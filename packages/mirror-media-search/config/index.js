@@ -16,7 +16,8 @@ const URL_HOST = process.env.URL_HOST || 'http://localhost:3000/'
 const API_PROTOCOL = process.env.API_PROTOCOL || 'http'
 const API_PORT = process.env.API_PORT || '8080'
 const API_HOST = process.env.API_HOST || 'no-api-host'
-const REDIS_HOST = process.env.REDIS_HOST || 'get redis url'
+const READ_REDIS_HOST = process.env.READ_REDIS_HOST || 'get read redis url'
+const WRITE_REDIS_HOST = process.env.WRITE_REDIS_HOST || 'get write redis url'
 const REDIS_AUTH = process.env.REDIS_AUTH || 'find redis password'
 const REDIS_EX = parseInt(process.env.REDIS_EX) || 60
 const PROGRAMABLE_SEARCH_ENGINE_ID =
@@ -50,7 +51,8 @@ export {
   URL_STATIC_COMBO_SECTIONS,
   URL_PROGRAMABLE_SEARCH,
   URL_HOST,
-  REDIS_HOST,
+  READ_REDIS_HOST,
+  WRITE_REDIS_HOST,
   REDIS_AUTH,
   REDIS_EX,
   PROGRAMABLE_SEARCH_ENGINE_ID,
