@@ -107,8 +107,10 @@ export default function SearchBar() {
               onChange={(event) => {
                 setSearchTerms(event.target.value)
               }}
-              onKeyPress={() => {
-                goSearch()
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  goSearch()
+                }
               }}
             />
           </SearchFieldWrapper>
@@ -122,6 +124,11 @@ export default function SearchBar() {
           value={searchTerms}
           onChange={(event) => {
             setSearchTerms(event.target.value)
+          }}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              goSearch()
+            }
           }}
         />
         <SearchButton

@@ -13,6 +13,13 @@ import {
 import SearchResult from '../../components/search-result'
 import Footer from '../../components/shared/mirror-media-footer'
 import { getSearchResult } from '../../utils/api/programmable-search'
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`
 
 export default function Home({
   sectionsData,
@@ -21,13 +28,13 @@ export default function Home({
   redirectUrl,
 }) {
   return (
-    <>
+    <Wrapper>
       <RedirectUrlContext.Provider value={redirectUrl}>
         <Header sectionsData={sectionsData} topicsData={topicsData} />
         <SearchResult searchResult={searchResult} />
         <Footer />
       </RedirectUrlContext.Provider>
-    </>
+    </Wrapper>
   )
 }
 
