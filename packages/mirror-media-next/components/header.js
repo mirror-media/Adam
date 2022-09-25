@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 import Link from 'next/link'
 import Image from 'next/image'
+import SubBrandList from './sub-brand-list'
+import { SUB_BRAND_LINKS } from '../utils/mirror-media/const.js'
+
 const HeaderWrapper = styled.div`
   z-index: 519;
   display: flex;
@@ -9,6 +12,7 @@ const HeaderWrapper = styled.div`
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 1);
 `
+
 export default function Header() {
   return (
     <HeaderWrapper>
@@ -22,6 +26,7 @@ export default function Header() {
           ></Image>
         </>
       </Link>
+      <SubBrandList subBrands={SUB_BRAND_LINKS} />
     </HeaderWrapper>
   )
 }
