@@ -1,13 +1,14 @@
 import styled from 'styled-components'
 import Link from 'next/link'
 import Image from 'next/image'
-import SubBrandList from './sub-brand-list'
 import {
   SUB_BRAND_LINKS,
   PROMOTION_LINKS,
 } from '../utils/mirror-media/const.js'
+import SubBrandList from './sub-brand-list'
 import SearchBar from './search-bar'
 import PromotionLinks from './promotion-links'
+import NavSections from './nav-sections'
 const HeaderWrapper = styled.div`
   z-index: 519;
   background-color: rgba(255, 255, 255, 1);
@@ -21,6 +22,9 @@ const HeaderTop = styled.div`
   margin: 0 auto;
   padding: 5px 90px 20px;
   border-bottom: 3px solid black;
+  .logo {
+    cursor: pointer;
+  }
 `
 const ActionWrapper = styled.div`
   display: flex;
@@ -30,20 +34,39 @@ const ActionWrapper = styled.div`
   ${({ fixHeader }) =>
     fixHeader && `margin-right: ${Header_Search_Margin_Right};`}
 `
+const HeaderNav = styled.nav``
 
-export default function Header() {
+function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
+  return {
+    ...section,
+    categories:
+      section.name === 'member'
+        ? section.categories
+        : section.categories.filter((category) => !category.isMemberOnly),
+  }
+}
+
+export default function Header({ sectionsData = [], topicsData = [] }) {
+  const sections =
+    sectionsData
+      .filter((section) => section.isFeatured)
+      .map(filterOutIsMemberOnlyCategoriesInNormalSection) ?? []
+  const topics =
+    topicsData.filter((topic) => topic.isFeatured).slice(0, 7) ?? []
+
   return (
     <HeaderWrapper>
       <HeaderTop>
         <Link href="/">
-          <>
+          <a>
             <Image
+              className="logo"
               src="/images/mirror-media-logo.svg"
               alt="mirrormedia"
               width={107}
               height={45}
             ></Image>
-          </>
+          </a>
         </Link>
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
@@ -51,6 +74,9 @@ export default function Header() {
           <PromotionLinks links={PROMOTION_LINKS} />
         </ActionWrapper>
       </HeaderTop>
+      <HeaderNav>
+        <NavSections sections={sections} />
+      </HeaderNav>
     </HeaderWrapper>
   )
 }

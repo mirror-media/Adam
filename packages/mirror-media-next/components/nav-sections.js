@@ -1,20 +1,17 @@
-import { useContext } from 'react'
 import styled from 'styled-components'
-import { RedirectUrlContext } from '../../context/redirectUrl'
-import { minWidth } from '../../styles/media'
-import { sectionColors } from '../../styles/sections-color'
+import { minWidth } from '../styles/media'
+import { sectionColors } from '../styles/sections-color'
 
 const SectionsWrapper = styled.section`
   font-size: 14px;
   // to hide scrollbar
-  height: 36px;
+  height: 48px;
   overflow: hidden;
 
   display: flex;
   justify-content: center;
   @media ${minWidth.xl} {
-    background-color: #064f77;
-    font-size: 16px;
+    font-size: 20px;
     height: auto;
     overflow: visible;
   }
@@ -22,50 +19,41 @@ const SectionsWrapper = styled.section`
     display: block;
   }
 `
-const Sections = styled.div`
-  // to hide scrollbar
+const Sections = styled.ul`
   height: 48px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  overflow-x: auto;
   max-width: 1024px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+
+  // to hide scrollbar
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  &::-webkit-scrollbar {
+    /* WebKit */
+    width: 0;
+    height: 0;
+  }
   @media ${minWidth.xl} {
     width: 100%;
-    height: 45px;
+    height: auto;
     justify-content: center;
     overflow: visible;
   }
 `
-const Section = styled.div`
+const Section = styled.li`
   flex: 0 0 auto;
   position: relative;
   cursor: pointer;
   user-select: none;
   line-height: 1.15;
-  color: #fff;
+  color: rgba(0, 0, 0, 0.87);
   padding-top: 0;
-  > a {
-    padding: 7px 11px 5px 11px;
-    @media ${minWidth.xl} {
-      padding: 0;
-    }
-  }
-  @media ${minWidth.xl} {
-    line-height: 42px;
-    min-width: calc(100% / 11);
-    border-top-width: 3px;
-    border-top-style: solid;
-    &:hover .dropdown {
-      display: block;
-    }
-    &.home {
-      display: none;
-    }
-  }
+
   @media ${minWidth.md} {
     padding: 0;
     border-top-color: #000;
@@ -83,6 +71,18 @@ const Section = styled.div`
     }
   `}
   }
+  @media ${minWidth.xl} {
+    line-height: 150%;
+    min-width: calc(100% / 11);
+
+    &:hover .dropdown {
+      display: block;
+    }
+    &.home {
+      display: none;
+    }
+  }
+
   &:hover {
     color: #34495e;
     @media ${minWidth.xl} {
@@ -96,43 +96,40 @@ const Section = styled.div`
     color: ${color};
   `}
   &.member {
+    background: #000000;
+    color: #fff;
     &:hover {
-      color: #db1730;
+      color: #fff;
     }
     &.active {
-      color: #e51731;
-    }
-    @media ${minWidth.xl} {
       color: #fff;
-      &:hover {
-        color: #fff;
-      }
-      &.active {
-        color: #fff;
-      }
     }
-  }
-  &.home {
-    color: #fff;
   }
 `
-
+const SectionLink = styled.a`
+  padding: 7px 11px 5px 11px;
+  @media ${minWidth.xl} {
+    padding: 9px 14px 9px 14px;
+  }
+`
 const SectionDropDown = styled.div`
   position: absolute;
   display: none;
-  width: 110px;
+  width: 100%;
   left: 0;
   top: 100%;
   background-color: #333;
   text-align: center;
   z-index: 20;
   color: #fff;
-  a {
-    line-height: 1.3;
-    padding: 13px 10px;
+`
+const CategoryLink = styled.a`
+  line-height: 1.3;
+  padding: 7px 11px 5px 11px;
+  @media ${minWidth.xl} {
+    padding: 9px 14px 9px 14px;
   }
 `
-
 function getCategoryHref(sectionName, categoryName) {
   if (sectionName === 'videohub') {
     return `/video_category/${categoryName}`
@@ -144,14 +141,14 @@ function getCategoryHref(sectionName, categoryName) {
 }
 
 export default function NavSections({ sections }) {
-  const redirectUrl = useContext(RedirectUrlContext)
   return (
     <SectionsWrapper>
       <Sections>
         <Section className="home">
-          <a href={`${redirectUrl}/`}>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <SectionLink href="/">
             <h2>首頁</h2>
-          </a>
+          </SectionLink>
         </Section>
         {sections.map((section) => (
           <Section
@@ -159,20 +156,17 @@ export default function NavSections({ sections }) {
             color={sectionColors[section.name]}
             className={section.name}
           >
-            <a href={`/section/${section.name}`}>
+            <SectionLink href={`/section/${section.name}`}>
               <h2>{section.title}</h2>
-            </a>
+            </SectionLink>
             <SectionDropDown className="dropdown">
               {section.categories.map((category) => (
-                <a
+                <CategoryLink
                   key={category._id}
-                  href={`${redirectUrl}${getCategoryHref(
-                    section.name,
-                    category.name
-                  )}`}
+                  href={getCategoryHref(section.name, category.name)}
                 >
                   <h3>{category.title}</h3>
-                </a>
+                </CategoryLink>
               ))}
             </SectionDropDown>
           </Section>
