@@ -18,7 +18,7 @@ const PromotionLinksButton = styled.button`
   background-position: center;
   background-repeat: no-repeat;
   width: 5px;
-  height: 20px;
+  height: 30.81px;
   background-size: 5px;
   padding-left: 8px;
   padding-right: 8px;

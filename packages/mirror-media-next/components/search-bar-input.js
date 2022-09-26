@@ -5,7 +5,7 @@ const SearchInputWrapper = styled.div`
   font-size: 16px;
   color: #1b1b1b;
   height: 34px;
-
+  border: 0.5px solid rgba(0, 0, 0, 1);
   @media ${maxWidth.xl} {
     height: 32px;
     margin-top: 16px;
@@ -19,6 +19,8 @@ const SearchInput = styled.input`
   height: 100%;
   line-height: 34px;
   display: block;
+  background-color: rgba(245, 245, 245, 1);
+  width: 247px;
   &::placeholder {
     color: #888;
   }
