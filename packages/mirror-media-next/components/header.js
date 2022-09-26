@@ -9,6 +9,7 @@ import SubBrandList from './sub-brand-list'
 import SearchBar from './search-bar'
 import PromotionLinks from './promotion-links'
 import NavSections from './nav-sections'
+import NavTopics from './nav-topics.js'
 const HeaderWrapper = styled.div`
   z-index: 519;
   background-color: rgba(255, 255, 255, 1);
@@ -76,6 +77,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
       </HeaderTop>
       <HeaderNav>
         <NavSections sections={sections} />
+        <NavTopics topics={topics} />
       </HeaderNav>
     </HeaderWrapper>
   )
