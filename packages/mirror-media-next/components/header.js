@@ -3,7 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import SubBrandList from './sub-brand-list'
 import { SUB_BRAND_LINKS } from '../utils/mirror-media/const.js'
-
 const HeaderWrapper = styled.div`
   z-index: 519;
   display: flex;
@@ -19,7 +18,7 @@ export default function Header() {
       <Link href="/">
         <>
           <Image
-            src="/image/mirror-media-logo.svg"
+            src="/images/mirror-media-logo.svg"
             alt="mirrormedia"
             width={107}
             height={45}
