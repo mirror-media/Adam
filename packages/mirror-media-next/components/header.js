@@ -10,17 +10,18 @@ import SearchBar from './search-bar'
 import PromotionLinks from './promotion-links'
 import NavSections from './nav-sections'
 import NavTopics from './nav-topics.js'
+import SubscribeMagazine from './subscribe-magazine.js'
 const HeaderWrapper = styled.div`
   z-index: 519;
   background-color: rgba(255, 255, 255, 1);
+  max-width: 1200px;
+  margin: 0 auto;
 `
 const HeaderTop = styled.div`
   height: 74.62px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
   padding: 5px 90px 20px;
   border-bottom: 3px solid black;
   .logo {
@@ -36,7 +37,9 @@ const ActionWrapper = styled.div`
     fixHeader && `margin-right: ${Header_Search_Margin_Right};`}
 `
 const HeaderNav = styled.nav``
-
+const NavBottom = styled.div`
+  display: flex;
+`
 function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
   return {
     ...section,
@@ -77,7 +80,10 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
       </HeaderTop>
       <HeaderNav>
         <NavSections sections={sections} />
-        <NavTopics topics={topics} />
+        <NavBottom>
+          <NavTopics topics={topics} />
+          <SubscribeMagazine />
+        </NavBottom>
       </HeaderNav>
     </HeaderWrapper>
   )

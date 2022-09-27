@@ -5,9 +5,8 @@ const TopicsWrapper = styled.section`
   display: none;
   @media ${minWidth.xl} {
     display: flex;
-    max-width: 883px;
+    width: 100%;
     background: #1d9fb8;
-    margin: 0 auto;
     text-align: center;
     height: 29px;
     overflow: hidden;
