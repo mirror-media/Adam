@@ -32,8 +32,6 @@ MyApp.getInitialProps = async () => {
       }),
     ])
 
-    console.log(responses[0].value.data._items)
-
     console.log(
       JSON.stringify({
         severity: 'DEBUG',
