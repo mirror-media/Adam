@@ -12,6 +12,7 @@ import NavTopics from './nav-topics'
 import SubscribeMagazine from './subscribe-magazine'
 import React from 'react'
 
+import MemberLoginButton from './member-login-button'
 const MOCK_DATA_FLASH_NEWS = [
   {
     slug: 'premium-test',
@@ -163,6 +164,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
           <SearchBar />
+          <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />
         </ActionWrapper>
       </HeaderTop>

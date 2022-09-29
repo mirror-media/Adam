@@ -20,7 +20,7 @@ const SearchButton = styled.button`
   user-select: none;
 
   path {
-    fill: white;
+    fill: #054f77;
   }
 
   @media ${minWidth.xl} {
