@@ -1,3 +1,5 @@
+//TODO : this component would rerender twice (once at `handleClickPrev` or `handleClickNext`, once at `handleTransitionEnd`),
+//need to refactor to solve this performance issue.
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
 
 import styled from 'styled-components'
@@ -56,7 +58,6 @@ const FlashNew = styled.a`
 `
 
 export default function FlashNews({ flashNews = [] }) {
-  console.log('re-render')
   const [pageForSlide, setPageForSlide] = useState(0)
   const [shouldTransition, setShouldTransition] = useState(false)
   const [move, setMove] = useState(-1)
