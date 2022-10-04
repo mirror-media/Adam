@@ -1,5 +1,6 @@
+//TODO: replace <a> with <Link> for Single Page Application
+
 import styled from 'styled-components'
-import Link from 'next/link'
 import Image from 'next/image'
 import {
   SUB_BRAND_LINKS,
@@ -117,17 +118,16 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
   return (
     <HeaderWrapper>
       <HeaderTop>
-        <Link href="/">
-          <a>
-            <Image
-              className="logo"
-              src="/images/mirror-media-logo.svg"
-              alt="mirrormedia"
-              width={107}
-              height={45}
-            ></Image>
-          </a>
-        </Link>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/">
+          <Image
+            className="logo"
+            src="/images/mirror-media-logo.svg"
+            alt="mirrormedia"
+            width={107}
+            height={45}
+          ></Image>
+        </a>
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
           <SearchBar />
