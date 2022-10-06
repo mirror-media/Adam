@@ -69,7 +69,6 @@ const MOCK_DATA_FLASH_NEWS = [
 ]
 
 const HeaderWrapper = styled.div`
-  z-index: 519;
   background-color: rgba(255, 255, 255, 1);
   max-width: 1200px;
   margin: 0 auto;
