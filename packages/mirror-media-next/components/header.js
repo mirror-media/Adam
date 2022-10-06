@@ -13,6 +13,7 @@ import NavSections from './nav-sections'
 import FlashNews from './flash-news.js'
 import NavTopics from './nav-topics.js'
 import SubscribeMagazine from './subscribe-magazine.js'
+import React from 'react'
 
 const MOCK_DATA_FLASH_NEWS = [
   {
@@ -96,6 +97,11 @@ const HeaderNav = styled.nav``
 const NavBottom = styled.div`
   display: flex;
 `
+/**
+ *
+ * @param {Section} section
+ * @returns
+ */
 function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
   return {
     ...section,
@@ -106,6 +112,38 @@ function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
   }
 }
 
+/**
+ * @typedef {Object} BasicInfo - info of certain category/section/topic
+ * @property {string} _id - id
+ * @property {string} title - chinese name of category/section/topic
+ * @property {string} name - english name of category/section/topic
+ */
+
+/**
+ * @typedef {Object} CategoryType
+ * @property {boolean} isMemberOnly - whether this category belongs to the members area
+ *
+ * @typedef {BasicInfo & CategoryType} Category
+ */
+
+/**
+ * @typedef {Object} SectionType
+ * @property {boolean} isFeatured - if true, should be selected and render
+ * @property {Category[]} categories - categories which belong to certain section
+ *
+ * @typedef {BasicInfo & SectionType} Section
+ */
+
+/**
+ * @typedef {BasicInfo & {isFeatured: boolean} } Topic
+ */
+
+/**
+ * @param {Object} props
+ * @param {Section[]} props.sectionsData
+ * @param {Topic[]} props.topicsData
+ * @returns {React.ReactElement}
+ */
 export default function Header({ sectionsData = [], topicsData = [] }) {
   const sections =
     sectionsData
