@@ -11,7 +11,7 @@ import FlashNews from './flash-news'
 import NavTopics from './nav-topics'
 import SubscribeMagazine from './subscribe-magazine'
 import React from 'react'
-
+import GptAd from './gpt-ad.js'
 import MemberLoginButton from './member-login-button'
 const MOCK_DATA_FLASH_NEWS = [
   {
@@ -89,6 +89,7 @@ const ActionWrapper = styled.div`
   align-items: center;
   z-index: 529;
 `
+
 const HeaderNav = styled.nav``
 const NavBottom = styled.div`
   display: flex;
@@ -161,6 +162,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
             height={45}
           ></Image>
         </a>
+        <GptAd />
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
           <SearchBar />
