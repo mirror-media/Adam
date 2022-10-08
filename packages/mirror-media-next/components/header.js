@@ -2,17 +2,14 @@
 
 import styled from 'styled-components'
 import Image from 'next/image'
-import {
-  SUB_BRAND_LINKS,
-  PROMOTION_LINKS,
-} from '../utils/mirror-media/const.js'
+import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../utils/mirror-media/const'
 import SubBrandList from './sub-brand-list'
 import SearchBar from './search-bar'
 import PromotionLinks from './promotion-links'
 import NavSections from './nav-sections'
-import FlashNews from './flash-news.js'
-import NavTopics from './nav-topics.js'
-import SubscribeMagazine from './subscribe-magazine.js'
+import FlashNews from './flash-news'
+import NavTopics from './nav-topics'
+import SubscribeMagazine from './subscribe-magazine'
 import React from 'react'
 
 const MOCK_DATA_FLASH_NEWS = [
