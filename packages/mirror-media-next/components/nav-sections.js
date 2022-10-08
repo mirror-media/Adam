@@ -89,8 +89,7 @@ const Section = styled.li`
       color: #fff;
     }
   }
-  ${({ active, color }) =>
-    active &&
+  ${({ color }) =>
     color &&
     `
     color: ${color};

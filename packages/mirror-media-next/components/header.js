@@ -87,8 +87,6 @@ const ActionWrapper = styled.div`
   flex-shrink: 0;
   align-items: center;
   z-index: 529;
-  ${({ fixHeader }) =>
-    fixHeader && `margin-right: ${Header_Search_Margin_Right};`}
 `
 const HeaderNav = styled.nav``
 const NavBottom = styled.div`
