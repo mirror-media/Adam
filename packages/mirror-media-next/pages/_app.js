@@ -28,6 +28,11 @@ function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
     </>
   )
 }
+
+/**
+ * @async
+ * @returns {Promise<Object>}
+ */
 MyApp.getInitialProps = async () => {
   try {
     const responses = await Promise.allSettled([
@@ -43,6 +48,15 @@ MyApp.getInitialProps = async () => {
       }),
     ])
 
+    const sectionsData = Array.isArray(responses[0]?.value?.data?._items)
+      ? responses[0]?.value?.data?._items
+      : []
+
+    const topicsData = Array.isArray(
+      responses[1]?.value?.data?._endpoints?.topics?._items
+    )
+      ? responses[1]?.value?.data?._endpoints?.topics?._items
+      : []
     console.log(
       JSON.stringify({
         severity: 'DEBUG',
@@ -50,8 +64,8 @@ MyApp.getInitialProps = async () => {
       })
     )
     return {
-      sectionsData: responses[0].value.data._items,
-      topicsData: responses[1].value.data._endpoints.topics._items,
+      sectionsData,
+      topicsData,
     }
   } catch (error) {
     console.log(JSON.stringify({ severity: 'ERROR', message: error.stack }))
