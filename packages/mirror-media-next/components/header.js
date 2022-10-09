@@ -2,7 +2,7 @@
 
 import styled from 'styled-components'
 import Image from 'next/image'
-import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../utils/mirror-media/const'
+import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../constants'
 import SubBrandList from './sub-brand-list'
 import SearchBar from './search-bar'
 import PromotionLinks from './promotion-links'
