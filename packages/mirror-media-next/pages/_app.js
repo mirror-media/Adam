@@ -1,3 +1,4 @@
+import React from 'react'
 import { GlobalStyles } from '../styles/global-styles'
 import Layout from '../components/layout'
 import axios from 'axios'
@@ -8,6 +9,16 @@ import {
   API_HOST,
   API_PORT,
 } from '../config'
+
+/**
+ *
+ * @param {Object} props
+ * @param {React.ElementType} props.Component
+ * @param {Object} props.pageProps
+ * @param {Object[]} props.sectionsData
+ * @param {Object[]} props.topicsData
+ * @returns {React.ReactElement}
+ */
 function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
   return (
     <>

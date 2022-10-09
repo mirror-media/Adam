@@ -93,9 +93,9 @@ const NavBottom = styled.div`
   display: flex;
 `
 /**
- *
+ * Remove item from array `categories` if which is member only category.
  * @param {Section} section
- * @returns
+ * @returns {Section}
  */
 function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
   return {

@@ -1,14 +1,16 @@
 import Header from './header'
 
-export default function Layout({
-  children,
-  sectionsData = [],
-  topicsData = [],
-}) {
+/**
+ *
+ * @param {Object} props
+ * @param {Object[]} props.sectionsData
+ * @param {Object[]} props.topicsData
+ * @returns {React.ReactElement}
+ */
+export default function Layout({ sectionsData = [], topicsData = [] }) {
   return (
     <>
       <Header sectionsData={sectionsData} topicsData={topicsData} />
-      {children}
     </>
   )
 }

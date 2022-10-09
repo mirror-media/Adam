@@ -46,12 +46,22 @@ const Arrow = styled.span`
     border-color: #054f77 transparent transparent transparent;
   }
 `
+
 const FlashNewsList = styled.div`
   height: 100%;
-  ${({ shouldTransition }) =>
-    shouldTransition ? 'transition: transform 0.35s ease;' : null}
-  ${({ move }) => `transform: translateY(${move * 100}%)`}
+
+  ${
+    /**
+     *  @param {Object} props
+     *  @param {boolean} props.shouldTransition
+     *  @param {number} props.move
+     */
+    ({ shouldTransition }) =>
+      shouldTransition ? 'transition: transform 0.35s ease;' : null
+  }
+  ${({ move }) => move && `transform: translateY(${move * 100}%)`}
 `
+
 const FlashNew = styled.a`
   display: block;
   padding: 5px 0 6px;
