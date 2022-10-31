@@ -28,10 +28,15 @@ function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
     </>
   )
 }
+/** @typedef {import('axios').AxiosResponse<{value: {data: Record<string, unknown>}}>} AxiosResponses */
+
+/** @typedef {PromiseSettledResult<AxiosResponses>} SectionsData */
+
+/** @typedef {PromiseSettledResult<AxiosResponses>} TopicsData */
 
 /**
  * @async
- * @returns {Promise<Object>}
+ * @returns {Promise<{sectionsData: SectionsData | [] , topicsData:TopicsData | []}>}
  */
 MyApp.getInitialProps = async () => {
   try {
@@ -48,15 +53,18 @@ MyApp.getInitialProps = async () => {
       }),
     ])
 
-    const sectionsData = Array.isArray(responses[0]?.value?.data?._items)
-      ? responses[0]?.value?.data?._items
-      : []
+    const sectionsData =
+      responses[0].status === 'fulfilled' &&
+      Array.isArray(responses[0]?.value?.data?._items)
+        ? responses[0]?.value?.data?._items
+        : []
 
-    const topicsData = Array.isArray(
-      responses[1]?.value?.data?._endpoints?.topics?._items
-    )
-      ? responses[1]?.value?.data?._endpoints?.topics?._items
-      : []
+    const topicsData =
+      responses[1].status === 'fulfilled' &&
+      Array.isArray(responses[1]?.value?.data?._endpoints?.topics._items)
+        ? responses[1]?.value?.data?._endpoints?.topics._items
+        : []
+
     console.log(
       JSON.stringify({
         severity: 'DEBUG',
