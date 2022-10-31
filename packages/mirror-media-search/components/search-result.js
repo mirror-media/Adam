@@ -115,7 +115,7 @@ export default function SearchResult({ searchResult }) {
   const { width } = useWindowDimensions()
   const { articles, loadMore, isLoading, hasMore } =
     useSearchArticles(searchResult)
-  const searchTerms = searchResult?.queries?.request[0].searchTerms ?? ''
+  const searchTerms = searchResult?.queries?.request[0].exactTerms ?? ''
 
   const observer = useRef()
   // use callback ref to re-observe when last article is changed

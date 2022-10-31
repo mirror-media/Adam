@@ -125,3 +125,6 @@ dist
 
 # vercel
 .vercel
+
+# jsconfig
+jsconfig.json

@@ -7,7 +7,7 @@ import {
 } from '../utils/programmable-search/const'
 
 export default function useSearchArticles({ items: initialArticles, queries }) {
-  const [searchTerms] = useState(queries.request[0].searchTerms)
+  const [searchTerms] = useState(queries.request[0].exactTerms)
   const [startIndex, setStartIndex] = useState(1)
   const [hasMore, setHasMore] = useState(!!queries.nextPage)
   const [articles, setArticles] = useState(initialArticles)
@@ -21,7 +21,7 @@ export default function useSearchArticles({ items: initialArticles, queries }) {
           method: 'get',
           url: '/api/search',
           params: {
-            query: searchTerms,
+            exactTerms: searchTerms,
             start: startIndex,
           },
           timeout: API_TIMEOUT,

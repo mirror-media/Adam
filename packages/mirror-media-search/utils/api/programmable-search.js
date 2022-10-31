@@ -20,7 +20,7 @@ const readRedis = new Redis({ host: READ_REDIS_HOST, password: REDIS_AUTH })
 const writeRedis = new Redis({ host: WRITE_REDIS_HOST, password: REDIS_AUTH })
 
 const searchQuerySchema = object({
-  query: string().required(),
+  exactTerms: string().required(),
   start: number()
     .optional()
     .integer()
@@ -43,14 +43,14 @@ export async function getSearchResult(query) {
     const queryParams = {
       key: PROGRAMABLE_SEARCH_API_KEY,
       cx: PROGRAMABLE_SEARCH_ENGINE_ID,
-      q: params.query,
+      exactTerms: params.exactTerms,
       start: params.start,
       num: params.take,
       sort: 'date',
     }
 
     const prefix = 'PROGRAMABLE_SEARCH'
-    const redisKey = `${prefix}_${queryParams.q}_${queryParams.start}_${queryParams.num}`
+    const redisKey = `${prefix}_${queryParams.exactTerms}_${queryParams.start}_${queryParams.num}`
     const searchResultCache = await readRedis.get(redisKey)
 
     if (searchResultCache) {

@@ -53,7 +53,7 @@ export async function getServerSideProps({ params }) {
         timeout: API_TIMEOUT,
       }),
       getSearchResult({
-        query: searchTerms,
+        exactTerms: searchTerms,
         start: 1,
       }),
     ])
