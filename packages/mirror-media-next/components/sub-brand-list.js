@@ -1,10 +1,13 @@
 import styled from 'styled-components'
 
 const SubBrandListWrapper = styled.ul`
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  position: relative;
+  display: none;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    position: relative;
+  }
 `
 const SubBrand = styled.a`
   padding-left: 10px;
@@ -17,9 +20,16 @@ const SubBrandIcon = styled.img`
   width: auto;
 `
 
-export default function SubBrandList({ subBrands = [] }) {
+/**
+ *
+ * @param {Object} props
+ * @param {Object[]} props.subBrands
+ * @param {string} [props.className]
+ * @returns
+ */
+export default function SubBrandList({ subBrands = [], className }) {
   return (
-    <SubBrandListWrapper>
+    <SubBrandListWrapper className={className}>
       {subBrands.map(({ name, title, href }) => (
         <SubBrand
           key={name}

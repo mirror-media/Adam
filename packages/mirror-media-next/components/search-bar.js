@@ -18,7 +18,10 @@ const SearchButton = styled.button`
   height: 18px;
   cursor: pointer;
   user-select: none;
-
+  &:focus {
+    border: none;
+    outline: none;
+  }
   path {
     fill: #054f77;
   }

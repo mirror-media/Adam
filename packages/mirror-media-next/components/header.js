@@ -73,14 +73,30 @@ const HeaderWrapper = styled.div`
   margin: 0 auto;
 `
 const HeaderTop = styled.div`
-  height: 74.62px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 90px 20px;
+  padding: 21px 8px 20px;
   border-bottom: 3px solid black;
+  ${({ theme }) => theme.breakpoint.md} {
+    padding: 21px 90px 20px;
+  }
   .logo {
     cursor: pointer;
+  }
+`
+const HeaderLogo = styled.a`
+  display: none;
+  ${({ theme }) => theme.breakpoint.md} {
+    display: block;
+    width: 107px;
+    height: 45px;
+    width: 49px;
+    height: 20.72px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 107px;
+    height: 45px;
   }
 `
 const ActionWrapper = styled.div`
@@ -90,6 +106,26 @@ const ActionWrapper = styled.div`
   z-index: 529;
 `
 
+const SideBarButton = styled.button`
+  user-select: none;
+  display: block;
+  margin-left: 16px;
+
+  &:focus {
+    border: none;
+    outline: none;
+  }
+  div {
+    width: 16px;
+    height: 2px;
+    background-color: black;
+    margin: 2px 0;
+    border-radius: 12px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
 const HeaderNav = styled.nav``
 const NavBottom = styled.div`
   display: flex;
@@ -152,22 +188,26 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
   return (
     <HeaderWrapper>
       <HeaderTop>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/">
+        <HeaderLogo className="logo" href="/">
           <Image
-            className="logo"
             src="/images/mirror-media-logo.svg"
             alt="mirrormedia"
+            layout="responsive"
             width={107}
             height={45}
           ></Image>
-        </a>
+        </HeaderLogo>
         <GptAd />
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
           <SearchBar />
           <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />
+          <SideBarButton>
+            <div></div>
+            <div></div>
+            <div></div>
+          </SideBarButton>
         </ActionWrapper>
       </HeaderTop>
       <HeaderNav>

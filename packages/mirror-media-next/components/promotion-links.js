@@ -2,13 +2,14 @@ import { useRef, useState } from 'react'
 import styled from 'styled-components'
 import useClickOutside from '../hooks/useClickOutside'
 import moreIcon from '../public/images/more-black.png'
-import { maxWidth } from '../styles/media'
 
 const PromotionLinksWrapper = styled.div`
+  display: none;
+
   margin-left: 5px;
   position: relative;
-  @media ${maxWidth.xl} {
-    display: none;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
   }
 `
 
@@ -43,7 +44,7 @@ const Link = styled.a`
   padding: 8px 16px;
 `
 
-export default function PromotionLinks({ links }) {
+export default function PromotionLinks({ links, className = '' }) {
   const [showLinks, setShowLinks] = useState(false)
   const moreLinksWrapperRef = useRef(null)
   useClickOutside(moreLinksWrapperRef, () => {
@@ -51,7 +52,7 @@ export default function PromotionLinks({ links }) {
   })
 
   return (
-    <PromotionLinksWrapper ref={moreLinksWrapperRef}>
+    <PromotionLinksWrapper ref={moreLinksWrapperRef} className={className}>
       <PromotionLinksButton
         onClick={() => {
           setShowLinks((val) => !val)
