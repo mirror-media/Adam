@@ -1,5 +1,7 @@
 import React from 'react'
 import { GlobalStyles } from '../styles/global-styles'
+import { ThemeProvider } from 'styled-components'
+import { theme } from '../styles/theme'
 import Layout from '../components/layout'
 import axios from 'axios'
 import {
@@ -23,8 +25,10 @@ function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
   return (
     <>
       <GlobalStyles />
-      <Layout sectionsData={sectionsData} topicsData={topicsData} />
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <Layout sectionsData={sectionsData} topicsData={topicsData} />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </>
   )
 }
