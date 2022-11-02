@@ -9,17 +9,49 @@ const FlashNewsWrapper = styled.div`
   align-items: center;
   width: 100%;
   overflow: hidden;
-  height: 31px;
-  font-size: 16px;
-  line-height: 20px;
+  height: 21px;
+  font-size: 12px;
   background: #f4f4f4;
   font-weight: 600;
   color: #054f77;
+  ${({ theme }) => theme.breakpoint.xl} {
+    height: 31px;
+    font-size: 16px;
+  }
+`
+
+const Title = styled.div`
+  width: 40px;
+  text-align: center;
+  background-color: #054f77;
+  color: white;
+  position: relative;
+  margin-right: 6px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    background-color: transparent;
+    color: #054f77;
+    margin-right: 12px;
+    &::after {
+      position: absolute;
+      content: '|';
+      right: -6px;
+      color: #054f77;
+    }
+  }
 `
 const ArrowWrapper = styled.div`
-  width: 12px;
+  width: 3px;
   margin: 0 8px 0 7px;
   user-select: none;
+  order: 1;
+  display: flex;
+  gap: 4px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 12px;
+
+    order: 0;
+    display: block;
+  }
 `
 const Arrow = styled.span`
   width: 12px;
@@ -49,7 +81,7 @@ const Arrow = styled.span`
 
 const FlashNewsList = styled.div`
   height: 100%;
-
+  width: calc(100% - 45px);
   ${
     /**
      *  @param {Object} props
@@ -63,8 +95,21 @@ const FlashNewsList = styled.div`
 `
 
 const FlashNew = styled.a`
-  display: block;
-  padding: 5px 0 6px;
+  display: flex;
+  line-height: 1.75em;
+
+  .content {
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    line-height: 2em;
+    .content {
+      //set margin to activate truncate
+    }
+  }
 `
 
 /**
@@ -142,7 +187,7 @@ export default function FlashNews({ flashNews = [] }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       handleClickNext()
-    }, 3000)
+    }, 2000)
     return () => clearTimeout(timer)
   }, [handleClickNext])
   return (
@@ -159,8 +204,8 @@ export default function FlashNews({ flashNews = [] }) {
       >
         {displayedArticle.map((item) => (
           <FlashNew href={item.href} key={item.href}>
-            <span>快訊｜</span>
-            {item.title}
+            <Title>快訊</Title>
+            <p className="content"> {item.title}</p>
           </FlashNew>
         ))}
       </FlashNewsList>
