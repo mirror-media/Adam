@@ -1,32 +1,30 @@
+//TODO: When user at certain section, at category which belongs to certain section, at story which belongs to certain section
+//component <Section> will change color of title to section color defined at /styles/sections-color.
+
 import styled from 'styled-components'
 import { minWidth } from '../styles/media'
 import { sectionColors } from '../styles/sections-color'
-
+import Logo from './logo'
 const SectionsWrapper = styled.section`
   font-size: 14px;
   // to hide scrollbar
-  height: 48px;
   overflow: hidden;
-
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  margin: 0 auto 8px;
   @media ${minWidth.xl} {
     font-size: 20px;
     height: auto;
     overflow: visible;
-  }
-  a {
-    display: block;
+    margin-bottom: 10px;
   }
 `
 const Sections = styled.ul`
-  height: 48px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
   max-width: 1024px;
-  margin-left: auto;
-  margin-right: auto;
+  width: fit-content;
+  margin: 0 auto;
   text-align: center;
 
   // to hide scrollbar
@@ -48,69 +46,60 @@ const Sections = styled.ul`
 const Section = styled.li`
   flex: 0 0 auto;
   position: relative;
+  width: fit-content;
   cursor: pointer;
   user-select: none;
   line-height: 1.15;
   color: rgba(0, 0, 0, 0.87);
-  padding-top: 0;
 
-  @media ${minWidth.md} {
-    padding: 0;
-    border-top-color: #000;
-    ${({ color }) =>
-      color &&
-      `
-    &:hover {
-      background: inherit;
-      h2 {
-        color: ${color};
-      }
-      & .dropdown a:hover {
-        background-color: ${color};
-      }
-    }
-  `}
-  }
   @media ${minWidth.xl} {
     line-height: 150%;
     min-width: calc(100% / 11);
+  }
 
-    &:hover .dropdown {
-      display: block;
-    }
-    &.home {
-      display: none;
+  &.member {
+    @media ${minWidth.xl} {
+      background: #000000;
+      color: #fff;
     }
   }
 
   &:hover {
-    color: #34495e;
-    @media ${minWidth.xl} {
-      color: #fff;
-    }
-  }
-  ${({ color }) =>
-    color &&
-    `
-    color: ${color};
-  `}
-  &.member {
-    background: #000000;
-    color: #fff;
-    &:hover {
-      color: #fff;
-    }
-    &.active {
-      color: #fff;
-    }
+    ${({ color }) => color && `color: ${color}`}
   }
 `
 const SectionLink = styled.a`
-  padding: 7px 11px 5px 11px;
+  display: block;
+  font-weight: 700;
+  padding: 7px 6px 5px 6px;
   @media ${minWidth.xl} {
-    padding: 9px 14px 9px 14px;
+    padding: 9px 16px 9px 16px;
   }
 `
+
+const SectionLogo = styled(Logo)`
+  width: 49px;
+  height: 20.72px;
+  @media ${minWidth.md} {
+    display: none;
+  }
+`
+const SectionLinkLogo = styled(SectionLink)`
+  padding-top: 3px;
+  @media ${minWidth.md} {
+    padding-top: 7px;
+  }
+  @media ${minWidth.xl} {
+    padding-top: 9px;
+  }
+  h2 {
+    display: none;
+    @media ${minWidth.md} {
+      display: block;
+    }
+  }
+`
+
 const SectionDropDown = styled.div`
   position: absolute;
   display: none;
@@ -121,10 +110,19 @@ const SectionDropDown = styled.div`
   text-align: center;
   z-index: 20;
   color: #fff;
+  @media ${minWidth.xl} {
+    ${Section}:hover & {
+      display: block;
+    }
+  }
 `
 const CategoryLink = styled.a`
+  display: block;
   line-height: 1.3;
   padding: 7px 11px 5px 11px;
+  &:hover {
+    ${({ color }) => color && `color: ${color};`}
+  }
   @media ${minWidth.xl} {
     padding: 9px 14px 9px 14px;
   }
@@ -143,11 +141,11 @@ export default function NavSections({ sections }) {
   return (
     <SectionsWrapper>
       <Sections>
-        <Section className="home">
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <SectionLink href="/">
+        <Section>
+          <SectionLinkLogo href="/">
             <h2>首頁</h2>
-          </SectionLink>
+            <SectionLogo />
+          </SectionLinkLogo>
         </Section>
         {sections.map((section) => (
           <Section
@@ -158,11 +156,12 @@ export default function NavSections({ sections }) {
             <SectionLink href={`/section/${section.name}`}>
               <h2>{section.title}</h2>
             </SectionLink>
-            <SectionDropDown className="dropdown">
+            <SectionDropDown>
               {section.categories.map((category) => (
                 <CategoryLink
                   key={category._id}
                   href={getCategoryHref(section.name, category.name)}
+                  color={sectionColors[section.name]}
                 >
                   <h3>{category.title}</h3>
                 </CategoryLink>
