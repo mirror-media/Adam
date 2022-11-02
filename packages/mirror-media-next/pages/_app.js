@@ -28,15 +28,27 @@ function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
     </>
   )
 }
-/** @typedef {import('axios').AxiosResponse<{value: {data: Record<string, unknown>}}>} AxiosResponses */
 
-/** @typedef {PromiseSettledResult<AxiosResponses>} SectionsData */
+/**
+ * TODO: add specific data structure for sectionsData and topicsData, not just an object of array.
+ * @typedef {Object[]} Items
+ */
 
-/** @typedef {PromiseSettledResult<AxiosResponses>} TopicsData */
+/**
+ * @typedef {Object} DataRes
+ * @property {Items} [_items]
+ * @property {Object} [_endpoints]
+ * @property {Object} [_endpoints.topics]
+ * @property {Items} [_endpoints.topics._items]
+ * @property {Object} _links
+ * @property {Object} _meta
+ */
+
+/** @typedef {import('axios').AxiosResponse<DataRes>} AxiosResponse */
 
 /**
  * @async
- * @returns {Promise<{sectionsData: SectionsData | [] , topicsData:TopicsData | []}>}
+ * @returns {Promise<{sectionsData: Items | [] ,topicsData: Items | []}>}
  */
 MyApp.getInitialProps = async () => {
   try {
@@ -52,18 +64,20 @@ MyApp.getInitialProps = async () => {
         timeout: API_TIMEOUT,
       }),
     ])
+    /** @type {PromiseFulfilledResult<AxiosResponse>} */
+    const sectionsResponse = responses[0].status === 'fulfilled' && responses[0]
+    /** @type {PromiseFulfilledResult<AxiosResponse>} */
+    const topicsResponse = responses[1].status === 'fulfilled' && responses[1]
 
-    const sectionsData =
-      responses[0].status === 'fulfilled' &&
-      Array.isArray(responses[0]?.value?.data?._items)
-        ? responses[0]?.value?.data?._items
-        : []
+    const sectionsData = Array.isArray(sectionsResponse?.value?.data?._items)
+      ? sectionsResponse?.value?.data?._items
+      : []
 
-    const topicsData =
-      responses[1].status === 'fulfilled' &&
-      Array.isArray(responses[1]?.value?.data?._endpoints?.topics._items)
-        ? responses[1]?.value?.data?._endpoints?.topics._items
-        : []
+    const topicsData = Array.isArray(
+      topicsResponse?.value?.data?._endpoints?.topics?._items
+    )
+      ? topicsResponse?.value?.data?._endpoints?.topics?._items
+      : []
 
     console.log(
       JSON.stringify({
