@@ -1,7 +1,6 @@
-//TODO: replace <a> with <Link> for Single Page Application
+//TODO: replace <a> with <Link> from Nextjs for Single Page Application
 
 import styled from 'styled-components'
-import Image from 'next/image'
 import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../constants'
 import SubBrandList from './sub-brand-list'
 import SearchBar from './search-bar'
@@ -13,6 +12,7 @@ import SubscribeMagazine from './subscribe-magazine'
 import React from 'react'
 import GptAd from './gpt-ad.js'
 import MemberLoginButton from './member-login-button'
+import Logo from './logo'
 const MOCK_DATA_FLASH_NEWS = [
   {
     slug: 'premium-test',
@@ -85,20 +85,21 @@ const HeaderTop = styled.div`
     cursor: pointer;
   }
 `
-const HeaderLogo = styled.a`
+
+const HeaderLogo = styled(Logo)`
   display: none;
   ${({ theme }) => theme.breakpoint.md} {
     display: block;
-    width: 107px;
-    height: 45px;
     width: 49px;
     height: 20.72px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
     width: 107px;
     height: 45px;
   }
 `
+
 const ActionWrapper = styled.div`
   display: flex;
   flex-shrink: 0;
@@ -126,7 +127,6 @@ const SideBarButton = styled.button`
     display: none;
   }
 `
-const HeaderNav = styled.nav``
 const NavBottom = styled.div`
   display: flex;
 `
@@ -188,15 +188,10 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
   return (
     <HeaderWrapper>
       <HeaderTop>
-        <HeaderLogo className="logo" href="/">
-          <Image
-            src="/images/mirror-media-logo.svg"
-            alt="mirrormedia"
-            layout="responsive"
-            width={107}
-            height={45}
-          ></Image>
-        </HeaderLogo>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/">
+          <HeaderLogo />
+        </a>
         <GptAd />
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
@@ -210,14 +205,14 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           </SideBarButton>
         </ActionWrapper>
       </HeaderTop>
-      <HeaderNav>
+      <nav>
         <NavSections sections={sections} />
         <FlashNews flashNews={MOCK_DATA_FLASH_NEWS} />
         <NavBottom>
           <NavTopics topics={topics} />
           <SubscribeMagazine />
         </NavBottom>
-      </HeaderNav>
+      </nav>
     </HeaderWrapper>
   )
 }
