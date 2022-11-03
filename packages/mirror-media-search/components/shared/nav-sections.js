@@ -159,7 +159,7 @@ export default function NavSections({ sections }) {
             color={sectionColors[section.name]}
             className={section.name}
           >
-            <a href={`/section/${section.name}`}>
+            <a href={`${redirectUrl}/section/${section.name}`}>
               <h2>{section.title}</h2>
             </a>
             <SectionDropDown className="dropdown">
