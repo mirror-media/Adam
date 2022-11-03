@@ -18,8 +18,7 @@ FROM node:${NODE_VERSION}
 WORKDIR /app
 
 ENV NODE_ENV=production
-
-#COPY --from=build /build/public ./public
+COPY --from=build /build/public ./public
 COPY --from=build /build/.next ./.next
 
 COPY ["package.json", "yarn.lock", "./"]
