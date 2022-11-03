@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import { minWidth } from '../styles/media'
 
 const TopicsWrapper = styled.section`
   display: none;
-  @media ${minWidth.xl} {
+  ${({ theme }) => theme.breakpoint.xl} {
     display: flex;
     width: 100%;
     background: #1d9fb8;
@@ -12,12 +11,7 @@ const TopicsWrapper = styled.section`
     overflow: hidden;
   }
 `
-const Topics = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  width: 90%;
-  padding-left: 5px;
-`
+
 const Topic = styled.a`
   font-size: 16px;
   line-height: 29px;
@@ -31,20 +25,34 @@ const Topic = styled.a`
   display: list-item;
   list-style-type: disc;
 `
+const MoreTopic = styled(Topic)`
+  flex-grow: 1;
+  text-align: left;
+`
+const Topics = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: fit-content;
+  padding-left: 5px;
+  //only show 6 topic
+  ${Topic}:nth-child(n + 7) {
+    display: none;
+  }
+`
 
 export default function NavTopics({ topics }) {
   return (
     <TopicsWrapper>
       <Topics>
         {topics.map((topic) => (
-          <Topic key={topic._id} className="normal" href={`topic/${topic._id}`}>
+          <Topic key={topic._id} href={`topic/${topic._id}`}>
             <h2>{topic.name}</h2>
           </Topic>
         ))}
       </Topics>
-      <Topic className="more" href={`/section/topic`}>
+      <MoreTopic href={`/section/topic`}>
         <h2>更多</h2>
-      </Topic>
+      </MoreTopic>
     </TopicsWrapper>
   )
 }
