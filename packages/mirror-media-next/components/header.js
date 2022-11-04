@@ -3,15 +3,17 @@
 import styled from 'styled-components'
 import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../constants'
 import SubBrandList from './sub-brand-list'
-import SearchBar from './search-bar'
+import SearchBarDesktop from './search-bar-desktop'
 import PromotionLinks from './promotion-links'
 import NavSections from './nav-sections'
 import FlashNews from './flash-news'
 import NavTopics from './nav-topics'
 import SubscribeMagazine from './subscribe-magazine'
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import GptAd from './gpt-ad.js'
 import MemberLoginButton from './member-login-button'
+import SearchBarInput from './search-bar-input'
+
 import Logo from './logo'
 const MOCK_DATA_FLASH_NEWS = [
   {
@@ -106,6 +108,53 @@ const ActionWrapper = styled.div`
   align-items: center;
   z-index: 529;
 `
+const SearchButtonMobile = styled.button`
+  display: block;
+  &:focus {
+    border: none;
+    outline: none;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+const SearchInputMobile = styled(SearchBarInput)`
+  width: 100%;
+  border: unset;
+  margin: auto 15px;
+  input {
+    background-color: white;
+    &::placeholder {
+      color: rgba(188, 188, 188, 1);
+    }
+  }
+`
+
+const SearchInputWrapper = styled.div`
+  background-color: #f5f5f5;
+  display: flex;
+  align-content: center;
+  text-align: center;
+  ${
+    /**
+     * @param {{showSearchField:boolean}} props
+     */ ({ showSearchField }) =>
+      showSearchField ? 'height: 60px;' : 'height: 0px;'
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+
+  transition: height 0.5s ease-out;
+  ${SearchInputMobile} {
+    ${
+      /**
+       * @param {{showSearchField:boolean}} props
+       */ ({ showSearchField }) =>
+        showSearchField ? 'display:block' : 'display:none'
+    }
+  }
+`
 
 const SideBarButton = styled.button`
   user-select: none;
@@ -127,6 +176,7 @@ const SideBarButton = styled.button`
     display: none;
   }
 `
+
 const NavBottom = styled.div`
   display: flex;
 `
@@ -178,6 +228,48 @@ function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
  * @returns {React.ReactElement}
  */
 export default function Header({ sectionsData = [], topicsData = [] }) {
+  const [showSearchField, setShowSearchField] = useState(false)
+  const [searchTerms, setSearchTerms] = useState('')
+  const mobileSearchButtonRef = useRef(null)
+  const mobileSearchWrapperRef = useRef(null)
+
+  // If user click search button, will show/hide search field search input field.
+  // If user click outside of search input field, or outside of search button, will hide  search field if needed.
+  useEffect(() => {
+    const handleSearchFieldOpen = (/** @type {MouseEvent}*/ event) => {
+      if (
+        mobileSearchButtonRef.current &&
+        mobileSearchButtonRef.current.contains(event.target)
+      ) {
+        setShowSearchField((val) => !val)
+      } else if (
+        mobileSearchWrapperRef.current &&
+        !mobileSearchWrapperRef.current.contains(event.target)
+      ) {
+        setShowSearchField(false)
+      }
+    }
+    document.addEventListener('click', handleSearchFieldOpen, true)
+    return () => {
+      document.removeEventListener('click', handleSearchFieldOpen, true)
+    }
+  }, [mobileSearchButtonRef, mobileSearchWrapperRef, setShowSearchField])
+
+  const goSearch = () => {
+    /*
+      1. remove whitespace from both sides of a string
+      2. remove whitespace from both sides of any comma
+      3. replace whitespace bwtween two letters with a comma
+     */
+    const trimedSearchTerms = searchTerms
+      .trim()
+      .replace(/\s*,\s*/g, ',')
+      .replace(/\s+/g, ',')
+
+    if (trimedSearchTerms === '') return setSearchTerms('')
+    location.assign(`/search/${trimedSearchTerms}`)
+  }
+
   const sections =
     sectionsData
       .filter((section) => section.isFeatured)
@@ -195,7 +287,15 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
         <GptAd />
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
-          <SearchBar />
+          <SearchBarDesktop
+            searchTerms={searchTerms}
+            setSearchTerms={setSearchTerms}
+            goSearch={goSearch}
+          />
+          <SearchButtonMobile ref={mobileSearchButtonRef}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/search-button-mobile.svg" alt="search-button" />
+          </SearchButtonMobile>
           <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />
           <SideBarButton>
@@ -205,6 +305,23 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           </SideBarButton>
         </ActionWrapper>
       </HeaderTop>
+      <SearchInputWrapper
+        showSearchField={showSearchField}
+        ref={mobileSearchWrapperRef}
+      >
+        <SearchInputMobile
+          value={searchTerms}
+          onChange={(event) => {
+            setSearchTerms(event.target.value)
+          }}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              goSearch()
+            }
+          }}
+        />
+      </SearchInputWrapper>
+
       <nav>
         <NavSections sections={sections} />
         <FlashNews flashNews={MOCK_DATA_FLASH_NEWS} />

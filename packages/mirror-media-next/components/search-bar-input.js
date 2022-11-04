@@ -6,6 +6,7 @@ const SearchInputWrapper = styled.div`
   color: #1b1b1b;
   height: 34px;
   border: 0.5px solid rgba(0, 0, 0, 1);
+  width: fit-content;
   @media ${maxWidth.xl} {
     height: 32px;
     margin-top: 16px;
@@ -15,12 +16,11 @@ const SearchInputWrapper = styled.div`
 const SearchInput = styled.input`
   padding-left: 12px;
   padding-right: 12px;
-  width: 100%;
   height: 100%;
+  width: 100%;
   line-height: 34px;
   display: block;
   background-color: rgba(245, 245, 245, 1);
-  width: 247px;
   &::placeholder {
     color: #888;
   }
@@ -29,9 +29,14 @@ const SearchInput = styled.input`
   }
 `
 
-export default function SearchBarInput({ value, onChange, onKeyPress }) {
+export default function SearchBarInput({
+  value,
+  onChange,
+  onKeyPress,
+  className = '',
+}) {
   return (
-    <SearchInputWrapper>
+    <SearchInputWrapper className={className}>
       <SearchInput
         value={value}
         onChange={onChange}
