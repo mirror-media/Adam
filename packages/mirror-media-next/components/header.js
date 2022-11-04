@@ -1,7 +1,9 @@
 //TODO: replace <a> with <Link> from Nextjs for Single Page Application
 
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../constants'
+
 import SubBrandList from './sub-brand-list'
 import SearchBarDesktop from './search-bar-desktop'
 import PromotionLinks from './promotion-links'
@@ -9,11 +11,10 @@ import NavSections from './nav-sections'
 import FlashNews from './flash-news'
 import NavTopics from './nav-topics'
 import SubscribeMagazine from './subscribe-magazine'
-import React, { useState, useRef, useEffect } from 'react'
 import GptAd from './gpt-ad.js'
 import MemberLoginButton from './member-login-button'
 import SearchBarInput from './search-bar-input'
-
+import MobileSidebar from './mobile-sidebar'
 import Logo from './logo'
 const MOCK_DATA_FLASH_NEWS = [
   {
@@ -156,27 +157,6 @@ const SearchInputWrapper = styled.div`
   }
 `
 
-const SideBarButton = styled.button`
-  user-select: none;
-  display: block;
-  margin-left: 16px;
-
-  &:focus {
-    border: none;
-    outline: none;
-  }
-  div {
-    width: 16px;
-    height: 2px;
-    background-color: black;
-    margin: 2px 0;
-    border-radius: 12px;
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
-`
-
 const NavBottom = styled.div`
   display: flex;
 `
@@ -298,11 +278,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           </SearchButtonMobile>
           <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />
-          <SideBarButton>
-            <div></div>
-            <div></div>
-            <div></div>
-          </SideBarButton>
+          <MobileSidebar></MobileSidebar>
         </ActionWrapper>
       </HeaderTop>
       <SearchInputWrapper
