@@ -1,5 +1,7 @@
 import styled from 'styled-components'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
+import { sectionColors } from '../styles/sections-color'
+
 const SideBarButton = styled.button`
   user-select: none;
   display: block;
@@ -23,11 +25,21 @@ const SideBarButton = styled.button`
 const SideBar = styled.div`
   position: fixed;
   top: 0;
-  right: 0;
-  height: 100vh;
+  left: 0;
   width: 100%;
   background-color: #054f77;
-  z-index: 99999999;
+  padding: 24px;
+  height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+  z-index: 539;
+  overflow-y: auto;
+  ${({ theme }) => theme.breakpoint.md} {
+    width: 50%;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
   ${SideBarButton} {
     width: 28px;
     height: 28px;
@@ -39,7 +51,7 @@ const SideBar = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    div {
+    .close {
       border: 1px solid #fff;
       border-radius: 50%;
       height: 20px;
@@ -66,8 +78,77 @@ const SideBar = styled.div`
     }
   }
 `
-export default function MobileSidebar() {
+const Topics = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding-right: 19px;
+`
+const Topic = styled.a`
+  font-weight: 500;
+  color: #fff;
+  text-decoration: underline;
+`
+const Section = styled.button`
+  display: block;
+  width: 100%;
+  text-align: left;
+  color: #fff;
+  font-weight: 700;
+  position: relative;
+  padding: 12px 0 12px 20px;
+  border-bottom: 1px solid #fff;
+  &::before,
+  ::after {
+    display: block;
+    position: absolute;
+    content: '';
+  }
+  &::before {
+    top: 14px;
+    left: 0;
+    width: 8px;
+    height: 16px;
+    background-color: ${({ color }) => (color ? color : '#fff')};
+  }
+  &::after {
+    top: 14px;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10.4px 6px 0 6px;
+    border-color: #fff transparent transparent transparent;
+  }
+  &:focus {
+    outline: none;
+    &::after {
+      border-width: 6px 10.4px 6px 0;
+      border-color: transparent #fff transparent transparent;
+    }
+  }
+`
+const Categories = styled.div`
+  margin-top: 12px;
+  display: flex;
+  font-weight: 400;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  color: ${({ color }) => (color ? color : '#fff')};
+
+  a {
+    height: ${
+      /** @param {{shouldShowCategories: Boolean}} props */
+      ({ shouldShowCategories }) => (shouldShowCategories ? '21px' : '0')
+    };
+    opacity: ${({ shouldShowCategories }) =>
+      shouldShowCategories ? '1' : '0'};
+    transition: all 0.5s ease-in-out;
+  }
+`
+export default function MobileSidebar({ topics, sections }) {
   const [openSidebar, setOpenSidebar] = useState(false)
+  const [openSection, setOpenSection] = useState('')
   return (
     <>
       <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
@@ -77,14 +158,38 @@ export default function MobileSidebar() {
       </SideBarButton>
       {openSidebar && (
         <SideBar>
-          <button
-            className="close"
-            onClick={() => setOpenSidebar((val) => !val)}
-          >
-            <SideBarButton>
-              <div></div>
-            </SideBarButton>
-          </button>
+          <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
+            <div className="close"></div>
+          </SideBarButton>
+          <Topics>
+            {topics.map((topic) => (
+              <Topic href={`topic/${topic._id}`} key={topic._id}>
+                {topic.name}
+              </Topic>
+            ))}
+            <Topic href={`/section/topic`}>更多</Topic>
+          </Topics>
+          {sections.map(({ _id, title, categories, name }) => (
+            <Fragment key={_id}>
+              <Section
+                onClick={() => setOpenSection(name)}
+                color={sectionColors[name]}
+              >
+                {title}
+              </Section>
+
+              <Categories
+                shouldShowCategories={name === openSection}
+                color={sectionColors[name]}
+              >
+                {categories.map((category) => (
+                  <a key={category._id} href={`/category/${category.name}`}>
+                    {category.title}
+                  </a>
+                ))}
+              </Categories>
+            </Fragment>
+          ))}
         </SideBar>
       )}
     </>

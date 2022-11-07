@@ -255,7 +255,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
       .filter((section) => section.isFeatured)
       .map(filterOutIsMemberOnlyCategoriesInNormalSection) ?? []
   const topics =
-    topicsData.filter((topic) => topic.isFeatured).slice(0, 7) ?? []
+    topicsData.filter((topic) => topic.isFeatured).slice(0, 9) ?? []
 
   return (
     <HeaderWrapper>
@@ -278,7 +278,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           </SearchButtonMobile>
           <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />
-          <MobileSidebar></MobileSidebar>
+          <MobileSidebar topics={topics} sections={sections} />
         </ActionWrapper>
       </HeaderTop>
       <SearchInputWrapper
