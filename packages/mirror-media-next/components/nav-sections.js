@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { minWidth } from '../styles/media'
 import { sectionColors } from '../styles/sections-color'
 import Logo from './logo'
-const SectionsWrapper = styled.section`
+const SectionsWrapper = styled.nav`
   font-size: 14px;
   // to hide scrollbar
   overflow: hidden;

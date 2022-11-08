@@ -12,67 +12,11 @@ import SubBrandList from './sub-brand-list'
 import SearchBarDesktop from './search-bar-desktop'
 import PromotionLinks from './promotion-links'
 import NavSections from './nav-sections'
-import FlashNews from './flash-news'
-import NavTopics from './nav-topics'
-import SubscribeMagazine from './subscribe-magazine'
 import GptAd from './gpt-ad.js'
 import MemberLoginButton from './member-login-button'
 import SearchBarInput from './search-bar-input'
 import MobileSidebar from './mobile-sidebar'
 import Logo from './logo'
-const MOCK_DATA_FLASH_NEWS = [
-  {
-    slug: 'premium-test',
-    title: 'premium-test',
-    href: '/story/premium-test/',
-  },
-  {
-    slug: '20180120soc001',
-    title: '【吸金父子檔】這對父子太誇張　詐騙逾2億還「感謝上帝帶你進來」',
-    href: '/story/20180120soc001/',
-  },
-  {
-    slug: 'no-image',
-    title: '沒有首圖的會員文章-aa',
-    href: '/story/no-image/',
-  },
-  {
-    slug: 'test-story-slug',
-    title: 'Lighthouse 測試用文章',
-    href: '/story/test-story-slug/',
-  },
-  {
-    slug: '20191028ent006',
-    title: '【網紅星勢力】唱歌拉二胡還不夠　許貝貝、小黛比陪聊留人',
-    href: '/story/20191028ent006/',
-  },
-  {
-    slug: '20201118fin001_test',
-    title: '【理財最前線】捷運年底上路　台中北屯熱區買房攻略',
-    href: '/story/20201118fin001_test/',
-  },
-  {
-    slug: '20191125ent004',
-    title: '【網紅星勢力】模特兒當到見血　J寶金嗓召喚陳零九',
-    href: '/story/20191125ent004/',
-  },
-  {
-    slug: 'oscar-test',
-    title:
-      '【奧斯卡90】完整得獎名單　《水底情深》奪4大獎：最佳影片、最佳導演、最佳原創配樂及最佳藝術指導',
-    href: '/story/oscar-test/',
-  },
-  {
-    slug: 'testvideotitle2',
-    title: '測試影片與標題新格式',
-    href: '/story/testvideotitle2/',
-  },
-  {
-    slug: '20180129ent007',
-    title: '【搶鏡頭】潔西卡瞎忙　那裡沒露還遮',
-    href: '/story/20180129ent007/',
-  },
-]
 
 const HeaderWrapper = styled.div`
   background-color: rgba(255, 255, 255, 1);
@@ -87,9 +31,6 @@ const HeaderTop = styled.div`
   border-bottom: 3px solid black;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 21px 90px 20px;
-  }
-  .logo {
-    cursor: pointer;
   }
 `
 
@@ -161,9 +102,6 @@ const SearchInputWrapper = styled.div`
   }
 `
 
-const NavBottom = styled.div`
-  display: flex;
-`
 /**
  * Remove item from array `categories` if which is member only category.
  * @param {import('../type').Section} section
@@ -288,15 +226,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           }
         />
       </SearchInputWrapper>
-
-      <nav>
-        <NavSections sections={sections} />
-        <FlashNews flashNews={MOCK_DATA_FLASH_NEWS} />
-        <NavBottom>
-          <NavTopics topics={topics} />
-          <SubscribeMagazine />
-        </NavBottom>
-      </nav>
+      <NavSections sections={sections} />
     </HeaderWrapper>
   )
 }
