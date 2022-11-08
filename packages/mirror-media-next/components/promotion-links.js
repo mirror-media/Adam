@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import useClickOutside from '../hooks/useClickOutside'
 import moreIcon from '../public/images/more-black.png'
@@ -43,8 +43,13 @@ const Link = styled.a`
   display: block;
   padding: 8px 16px;
 `
-
-export default function PromotionLinks({ links, className = '' }) {
+/**
+ *
+ * @param {Object} props
+ * @param {import('../type').Promotion[]} props.links
+ * @returns {React.ReactElement}
+ */
+export default function PromotionLinks({ links }) {
   const [showLinks, setShowLinks] = useState(false)
   const moreLinksWrapperRef = useRef(null)
   useClickOutside(moreLinksWrapperRef, () => {
@@ -52,7 +57,7 @@ export default function PromotionLinks({ links, className = '' }) {
   })
 
   return (
-    <PromotionLinksWrapper ref={moreLinksWrapperRef} className={className}>
+    <PromotionLinksWrapper ref={moreLinksWrapperRef}>
       <PromotionLinksButton
         onClick={() => {
           setShowLinks((val) => !val)

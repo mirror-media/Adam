@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 
 const TopicsWrapper = styled.section`
@@ -40,6 +41,10 @@ const Topics = styled.div`
   }
 `
 
+/**
+ * @param {{topics: import('../type').Topic[] | []  }} props
+ * @returns {React.ReactElement}
+ */
 export default function NavTopics({ topics }) {
   return (
     <TopicsWrapper>

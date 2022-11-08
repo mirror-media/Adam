@@ -166,8 +166,8 @@ const NavBottom = styled.div`
 `
 /**
  * Remove item from array `categories` if which is member only category.
- * @param {Section} section
- * @returns {Section}
+ * @param {import('../type').Section} section
+ * @returns {import('../type').Section}
  */
 function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
   return {
@@ -180,35 +180,9 @@ function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
 }
 
 /**
- * @typedef {Object} BasicInfo - info of certain category/section/topic
- * @property {string} _id - id
- * @property {string} title - chinese name of category/section/topic
- * @property {string} name - english name of category/section/topic
- */
-
-/**
- * @typedef {Object} CategoryType
- * @property {boolean} isMemberOnly - whether this category belongs to the members area
- *
- * @typedef {BasicInfo & CategoryType} Category
- */
-
-/**
- * @typedef {Object} SectionType
- * @property {boolean} isFeatured - if true, should be selected and render
- * @property {Category[]} categories - categories which belong to certain section
- *
- * @typedef {BasicInfo & SectionType} Section
- */
-
-/**
- * @typedef {BasicInfo & {isFeatured: boolean} } Topic
- */
-
-/**
  * @param {Object} props
- * @param {Section[]} props.sectionsData
- * @param {Topic[]} props.topicsData
+ * @param {import('../type').Section[]} props.sectionsData
+ * @param {import('../type').Topic[]} props.topicsData
  * @returns {React.ReactElement}
  */
 export default function Header({ sectionsData = [], topicsData = [] }) {
@@ -258,6 +232,7 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
     sectionsData
       .filter((section) => section.isFeatured)
       .map(filterOutIsMemberOnlyCategoriesInNormalSection) ?? []
+
   const topics =
     topicsData.filter((topic) => topic.isFeatured).slice(0, 9) ?? []
 
@@ -297,14 +272,20 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
       >
         <SearchInputMobile
           value={searchTerms}
-          onChange={(event) => {
-            setSearchTerms(event.target.value)
-          }}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              goSearch()
+          onChange={
+            /** @param {React.ChangeEvent<HTMLInputElement>} event */
+            (event) => {
+              setSearchTerms(event.target.value)
             }
-          }}
+          }
+          onKeyPress={
+            /** @param {React.KeyboardEvent} e */
+            (e) => {
+              if (e.key === 'Enter') {
+                goSearch()
+              }
+            }
+          }
         />
       </SearchInputWrapper>
 

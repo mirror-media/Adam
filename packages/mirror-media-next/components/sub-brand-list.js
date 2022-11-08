@@ -23,7 +23,7 @@ const SubBrandIcon = styled.img`
 /**
  *
  * @param {Object} props
- * @param {Object[]} props.subBrands
+ * @param {import('../type').SubBrand[]} props.subBrands
  * @param {string} [props.className]
  * @returns
  */

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Fragment, useState, useRef } from 'react'
+import React, { Fragment, useState, useRef } from 'react'
 import { sectionColors } from '../styles/sections-color'
 import useClickOutside from '../hooks/useClickOutside'
 
@@ -151,7 +151,11 @@ const Categories = styled.div`
   color: ${({ color }) => (color ? color : '#fff')};
   margin-top: ${
     /** @param {{shouldShowCategories: Boolean}} props */
-    ({ shouldShowCategories }) => (shouldShowCategories ? '12px' : '0')
+    ({ shouldShowCategories }) => (shouldShowCategories ? '12px' : '0px')
+  };
+  gap: ${
+    /** @param {{shouldShowCategories: Boolean}} props */
+    ({ shouldShowCategories }) => (shouldShowCategories ? '4px 12px' : '0px')
   };
   transition: all 0.5s ease-in-out;
 
@@ -226,6 +230,16 @@ const SocialMediaList = styled.div`
     }
   }
 `
+/**
+ *
+ * @param {Object} props
+ * @param {import('../type').Topic[]} props.topics
+ * @param {import('../type').Section[]} props.sections
+ * @param {import('../type').SubBrand[]} props.subBrands
+ * @param {import('../type').Promotion[]} props.promotions
+ * @param {import('../type').SocialMedia[]} props.socialMedia
+ * @returns {React.ReactElement}
+ */
 export default function MobileSidebar({
   topics,
   sections,

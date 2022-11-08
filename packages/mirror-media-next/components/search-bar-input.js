@@ -1,3 +1,4 @@
+import React from 'react'
 import styled from 'styled-components'
 import { maxWidth } from '../styles/media'
 
@@ -28,7 +29,15 @@ const SearchInput = styled.input`
     border-radius: 8px;
   }
 `
-
+/**
+ *
+ * @param {Object} props
+ * @param {string} props.value
+ * @param {(event: React.ChangeEvent<HTMLInputElement>)=> void} props.onChange
+ * @param {(event: React.KeyboardEvent)=> void} props.onKeyPress
+ * @param {string} [props.className]
+ * @returns {React.ReactElement}
+ */
 export default function SearchBarInput({
   value,
   onChange,

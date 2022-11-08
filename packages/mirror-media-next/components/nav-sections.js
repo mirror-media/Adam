@@ -136,7 +136,10 @@ function getCategoryHref(sectionName, categoryName) {
   }
   return `/category/${categoryName}`
 }
-
+/**
+ * @param {{sections: import('../type').Section[] | []  }} props
+ * @returns {React.ReactElement}
+ */
 export default function NavSections({ sections }) {
   return (
     <SectionsWrapper>
