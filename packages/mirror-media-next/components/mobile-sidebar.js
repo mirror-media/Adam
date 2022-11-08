@@ -24,11 +24,13 @@ const SideBarButton = styled.button`
   }
 `
 const SideBar = styled.div`
+  display: flex;
+  flex-direction: column;
+
   position: fixed;
   top: 0;
   width: 100%;
   background-color: #054f77;
-  padding: 24px;
   height: 100vh;
   font-size: 14px;
   line-height: 1.5;
@@ -50,41 +52,44 @@ const SideBar = styled.div`
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }
-  ${SideBarButton} {
-    width: 28px;
-    height: 28px;
-    padding: 4px;
-    display: flex;
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    .close {
-      border: 1px solid #fff;
-      border-radius: 50%;
-      height: 20px;
-      width: 20px;
-      margin: 0 auto;
-      position: relative;
-      &:before,
-      :after {
-        position: absolute;
-        left: 8.5px;
-        top: 5px;
-        transform: translate(-50%, -50%);
-        content: ' ';
-        height: 8.5px;
-        width: 1.2px;
-        background-color: #fff;
-      }
-      &:before {
-        transform: rotate(45deg);
-      }
-      &:after {
-        transform: rotate(-45deg);
-      }
+`
+const CloseButton = styled.button`
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  display: flex;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  &:focus {
+    outline: none;
+  }
+  .close {
+    border: 1px solid #fff;
+    border-radius: 50%;
+    height: 20px;
+    width: 20px;
+    margin: 0 auto;
+    position: relative;
+    &:before,
+    :after {
+      position: absolute;
+      left: 8.5px;
+      top: 5px;
+      transform: translate(-50%, -50%);
+      content: ' ';
+      height: 8.5px;
+      width: 1.2px;
+      background-color: #fff;
+    }
+    &:before {
+      transform: rotate(45deg);
+    }
+    &:after {
+      transform: rotate(-45deg);
     }
   }
 `
@@ -162,16 +167,72 @@ const Categories = styled.div`
     transition: all 0.5s ease-in-out;
   }
 `
-
+const SideBarTop = styled.div`
+  padding: 24px;
+`
+const SideBarBottom = styled(SideBarTop)`
+  margin-top: auto;
+`
 const SubBrandList = styled.ul`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 45px;
   img {
     height: 19px;
   }
 `
-
-export default function MobileSidebar({ topics, sections, subBrands }) {
+const PromotionList = styled.ul`
+  display: flex;
+  color: #bcbcbc;
+  justify-content: start;
+  flex-wrap: wrap;
+  row-gap: 9px;
+  li {
+    min-width: 33.33%;
+  }
+`
+// The way to display social-media link is copied from mirror-media-nuxt,
+// should be refactor if has separate image of each social media.
+const SocialMediaList = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  background-color: #333333;
+  padding: 4.5px 24px;
+  img {
+    width: 20px;
+    height: 20px;
+    background-image: url(/images/social-media-white@2x.png);
+    display: block;
+    background-size: 126px 120px;
+    &.line {
+      background-position: -86px -80px;
+    }
+    &.weibo {
+      background-position: -66px -60px;
+    }
+    &.facebook {
+      background-position: -106px -100px;
+    }
+    &.instagram {
+      background-position: -46px -40px;
+    }
+    &.rss {
+      background-position: -26px -20px;
+    }
+    &.email {
+      width: 26px;
+      background-position: 0 0;
+    }
+  }
+`
+export default function MobileSidebar({
+  topics,
+  sections,
+  subBrands,
+  promotions,
+  socialMedia,
+}) {
   const [openSidebar, setOpenSidebar] = useState(false)
   const [openSection, setOpenSection] = useState('')
   const sideBarRef = useRef(null)
@@ -187,55 +248,78 @@ export default function MobileSidebar({ topics, sections, subBrands }) {
         <div className="hamburger"></div>
       </SideBarButton>
       <SideBar shouldShowSidebar={openSidebar} ref={sideBarRef}>
-        <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
-          <div className="close"></div>
-        </SideBarButton>
-        <Topics>
-          {topics.map((topic) => (
-            <Topic href={`topic/${topic._id}`} key={topic._id}>
-              {topic.name}
-            </Topic>
-          ))}
-          <Topic href={`/section/topic`}>更多</Topic>
-        </Topics>
-        {sections.map(({ _id, title, categories, name }) => (
-          <Fragment key={_id}>
-            <Section
-              onClick={() => setOpenSection(name)}
-              color={sectionColors[name]}
-            >
-              {title}
-            </Section>
-
-            <Categories
-              shouldShowCategories={name === openSection}
-              color={sectionColors[name]}
-            >
-              {categories.map((category) => (
-                <a key={category._id} href={`/category/${category.name}`}>
-                  {category.title}
-                </a>
-              ))}
-            </Categories>
-          </Fragment>
-        ))}
-        <SubBrandList>
-          {subBrands.map((brand) => (
-            <li key={brand.name}>
-              <a
-                href={brand.href}
-                target="_blank"
-                rel="noopener noreferer noreferrer"
+        <SideBarTop>
+          <CloseButton onClick={() => setOpenSidebar((val) => !val)}>
+            <div className="close"></div>
+          </CloseButton>
+          <Topics>
+            {topics.map((topic) => (
+              <Topic href={`topic/${topic._id}`} key={topic._id}>
+                {topic.name}
+              </Topic>
+            ))}
+            <Topic href={`/section/topic`}>更多</Topic>
+          </Topics>
+          {sections.map(({ _id, title, categories, name }) => (
+            <Fragment key={_id}>
+              <Section
+                onClick={() => setOpenSection(name)}
+                color={sectionColors[name]}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={`/images/${brand.name}-colorless.png`}
-                  alt={brand.title}
-                />
-              </a>
-            </li>
+                {title}
+              </Section>
+
+              <Categories
+                shouldShowCategories={name === openSection}
+                color={sectionColors[name]}
+              >
+                {categories.map((category) => (
+                  <a key={category._id} href={`/category/${category.name}`}>
+                    {category.title}
+                  </a>
+                ))}
+              </Categories>
+            </Fragment>
           ))}
-        </SubBrandList>
+        </SideBarTop>
+        <SideBarBottom>
+          <SubBrandList>
+            {subBrands.map((brand) => (
+              <li key={brand.name}>
+                <a
+                  href={brand.href}
+                  target="_blank"
+                  rel="noopener noreferer noreferrer"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={`/images/${brand.name}-colorless.png`}
+                    alt={brand.title}
+                  />
+                </a>
+              </li>
+            ))}
+          </SubBrandList>
+          <PromotionList>
+            {promotions.map((promotion) => (
+              <li key={promotion.name}>
+                <a href={promotion.href}>{promotion.title}</a>
+              </li>
+            ))}
+          </PromotionList>
+        </SideBarBottom>
+        <SocialMediaList>
+          {socialMedia.map(({ name, href }) => (
+            <a key={name} href={href}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className={name}
+                src="/images/transperent.png"
+                alt={name}
+              ></img>
+            </a>
+          ))}
+        </SocialMediaList>
       </SideBar>
     </>
   )

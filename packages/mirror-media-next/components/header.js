@@ -2,7 +2,11 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
-import { SUB_BRAND_LINKS, PROMOTION_LINKS } from '../constants'
+import {
+  SUB_BRAND_LINKS,
+  PROMOTION_LINKS,
+  SOCIAL_MEDIA_LINKS,
+} from '../constants'
 
 import SubBrandList from './sub-brand-list'
 import SearchBarDesktop from './search-bar-desktop'
@@ -282,6 +286,8 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
             topics={topics}
             sections={sections}
             subBrands={SUB_BRAND_LINKS}
+            promotions={PROMOTION_LINKS}
+            socialMedia={SOCIAL_MEDIA_LINKS}
           />
         </ActionWrapper>
       </HeaderTop>
