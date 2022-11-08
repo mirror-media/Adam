@@ -1,64 +1,17 @@
 //TODO: will fetch topic data twice (once in header, once in index),
 //should fetch only once by using Redux.
 
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
-import { API_TIMEOUT, URL_STATIC_COMBO_TOPICS } from '../config'
+import {
+  API_TIMEOUT,
+  URL_STATIC_COMBO_TOPICS,
+  API_PROTOCOL,
+  RESTFUL_API_HOST,
+  API_PORT,
+} from '../config'
 
-const MOCK_DATA_FLASH_NEWS = [
-  {
-    slug: 'premium-test',
-    title: 'premium-test',
-    href: '/story/premium-test/',
-  },
-  {
-    slug: '20180120soc001',
-    title: '【吸金父子檔】這對父子太誇張　詐騙逾2億還「感謝上帝帶你進來」',
-    href: '/story/20180120soc001/',
-  },
-  {
-    slug: 'no-image',
-    title: '沒有首圖的會員文章-aa',
-    href: '/story/no-image/',
-  },
-  {
-    slug: 'test-story-slug',
-    title: 'Lighthouse 測試用文章',
-    href: '/story/test-story-slug/',
-  },
-  {
-    slug: '20191028ent006',
-    title: '【網紅星勢力】唱歌拉二胡還不夠　許貝貝、小黛比陪聊留人',
-    href: '/story/20191028ent006/',
-  },
-  {
-    slug: '20201118fin001_test',
-    title: '【理財最前線】捷運年底上路　台中北屯熱區買房攻略',
-    href: '/story/20201118fin001_test/',
-  },
-  {
-    slug: '20191125ent004',
-    title: '【網紅星勢力】模特兒當到見血　J寶金嗓召喚陳零九',
-    href: '/story/20191125ent004/',
-  },
-  {
-    slug: 'oscar-test',
-    title:
-      '【奧斯卡90】完整得獎名單　《水底情深》奪4大獎：最佳影片、最佳導演、最佳原創配樂及最佳藝術指導',
-    href: '/story/oscar-test/',
-  },
-  {
-    slug: 'testvideotitle2',
-    title: '測試影片與標題新格式',
-    href: '/story/testvideotitle2/',
-  },
-  {
-    slug: '20180129ent007',
-    title: '【搶鏡頭】潔西卡瞎忙　那裡沒露還遮',
-    href: '/story/20180129ent007/',
-  },
-]
 import FlashNews from '../components/flash-news'
 import NavTopics from '../components/nav-topics'
 import SubscribeMagazine from '../components/subscribe-magazine'
@@ -77,9 +30,17 @@ const IndexTop = styled.div`
  *
  * @param {Object} props
  * @param {import('../type').Topic[]} props.topicsData
- * @returns
+ * @param {import('../type').FlashNews[]} props.flashNewsData
+ * @returns {React.ReactElement}
  */
-export default function Home({ topicsData = [] }) {
+export default function Home({ topicsData = [], flashNewsData = [] }) {
+  const flashNews = flashNewsData.map(({ slug, title }) => {
+    return {
+      title,
+      slug,
+      href: `/story/${slug}`,
+    }
+  })
   const topics = useMemo(
     () => topicsData.filter((topic) => topic.isFeatured).slice(0, 9) ?? [],
     [topicsData]
@@ -87,7 +48,7 @@ export default function Home({ topicsData = [] }) {
 
   return (
     <IndexContainer>
-      <FlashNews flashNews={MOCK_DATA_FLASH_NEWS} />
+      <FlashNews flashNews={flashNews} />
       <IndexTop>
         <NavTopics topics={topics} />
         <SubscribeMagazine />
@@ -96,33 +57,68 @@ export default function Home({ topicsData = [] }) {
   )
 }
 
+/**
+ * @typedef {Object[]} Items
+ */
+
+/**
+ * @typedef {Object} DataRes
+ * @property {Object} [_endpoints]
+ * @property {Object} [_endpoints.topics]
+ * @property {Items} [_endpoints.topics._items]
+ * @property {Object} [data]
+ * @property {Items} [data._items]
+ * @property {Object} _links
+ * @property {Object} _meta
+ */
+
+/** @typedef {import('axios').AxiosResponse<DataRes>} AxiosResponse */
+
 export async function getServerSideProps() {
   try {
-    const responses = await axios({
-      method: 'get',
-      url: URL_STATIC_COMBO_TOPICS,
-      timeout: API_TIMEOUT,
-    })
+    const responses = await Promise.allSettled([
+      axios({
+        method: 'get',
+        url: URL_STATIC_COMBO_TOPICS,
+        timeout: API_TIMEOUT,
+      }),
+      axios({
+        method: 'get',
+        url: `${API_PROTOCOL}://${RESTFUL_API_HOST}:${API_PORT}/api/v2/membership/v0/getposts?where={"categories":{"$in":["5979ac0de531830d00e330a7","5979ac33e531830d00e330a9","57e1e16dee85930e00cad4ec","57e1e200ee85930e00cad4f3"]},"isAudioSiteOnly":false}&clean=content&max_results=10&page=1&sort=-publishedDate`,
+        timeout: API_TIMEOUT,
+      }),
+    ])
+
+    /** @type {PromiseFulfilledResult<AxiosResponse>} */
+    const topicsResponse = responses[0].status === 'fulfilled' && responses[0]
+    /** @type {PromiseFulfilledResult<AxiosResponse>} */
+    const flashNewsResponse =
+      responses[1].status === 'fulfilled' && responses[1]
 
     const topicsData = Array.isArray(
-      responses?.data?._endpoints?.topics?._items
+      topicsResponse?.value?.data?._endpoints?.topics?._items
     )
-      ? responses?.data?._endpoints?.topics?._items
+      ? topicsResponse?.value?.data?._endpoints?.topics?._items
+      : []
+    const flashNewsData = Array.isArray(
+      flashNewsResponse.value?.data?.data?._items
+    )
+      ? flashNewsResponse?.value?.data?.data?._items
       : []
 
     console.log(
       JSON.stringify({
         severity: 'DEBUG',
-        message: `Successfully fetch topics from ${URL_STATIC_COMBO_TOPICS}`,
+        message: `Successfully fetch topics and flesh news`,
       })
     )
     return {
-      props: { topicsData },
+      props: { topicsData, flashNewsData },
     }
   } catch (error) {
     console.log(JSON.stringify({ severity: 'ERROR', message: error.stack }))
     return {
-      props: { topicsData: [] },
+      props: { topicsData: [], flashNewsData: [] },
     }
   }
 }

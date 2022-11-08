@@ -47,3 +47,10 @@ export default {}
  * @property {string} name - English name of SNS
  * @property {string} href - Url of SNS
  */
+
+/**
+ * @typedef {Object} FlashNews - info of certain flash news
+ * @property {string} title - title of flash news
+ * @property {string} href - path of flash news
+ * @property {string} slug - slug of flash news
+ */

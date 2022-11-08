@@ -113,10 +113,7 @@ const FlashNew = styled.a`
 `
 
 /**
- * @typedef {Object} FlashNews - info of certain flash news
- * @property {string} title - title of flash news
- * @property {string} href - path of flash news
- * @property {string} slug - slug of flash news
+ * @typedef {import('../type').FlashNews} FlashNews
  */
 
 /**
@@ -203,7 +200,7 @@ export default function FlashNews({ flashNews = [] }) {
         onTransitionEnd={handleTransitionEnd}
       >
         {displayedArticle.map((item) => (
-          <FlashNew href={item.href} key={item.href}>
+          <FlashNew href={item.href} key={item.slug}>
             <Title>快訊</Title>
             <p className="content"> {item.title}</p>
           </FlashNew>
