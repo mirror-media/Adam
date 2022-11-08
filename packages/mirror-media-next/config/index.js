@@ -1,7 +1,5 @@
 const URL_MIRROR_MEDIA =
   process.env.URL_MIRROR_MEDIA || 'https://www.mirrormedia.mg'
-const URL_STATIC_COMBO_SECTIONS =
-  'https://storage.googleapis.com/statics.mirrormedia.mg/json/sections.json'
 
 // The following variables are from environment variables
 
@@ -12,26 +10,38 @@ const API_HOST = process.env.API_HOST || 'no-api-host'
 
 // The following variables are given values according to different `ENV`
 let API_TIMEOUT = 5000
+let URL_STATIC_COMBO_SECTIONS = ''
+let URL_STATIC_COMBO_TOPICS = ''
 
 switch (ENV) {
   case 'prod':
     API_TIMEOUT = 1500
-    break
+    URL_STATIC_COMBO_SECTIONS =
+      'https://storage.googleapis.com/statics.mirrormedia.mg/json/sections.json'
+    URL_STATIC_COMBO_TOPICS = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/combo?endpoint=topics`
   case 'staging':
     API_TIMEOUT = 1500
+    URL_STATIC_COMBO_SECTIONS =
+      'https://storage.googleapis.com/statics.mirrormedia.mg/json/sections.json'
+    URL_STATIC_COMBO_TOPICS = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/combo?endpoint=topics`
+
     break
   case 'dev':
     API_TIMEOUT = 5000
+    URL_STATIC_COMBO_SECTIONS =
+      'https://storage.googleapis.com/statics.mirrormedia.mg/json/sections.json'
+    URL_STATIC_COMBO_TOPICS = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/combo?endpoint=topics`
+
     break
   default:
     API_TIMEOUT = 5000
+    URL_STATIC_COMBO_SECTIONS = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/json/sections.json`
+    URL_STATIC_COMBO_TOPICS = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/api/v2/combo?endpoint=topics`
 }
 
 export {
   URL_MIRROR_MEDIA,
   URL_STATIC_COMBO_SECTIONS,
+  URL_STATIC_COMBO_TOPICS,
   API_TIMEOUT,
-  API_PROTOCOL,
-  API_HOST,
-  API_PORT,
 }

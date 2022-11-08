@@ -6,10 +6,8 @@ import Layout from '../components/layout'
 import axios from 'axios'
 import {
   URL_STATIC_COMBO_SECTIONS,
+  URL_STATIC_COMBO_TOPICS,
   API_TIMEOUT,
-  API_PROTOCOL,
-  API_HOST,
-  API_PORT,
 } from '../config'
 
 /**
@@ -64,7 +62,7 @@ MyApp.getInitialProps = async () => {
       }),
       axios({
         method: 'get',
-        url: `${API_PROTOCOL}://${API_HOST}:${API_PORT}/combo?endpoint=topics`,
+        url: URL_STATIC_COMBO_TOPICS,
         timeout: API_TIMEOUT,
       }),
     ])
@@ -86,7 +84,7 @@ MyApp.getInitialProps = async () => {
     console.log(
       JSON.stringify({
         severity: 'DEBUG',
-        message: `Successfully fetch sections and topics from ${URL_STATIC_COMBO_SECTIONS} and ${API_PROTOCOL}://${API_HOST}:${API_PORT}/combo?endpoint=topics`,
+        message: `Successfully fetch sections and topics from ${URL_STATIC_COMBO_SECTIONS} and ${URL_STATIC_COMBO_TOPICS}`,
       })
     )
     return {
