@@ -163,7 +163,15 @@ const Categories = styled.div`
   }
 `
 
-export default function MobileSidebar({ topics, sections }) {
+const SubBrandList = styled.ul`
+  display: flex;
+  justify-content: space-between;
+  img {
+    height: 19px;
+  }
+`
+
+export default function MobileSidebar({ topics, sections, subBrands }) {
   const [openSidebar, setOpenSidebar] = useState(false)
   const [openSection, setOpenSection] = useState('')
   const sideBarRef = useRef(null)
@@ -211,6 +219,23 @@ export default function MobileSidebar({ topics, sections }) {
             </Categories>
           </Fragment>
         ))}
+        <SubBrandList>
+          {subBrands.map((brand) => (
+            <li key={brand.name}>
+              <a
+                href={brand.href}
+                target="_blank"
+                rel="noopener noreferer noreferrer"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/images/${brand.name}-colorless.png`}
+                  alt={brand.title}
+                />
+              </a>
+            </li>
+          ))}
+        </SubBrandList>
       </SideBar>
     </>
   )

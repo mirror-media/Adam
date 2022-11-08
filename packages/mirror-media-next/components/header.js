@@ -278,7 +278,11 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           </SearchButtonMobile>
           <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />
-          <MobileSidebar topics={topics} sections={sections} />
+          <MobileSidebar
+            topics={topics}
+            sections={sections}
+            subBrands={SUB_BRAND_LINKS}
+          />
         </ActionWrapper>
       </HeaderTop>
       <SearchInputWrapper
