@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useRef } from 'react'
 import { sectionColors } from '../styles/sections-color'
+import useClickOutside from '../hooks/useClickOutside'
 
 const SideBarButton = styled.button`
   user-select: none;
@@ -25,7 +26,6 @@ const SideBarButton = styled.button`
 const SideBar = styled.div`
   position: fixed;
   top: 0;
-  left: 0;
   width: 100%;
   background-color: #054f77;
   padding: 24px;
@@ -34,8 +34,18 @@ const SideBar = styled.div`
   line-height: 1.5;
   z-index: 539;
   overflow-y: auto;
+  left: ${
+    /** @param {{shouldShowSidebar: Boolean}} props */
+    ({ shouldShowSidebar }) => (shouldShowSidebar ? '0' : '-100%')
+  };
+  transition: left 0.5s ease-in-out;
+
   ${({ theme }) => theme.breakpoint.md} {
-    width: 50%;
+    width: 320px;
+    left: ${
+      /** @param {{shouldShowSidebar: Boolean}} props */
+      ({ shouldShowSidebar }) => (shouldShowSidebar ? '0' : '-100%')
+    };
   }
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
@@ -129,26 +139,38 @@ const Section = styled.button`
   }
 `
 const Categories = styled.div`
-  margin-top: 12px;
   display: flex;
   font-weight: 400;
   flex-wrap: wrap;
   gap: 4px 12px;
   color: ${({ color }) => (color ? color : '#fff')};
+  margin-top: ${
+    /** @param {{shouldShowCategories: Boolean}} props */
+    ({ shouldShowCategories }) => (shouldShowCategories ? '12px' : '0')
+  };
+  transition: all 0.5s ease-in-out;
 
   a {
     height: ${
       /** @param {{shouldShowCategories: Boolean}} props */
       ({ shouldShowCategories }) => (shouldShowCategories ? '21px' : '0')
     };
+    visibility: ${({ shouldShowCategories }) =>
+      shouldShowCategories ? 'visible' : 'hidden'};
     opacity: ${({ shouldShowCategories }) =>
       shouldShowCategories ? '1' : '0'};
     transition: all 0.5s ease-in-out;
   }
 `
+
 export default function MobileSidebar({ topics, sections }) {
   const [openSidebar, setOpenSidebar] = useState(false)
   const [openSection, setOpenSection] = useState('')
+  const sideBarRef = useRef(null)
+  useClickOutside(sideBarRef, () => {
+    setOpenSidebar(false)
+  })
+
   return (
     <>
       <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
@@ -156,42 +178,40 @@ export default function MobileSidebar({ topics, sections }) {
         <div className="hamburger"></div>
         <div className="hamburger"></div>
       </SideBarButton>
-      {openSidebar && (
-        <SideBar>
-          <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
-            <div className="close"></div>
-          </SideBarButton>
-          <Topics>
-            {topics.map((topic) => (
-              <Topic href={`topic/${topic._id}`} key={topic._id}>
-                {topic.name}
-              </Topic>
-            ))}
-            <Topic href={`/section/topic`}>更多</Topic>
-          </Topics>
-          {sections.map(({ _id, title, categories, name }) => (
-            <Fragment key={_id}>
-              <Section
-                onClick={() => setOpenSection(name)}
-                color={sectionColors[name]}
-              >
-                {title}
-              </Section>
-
-              <Categories
-                shouldShowCategories={name === openSection}
-                color={sectionColors[name]}
-              >
-                {categories.map((category) => (
-                  <a key={category._id} href={`/category/${category.name}`}>
-                    {category.title}
-                  </a>
-                ))}
-              </Categories>
-            </Fragment>
+      <SideBar shouldShowSidebar={openSidebar} ref={sideBarRef}>
+        <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
+          <div className="close"></div>
+        </SideBarButton>
+        <Topics>
+          {topics.map((topic) => (
+            <Topic href={`topic/${topic._id}`} key={topic._id}>
+              {topic.name}
+            </Topic>
           ))}
-        </SideBar>
-      )}
+          <Topic href={`/section/topic`}>更多</Topic>
+        </Topics>
+        {sections.map(({ _id, title, categories, name }) => (
+          <Fragment key={_id}>
+            <Section
+              onClick={() => setOpenSection(name)}
+              color={sectionColors[name]}
+            >
+              {title}
+            </Section>
+
+            <Categories
+              shouldShowCategories={name === openSection}
+              color={sectionColors[name]}
+            >
+              {categories.map((category) => (
+                <a key={category._id} href={`/category/${category.name}`}>
+                  {category.title}
+                </a>
+              ))}
+            </Categories>
+          </Fragment>
+        ))}
+      </SideBar>
     </>
   )
 }
