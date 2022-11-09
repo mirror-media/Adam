@@ -7,9 +7,7 @@ import axios from 'axios'
 import {
   API_TIMEOUT,
   URL_STATIC_COMBO_TOPICS,
-  API_PROTOCOL,
-  RESTFUL_API_HOST,
-  API_PORT,
+  URL_K3_FLASH_NEWS,
 } from '../config'
 
 import FlashNews from '../components/flash-news'
@@ -83,7 +81,7 @@ export async function getServerSideProps() {
       }),
       axios({
         method: 'get',
-        url: `${API_PROTOCOL}://${RESTFUL_API_HOST}:${API_PORT}/api/v2/getposts?where={"categories":{"$in":["5979ac0de531830d00e330a7","5979ac33e531830d00e330a9","57e1e16dee85930e00cad4ec","57e1e200ee85930e00cad4f3"]},"isAudioSiteOnly":false}&clean=content&max_results=10&page=1&sort=-publishedDate`,
+        url: URL_K3_FLASH_NEWS,
         timeout: API_TIMEOUT,
       }),
     ])
@@ -105,7 +103,7 @@ export async function getServerSideProps() {
     console.log(
       JSON.stringify({
         severity: 'DEBUG',
-        message: `Successfully fetch topics and flesh news`,
+        message: `Successfully fetch topics and flesh news from ${URL_STATIC_COMBO_TOPICS} and ${URL_K3_FLASH_NEWS}`,
       })
     )
     return {
