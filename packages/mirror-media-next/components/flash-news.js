@@ -200,9 +200,9 @@ export default function FlashNews({ flashNews = [] }) {
         onTransitionEnd={handleTransitionEnd}
       >
         {displayedArticle.map((item) => (
-          <FlashNew href={item.href} key={item.slug}>
+          <FlashNew href={item?.href} key={item?.slug}>
             <Title>快訊</Title>
-            <p className="content"> {item.title}</p>
+            <p className="content"> {item?.title}</p>
           </FlashNew>
         ))}
       </FlashNewsList>

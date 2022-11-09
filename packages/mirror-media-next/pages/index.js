@@ -66,8 +66,7 @@ export default function Home({ topicsData = [], flashNewsData = [] }) {
  * @property {Object} [_endpoints]
  * @property {Object} [_endpoints.topics]
  * @property {Items} [_endpoints.topics._items]
- * @property {Object} [data]
- * @property {Items} [data._items]
+ * @property {Items} [_items]
  * @property {Object} _links
  * @property {Object} _meta
  */
@@ -84,7 +83,7 @@ export async function getServerSideProps() {
       }),
       axios({
         method: 'get',
-        url: `${API_PROTOCOL}://${RESTFUL_API_HOST}:${API_PORT}/api/v2/membership/v0/getposts?where={"categories":{"$in":["5979ac0de531830d00e330a7","5979ac33e531830d00e330a9","57e1e16dee85930e00cad4ec","57e1e200ee85930e00cad4f3"]},"isAudioSiteOnly":false}&clean=content&max_results=10&page=1&sort=-publishedDate`,
+        url: `${API_PROTOCOL}://${RESTFUL_API_HOST}:${API_PORT}/api/v2/getposts?where={"categories":{"$in":["5979ac0de531830d00e330a7","5979ac33e531830d00e330a9","57e1e16dee85930e00cad4ec","57e1e200ee85930e00cad4f3"]},"isAudioSiteOnly":false}&clean=content&max_results=10&page=1&sort=-publishedDate`,
         timeout: API_TIMEOUT,
       }),
     ])
@@ -94,16 +93,13 @@ export async function getServerSideProps() {
     /** @type {PromiseFulfilledResult<AxiosResponse>} */
     const flashNewsResponse =
       responses[1].status === 'fulfilled' && responses[1]
-
     const topicsData = Array.isArray(
       topicsResponse?.value?.data?._endpoints?.topics?._items
     )
       ? topicsResponse?.value?.data?._endpoints?.topics?._items
       : []
-    const flashNewsData = Array.isArray(
-      flashNewsResponse.value?.data?.data?._items
-    )
-      ? flashNewsResponse?.value?.data?.data?._items
+    const flashNewsData = Array.isArray(flashNewsResponse.value?.data?._items)
+      ? flashNewsResponse.value?.data?._items
       : []
 
     console.log(
