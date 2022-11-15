@@ -20,16 +20,23 @@ import Logo from './logo'
 
 const HeaderWrapper = styled.div`
   background-color: rgba(255, 255, 255, 1);
-  max-width: 1200px;
+  max-width: 596px;
   margin: 0 auto;
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 1200px;
+  }
 `
 const HeaderTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 21px 8px 20px;
-  border-bottom: 3px solid black;
+
   ${({ theme }) => theme.breakpoint.md} {
+    padding: 21px 8px 20px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    border-bottom: 3px solid black;
     padding: 21px 90px 20px;
   }
 `

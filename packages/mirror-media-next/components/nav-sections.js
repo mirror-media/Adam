@@ -1,6 +1,6 @@
 //TODO: When user at certain section, at category which belongs to certain section, at story which belongs to certain section
 //component <Section> will change color of title to section color defined at /styles/sections-color.
-
+//TODO: Replace <a> to <Link> for Single Page Application
 import styled from 'styled-components'
 import { minWidth } from '../styles/media'
 import { sectionColors } from '../styles/sections-color'
@@ -21,12 +21,11 @@ const SectionsWrapper = styled.nav`
 const Sections = styled.ul`
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
-  max-width: 1024px;
-  width: fit-content;
+  justify-content: space-between;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
-
+  padding: 0 8px;
   // to hide scrollbar
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
@@ -36,17 +35,19 @@ const Sections = styled.ul`
     width: 0;
     height: 0;
   }
-  @media ${minWidth.xl} {
+  @media ${minWidth.md} {
     width: 100%;
+    justify-content: space-between;
+    padding: 0;
+  }
+  @media ${minWidth.xl} {
     height: auto;
-    justify-content: center;
     overflow: visible;
   }
 `
 const Section = styled.li`
   flex: 0 0 auto;
   position: relative;
-  width: fit-content;
   cursor: pointer;
   user-select: none;
   line-height: 1.15;
@@ -54,22 +55,17 @@ const Section = styled.li`
 
   @media ${minWidth.xl} {
     line-height: 150%;
+    flex-shrink: 1;
+    width: 100%;
     min-width: calc(100% / 11);
   }
-
-  &.member {
-    @media ${minWidth.xl} {
-      background: #000000;
-      color: #fff;
-    }
-  }
-
   &:hover {
     ${({ color }) => color && `color: ${color}`}
   }
 `
 const SectionLink = styled.a`
   display: block;
+  width: 100%;
   font-weight: 700;
   padding: 7px 6px 5px 6px;
   @media ${minWidth.xl} {
@@ -77,26 +73,17 @@ const SectionLink = styled.a`
   }
 `
 
-const SectionLogo = styled(Logo)`
+const LogoIcon = styled(Logo)`
   width: 49px;
   height: 20.72px;
   @media ${minWidth.md} {
     display: none;
   }
 `
-const SectionLinkLogo = styled(SectionLink)`
+const SectionLogo = styled(Section)`
   padding-top: 3px;
   @media ${minWidth.md} {
-    padding-top: 7px;
-  }
-  @media ${minWidth.xl} {
-    padding-top: 9px;
-  }
-  h2 {
     display: none;
-    @media ${minWidth.md} {
-      display: block;
-    }
   }
 `
 
@@ -118,13 +105,13 @@ const SectionDropDown = styled.div`
 `
 const CategoryLink = styled.a`
   display: block;
-  line-height: 1.3;
-  padding: 7px 11px 5px 11px;
+  font-size: 16px;
+  line-height: 1.5;
   &:hover {
     ${({ color }) => color && `color: ${color};`}
   }
   @media ${minWidth.xl} {
-    padding: 9px 14px 9px 14px;
+    padding: 8px 14px 8px 14px;
   }
 `
 function getCategoryHref(sectionName, categoryName) {
@@ -144,12 +131,12 @@ export default function NavSections({ sections }) {
   return (
     <SectionsWrapper>
       <Sections>
-        <Section>
-          <SectionLinkLogo href="/">
-            <h2>首頁</h2>
-            <SectionLogo />
-          </SectionLinkLogo>
-        </Section>
+        <SectionLogo>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/">
+            <LogoIcon />
+          </a>
+        </SectionLogo>
         {sections.map((section) => (
           <Section
             key={section._id}
