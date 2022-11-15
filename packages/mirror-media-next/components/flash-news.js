@@ -8,6 +8,7 @@ const FlashNewsWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  margin: 0 auto;
   overflow: hidden;
   height: 21px;
   font-size: 12px;
@@ -15,7 +16,7 @@ const FlashNewsWrapper = styled.div`
   font-weight: 600;
   color: #054f77;
   ${({ theme }) => theme.breakpoint.xl} {
-    height: 31px;
+    height: 36px;
     font-size: 16px;
   }
 `
@@ -96,8 +97,7 @@ const FlashNewsList = styled.div`
 
 const FlashNew = styled.a`
   display: flex;
-  line-height: 1.75em;
-
+  padding: 2px 0 2px;
   .content {
     width: 100%;
     white-space: nowrap;
@@ -105,10 +105,7 @@ const FlashNew = styled.a`
     overflow: hidden;
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    line-height: 2em;
-    .content {
-      //set margin to activate truncate
-    }
+    padding: 6px 0 6px;
   }
 `
 
@@ -200,7 +197,12 @@ export default function FlashNews({ flashNews = [] }) {
         onTransitionEnd={handleTransitionEnd}
       >
         {displayedArticle.map((item) => (
-          <FlashNew href={item?.href} key={item?.slug}>
+          <FlashNew
+            href={item?.href}
+            key={item?.slug}
+            target="_blank"
+            rel="noreferrer noopenner"
+          >
             <Title>快訊</Title>
             <p className="content"> {item?.title}</p>
           </FlashNew>

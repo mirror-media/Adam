@@ -16,7 +16,11 @@ import SubscribeMagazine from '../components/subscribe-magazine'
 
 const IndexContainer = styled.main`
   background-color: rgba(255, 255, 255, 1);
-  max-width: 1200px;
+  max-width: 596px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 1024px;
+  }
   margin: 0 auto;
 `
 

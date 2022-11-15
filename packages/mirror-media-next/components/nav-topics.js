@@ -26,10 +26,7 @@ const Topic = styled.a`
   display: list-item;
   list-style-type: disc;
 `
-const MoreTopic = styled(Topic)`
-  flex-grow: 1;
-  text-align: left;
-`
+
 const Topics = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -55,9 +52,9 @@ export default function NavTopics({ topics }) {
           </Topic>
         ))}
       </Topics>
-      <MoreTopic href={`/section/topic`}>
+      <Topic href={`/section/topic`}>
         <h2>更多</h2>
-      </MoreTopic>
+      </Topic>
     </TopicsWrapper>
   )
 }
