@@ -50,11 +50,6 @@ const AD_LINK = {
   title: '廣告合作',
   href: 'https://www.mirrormedia.mg/story/ad1018001/index.html',
 }
-const CAMPAIGN_LINK = {
-  name: 'campaign',
-  title: '活動專區',
-  href: 'https://www.mirrormedia.mg/category/campaign',
-}
 
 const DOWNLOAD_APP_LINK = {
   name: 'download',
@@ -70,7 +65,6 @@ const PROMOTION_LINKS = [
   MAGAZINE_LINK,
   AUTH_LINK,
   AD_LINK,
-  CAMPAIGN_LINK,
   DOWNLOAD_APP_LINK,
   MEDIA_DISCIPLINE_LINK,
 ]
