@@ -23,15 +23,15 @@ const SideBarButton = styled.button`
     display: none;
   }
 `
-const SideBar = styled.div`
+const SideBar = styled.section`
   display: flex;
   flex-direction: column;
 
   position: fixed;
   top: 0;
   width: 100%;
+  height: 100%;
   background-color: #054f77;
-  height: 100vh;
   font-size: 14px;
   line-height: 1.5;
   z-index: 539;
@@ -54,8 +54,8 @@ const SideBar = styled.div`
   }
 `
 const CloseButton = styled.button`
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   padding: 4px;
   display: flex;
   position: absolute;
@@ -72,7 +72,7 @@ const CloseButton = styled.button`
     border-radius: 50%;
     height: 20px;
     width: 20px;
-    margin: 0 auto;
+    margin: 0 5px 0 0;
     position: relative;
     &:before,
     :after {
@@ -264,7 +264,7 @@ export default function MobileSidebar({
       <SideBar shouldShowSidebar={openSidebar} ref={sideBarRef}>
         <SideBarTop>
           <CloseButton onClick={() => setOpenSidebar((val) => !val)}>
-            <div className="close"></div>
+            <i className="close"></i>
           </CloseButton>
           <Topics>
             {topics.map((topic) => (
@@ -324,7 +324,12 @@ export default function MobileSidebar({
         </SideBarBottom>
         <SocialMediaList>
           {socialMedia.map(({ name, href }) => (
-            <a key={name} href={href}>
+            <a
+              key={name}
+              href={href}
+              target="_blank"
+              rel="noreferrer noopenner"
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={name}
