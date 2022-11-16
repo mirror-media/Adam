@@ -20,17 +20,15 @@ import Logo from './logo'
 
 const HeaderWrapper = styled.div`
   background-color: rgba(255, 255, 255, 1);
-  max-width: 596px;
   margin: 0 auto;
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 1200px;
-  }
 `
 const HeaderTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 21px 8px 20px;
+  max-width: 596px;
+  margin: 0 auto;
 
   ${({ theme }) => theme.breakpoint.md} {
     padding: 21px 8px 20px;
@@ -38,9 +36,16 @@ const HeaderTop = styled.div`
   ${({ theme }) => theme.breakpoint.xl} {
     border-bottom: 3px solid black;
     padding: 21px 90px 20px;
+    max-width: 1200px;
   }
 `
-
+const HeaderBottom = styled.div`
+  max-width: 596px;
+  margin: 0 auto;
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 1024px;
+  }
+`
 const HeaderLogo = styled(Logo)`
   display: none;
   ${({ theme }) => theme.breakpoint.md} {
@@ -211,29 +216,31 @@ export default function Header({ sectionsData = [], topicsData = [] }) {
           />
         </ActionWrapper>
       </HeaderTop>
-      <SearchInputWrapper
-        showSearchField={showSearchField}
-        ref={mobileSearchWrapperRef}
-      >
-        <SearchInputMobile
-          value={searchTerms}
-          onChange={
-            /** @param {React.ChangeEvent<HTMLInputElement>} event */
-            (event) => {
-              setSearchTerms(event.target.value)
-            }
-          }
-          onKeyPress={
-            /** @param {React.KeyboardEvent} e */
-            (e) => {
-              if (e.key === 'Enter') {
-                goSearch()
+      <HeaderBottom>
+        <SearchInputWrapper
+          showSearchField={showSearchField}
+          ref={mobileSearchWrapperRef}
+        >
+          <SearchInputMobile
+            value={searchTerms}
+            onChange={
+              /** @param {React.ChangeEvent<HTMLInputElement>} event */
+              (event) => {
+                setSearchTerms(event.target.value)
               }
             }
-          }
-        />
-      </SearchInputWrapper>
-      <NavSections sections={sections} />
+            onKeyPress={
+              /** @param {React.KeyboardEvent} e */
+              (e) => {
+                if (e.key === 'Enter') {
+                  goSearch()
+                }
+              }
+            }
+          />
+        </SearchInputWrapper>
+        <NavSections sections={sections} />
+      </HeaderBottom>
     </HeaderWrapper>
   )
 }

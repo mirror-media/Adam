@@ -7,12 +7,13 @@ import { sectionColors } from '../styles/sections-color'
 import Logo from './logo'
 const SectionsWrapper = styled.nav`
   font-size: 14px;
+  line-height: 1.5;
   // to hide scrollbar
   overflow: hidden;
   width: 100%;
   margin: 0 auto 8px;
   @media ${minWidth.xl} {
-    font-size: 20px;
+    font-size: 16px;
     height: auto;
     overflow: visible;
     margin-bottom: 10px;
@@ -58,6 +59,10 @@ const Section = styled.li`
     flex-shrink: 1;
     width: 100%;
     min-width: calc(100% / 11);
+    &.member {
+      color: #fff;
+      background-color: #000000;
+    }
   }
   &:hover {
     ${({ color }) => color && `color: ${color}`}
@@ -105,8 +110,6 @@ const SectionDropDown = styled.div`
 `
 const CategoryLink = styled.a`
   display: block;
-  font-size: 16px;
-  line-height: 1.5;
   &:hover {
     ${({ color }) => color && `color: ${color};`}
   }
