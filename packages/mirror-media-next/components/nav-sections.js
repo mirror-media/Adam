@@ -12,6 +12,8 @@ const SectionsWrapper = styled.nav`
   overflow: hidden;
   width: 100%;
   margin: 0 auto 8px;
+  display: flex;
+  gap: 10px;
   @media ${minWidth.xl} {
     font-size: 16px;
     height: auto;
@@ -26,7 +28,7 @@ const Sections = styled.ul`
   width: 100%;
   margin: 0 auto;
   text-align: center;
-  padding: 0 8px;
+  padding: 0;
   // to hide scrollbar
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
@@ -39,7 +41,6 @@ const Sections = styled.ul`
   @media ${minWidth.md} {
     width: 100%;
     justify-content: space-between;
-    padding: 0;
   }
   @media ${minWidth.xl} {
     height: auto;
@@ -85,8 +86,10 @@ const LogoIcon = styled(Logo)`
     display: none;
   }
 `
-const SectionLogo = styled(Section)`
-  padding-top: 3px;
+const SectionLogo = styled.div`
+  background-color: #fff;
+
+  padding: 4px 0 4px 8px;
   @media ${minWidth.md} {
     display: none;
   }
@@ -133,13 +136,13 @@ function getCategoryHref(sectionName, categoryName) {
 export default function NavSections({ sections }) {
   return (
     <SectionsWrapper>
+      <SectionLogo>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/">
+          <LogoIcon />
+        </a>
+      </SectionLogo>
       <Sections>
-        <SectionLogo>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a href="/">
-            <LogoIcon />
-          </a>
-        </SectionLogo>
         {sections.map((section) => (
           <Section
             key={section._id}
