@@ -22,7 +22,7 @@ const FlashNewsWrapper = styled.div`
 `
 
 const Title = styled.div`
-  width: 40px;
+  width: 45px;
   text-align: center;
   background-color: #054f77;
   color: white;
@@ -97,7 +97,7 @@ const FlashNewsList = styled.div`
 
 const FlashNew = styled.a`
   display: flex;
-  padding: 2px 0 2px;
+  line-height: 1.75em;
   .content {
     width: 100%;
     white-space: nowrap;
@@ -105,7 +105,7 @@ const FlashNew = styled.a`
     overflow: hidden;
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    padding: 6px 0 6px;
+    padding: 4px 0 4px;
   }
 `
 
