@@ -137,7 +137,7 @@ export default function EditorChoice({ editorChoice }) {
                 rel="noreferrer noopenner"
               >
                 <img
-                  src={item.imgSrc || '/images/default-og-img.png'}
+                  src={item.imgSrcTablet || '/images/default-og-img.png'}
                   alt={item.title}
                 ></img>
 

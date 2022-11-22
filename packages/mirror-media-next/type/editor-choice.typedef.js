@@ -85,20 +85,35 @@ export default {}
  */
 
 /**
- * @typedef {Object} EditorChoiceRawData - information of certain editor choices article
+ * @typedef {'article'| 'wide' | 'projects' | 'photography' | 'script' | 'campaign' | 'readr'} ArticleStyle
+ */
+
+/**
+ * @typedef {Object} EditorChoiceRawData - raw data property of editor choices article
  * @property {Object} brief - short content of article
  * @property {ApiData[]} brief.apiData - api Data of article
  * @property {Draft} brief.draft - unknown usage
  * @property {String} brief.html - short content of article which included html tag.
  * @property {Category[]} categories - which categories does this article belong to
  * @property {HeroImage} heroImage - information of hero image in article
- * @property {String} partner - unknown usage
+ * @property {Object | ""} partner - if is Object, then is made by external partner. if is empty string, then is not external partner.
  * @property {String} publishedDate - article publish date
- * @property {String} redirect - redirect url, if this property is not empty string, that means should redirect to other url when user enter
+ * @property {String} redirect - redirect url, if this property is not empty string, then redirect to other url when user enter
  * @property {Section[]} sections - which sections does this article belong to
- * @property {Object[]} slug - article slug
- * @property {'article'| 'wide' | 'projects' | 'photography' | 'script' | 'campaigns' | 'readr'} style - article type, script and readr is unknown usage
+ * @property {String} slug - article slug
+ * @property {ArticleStyle} style - article type, script and readr is unknown usage
  * @property {String} title - article title
  * @property {String} _id - article unique id
  *
+ */
+
+/**
+ * @typedef {Object} EditorChoice - information of editor choices article, which property is computed base on raw data of editor choice
+ * @property {string} title - article title
+ * @property {string} slug - article slug
+ * @property {string} href - article href, which will change base on different value of property `style` in EditorChoiceRawData
+ * @property {string} imgSrcTablet - tablet version of hero image url
+ * @property {string} imgSrcMobile - mobile version of hero image url
+ * @property {string} sectionTitle - title of first section in EditorChoiceRawData property `sections`, which is English, e.g. 'news'
+ * @property {string} sectionName - name of first section in EditorChoiceRawData property `sections`, which is Chinese, e.g. '時事'
  */
