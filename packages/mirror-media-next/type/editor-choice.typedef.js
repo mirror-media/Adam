@@ -29,15 +29,15 @@ export default {}
 /**
  * @typedef {Object} Category
  * @property {String} _id - unique id
- * @property {String} title - chinese name of category
- * @property {String} name - english name of category
+ * @property {String} title - english name of category
+ * @property {String} name - chinese name of category
  * @property {Boolean} isCampaign - unknown usage
  */
 /**
  * @typedef {Object} Section
  * @property {String} _id - unique id
- * @property {String} title - chinese name of section
- * @property {String} name - english name of section
+ * @property {String} title - english name of section
+ * @property {String} name - chinese name of section
  * @property {String} description - introduction of this section
  * @property {Number} sortOrder - sorting order of section (currently no use)
  * @property {Boolean} isFeatured - whether this section is marked as  `置頂` in cms
@@ -71,7 +71,7 @@ export default {}
  * @typedef {Object} ResizedImageInfo
  * @property {Number} height image height, unit is `px`
  * @property {Number} width image width, unit is `px`
- * @property {Number} url whole url of image
+ * @property {String} url whole url of image
 
  */
 
@@ -114,6 +114,6 @@ export default {}
  * @property {string} href - article href, which will change base on different value of property `style` in EditorChoiceRawData
  * @property {string} imgSrcTablet - tablet version of hero image url
  * @property {string} imgSrcMobile - mobile version of hero image url
- * @property {string} sectionTitle - title of first section in EditorChoiceRawData property `sections`, which is English, e.g. 'news'
- * @property {string} sectionName - name of first section in EditorChoiceRawData property `sections`, which is Chinese, e.g. '時事'
+ * @property {string} sectionTitle - title of first section in EditorChoiceRawData property `sections`, which is Chinese, e.g. '時事'
+ * @property {string} sectionName - name of first section in EditorChoiceRawData property `sections`, which is English, e.g. 'news'
  */
