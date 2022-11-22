@@ -46,7 +46,7 @@ export async function getSearchResult(query) {
       exactTerms: params.exactTerms,
       start: params.start,
       num: params.take,
-      sort: 'date',
+      sort: ' ,date:s',
     }
 
     const prefix = 'PROGRAMABLE_SEARCH'

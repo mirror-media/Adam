@@ -4,9 +4,11 @@ FROM node:${NODE_VERSION} AS build
 
 WORKDIR /build
 
-ADD . /build/
+COPY package.json yarn.lock /build/
 
 RUN yarn install
+
+COPY . /build/
 
 RUN yarn build
 

@@ -1,3 +1,6 @@
+//TODO: this file will be replaced by `ThemeProvider` of styled-component.
+//The setting of custom theme is located at './theme/index.js'.
+
 const mediaSize = {
   xs: 0,
   sm: 576,
