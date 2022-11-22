@@ -30,6 +30,32 @@ const IndexContainer = styled.main`
 const IndexTop = styled.div`
   display: flex;
 `
+/**
+ * Get path of article base on different article style, and whether is external article.
+ * @param {String} slug
+ * @param {import('../type/editor-choice.typedef').ArticleStyle} style
+ * @param {Object |''} partner
+ * @returns {String}
+ */
+const getArticleHref = (slug, style, partner) => {
+  if (partner) {
+    return `/external/${slug}/`
+  }
+  if (style === 'campaign') {
+    return `/campaigns/${slug}`
+  } else if (style === 'projects') {
+    return `/projects/${slug}/`
+  }
+  /**
+   * TODO: condition `isPremiumMember` is whether user is log in and is premium member,
+   * We haven't migrate membership system yet, so remove this condition temporally.
+   */
+  // else if (isPremiumMember) {
+  //   return `pre/story/${slug}/`
+  // }
+
+  return `/story/${slug}/`
+}
 
 /**
  *
@@ -52,17 +78,24 @@ export default function Home({
     }
   })
   const editorChoice = editorChoicesData.map((article) => {
-    const { slug = '', title = '', heroImage, sections } = article
+    const {
+      slug = '',
+      title = '',
+      heroImage,
+      sections,
+      partner,
+      style,
+    } = article
     const [section] = sections
     const { mobile, tablet } = heroImage?.image?.resizedTargets || {}
 
     return {
       title,
       slug,
-      href: `/story/${slug}`,
-      imgSrc: tablet.url,
+      href: getArticleHref(slug, style, partner),
+      imgSrcTablet: tablet.url,
       imgSrcMobile: mobile.url,
-      label: section.title || '',
+      sectionTitle: section.title || '',
       sectionName: section.name || '',
     }
   })
