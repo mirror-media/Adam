@@ -48,30 +48,30 @@ export default {}
 
 /**
  * @typedef {Object} Image - image information
- * @property {String} filename - filename in gcs bucket
- * @property {String} filetype - filetype, e.g. image/jpeg
- * @property {String} gcsBucket - name of gcs bucket which image is located
- * @property {String} gcsDir - name of directory in gcs bucket which iamge is located
- * @property {String} url whole url of image, which value is equal to `https://storage.googleapis.com/${gcsBucket}/${gcsDir}${filename}`
- * @property {Number} height - image height, unit is `px`
- * @property {Number} width - image width, unit is `px`
- * @property {Number} size - image file size, unit is `bytes`
- * @property {Object} iptc - unknown usage
- * @property {String} iptc.city
- * @property {Array} iptc.keywords
- * @property {Object} resizedTargets - information of different size of image,
- * @property {ResizedImageInfo} resizedTargets.tiny - smallest image, which height and width is shortest compared to different size of image
- * @property {ResizedImageInfo} resizedTargets.mobile - size of image for mobile
- * @property {ResizedImageInfo} resizedTargets.square - size of image for square, which height and width is same
- * @property {ResizedImageInfo} resizedTargets.tablet - size of image for tablet
- * @property {ResizedImageInfo} resizedTargets.desktop  - size of image for desktop, which height and width is largest compared to different size of image
+ * @property {String} [filename] - filename in gcs bucket
+ * @property {String} [filetype] - filetype, e.g. image/jpeg
+ * @property {String} [gcsBucket] - name of gcs bucket which image is located
+ * @property {String} [gcsDir] - name of directory in gcs bucket which iamge is located
+ * @property {String} [url] whole url of image, which value is equal to `https://storage.googleapis.com/${gcsBucket}/${gcsDir}${filename}`
+ * @property {Number} [height] - image height, unit is `px`
+ * @property {Number} [width] - image width, unit is `px`
+ * @property {Number} [size] - image file size, unit is `bytes`
+ * @property {Object} [iptc] - unknown usage
+ * @property {String} [iptc.city]
+ * @property {Array} [iptc.keywords]
+ * @property {Object} [resizedTargets] - information of different size of image,
+ * @property {ResizedImageInfo} [resizedTargets.tiny] - smallest image, which height and width is shortest compared to different size of image
+ * @property {ResizedImageInfo} [resizedTargets.mobile] - size of image for mobile
+ * @property {ResizedImageInfo} [resizedTargets.square] - size of image for square, which height and width is same
+ * @property {ResizedImageInfo} [resizedTargets.tablet] - size of image for tablet
+ * @property {ResizedImageInfo} [resizedTargets.desktop] - size of image for desktop, which height and width is largest compared to different size of image
  */
 
 /**
  * @typedef {Object} ResizedImageInfo
- * @property {Number} height image height, unit is `px`
- * @property {Number} width image width, unit is `px`
- * @property {String} url whole url of image
+ * @property {Number} [height] image height, unit is `px`
+ * @property {Number} [width] image width, unit is `px`
+ * @property {String} [url] whole url of image
 
  */
 
@@ -79,7 +79,7 @@ export default {}
  * @typedef {Object} HeroImage
  * @property {String} createTime - image create time at cms
  * @property {String} description - image description image at cms
- * @property {Image} image - image information
+ * @property {(Image | '')} image - image information, if no image, then its value should be empty string
  * @property {Object[]} tags - image tags
  * @property {Object[]} _id - image unique id
  */
@@ -95,7 +95,7 @@ export default {}
  * @property {Draft} brief.draft - unknown usage
  * @property {String} brief.html - short content of article which included html tag.
  * @property {Category[]} categories - which categories does this article belong to
- * @property {HeroImage} heroImage - information of hero image in article
+ * @property {HeroImage | null} heroImage - information of hero image in article
  * @property {Object | ""} partner - if is Object, then is made by external partner. if is empty string, then is not external partner.
  * @property {String} publishedDate - article publish date
  * @property {String} redirect - redirect url, if this property is not empty string, then redirect to other url when user enter

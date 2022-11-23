@@ -87,16 +87,18 @@ export default function Home({
       style,
     } = article
     const [section] = sections
-    const { mobile, tablet } = heroImage?.image?.resizedTargets || {}
 
+    const { mobile = {}, tablet = {} } = heroImage?.image
+      ? heroImage?.image?.resizedTargets
+      : {}
     return {
       title,
       slug,
       href: getArticleHref(slug, style, partner),
-      imgSrcTablet: tablet.url,
-      imgSrcMobile: mobile.url,
-      sectionTitle: section.title || '',
-      sectionName: section.name || '',
+      imgSrcTablet: mobile?.url || '/images/default-og-img.png',
+      imgSrcMobile: tablet?.url || '/images/default-og-img.png',
+      sectionTitle: section?.title || '',
+      sectionName: section?.name || '',
     }
   })
   const topics = useMemo(
@@ -171,7 +173,6 @@ export async function getServerSideProps() {
 
     /** @type {PromiseFulfilledResult<AxiosPostResponse>} */
     const postResponse = responses[2].status === 'fulfilled' && responses[2]
-    console.log(postResponse)
     const topicsData = Array.isArray(
       topicsResponse?.value?.data?._endpoints?.topics?._items
     )
