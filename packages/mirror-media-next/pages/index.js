@@ -4,6 +4,8 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
+import errors from '@twreporter/errors'
+
 import {
   API_TIMEOUT,
   URL_STATIC_COMBO_TOPICS,
@@ -165,6 +167,33 @@ export async function getServerSideProps() {
       }),
     ])
 
+    responses.forEach((response) => {
+      if (response.status === 'fulfilled') {
+        console.log(
+          JSON.stringify({
+            severity: 'INFO',
+            message: `Successfully fetch data on ${response.value.request.res.responseUrl}`,
+          })
+        )
+      } else {
+        const rejectedReason = response.reason
+        const annotatingError = errors.helpers.wrap(
+          rejectedReason,
+          'UnhandledError',
+          `Error occurs while fetching ${rejectedReason?.request.res.responseUrl}`
+        )
+        console.error(
+          JSON.stringify({
+            severity: 'ERROR',
+            message: errors.helpers.printAll(annotatingError, {
+              withStack: false,
+              withPayload: false,
+            }),
+          })
+        )
+      }
+    })
+
     /** @type {PromiseFulfilledResult<AxiosResponse>} */
     const topicsResponse = responses[0].status === 'fulfilled' && responses[0]
     /** @type {PromiseFulfilledResult<AxiosResponse>} */
@@ -184,20 +213,27 @@ export async function getServerSideProps() {
     const editorChoicesData = Array.isArray(postResponse.value?.data?.choices)
       ? postResponse.value?.data?.choices
       : []
-
-    console.log(
-      JSON.stringify({
-        severity: 'DEBUG',
-        message: `Successfully fetch topics and flesh news from ${URL_STATIC_COMBO_TOPICS} and ${URL_K3_FLASH_NEWS}`,
-      })
-    )
     return {
       props: { topicsData, flashNewsData, editorChoicesData },
     }
-  } catch (error) {
-    console.log(JSON.stringify({ severity: 'ERROR', message: error.stack }))
+  } catch (err) {
+    const annotatingError = errors.helpers.wrap(
+      err,
+      'UnhandledError',
+      'Error occurs while getting index page data'
+    )
+
+    console.error(
+      JSON.stringify({
+        severity: 'ERROR',
+        message: errors.helpers.printAll(annotatingError, {
+          withStack: false,
+          withPayload: false,
+        }),
+      })
+    )
     return {
-      props: { topicsData: [], flashNewsData: [] },
+      props: { topicsData: [], flashNewsData: [], editorChoicesData: [] },
     }
   }
 }
