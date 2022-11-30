@@ -177,17 +177,14 @@ export async function getServerSideProps() {
         )
       } else {
         const rejectedReason = response.reason
-        const annotatingError = errors.helpers.wrap(
-          rejectedReason,
-          'UnhandledError',
-          `Error occurs while fetching ${rejectedReason?.request.res.responseUrl}`
-        )
+        const annotatingAxiosError =
+          errors.helpers.annotateAxiosError(rejectedReason)
         console.error(
           JSON.stringify({
             severity: 'ERROR',
-            message: errors.helpers.printAll(annotatingError, {
-              withStack: false,
-              withPayload: false,
+            message: errors.helpers.printAll(annotatingAxiosError, {
+              withStack: true,
+              withPayload: true,
             }),
           })
         )
@@ -227,7 +224,7 @@ export async function getServerSideProps() {
       JSON.stringify({
         severity: 'ERROR',
         message: errors.helpers.printAll(annotatingError, {
-          withStack: false,
+          withStack: true,
           withPayload: false,
         }),
       })
