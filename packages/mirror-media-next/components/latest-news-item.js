@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 import Image from 'next/image'
-import DefaultOgImg from '../public/images/default-og-img.png'
+
+/**
+ * @typedef {import('../type/theme').Theme} Theme
+ */
+
 const ItemWrapper = styled.article`
   display: flex;
   width: 288px;
@@ -37,18 +41,28 @@ const Detail = styled.div`
     padding-left: 0;
   }
 `
-//TODO: set Label background color according to section color
 
 const Label = styled.div`
-  width: 56px;
+  width: fit-content;
   height: 36px;
   padding: 8px 10px;
   text-align: center;
-  background-color: #1d9fb8;
   color: white;
   font-size: 18px;
   line-height: 20px;
   font-weight: 400;
+  background-color: ${
+    /**
+     * @param {Object} props
+     * @param {String } props.sectionName
+     * @param {Theme} [props.theme]
+     */
+    ({ sectionName, theme }) =>
+      sectionName && theme.color.sectionsColor[sectionName]
+        ? theme.color.sectionsColor[sectionName]
+        : theme.color.brandColor.lightBlue
+  };
+
   ${({ theme }) => theme.breakpoint.md} {
     font-weight: 300;
   }
@@ -82,29 +96,36 @@ const Title = styled.div`
     }
   }
 `
+
 /**
- *
+ * @param {Object} props
+ * @param {Object} props.itemData
  * @returns {React.ReactElement}
  */
-export default function LatestNewsItem() {
+
+export default function LatestNewsItem({ itemData }) {
   return (
-    <ItemWrapper>
-      <ImageContainer>
-        <Image
-          src={DefaultOgImg}
-          alt="image"
-          layout="fill"
-          objectFit="cover"
-        ></Image>
-      </ImageContainer>
-      <Detail>
-        <Label>時事</Label>
-        <Title>
-          <h3>
-            這是一個很長很長很長很長很長很長很長很長很長很長很長很長的標題
-          </h3>
-        </Title>
-      </Detail>
-    </ItemWrapper>
+    <a href={itemData.href} target="_blank" rel="noreferrer">
+      <ItemWrapper>
+        <ImageContainer>
+          <Image
+            src={itemData.imgSrcMobile}
+            alt="image"
+            layout="fill"
+            objectFit="cover"
+          ></Image>
+        </ImageContainer>
+        <Detail>
+          {itemData.sectionTitle && (
+            <Label sectionName={itemData.sectionName}>
+              {itemData.sectionTitle}
+            </Label>
+          )}
+          <Title>
+            <h3>{itemData.title}</h3>
+          </Title>
+        </Detail>
+      </ItemWrapper>
+    </a>
   )
 }

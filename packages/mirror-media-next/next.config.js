@@ -8,6 +8,9 @@ const nextConfig = {
       ssr: true,
     },
   },
+  images: {
+    domains: ['www.mirrormedia.com.tw'],
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,

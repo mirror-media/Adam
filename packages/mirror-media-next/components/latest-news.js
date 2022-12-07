@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import LatestNewsItem from './latest-news-item'
-
+import { transformRawDataToArticleInfo } from '../utils'
 const Wrapper = styled.section`
   width: 100%;
   margin: 20px auto 40px;
@@ -41,22 +41,31 @@ const ItemContainer = styled.div`
     justify-content: center;
   }
 `
+const LoadMoreButton = styled.button`
+  margin: 10px auto;
+  padding: 10px 0;
+  width: 100%;
+  border: 1px solid ${({ theme }) => theme.color.brandColor.darkBlue};
+  color: ${({ theme }) => theme.color.brandColor.darkBlue};
+`
+
 /**
- *
  * @param {Object} props
- * @param {Object} props.latestNewsData
+ * @param {import('../type/raw-data.typedef').RawData[]} [props.latestNewsData=[]]
  * @returns {React.ReactElement}
  */
-export default function LatestNews({ latestNewsData }) {
-  console.log(latestNewsData[0])
+export default function LatestNews({ latestNewsData = [] }) {
+  const latestNews = transformRawDataToArticleInfo(latestNewsData)
   return (
     <Wrapper>
       <h2>最新文章</h2>
       <ItemContainer>
-        {latestNewsData.map((item, index) => (
-          <LatestNewsItem key={index}></LatestNewsItem>
+        {latestNews.map((item) => (
+          <LatestNewsItem key={item.slug} itemData={item}></LatestNewsItem>
         ))}
       </ItemContainer>
+      {/* Temporary components to mock process of fetching data, should replace to infinite loading in the future */}
+      <LoadMoreButton>載入更多</LoadMoreButton>
     </Wrapper>
   )
 }
