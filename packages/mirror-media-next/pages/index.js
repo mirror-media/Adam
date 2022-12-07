@@ -10,7 +10,7 @@ import {
   API_TIMEOUT,
   URL_STATIC_COMBO_TOPICS,
   URL_K3_FLASH_NEWS,
-  URL_STATIC_POST_EXTERNALS_01,
+  URL_STATIC_POST_EXTERNAL,
 } from '../config'
 
 import FlashNews from '../components/flash-news'
@@ -162,7 +162,7 @@ export async function getServerSideProps() {
       }),
       axios({
         method: 'get',
-        url: URL_STATIC_POST_EXTERNALS_01,
+        url: `${URL_STATIC_POST_EXTERNAL}01.json`,
         timeout: API_TIMEOUT,
       }),
     ])
