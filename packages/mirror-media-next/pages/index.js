@@ -12,7 +12,7 @@ import {
   URL_K3_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
 } from '../config'
-
+import { transformRawDataToArticleInfo } from '../utils'
 import FlashNews from '../components/flash-news'
 import NavTopics from '../components/nav-topics'
 import SubscribeMagazine from '../components/subscribe-magazine'
@@ -32,32 +32,6 @@ const IndexContainer = styled.main`
 const IndexTop = styled.div`
   display: flex;
 `
-/**
- * Get path of article base on different article style, and whether is external article.
- * @param {String} slug
- * @param {import('../type/editor-choice.typedef').ArticleStyle} style
- * @param {Object |''} partner
- * @returns {String}
- */
-const getArticleHref = (slug, style, partner) => {
-  if (partner) {
-    return `/external/${slug}/`
-  }
-  if (style === 'campaign') {
-    return `/campaigns/${slug}`
-  } else if (style === 'projects') {
-    return `/projects/${slug}/`
-  }
-  /**
-   * TODO: condition `isPremiumMember` is whether user is log in and is premium member,
-   * We haven't migrate membership system yet, so remove this condition temporally.
-   */
-  // else if (isPremiumMember) {
-  //   return `pre/story/${slug}/`
-  // }
-
-  return `/story/${slug}/`
-}
 
 /**
  *
@@ -79,30 +53,7 @@ export default function Home({
       href: `/story/${slug}`,
     }
   })
-  const editorChoice = editorChoicesData.map((article) => {
-    const {
-      slug = '',
-      title = '',
-      heroImage,
-      sections,
-      partner,
-      style,
-    } = article
-    const [section] = sections
-
-    const { mobile = {}, tablet = {} } = heroImage?.image
-      ? heroImage?.image?.resizedTargets
-      : {}
-    return {
-      title,
-      slug,
-      href: getArticleHref(slug, style, partner),
-      imgSrcTablet: mobile?.url || '/images/default-og-img.png',
-      imgSrcMobile: tablet?.url || '/images/default-og-img.png',
-      sectionTitle: section?.title || '',
-      sectionName: section?.name || '',
-    }
-  })
+  const editorChoice = transformRawDataToArticleInfo(editorChoicesData)
   const topics = useMemo(
     () => topicsData.filter((topic) => topic.isFeatured).slice(0, 9) ?? [],
     [topicsData]
