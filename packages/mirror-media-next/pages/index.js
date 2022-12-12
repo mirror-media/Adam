@@ -17,7 +17,7 @@ import FlashNews from '../components/flash-news'
 import NavTopics from '../components/nav-topics'
 import SubscribeMagazine from '../components/subscribe-magazine'
 import EditorChoice from '../components/editor-choice'
-
+import LatestNews from '../components/latest-news'
 const IndexContainer = styled.main`
   background-color: rgba(255, 255, 255, 1);
   max-width: 596px;
@@ -38,13 +38,15 @@ const IndexTop = styled.div`
  * @param {Object} props
  * @param {import('../type').Topic[]} props.topicsData
  * @param {import('../type').FlashNews[]} props.flashNewsData
- * @param {import('../type/editor-choice.typedef').EditorChoiceRawData[] } [props.editorChoicesData=[]]
+ * @param {import('../type/raw-data.typedef').RawData[] } [props.editorChoicesData=[]]
+ * @param {import('../type/raw-data.typedef').RawData[] } [props.latestNewsData=[]]
  * @returns {React.ReactElement}
  */
 export default function Home({
   topicsData = [],
   flashNewsData = [],
   editorChoicesData = [],
+  latestNewsData = [],
 }) {
   const flashNews = flashNewsData.map(({ slug, title }) => {
     return {
@@ -67,6 +69,7 @@ export default function Home({
         <SubscribeMagazine />
       </IndexTop>
       <EditorChoice editorChoice={editorChoice}></EditorChoice>
+      <LatestNews latestNewsData={latestNewsData} />
     </IndexContainer>
   )
 }
@@ -161,8 +164,11 @@ export async function getServerSideProps() {
     const editorChoicesData = Array.isArray(postResponse.value?.data?.choices)
       ? postResponse.value?.data?.choices
       : []
+    const latestNewsData = Array.isArray(postResponse.value?.data?.latest)
+      ? postResponse.value?.data?.latest
+      : []
     return {
-      props: { topicsData, flashNewsData, editorChoicesData },
+      props: { topicsData, flashNewsData, editorChoicesData, latestNewsData },
     }
   } catch (err) {
     const annotatingError = errors.helpers.wrap(
@@ -181,7 +187,12 @@ export async function getServerSideProps() {
       })
     )
     return {
-      props: { topicsData: [], flashNewsData: [], editorChoicesData: [] },
+      props: {
+        topicsData: [],
+        flashNewsData: [],
+        editorChoicesData: [],
+        latestNewsData: [],
+      },
     }
   }
 }
