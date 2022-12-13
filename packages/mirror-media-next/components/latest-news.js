@@ -55,6 +55,7 @@ const LoadMoreButton = styled.button`
  * @returns {React.ReactElement}
  */
 export default function LatestNews({ latestNewsData = [] }) {
+  /** @type {import('../type/index').ArticleInfoCard[]} */
   const latestNews = transformRawDataToArticleInfo(latestNewsData)
   return (
     <Wrapper>

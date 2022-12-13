@@ -54,3 +54,16 @@ export default {}
  * @property {string} href - path of flash news
  * @property {string} slug - slug of flash news
  */
+
+//article card info
+
+/**
+ * @typedef {Object} ArticleInfoCard - info of certain article, which will applied at card component of list page
+ * @property {String} title - headlines of article
+ * @property {String} slug - unique slug of article
+ * @property {String} href - relative path of article
+ * @property {String} imgSrcMobile - mobile size of image src
+ * @property {String} imgSrcTablet - tablet size of image src
+ * @property {String} [sectionTitle] - what kind of mandarin name of section should display
+ * @property {String} [sectionName] - what kind of english name of section is
+ */

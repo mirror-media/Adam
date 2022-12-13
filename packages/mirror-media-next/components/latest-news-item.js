@@ -99,7 +99,7 @@ const Title = styled.div`
 
 /**
  * @param {Object} props
- * @param {Object} props.itemData
+ * @param {import('../type/index').ArticleInfoCard} props.itemData
  * @returns {React.ReactElement}
  */
 
