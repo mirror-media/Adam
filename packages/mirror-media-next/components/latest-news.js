@@ -1,10 +1,12 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
+import InfiniteScroll from 'react-infinite-scroller'
+import LoadingPage from '../public/images/loading_page.gif'
 import LatestNewsItem from './latest-news-item'
 import { transformRawDataToArticleInfo } from '../utils'
-import { URL_STATIC_POST_EXTERNAL, API_TIMEOUT } from '../config'
-
+import { URL_STATIC_POST_EXTERNAL } from '../config'
+import Image from 'next/image'
 const Wrapper = styled.section`
   width: 100%;
   margin: 20px auto 40px;
@@ -43,13 +45,6 @@ const ItemContainer = styled.div`
     justify-content: center;
   }
 `
-const LoadMoreButton = styled.button`
-  margin: 10px auto;
-  padding: 10px 0;
-  width: 100%;
-  border: 1px solid ${({ theme }) => theme.color.brandColor.darkBlue};
-  color: ${({ theme }) => theme.color.brandColor.darkBlue};
-`
 
 const Test = styled.div`
   border: 1px solid black;
@@ -59,7 +54,14 @@ const Test = styled.div`
   left: 0;
   z-index: 99999999;
 `
-
+const Loading = styled.div`
+  margin: 20px auto 0;
+  padding: 0 0 20px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin: 64px auto 0;
+    padding: 0 0 64px;
+  }
+`
 /** the amount of articles every time we load more */
 const RENDER_PAGE_SIZE = 20
 
@@ -80,7 +82,7 @@ export default function LatestNews(props) {
   const [fetchCount, setFetchCount] = useState(0)
   const [loadMoreCount, setLoadMoreCount] = useState(0)
   const [hasFetchFirstJson, setHasFetchFirstJson] = useState(false)
-
+  const [isLoading, setIsLoading] = useState(false)
   const shouldUpdateLatestArticle = useMemo(() => {
     const formattedTimeStamp = props.latestNewsTimestamp.replace(/ /g, 'T')
     const articlesUpdateTimestamp = new Date(formattedTimeStamp).getTime()
@@ -112,7 +114,7 @@ export default function LatestNews(props) {
       const { data } = await axios({
         method: 'get',
         url: `${URL_STATIC_POST_EXTERNAL}0${serialNumber}.json`,
-        timeout: API_TIMEOUT,
+        timeout: 5000, //since size of json file is large, we assign timeout as 5000ms to prevent content lost in poor network condition
       })
       /** @type {import('../type/raw-data.typedef').RawData[]} */
       return data.latest
@@ -141,6 +143,9 @@ export default function LatestNews(props) {
     ])
   }
   function handleLoadMore() {
+    if (isLoading) {
+      return
+    }
     if (
       obtainedLatestNewsAmount === renderedLatestNewsAmount &&
       fetchCount === 4
@@ -150,7 +155,8 @@ export default function LatestNews(props) {
       obtainedLatestNewsAmount - renderedLatestNewsAmount <=
       RENDER_PAGE_SIZE
     ) {
-      fetchMoreLatestNews()
+      setIsLoading(true)
+      fetchMoreLatestNews().then(() => setIsLoading(false))
     }
     showMoreLatestNews()
     setLoadMoreCount((pre) => pre + 1)
@@ -185,13 +191,29 @@ export default function LatestNews(props) {
       </Test>
 
       <h2>最新文章</h2>
-      <ItemContainer>
-        {renderedLatestNews.map((item) => (
-          <LatestNewsItem key={item.slug} itemData={item}></LatestNewsItem>
-        ))}
-      </ItemContainer>
-      {/* Temporary components to mock process of fetching data, should replace to infinite loading in the future */}
-      <LoadMoreButton onClick={handleLoadMore}>顯示或載入更多</LoadMoreButton>
+
+      <InfiniteScroll
+        pageStart={20}
+        loadMore={handleLoadMore}
+        hasMore={
+          !(
+            obtainedLatestNewsAmount === renderedLatestNewsAmount &&
+            fetchCount === 4
+          )
+        }
+        threshold={150}
+        loader={
+          <Loading key={0}>
+            <Image src={LoadingPage} alt="loading page"></Image>
+          </Loading>
+        }
+      >
+        <ItemContainer>
+          {renderedLatestNews.map((item) => (
+            <LatestNewsItem key={item.slug} itemData={item}></LatestNewsItem>
+          ))}
+        </ItemContainer>
+      </InfiniteScroll>
     </Wrapper>
   )
 }
