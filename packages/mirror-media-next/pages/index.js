@@ -40,6 +40,7 @@ const IndexTop = styled.div`
  * @param {import('../type').FlashNews[]} props.flashNewsData
  * @param {import('../type/raw-data.typedef').RawData[] } [props.editorChoicesData=[]]
  * @param {import('../type/raw-data.typedef').RawData[] } [props.latestNewsData=[]]
+ * @param {String} [props.latestNewsTimestamp]
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -47,6 +48,7 @@ export default function Home({
   flashNewsData = [],
   editorChoicesData = [],
   latestNewsData = [],
+  latestNewsTimestamp,
 }) {
   const flashNews = flashNewsData.map(({ slug, title }) => {
     return {
@@ -69,7 +71,10 @@ export default function Home({
         <SubscribeMagazine />
       </IndexTop>
       <EditorChoice editorChoice={editorChoice}></EditorChoice>
-      <LatestNews latestNewsData={latestNewsData} />
+      <LatestNews
+        latestNewsData={latestNewsData}
+        latestNewsTimestamp={latestNewsTimestamp}
+      />
     </IndexContainer>
   )
 }
@@ -167,8 +172,16 @@ export async function getServerSideProps() {
     const latestNewsData = Array.isArray(postResponse.value?.data?.latest)
       ? postResponse.value?.data?.latest
       : []
+    const latestNewsTimestamp = postResponse.value?.data?.timestamp
+
     return {
-      props: { topicsData, flashNewsData, editorChoicesData, latestNewsData },
+      props: {
+        topicsData,
+        flashNewsData,
+        editorChoicesData,
+        latestNewsData,
+        latestNewsTimestamp,
+      },
     }
   } catch (err) {
     const annotatingError = errors.helpers.wrap(
@@ -192,6 +205,7 @@ export async function getServerSideProps() {
         flashNewsData: [],
         editorChoicesData: [],
         latestNewsData: [],
+        latestNewsTimestamp: undefined,
       },
     }
   }
