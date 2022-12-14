@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import Image from 'next/image'
+// import Image from 'next/image'
+import CustomNextImage from './custom-next-image'
 
 /**
  * @typedef {import('../type/theme').Theme} Theme
@@ -108,12 +109,7 @@ export default function LatestNewsItem({ itemData }) {
     <a href={itemData.href} target="_blank" rel="noreferrer">
       <ItemWrapper>
         <ImageContainer>
-          <Image
-            src={itemData.imgSrcMobile}
-            alt="image"
-            layout="fill"
-            objectFit="cover"
-          ></Image>
+          <CustomNextImage src={itemData.imgSrcMobile}></CustomNextImage>
         </ImageContainer>
         <Detail>
           {itemData.sectionTitle && (
