@@ -65,6 +65,8 @@ const Loading = styled.div`
 /** the amount of articles every time we load more */
 const RENDER_PAGE_SIZE = 20
 
+/** number of json files has latest news, and we need to fetch  */
+const JSON_FILE_COUNT = 4
 /**
  * @typedef {import('../type/raw-data.typedef').RawData} RawData
  */
@@ -78,26 +80,57 @@ const RENDER_PAGE_SIZE = 20
  * @param {String} [props.latestNewsTimestamp = '']
  * @returns {React.ReactElement}
  */
+
 export default function LatestNews(props) {
+  // we use two state,`obtainedLatestNews` and `renderedLatestNews.
+  // `obtainedLatestNews` is an array for placing the data we fetched from certain json file.
+  // `renderedLatestNews` is an array for placing the article we render.
+  // `obtainedLatestNews` is initialized by `props.latestNewsData`, which is passed from index.page.
+  // `renderedLatestNews` is initialized by first 20 amount of item in `obtainedLatestNews`.
+
+  // Our goal is not immediately but progressively fetch data and render it,
+  // we will fetch data from certain json file, then temporarily store data at `obtainedLatestNews`,
+  // and push a part of it into `renderedLatestNews` for render article.
+
+  const [obtainedLatestNews, setObtainedLatestNews] = useState([
+    ...transformRawDataToArticleInfo(props.latestNewsData),
+  ])
+  const [renderedLatestNews, setRenderedLatestNews] = useState(
+    obtainedLatestNews.slice(0, RENDER_PAGE_SIZE)
+  )
   const [fetchCount, setFetchCount] = useState(0)
-  const [loadMoreCount, setLoadMoreCount] = useState(0)
-  const [hasFetchFirstJson, setHasFetchFirstJson] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+
+  // If props.latestNewsTimestamp is 3 minute ( 180 * 1000ms ) earlier than browser time , then should fetch same json file again,
+  // which is already fetched at server side of index page, then update `obtainedLatestNews`.
+
   const shouldUpdateLatestArticle = useMemo(() => {
+    // Safari can't accept original format ("YYYY-MM-DD hh:mm:ss") to generate Date object,
+    // should convert to certain format("YYYY-MM-DDThh:mm:ss") first.
+
     const formattedTimeStamp = props.latestNewsTimestamp.replace(/ /g, 'T')
     const articlesUpdateTimestamp = new Date(formattedTimeStamp).getTime()
     const currentTimestamp = new Date().getTime()
     return currentTimestamp - articlesUpdateTimestamp > 1000 * 180
   }, [props.latestNewsTimestamp])
 
-  const latestNewsData = props.latestNewsData
+  const [hasFetchFirstJson, setHasFetchFirstJson] = useState(false)
 
-  const [obtainedLatestNews, setObtainedLatestNews] = useState([
-    ...transformRawDataToArticleInfo(latestNewsData),
-  ])
-  const [renderedLatestNews, setRenderedLatestNews] = useState(
-    obtainedLatestNews.slice(0, RENDER_PAGE_SIZE)
-  )
+  useEffect(() => {
+    async function fetchFirstJsonOnClientSide() {
+      const latestNewsData = await fetchCertainLatestNews(1)
+      /** @type {ArticleInfoCard[]} */
+      const latestNews = transformRawDataToArticleInfo(latestNewsData)
+      setObtainedLatestNews([...latestNews])
+      setRenderedLatestNews([...latestNews].slice(0, RENDER_PAGE_SIZE))
+    }
+    if (shouldUpdateLatestArticle && !hasFetchFirstJson) {
+      fetchFirstJsonOnClientSide()
+    }
+    setFetchCount(1)
+    setHasFetchFirstJson(true)
+  }, [shouldUpdateLatestArticle, hasFetchFirstJson])
+
   const obtainedLatestNewsAmount = useMemo(() => {
     return obtainedLatestNews.length
   }, [obtainedLatestNews])
@@ -106,6 +139,7 @@ export default function LatestNews(props) {
   }, [renderedLatestNews])
 
   /**
+   * Fetch certain json file
    * @param {Number} [serialNumber = 1]
    * @returns {Promise<RawData[]>}
    */
@@ -123,32 +157,51 @@ export default function LatestNews(props) {
       return []
     }
   }
+  /**
+   * fetch another json file, which will execute in function `handleLoadMore` at certain condition.
+   * this function will not execute when fetchCount is equal to `JSON_FILE_COUNT` , which mean all json has fetched.
+   * After fetching data, we update `obtainedLatestNews`, push `latestNews` into `obtainedLatestNews`,and plus fetchCount 1
+   */
   async function fetchMoreLatestNews() {
-    if (fetchCount === 4) {
+    if (fetchCount === JSON_FILE_COUNT) {
       return
     }
     const latestNewsData = await fetchCertainLatestNews(fetchCount + 1)
     /** @type {ArticleInfoCard[]} */
     const latestNews = transformRawDataToArticleInfo(latestNewsData)
-    setObtainedLatestNews((oldArray) => [...oldArray, ...latestNews])
+    setObtainedLatestNews((preState) => [...preState, ...latestNews])
     setFetchCount((preState) => preState + 1)
   }
+  /**
+   * push `obtainedLatestNews` into `renderedLatestNews` , which will execute in function `handleLoadMore`
+   * In this function, we push certain amount of `obtainedLatestNews` into `renderedLatestNews`, the amount of which decided by const `RENDER_PAGE_SIZE`
+   */
   function showMoreLatestNews() {
-    setRenderedLatestNews((oldArray) => [
-      ...oldArray,
+    setRenderedLatestNews((preState) => [
+      ...preState,
       ...obtainedLatestNews.slice(
         renderedLatestNewsAmount,
         renderedLatestNewsAmount + RENDER_PAGE_SIZE
       ),
     ])
   }
+
+  /**
+   * This function will execute when user scroll to the bottom of latest news
+   * In two condition, this function will return and not execute anything:
+   * 1. When `isLoading` is true, which means we are fetching new json file. we need this boolean to prevent infinite execute this function.
+   * 2. When `obtainedLatestNewsAmount` is equal to `renderedLatestNewsAmount` and fetchCount is equal to `JSON_FILE_COUNT`, which mean all json is fetched and rendered.
+   *
+   * If `obtainedLatestNewsAmount` minus `renderedLatestNewsAmount` is less than `RENDER_PAGE_SIZE`,
+   * which means `obtainedLatestNews` is not enough to push into `renderedLatestNews` and render, so need to execute `fetchMoreLatestNews()` to get more article.
+   */
   function handleLoadMore() {
     if (isLoading) {
       return
     }
     if (
       obtainedLatestNewsAmount === renderedLatestNewsAmount &&
-      fetchCount === 4
+      fetchCount === JSON_FILE_COUNT
     ) {
       return
     } else if (
@@ -159,22 +212,8 @@ export default function LatestNews(props) {
       fetchMoreLatestNews().then(() => setIsLoading(false))
     }
     showMoreLatestNews()
-    setLoadMoreCount((pre) => pre + 1)
   }
-  useEffect(() => {
-    async function fetchFirstJsonOnClientSide() {
-      const latestNewsData = await fetchCertainLatestNews(1)
-      /** @type {ArticleInfoCard[]} */
-      const latestNews = transformRawDataToArticleInfo(latestNewsData)
-      setObtainedLatestNews([...latestNews])
-      setRenderedLatestNews([...latestNews].slice(0, RENDER_PAGE_SIZE))
-    }
-    if (shouldUpdateLatestArticle && !hasFetchFirstJson) {
-      fetchFirstJsonOnClientSide()
-    }
-    setFetchCount(1)
-    setHasFetchFirstJson(true)
-  }, [shouldUpdateLatestArticle, hasFetchFirstJson])
+
   return (
     <Wrapper>
       {/* Temporary components for developing */}
@@ -185,7 +224,6 @@ export default function LatestNews(props) {
           post_external01.json資料
         </p>
         <p>已fetch json檔{fetchCount}次</p>
-        <p>已load more {loadMoreCount}次</p>
         <p>已抓取文章：{obtainedLatestNewsAmount}</p>
         <p>已顯示文章：{renderedLatestNewsAmount}</p>
       </Test>
