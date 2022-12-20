@@ -185,7 +185,7 @@ const EditorChoiceContainer = styled.section`
 `
 /**
  * @param {Object} props
- * @param {import('../type/editor-choice.typedef').EditorChoice[]} props.editorChoice
+ * @param {import('../type/index').ArticleInfoCard[]} props.editorChoice
  * @returns {React.ReactElement}
  */
 export default function EditorChoice({ editorChoice }) {
