@@ -74,18 +74,20 @@ function getSectionTitle(sections = [], partner) {
 /**
  * Transform the item in the array into a specific data structure, which will be applied to a specific list page
  * @param {RawData[]} rawData
- * @returns {Object[]}
+ * @returns {import('../type/index').ArticleInfoCard[]}
  */
 const transformRawDataToArticleInfo = (rawData) => {
-  return rawData.map((article) => {
+  return rawData?.map((article) => {
     const {
       slug = '',
       title = '',
-      heroImage,
-      sections,
-      partner,
+      heroImage = {
+        image: { resizedTargets: { mobile: { url: '' }, tablet: { url: '' } } },
+      },
+      sections = [],
+      partner = {},
       style,
-    } = article
+    } = article || {}
 
     const { mobile = {}, tablet = {} } = heroImage?.image
       ? heroImage?.image?.resizedTargets
