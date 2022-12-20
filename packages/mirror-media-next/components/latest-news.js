@@ -7,6 +7,7 @@ import LatestNewsItem from './latest-news-item'
 import { transformRawDataToArticleInfo } from '../utils'
 import { URL_STATIC_POST_EXTERNAL } from '../config'
 import Image from 'next/image'
+
 const Wrapper = styled.section`
   width: 100%;
   margin: 20px auto 40px;
@@ -98,8 +99,17 @@ export default function LatestNews(props) {
   const [renderedLatestNews, setRenderedLatestNews] = useState(
     obtainedLatestNews.slice(0, RENDER_PAGE_SIZE)
   )
-  const [fetchCount, setFetchCount] = useState(0)
+  const [fetchCount, setFetchCount] = useState(
+    obtainedLatestNews.length !== 0 ? 1 : 0
+  )
   const [isLoading, setIsLoading] = useState(false)
+
+  const obtainedLatestNewsAmount = obtainedLatestNews.length
+
+  const renderedLatestNewsAmount = renderedLatestNews.length
+
+  //TODO: If we decrease time of `Cache-Control` on index page to 180 seconds, we do no`t need to compare difference between
+  // `props.latestNewsTimestamp` current browser time, then we can remove related logic of `shouldUpdateLatestArticle`.
 
   // If props.latestNewsTimestamp is 3 minute ( 180 * 1000ms ) earlier than browser time , then should fetch same json file again,
   // which is already fetched at server side of index page, then update `obtainedLatestNews`.
@@ -108,40 +118,38 @@ export default function LatestNews(props) {
     // Safari can't accept original format ("YYYY-MM-DD hh:mm:ss") to generate Date object,
     // should convert to certain format("YYYY-MM-DDThh:mm:ss") first.
 
-    const formattedTimeStamp = props.latestNewsTimestamp.replace(/ /g, 'T')
+    const formattedTimeStamp = props.latestNewsTimestamp?.replace(/ /g, 'T')
     const articlesUpdateTimestamp = new Date(formattedTimeStamp).getTime()
     const currentTimestamp = new Date().getTime()
     return currentTimestamp - articlesUpdateTimestamp > 1000 * 180
   }, [props.latestNewsTimestamp])
 
-  const [hasFetchFirstJson, setHasFetchFirstJson] = useState(false)
-
   useEffect(() => {
+    if (!shouldUpdateLatestArticle) {
+      return
+    }
     async function fetchFirstJsonOnClientSide() {
       const latestNewsData = await fetchCertainLatestNews(1)
+      if (latestNewsData.length === 0) {
+        throw new Error('fetch first json file failed, return empty array')
+      }
       /** @type {ArticleInfoCard[]} */
       const latestNews = transformRawDataToArticleInfo(latestNewsData)
       setObtainedLatestNews([...latestNews])
       setRenderedLatestNews([...latestNews].slice(0, RENDER_PAGE_SIZE))
     }
-    if (shouldUpdateLatestArticle && !hasFetchFirstJson) {
-      fetchFirstJsonOnClientSide()
-    }
-    setFetchCount(1)
-    setHasFetchFirstJson(true)
-  }, [shouldUpdateLatestArticle, hasFetchFirstJson])
 
-  const obtainedLatestNewsAmount = useMemo(() => {
-    return obtainedLatestNews.length
-  }, [obtainedLatestNews])
-  const renderedLatestNewsAmount = useMemo(() => {
-    return renderedLatestNews.length
-  }, [renderedLatestNews])
+    fetchFirstJsonOnClientSide()
+      .then(() => setFetchCount(1))
+      .catch((e) => {
+        console.error(e)
+      })
+  }, [shouldUpdateLatestArticle])
 
   /**
    * Fetch certain json file
    * @param {Number} [serialNumber = 1]
-   * @returns {Promise<RawData[]>}
+   * @returns {Promise<RawData[] | []> }
    */
   async function fetchCertainLatestNews(serialNumber = 1) {
     try {
@@ -151,7 +159,10 @@ export default function LatestNews(props) {
         timeout: 5000, //since size of json file is large, we assign timeout as 5000ms to prevent content lost in poor network condition
       })
       /** @type {import('../type/raw-data.typedef').RawData[]} */
-      return data.latest
+      if (Array.isArray(data.latest)) {
+        return data.latest
+      }
+      return []
     } catch (e) {
       console.error(e)
       return []
@@ -213,7 +224,6 @@ export default function LatestNews(props) {
     }
     showMoreLatestNews()
   }
-
   return (
     <Wrapper>
       {/* Temporary components for developing */}
