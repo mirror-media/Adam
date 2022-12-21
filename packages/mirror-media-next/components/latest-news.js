@@ -6,7 +6,7 @@ import LoadingPage from '../public/images/loading_page.gif'
 import LatestNewsItem from './latest-news-item'
 import { transformRawDataToArticleInfo } from '../utils'
 import { URL_STATIC_POST_EXTERNAL } from '../config'
-import Image from 'next/image'
+import Image from 'next/legacy/image'
 
 const Wrapper = styled.section`
   width: 100%;
