@@ -12,6 +12,7 @@ const SideBarButton = styled.button`
     outline: none;
   }
   .hamburger {
+    display: block;
     width: 16px;
     height: 2px;
     background-color: black;
