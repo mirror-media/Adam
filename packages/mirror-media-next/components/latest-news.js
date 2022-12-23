@@ -76,6 +76,33 @@ const JSON_FILE_COUNT = 4
  */
 
 /**
+ * @param {RawData[]} articleRawData
+ * @returns {RawData[]}
+ */
+function removeArticleWithExternalLink(articleRawData) {
+  return articleRawData?.filter((item) => {
+    if (!item.redirect) {
+      return item
+    }
+    const redirectLink = item.redirect?.trim()
+    return (
+      !redirectLink.startsWith('https://') &&
+      !redirectLink.startsWith('http://') &&
+      !redirectLink.startsWith('www.')
+    )
+  })
+}
+
+/**
+ * @param {RawData[]} articleRawData
+ * @returns {ArticleInfoCard[]}
+ */
+const transformRawDataContent = function (articleRawData) {
+  return transformRawDataToArticleInfo(
+    removeArticleWithExternalLink(articleRawData)
+  )
+}
+/**
  * @param {Object} props
  * @param {RawData[]} [props.latestNewsData = []]
  * @param {String} [props.latestNewsTimestamp = '']
@@ -94,7 +121,7 @@ export default function LatestNews(props) {
   // and push a part of it into `renderedLatestNews` for render article.
 
   const [obtainedLatestNews, setObtainedLatestNews] = useState([
-    ...transformRawDataToArticleInfo(props.latestNewsData),
+    ...transformRawDataContent(props.latestNewsData),
   ])
   const [renderedLatestNews, setRenderedLatestNews] = useState(
     obtainedLatestNews.slice(0, RENDER_PAGE_SIZE)
@@ -134,7 +161,7 @@ export default function LatestNews(props) {
         throw new Error('fetch first json file failed, return empty array')
       }
       /** @type {ArticleInfoCard[]} */
-      const latestNews = transformRawDataToArticleInfo(latestNewsData)
+      const latestNews = transformRawDataContent(latestNewsData)
       setObtainedLatestNews([...latestNews])
       setRenderedLatestNews([...latestNews].slice(0, RENDER_PAGE_SIZE))
     }
@@ -179,7 +206,8 @@ export default function LatestNews(props) {
     }
     const latestNewsData = await fetchCertainLatestNews(fetchCount + 1)
     /** @type {ArticleInfoCard[]} */
-    const latestNews = transformRawDataToArticleInfo(latestNewsData)
+    const latestNews = transformRawDataContent(latestNewsData)
+
     setObtainedLatestNews((preState) => [...preState, ...latestNews])
     setFetchCount((preState) => preState + 1)
   }
