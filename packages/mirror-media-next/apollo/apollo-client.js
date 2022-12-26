@@ -19,7 +19,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
     graphQLErrors.forEach(({ message, locations, path }) => {
       debugPayload.graphQLErrors.push({
         Message: message,
-        Location: `${locations}`,
+        Location: JSON.stringify(locations),
         Path: `${path}`,
       })
     })
@@ -30,7 +30,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
   console.error(
     JSON.stringify({
       severity: 'ERROR',
-      message: `Fetch graphQL failed`,
+      message: `[Error] Fetch graphQL failed`,
       debugPayload,
     })
   )
