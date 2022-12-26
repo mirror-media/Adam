@@ -5,6 +5,8 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
+import client from '../apollo/apollo-client'
+import { gql } from '@apollo/client'
 
 import {
   API_TIMEOUT,
@@ -62,7 +64,6 @@ export default function Home({
     () => topicsData.filter((topic) => topic.isFeatured).slice(0, 9) ?? [],
     [topicsData]
   )
-
   return (
     <IndexContainer>
       <FlashNews flashNews={flashNews} />
@@ -108,6 +109,40 @@ export default function Home({
 
 export async function getServerSideProps() {
   try {
+    const editorChoiceApollo = await client.query({
+      query: gql`
+        query GetEditorChoices {
+          editorChoices(
+            orderBy: { order: asc }
+            where: {
+              state: { equals: "published" }
+              choices: { state: { equals: "published" } }
+            }
+          ) {
+            id
+            s
+            order
+            choices {
+              id
+              slug
+              title
+              subtitle
+              state
+              publishedDate
+              sections {
+                id
+                name
+              }
+              categories {
+                id
+                name
+              }
+            }
+          }
+        }
+      `,
+    })
+    console.log(editorChoiceApollo)
     const responses = await Promise.allSettled([
       axios({
         method: 'get',
@@ -205,7 +240,7 @@ export async function getServerSideProps() {
         flashNewsData: [],
         editorChoicesData: [],
         latestNewsData: [],
-        latestNewsTimestamp: undefined,
+        latestNewsTimestamp: null,
       },
     }
   }
