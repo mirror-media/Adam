@@ -1,3 +1,5 @@
+const GCP_PROJECT_ID = 'mirrormedia-1470651750304'
+
 // The following variables are from environment variables
 
 const ENV = process.env.NEXT_PUBLIC_ENV || 'local'
@@ -54,6 +56,7 @@ switch (ENV) {
 }
 
 export {
+  GCP_PROJECT_ID,
   API_TIMEOUT,
   API_HOST,
   URL_STATIC_COMBO_SECTIONS,
