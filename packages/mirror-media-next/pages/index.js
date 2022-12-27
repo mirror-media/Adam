@@ -12,6 +12,7 @@ import {
   URL_STATIC_COMBO_TOPICS,
   URL_K3_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
+  GCP_PROJECT_ID,
 } from '../config'
 import { transformRawDataToArticleInfo } from '../utils'
 import FlashNews from '../components/flash-news'
@@ -218,6 +219,18 @@ export async function getServerSideProps() {
       },
     }
   } catch (err) {
+    const traceHeader = err?.networkError?.response?.headers.get(
+      'X-Cloud-Trace-Context'
+    )
+
+    let globalLogFields = {}
+    if (err?.networkError?.response?.headers && traceHeader) {
+      const [trace] = traceHeader.split('/')
+      globalLogFields[
+        'logging.googleapis.com/trace'
+      ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+    }
+
     const annotatingError = errors.helpers.wrap(
       err,
       'UnhandledError',
@@ -231,6 +244,7 @@ export async function getServerSideProps() {
           withStack: true,
           withPayload: false,
         }),
+        globalLogFields,
       })
     )
     return {
