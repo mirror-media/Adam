@@ -244,7 +244,7 @@ export async function getServerSideProps() {
           withStack: true,
           withPayload: false,
         }),
-        globalLogFields,
+        ...globalLogFields,
       })
     )
     return {
