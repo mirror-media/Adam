@@ -107,42 +107,28 @@ export default function Home({
 //TODO: rename typedef, make it more clear
 /** @typedef {import('axios').AxiosResponse<PostRes>} AxiosPostResponse */
 
-export async function getServerSideProps() {
+/**
+ * @type {import('next').GetServerSideProps}
+ */
+export async function getServerSideProps(context) {
+  const traceHeader = context?.req?.headers?.['X-Cloud-Trace-Context']
+
+  let globalLogFields = {}
+  if (traceHeader && !Array.isArray(traceHeader)) {
+    const [trace] = traceHeader.split('/')
+    globalLogFields[
+      'logging.googleapis.com/trace'
+    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+  }
+
+  let topicsData = []
+  let flashNewsData = []
+  let editorChoicesData = []
+  let latestNewsData = []
+  let latestNewsTimestamp = null
+
+  //request fetched by axios, should be replaced to `apollo-client` in the future
   try {
-    const editorChoiceApollo = await client.query({
-      query: gql`
-        query GetEditorChoices {
-          editorChoices(
-            orderBy: { order: asc }
-            where: {
-              state: { equals: "published" }
-              choices: { state: { equals: "published" } }
-            }
-          ) {
-            id
-            s
-            order
-            choices {
-              id
-              slug
-              title
-              subtitle
-              state
-              publishedDate
-              sections {
-                id
-                name
-              }
-              categories {
-                id
-                name
-              }
-            }
-          }
-        }
-      `,
-    })
-    console.log(editorChoiceApollo)
     const responses = await Promise.allSettled([
       axios({
         method: 'get',
@@ -193,68 +179,117 @@ export async function getServerSideProps() {
 
     /** @type {PromiseFulfilledResult<AxiosPostResponse>} */
     const postResponse = responses[2].status === 'fulfilled' && responses[2]
-    const topicsData = Array.isArray(
+    topicsData = Array.isArray(
       topicsResponse?.value?.data?._endpoints?.topics?._items
     )
       ? topicsResponse?.value?.data?._endpoints?.topics?._items
       : []
-    const flashNewsData = Array.isArray(flashNewsResponse.value?.data?._items)
+    flashNewsData = Array.isArray(flashNewsResponse.value?.data?._items)
       ? flashNewsResponse.value?.data?._items
       : []
-    const editorChoicesData = Array.isArray(postResponse.value?.data?.choices)
+    editorChoicesData = Array.isArray(postResponse.value?.data?.choices)
       ? postResponse.value?.data?.choices
       : []
-    const latestNewsData = Array.isArray(postResponse.value?.data?.latest)
+    latestNewsData = Array.isArray(postResponse.value?.data?.latest)
       ? postResponse.value?.data?.latest
       : []
-    const latestNewsTimestamp = postResponse.value?.data?.timestamp
-
-    return {
-      props: {
-        topicsData,
-        flashNewsData,
-        editorChoicesData,
-        latestNewsData,
-        latestNewsTimestamp,
-      },
-    }
+    latestNewsTimestamp = postResponse.value?.data?.timestamp
   } catch (err) {
-    const traceHeader = err?.networkError?.response?.headers.get(
-      'X-Cloud-Trace-Context'
-    )
-
-    let globalLogFields = {}
-    if (err?.networkError?.response?.headers && traceHeader) {
-      const [trace] = traceHeader.split('/')
-      globalLogFields[
-        'logging.googleapis.com/trace'
-      ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-    }
-
     const annotatingError = errors.helpers.wrap(
       err,
       'UnhandledError',
       'Error occurs while getting index page data'
     )
 
-    console.error(
+    console.log(
       JSON.stringify({
         severity: 'ERROR',
-        message: errors.helpers.printAll(annotatingError, {
-          withStack: true,
-          withPayload: false,
-        }),
+        message: errors.helpers.printAll(
+          annotatingError,
+          {
+            withStack: true,
+            withPayload: true,
+          },
+          0,
+          0
+        ),
         ...globalLogFields,
       })
     )
-    return {
-      props: {
-        topicsData: [],
-        flashNewsData: [],
-        editorChoicesData: [],
-        latestNewsData: [],
-        latestNewsTimestamp: null,
-      },
-    }
+  }
+
+  //request fetched by `apollo`, should replace request fetched by `axios` in the future
+  try {
+    const editorChoiceApollo = await client.query({
+      query: gql`
+        query GetEditorChoices {
+          editorChoices(
+            orderBy: { order: asc }
+            where: {
+              state: { equals: "published" }
+              choices: { state: { equals: "published" } }
+            }
+          ) {
+            id
+            s
+            order
+            choices {
+              id
+              slug
+              title
+              subtitle
+              state
+              publishedDate
+              sections {
+                id
+                name
+              }
+              categories {
+                id
+                name
+              }
+            }
+          }
+        }
+      `,
+    })
+  } catch (err) {
+    const { graphQLErrors, clientErrors, networkError } = err
+    const annotatingError = errors.helpers.wrap(
+      err,
+      'UnhandledError',
+      'Error occurs while getting index page data'
+    )
+
+    console.log(
+      JSON.stringify({
+        severity: 'ERROR',
+        message: errors.helpers.printAll(
+          annotatingError,
+          {
+            withStack: true,
+            withPayload: true,
+          },
+          0,
+          0
+        ),
+        debugPayload: {
+          graphQLErrors,
+          clientErrors,
+          networkError,
+        },
+        ...globalLogFields,
+      })
+    )
+  }
+
+  return {
+    props: {
+      topicsData,
+      flashNewsData,
+      editorChoicesData,
+      latestNewsData,
+      latestNewsTimestamp,
+    },
   }
 }
