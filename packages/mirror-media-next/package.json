@@ -17,6 +17,7 @@
     "@twreporter/errors": "^1.1.2",
     "axios": "^1.2.0",
     "cors": "^2.8.5",
+    "draft-js": "^0.11.7",
     "graphql": "^16.6.0",
     "next": "^13.0.7",
     "react": "18.2.0",
