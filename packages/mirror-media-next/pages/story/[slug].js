@@ -1,6 +1,10 @@
 // import client from '../../apollo/apollo-client'
 // import { gql } from '@apollo/client'
 import errors from '@twreporter/errors'
+import styled, { css } from 'styled-components'
+import MockAdvertisement from '../../components/mock-advertisement'
+import Image from 'next/image'
+import ArticleInfo from '../../components/story/normal/article-info'
 const MOCK_DATA_STORY = {
   '20221214edi004': {
     data: {
@@ -11,18 +15,22 @@ const MOCK_DATA_STORY = {
         titleColor: 'light',
         subtitle: '這是副標',
         publishedDate: '2022-12-14T01:41:40.000Z',
+        updatedAt: '2023-01-10T08:18:56.455Z',
         sections: [
           {
             id: '32',
             name: '時事',
+            slug: 'news',
           },
           {
             id: '33',
             name: '娛樂',
+            slug: 'entertainment',
           },
           {
             id: '36',
             name: '文化',
+            slug: 'culture',
           },
         ],
         writers: [
@@ -43,12 +51,7 @@ const MOCK_DATA_STORY = {
             name: '林高',
           },
         ],
-        photographers: [
-          {
-            id: '114',
-            name: '劉慧茹',
-          },
-        ],
+        photographers: [],
         camera_man: [
           {
             id: '114',
@@ -95,6 +98,26 @@ const MOCK_DATA_STORY = {
           {
             id: '120',
             name: '黃文鉅',
+          },
+        ],
+        extend_byline:
+          '陳小花、織田信長、李奧納多·狄卡皮歐、Katherine Matilda Swinton',
+        tags: [
+          {
+            id: '25882',
+            name: '阿根廷',
+          },
+          {
+            id: '26154',
+            name: '世足',
+          },
+          {
+            id: '15557',
+            name: '克羅埃西亞',
+          },
+          {
+            id: '7412',
+            name: '梅西',
           },
         ],
         heroVideo: null,
@@ -165,8 +188,229 @@ const MOCK_DATA_STORY = {
   },
 }
 
+/**
+ * @typedef {import('../../type/theme').Theme} Theme
+ */
+
+const sectionColor = css`
+  ${
+    /**
+     * @param {Object} props
+     * @param {String} [props.sectionSlug]
+     * @param {Theme} [props.theme]
+     */
+    ({ sectionSlug, theme }) =>
+      sectionSlug && theme.color.sectionsColor[sectionSlug]
+        ? theme.color.sectionsColor[sectionSlug]
+        : 'black'
+  };
+`
+
+const StoryContainer = styled.div`
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  max-width: 1200px;
+`
+
+const StoryMockAdvertisement = styled(MockAdvertisement)`
+  margin: 24px auto;
+  text-align: center;
+  display: none;
+`
+const Title = styled.h1`
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 34px;
+  ${({ theme }) => theme.breakpoint.md} {
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 1.25;
+    text-align: left;
+  }
+`
+const Main = styled.main`
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  ${({ theme }) => theme.breakpoint.md} {
+    padding: 0 64px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    padding: 0 40px 0 77px;
+    justify-content: space-between;
+  }
+`
+const Article = styled.article`
+  width: 640px;
+`
+
+const Section = styled.div`
+  color: ${
+    /**
+     * @param {{ sectionSlug: String}} props
+     */
+    ({ sectionSlug }) => sectionSlug && sectionColor
+  };
+  margin-left: 4px;
+  padding-left: 8px;
+  position: relative;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: center;
+  ${({ theme }) => theme.breakpoint.md} {
+    font-size: 18px;
+    line-height: 25px;
+    text-align: left;
+  }
+  &::before {
+    display: none;
+
+    ${({ theme }) => theme.breakpoint.md} {
+      display: block;
+      position: absolute;
+      content: '';
+      background-color: ${({ sectionSlug }) => sectionSlug && sectionColor};
+      left: -4px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 20px;
+    }
+  }
+`
+
+const Date = styled.div`
+  width: fit-content;
+  height: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #a1a1a1;
+  display: none;
+  ${({ theme }) => theme.breakpoint.md} {
+    display: block;
+  }
+`
+
+const SectionAndDate = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4px;
+  ${({ theme }) => theme.breakpoint.md} {
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+`
+
+const HeroImage = styled.div`
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin: 20px 0 0;
+
+  .caption {
+    width: 100%;
+    height: auto;
+    margin-top: 9px;
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 600;
+    color: #9d9d9d;
+  }
+  ${({ theme }) => theme.breakpoint.md} {
+    margin: 0;
+  }
+`
+const InfoAndHero = styled.div`
+  display: flex;
+  flex-direction: column;
+  ${({ theme }) => theme.breakpoint.md} {
+    ${HeroImage} {
+      order: 10;
+    }
+  }
+`
+
+const Aside = styled.aside`
+  display: none;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+    width: 365px;
+    border: 1px solid black;
+  }
+`
+
 export default function Story({ storyData }) {
-  return <div>這是story頁{JSON.stringify(storyData)}</div>
+  const {
+    title = '',
+    sections = [],
+    publishedDate = '',
+    updatedAt = '',
+    writers = [],
+    photographers = [],
+    camera_man = [],
+    designers = [],
+    engineers = [],
+    vocals = [],
+    extend_byline = '',
+    tags = [],
+  } = storyData
+
+  const [section] = sections
+  const credits = [
+    { 文: writers },
+    { 攝影: photographers },
+    { 影音: camera_man },
+    { 設計: designers },
+    { 工程: engineers },
+    { 主播: vocals },
+    { 特約記者: extend_byline },
+  ]
+
+  return (
+    <StoryContainer>
+      <StoryMockAdvertisement
+        width="970px"
+        height="250px"
+        text="PC_HD 970*250"
+      ></StoryMockAdvertisement>
+      <Main>
+        <Article>
+          <SectionAndDate>
+            <Section sectionSlug={section.slug}>{section.name || ''}</Section>
+            <Date>{publishedDate}</Date>
+          </SectionAndDate>
+          <Title>{title}</Title>
+          <InfoAndHero>
+            <HeroImage>
+              <Image
+                src={
+                  'https://storage.googleapis.com/static-mirrormedia-dev/images/20160929123258-7818228bd4c9933a170433e57a90616c-tablet.png'
+                }
+                width={640}
+                height={427}
+                alt="首圖"
+              ></Image>
+              <p className="caption">這是首圖圖說</p>
+            </HeroImage>
+
+            <ArticleInfo
+              updatedDate={updatedAt}
+              publishedDate={publishedDate}
+              credits={credits}
+              tags={tags}
+            ></ArticleInfo>
+          </InfoAndHero>
+        </Article>
+        <Aside>這是側欄</Aside>
+      </Main>
+    </StoryContainer>
+  )
 }
 
 /**
