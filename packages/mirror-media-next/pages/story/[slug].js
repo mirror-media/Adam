@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components'
 import MockAdvertisement from '../../components/mock-advertisement'
 import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
+import ArticleBrief from '../../components/story/normal/brief'
 const MOCK_DATA_STORY = {
   '20221214edi004': {
     data: {
@@ -142,14 +143,209 @@ const MOCK_DATA_STORY = {
             {
               key: '3teck',
               data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '7f1kt',
+              data: {},
+              text: 'h2',
+              type: 'header-two',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: 'ms15',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '7p20l',
+              data: {},
               text: '2022卡達世足今（14日）凌晨4強戰開踢，南美勁旅阿根廷終場以3比0大勝克羅埃西亞，當家球星梅西（Lionel Messi）踢進一顆12碼點球並傳出一次助攻，小將艾瓦雷茲（Julian Alvarez）更是梅開二度，老少配攜手率領潘帕斯雄鷹挺進冠軍賽。',
               type: 'unstyled',
               depth: 0,
               entityRanges: [],
               inlineStyleRanges: [],
             },
+            {
+              key: '2j92a',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '76p65',
+              data: {},
+              text: '粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold粗體Bold',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [
+                {
+                  style: 'BOLD',
+                  length: 96,
+                  offset: 0,
+                },
+              ],
+            },
+            {
+              key: 'cmq26',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '5gnao',
+              data: {},
+              text: '斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics斜體italics',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [
+                {
+                  style: 'ITALIC',
+                  length: 144,
+                  offset: 0,
+                },
+              ],
+            },
+            {
+              key: '3un4o',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '1io97',
+              data: {},
+              text: '底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline底線Underline',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [
+                {
+                  style: 'UNDERLINE',
+                  length: 242,
+                  offset: 0,
+                },
+              ],
+            },
+            {
+              key: '1uh6h',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '4sdac',
+              data: {},
+              text: '程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline程式碼inline',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [
+                {
+                  style: 'CODE',
+                  length: 144,
+                  offset: 0,
+                },
+              ],
+            },
+            {
+              key: '3mi8j',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '3qka6',
+              data: {},
+              text: '超連結1',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [
+                {
+                  key: 0,
+                  length: 4,
+                  offset: 0,
+                },
+              ],
+              inlineStyleRanges: [],
+            },
+            {
+              key: 'fs6s7',
+              data: {},
+              text: '超連結2',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [
+                {
+                  key: 1,
+                  length: 4,
+                  offset: 0,
+                },
+              ],
+              inlineStyleRanges: [],
+            },
+            {
+              key: 'cm1e3',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
+            {
+              key: '95g1p',
+              data: {},
+              text: '',
+              type: 'unstyled',
+              depth: 0,
+              entityRanges: [],
+              inlineStyleRanges: [],
+            },
           ],
-          entityMap: {},
+          entityMap: {
+            0: {
+              data: {
+                url: 'https://www.google.com',
+              },
+              type: 'LINK',
+              mutability: 'MUTABLE',
+            },
+            1: {
+              data: {
+                url: 'https://www.mirrormedia.mg',
+              },
+              type: 'LINK',
+              mutability: 'MUTABLE',
+            },
+          },
         },
         content: {
           blocks: [
@@ -359,6 +555,7 @@ export default function Story({ storyData }) {
     vocals = [],
     extend_byline = '',
     tags = [],
+    brief = [],
   } = storyData
 
   const [section] = sections
@@ -406,6 +603,7 @@ export default function Story({ storyData }) {
               tags={tags}
             ></ArticleInfo>
           </InfoAndHero>
+          <ArticleBrief sectionSlug={section.slug} brief={brief}></ArticleBrief>
         </Article>
         <Aside>這是側欄</Aside>
       </Main>
