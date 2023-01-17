@@ -17,13 +17,25 @@ const nextConfig = {
     ],
   },
   webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    })
+    config.module.rules.push(
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      },
+      {
+        test: /\.(graphql|gql)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'graphql-tag/loader',
+          },
+        ],
+      }
+    )
 
     return config
   },
+
   output: 'standalone',
 }
 
