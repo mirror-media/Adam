@@ -4,6 +4,8 @@ import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
 import Layout from '../components/layout'
 import axios from 'axios'
+import { ApolloProvider } from '@apollo/client'
+import client from '../apollo/apollo-client'
 import {
   URL_STATIC_COMBO_SECTIONS,
   URL_STATIC_COMBO_TOPICS,
@@ -23,10 +25,12 @@ function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
   return (
     <>
       <GlobalStyles />
-      <ThemeProvider theme={theme}>
-        <Layout sectionsData={sectionsData} topicsData={topicsData} />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <Layout sectionsData={sectionsData} topicsData={topicsData} />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </ApolloProvider>
     </>
   )
 }
