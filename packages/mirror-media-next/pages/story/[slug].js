@@ -1,12 +1,11 @@
 import client from '../../apollo/apollo-client'
-import { gql } from '@apollo/client'
 import errors from '@twreporter/errors'
 import styled, { css } from 'styled-components'
 import MockAdvertisement from '../../components/mock-advertisement'
 import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
 import ArticleBrief from '../../components/story/normal/brief'
-
+import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
 
 /**
@@ -193,6 +192,8 @@ export default function Story({ storyData }) {
     { 主播: vocals },
     { 特約記者: extend_byline },
   ]
+  const publishedTaipeiTime = transformTimeDataIntoTaipeiTime(publishedDate)
+  const updatedTaipeiTime = transformTimeDataIntoTaipeiTime(updatedAt)
 
   return (
     <StoryContainer>
@@ -205,7 +206,7 @@ export default function Story({ storyData }) {
         <Article>
           <SectionAndDate>
             <Section sectionSlug={section?.slug}>{section?.name || ''}</Section>
-            <Date>{publishedDate}</Date>
+            <Date>{publishedTaipeiTime}</Date>
           </SectionAndDate>
           <Title>{title}</Title>
           <InfoAndHero>
@@ -222,8 +223,8 @@ export default function Story({ storyData }) {
             </HeroImage>
 
             <ArticleInfo
-              updatedDate={updatedAt}
-              publishedDate={publishedDate}
+              updatedDate={updatedTaipeiTime}
+              publishedDate={publishedTaipeiTime}
               credits={credits}
               tags={tags}
             ></ArticleInfo>

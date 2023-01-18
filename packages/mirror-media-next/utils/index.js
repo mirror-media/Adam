@@ -104,4 +104,34 @@ const transformRawDataToArticleInfo = (rawData) => {
   })
 }
 
-export { transformRawDataToArticleInfo }
+/**
+ * Transform params `time` into certain type
+ * If `time` is not a valid date, this function will return undefined
+ * @param {String} time
+ * @returns {string | undefined}
+ */
+const transformTimeDataIntoTaipeiTime = (time) => {
+  const timeData = new Date(time)
+  const timestamp = timeData.getTime()
+  if (isNaN(timestamp)) {
+    return undefined
+  } else {
+    const year = timeData.getFullYear()
+    const month = timeData.getMonth() + 1
+    const date = timeData.getDate()
+    const hour = timeData.getHours()
+    const minute = timeData.getMinutes()
+    const formattedUnit = (unit) => {
+      if (unit < 10) {
+        return `0${unit}`
+      } else {
+        return unit
+      }
+    }
+    return `${year}.${formattedUnit(month)}.${formattedUnit(
+      date
+    )} ${formattedUnit(hour)}:${formattedUnit(minute)} 臺北時間`
+  }
+}
+
+export { transformRawDataToArticleInfo, transformTimeDataIntoTaipeiTime }
