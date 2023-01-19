@@ -52,7 +52,8 @@ export default function ButtonCopyLink() {
     window.navigator.clipboard.writeText(URL)
 
     setShouldShowMessage(true)
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
+      clearTimeout(timeout)
       setShouldShowMessage(false)
     }, 3000)
   }
