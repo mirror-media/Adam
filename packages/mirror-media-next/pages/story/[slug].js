@@ -164,7 +164,12 @@ const Aside = styled.aside`
     border: 1px solid black;
   }
 `
-
+/**
+ *
+ * @param {Object} props
+ * @param {import('../../type/post.typedef').Post} props.storyData
+ * @returns
+ */
 export default function Story({ storyData }) {
   const {
     title = '',
