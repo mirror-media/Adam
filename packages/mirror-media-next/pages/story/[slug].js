@@ -167,10 +167,10 @@ const Aside = styled.aside`
 /**
  *
  * @param {Object} props
- * @param {import('../../type/post.typedef').Post} props.storyData
+ * @param {import('../../type/post.typedef').Post} props.postData
  * @returns
  */
-export default function Story({ storyData }) {
+export default function Story({ postData }) {
   const {
     title = '',
     sections = [],
@@ -185,7 +185,7 @@ export default function Story({ storyData }) {
     extend_byline = '',
     tags = [],
     brief = [],
-  } = storyData
+  } = postData
 
   const [section] = sections
   const credits = [
@@ -256,11 +256,14 @@ export async function getServerSideProps({ params }) {
       variables: { Slug: slug },
     })
 
-    const storyData = result?.data?.post
+    const postData = result?.data?.post
+    if (!postData) {
+      return { notFound: true }
+    }
 
     return {
       props: {
-        storyData,
+        postData,
       },
     }
   } catch (err) {
