@@ -189,13 +189,13 @@ export default function Story({ postData }) {
 
   const [section] = sections
   const credits = [
-    { 文: writers },
-    { 攝影: photographers },
-    { 影音: camera_man },
-    { 設計: designers },
-    { 工程: engineers },
-    { 主播: vocals },
-    { 特約記者: extend_byline },
+    { writers: writers },
+    { photographers: photographers },
+    { camera_man: camera_man },
+    { designers: designers },
+    { engineers: engineers },
+    { vocals: vocals },
+    { extend_byline: extend_byline },
   ]
   const publishedTaipeiTime = transformTimeDataIntoTaipeiTime(publishedDate)
   const updatedTaipeiTime = transformTimeDataIntoTaipeiTime(updatedAt)

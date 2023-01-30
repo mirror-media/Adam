@@ -151,7 +151,39 @@ const ArticleInfoContainer = styled.div`
     }
   }
 `
+const CREDIT_TITLE_NAME_MAP = {
+  writers: '文',
+  photographers: '攝影',
+  camera_man: '影音',
+  designers: '設計',
+  engineers: '工程',
+  vocals: '主播',
+  extend_byline: '特約記者',
+}
 
+/**
+ * @typedef {import('../../../type/post.typedef').Contact} Contact
+ */
+
+/**
+ * @typedef {Object} Credit
+ * @property {Contact[]} [writers]
+ * @property {Contact[]} [photographers]
+ * @property {Contact[]} [camera_man]
+ * @property {Contact[]} [designers]
+ * @property {Contact[]} [engineers]
+ * @property {Contact[]} [vocals]
+ * @property {string} [extend_byline]
+ */
+
+/**
+ * @param {Object} props
+ * @param {string} props.updatedDate
+ * @param {string} props.publishedDate
+ * @param {Credit[]} props.credits
+ * @param {import('../../../type/post.typedef').Tag[]} props.tags
+ * @returns {JSX.Element}
+ */
 export default function ArticleInfo({
   updatedDate,
   publishedDate,
@@ -162,9 +194,10 @@ export default function ArticleInfo({
     <Credits>
       {credits.map((credit, index) => {
         const title = Object.keys(credit)
-
+        const titleName = CREDIT_TITLE_NAME_MAP[title]
         const [people] = Object.values(credit)
         if (
+          !titleName ||
           people.length === 0 ||
           (typeof people === 'string' && !people.trim())
         ) {
@@ -172,7 +205,7 @@ export default function ArticleInfo({
         }
         return (
           <CreditList key={index}>
-            <CreditTitle>{title} | </CreditTitle>
+            <CreditTitle>{titleName} | </CreditTitle>
             {Array.isArray(people) ? (
               people.map((person) => (
                 <Link
@@ -197,7 +230,7 @@ export default function ArticleInfo({
   const tagsJsx = (
     <Tags>
       {tags.map((tag) => (
-        <Tag key={tag.id} href={`/tag/${tag.id}`} target="_blank">
+        <Tag key={tag.id} href={`/tag/${tag.slug}`} target="_blank">
           {tag.name}
         </Tag>
       ))}
