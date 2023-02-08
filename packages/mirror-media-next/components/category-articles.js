@@ -1,12 +1,11 @@
 import styled from 'styled-components'
 import client from '../apollo/apollo-client'
 
-import InfiniteScrollList from './InifiniteScrollList'
+import InfiniteScrollCustom from './infinite-scroll-list'
 import Image from 'next/legacy/image'
 import LoadingPage from '../public/images/loading_page.gif'
 import ArticleListItems from './article-list-items'
 import { fetchPosts } from '../apollo/query/posts'
-
 const Loading = styled.div`
   margin: 20px auto 0;
   padding: 0 0 20px;
@@ -33,13 +32,14 @@ export default function CategoryArticles({
   category,
   renderPageSize,
 }) {
+  const fetchPageSize = renderPageSize * 2
   async function fetchPostsFromPage(page) {
     try {
       const response = await client.query({
         query: fetchPosts,
         variables: {
-          take: renderPageSize * 2,
-          skip: page * renderPageSize * 2,
+          take: fetchPageSize,
+          skip: (page - 1) * fetchPageSize,
           orderBy: { publishedDate: 'desc' },
           filter: {
             state: { equals: 'published' },
@@ -49,7 +49,7 @@ export default function CategoryArticles({
       })
       return response.data.posts
     } catch (error) {}
-    return
+    return []
   }
 
   const loader = (
@@ -59,19 +59,21 @@ export default function CategoryArticles({
   )
 
   return (
-    <InfiniteScrollList
-      propsIS={{
-        threshold: 150,
-        loader,
-      }}
-      initialList={posts}
-      renderPageSize={renderPageSize}
-      pageCount={Math.ceil(postsCount / renderPageSize)}
-      fetchListInPage={fetchPostsFromPage}
-    >
-      {(renderList) => (
-        <ArticleListItems renderList={renderList} section={category.sections} />
-      )}
-    </InfiniteScrollList>
+    <>
+      <InfiniteScrollCustom
+        initialList={posts}
+        renderPageSize={renderPageSize}
+        pagesCount={Math.ceil(postsCount / fetchPageSize)}
+        fetchListInPage={fetchPostsFromPage}
+        loader={loader}
+      >
+        {(renderList) => (
+          <ArticleListItems
+            renderList={renderList}
+            section={category.sections}
+          />
+        )}
+      </InfiniteScrollCustom>
+    </>
   )
 }
