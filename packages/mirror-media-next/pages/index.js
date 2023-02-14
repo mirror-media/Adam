@@ -8,12 +8,14 @@ import errors from '@twreporter/errors'
 import client from '../apollo/apollo-client'
 import { gql } from '@apollo/client'
 import {
+  ENV,
   API_TIMEOUT,
   URL_STATIC_COMBO_TOPICS,
   URL_K3_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
   GCP_PROJECT_ID,
 } from '../config'
+
 import { transformRawDataToArticleInfo } from '../utils'
 import FlashNews from '../components/flash-news'
 import NavTopics from '../components/nav-topics'
@@ -110,8 +112,12 @@ export default function Home({
 /**
  * @type {import('next').GetServerSideProps}
  */
-export async function getServerSideProps(context) {
-  const headers = context?.req?.headers
+export async function getServerSideProps({ res, req }) {
+  if (ENV === 'dev' || ENV === 'staging' || ENV === 'prod') {
+    res.setHeader('Cache-Control', 'public, max-age=180')
+  }
+
+  const headers = req?.headers
   const traceHeader = headers?.['x-cloud-trace-context']
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
@@ -231,7 +237,6 @@ export async function getServerSideProps(context) {
             }
           ) {
             id
-            s
             order
             choices {
               id
@@ -253,6 +258,7 @@ export async function getServerSideProps(context) {
         }
       `,
     })
+    console.log(editorChoiceApollo)
   } catch (err) {
     const { graphQLErrors, clientErrors, networkError } = err
     const annotatingError = errors.helpers.wrap(

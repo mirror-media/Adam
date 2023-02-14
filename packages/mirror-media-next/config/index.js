@@ -56,6 +56,7 @@ switch (ENV) {
 }
 
 export {
+  ENV,
   GCP_PROJECT_ID,
   API_TIMEOUT,
   API_HOST,
