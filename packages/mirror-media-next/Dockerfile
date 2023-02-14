@@ -19,10 +19,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 COPY --from=build /build/public ./public
-COPY --from=build /build/.next ./.next
 
-COPY ["package.json", "yarn.lock", "./"]
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=build /build/.next/standalone ./
+COPY --from=build /build/.next/static ./.next/static
 
-RUN yarn install --production
-
-CMD ["yarn", "start"]
+CMD ["node", "server.js"]

@@ -83,7 +83,7 @@ next-env.d.ts
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+.env*
 .env.test
 .env*.local
 
@@ -97,6 +97,9 @@ out/
 # Nuxt.js build / generate output
 .nuxt
 dist
+
+# Babel transpiled folder
+lib
 
 # Gatsby files
 .cache/

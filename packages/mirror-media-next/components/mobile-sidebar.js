@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import React, { Fragment, useState, useRef } from 'react'
 import { sectionColors } from '../styles/sections-color'
 import useClickOutside from '../hooks/useClickOutside'
-
+import Link from 'next/link'
 const SideBarButton = styled.button`
   user-select: none;
   display: block;
@@ -12,6 +12,7 @@ const SideBarButton = styled.button`
     outline: none;
   }
   .hamburger {
+    display: block;
     width: 16px;
     height: 2px;
     background-color: black;
@@ -104,9 +105,11 @@ const Topic = styled.a`
   color: #fff;
   text-decoration: underline;
 `
-const Section = styled.button`
-  display: block;
+const Section = styled.div`
+  display: flex;
   width: 100%;
+  justify-content: space-between;
+  align-items: center;
   text-align: left;
   color: #fff;
   font-weight: 700;
@@ -126,21 +129,37 @@ const Section = styled.button`
     height: 16px;
     background-color: ${({ color }) => (color ? color : '#fff')};
   }
-  &::after {
-    top: 14px;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 10.4px 6px 0 6px;
-    border-color: #fff transparent transparent transparent;
-  }
+`
+
+const SectionToggle = styled.button`
+  width: 25%;
+  height: 1rem;
+  display: block;
   &:focus {
     outline: none;
-    &::after {
-      border-width: 6px 10.4px 6px 0;
-      border-color: transparent #fff transparent transparent;
-    }
+  }
+  &:after {
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    content: '';
+    border-style: solid;
+    border-width: 6px 10.4px 6px 0;
+    border-color: transparent #fff transparent transparent;
+    border-width: ${
+      /**
+       * @param {Object} props
+       * @param {Boolean} props.shouldOpen
+       */
+      ({ shouldOpen }) => (shouldOpen ? '10.4px 6px 0 6px' : '6px 10.4px 6px 0')
+    };
+    border-color: ${({ shouldOpen }) =>
+      shouldOpen
+        ? '#fff transparent transparent transparent'
+        : 'transparent #fff transparent transparent'};
   }
 `
 const Categories = styled.div`
@@ -257,9 +276,9 @@ export default function MobileSidebar({
   return (
     <>
       <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
-        <div className="hamburger"></div>
-        <div className="hamburger"></div>
-        <div className="hamburger"></div>
+        <i className="hamburger"></i>
+        <i className="hamburger"></i>
+        <i className="hamburger"></i>
       </SideBarButton>
       <SideBar shouldShowSidebar={openSidebar} ref={sideBarRef}>
         <SideBarTop>
@@ -276,13 +295,15 @@ export default function MobileSidebar({
           </Topics>
           {sections.map(({ _id, title, categories, name }) => (
             <Fragment key={_id}>
-              <Section
-                onClick={() => setOpenSection(name)}
-                color={sectionColors[name]}
-              >
-                {title}
+              <Section color={sectionColors[name]}>
+                <Link style={{ width: '50%' }} href={`/section/${title}`}>
+                  <h3>{title}</h3>
+                </Link>
+                <SectionToggle
+                  onClick={() => setOpenSection(name)}
+                  shouldOpen={name === openSection}
+                ></SectionToggle>
               </Section>
-
               <Categories
                 shouldShowCategories={name === openSection}
                 color={sectionColors[name]}

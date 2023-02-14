@@ -1,8 +1,11 @@
 const express = require('express')
 const path = require('path')
 const querystring = require('querystring')
+const cors = require('cors')
 
 const app = express()
+
+app.use(cors())
 
 app.get('/json/:filename', (req, res) => {
   const filepath = path.resolve(__dirname, `./statics.mirrormedia.mg/json/${req.params.filename}`)

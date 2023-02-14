@@ -1,7 +1,24 @@
 import Head from 'next/head'
 import { GlobalStyles } from '../styles/global-styles'
+import Script from 'next/script'
+import { initGA, logPageView } from '../utils/programmable-search/analytics'
+import { useRouter } from 'next/router'
+import { GA_TRACKING_ID } from '../config'
+import { useEffect } from 'react'
 
 function MyApp({ Component, pageProps }) {
+  const router = useRouter()
+  useEffect(() => {
+    initGA()
+    // `routeChangeComplete` won't run for the first page load unless the query string is
+    // hydrated later on, so here we log a page view if this is the first render and
+    // there's no query string
+    if (!router.asPath.includes('?')) {
+      logPageView()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <>
       <Head>
@@ -13,6 +30,19 @@ function MyApp({ Component, pageProps }) {
         />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '${GA_TRACKING_ID}');
+        `}
+      </Script>
       <GlobalStyles />
       <Component {...pageProps} />
     </>
