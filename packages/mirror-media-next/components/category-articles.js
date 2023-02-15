@@ -62,8 +62,8 @@ export default function CategoryArticles({
     <>
       <InfiniteScrollCustom
         initialList={posts}
-        renderPageSize={renderPageSize}
-        pagesCount={Math.ceil(postsCount / fetchPageSize)}
+        renderAmount={renderPageSize}
+        fetchCount={Math.ceil(postsCount / fetchPageSize)}
         fetchListInPage={fetchPostsFromPage}
         loader={loader}
       >
