@@ -122,11 +122,11 @@ export default function InfiniteScrollList({
   return (
     <div>
       <Test>
-        <p>dataList.length: {dataList.length}</p>
-        <p>renderList.length: {renderList.length}</p>
-        <p>renderCount: {renderCount}</p>
-        <p>page: {fetchPage}</p>
-        <p>pageCount: {fetchCount}</p>
+        <p>目前取得的資料共 {dataList.length} 筆</p>
+        <p>目前顯示的資料共 {renderList.length} 筆</p>
+        <p>應顯示 {renderCount} 筆</p>
+        <p>目前已發request {fetchPage} 次</p>
+        <p>最終應發request {fetchCount} 次</p>
       </Test>
       {children(renderList)}
 
