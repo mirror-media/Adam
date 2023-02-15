@@ -122,11 +122,35 @@ export default function InfiniteScrollList({
   return (
     <div>
       <Test>
-        <p>目前取得的資料共 {dataList.length} 筆</p>
-        <p>目前顯示的資料共 {renderList.length} 筆</p>
-        <p>應顯示 {renderCount} 筆</p>
-        <p>目前已發request {fetchPage} 次</p>
-        <p>最終應發request {fetchCount} 次</p>
+        <p>資料顯示狀態</p>
+        <ul>
+          <li>一次無限滾動應顯示 {renderAmount} 筆</li>
+          <li>目前取得的資料共 {dataList.length} 筆</li>
+          <li>目前顯示的資料共 {renderList.length} 筆</li>
+          <li>
+            {isNotEnoughToRender
+              ? '取得的資料不足以顯示，需另外發request'
+              : '取得的資料足以顯示，不需要發request'}
+          </li>
+          <li>最終應顯示 {renderCount} 筆</li>
+        </ul>
+        --
+        <p>發request狀態</p>
+        <ul>
+          <li>目前已發request {fetchPage} 次</li>
+          <li>最終應發request {fetchCount} 次</li>
+        </ul>
+        --
+        <p>loading狀態</p>
+        <ul>
+          <li>正在發request中：{isLoading ? '是' : '否'}</li>
+          <li>
+            {hasUnFetchedData
+              ? '仍有資料未被取得，開啟無限滾動功能'
+              : '所有資料皆已被取得且顯示，關閉無限滾動功能'}
+          </li>
+          <li></li>
+        </ul>
       </Test>
       {children(renderList)}
 
