@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import axios from 'axios'
-import InfiniteScroll from './infinite-scroll-list'
+import InfiniteScrollList from './infinite-scroll-list'
 import LoadingPage from '../public/images/loading_page.gif'
 import LatestNewsItem from './latest-news-item'
 import { transformRawDataToArticleInfo } from '../utils'
@@ -139,7 +139,7 @@ export default function LatestNews(props) {
   return (
     <Wrapper>
       <h2>最新文章</h2>
-      <InfiniteScroll
+      <InfiniteScrollList
         initialList={transformRawDataContent([...props.latestNewsData])}
         renderAmount={RENDER_PAGE_SIZE}
         fetchListInPage={fetchMoreLatestNews}
@@ -157,7 +157,7 @@ export default function LatestNews(props) {
             ))}
           </ItemContainer>
         )}
-      </InfiniteScroll>
+      </InfiniteScrollList>
     </Wrapper>
   )
 }

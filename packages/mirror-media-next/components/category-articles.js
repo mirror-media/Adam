@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import client from '../apollo/apollo-client'
 
-import InfiniteScrollCustom from './infinite-scroll-list'
+import InfiniteScrollList from './infinite-scroll-list'
 import Image from 'next/legacy/image'
 import LoadingPage from '../public/images/loading_page.gif'
 import ArticleListItems from './article-list-items'
@@ -60,7 +60,7 @@ export default function CategoryArticles({
 
   return (
     <>
-      <InfiniteScrollCustom
+      <InfiniteScrollList
         initialList={posts}
         renderAmount={renderPageSize}
         fetchCount={Math.ceil(postsCount / fetchPageSize)}
@@ -73,7 +73,7 @@ export default function CategoryArticles({
             section={category.sections}
           />
         )}
-      </InfiniteScrollCustom>
+      </InfiniteScrollList>
     </>
   )
 }

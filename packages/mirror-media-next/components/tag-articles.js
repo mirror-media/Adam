@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import client from '../apollo/apollo-client'
 
-import InfiniteScrollList from './InifiniteScrollList'
+import InfiniteScrollList from './infinite-scroll-list'
 import Image from 'next/legacy/image'
 import LoadingPage from '../public/images/loading_page.gif'
 import ArticleListItems from './article-list-items'
@@ -60,14 +60,11 @@ export default function TagArticles({
 
   return (
     <InfiniteScrollList
-      propsIS={{
-        threshold: 150,
-        loader,
-      }}
       initialList={posts}
-      renderPageSize={renderPageSize}
-      pageCount={Math.ceil(postsCount / renderPageSize)}
+      renderAmount={renderPageSize}
+      fetchCount={Math.ceil(postsCount / renderPageSize)}
       fetchListInPage={fetchPostsFromPage}
+      loader={loader}
     >
       {(renderList) => <ArticleListItems renderList={renderList} />}
     </InfiniteScrollList>
