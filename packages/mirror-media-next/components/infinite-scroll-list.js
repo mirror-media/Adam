@@ -52,7 +52,10 @@ export default function InfiniteScrollList({
 
   const [dataList, setDataList] = useState([...initialList])
 
-  const [page, setPage] = useState(INITIAL_PAGE)
+  /**
+   * The number of fetches that is send currently. State will possibly change when executing function `handleLoadMore`
+   */
+  const [fetchPage, setFetchPage] = useState(INITIAL_PAGE)
 
   const [renderCount, setRenderCount] = useState(renderAmount)
 
@@ -61,11 +64,11 @@ export default function InfiniteScrollList({
 
   const dataListAmount = useMemo(() => dataList.length, [dataList])
   const hasUnFetchedData = useMemo(
-    () => !(renderCount >= dataListAmount && page >= fetchCount),
-    [dataListAmount, renderCount, page, fetchCount]
+    () => !(renderCount >= dataListAmount && fetchPage >= fetchCount),
+    [dataListAmount, renderCount, fetchPage, fetchCount]
   )
   const isNotEnoughToRender =
-    page < fetchCount && dataListAmount - renderCount <= renderAmount
+    fetchPage < fetchCount && dataListAmount - renderCount <= renderAmount
 
   /**
    * This function will execute when user scroll to the bottom of latest news
@@ -82,18 +85,18 @@ export default function InfiniteScrollList({
     }
 
     if (isNotEnoughToRender) {
-      const newPage = page + 1
+      const newPage = fetchPage + 1
       setIsLoading(true)
       fetchListInPage(newPage).then((newList) => {
         if (newList && Array.isArray(newList)) {
           setDataList((oldList) => [...oldList, ...newList])
         }
-        setPage(newPage)
+        setFetchPage(newPage)
         setIsLoading(false)
       })
     }
     setRenderCount((pre) => (pre += renderAmount))
-  }, [fetchListInPage, page, renderAmount, isLoading, isNotEnoughToRender])
+  }, [fetchListInPage, fetchPage, renderAmount, isLoading, isNotEnoughToRender])
   const loaderRef = useRef(null)
   useEffect(() => {
     let callback = (entries, observer) => {
@@ -123,7 +126,7 @@ export default function InfiniteScrollList({
         <p>dataList.length: {dataList.length}</p>
         <p>renderList.length: {renderList.length}</p>
         <p>renderCount: {renderCount}</p>
-        <p>page: {page}</p>
+        <p>page: {fetchPage}</p>
         <p>pageCount: {fetchCount}</p>
       </Test>
       {children(renderList)}
