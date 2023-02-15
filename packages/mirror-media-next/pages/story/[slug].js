@@ -5,9 +5,9 @@ import MockAdvertisement from '../../components/mock-advertisement'
 import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
 import ArticleBrief from '../../components/story/normal/brief'
+import AsideArticleList from '../../components/story/normal/aside-article-list'
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
-
 /**
  * @typedef {import('../../type/theme').Theme} Theme
  */
@@ -33,10 +33,17 @@ const StoryContainer = styled.div`
   max-width: 1200px;
 `
 
-const StoryMockAdvertisement = styled(MockAdvertisement)`
+const PC_HD_Advertisement = styled(MockAdvertisement)`
   margin: 24px auto;
   text-align: center;
-  display: none;
+`
+const PC_R1_Advertisement = styled(MockAdvertisement)`
+  margin: 0 auto;
+  text-align: center;
+`
+const PC_R2_Advertisement = styled(MockAdvertisement)`
+  margin: 20px auto;
+  text-align: center;
 `
 const Title = styled.h1`
   margin: 0 auto;
@@ -161,7 +168,6 @@ const Aside = styled.aside`
   ${({ theme }) => theme.breakpoint.xl} {
     display: block;
     width: 365px;
-    border: 1px solid black;
   }
 `
 /**
@@ -202,11 +208,11 @@ export default function Story({ postData }) {
 
   return (
     <StoryContainer>
-      <StoryMockAdvertisement
+      <PC_HD_Advertisement
         width="970px"
         height="250px"
         text="PC_HD 970*250"
-      ></StoryMockAdvertisement>
+      ></PC_HD_Advertisement>
       <Main>
         <Article>
           <SectionAndDate>
@@ -239,7 +245,26 @@ export default function Story({ postData }) {
             brief={brief}
           ></ArticleBrief>
         </Article>
-        <Aside>這是側欄</Aside>
+        <Aside>
+          <PC_R1_Advertisement
+            text="PC_R1 300*600"
+            width="300px"
+            height="600px"
+          ></PC_R1_Advertisement>
+          <AsideArticleList
+            heading="最新文章"
+            shouldReverseOrder={false}
+          ></AsideArticleList>
+          <PC_R2_Advertisement
+            text="PC_R2 300*600"
+            width="300px"
+            height="600px"
+          ></PC_R2_Advertisement>
+          <AsideArticleList
+            heading="熱門文章"
+            shouldReverseOrder={true}
+          ></AsideArticleList>
+        </Aside>
       </Main>
     </StoryContainer>
   )
