@@ -62,13 +62,12 @@ export default function InfiniteScrollList({
   const renderList = dataList.slice(0, renderCount)
   const [isLoading, setIsLoading] = useState(false)
 
-  const dataListAmount = useMemo(() => dataList.length, [dataList])
   const hasUnFetchedData = useMemo(
-    () => !(renderCount >= dataListAmount && fetchPage >= fetchCount),
-    [dataListAmount, renderCount, fetchPage, fetchCount]
+    () => !(renderCount >= dataList.length && fetchPage >= fetchCount),
+    [dataList.length, renderCount, fetchPage, fetchCount]
   )
   const isNotEnoughToRender =
-    fetchPage < fetchCount && dataListAmount - renderCount <= renderAmount
+    fetchPage < fetchCount && dataList.length - renderCount <= renderAmount
 
   /**
    * This function will execute when user scroll to the bottom of latest news
