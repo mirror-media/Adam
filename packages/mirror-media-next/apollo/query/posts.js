@@ -1,4 +1,31 @@
 import { gql } from '@apollo/client'
+import { listingPost } from '../fragments/listing-post'
+
+//TODO: result of fetchListingPost is similar to fetchPosts, should refactor to on gql query if possible
+
+/**
+ * @typedef {import('../fragments/listing-post').ListingPost} ResultOfFetchListingPosts
+ */
+
+const fetchListingPosts = gql`
+  ${listingPost}
+  query fetchListingPosts(
+    $take: Int
+    $sectionSlug: [String!]
+    $storySlug: String!
+  ) {
+    posts(
+      take: $take
+      orderBy: { publishedDate: desc }
+      where: {
+        sections: { some: { slug: { in: $sectionSlug } } }
+        slug: { not: { equals: $storySlug } }
+      }
+    ) {
+      ...listingPost
+    }
+  }
+`
 
 const fetchPosts = gql`
   query (
@@ -41,4 +68,4 @@ const fetchPosts = gql`
   }
 `
 
-export { fetchPosts }
+export { fetchPosts, fetchListingPosts }
