@@ -9,6 +9,7 @@ import {
   getSectionTitleGql,
   getArticleHref,
 } from '../../../utils'
+import Image from '@readr-media/react-image'
 
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
@@ -181,7 +182,6 @@ export default function AsideArticleList({
 
     return () => observer.disconnect()
   }, [isLoaded, handleLoadMore])
-
   const newsJsx = item.map((item) => {
     const sectionName = getSectionNameGql(item.sections, undefined)
     const sectionTitle = getSectionTitleGql(item.sections, undefined)
@@ -190,11 +190,12 @@ export default function AsideArticleList({
       <li key={item.id}>
         <Article shouldReverseOrder={shouldReverseOrder}>
           <Link href={articleHref} target="_blank">
-            <img
-              src={
-                item?.heroImage?.resized?.w480 || '/images/default-og-img.png'
-              }
+            <Image
+              images={item?.heroImage?.resized}
               alt={item.title}
+              loadingImage={'/images/loading.gif'}
+              defaultImage={'/images/default-og-img.png'}
+              rwd={{ desktop: '120px' }}
             />
           </Link>
 
