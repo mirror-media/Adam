@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled, { css } from 'styled-components'
@@ -8,6 +9,8 @@ import ArticleBrief from '../../components/story/normal/brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
+import { fetchListingPosts } from '../../apollo/query/posts'
+
 /**
  * @typedef {import('../../type/theme').Theme} Theme
  */
@@ -179,6 +182,7 @@ const Aside = styled.aside`
 export default function Story({ postData }) {
   const {
     title = '',
+    slug = '',
     sections = [],
     publishedDate = '',
     updatedAt = '',
@@ -192,8 +196,24 @@ export default function Story({ postData }) {
     tags = [],
     brief = [],
   } = postData
-
   const [section] = sections
+
+  const handleFetchLatestNews = useCallback(async () => {
+    try {
+      const res = await client.query({
+        query: fetchListingPosts,
+        variables: {
+          take: 6,
+          sectionSlug: section.slug,
+          storySlug: slug,
+        },
+      })
+      return res.data?.posts
+    } catch (err) {
+      return []
+    }
+  }, [section, slug])
+
   const credits = [
     { writers: writers },
     { photographers: photographers },
@@ -253,17 +273,15 @@ export default function Story({ postData }) {
           ></PC_R1_Advertisement>
           <AsideArticleList
             heading="最新文章"
+            fetchArticle={handleFetchLatestNews}
             shouldReverseOrder={false}
+            renderAmount={6}
           ></AsideArticleList>
           <PC_R2_Advertisement
             text="PC_R2 300*600"
             width="300px"
             height="600px"
           ></PC_R2_Advertisement>
-          <AsideArticleList
-            heading="熱門文章"
-            shouldReverseOrder={true}
-          ></AsideArticleList>
         </Aside>
       </Main>
     </StoryContainer>
