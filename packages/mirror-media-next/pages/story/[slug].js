@@ -15,6 +15,10 @@ import { fetchListingPosts } from '../../apollo/query/posts'
  * @typedef {import('../../type/theme').Theme} Theme
  */
 
+/**
+ * @typedef {import('../../components/story/normal/aside-article-list').ArticleData} AsideArticleData
+ */
+
 const sectionColor = css`
   ${
     /**
@@ -177,7 +181,7 @@ const Aside = styled.aside`
  *
  * @param {Object} props
  * @param {import('../../type/post.typedef').Post} props.postData
- * @returns
+ * @returns {JSX.Element}
  */
 export default function Story({ postData }) {
   const {
@@ -198,8 +202,14 @@ export default function Story({ postData }) {
   } = postData
   const [section] = sections
 
+  /**
+   * @returns {Promise<AsideArticleData[] | []>}
+   */
   const handleFetchLatestNews = useCallback(async () => {
     try {
+      /**
+       * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
+       */
       const res = await client.query({
         query: fetchListingPosts,
         variables: {

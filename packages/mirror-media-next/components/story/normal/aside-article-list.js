@@ -1,6 +1,5 @@
 //TODOs:
-// 1. add jsDoc for article
-// 2. add loading UI
+// 1. add loading UI
 import Link from 'next/link'
 import styled from 'styled-components'
 import { useEffect, useState, useRef, useCallback } from 'react'
@@ -14,6 +13,8 @@ import Image from '@readr-media/react-image'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
+
+/** @typedef {import('../../../apollo/query/posts').ResultOfFetchListingPosts} ArticleData */
 
 const Wrapper = styled.section`
   margin-top: 20px;
@@ -133,7 +134,7 @@ const Loading = styled.div`
  * - If is true, image of article should display at right, title and label should display at left.
  * - If is false, image of article should display at left, title and label should display at right.
  * optional, default value is `false`.
- * @param {()=>Promise<Object[] | []>} props.fetchArticle
+ * @param {()=>Promise<ArticleData[] | []>} props.fetchArticle
  * - A Promise base function for fetching article.
  * - If fulfilled, it will return a array of object, which item is a article.
  * - If rejected, it will return an empty array
