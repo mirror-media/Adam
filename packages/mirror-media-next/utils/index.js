@@ -71,6 +71,52 @@ function getSectionTitle(sections = [], partner) {
   return undefined
 }
 
+//TODO:
+// - remove function for handling data from k3 server
+// - adjust typedef of Section
+/**
+ * Get section name based on different condition
+ * Because data structure of keystone 6 response is different from keystone 3, we create this function to handle data from keystone 6 server.
+ * @param {import('../type/raw-data.typedef').Section[]} sections
+ * @param {Object | ''} partner
+ * @returns {String | undefined}
+ */
+function getSectionNameGql(sections = [], partner = '') {
+  if (partner) {
+    return 'external'
+  } else if (sections?.some((section) => section.name === 'member')) {
+    return 'member'
+  }
+  return sections[0]?.name
+}
+
+/**
+ * Get section title based on different condition
+ * Because data structure of keystone 6 response is different from keystone 3, we create this function to handle data from keystone 6 server.
+ * @param {import('../type/raw-data.typedef').Section[]} sections
+ * @param {Object | ''} partner
+ * @returns {String | undefined}
+ */
+function getSectionTitleGql(sections = [], partner) {
+  if (partner) {
+    if (partner.name === 'healthnews') {
+      return '生活'
+    } else if (partner.name === 'ebc') {
+      return '時事'
+    } else {
+      return '時事'
+    }
+  }
+
+  if (sections.length > 0) {
+    if (sections.some((section) => section.name === 'member')) {
+      return '會員專區'
+    } else {
+      return sections[0]?.slug
+    }
+  }
+  return undefined
+}
 /**
  * Transform the item in the array into a specific data structure, which will be applied to a specific list page
  * @param {RawData[]} rawData
@@ -134,4 +180,10 @@ const transformTimeDataIntoTaipeiTime = (time) => {
   }
 }
 
-export { transformRawDataToArticleInfo, transformTimeDataIntoTaipeiTime }
+export {
+  transformRawDataToArticleInfo,
+  transformTimeDataIntoTaipeiTime,
+  getSectionNameGql,
+  getSectionTitleGql,
+  getArticleHref,
+}
