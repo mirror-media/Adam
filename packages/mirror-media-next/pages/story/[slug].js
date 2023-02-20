@@ -7,6 +7,8 @@ import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
 import ArticleBrief from '../../components/story/normal/brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
+import FbPage from '../../components/story/normal/fb-page-plugin'
+
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
 import { fetchListingPosts } from '../../apollo/query/posts'
@@ -292,6 +294,7 @@ export default function Story({ postData }) {
             width="300px"
             height="600px"
           ></PC_R2_Advertisement>
+          <FbPage></FbPage>
         </Aside>
       </Main>
     </StoryContainer>
