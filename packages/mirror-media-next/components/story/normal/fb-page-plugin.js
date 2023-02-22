@@ -59,7 +59,15 @@ async function loadFbSdkNew() {
   })
 }
 
-export default function FbPage() {
+/**
+ * @see https://developers.facebook.com/docs/plugins/page-plugin/
+ * @param {Object} props
+ * @param {Object} [props.facebookPagePluginSetting]
+ * - Settings for facebook page plugin, such as `data-tabs`, `data-width`,
+ * - see docs https://developers.facebook.com/docs/plugins/page-plugin/ to get more information
+ * @returns {JSX.Element}
+ */
+export default function FbPage({ facebookPagePluginSetting = {} }) {
   const embedRef = useRef(null)
   const [isLoaded, setIsLoaded] = useState(false)
   useEffect(() => {
@@ -103,6 +111,7 @@ export default function FbPage() {
         data-adapt-container-width="true"
         data-hide-cover="false"
         data-show-facepile="true"
+        {...facebookPagePluginSetting}
       >
         <blockquote cite={FB_PAGE_URL} className="fb-xfbml-parse-ignore">
           <a href={FB_PAGE_URL}>鏡週刊</a>
