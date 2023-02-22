@@ -1637,6 +1637,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/facebook-js-sdk@^3.3.6":
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/@types/facebook-js-sdk/-/facebook-js-sdk-3.3.6.tgz#a07bc686304c34953931546a207df455777d9ccf"
+  integrity sha512-CxTLMVtZsgrj9Ven5Pn1vcFumCFs+CG8Jfc63xWq/8b9e6uWjGyZlMnvQk7lIVn97Zd1vpu0ZK/OFWAoap0RCw==
+
 "@types/http-proxy@^1.17.8":
   version "1.17.9"
   resolved "https://registry.yarnpkg.com/@types/http-proxy/-/http-proxy-1.17.9.tgz#7f0e7931343761efde1e2bf48c40f02f3f75705a"
