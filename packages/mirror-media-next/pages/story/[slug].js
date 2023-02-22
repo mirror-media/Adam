@@ -7,7 +7,7 @@ import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
 import ArticleBrief from '../../components/story/normal/brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
-import FbPage from '../../components/story/normal/fb-page-plugin'
+import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
@@ -179,6 +179,22 @@ const Aside = styled.aside`
     width: 365px;
   }
 `
+const AsideFbPagePlugin = styled(FbPagePlugin)`
+  display: none;
+  text-align: center;
+  height: 500px;
+  margin: 20px 0;
+  ${
+    /**
+     * @param {Object} param
+     * @param {Theme} param.theme
+     */
+    ({ theme }) => theme.breakpoint.md
+  } {
+    display: block;
+  }
+`
+
 /**
  *
  * @param {Object} props
@@ -294,7 +310,7 @@ export default function Story({ postData }) {
             width="300px"
             height="600px"
           ></PC_R2_Advertisement>
-          <FbPage></FbPage>
+          <AsideFbPagePlugin></AsideFbPagePlugin>
         </Aside>
       </Main>
     </StoryContainer>

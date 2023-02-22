@@ -1,29 +1,14 @@
-//See Doc: https://developers.facebook.com/docs/plugins/page-plugin/
-
-//TODO: refactor to a custom hook for loading facebook page plugin in different component
 import { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
 
 const FB_SDK_URL = 'https://connect.facebook.net/zh_TW/sdk.js'
 const FB_PAGE_URL = 'https://www.facebook.com/mirrormediamg'
 
 /** @typedef {import('../../../type/theme').Theme} Theme */
 
-const Wrapper = styled.div`
-  display: none;
-  text-align: center;
-  height: 500px;
-  ${
-    /**
-     * @param {Object} param
-     * @param {Theme} param.theme
-     */
-    ({ theme }) => theme.breakpoint.md
-  } {
-    display: block;
-  }
-`
-
+/**
+ * @function
+ * Insert div for initializing facebook page plugin.
+ */
 function insertRootDiv() {
   if (document.getElementById('fb-root')) {
     return
@@ -33,7 +18,11 @@ function insertRootDiv() {
   document.body.appendChild(fbRoot)
 }
 
-async function loadFbSdkNew() {
+/**
+ * @async
+ * Load script of facebook javascript sdk for initializing facebook page plugin.
+ */
+async function loadFbSdk() {
   if (window.FB) return
 
   await new Promise((resolve, reject) => {
@@ -63,11 +52,15 @@ async function loadFbSdkNew() {
  * @see https://developers.facebook.com/docs/plugins/page-plugin/
  * @param {Object} props
  * @param {Object} [props.facebookPagePluginSetting]
- * - Settings for facebook page plugin, such as `data-tabs`, `data-width`,
- * - see docs https://developers.facebook.com/docs/plugins/page-plugin/ to get more information
+ * - Settings for facebook page plugin, such as `data-tabs`, `data-width`.
+ * - See docs https://developers.facebook.com/docs/plugins/page-plugin/ to get more information
+ * @param {string} [props.className] - Attribute for updating style by styled-component
  * @returns {JSX.Element}
  */
-export default function FbPage({ facebookPagePluginSetting = {} }) {
+export default function FbPage({
+  facebookPagePluginSetting = {},
+  className = '',
+}) {
   const embedRef = useRef(null)
   const [isLoaded, setIsLoaded] = useState(false)
   useEffect(() => {
@@ -76,9 +69,10 @@ export default function FbPage({ facebookPagePluginSetting = {} }) {
         if (entry.isIntersecting) {
           if (!isLoaded) {
             insertRootDiv()
-            loadFbSdkNew()
+            loadFbSdk()
               .then(() => {
-                //parse only the part needed to improve performance
+                // parse only the part we needed to improve web performance.
+                // docs: https://developers.facebook.com/docs/reference/javascript/FB.XFBML.parse
                 window.FB.XFBML.parse(embedRef.current)
               })
               .catch((src) => {
@@ -100,8 +94,9 @@ export default function FbPage({ facebookPagePluginSetting = {} }) {
     return () => observer.disconnect()
   }, [isLoaded])
   return (
-    <Wrapper ref={embedRef}>
+    <section className={className}>
       <div
+        ref={embedRef}
         className="fb-page"
         data-href={FB_PAGE_URL}
         data-tabs="timeline"
@@ -117,6 +112,6 @@ export default function FbPage({ facebookPagePluginSetting = {} }) {
           <a href={FB_PAGE_URL}>鏡週刊</a>
         </blockquote>
       </div>
-    </Wrapper>
+    </section>
   )
 }
