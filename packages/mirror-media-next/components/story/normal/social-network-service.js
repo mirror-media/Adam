@@ -8,25 +8,43 @@ import snsIG from '../../../public/images/sns-ig.png'
 import snsYT from '../../../public/images/sns-yt.png'
 import snsMM from '../../../public/images/sns-mm.png'
 import FbPagePlugin from './fb-page-plugin'
-const Wrapper = styled.section`
+
+/**
+ * @typedef {import('./fb-page-plugin').FacebookPagePluginSetting} FacebookPagePluginSetting
+ */
+
+/**
+ * @typedef {'row' | 'column'} FlexDirection
+ */
+
+const Wrapper = styled.div`
   margin-top: 20px;
   display: flex;
   gap: 20px;
   align-items: center;
-  flex-direction: column;
-  ${({ theme }) => theme.breakpoint.xl} {
-    flex-direction: row;
-  }
+  flex-direction: ${
+    /**
+     * @param {Object} params
+     * @param {FlexDirection} params.flexDirection
+     */
+    ({ flexDirection }) => flexDirection
+  };
 `
-const FbPagePluginSmall = styled(FbPagePlugin)`
-  height: 71px;
-  width: 180px;
+const CustomFbPagePlugin = styled(FbPagePlugin)`
+  height: ${
+    /**
+     * @param {Object} param
+     * @param {{width: string, height: string}} param.facebookPagePluginSize
+     */
+    ({ facebookPagePluginSize }) => facebookPagePluginSize.height
+  };
+  width: ${({ facebookPagePluginSize }) => facebookPagePluginSize.width};
 `
 
 const SnsNav = styled.nav`
   ul {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: no-wrap;
     gap: 16px;
   }
 `
@@ -104,15 +122,45 @@ const snsItem = SNS_ITEM_LIST.map((item) => (
   </SnsItem>
 ))
 
-export default function SocialNetworkService() {
+/**
+ * @param {Object} props
+ * @param {boolean} [props.shouldShowLargePagePlugin] - Rather should show large facebook page plugin. It will change the appearance of plugin.
+ * @param {'row' | 'column'} [props.flexDirection] - value of css property `flex-direction`. It will change direction of arrangement of this component.
+ * @param {string} [props.className] - Attribute for updating style by styled-component
+ * @returns {JSX.Element}
+ */
+export default function SocialNetworkService({
+  shouldShowLargePagePlugin = false,
+  flexDirection = 'row',
+  className = '',
+}) {
+  /**
+   * @type {FacebookPagePluginSetting}
+   */
+  let facebookPagePluginSetting = {
+    'data-tabs': 'events',
+    'data-small-header': true,
+    'data-width': 180,
+  }
+  let facebookPagePluginSize = {
+    width: '180px',
+    height: '71px',
+  }
+  if (shouldShowLargePagePlugin) {
+    facebookPagePluginSetting = {
+      'data-tabs': 'timeline',
+      'data-small-header': false,
+    }
+    facebookPagePluginSize = {
+      width: '100%',
+      height: '100%',
+    }
+  }
   return (
-    <Wrapper>
-      <FbPagePluginSmall
-        facebookPagePluginSetting={{
-          'data-tabs': 'events',
-          'data-small-header': 'true',
-          'data-width': '180',
-        }}
+    <Wrapper flexDirection={flexDirection} className={className}>
+      <CustomFbPagePlugin
+        facebookPagePluginSetting={facebookPagePluginSetting}
+        facebookPagePluginSize={facebookPagePluginSize}
       />
       <SnsNav>
         <ul>

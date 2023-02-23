@@ -44,6 +44,7 @@ const StoryContainer = styled.div`
 `
 
 const PC_HD_Advertisement = styled(MockAdvertisement)`
+  display: none;
   margin: 24px auto;
   text-align: center;
 `
@@ -172,6 +173,12 @@ const InfoAndHero = styled.div`
     }
   }
 `
+const SocialNetworkServiceInArticle = styled(SocialNetworkService)`
+  display: none;
+  ${({ theme }) => theme.breakpoint.md} {
+    display: flex;
+  }
+`
 
 const Aside = styled.aside`
   display: none;
@@ -293,7 +300,7 @@ export default function Story({ postData }) {
             sectionSlug={section?.slug}
             brief={brief}
           ></ArticleBrief>
-          <SocialNetworkService></SocialNetworkService>
+          <SocialNetworkServiceInArticle />
         </Article>
         <Aside>
           <PC_R1_Advertisement
