@@ -49,11 +49,26 @@ async function loadFbSdk() {
 }
 
 /**
- * @see https://developers.facebook.com/docs/plugins/page-plugin/
- * @param {Object} props
- * @param {Object} [props.facebookPagePluginSetting]
  * - Settings for facebook page plugin, such as `data-tabs`, `data-width`.
  * - See docs https://developers.facebook.com/docs/plugins/page-plugin/ to get more information
+ * @see https://developers.facebook.com/docs/plugins/page-plugin/
+ * @typedef {Object} FacebookPagePluginSetting
+ * @property {string} [data-href]
+ * @property {number} [data-width]
+ * @property {number} [data-height ]
+ * @property {'timeline' | 'events' | 'messages' } [data-tabs]
+ * @property {boolean} [data-hide-cover]
+ * @property {boolean} [data-show-facepile]
+ * @property {boolean} [data-hide-cta]
+ * @property {boolean} [data-small-header]
+ * @property {boolean} [data-adapt-container-width]
+ * @property {boolean} [data-lazy]
+ */
+
+/**
+ * @see https://developers.facebook.com/docs/plugins/page-plugin/
+ * @param {Object} props
+ * @param {FacebookPagePluginSetting} [props.facebookPagePluginSetting]
  * @param {string} [props.className] - Attribute for updating style by styled-component
  * @returns {JSX.Element}
  */
@@ -100,12 +115,10 @@ export default function FbPage({
         className="fb-page"
         data-href={FB_PAGE_URL}
         data-tabs="timeline"
-        data-width=""
-        data-height=""
-        data-small-header="false"
-        data-adapt-container-width="true"
-        data-hide-cover="false"
-        data-show-facepile="true"
+        data-small-header={false}
+        data-adapt-container-width={true}
+        data-hide-cover={false}
+        data-show-facepile={true}
         {...facebookPagePluginSetting}
       >
         <blockquote cite={FB_PAGE_URL} className="fb-xfbml-parse-ignore">
