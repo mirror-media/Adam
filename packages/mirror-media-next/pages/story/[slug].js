@@ -9,6 +9,7 @@ import ArticleBrief from '../../components/story/normal/brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
+import SubscribeInviteBanner from '../../components/story/normal/subscribe-invite-banner'
 
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
@@ -301,6 +302,7 @@ export default function Story({ postData }) {
             brief={brief}
           ></ArticleBrief>
           <SocialNetworkServiceInArticle />
+          <SubscribeInviteBanner />
         </Article>
         <Aside>
           <PC_R1_Advertisement
