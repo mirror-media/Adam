@@ -14,8 +14,8 @@ import SubscribeInviteBanner from '../../components/story/normal/subscribe-invit
 import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
 
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
-import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
 import { fetchListingPosts } from '../../apollo/query/posts'
+import { fetchPostBySlug } from '../../apollo/query/post'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -384,8 +384,8 @@ export async function getServerSideProps({ params }) {
   const { slug } = params
   try {
     const result = await client.query({
-      query: GetPostBySlug,
-      variables: { Slug: slug },
+      query: fetchPostBySlug,
+      variables: { slug },
     })
 
     const postData = result?.data?.post
