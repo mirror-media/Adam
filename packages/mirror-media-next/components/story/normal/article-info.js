@@ -162,17 +162,21 @@ const CREDIT_TITLE_NAME_MAP = {
 }
 
 /**
- * @typedef {import('../../../type/post.typedef').Contact} Contact
+ * @typedef {import('../../../apollo/query/post').Contact & { id: string, name: string }[]} Contacts
+ */
+
+/**
+ * @typedef {(import('../../../apollo/query/post').Post['tags'] & {id: string, slug: string, name: string})[]} Tags
  */
 
 /**
  * @typedef {Object} Credit
- * @property {Contact[]} [writers]
- * @property {Contact[]} [photographers]
- * @property {Contact[]} [camera_man]
- * @property {Contact[]} [designers]
- * @property {Contact[]} [engineers]
- * @property {Contact[]} [vocals]
+ * @property {Contacts} [writers]
+ * @property {Contacts} [photographers]
+ * @property {Contacts} [camera_man]
+ * @property {Contacts} [designers]
+ * @property {Contacts} [engineers]
+ * @property {Contacts} [vocals]
  * @property {string} [extend_byline]
  */
 
@@ -181,7 +185,7 @@ const CREDIT_TITLE_NAME_MAP = {
  * @param {string} props.updatedDate
  * @param {string} props.publishedDate
  * @param {Credit[]} props.credits
- * @param {import('../../../type/post.typedef').Tag[]} props.tags
+ * @param {Tags} props.tags
  * @returns {JSX.Element}
  */
 export default function ArticleInfo({

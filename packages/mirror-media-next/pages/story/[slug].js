@@ -25,6 +25,74 @@ import { fetchPostBySlug } from '../../apollo/query/post'
  * @typedef {import('../../components/story/normal/aside-article-list').ArticleData} AsideArticleData
  */
 
+/**
+ * @typedef {import('../../components/story/normal/article-info').Contacts} Contacts
+ */
+
+/**
+ * @typedef {(import('../../apollo/query/post').Section &
+ * { id: string, slug: string, name: string })[]} Sections
+ */
+
+/**
+ * @typedef {import('../../apollo/query/post').HeroImage &
+ * {
+ *  id: string,
+ *  resized: {
+ *    original: string,
+ *    w480: string,
+ *    w800: string,
+ *    w1200: string,
+ *    w1600: string,
+ *    w2400: string
+ *  }
+ * } } HeroImage
+ */
+
+/**
+ * @typedef {import('../../apollo/query/post').HeroVideo & {
+ * id: string, name:string, urlOriginal: string}} HeroVideo
+ */
+
+/**
+ * @typedef {import('../../apollo/query/post').Draft} Draft
+ */
+
+/**
+ * @typedef {(import('../../apollo/query/post').Related & {
+ *  id: string, slug: string, title: string, heroImage: HeroImage})[]
+ * } Relateds
+ */
+
+/**
+ * @typedef {import('../../apollo/query/post').Post &
+ * {
+ * id: string,
+ * slug: string,
+ * title: string,
+ * titleColor: "dark" | "light",
+ * subtitle: string,
+ * publishedDate: string,
+ * updatedAt: string,
+ * state: "published" | "draft" | "scheduled" | "archived" | "invisible",
+ * sections: Sections | [],
+ * writers: Contacts | [],
+ * photographers: Contacts | [],
+ * camera_man: Contacts | [],
+ * designers: Contacts | [],
+ * engineers: Contacts | [],
+ * vocals: Contacts | [],
+ * extend_byline: string,
+ * tags: import('../../components/story/normal/article-info').Tags | [],
+ * heroVideo : HeroVideo | null,
+ * heroImage : HeroImage | null,
+ * heroCaption: string,
+ * brief: Draft,
+ * content: Draft,
+ * relateds: Relateds | []
+ * } } PostData
+ */
+
 const sectionColor = css`
   ${
     /**
@@ -238,7 +306,7 @@ const AsideFbPagePlugin = styled(FbPagePlugin)`
 /**
  *
  * @param {Object} props
- * @param {import('../../type/post.typedef').Post} props.postData
+ * @param {PostData} props.postData
  * @returns {JSX.Element}
  */
 export default function Story({ postData }) {
@@ -387,7 +455,9 @@ export async function getServerSideProps({ params }) {
       query: fetchPostBySlug,
       variables: { slug },
     })
-
+    /**
+     * @type {PostData}
+     */
     const postData = result?.data?.post
     if (!postData) {
       return { notFound: true }
