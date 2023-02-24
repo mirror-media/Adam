@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled, { css } from 'styled-components'
+import Link from 'next/link'
 import MockAdvertisement from '../../components/mock-advertisement'
 import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
@@ -180,7 +181,22 @@ const SocialNetworkServiceInArticle = styled(SocialNetworkService)`
     display: flex;
   }
 `
-
+const StoryMoreInfo = styled.p`
+  font-size: 18px;
+  line-height: 1.5;
+  color: black;
+  margin-top: 60px;
+  a {
+    color: ${({ theme }) => theme.color.brandColor.lightBlue};
+    border-bottom: 1px solid ${({ theme }) => theme.color.brandColor.lightBlue};
+  }
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 24px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 20px;
+  }
+`
 const Aside = styled.aside`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
@@ -303,6 +319,21 @@ export default function Story({ postData }) {
           ></ArticleBrief>
           <SocialNetworkServiceInArticle />
           <SubscribeInviteBanner />
+          <StoryMoreInfo>
+            更多內容，歡迎
+            <Link href="/papermag" target="_blank">
+              鏡週刊紙本雜誌
+            </Link>
+            、
+            <Link href="/subscribe" target="_blank">
+              鏡週刊數位訂閱
+            </Link>
+            、
+            <Link href="/story/webauthorize/" target="_blank">
+              了解內容授權資訊
+            </Link>
+            。
+          </StoryMoreInfo>
         </Article>
         <Aside>
           <PC_R1_Advertisement
