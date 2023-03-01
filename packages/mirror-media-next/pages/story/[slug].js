@@ -12,7 +12,7 @@ import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
 import SubscribeInviteBanner from '../../components/story/normal/subscribe-invite-banner'
 import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
-
+import RelatedArticleList from '../../components/story/normal/related-article-list'
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
 import { fetchListingPosts } from '../../apollo/query/posts'
 import { fetchPostBySlug } from '../../apollo/query/post'
@@ -325,6 +325,7 @@ export default function Story({ postData }) {
     extend_byline = '',
     tags = [],
     brief = [],
+    relateds = [],
   } = postData
   const [section] = sections
 
@@ -402,6 +403,7 @@ export default function Story({ postData }) {
           ></ArticleBrief>
           <SocialNetworkServiceInArticle />
           <SubscribeInviteBanner />
+          <RelatedArticleList relateds={relateds} />
           <StoryEnd>
             <StoryMoreInfo>
               更多內容，歡迎&nbsp;
