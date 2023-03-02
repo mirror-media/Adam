@@ -11,6 +11,7 @@ import AsideArticleList from '../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
 import SubscribeInviteBanner from '../../components/story/normal/subscribe-invite-banner'
+import DonateBanner from '../../components/story/shared/donate-banner'
 import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../components/story/normal/related-article-list'
 import { transformTimeDataIntoTaipeiTime } from '../../utils'
@@ -401,6 +402,7 @@ export default function Story({ postData }) {
             sectionSlug={section?.slug}
             brief={brief}
           ></ArticleBrief>
+          <DonateBanner />
           <SocialNetworkServiceInArticle />
           <SubscribeInviteBanner />
           <RelatedArticleList relateds={relateds} />

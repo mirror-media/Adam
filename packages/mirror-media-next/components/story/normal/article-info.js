@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import Image from 'next/image'
 import ButtonCopyLink from '../button-copy-link'
+import DonateLink from '../shared/donate-link'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -98,24 +99,6 @@ const SocialMedia = styled.div`
   }
 `
 
-const DonateLink = styled.a`
-  background-color: black;
-  width: 100px;
-  height: 32px;
-  padding: 9px 12px 9px 13.33px;
-  display: flex;
-  gap: 5.33px;
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 400;
-  border-radius: 32px;
-  color: white;
-  img {
-    width: 13.33px;
-    height: 13.33px;
-  }
-`
-
 const SocialMediaAndDonateLink = styled.div`
   display: flex;
   align-items: center;
@@ -124,6 +107,7 @@ const SocialMediaAndDonateLink = styled.div`
   gap: 20px;
   ${({ theme }) => theme.breakpoint.md} {
     flex-direction: row;
+    align-items: center;
   }
   .link-to-index {
     display: none;
@@ -277,16 +261,7 @@ export default function ArticleInfo({
           </Link>
           <ButtonCopyLink />
         </SocialMedia>
-        <DonateLink href="/donate" target="_blank">
-          <Image
-            src={'/images/donate.png'}
-            width={13.33}
-            height={13.33}
-            alt="donate"
-          ></Image>
-
-          <span>贊助本文</span>
-        </DonateLink>
+        <DonateLink />
       </SocialMediaAndDonateLink>
     </ArticleInfoContainer>
   )
