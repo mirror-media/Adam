@@ -18,26 +18,46 @@ import Image from '@readr-media/react-image'
 
 const Wrapper = styled.section`
   margin-top: 20px;
+  ${({ theme }) => theme.breakpoint.md} {
+    width: 618px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 100%;
+  }
 `
-const Heading = styled.div`
-  background-color: ${
-    /**
-     * @param {Object} props
-     * @param {Theme} props.theme
-     */
-    ({ theme }) => theme.color.brandColor.darkBlue
-  };
-  border: 1px solid #dedede;
-  color: #fff;
-  padding: 8px 0 8px 20px;
+const Heading = styled.h2`
+  text-align: center;
+  color: #888888;
+  font-size: 21px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  ${({ theme }) => theme.breakpoint.md} {
+    text-align: left;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    background-color: ${
+      /**
+       * @param {Object} props
+       * @param {Theme} props.theme
+       */
+      ({ theme }) => theme.color.brandColor.darkBlue
+    };
+    border: 1px solid #dedede;
+    font-size: 18px;
+    color: #fff;
+    padding: 8px 0 8px 20px;
+  }
 `
 
-const articleHeight = 80 //px
+const articleHeightMobile = 256 //px
+const articleHeightTablet = 177 //px
+const articleHeightDesktop = 80 //px
 const articleWrapperGap = 21 //px
 const ArticleWrapper = styled.ul`
-  border: 1px solid #dedede;
-  padding: 20.5px 20px;
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: ${`${articleWrapperGap}px`};
+
   min-height: ${
     /**
      *
@@ -45,77 +65,127 @@ const ArticleWrapper = styled.ul`
      * @param {number} param.renderAmount
      */
     ({ renderAmount }) =>
-      `calc(20.5px + 20.5px + ${
-        renderAmount * articleHeight
-      }px + ${articleWrapperGap}px * 5) `
+      `calc(${
+        renderAmount * articleHeightMobile
+      }px + ${articleWrapperGap}px * ${renderAmount - 1}) `
   };
-  height: fit-content;
-  display: flex;
-  flex-direction: column;
-  gap: ${`${articleWrapperGap}px`};
+  ${({ theme }) => theme.breakpoint.md} {
+    min-height: ${({ renderAmount }) =>
+      `calc(${
+        renderAmount * articleHeightTablet
+      }px + ${articleWrapperGap}px * ${renderAmount - 1}) `};
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    border: 1px solid #dedede;
+    padding: 20.5px 20px;
+    width: 100%;
+    min-height: ${({ renderAmount }) =>
+      // 20.5px is padding-top and padding-bottom of articleWrapper
+      `calc(20.5px + 20.5px + ${
+        renderAmount * articleHeightDesktop
+      }px + ${articleWrapperGap}px * ${renderAmount - 1}) `};
+    height: fit-content;
+  }
 `
 const Article = styled.figure`
-  width: 100%;
-  margin: 0 auto;
-  height: ${`${articleHeight}px`};
   display: flex;
-  flex-direction: ${
-    /**
-     * @param {Object} props
-     * @param {boolean} props.shouldReverseOrder
-     */
-    ({ shouldReverseOrder }) => (shouldReverseOrder ? 'row-reverse' : 'row')
-  };
-  gap: 12px;
-  a {
-    min-width: 120px;
-    img {
-      width: 100%;
+  flex-direction: column;
+  max-width: 276px;
+  margin: 0 auto;
+  .article-image {
+    height: 184px;
+  }
+  ${({ theme }) => theme.breakpoint.md} {
+    flex-direction: row;
+    height: ${`${articleHeightTablet}px`};
+    max-width: 100%;
+    justify-content: space-between;
+    gap: 28px;
+    margin: 0 auto 0 0;
+    .article-image {
       height: 100%;
+      min-width: 266px;
+      max-width: 266px;
+    }
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    height: ${`${articleHeightDesktop}px`};
+    flex-direction: ${
+      /**
+       * @param {Object} props
+       * @param {boolean} props.shouldReverseOrder
+       */
+      ({ shouldReverseOrder }) => (shouldReverseOrder ? 'row-reverse' : 'row')
+    };
+    gap: 12px;
+    .article-image {
+      min-width: 120px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 `
 
 const Label = styled.div`
-  width: fit-content;
-  height: 25px;
-  padding: 0 8px;
-  text-align: center;
-  color: white;
-  font-size: 14px;
-  line-height: 25px;
-  font-weight: 400;
-  background-color: ${
-    /**
-     * @param {Object} props
-     * @param {string} props.sectionTitle
-     * @param {Theme} [props.theme]
-     */
-    ({ sectionTitle, theme }) =>
-      sectionTitle && theme.color.sectionsColor[sectionTitle]
-        ? theme.color.sectionsColor[sectionTitle]
-        : theme.color.brandColor.lightBlue
-  };
+  display: none;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+    width: fit-content;
+    height: 25px;
+    padding: 0 8px;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    line-height: 25px;
+    font-weight: 400;
+    background-color: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.sectionTitle
+       * @param {Theme} [props.theme]
+       */
+      ({ sectionTitle, theme }) =>
+        sectionTitle && theme.color.sectionsColor[sectionTitle]
+          ? theme.color.sectionsColor[sectionTitle]
+          : theme.color.brandColor.lightBlue
+    };
+  }
 `
 const Title = styled.p`
-  margin-top: 8px;
-  text-align: left;
-  width: 100%;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  color: ${
-    /**
-     * @param {Object} props
-     * @param {Theme} props.theme
-     */
-    ({ theme }) => theme.color.brandColor.darkBlue
-  };
-
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   overflow: hidden;
+  color: #888888;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 400;
+  margin-top: 16px;
+  ${({ theme }) => theme.breakpoint.md} {
+    font-size: 20px;
+    line-height: 32px;
+    margin-top: 0;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 8px;
+    text-align: left;
+    width: 100%;
+    font-size: 16px;
+    line-height: 1.5;
+
+    font-weight: 600;
+    color: ${
+      /**
+       * @param {Object} props
+       * @param {Theme} props.theme
+       */
+      ({ theme }) => theme.color.brandColor.darkBlue
+    };
+
+    -webkit-line-clamp: 2;
+  }
 `
 
 const Loading = styled.div`
@@ -190,17 +260,17 @@ export default function AsideArticleList({
     return (
       <li key={item.id}>
         <Article shouldReverseOrder={shouldReverseOrder}>
-          <Link href={articleHref} target="_blank">
+          <Link href={articleHref} target="_blank" className="article-image">
             <Image
               images={item?.heroImage?.resized}
               alt={item.title}
               loadingImage={'/images/loading.gif'}
               defaultImage={'/images/default-og-img.png'}
-              rwd={{ desktop: '120px' }}
+              rwd={{ mobile: '276px', tablet: '266px', desktop: '120px' }}
             />
           </Link>
 
-          <figcaption>
+          <figcaption className="article-title">
             <Label sectionTitle={sectionTitle}>{sectionName}</Label>
             <Link href={articleHref} target="_blank">
               <Title>{item.title}</Title>

@@ -121,12 +121,20 @@ const PC_HD_Advertisement = styled(MockAdvertisement)`
   text-align: center;
 `
 const PC_R1_Advertisement = styled(MockAdvertisement)`
+  display: none;
   margin: 0 auto;
   text-align: center;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+  }
 `
 const PC_R2_Advertisement = styled(MockAdvertisement)`
+  display: none;
   margin: 20px auto;
   text-align: center;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+  }
 `
 const Title = styled.h1`
   margin: 0 auto;
@@ -143,19 +151,23 @@ const Title = styled.h1`
   }
 `
 const Main = styled.main`
-  display: flex;
-  justify-content: center;
   padding: 0 20px;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 0 64px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
+    justify-content: center;
     padding: 0 40px 0 77px;
     justify-content: space-between;
   }
 `
 const Article = styled.article`
-  width: 640px;
+  max-width: 640px;
+  margin: 0 auto;
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 640px;
+  }
 `
 
 const Section = styled.div`
@@ -261,30 +273,31 @@ const StoryMoreInfo = styled.p`
     color: ${({ theme }) => theme.color.brandColor.lightBlue};
     border-bottom: 1px solid ${({ theme }) => theme.color.brandColor.lightBlue};
   }
-  ${({ theme }) => theme.breakpoint.md} {
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-  }
 `
 
 const StoryEnd = styled.section`
+  padding: 0 20px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  margin-top: 60px;
+  margin: 60px auto 0;
   ${({ theme }) => theme.breakpoint.md} {
-    margin-top: 24px;
+    width: 640px;
+
+    margin-top: 24px auto 0;
     gap: 16px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     gap: 36px;
-    margin-top: 20px;
+    padding: 0;
+    margin: 20px 0 0 77px;
   }
 `
 const Aside = styled.aside`
-  display: none;
+  max-width: 640px;
+  margin: 0 auto;
   ${({ theme }) => theme.breakpoint.xl} {
-    display: block;
     width: 365px;
   }
 `
@@ -303,7 +316,18 @@ const AsideFbPagePlugin = styled(FbPagePlugin)`
     display: block;
   }
 `
-
+const AdvertisementDable = styled.div`
+  text-align: center;
+  background-color: #eeeeee;
+`
+const AdvertisementDableMobile = styled(AdvertisementDable)`
+  display: none;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+    width: 640px;
+    margin: 0 auto;
+  }
+`
 /**
  *
  * @param {Object} props
@@ -406,24 +430,6 @@ export default function Story({ postData }) {
           <SocialNetworkServiceInArticle />
           <SubscribeInviteBanner />
           <RelatedArticleList relateds={relateds} />
-          <StoryEnd>
-            <StoryMoreInfo>
-              更多內容，歡迎&nbsp;
-              <Link href="/papermag" target="_blank">
-                鏡週刊紙本雜誌
-              </Link>
-              、
-              <Link href="/subscribe" target="_blank">
-                鏡週刊數位訂閱
-              </Link>
-              、
-              <Link href="/story/webauthorize/" target="_blank">
-                了解內容授權資訊
-              </Link>
-              。
-            </StoryMoreInfo>
-            <MagazineInviteBanner />
-          </StoryEnd>
         </Article>
         <Aside>
           <PC_R1_Advertisement
@@ -445,6 +451,27 @@ export default function Story({ postData }) {
           <AsideFbPagePlugin></AsideFbPagePlugin>
         </Aside>
       </Main>
+      <StoryEnd>
+        <StoryMoreInfo>
+          更多內容，歡迎&nbsp;
+          <Link href="/papermag" target="_blank">
+            鏡週刊紙本雜誌
+          </Link>
+          、
+          <Link href="/subscribe" target="_blank">
+            鏡週刊數位訂閱
+          </Link>
+          、
+          <Link href="/story/webauthorize/" target="_blank">
+            了解內容授權資訊
+          </Link>
+          。
+        </StoryMoreInfo>
+        <MagazineInviteBanner />
+        <AdvertisementDableMobile>
+          dable廣告 (桌機版) 施工中......
+        </AdvertisementDableMobile>
+      </StoryEnd>
     </StoryContainer>
   )
 }
