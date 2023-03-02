@@ -8,7 +8,9 @@ const Container = styled.div`
   color: white;
   font-size: 18px;
   line-height: 1.5;
+  margin-top: 60px;
   ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 32px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;

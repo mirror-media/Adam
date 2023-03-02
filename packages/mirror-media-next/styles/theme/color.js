@@ -3,7 +3,7 @@ const brandColor = {
   lightBlue: '#61B8C6',
   black: '#000000',
   white: '#ffffff',
-  gray: '#555555',
+  gray: '#888888',
 }
 const sectionsColor = {
   member: '#e51731',

@@ -18,7 +18,6 @@ import FbPagePlugin from './fb-page-plugin'
  */
 
 const Wrapper = styled.div`
-  margin-top: 20px;
   display: flex;
   gap: 20px;
   align-items: center;
@@ -29,6 +28,7 @@ const Wrapper = styled.div`
      */
     ({ flexDirection }) => flexDirection
   };
+  flex-wrap: wrap;
 `
 const CustomFbPagePlugin = styled(FbPagePlugin)`
   height: ${
@@ -39,12 +39,13 @@ const CustomFbPagePlugin = styled(FbPagePlugin)`
     ({ facebookPagePluginSize }) => facebookPagePluginSize.height
   };
   width: ${({ facebookPagePluginSize }) => facebookPagePluginSize.width};
+  text-align: center;
 `
 
 const SnsNav = styled.nav`
   ul {
     display: flex;
-    flex-wrap: no-wrap;
+    flex-wrap: wrap;
     gap: 16px;
   }
 `

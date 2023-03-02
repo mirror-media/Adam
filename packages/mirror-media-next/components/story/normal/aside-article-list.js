@@ -27,7 +27,7 @@ const Wrapper = styled.section`
 `
 const Heading = styled.h2`
   text-align: center;
-  color: #888888;
+  color: ${({ theme, color }) => theme.color.brandColor[color]};
   font-size: 21px;
   line-height: 1.5;
   margin-bottom: 20px;
@@ -35,6 +35,7 @@ const Heading = styled.h2`
     text-align: left;
   }
   ${({ theme }) => theme.breakpoint.xl} {
+    margin-bottom: 0;
     background-color: ${
       /**
        * @param {Object} props
@@ -158,7 +159,7 @@ const Title = styled.p`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   overflow: hidden;
-  color: #888888;
+  color: ${({ theme, color }) => theme.color.brandColor[color]};
   font-size: 18px;
   line-height: 1.5;
   font-weight: 400;
@@ -273,7 +274,9 @@ export default function AsideArticleList({
           <figcaption className="article-title">
             <Label sectionTitle={sectionTitle}>{sectionName}</Label>
             <Link href={articleHref} target="_blank">
-              <Title>{item.title}</Title>
+              <Title color={heading === '熱門文章' ? 'darkBlue' : 'gray'}>
+                {item.title}
+              </Title>
             </Link>
           </figcaption>
         </Article>
@@ -283,7 +286,9 @@ export default function AsideArticleList({
 
   return (
     <Wrapper>
-      <Heading>{heading}</Heading>
+      <Heading color={heading === '熱門文章' ? 'darkBlue' : 'gray'}>
+        {heading}
+      </Heading>
       <ArticleWrapper renderAmount={renderAmount} ref={wrapperRef}>
         {isLoaded ? newsJsx : <Loading>Loading...</Loading>}
       </ArticleWrapper>

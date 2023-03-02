@@ -1,3 +1,5 @@
+//TODO: adjust margin and padding of all margin and padding after implement advertisement.
+
 import { useCallback } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
@@ -136,6 +138,18 @@ const PC_R2_Advertisement = styled(MockAdvertisement)`
     display: block;
   }
 `
+const M_AT3_Advertisement = styled(MockAdvertisement)`
+  margin: 0 -20px;
+  width: 100vw;
+  max-width: 336px;
+  @media (min-width: 336px) {
+    margin: 0 auto;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 const Title = styled.h1`
   margin: 0 auto;
   width: 100%;
@@ -257,10 +271,19 @@ const InfoAndHero = styled.div`
     }
   }
 `
-const SocialNetworkServiceInArticle = styled(SocialNetworkService)`
+const SocialNetworkServiceSmall = styled(SocialNetworkService)`
   display: none;
   ${({ theme }) => theme.breakpoint.md} {
     display: flex;
+    margin-top: 20px;
+  }
+`
+const SocialNetworkServiceLarge = styled(SocialNetworkService)`
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 24px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
   }
 `
 const StoryMoreInfo = styled.p`
@@ -276,12 +299,12 @@ const StoryMoreInfo = styled.p`
 `
 
 const StoryEnd = styled.section`
-  padding: 0 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 24px;
   margin: 60px auto 0;
+  padding: 0 23.5px;
   ${({ theme }) => theme.breakpoint.md} {
     width: 640px;
 
@@ -291,14 +314,25 @@ const StoryEnd = styled.section`
   ${({ theme }) => theme.breakpoint.xl} {
     gap: 36px;
     padding: 0;
-    margin: 20px 0 0 77px;
+  }
+`
+const StoryEndMobileTablet = styled(StoryEnd)`
+  display: flex;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+const StoryEndDesktop = styled(StoryEnd)`
+  display: none;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
   }
 `
 const Aside = styled.aside`
   max-width: 640px;
   margin: 0 auto;
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 365px;
+    max-width: 365px;
   }
 `
 const AsideFbPagePlugin = styled(FbPagePlugin)`
@@ -320,7 +354,7 @@ const AdvertisementDable = styled.div`
   text-align: center;
   background-color: #eeeeee;
 `
-const AdvertisementDableMobile = styled(AdvertisementDable)`
+const AdvertisementDableDesktop = styled(AdvertisementDable)`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
     display: block;
@@ -328,6 +362,28 @@ const AdvertisementDableMobile = styled(AdvertisementDable)`
     margin: 0 auto;
   }
 `
+const AdvertisementDableMobile = styled(AdvertisementDable)`
+  display: block;
+  margin: 0 auto;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+    width: 640px;
+  }
+`
+const DivideLine = styled.div`
+  background-color: #000000;
+  width: 208px;
+  height: 2px;
+  margin: 32px auto 36px;
+  ${({ theme }) => theme.breakpoint.md} {
+    width: 100%;
+    margin: 36px auto;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 /**
  *
  * @param {Object} props
@@ -427,15 +483,56 @@ export default function Story({ postData }) {
             brief={brief}
           ></ArticleBrief>
           <DonateBanner />
-          <SocialNetworkServiceInArticle />
+          <SocialNetworkServiceSmall />
           <SubscribeInviteBanner />
           <RelatedArticleList relateds={relateds} />
+          <M_AT3_Advertisement
+            text="M_AT3 336*280"
+            width="336px"
+            height="280px"
+            className="ad"
+          />
+          <SocialNetworkServiceLarge
+            shouldShowLargePagePlugin={true}
+            flexDirection="column"
+          />
+          <M_AT3_Advertisement
+            text="M_E1 336*280"
+            width="336px"
+            height="280px"
+            className="ad"
+          />
+          <AdvertisementDableMobile>
+            dable廣告(手機版)施工中......
+          </AdvertisementDableMobile>
+          <StoryEndDesktop>
+            <StoryMoreInfo>
+              更多內容，歡迎&nbsp;
+              <Link href="/papermag" target="_blank">
+                鏡週刊紙本雜誌
+              </Link>
+              、
+              <Link href="/subscribe" target="_blank">
+                鏡週刊數位訂閱
+              </Link>
+              、
+              <Link href="/story/webauthorize/" target="_blank">
+                了解內容授權資訊
+              </Link>
+              。
+            </StoryMoreInfo>
+            <MagazineInviteBanner />
+            <AdvertisementDableDesktop>
+              dable廣告 (桌機版) 施工中......
+            </AdvertisementDableDesktop>
+          </StoryEndDesktop>
         </Article>
         <Aside>
           <PC_R1_Advertisement
             text="PC_R1 300*600"
             width="300px"
             height="600px"
+            className="ad"
           ></PC_R1_Advertisement>
           <AsideArticleList
             heading="最新文章"
@@ -443,15 +540,24 @@ export default function Story({ postData }) {
             shouldReverseOrder={false}
             renderAmount={6}
           ></AsideArticleList>
+
           <PC_R2_Advertisement
             text="PC_R2 300*600"
             width="300px"
             height="600px"
+            className="ad"
           ></PC_R2_Advertisement>
+          <DivideLine />
+          <AsideArticleList
+            heading="熱門文章"
+            fetchArticle={handleFetchLatestNews}
+            shouldReverseOrder={false}
+            renderAmount={6}
+          ></AsideArticleList>
           <AsideFbPagePlugin></AsideFbPagePlugin>
         </Aside>
       </Main>
-      <StoryEnd>
+      <StoryEndMobileTablet>
         <StoryMoreInfo>
           更多內容，歡迎&nbsp;
           <Link href="/papermag" target="_blank">
@@ -468,10 +574,10 @@ export default function Story({ postData }) {
           。
         </StoryMoreInfo>
         <MagazineInviteBanner />
-        <AdvertisementDableMobile>
+        <AdvertisementDableDesktop>
           dable廣告 (桌機版) 施工中......
-        </AdvertisementDableMobile>
-      </StoryEnd>
+        </AdvertisementDableDesktop>
+      </StoryEndMobileTablet>
     </StoryContainer>
   )
 }

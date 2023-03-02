@@ -57,7 +57,7 @@ const Article = styled.figure`
   flex-direction: column;
   gap: 12px;
   ${({ theme }) => theme.breakpoint.md} {
-    width: 100%;
+    max-width: 640px;
     height: 90px;
     flex-direction: row-reverse;
     justify-content: space-between;
@@ -112,6 +112,8 @@ const ArticleWrapper = styled.ul`
 `
 
 const AdvertisementWrapper = styled.div`
+  height: 300px;
+  background-color: pink;
   padding: 28px 0 10px;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 20px 0 0;
