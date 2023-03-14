@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { GlobalStyles } from '../styles/global-styles'
 import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
@@ -7,6 +8,7 @@ import axios from 'axios'
 import { ApolloProvider } from '@apollo/client'
 import client from '../apollo/apollo-client'
 import PremiumLayout from '../components/premium-layout'
+import * as gtag from '../utils/gtag'
 import {
   URL_STATIC_COMBO_SECTIONS,
   URL_STATIC_COMBO_TOPICS,
@@ -43,6 +45,10 @@ function defaultGetLayout(page, sectionsData, topicsData) {
  */
 
 function MyApp({ Component, pageProps, sectionsData = [], topicsData = [] }) {
+  const router = useRouter()
+  useEffect(() => {
+    gtag.init()
+  }, [])
   const getLayout = Component.getLayout || defaultGetLayout
   return (
     <>
