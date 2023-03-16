@@ -1,10 +1,13 @@
 //TODO: adjust margin and padding of all margin and padding after implement advertisement.
+//TODO: add component to add html head dynamically, not jus write head in every pag
 
 import { useCallback } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
+import Head from 'next/head'
+
 import MockAdvertisement from '../../components/mock-advertisement'
 import Image from 'next/image'
 import ArticleInfo from '../../components/story/normal/article-info'
@@ -441,144 +444,154 @@ export default function Story({ postData }) {
     { vocals: vocals },
     { extend_byline: extend_byline },
   ]
+  const headJsx = (
+    <Head>
+      <title>{title}</title>
+    </Head>
+  )
   const publishedTaipeiTime = transformTimeDataIntoTaipeiTime(publishedDate)
   const updatedTaipeiTime = transformTimeDataIntoTaipeiTime(updatedAt)
 
   return (
-    <StoryContainer>
-      <PC_HD_Advertisement
-        width="970px"
-        height="250px"
-        text="PC_HD 970*250"
-      ></PC_HD_Advertisement>
-      <Main>
-        <Article>
-          <SectionAndDate>
-            <Section sectionSlug={section?.slug}>{section?.name || ''}</Section>
-            <Date>{publishedTaipeiTime}</Date>
-          </SectionAndDate>
-          <Title>{title}</Title>
-          <InfoAndHero>
-            <HeroImage>
-              <Image
-                src={
-                  'https://storage.googleapis.com/static-mirrormedia-dev/images/20160929123258-7818228bd4c9933a170433e57a90616c-tablet.png'
-                }
-                width={640}
-                height={427}
-                alt="首圖"
-              ></Image>
-              <p className="caption">這是首圖圖說</p>
-            </HeroImage>
+    <>
+      {headJsx}
+      <StoryContainer>
+        <PC_HD_Advertisement
+          width="970px"
+          height="250px"
+          text="PC_HD 970*250"
+        ></PC_HD_Advertisement>
+        <Main>
+          <Article>
+            <SectionAndDate>
+              <Section sectionSlug={section?.slug}>
+                {section?.name || ''}
+              </Section>
+              <Date>{publishedTaipeiTime}</Date>
+            </SectionAndDate>
+            <Title>{title}</Title>
+            <InfoAndHero>
+              <HeroImage>
+                <Image
+                  src={
+                    'https://storage.googleapis.com/static-mirrormedia-dev/images/20160929123258-7818228bd4c9933a170433e57a90616c-tablet.png'
+                  }
+                  width={640}
+                  height={427}
+                  alt="首圖"
+                ></Image>
+                <p className="caption">這是首圖圖說</p>
+              </HeroImage>
 
-            <ArticleInfo
-              updatedDate={updatedTaipeiTime}
-              publishedDate={publishedTaipeiTime}
-              credits={credits}
-              tags={tags}
-            ></ArticleInfo>
-          </InfoAndHero>
-          <ArticleBrief
-            sectionSlug={section?.slug}
-            brief={brief}
-          ></ArticleBrief>
-          <DonateBanner />
-          <SocialNetworkServiceSmall />
-          <SubscribeInviteBanner />
-          <RelatedArticleList relateds={relateds} />
-          <M_AT3_Advertisement
-            text="M_AT3 336*280"
-            width="336px"
-            height="280px"
-            className="ad"
-          />
-          <SocialNetworkServiceLarge
-            shouldShowLargePagePlugin={true}
-            flexDirection="column"
-          />
-          <M_AT3_Advertisement
-            text="M_E1 336*280"
-            width="336px"
-            height="280px"
-            className="ad"
-          />
-          <AdvertisementDableMobile>
-            dable廣告(手機版)施工中......
-          </AdvertisementDableMobile>
-          <StoryEndDesktop>
-            <StoryMoreInfo>
-              更多內容，歡迎&nbsp;
-              <Link href="/papermag" target="_blank">
-                鏡週刊紙本雜誌
-              </Link>
-              、
-              <Link href="/subscribe" target="_blank">
-                鏡週刊數位訂閱
-              </Link>
-              、
-              <Link href="/story/webauthorize/" target="_blank">
-                了解內容授權資訊
-              </Link>
-              。
-            </StoryMoreInfo>
-            <MagazineInviteBanner />
-            <AdvertisementDableDesktop>
-              dable廣告 (桌機版) 施工中......
-            </AdvertisementDableDesktop>
-          </StoryEndDesktop>
-        </Article>
-        <Aside>
-          <PC_R1_Advertisement
-            text="PC_R1 300*600"
-            width="300px"
-            height="600px"
-            className="ad"
-          ></PC_R1_Advertisement>
-          <AsideArticleList
-            heading="最新文章"
-            fetchArticle={handleFetchLatestNews}
-            shouldReverseOrder={false}
-            renderAmount={6}
-          ></AsideArticleList>
+              <ArticleInfo
+                updatedDate={updatedTaipeiTime}
+                publishedDate={publishedTaipeiTime}
+                credits={credits}
+                tags={tags}
+              ></ArticleInfo>
+            </InfoAndHero>
+            <ArticleBrief
+              sectionSlug={section?.slug}
+              brief={brief}
+            ></ArticleBrief>
+            <DonateBanner />
+            <SocialNetworkServiceSmall />
+            <SubscribeInviteBanner />
+            <RelatedArticleList relateds={relateds} />
+            <M_AT3_Advertisement
+              text="M_AT3 336*280"
+              width="336px"
+              height="280px"
+              className="ad"
+            />
+            <SocialNetworkServiceLarge
+              shouldShowLargePagePlugin={true}
+              flexDirection="column"
+            />
+            <M_AT3_Advertisement
+              text="M_E1 336*280"
+              width="336px"
+              height="280px"
+              className="ad"
+            />
+            <AdvertisementDableMobile>
+              dable廣告(手機版)施工中......
+            </AdvertisementDableMobile>
+            <StoryEndDesktop>
+              <StoryMoreInfo>
+                更多內容，歡迎&nbsp;
+                <Link href="/papermag" target="_blank">
+                  鏡週刊紙本雜誌
+                </Link>
+                、
+                <Link href="/subscribe" target="_blank">
+                  鏡週刊數位訂閱
+                </Link>
+                、
+                <Link href="/story/webauthorize/" target="_blank">
+                  了解內容授權資訊
+                </Link>
+                。
+              </StoryMoreInfo>
+              <MagazineInviteBanner />
+              <AdvertisementDableDesktop>
+                dable廣告 (桌機版) 施工中......
+              </AdvertisementDableDesktop>
+            </StoryEndDesktop>
+          </Article>
+          <Aside>
+            <PC_R1_Advertisement
+              text="PC_R1 300*600"
+              width="300px"
+              height="600px"
+              className="ad"
+            ></PC_R1_Advertisement>
+            <AsideArticleList
+              heading="最新文章"
+              fetchArticle={handleFetchLatestNews}
+              shouldReverseOrder={false}
+              renderAmount={6}
+            ></AsideArticleList>
 
-          <PC_R2_Advertisement
-            text="PC_R2 300*600"
-            width="300px"
-            height="600px"
-            className="ad"
-          ></PC_R2_Advertisement>
-          <DivideLine />
-          <AsideArticleList
-            heading="熱門文章"
-            fetchArticle={handleFetchLatestNews}
-            shouldReverseOrder={false}
-            renderAmount={6}
-          ></AsideArticleList>
-          <AsideFbPagePlugin></AsideFbPagePlugin>
-        </Aside>
-      </Main>
-      <StoryEndMobileTablet>
-        <StoryMoreInfo>
-          更多內容，歡迎&nbsp;
-          <Link href="/papermag" target="_blank">
-            鏡週刊紙本雜誌
-          </Link>
-          、
-          <Link href="/subscribe" target="_blank">
-            鏡週刊數位訂閱
-          </Link>
-          、
-          <Link href="/story/webauthorize/" target="_blank">
-            了解內容授權資訊
-          </Link>
-          。
-        </StoryMoreInfo>
-        <MagazineInviteBanner />
-        <AdvertisementDableDesktop>
-          dable廣告 (桌機版) 施工中......
-        </AdvertisementDableDesktop>
-      </StoryEndMobileTablet>
-    </StoryContainer>
+            <PC_R2_Advertisement
+              text="PC_R2 300*600"
+              width="300px"
+              height="600px"
+              className="ad"
+            ></PC_R2_Advertisement>
+            <DivideLine />
+            <AsideArticleList
+              heading="熱門文章"
+              fetchArticle={handleFetchLatestNews}
+              shouldReverseOrder={false}
+              renderAmount={6}
+            ></AsideArticleList>
+            <AsideFbPagePlugin></AsideFbPagePlugin>
+          </Aside>
+        </Main>
+        <StoryEndMobileTablet>
+          <StoryMoreInfo>
+            更多內容，歡迎&nbsp;
+            <Link href="/papermag" target="_blank">
+              鏡週刊紙本雜誌
+            </Link>
+            、
+            <Link href="/subscribe" target="_blank">
+              鏡週刊數位訂閱
+            </Link>
+            、
+            <Link href="/story/webauthorize/" target="_blank">
+              了解內容授權資訊
+            </Link>
+            。
+          </StoryMoreInfo>
+          <MagazineInviteBanner />
+          <AdvertisementDableDesktop>
+            dable廣告 (桌機版) 施工中......
+          </AdvertisementDableDesktop>
+        </StoryEndMobileTablet>
+      </StoryContainer>
+    </>
   )
 }
 

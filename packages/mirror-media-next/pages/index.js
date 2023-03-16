@@ -1,11 +1,13 @@
 //TODO: will fetch topic data twice (once in header, once in index),
 //should fetch only once by using Redux.
 //TODO: add typedef of editor choice data
+//TODO: add component to add html head dynamically, not jus write head in every pag
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
 import client from '../apollo/apollo-client'
+import Head from 'next/head'
 import { gql } from '@apollo/client'
 import {
   ENV,
@@ -67,18 +69,23 @@ export default function Home({
     [topicsData]
   )
   return (
-    <IndexContainer>
-      <FlashNews flashNews={flashNews} />
-      <IndexTop>
-        <NavTopics topics={topics} />
-        <SubscribeMagazine />
-      </IndexTop>
-      <EditorChoice editorChoice={editorChoice}></EditorChoice>
-      <LatestNews
-        latestNewsData={latestNewsData}
-        latestNewsTimestamp={latestNewsTimestamp}
-      />
-    </IndexContainer>
+    <>
+      <Head>
+        <title>鏡週刊 Mirror Media</title>
+      </Head>
+      <IndexContainer>
+        <FlashNews flashNews={flashNews} />
+        <IndexTop>
+          <NavTopics topics={topics} />
+          <SubscribeMagazine />
+        </IndexTop>
+        <EditorChoice editorChoice={editorChoice}></EditorChoice>
+        <LatestNews
+          latestNewsData={latestNewsData}
+          latestNewsTimestamp={latestNewsTimestamp}
+        />
+      </IndexContainer>
+    </>
   )
 }
 
