@@ -18,7 +18,7 @@ let URL_STATIC_COMBO_SECTIONS = ''
 let URL_STATIC_POST_EXTERNAL = ''
 let DONATION_PAGE_URL = ''
 let GA_TRACKING_ID = ''
-
+let GTM_ID = ''
 switch (ENV) {
   case 'prod':
     API_TIMEOUT = 1500
@@ -33,6 +33,7 @@ switch (ENV) {
       'https://statics.mirrormedia.mg/json/post_external'
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_TRACKING_ID = 'G-341XFN0675'
+    GTM_ID = 'GTM-NCH86SP'
     break
   case 'staging':
     API_TIMEOUT = 1500
@@ -47,6 +48,7 @@ switch (ENV) {
       'https://statics.mirrormedia.mg/json/post_external'
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_TRACKING_ID = 'G-32D7P3MJ8B'
+    GTM_ID = 'GTM-KVDZ27K'
 
     break
   case 'dev':
@@ -62,7 +64,7 @@ switch (ENV) {
       'https://statics.mirrormedia.mg/dev/post_external'
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_TRACKING_ID = 'G-36HYH6NF6P'
-
+    GTM_ID = 'GTM-PBNLSMX'
     break
   default:
     API_TIMEOUT = 5000
@@ -75,6 +77,7 @@ switch (ENV) {
     URL_STATIC_POST_EXTERNAL = `${API_PROTOCOL}://${RESTFUL_API_HOST}:${API_PORT}/json/post_external`
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_TRACKING_ID = 'G-36HYH6NF6P'
+    GTM_ID = 'GTM-PBNLSMX'
 }
 
 export {
@@ -88,4 +91,5 @@ export {
   URL_STATIC_POST_EXTERNAL,
   DONATION_PAGE_URL,
   GA_TRACKING_ID,
+  GTM_ID,
 }
