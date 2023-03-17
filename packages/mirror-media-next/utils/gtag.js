@@ -1,11 +1,11 @@
 // https://github.com/codler/react-ga4#readme
 import ga4 from 'react-ga4'
-import { GA_TRACKING_ID } from '../config/index.mjs'
+import { GA_MEASUREMENT_ID } from '../config/index.mjs'
 
 const init = () => {
   ga4.initialize([
     {
-      trackingId: GA_TRACKING_ID,
+      trackingId: GA_MEASUREMENT_ID,
     },
   ])
 }
