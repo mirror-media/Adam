@@ -145,6 +145,7 @@ const fetchPostBySlug = gql`
       tags {
         id
         name
+        slug
       }
       heroVideo {
         id
