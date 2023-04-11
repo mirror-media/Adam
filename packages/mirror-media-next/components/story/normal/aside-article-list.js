@@ -128,7 +128,9 @@ const Article = styled.figure`
     }
   }
 `
-
+const FigureCaption = styled.figcaption`
+  width: 100%;
+`
 const Label = styled.div`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
@@ -271,14 +273,14 @@ export default function AsideArticleList({
             />
           </Link>
 
-          <figcaption className="article-title">
+          <FigureCaption>
             <Label sectionTitle={sectionTitle}>{sectionName}</Label>
             <Link href={articleHref} target="_blank">
               <Title color={heading === '熱門文章' ? 'darkBlue' : 'gray'}>
                 {item.title}
               </Title>
             </Link>
-          </figcaption>
+          </FigureCaption>
         </Article>
       </li>
     )
