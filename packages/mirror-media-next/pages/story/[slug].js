@@ -84,6 +84,7 @@ const { DraftRenderer } = MirrorMedia
  * state: "published" | "draft" | "scheduled" | "archived" | "invisible",
  * sections: Sections | [],
  * writers: Contacts | [],
+ * manualOrderOfWriters: Contacts | [] | null,
  * photographers: Contacts | [],
  * camera_man: Contacts | [],
  * designers: Contacts | [],
@@ -402,6 +403,7 @@ export default function Story({ postData }) {
     publishedDate = '',
     updatedAt = '',
     writers = [],
+    manualOrderOfWriters = [],
     photographers = [],
     camera_man = [],
     designers = [],
@@ -436,9 +438,12 @@ export default function Story({ postData }) {
       return []
     }
   }, [section, slug])
-
+  const writersWithOrdered =
+    manualOrderOfWriters && manualOrderOfWriters.length
+      ? manualOrderOfWriters
+      : writers
   const credits = [
-    { writers: writers },
+    { writers: writersWithOrdered },
     { photographers: photographers },
     { camera_man: camera_man },
     { designers: designers },
