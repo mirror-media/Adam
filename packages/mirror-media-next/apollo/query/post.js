@@ -84,6 +84,7 @@ import { gql } from '@apollo/client'
  * @property {string} [updatedAt] - post updated date
  * @property {PostState} [state] - post state, different states will have different post access of viewing
  * @property {Section[]} [sections] - which sections does this post belong to
+ * @property {Section[] | null} [manualOrderOfSections] - sections with adjusted order
  * @property {Contact[]} [writers] -  the field called '作者' in cms
  * @property {Contact[] | null} [manualOrderOfWriters] - writers with adjusted order
  * @property {Contact[]} [photographers] - the field called '攝影' in cms
@@ -118,6 +119,7 @@ const fetchPostBySlug = gql`
         name
         slug
       }
+      manualOrderOfSections
       writers {
         id
         name
