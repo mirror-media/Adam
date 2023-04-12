@@ -3,6 +3,7 @@ import { gql } from '@apollo/client'
 //TODOs:
 // 1. specify DraftBlock typedef
 // 2. refactor jsDoc, make it follow jsDoc convention of importing and using
+// 3. remove this file, move & refactor related code into fragments/post and query/posts
 
 /**
  * @typedef {'published' | 'draft' | 'scheduled' | 'archived' | 'invisible'} PostState
@@ -84,6 +85,7 @@ import { gql } from '@apollo/client'
  * @property {PostState} [state] - post state, different states will have different post access of viewing
  * @property {Section[]} [sections] - which sections does this post belong to
  * @property {Contact[]} [writers] -  the field called '作者' in cms
+ * @property {Contact[] | null} [manualOrderOfWriters] - writers with adjusted order
  * @property {Contact[]} [photographers] - the field called '攝影' in cms
  * @property {Contact[]} [camera_man] - the field called '影音' in cms
  * @property {Contact[]} [designers] - the field called '設計' in cms
@@ -116,11 +118,11 @@ const fetchPostBySlug = gql`
         name
         slug
       }
-
       writers {
         id
         name
       }
+      manualOrderOfWriters
       photographers {
         id
         name
