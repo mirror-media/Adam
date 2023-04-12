@@ -19,7 +19,10 @@ import SubscribeInviteBanner from '../../components/story/normal/subscribe-invit
 import DonateBanner from '../../components/story/shared/donate-banner'
 import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../components/story/normal/related-article-list'
-import { transformTimeDataIntoTaipeiTime } from '../../utils'
+import {
+  transformTimeDataIntoTaipeiTime,
+  sortArrayWithOtherArrayId,
+} from '../../utils'
 import { fetchListingPosts } from '../../apollo/query/posts'
 import { fetchPostBySlug } from '../../apollo/query/post'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
@@ -83,6 +86,7 @@ const { DraftRenderer } = MirrorMedia
  * updatedAt: string,
  * state: "published" | "draft" | "scheduled" | "archived" | "invisible",
  * sections: Sections | [],
+ * manualOrderOfSections: Sections | [] | null,
  * writers: Contacts | [],
  * manualOrderOfWriters: Contacts | [] | null,
  * photographers: Contacts | [],
@@ -400,6 +404,7 @@ export default function Story({ postData }) {
     title = '',
     slug = '',
     sections = [],
+    manualOrderOfSections = [],
     publishedDate = '',
     updatedAt = '',
     writers = [],
@@ -415,7 +420,12 @@ export default function Story({ postData }) {
     relateds = [],
     content = {},
   } = postData
-  const [section] = sections
+
+  const sectionsWithOrdered =
+    manualOrderOfSections && manualOrderOfSections.length
+      ? sortArrayWithOtherArrayId(sections, manualOrderOfSections)
+      : sections
+  const [section] = sectionsWithOrdered
 
   /**
    * @returns {Promise<AsideArticleData[] | []>}
