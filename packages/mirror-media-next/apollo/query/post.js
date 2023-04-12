@@ -99,7 +99,8 @@ import { gql } from '@apollo/client'
  * @property {string} [heroCaption] - caption to explain hero video or image
  * @property {Draft} [brief] - post brief
  * @property {Draft} [content] - post content
- * @property {Related[] | []} [relateds]
+ * @property {Related[] | []} [relateds] related articles selected by cms users
+ * @property {Related[] | [] | null} [manualOrderOfRelateds] related articles with adjusted order
  */
 
 const fetchPostBySlug = gql`
@@ -186,6 +187,7 @@ const fetchPostBySlug = gql`
           }
         }
       }
+      manualOrderOfRelateds
     }
   }
 `
