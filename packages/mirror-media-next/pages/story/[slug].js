@@ -69,9 +69,7 @@ const { DraftRenderer } = MirrorMedia
  */
 
 /**
- * @typedef {(import('../../apollo/query/post').Related & {
- *  id: string, slug: string, title: string, heroImage: HeroImage})[]
- * } Relateds
+ * @typedef {import('../../components/story/normal/related-article-list').Relateds} Relateds
  */
 
 /**
@@ -87,7 +85,7 @@ const { DraftRenderer } = MirrorMedia
  * state: "published" | "draft" | "scheduled" | "archived" | "invisible",
  * sections: Sections | [],
  * manualOrderOfSections: Sections | [] | null,
- * writers: Contacts | [],
+ * writers: import('../../components/story/normal/article-info').Contacts | [],
  * manualOrderOfWriters: Contacts | [] | null,
  * photographers: Contacts | [],
  * camera_man: Contacts | [],
@@ -418,6 +416,7 @@ export default function Story({ postData }) {
     tags = [],
     brief = [],
     relateds = [],
+    manualOrderOfRelateds = [],
     content = {},
   } = postData
 
@@ -425,6 +424,16 @@ export default function Story({ postData }) {
     manualOrderOfSections && manualOrderOfSections.length
       ? sortArrayWithOtherArrayId(sections, manualOrderOfSections)
       : sections
+  const relatedsWithOrdered =
+    manualOrderOfRelateds && manualOrderOfRelateds.length
+      ? sortArrayWithOtherArrayId(relateds, manualOrderOfRelateds)
+      : relateds
+
+  const writersWithOrdered =
+    manualOrderOfWriters && manualOrderOfWriters.length
+      ? sortArrayWithOtherArrayId(writers, manualOrderOfWriters)
+      : writers
+
   const [section] = sectionsWithOrdered
 
   /**
@@ -448,10 +457,7 @@ export default function Story({ postData }) {
       return []
     }
   }, [section, slug])
-  const writersWithOrdered =
-    manualOrderOfWriters && manualOrderOfWriters.length
-      ? manualOrderOfWriters
-      : writers
+
   const credits = [
     { writers: writersWithOrdered },
     { photographers: photographers },
@@ -520,7 +526,7 @@ export default function Story({ postData }) {
             <DonateBanner />
             <SocialNetworkServiceSmall />
             <SubscribeInviteBanner />
-            <RelatedArticleList relateds={relateds} />
+            <RelatedArticleList relateds={relatedsWithOrdered} />
             <M_AT3_Advertisement
               text="M_AT3 336*280"
               width="336px"
