@@ -213,6 +213,23 @@ const transformTimeDataIntoSlashFormat = (time) => {
   return transformTimeData(time, 'slash')
 }
 
+//TODO: add more specific type in param `arrayNeedToSort` and `arraySortReference`
+/**
+ * Sorts an array of objects based on the order of ids in another array of objects.
+ * @param {Object[]} arrayNeedToSort
+ * @param {Object[]} arraySortReference
+ */
+const sortArrayWithOtherArrayId = (arrayNeedToSort, arraySortReference) => {
+  const sortedArray = arrayNeedToSort.slice().sort((a, b) => {
+    const aIndex = arraySortReference.findIndex((x) => x.id === a.id)
+    console.log(aIndex)
+    const bIndex = arraySortReference.findIndex((x) => x.id === b.id)
+    console.log(bIndex)
+    return aIndex - bIndex
+  })
+  return sortedArray
+}
+
 export {
   transformRawDataToArticleInfo,
   transformTimeDataIntoTaipeiTime,
@@ -220,4 +237,5 @@ export {
   getSectionNameGql,
   getSectionTitleGql,
   getArticleHref,
+  sortArrayWithOtherArrayId,
 }
