@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import client from '../../../apollo/apollo-client'
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
-
+import axios from 'axios'
 import MockAdvertisement from '../../../components/mock-advertisement'
 import Image from 'next/image'
 import ArticleInfo from '../../../components/story/normal/article-info'
@@ -23,7 +23,7 @@ import {
 import { fetchListingPosts } from '../../../apollo/query/posts'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
 const { DraftRenderer } = MirrorMedia
-
+import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -442,6 +442,24 @@ export default function StoryNormalType({ postData }) {
     }
   }, [section, slug])
 
+  /**
+   * @returns {Promise<AsideArticleData[] | []>}
+   */
+  const handleFetchPopularNews = async () => {
+    try {
+      /**
+       * @type {import('axios').AxiosResponse<AsideArticleData[] | []>}>}
+       */
+      const { data } = await axios({
+        method: 'get',
+        url: URL_STATIC_POPULAR_NEWS,
+        timeout: API_TIMEOUT,
+      })
+      return data.filter((data) => data)
+    } catch (err) {
+      return []
+    }
+  }
   const credits = [
     { writers: writersWithOrdered },
     { photographers: photographers },
@@ -567,7 +585,7 @@ export default function StoryNormalType({ postData }) {
           <DivideLine />
           <AsideArticleList
             heading="熱門文章"
-            fetchArticle={handleFetchLatestNews}
+            fetchArticle={handleFetchPopularNews}
             shouldReverseOrder={false}
             renderAmount={6}
           ></AsideArticleList>
