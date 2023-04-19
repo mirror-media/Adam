@@ -6,7 +6,6 @@ import styled, { css } from 'styled-components'
 import Link from 'next/link'
 import axios from 'axios'
 import MockAdvertisement from '../../../components/mock-advertisement'
-import Image from 'next/image'
 import ArticleInfo from '../../../components/story/normal/article-info'
 import ArticleBrief from '../../../components/story/normal/brief'
 import AsideArticleList from '../../../components/story/normal/aside-article-list'
@@ -16,6 +15,7 @@ import SubscribeInviteBanner from '../../../components/story/normal/subscribe-in
 import DonateBanner from '../../../components/story/shared/donate-banner'
 import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
+import HeroImageAndVideo from './hero-image-and-video'
 import {
   transformTimeDataIntoTaipeiTime,
   sortArrayWithOtherArrayId,
@@ -42,23 +42,11 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  */
 
 /**
- * @typedef {import('../../../apollo/query/post').HeroImage &
- * {
- *  id: string,
- *  resized: {
- *    original: string,
- *    w480: string,
- *    w800: string,
- *    w1200: string,
- *    w1600: string,
- *    w2400: string
- *  }
- * } } HeroImage
+ * @typedef {import('../../../components/story/normal/hero-image-and-video').HeroImage} HeroImage
  */
 
 /**
- * @typedef {import('../../../apollo/query/post').HeroVideo & {
- * id: string, name:string, urlOriginal: string}} HeroVideo
+ * @typedef {import('../../../components/story/normal/hero-image-and-video').HeroVideo} HeroVideo
  */
 
 /**
@@ -240,30 +228,12 @@ const SectionAndDate = styled.div`
   }
 `
 
-const HeroImage = styled.div`
-  position: relative;
-  width: 100%;
-  height: auto;
-  margin: 20px 0 0;
-
-  .caption {
-    width: 100%;
-    height: auto;
-    margin-top: 9px;
-    font-size: 18px;
-    line-height: 25px;
-    font-weight: 600;
-    color: #9d9d9d;
-  }
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 0;
-  }
-`
+const StyledHeroImageAndVideo = styled(HeroImageAndVideo)``
 const InfoAndHero = styled.div`
   display: flex;
   flex-direction: column;
   ${({ theme }) => theme.breakpoint.md} {
-    ${HeroImage} {
+    ${StyledHeroImageAndVideo} {
       order: 10;
     }
   }
@@ -380,13 +350,20 @@ const DivideLine = styled.div`
     display: none;
   }
 `
-
+/**
+ *
+ * @param {{postData: PostData}} param
+ * @returns {JSX.Element}
+ */
 export default function StoryNormalType({ postData }) {
   const {
     title = '',
     slug = '',
     sections = [],
     manualOrderOfSections = [],
+    heroImage = null,
+    heroVideo = null,
+    heroCaption = '',
     publishedDate = '',
     updatedAt = '',
     writers = [],
@@ -488,18 +465,12 @@ export default function StoryNormalType({ postData }) {
           </SectionAndDate>
           <Title>{title}</Title>
           <InfoAndHero>
-            <HeroImage>
-              <Image
-                src={
-                  'https://storage.googleapis.com/static-mirrormedia-dev/images/20160929123258-7818228bd4c9933a170433e57a90616c-tablet.png'
-                }
-                width={640}
-                height={427}
-                alt="首圖"
-              ></Image>
-              <p className="caption">這是首圖圖說</p>
-            </HeroImage>
-
+            <StyledHeroImageAndVideo
+              heroImage={heroImage}
+              heroCaption={heroCaption}
+              heroVideo={heroVideo}
+              title={title}
+            />
             <ArticleInfo
               updatedDate={updatedTaipeiTime}
               publishedDate={publishedTaipeiTime}
