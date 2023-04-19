@@ -34,6 +34,7 @@ import { gql } from '@apollo/client'
  * @property {string} [id] - unique id
  * @property {string} [name] - name of the video
  * @property {string} [urlOriginal] - video url
+ * @property {Pick<HeroImage,'id'> & Pick<HeroImage['resized'], 'original'>} [heroImage] - video url
  */
 
 /**
@@ -156,6 +157,12 @@ const fetchPostBySlug = gql`
         id
         name
         urlOriginal
+        heroImage {
+          id
+          resized {
+            original
+          }
+        }
       }
       heroImage {
         id
