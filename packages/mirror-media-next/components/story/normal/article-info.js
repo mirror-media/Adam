@@ -178,7 +178,13 @@ export default function ArticleInfo({
   credits,
   tags,
 }) {
-  const creditsJsx = (
+  const shouldShowCredits = credits.some((credit) => {
+    const [people] = Object.values(credit)
+    return people.length !== 0 || (typeof people === 'string' && people.trim())
+  })
+
+  const shouldShowTags = tags && tags.length
+  const creditsJsx = shouldShowCredits ? (
     <Credits>
       {credits.map((credit, index) => {
         const title = Object.keys(credit)
@@ -213,9 +219,9 @@ export default function ArticleInfo({
         )
       })}
     </Credits>
-  )
+  ) : null
 
-  const tagsJsx = (
+  const tagsJsx = shouldShowTags ? (
     <Tags>
       {tags.map((tag) => (
         <Tag key={tag.id} href={`/tag/${tag.slug}`} target="_blank">
@@ -223,7 +229,7 @@ export default function ArticleInfo({
         </Tag>
       ))}
     </Tags>
-  )
+  ) : null
   return (
     <ArticleInfoContainer>
       <div>
