@@ -1,8 +1,12 @@
 import styled from 'styled-components'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
-const { DraftRenderer } = MirrorMedia
+const { DraftRenderer, hasContentInRawContentBlock } = MirrorMedia
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
+ */
+
+/**
+ * @typedef {import('../../../type/draft-js').Draft} Brief
  */
 
 const BriefContainer = styled.div`
@@ -31,24 +35,12 @@ const BriefContainer = styled.div`
   *::after {
     color: white;
   }
-  .DraftEditor-editorContainer {
-    background-color: ${
-      /**
-       * @param {Object} props
-       * @param {String} props.sectionSlug
-       * @param {Theme} [props.theme]
-       */
-      ({ theme, sectionSlug }) =>
-        sectionSlug && theme.color.sectionsColor[sectionSlug]
-          ? theme.color.sectionsColor[sectionSlug]
-          : theme.color.brandColor.darkBlue
-    };
-  }
 `
+
 /**
  *
  * @param {Object} props
- * @param {Object} props.brief
+ * @param {Brief} props.brief
  * @param {String} [props.sectionSlug]
  * @returns {JSX.Element}
  */
@@ -56,9 +48,12 @@ export default function ArticleBrief({
   brief = { blocks: [], entityMap: {} },
   sectionSlug = '',
 }) {
+  const shouldRenderBrief = hasContentInRawContentBlock(brief)
   return (
-    <BriefContainer sectionSlug={sectionSlug}>
-      <DraftRenderer rawContentBlock={brief}></DraftRenderer>
-    </BriefContainer>
+    shouldRenderBrief && (
+      <BriefContainer sectionSlug={sectionSlug}>
+        <DraftRenderer rawContentBlock={brief}></DraftRenderer>
+      </BriefContainer>
+    )
   )
 }
