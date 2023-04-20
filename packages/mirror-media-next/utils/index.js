@@ -181,7 +181,7 @@ const transformTimeData = (time, format) => {
       case 'dot':
         return `${year}.${formattedUnit(month)}.${formattedUnit(
           date
-        )} ${formattedUnit(hour)}:${formattedUnit(minute)} 臺北時間`
+        )} ${formattedUnit(hour)}:${formattedUnit(minute)}`
       case 'slash':
         return `${year}/${formattedUnit(month)}/${formattedUnit(
           date
@@ -193,13 +193,12 @@ const transformTimeData = (time, format) => {
 }
 
 /**
- * Transform params `time` into `YYYY.MM.DD HH:MM 臺北時間` pattern
- * Transform params `time` into certain type
+ * Transform params `time` into `YYYY.MM.DD HH:MM` pattern
  * If `time` is not a valid date, this function will return undefined
  * @param {String} time
  * @returns {string | undefined}
  */
-const transformTimeDataIntoTaipeiTime = (time) => {
+const transformTimeDataIntoDotFormat = (time) => {
   return transformTimeData(time, 'dot')
 }
 
@@ -230,7 +229,7 @@ const sortArrayWithOtherArrayId = (arrayNeedToSort, arraySortReference) => {
 
 export {
   transformRawDataToArticleInfo,
-  transformTimeDataIntoTaipeiTime,
+  transformTimeDataIntoDotFormat,
   transformTimeDataIntoSlashFormat,
   getSectionNameGql,
   getSectionTitleGql,
