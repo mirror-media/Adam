@@ -3,10 +3,6 @@ import { listingPost, asideListingPost } from '../fragments/post'
 
 //TODO: result of fetchListingPost is similar to fetchPosts, should refactor to on gql query if possible
 
-/**
- * @typedef {import('../fragments/listing-post').ListingPost} ResultOfFetchListingPosts
- */
-
 const fetchAsidePosts = gql`
   ${asideListingPost}
   query fetchListingPosts(
