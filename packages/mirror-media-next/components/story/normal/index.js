@@ -18,7 +18,7 @@ import RelatedArticleList from '../../../components/story/normal/related-article
 import ArticleContent from './article-content'
 import HeroImageAndVideo from './hero-image-and-video'
 import {
-  transformTimeDataIntoTaipeiTime,
+  transformTimeDataIntoDotFormat,
   sortArrayWithOtherArrayId,
 } from '../../../utils'
 import { fetchListingPosts } from '../../../apollo/query/posts'
@@ -161,6 +161,7 @@ const Main = styled.main`
     justify-content: center;
     padding: 0 40px 0 77px;
     justify-content: space-between;
+    align-items: start;
   }
 `
 const Article = styled.article`
@@ -217,7 +218,15 @@ const Date = styled.div`
     display: block;
   }
 `
-
+const DateUnderContent = styled(Date)`
+  color: ${({ theme }) => theme.color.brandColor.darkBlue};
+  font-size: 16px;
+  line-height: 1.15;
+  margin-top: 32px;
+  .time {
+    color: ${({ theme }) => theme.color.brandColor.lightBlue};
+  }
+`
 const SectionAndDate = styled.div`
   display: flex;
   width: 100%;
@@ -449,8 +458,8 @@ export default function StoryNormalType({ postData }) {
     { extend_byline: extend_byline },
   ]
 
-  const publishedTaipeiTime = transformTimeDataIntoTaipeiTime(publishedDate)
-  const updatedTaipeiTime = transformTimeDataIntoTaipeiTime(updatedAt)
+  const publishedTaipeiTime = transformTimeDataIntoDotFormat(publishedDate)
+  const updatedTaipeiTime = transformTimeDataIntoDotFormat(updatedAt)
 
   return (
     <>
@@ -463,7 +472,7 @@ export default function StoryNormalType({ postData }) {
         <Article>
           <SectionAndDate>
             <Section sectionSlug={section?.slug}>{section?.name || ''}</Section>
-            <Date>{publishedTaipeiTime}</Date>
+            <Date>{publishedTaipeiTime} 臺北時間</Date>
           </SectionAndDate>
           <Title>{title}</Title>
           <InfoAndHero>
@@ -486,6 +495,10 @@ export default function StoryNormalType({ postData }) {
             brief={brief}
           ></ArticleBrief>
           <ArticleContent content={content} />
+          <DateUnderContent>
+            <span>更新時間｜</span>
+            <span className="time">{updatedTaipeiTime}</span>
+          </DateUnderContent>
           <DonateBanner />
           <SocialNetworkServiceSmall />
           <SubscribeInviteBanner />
