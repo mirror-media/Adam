@@ -21,7 +21,7 @@ import {
   transformTimeDataIntoDotFormat,
   sortArrayWithOtherArrayId,
 } from '../../../utils'
-import { fetchListingPosts } from '../../../apollo/query/posts'
+import { fetchAsidePosts } from '../../../apollo/query/posts'
 import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
@@ -417,7 +417,7 @@ export default function StoryNormalType({ postData }) {
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
       const res = await client.query({
-        query: fetchListingPosts,
+        query: fetchAsidePosts,
         variables: {
           take: 6,
           sectionSlug: section.slug,
@@ -426,6 +426,7 @@ export default function StoryNormalType({ postData }) {
       })
       return res.data?.posts
     } catch (err) {
+      console.error(err)
       return []
     }
   }, [section, slug])

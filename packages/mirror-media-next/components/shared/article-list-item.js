@@ -109,7 +109,7 @@ const ItemBrief = styled.div`
  *  resized: import('../../apollo/fragments/photo').Resized
  * }} HeroImage
  *
- * @typedef {import('../../apollo/fragments/post').Post & {
+ * @typedef {import('../../apollo/fragments/post').ListingPost & {
  *  id: string,
  *  slug: string,
  *  title: string,

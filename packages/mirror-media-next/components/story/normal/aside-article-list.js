@@ -14,7 +14,7 @@ import Image from '@readr-media/react-image'
  * @typedef {import('../../../type/theme').Theme} Theme
  */
 
-/** @typedef {import('../../../apollo/query/posts').ResultOfFetchListingPosts} ArticleData */
+/** @typedef {import('../../../apollo/fragments/post').AsideListingPost} ArticleData */
 
 const Wrapper = styled.section`
   margin-top: 20px;
