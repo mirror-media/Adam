@@ -222,9 +222,7 @@ const transformTimeDataIntoSlashFormat = (time) => {
 const sortArrayWithOtherArrayId = (arrayNeedToSort, arraySortReference) => {
   const sortedArray = arrayNeedToSort.slice().sort((a, b) => {
     const aIndex = arraySortReference.findIndex((x) => x.id === a.id)
-    console.log(aIndex)
     const bIndex = arraySortReference.findIndex((x) => x.id === b.id)
-    console.log(bIndex)
     return aIndex - bIndex
   })
   return sortedArray
