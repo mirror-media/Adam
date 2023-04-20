@@ -15,14 +15,13 @@ import SubscribeInviteBanner from '../../../components/story/normal/subscribe-in
 import DonateBanner from '../../../components/story/shared/donate-banner'
 import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
+import ArticleContent from './article-content'
 import HeroImageAndVideo from './hero-image-and-video'
 import {
   transformTimeDataIntoTaipeiTime,
   sortArrayWithOtherArrayId,
 } from '../../../utils'
 import { fetchListingPosts } from '../../../apollo/query/posts'
-import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
-const { DraftRenderer } = MirrorMedia
 import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
@@ -50,7 +49,10 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  */
 
 /**
- * @typedef {import('../../../apollo/query/post').Draft} Draft
+ * @typedef {import('./brief').Brief} Brief
+ */
+/**
+ * @typedef {import('./article-content').Content} Content
  */
 
 /**
@@ -82,8 +84,8 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  * heroVideo : HeroVideo | null,
  * heroImage : HeroImage | null,
  * heroCaption: string,
- * brief: Draft,
- * content: Draft,
+ * brief: Brief | null,
+ * content: Content | null,
  * relateds: Relateds | []
  * } } PostData
  */
@@ -375,10 +377,10 @@ export default function StoryNormalType({ postData }) {
     vocals = [],
     extend_byline = '',
     tags = [],
-    brief = [],
+    brief = { blocks: [], entityMap: {} },
     relateds = [],
     manualOrderOfRelateds = [],
-    content = {},
+    content = { blocks: [], entityMap: {} },
   } = postData
 
   const sectionsWithOrdered =
@@ -478,16 +480,12 @@ export default function StoryNormalType({ postData }) {
               tags={tags}
             ></ArticleInfo>
           </InfoAndHero>
+
           <ArticleBrief
             sectionSlug={section?.slug}
             brief={brief}
           ></ArticleBrief>
-          <div>
-            <DraftRenderer
-              rawContentBlock={content}
-              image="/images/default-og-img.png"
-            ></DraftRenderer>
-          </div>
+          <ArticleContent content={content} />
           <DonateBanner />
           <SocialNetworkServiceSmall />
           <SubscribeInviteBanner />
