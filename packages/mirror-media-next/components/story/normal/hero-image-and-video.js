@@ -31,7 +31,7 @@ import styled from 'styled-components'
 const Wrapper = styled.figure`
   margin: 20px 0 0;
   ${({ theme }) => theme.breakpoint.md} {
-    margin: 0;
+    margin: 0 0 34px;
   }
 `
 
