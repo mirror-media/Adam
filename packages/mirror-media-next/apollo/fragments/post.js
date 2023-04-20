@@ -4,7 +4,7 @@ import { category } from './category'
 import { section } from './section'
 
 /**
- * @typedef {Object} Post
+ * @typedef {Object} ListingPost
  * @property {string} [id]
  * @property {string} [slug]
  * @property {string} [title]
@@ -15,11 +15,11 @@ import { section } from './section'
  * @property {import('./photo').Photo} [heroImage]
  */
 
-export const post = gql`
+export const listingPost = gql`
   ${section}
   ${category}
   ${heroImage}
-  fragment post on Post {
+  fragment listingPost on Post {
     id
     slug
     title
@@ -31,6 +31,31 @@ export const post = gql`
     }
     categories {
       ...category
+    }
+    heroImage {
+      ...heroImage
+    }
+  }
+`
+
+/**
+ * @typedef {Object} AsideListingPost
+ * @property {string} [id]
+ * @property {string} [slug]
+ * @property {string} [title]
+ * @property {import('./section').Section} [sections]
+ * @property {import('./photo').Photo} [heroImage]
+ */
+
+export const asideListingPost = gql`
+  ${section}
+  ${heroImage}
+  fragment asideListingPost on Post {
+    id
+    slug
+    title
+    sections {
+      ...section
     }
     heroImage {
       ...heroImage
