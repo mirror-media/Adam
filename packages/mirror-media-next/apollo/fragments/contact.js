@@ -10,6 +10,5 @@ export const contact = gql`
   fragment contact on Contact {
     id
     name
-    slug
   }
 `
