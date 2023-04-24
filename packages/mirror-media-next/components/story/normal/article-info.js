@@ -150,7 +150,7 @@ const CREDIT_TITLE_NAME_MAP = {
  */
 
 /**
- * @typedef {(import('../../../apollo/fragments/post').Post['tags'] & {id: string, slug: string, name: string})[]} Tags
+ * @typedef {import('../../../apollo/fragments/tag').Tag[]} Tags
  */
 
 /**

@@ -20,11 +20,7 @@ const Loading = styled.div`
 
 /**
  * @typedef {import('../shared/article-list').Article} Article
- * @typedef {import('../../apollo/fragments/tag').Tag & {
- *  id: string,
- *  name: string,
- *  slug: string,
- * }} Tag
+ * @typedef {import('../../apollo/fragments/tag').Tag} Tag
  */
 
 /**
