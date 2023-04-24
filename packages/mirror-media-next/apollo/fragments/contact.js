@@ -2,8 +2,8 @@ import { gql } from '@apollo/client'
 
 /**
  * @typedef {Object} Contact
- * @property {string} [id]
- * @property {string} [name]
+ * @property {string} id
+ * @property {string} name
  */
 
 export const contact = gql`

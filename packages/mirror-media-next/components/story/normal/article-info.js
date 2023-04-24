@@ -146,7 +146,7 @@ const CREDIT_TITLE_NAME_MAP = {
 }
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Contact & { id: string, name: string }[]} Contacts
+ * @typedef {import('../../../apollo/fragments/contact').Contact[]} Contacts
  */
 
 /**

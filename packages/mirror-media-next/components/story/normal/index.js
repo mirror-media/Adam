@@ -72,7 +72,7 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  * state: "published" | "draft" | "scheduled" | "archived" | "invisible",
  * sections: Sections | [],
  * manualOrderOfSections: Sections | [] | null,
- * writers: import('../../../components/story/normal/article-info').Contacts | [],
+ * writers: Contacts | [],
  * manualOrderOfWriters: Contacts | [] | null,
  * photographers: Contacts | [],
  * camera_man: Contacts | [],
