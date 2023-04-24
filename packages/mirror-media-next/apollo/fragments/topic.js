@@ -3,12 +3,12 @@ import { heroImage } from './photo'
 
 /**
  * @typedef {Object} Topic
- * @property {string} [id]
- * @property {string} [name]
- * @property {import('../../type/draft-js').Draft} [brief]
- * @property {import('./photo').Photo} [heroImage]
- * @property {nunber} [sortOrder]
- * @property {string} [createdAt]
+ * @property {string} id
+ * @property {string} name
+ * @property {import('../../type/draft-js').Draft} brief
+ * @property {import('./photo').Photo} heroImage
+ * @property {number} sortOrder
+ * @property {string} createdAt
  */
 
 export const topic = gql`
