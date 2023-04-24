@@ -3,11 +3,11 @@ import { section } from './section'
 
 /**
  * @typedef {Object} Category
- * @property {string} [id]
- * @property {string} [name]
- * @property {string} [slug]
- * @property {boolean} [isMemberOnly]
- * @property {import('./section').Section[]} [sections] it's singular but wrongly named as plural
+ * @property {string} id
+ * @property {string} name
+ * @property {string} slug
+ * @property {boolean} isMemberOnly
+ * @property {import('./section').Section[]} sections it's singular but wrongly named as plural
  */
 
 export const category = gql`

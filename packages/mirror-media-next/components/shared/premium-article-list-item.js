@@ -108,11 +108,7 @@ const ItemDate = styled.div`
  *  slug: string,
  * }} Section
  *
- * @typedef {import('../../apollo/fragments/category').Category & {
- *  id: string,
- *  name: string,
- *  slug: string,
- * }} Category
+ * @typedef {import('../../apollo/fragments/category').Category} Category
  *
  * @typedef {import('../../apollo/fragments/photo').Photo & {
  *  id: String,
