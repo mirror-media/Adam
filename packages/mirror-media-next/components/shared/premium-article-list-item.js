@@ -110,12 +110,7 @@ const ItemDate = styled.div`
  *
  * @typedef {import('../../apollo/fragments/category').Category} Category
  *
- * @typedef {import('../../apollo/fragments/photo').Photo & {
- *  id: String,
- *  name: String,
- *  imageFile: import('../../apollo/fragments/photo').ImageFile,
- *  resized: import('../../apollo/fragments/photo').Resized
- * }} HeroImage
+ * @typedef {import('../../apollo/fragments/photo').Photo } HeroImage
  *
  * @typedef {import('../../apollo/fragments/post').ListingPost & {
  *  id: string,

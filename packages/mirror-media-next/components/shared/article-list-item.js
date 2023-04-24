@@ -98,12 +98,7 @@ const ItemBrief = styled.div`
  *
  * @typedef {Pick<import('../../apollo/fragments/category').Category, 'id' |'name' | 'slug'>} Category
  *
- * @typedef {import('../../apollo/fragments/photo').Photo & {
- *  id: String,
- *  name: String,
- *  imageFile: import('../../apollo/fragments/photo').ImageFile,
- *  resized: import('../../apollo/fragments/photo').Resized
- * }} HeroImage
+ * @typedef {import('../../apollo/fragments/photo').Photo} HeroImage
  *
  * @typedef {import('../../apollo/fragments/post').ListingPost & {
  *  id: string,
