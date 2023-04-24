@@ -250,7 +250,8 @@ const SocialMediaList = styled.div`
   }
 `
 /**
- *
+ * TODO: use typedef in `../apollo/fragments/section`
+ * Should be done after fetch header data from new json file
  * @param {Object} props
  * @param {import('../type').Topic[]} props.topics
  * @param {import('../type').Section[]} props.sections

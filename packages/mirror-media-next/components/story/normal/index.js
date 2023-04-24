@@ -36,8 +36,7 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  */
 
 /**
- * @typedef {(import('../../../apollo/fragments/post').Section &
- * { id: string, slug: string, name: string })[]} Sections
+ * @typedef {import('../../../apollo/fragments/section').Section[] } Sections
  */
 
 /**

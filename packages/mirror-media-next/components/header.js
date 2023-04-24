@@ -116,6 +116,9 @@ const SearchInputWrapper = styled.div`
 `
 
 /**
+ * TODO: use typedef in `../apollo/fragments/section`
+ * Should be done after fetch header data from new json file
+ *
  * Remove item from array `categories` if which is member only category.
  * @param {import('../type').Section} section
  * @returns {import('../type').Section}
@@ -131,6 +134,8 @@ function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
 }
 
 /**
+ * TODO: use typedef in `../apollo/fragments/section` and  `../apollo/fragments/topic`
+ * Should be done after fetch header data from new json file
  * @param {Object} props
  * @param {import('../type').Section[]} props.sectionsData
  * @param {import('../type').Topic[]} props.topicsData

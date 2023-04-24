@@ -21,11 +21,7 @@ const Loading = styled.div`
 
 /**
  * @typedef {import('../shared/article-list').Article} Article
- * @typedef {import('../../apollo/fragments/section').Section & {
- *  id: string,
- *  name: string,
- *  slug: string,
- * }} Section
+ * @typedef {import('../../apollo/fragments/section').Section } Section
  */
 
 /**

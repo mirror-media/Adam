@@ -90,11 +90,7 @@ const ItemBrief = styled.div`
 `
 
 /**
- * @typedef {import('../../apollo/fragments/section').Section & {
- *  id: string,
- *  name: string,
- *  slug: string,
- * }} Section
+ * @typedef {import('../../apollo/fragments/section').Section } Section
  *
  * @typedef {Pick<import('../../apollo/fragments/category').Category, 'id' |'name' | 'slug'>} Category
  *

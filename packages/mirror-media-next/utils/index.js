@@ -30,6 +30,9 @@ const getArticleHref = (slug, style, partner) => {
 }
 
 /**
+ * TODO: use typedef in `../apollo/fragments/section`
+ * Should be done after fetch header data from new json file
+ *
  * Get section name based on different condition
  * @param {import('../type/raw-data.typedef').Section[]} sections
  * @param {Object | ''} partner
@@ -45,6 +48,9 @@ function getSectionName(sections = [], partner = '') {
 }
 
 /**
+ * TODO: use typedef in `../apollo/fragments/section`
+ * Should be done after fetch header data from new json file
+ *
  * Get section title based on different condition
  * @param {import('../type/raw-data.typedef').Section[]} sections
  * @param {Object | ''} partner
@@ -74,6 +80,9 @@ function getSectionTitle(sections = [], partner) {
 //TODO:
 // - remove function for handling data from k3 server
 // - adjust typedef of Section
+
+//TODO: use typedef in `../apollo/fragments/section`
+// Should be done after fetch header data from new json file
 /**
  * Get section name based on different condition
  * Because data structure of keystone 6 response is different from keystone 3, we create this function to handle data from keystone 6 server.
@@ -90,6 +99,8 @@ function getSectionNameGql(sections = [], partner = '') {
   return sections[0]?.name
 }
 
+// TODO: use typedef in `../apollo/fragments/section`
+// Should be done after fetch header data from new json file
 /**
  * Get section title based on different condition
  * Because data structure of keystone 6 response is different from keystone 3, we create this function to handle data from keystone 6 server.

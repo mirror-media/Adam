@@ -130,6 +130,8 @@ function getCategoryHref(sectionName, categoryName) {
   return `/category/${categoryName}`
 }
 /**
+ * TODO: use typedef in `../apollo/fragments/section`
+ * Should be done after fetch header data from new json file
  * @param {{sections: import('../type').Section[] | []  }} props
  * @returns {React.ReactElement}
  */
