@@ -4,7 +4,7 @@ import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import Head from 'next/head'
-import { fetchPostBySlug } from '../../apollo/query/post'
+import { fetchPostBySlug } from '../../apollo/query/posts'
 import StoryNormalType from '../../components/story/normal'
 
 /**

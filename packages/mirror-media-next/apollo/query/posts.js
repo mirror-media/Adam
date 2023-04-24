@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client'
-import { listingPost, asideListingPost } from '../fragments/post'
-
-//TODO: result of fetchListingPost is similar to fetchPosts, should refactor to on gql query if possible
+import { listingPost, asideListingPost, post } from '../fragments/post'
 
 const fetchAsidePosts = gql`
   ${asideListingPost}
@@ -38,4 +36,13 @@ const fetchPosts = gql`
   }
 `
 
-export { fetchPosts, fetchAsidePosts }
+const fetchPostBySlug = gql`
+  ${post}
+  query fetchPostBySlug($slug: String) {
+    post(where: { slug: $slug }) {
+      ...post
+    }
+  }
+`
+
+export { fetchPosts, fetchAsidePosts, fetchPostBySlug }
