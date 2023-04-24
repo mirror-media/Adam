@@ -17,15 +17,7 @@ import styled from 'styled-components'
  */
 
 /**
- * @typedef {import('../../../apollo/fragments/post').HeroVideo & {
- * id: string,
- * name:string,
- * urlOriginal: string,
- * heroImage: {
- *    resized:
- *      Pick<HeroImage,'id'> & Pick<HeroImage['resized'], 'original'>
- *   }
- * } } HeroVideo
+ * @typedef {import('../../../apollo/fragments/video').HeroVideo } HeroVideo
  */
 
 const Wrapper = styled.figure`

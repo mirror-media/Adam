@@ -6,9 +6,9 @@ import { gql } from '@apollo/client'
 
 /**
  * @typedef {Object} HeroVideo - certain video information
- * @property {string} [id] - unique id
- * @property {string} [urlOriginal] - video url
- * @property {Pick<HeroImage,'id'> & Pick<HeroImage['resized'], 'original'>} [heroImage] - video url
+ * @property {string} id - unique id
+ * @property {string} urlOriginal - video url
+ * @property {Pick<HeroImage, 'id' | 'resized'> & Pick<HeroImage['resized'], 'original'>} heroImage - video url
  */
 
 export const heroVideo = gql`
