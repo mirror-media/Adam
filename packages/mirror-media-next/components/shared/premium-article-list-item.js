@@ -108,16 +108,7 @@ const ItemDate = styled.div`
  *
  * @typedef {import('../../apollo/fragments/photo').Photo } HeroImage
  *
- * @typedef {import('../../apollo/fragments/post').ListingPost & {
- *  id: string,
- *  slug: string,
- *  title: string,
- *  publishedDate: string,
- *  brief: import('../../type/draft-js').Draft,
- *  categroies: Category[],
- *  sections: Section[],
- *  heroImage: HeroImage,
- * }} Article
+ * @typedef {import('../../apollo/fragments/post').ListingPost} Article
  */
 
 /**

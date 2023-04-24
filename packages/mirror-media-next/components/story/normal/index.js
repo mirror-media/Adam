@@ -59,34 +59,7 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  */
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Post &
- * {
- * id: string,
- * slug: string,
- * title: string,
- * titleColor: "dark" | "light",
- * subtitle: string,
- * publishedDate: string,
- * updatedAt: string,
- * state: "published" | "draft" | "scheduled" | "archived" | "invisible",
- * sections: Sections | [],
- * manualOrderOfSections: Sections | [] | null,
- * writers: Contacts | [],
- * manualOrderOfWriters: Contacts | [] | null,
- * photographers: Contacts | [],
- * camera_man: Contacts | [],
- * designers: Contacts | [],
- * engineers: Contacts | [],
- * vocals: Contacts | [],
- * extend_byline: string,
- * tags: import('../../../components/story/normal/article-info').Tags | [],
- * heroVideo : HeroVideo | null,
- * heroImage : HeroImage | null,
- * heroCaption: string,
- * brief: Brief | null,
- * content: Content | null,
- * relateds: Relateds | []
- * } } PostData
+ * @typedef {import('../../../apollo/fragments/post').Post } PostData
  */
 
 const sectionColor = css`
