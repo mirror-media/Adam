@@ -5,7 +5,7 @@ import Image from '@readr-media/react-image'
 import Link from 'next/link'
 
 /**
- * @typedef {import('../../../apollo/query/post').HeroImage &
+ * @typedef {import('../../../apollo/fragments/post').HeroImage &
  * {
  *  id: string,
  *  resized: {
@@ -20,7 +20,7 @@ import Link from 'next/link'
  */
 
 /**
- * @typedef {(import('../../../apollo/query/post').Related & {
+ * @typedef {(import('../../../apollo/fragments/post').Related & {
  *  id: string, slug: string, title: string, heroImage: HeroImage})[]
  * } Relateds
  */

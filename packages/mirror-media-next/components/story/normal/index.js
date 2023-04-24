@@ -36,7 +36,7 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  */
 
 /**
- * @typedef {(import('../../../apollo/query/post').Section &
+ * @typedef {(import('../../../apollo/fragments/post').Section &
  * { id: string, slug: string, name: string })[]} Sections
  */
 
@@ -60,7 +60,7 @@ import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
  */
 
 /**
- * @typedef {import('../../../apollo/query/post').Post &
+ * @typedef {import('../../../apollo/fragments/post').Post &
  * {
  * id: string,
  * slug: string,

@@ -2,7 +2,7 @@ import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
 
 /**
- * @typedef {import('../../../apollo/query/post').HeroImage &
+ * @typedef {import('../../../apollo/fragments/post').HeroImage &
  * {
  *  id: string,
  *  resized: {
@@ -17,7 +17,7 @@ import styled from 'styled-components'
  */
 
 /**
- * @typedef {import('../../../apollo/query/post').HeroVideo & {
+ * @typedef {import('../../../apollo/fragments/post').HeroVideo & {
  * id: string,
  * name:string,
  * urlOriginal: string,
