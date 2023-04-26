@@ -125,10 +125,12 @@ const Title = styled.h1`
 `
 const Main = styled.main`
   padding: 0 20px;
+  margin-top: 20px;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 0 64px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 24px;
     display: flex;
     flex-direction: row;
     align-items: start;
@@ -140,7 +142,7 @@ const Article = styled.article`
   max-width: 640px;
   margin: 0 auto;
   ${({ theme }) => theme.breakpoint.xl} {
-    margin: 0;
+    margin: 35px 0 0 0;
   }
 `
 

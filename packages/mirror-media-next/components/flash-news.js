@@ -8,7 +8,7 @@ const FlashNewsWrapper = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  margin: 0 auto;
+  margin: 8px auto 0;
   overflow: hidden;
   height: 21px;
   font-size: 12px;
@@ -16,6 +16,7 @@ const FlashNewsWrapper = styled.div`
   font-weight: 600;
   color: #054f77;
   ${({ theme }) => theme.breakpoint.xl} {
+    margin: 10px auto 0;
     height: 36px;
     font-size: 16px;
   }
