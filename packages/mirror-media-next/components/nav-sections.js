@@ -11,14 +11,13 @@ const SectionsWrapper = styled.nav`
   // to hide scrollbar
   overflow: hidden;
   width: 100%;
-  margin: 0 auto 8px;
+  margin: 0 auto;
   display: flex;
   gap: 10px;
   @media ${minWidth.xl} {
     font-size: 16px;
     height: auto;
     overflow: visible;
-    margin-bottom: 10px;
   }
 `
 const Sections = styled.ul`
