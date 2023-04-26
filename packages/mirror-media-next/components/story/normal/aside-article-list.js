@@ -17,7 +17,7 @@ import Image from '@readr-media/react-image'
 /** @typedef {import('../../../apollo/fragments/post').AsideListingPost} ArticleData */
 
 const Wrapper = styled.section`
-  margin-top: 20px;
+  margin: 20px auto 0;
   ${({ theme }) => theme.breakpoint.md} {
     width: 618px;
   }
@@ -79,7 +79,7 @@ const ArticleWrapper = styled.ul`
   ${({ theme }) => theme.breakpoint.xl} {
     border: 1px solid #dedede;
     padding: 20.5px 20px;
-    width: 365px;
+    width: 100%;
     min-height: ${({ renderAmount }) =>
       // 20.5px is padding-top and padding-bottom of articleWrapper
       `calc(20.5px + 20.5px + ${

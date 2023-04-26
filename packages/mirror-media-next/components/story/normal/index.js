@@ -130,17 +130,17 @@ const Main = styled.main`
   }
   ${({ theme }) => theme.breakpoint.xl} {
     display: flex;
-    justify-content: center;
-    padding: 0 40px 0 77px;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: start;
+    justify-content: space-between;
+    padding: 0 40px 0 77px;
   }
 `
 const Article = styled.article`
   max-width: 640px;
   margin: 0 auto;
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 640px;
+    margin: 0;
   }
 `
 
@@ -279,12 +279,12 @@ const StoryEndDesktop = styled(StoryEnd)`
   }
 `
 const Aside = styled.aside`
-  max-width: 640px;
-  margin: 0 auto;
+  width: 100%;
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 365px;
+    width: 365px;
   }
 `
+
 const AsideFbPagePlugin = styled(FbPagePlugin)`
   display: none;
   text-align: center;

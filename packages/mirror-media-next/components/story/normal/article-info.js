@@ -135,7 +135,7 @@ const ArticleInfoContainer = styled.div`
   ${({ theme }) => theme.breakpoint.md} {
     border: none;
     padding-left: 0px;
-    margin: 0 0 16px;
+    margin: 0 0 24px;
   }
 `
 const CREDIT_TITLE_NAME_MAP = {
