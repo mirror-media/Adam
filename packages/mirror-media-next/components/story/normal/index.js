@@ -80,6 +80,9 @@ const PC_HD_Advertisement = styled(MockAdvertisement)`
   display: none;
   margin: 24px auto;
   text-align: center;
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+  }
 `
 const PC_R1_Advertisement = styled(MockAdvertisement)`
   display: none;
@@ -124,13 +127,16 @@ const Title = styled.h1`
   }
 `
 const Main = styled.main`
+  margin: 20px auto 0;
+  width: 100%;
+  height: auto;
+  max-width: 1200px;
   padding: 0 20px;
-  margin-top: 20px;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 0 64px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    margin-top: 24px;
+    margin: 24px auto 0;
     display: flex;
     flex-direction: row;
     align-items: start;
