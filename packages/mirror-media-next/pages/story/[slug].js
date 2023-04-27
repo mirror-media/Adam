@@ -1,21 +1,33 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-
+import { useState, useEffect } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
+
 import { fetchPostBySlug } from '../../apollo/query/posts'
-import StoryNormalType from '../../components/story/normal'
+import StoryNormalStyle from '../../components/story/normal'
+
+const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
+const StoryPhotographyStyle = dynamic(() =>
+  import('../../components/story/photography')
+)
+const StoryPremiumStyle = dynamic(() =>
+  import('../../components/story/premium')
+)
 
 /**
  * @typedef {import('../../components/story/normal').PostData} PostData
  */
 
-const StoryContainer = styled.div`
-  margin: 0 auto;
+//Todo: adjust height, make it not to scroll when loading
+const MockLoading = styled.div`
   width: 100%;
-  height: auto;
-  max-width: 1200px;
+  height: 100vh;
+  background-color: pink;
+  text-align: center;
+  font-size: 32px;
 `
 
 /**
@@ -25,6 +37,31 @@ const StoryContainer = styled.div`
  * @returns {JSX.Element}
  */
 export default function Story({ postData }) {
+  const [storyStyle, setStoryStyle] = useState(null)
+
+  const getRenderUi = () => {
+    switch (storyStyle) {
+      case 'style-normal':
+        return <StoryNormalStyle postData={postData} />
+      case 'style-wide':
+        return <StoryWideStyle test={'我是test的字串'} />
+      case 'style-photography':
+        return <StoryPhotographyStyle />
+      case 'style-premium':
+        return <StoryPremiumStyle />
+      default:
+        return <StoryNormalStyle postData={postData} />
+    }
+  }
+  const jsx = getRenderUi()
+
+  //mock for process of changing article type
+  useEffect(() => {
+    const time1 = setTimeout(() => {
+      setStoryStyle('style-normal')
+    }, 1000)
+    return () => clearTimeout(time1)
+  }, [])
   const { title = '' } = postData
 
   const headJsx = (
@@ -36,10 +73,8 @@ export default function Story({ postData }) {
   return (
     <>
       {headJsx}
-
-      <StoryContainer>
-        <StoryNormalType postData={postData}></StoryNormalType>
-      </StoryContainer>
+      {!storyStyle && <MockLoading>Loading...</MockLoading>}
+      <div style={{ display: `${storyStyle ? 'block' : 'none'}` }}>{jsx}</div>
     </>
   )
 }
