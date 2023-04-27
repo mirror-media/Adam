@@ -346,7 +346,7 @@ const DivideLine = styled.div`
  * @param {{postData: PostData}} param
  * @returns {JSX.Element}
  */
-export default function StoryNormalType({ postData }) {
+export default function StoryNormalStyle({ postData }) {
   const {
     title = '',
     slug = '',
