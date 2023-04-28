@@ -29,6 +29,47 @@ const MockLoading = styled.div`
   text-align: center;
   font-size: 32px;
 `
+/**
+ *
+ * @param {'article'| 'wide' | 'projects' | 'photography' | 'script' | 'campaign' | 'readr'} articleType
+ * @param {boolean} isMemberArticle
+ * @param { 'yearly' | 'monthly' | 'basic' | undefined} [memberType]
+ * @return {'style-normal' | 'style-wide' | 'style-photography' | 'style-premium'}
+ */
+const getStoryLayout = (
+  articleType,
+  isMemberArticle = false,
+  memberType = undefined
+) => {
+  switch (articleType) {
+    case 'wide':
+      return 'style-wide'
+
+    case 'photography':
+      return 'style-photography'
+
+    case 'article':
+      if (
+        isMemberArticle ||
+        memberType === 'monthly' ||
+        memberType === 'yearly'
+      ) {
+        return 'style-premium'
+      }
+      return 'style-normal'
+
+    default:
+      return 'style-normal'
+  }
+}
+
+const mockMemberSystem = () => {
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      resolve('basic')
+    }, 1000)
+  )
+}
 
 /**
  *
@@ -37,10 +78,12 @@ const MockLoading = styled.div`
  * @returns {JSX.Element}
  */
 export default function Story({ postData }) {
-  const [storyStyle, setStoryStyle] = useState(null)
+  const { title = '', style = 'article', isMember = false } = postData
 
-  const getRenderUi = () => {
-    switch (storyStyle) {
+  const [storyLayout, setStoryLayout] = useState(null)
+
+  const renderStoryLayout = () => {
+    switch (storyLayout) {
       case 'style-normal':
         return <StoryNormalStyle postData={postData} />
       case 'style-wide':
@@ -53,16 +96,25 @@ export default function Story({ postData }) {
         return <StoryNormalStyle postData={postData} />
     }
   }
-  const jsx = getRenderUi()
+  const jsx = renderStoryLayout()
 
   //mock for process of changing article type
   useEffect(() => {
-    const time1 = setTimeout(() => {
-      setStoryStyle('style-normal')
-    }, 1000)
-    return () => clearTimeout(time1)
-  }, [])
-  const { title = '' } = postData
+    async function getMemberType() {
+      const memberType = await mockMemberSystem()
+      return memberType
+    }
+
+    getMemberType()
+      .then((res) => {
+        const storyLayout = getStoryLayout(style, isMember, res)
+        setStoryLayout(storyLayout)
+      })
+      .catch(() => {
+        const storyLayout = getStoryLayout(style, isMember, undefined)
+        setStoryLayout(storyLayout)
+      })
+  }, [style, isMember])
 
   const headJsx = (
     <Head>
@@ -73,8 +125,8 @@ export default function Story({ postData }) {
   return (
     <>
       {headJsx}
-      {!storyStyle && <MockLoading>Loading...</MockLoading>}
-      <div style={{ display: `${storyStyle ? 'block' : 'none'}` }}>{jsx}</div>
+      {!storyLayout && <MockLoading>Loading...</MockLoading>}
+      <div style={{ display: `${storyLayout ? 'block' : 'none'}` }}>{jsx}</div>
     </>
   )
 }
