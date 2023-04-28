@@ -113,6 +113,8 @@ export const asideListingPost = gql`
  * @property {string} publishedDate - post published date
  * @property {string} updatedAt - post updated date
  * @property {PostState} state - post state, different states will have different post access of viewing
+ * @property {'article'| 'wide' | 'projects' | 'photography' | 'script' | 'campaign' | 'readr'} style - what kind of article style is
+ * @property {boolean} isMember - whether this post is a member article
  * @property {Section[] | null } sections - which sections does this post belong to
  * @property {Section[] | null} manualOrderOfSections - sections with adjusted order
  * @property {Contact[] | null} writers -  the field called '作者' in cms
@@ -148,6 +150,7 @@ export const post = gql`
     titleColor
     subtitle
     style
+    isMember
     publishedDate
     updatedAt
     sections {
