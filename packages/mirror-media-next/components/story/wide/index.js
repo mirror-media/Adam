@@ -49,6 +49,14 @@ const ContentWrapper = styled.section`
     border-bottom: 1px black solid;
   }
 `
+const StyledDonateBanner = styled(DonateBanner)`
+  margin-left: 10px;
+  margin-right: 10px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-left: auto;
+    margin-right: auto;
+  }
+`
 
 /**
  *
@@ -85,9 +93,8 @@ export default function StoryWideStyle({ postData }) {
           <StyledDonateLink />
           <div>這是前言</div>
           <div>這是內文</div>
-          <div>
-            <DonateBanner />
-          </div>
+
+          <StyledDonateBanner />
         </ContentWrapper>
       </article>
     </Main>

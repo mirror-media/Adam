@@ -37,10 +37,15 @@ const DonateLinkInBanner = styled(DonateLink)`
     width: 140px;
   }
 `
-
-export default function DonateBanner() {
+/**
+ *
+ * @param {Object} props
+ * @param {string} [props.className]
+ * @returns {JSX.Element}
+ */
+export default function DonateBanner({ className }) {
   return (
-    <Container>
+    <Container className={className}>
       <p className="title">小心意大意義，小額贊助鏡週刊！</p>
 
       <DonateLinkInBanner />
