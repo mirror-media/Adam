@@ -1,11 +1,13 @@
 import { useCallback } from 'react'
 import styled from 'styled-components'
+import axios from 'axios'
 import client from '../../../apollo/apollo-client'
 
 import {
   transformTimeDataIntoDotFormat,
   sortArrayWithOtherArrayId,
 } from '../../../utils'
+import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
 import DonateLink from '../shared/donate-link'
 import HeroImageAndVideo from './hero-image-and-video'
 import DonateBanner from '../shared/donate-banner'
@@ -131,6 +133,25 @@ export default function StoryWideStyle({ postData }) {
     }
   }, [section, slug])
 
+  /**
+   * @returns {Promise<any[] | []>}
+   */
+  const handleFetchPopularNews = async () => {
+    try {
+      /**
+       * @type {import('axios').AxiosResponse<any[] | []>}>}
+       */
+      const { data } = await axios({
+        method: 'get',
+        url: URL_STATIC_POPULAR_NEWS,
+        timeout: API_TIMEOUT,
+      })
+      return data.filter((data) => data).slice(0, 6)
+    } catch (err) {
+      return []
+    }
+  }
+
   return (
     <Main>
       <article>
@@ -161,8 +182,8 @@ export default function StoryWideStyle({ postData }) {
           />
           <Divider />
           <AsideArticleList
-            heading="最新文章"
-            fetchArticle={handleFetchLatestNews}
+            heading="熱門文章"
+            fetchArticle={handleFetchPopularNews}
             shouldReverseOrder={false}
             renderAmount={6}
           />
