@@ -11,7 +11,7 @@ import HeroImageAndVideo from './hero-image-and-video'
 import DonateBanner from '../shared/donate-banner'
 import RelatedArticleList from './related-article-list'
 import AsideArticleList from './aside-article-list'
-
+import Divider from '../shared/divider'
 import { fetchAsidePosts } from '../../../apollo/query/posts'
 
 /**
@@ -79,6 +79,7 @@ const Aside = styled.aside`
     margin-top: 64px;
   }
 `
+
 /**
  *
  * @param {Object} param
@@ -152,6 +153,13 @@ export default function StoryWideStyle({ postData }) {
         </ContentWrapper>
         <Aside>
           <RelatedArticleList relateds={relateds} />
+          <AsideArticleList
+            heading="最新文章"
+            fetchArticle={handleFetchLatestNews}
+            shouldReverseOrder={false}
+            renderAmount={6}
+          />
+          <Divider />
           <AsideArticleList
             heading="最新文章"
             fetchArticle={handleFetchLatestNews}

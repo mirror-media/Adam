@@ -17,6 +17,7 @@ import MagazineInviteBanner from '../../../components/story/shared/magazine-invi
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
 import ArticleContent from './article-content'
 import HeroImageAndVideo from './hero-image-and-video'
+import Divider from '../shared/divider'
 import {
   transformTimeDataIntoDotFormat,
   sortArrayWithOtherArrayId,
@@ -328,19 +329,7 @@ const AdvertisementDableMobile = styled(AdvertisementDable)`
     width: 640px;
   }
 `
-const DivideLine = styled.div`
-  background-color: #000000;
-  width: 208px;
-  height: 2px;
-  margin: 32px auto 36px;
-  ${({ theme }) => theme.breakpoint.md} {
-    width: 100%;
-    margin: 36px auto;
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
-`
+
 /**
  *
  * @param {{postData: PostData}} param
@@ -545,7 +534,7 @@ export default function StoryNormalStyle({ postData }) {
             height="600px"
             className="ad"
           ></PC_R2_Advertisement>
-          <DivideLine />
+          <Divider />
           <AsideArticleList
             heading="熱門文章"
             fetchArticle={handleFetchPopularNews}
