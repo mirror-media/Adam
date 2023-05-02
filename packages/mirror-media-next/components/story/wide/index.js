@@ -1,9 +1,19 @@
+import { useCallback } from 'react'
 import styled from 'styled-components'
-import { transformTimeDataIntoDotFormat } from '../../../utils'
+import client from '../../../apollo/apollo-client'
+
+import {
+  transformTimeDataIntoDotFormat,
+  sortArrayWithOtherArrayId,
+} from '../../../utils'
 import DonateLink from '../shared/donate-link'
 import HeroImageAndVideo from './hero-image-and-video'
 import DonateBanner from '../shared/donate-banner'
 import RelatedArticleList from './related-article-list'
+import AsideArticleList from './aside-article-list'
+
+import { fetchAsidePosts } from '../../../apollo/query/posts'
+
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
  */
@@ -83,11 +93,43 @@ export default function StoryWideStyle({ postData }) {
     heroCaption = '',
     updatedAt = '',
     publishedDate = '',
+    sections = [],
+    manualOrderOfSections = [],
     relateds = [],
+    slug = '',
   } = postData
 
   const updatedAtFormatTime = transformTimeDataIntoDotFormat(updatedAt)
   const publishedDateFormatTime = transformTimeDataIntoDotFormat(publishedDate)
+  const sectionsWithOrdered =
+    manualOrderOfSections && manualOrderOfSections.length
+      ? sortArrayWithOtherArrayId(sections, manualOrderOfSections)
+      : sections
+  const [section] = sectionsWithOrdered
+
+  /**
+   * @returns {Promise<AsideArticleData[] | []>}
+   */
+  const handleFetchLatestNews = useCallback(async () => {
+    try {
+      /**
+       * @type {import('@apollo/client').ApolloQueryResult<{posts: any[]}>}
+       */
+      const res = await client.query({
+        query: fetchAsidePosts,
+        variables: {
+          take: 6,
+          sectionSlug: section.slug,
+          storySlug: slug,
+        },
+      })
+      return res.data?.posts
+    } catch (err) {
+      console.error(err)
+      return []
+    }
+  }, [section, slug])
+
   return (
     <Main>
       <article>
@@ -110,6 +152,12 @@ export default function StoryWideStyle({ postData }) {
         </ContentWrapper>
         <Aside>
           <RelatedArticleList relateds={relateds} />
+          <AsideArticleList
+            heading="最新文章"
+            fetchArticle={handleFetchLatestNews}
+            shouldReverseOrder={false}
+            renderAmount={6}
+          />
         </Aside>
       </article>
     </Main>
