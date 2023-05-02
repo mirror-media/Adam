@@ -87,7 +87,7 @@ export default function Story({ postData }) {
       case 'style-normal':
         return <StoryNormalStyle postData={postData} />
       case 'style-wide':
-        return <StoryWideStyle test={'我是test的字串'} />
+        return <StoryWideStyle postData={postData} />
       case 'style-photography':
         return <StoryPhotographyStyle />
       case 'style-premium':
