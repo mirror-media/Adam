@@ -3,6 +3,7 @@ import { transformTimeDataIntoDotFormat } from '../../../utils'
 import DonateLink from '../shared/donate-link'
 import HeroImageAndVideo from './hero-image-and-video'
 import DonateBanner from '../shared/donate-banner'
+import RelatedArticleList from './related-article-list'
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
  */
@@ -57,7 +58,17 @@ const StyledDonateBanner = styled(DonateBanner)`
     margin-right: auto;
   }
 `
-
+const Aside = styled.aside`
+  width: 100%;
+  max-width: 640px;
+  margin: 20px auto;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 32px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 64px;
+  }
+`
 /**
  *
  * @param {Object} param
@@ -72,6 +83,7 @@ export default function StoryWideStyle({ postData }) {
     heroCaption = '',
     updatedAt = '',
     publishedDate = '',
+    relateds = [],
   } = postData
 
   const updatedAtFormatTime = transformTimeDataIntoDotFormat(updatedAt)
@@ -96,6 +108,9 @@ export default function StoryWideStyle({ postData }) {
 
           <StyledDonateBanner />
         </ContentWrapper>
+        <Aside>
+          <RelatedArticleList relateds={relateds} />
+        </Aside>
       </article>
     </Main>
   )
