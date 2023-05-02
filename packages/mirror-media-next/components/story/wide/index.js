@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { transformTimeDataIntoDotFormat } from '../../../utils'
 import DonateLink from '../shared/donate-link'
 import HeroImageAndVideo from './hero-image-and-video'
-
+import DonateBanner from '../shared/donate-banner'
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
  */
@@ -38,6 +38,17 @@ const Date = styled.div`
     margin: 0 auto;
   }
 `
+const ContentWrapper = styled.section`
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+  border: none;
+  ${({ theme }) => theme.breakpoint.md} {
+    padding-bottom: 32px;
+    border-bottom: 1px black solid;
+  }
+`
 
 /**
  *
@@ -66,11 +77,18 @@ export default function StoryWideStyle({ postData }) {
           heroCaption={heroCaption}
           title={title}
         />
-        <DateWrapper>
-          <Date>更新時間 {updatedAtFormatTime}</Date>
-          <Date>發布時間 {publishedDateFormatTime}</Date>
-        </DateWrapper>
-        <StyledDonateLink />
+        <ContentWrapper>
+          <DateWrapper>
+            <Date>更新時間 {updatedAtFormatTime}</Date>
+            <Date>發布時間 {publishedDateFormatTime}</Date>
+          </DateWrapper>
+          <StyledDonateLink />
+          <div>這是前言</div>
+          <div>這是內文</div>
+          <div>
+            <DonateBanner />
+          </div>
+        </ContentWrapper>
       </article>
     </Main>
   )
