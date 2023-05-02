@@ -413,7 +413,7 @@ export default function StoryNormalStyle({ postData }) {
         url: URL_STATIC_POPULAR_NEWS,
         timeout: API_TIMEOUT,
       })
-      return data.filter((data) => data)
+      return data.filter((data) => data).slice(0.6)
     } catch (err) {
       return []
     }
