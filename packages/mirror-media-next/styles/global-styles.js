@@ -10,7 +10,7 @@ const notosansTC = Noto_Sans_TC({
 })
 const notoserifTC = Noto_Serif_TC({
   subsets: ['latin'],
-  weight: ['500'],
+  weight: ['500', '700'],
 })
 
 export const GlobalStyles = createGlobalStyle`
