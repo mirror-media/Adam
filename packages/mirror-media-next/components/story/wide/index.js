@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import client from '../../../apollo/apollo-client'
+import DraftRenderBlock from '../shared/draft-renderer-block'
 
 import {
   transformTimeDataIntoDotFormat,
@@ -53,18 +54,31 @@ const Date = styled.div`
 `
 const ContentWrapper = styled.section`
   width: 100%;
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding-bottom: 20px;
+  padding: 0 20px 20px;
   border: none;
+
+  .content {
+    width: 100%;
+    margin: 20px auto 0;
+    max-width: 640px;
+  }
+
   ${({ theme }) => theme.breakpoint.md} {
-    padding-bottom: 32px;
+    padding: 0 0 32px;
+
     border-bottom: 1px black solid;
+    .content {
+      margin: 40px auto 0;
+    }
   }
 `
 const StyledDonateBanner = styled(DonateBanner)`
   margin-left: 10px;
   margin-right: 10px;
+  width: 100%;
+  max-width: 640px;
   ${({ theme }) => theme.breakpoint.md} {
     margin-left: auto;
     margin-right: auto;
@@ -100,8 +114,9 @@ export default function StoryWideStyle({ postData }) {
     manualOrderOfSections = [],
     relateds = [],
     slug = '',
+    content = null,
+    brief = null,
   } = postData
-
   const updatedAtFormatTime = transformTimeDataIntoDotFormat(updatedAt)
   const publishedDateFormatTime = transformTimeDataIntoDotFormat(publishedDate)
   const sectionsWithOrdered =
@@ -167,9 +182,10 @@ export default function StoryWideStyle({ postData }) {
             <Date>發布時間 {publishedDateFormatTime}</Date>
           </DateWrapper>
           <StyledDonateLink />
-          <div>這是前言</div>
-          <div>這是內文</div>
-
+          <section className="content">
+            <DraftRenderBlock rawContentBlock={brief} contentLayout="wide" />
+            <DraftRenderBlock rawContentBlock={content} contentLayout="wide" />
+          </section>
           <StyledDonateBanner />
         </ContentWrapper>
         <Aside>
