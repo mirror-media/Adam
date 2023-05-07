@@ -1,8 +1,5 @@
 import styled from 'styled-components'
-import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
-const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
-  MirrorMedia
-
+import DraftRenderBlock from '../shared/draft-renderer-block'
 /**
  * @typedef {import('../../../type/draft-js').Draft} Content
  */
@@ -23,17 +20,11 @@ const Wrapper = styled.section`
 export default function ArticleContent({
   content = { blocks: [], entityMap: {} },
 }) {
-  const shouldRenderContent = hasContentInRawContentBlock(content)
-  let contentJsx = null
-
-  if (shouldRenderContent) {
-    const contentWithRemovedEmptyBlock = removeEmptyContentBlock(content)
-    contentJsx = (
-      <Wrapper>
-        <DraftRenderer rawContentBlock={contentWithRemovedEmptyBlock} />
-      </Wrapper>
-    )
-  }
-
-  return <>{contentJsx}</>
+  return (
+    <DraftRenderBlock
+      rawContentBlock={content}
+      contentLayout="normal"
+      wrapper={(children) => <Wrapper>{children}</Wrapper>}
+    />
+  )
 }

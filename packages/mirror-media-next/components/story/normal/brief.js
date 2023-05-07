@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
-const { DraftRenderer, hasContentInRawContentBlock } = MirrorMedia
+import DraftRenderBlock from '../shared/draft-renderer-block'
+
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -48,12 +48,13 @@ export default function ArticleBrief({
   brief = { blocks: [], entityMap: {} },
   sectionSlug = '',
 }) {
-  const shouldRenderBrief = hasContentInRawContentBlock(brief)
   return (
-    shouldRenderBrief && (
-      <BriefContainer sectionSlug={sectionSlug}>
-        <DraftRenderer rawContentBlock={brief}></DraftRenderer>
-      </BriefContainer>
-    )
+    <DraftRenderBlock
+      rawContentBlock={brief}
+      contentLayout="normal"
+      wrapper={(children) => (
+        <BriefContainer sectionSlug={sectionSlug}>{children}</BriefContainer>
+      )}
+    />
   )
 }
