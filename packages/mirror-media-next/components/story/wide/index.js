@@ -4,6 +4,9 @@ import axios from 'axios'
 import client from '../../../apollo/apollo-client'
 import DraftRenderBlock from '../shared/draft-renderer-block'
 
+import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+const { getContentBlocksH2H3 } = MirrorMedia
+
 import {
   transformTimeDataIntoDotFormat,
   sortArrayWithOtherArrayId,
@@ -168,6 +171,8 @@ export default function StoryWideStyle({ postData }) {
     }
   }
 
+  const h2AndH3Block = getContentBlocksH2H3(content)
+
   return (
     <Main>
       <article>
@@ -178,7 +183,9 @@ export default function StoryWideStyle({ postData }) {
           title={title}
         />
         <ContentWrapper>
-          <NavSubtitleNavigator></NavSubtitleNavigator>
+          <NavSubtitleNavigator
+            h2AndH3Block={h2AndH3Block}
+          ></NavSubtitleNavigator>
           <DateWrapper>
             <Date>更新時間 {updatedAtFormatTime}</Date>
             <Date>發布時間 {publishedDateFormatTime}</Date>

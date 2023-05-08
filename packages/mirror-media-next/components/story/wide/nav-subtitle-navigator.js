@@ -7,6 +7,36 @@ const NavWrapper = styled.section`
   width: calc((100vw - 100%) / 2);
   height: 100%;
 `
+const NavItem = styled.li`
+  margin-bottom: 8px;
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 500;
+  cursor: pointer;
+  ${
+    /**
+     * @param {{headerType: 'header-two' | 'header-three'}} param
+     */
+    ({ headerType }) => {
+      switch (headerType) {
+        case 'header-two':
+          return `  
+        font-size: 18px;
+        line-height: 1.5;
+        `
+        case 'header-three':
+          return `
+        font-size: 14px;
+        line-height: 2;
+        `
+        default:
+          return `  
+        font-size: 18px;
+        line-height: 1.5;
+        `
+      }
+    }
+  }
+`
 const Nav = styled.nav`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
@@ -18,51 +48,38 @@ const Nav = styled.nav`
     width: 168px;
     height: auto;
   }
-  li {
-    margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.87);
-    font-weight: 500;
-
-    &.h2 {
-      font-size: 18px;
-      line-height: 1.5;
-    }
-    &.h3 {
-      font-size: 14px;
-      line-height: 2;
-    }
-    &.active {
-      color: ${({ theme }) => theme.color.brandColor.darkBlue};
-      text-decoration: underline;
-    }
-  }
 `
 /**
  * TODO: add feature for scroll into certain subtitle
  * @returns {JSX.Element}
  */
-export default function NavSubtitleNavigator() {
+export default function NavSubtitleNavigator({ h2AndH3Block = [] }) {
+  const handleOnClick = (key) => {
+    const target = document.querySelector(`[data-offset-key*="${key}"]`)
+    if (!target) {
+      return
+    }
+    target.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <NavWrapper>
-      <Nav>
-        <ul>
-          <li className="h2">
-            <p>堅持非營利　評價中肯鄉民擁戴</p>
-          </li>
-          <li className="h3 active">
-            <p>突然變殺人凶手　滿腹委屈</p>
-          </li>
-          <li className="h3">
-            <p>沈大俠有話直說　遭人誤解</p>
-          </li>
-          <li className="h3">
-            <p>工作中投射缺憾　渴望父愛</p>
-          </li>
-          <li className="h3">
-            <p>不再蹚司法渾水　專注醫療</p>
-          </li>
-        </ul>
-      </Nav>
+      {h2AndH3Block.length ? (
+        <Nav>
+          <ul>
+            {h2AndH3Block.map((item) => (
+              <NavItem
+                headerType={item.type}
+                key={item.key}
+                onClick={() => handleOnClick(item.key)}
+              >
+                {/* {item.text} */}
+                <a href={`#header-${item.key}`}>{item.text}</a>
+              </NavItem>
+            ))}
+          </ul>
+        </Nav>
+      ) : null}
     </NavWrapper>
   )
 }
