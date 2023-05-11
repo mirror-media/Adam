@@ -1,6 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
+import {
+  disableBodyScroll,
+  enableBodyScroll,
+  clearAllBodyScrollLocks,
+} from 'body-scroll-lock'
 
 import LogoSvg from '../../../public/images/mirror-media-logo.svg'
 import HamburgerButton from '../../shared/hamburger-button'
@@ -70,7 +75,21 @@ const SideBar = styled.section`
 `
 
 export default function Header({ h2AndH3Block = [] }) {
+  const sideBarRef = useRef(null)
   const [shouldOpenSideBar, setShouldOpenSideBar] = useState(false)
+
+  useEffect(() => {
+    const sideBar = sideBarRef.current
+    if (!sideBar) {
+      return
+    }
+    if (shouldOpenSideBar) {
+      disableBodyScroll(sideBar)
+    } else {
+      enableBodyScroll(sideBar)
+    }
+    return () => clearAllBodyScrollLocks()
+  }, [shouldOpenSideBar])
   return (
     <HeaderWrapper>
       <Link href="/">
@@ -81,7 +100,7 @@ export default function Header({ h2AndH3Block = [] }) {
         handleOnClick={() => setShouldOpenSideBar((val) => !val)}
       />
 
-      <SideBar shouldShowSidebar={shouldOpenSideBar}>
+      <SideBar shouldShowSidebar={shouldOpenSideBar} ref={sideBarRef}>
         <CloseButton
           handleOnClick={() => setShouldOpenSideBar((val) => !val)}
         />
