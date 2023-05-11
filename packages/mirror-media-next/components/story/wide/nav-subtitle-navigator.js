@@ -21,9 +21,8 @@ const navWrapperSideIndex = css`
   height: 100%;
 `
 const navWrapperSideMenu = css`
-  min-height: 50%;
   background-color: #3e3e3e;
-  padding: 24px;
+  padding: 24px 24px 20px;
 `
 
 const NavWrapper = styled.section`

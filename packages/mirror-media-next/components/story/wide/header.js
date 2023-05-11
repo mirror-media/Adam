@@ -12,6 +12,8 @@ import LogoSvg from '../../../public/images/mirror-media-logo.svg'
 import HamburgerButton from '../../shared/hamburger-button'
 import CloseButton from '../../shared/close-button'
 import NavSubtitleNavigator from './nav-subtitle-navigator'
+import ButtonSocialNetworkShare from '../shared/button-social-network-share'
+import ButtonCopyLink from '../shared/button-copy-link'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -43,7 +45,15 @@ const HeaderWrapper = styled.header`
     }
   }
 `
-
+const SocialMedia = styled.li`
+  display: flex;
+  margin-bottom: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  a {
+    margin-right: 10px;
+  }
+`
 const SideBar = styled.section`
   display: flex;
   flex-direction: column;
@@ -53,7 +63,7 @@ const SideBar = styled.section`
 
   width: 100%;
   height: 100%;
-  background-color: pink;
+  background-color: #3e3e3e;
   font-size: 14px;
   line-height: 1.5;
   z-index: 539;
@@ -112,6 +122,11 @@ export default function Header({ h2AndH3Block = [] }) {
           componentStyle="side-bar"
           handleCloseSideBar={() => setShouldOpenSideBar(false)}
         />
+        <SocialMedia>
+          <ButtonSocialNetworkShare type="facebook" width={28} height={28} />
+          <ButtonSocialNetworkShare type="line" width={28} height={28} />
+          <ButtonCopyLink width={28} height={28} />
+        </SocialMedia>
       </SideBar>
     </HeaderWrapper>
   )
