@@ -6,6 +6,7 @@ import {
   enableBodyScroll,
   clearAllBodyScrollLocks,
 } from 'body-scroll-lock'
+import useClickOutside from '../../../hooks/useClickOutside'
 
 import LogoSvg from '../../../public/images/mirror-media-logo.svg'
 import HamburgerButton from '../../shared/hamburger-button'
@@ -77,7 +78,9 @@ const SideBar = styled.section`
 export default function Header({ h2AndH3Block = [] }) {
   const sideBarRef = useRef(null)
   const [shouldOpenSideBar, setShouldOpenSideBar] = useState(false)
-
+  useClickOutside(sideBarRef, () => {
+    setShouldOpenSideBar(false)
+  })
   useEffect(() => {
     const sideBar = sideBarRef.current
     if (!sideBar) {
