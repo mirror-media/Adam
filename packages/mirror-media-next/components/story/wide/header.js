@@ -5,6 +5,7 @@ import Link from 'next/link'
 import LogoSvg from '../../../public/images/mirror-media-logo.svg'
 import HamburgerButton from '../../shared/hamburger-button'
 import CloseButton from '../../shared/close-button'
+import NavSubtitleNavigator from './nav-subtitle-navigator'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -18,7 +19,6 @@ const HeaderWrapper = styled.header`
   margin: 0 auto;
   top: 0;
   left: 0;
-  color: red;
   background-color: transparent;
   display: flex;
   justify-content: space-between;
@@ -47,7 +47,7 @@ const SideBar = styled.section`
 
   width: 100%;
   height: 100%;
-  background-color: #3e3e3e;
+  background-color: pink;
   font-size: 14px;
   line-height: 1.5;
   z-index: 539;
@@ -69,7 +69,7 @@ const SideBar = styled.section`
   }
 `
 
-export default function Header() {
+export default function Header({ h2AndH3Block = [] }) {
   const [shouldOpenSideBar, setShouldOpenSideBar] = useState(false)
   return (
     <HeaderWrapper>
@@ -84,6 +84,11 @@ export default function Header() {
       <SideBar shouldShowSidebar={shouldOpenSideBar}>
         <CloseButton
           handleOnClick={() => setShouldOpenSideBar((val) => !val)}
+        />
+        <NavSubtitleNavigator
+          h2AndH3Block={h2AndH3Block}
+          componentStyle="side-bar"
+          handleCloseSideBar={() => setShouldOpenSideBar(false)}
         />
       </SideBar>
     </HeaderWrapper>

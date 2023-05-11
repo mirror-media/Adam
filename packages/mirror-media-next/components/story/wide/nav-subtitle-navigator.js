@@ -1,27 +1,112 @@
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 /**
  * @typedef {Pick<import('../../../type/draft-js').DraftBlock, 'key' | 'text' | 'type'> & { type: 'header-two' | 'header-three'}} H2AndH3Block
  */
 
-const NavWrapper = styled.section`
+/**
+ * @typedef {import('../../../type/theme').Theme} Theme
+ */
+
+/**
+ * @typedef {'side-index' | 'side-bar'} ComponentStyle
+ */
+
+const navWrapperSideIndex = css`
   position: absolute;
   top: 0;
   left: calc((100vw - 100%) / 2 * -1);
   width: calc((100vw - 100%) / 2);
   height: 100%;
 `
-const NavItem = styled.li`
-  margin-bottom: 8px;
+const navWrapperSideMenu = css`
+  min-height: 50%;
+  background-color: #3e3e3e;
+  padding: 24px;
+`
+
+const NavWrapper = styled.section`
+  ${
+    /**
+     * @param {{componentStyle: ComponentStyle}} Object
+     */
+    ({ componentStyle }) => {
+      switch (componentStyle) {
+        case 'side-index':
+          return navWrapperSideIndex
+        case 'side-bar':
+          return navWrapperSideMenu
+        default:
+        case 'side-index':
+          return navWrapperSideIndex
+      }
+    }
+  }
+`
+
+const navItemSideIndex = css`
   color: rgba(0, 0, 0, 0.87);
-  font-weight: 500;
-  cursor: pointer;
+
   ${
     /**
      * @param {Object} param
-     * @param {'header-two' | 'header-three'} param.headerType
      * @param {boolean} param.isActive
+     * @param {Theme} param.theme
+     */
+    ({ isActive, theme }) =>
+      isActive &&
+      `
+    color: ${theme.color.brandColor.darkBlue};
+    text-decoration: underline;
+    `
+  }
+`
+
+const navItemSideMenu = css`
+  color: ${({ theme }) => theme.color.brandColor.lightBlue};
+  position: relative;
+  margin-left: 28px;
+  width: 168px;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    width: 8px;
+    height: 8px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background-color: ${({ theme }) => theme.color.brandColor.lightBlue};
+  }
+
+  ${
+    /**
+     * @param {{isActive: boolean}} param
+     */
+    ({ isActive }) =>
+      isActive &&
+      `
+        color: white;
+        &::before{
+          background-color: white;
+        }
+      `
+  }
+`
+
+const NavItem = styled.li`
+  margin-bottom: 8px;
+  font-weight: 500;
+  cursor: pointer;
+
+  ${
+    /**
+     * @param {Object} param
+     * @param {boolean} param.isActive
+     * @param {ComponentStyle} param.componentStyle
+     * @param {'header-two' | 'header-three'} param.headerType
+     * @param {Theme} param.theme
      */
     ({ headerType }) => {
       switch (headerType) {
@@ -43,15 +128,22 @@ const NavItem = styled.li`
       }
     }
   }
+  ${({ componentStyle }) => {
+    switch (componentStyle) {
+      case 'side-index':
+        return navItemSideIndex
 
-  ${({ isActive, theme }) =>
-    isActive &&
-    `
-    color: ${theme.color.brandColor.darkBlue};
-    text-decoration: underline;
-    `}
+      case 'side-bar':
+        return navItemSideMenu
+
+      default:
+      case 'side-index':
+        return navItemSideIndex
+    }
+  }}
 `
-const Nav = styled.nav`
+
+const navSideIndex = css`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
     display: block;
@@ -63,16 +155,48 @@ const Nav = styled.nav`
     height: auto;
   }
 `
+const navSideMenu = css`
+  display: block;
+`
+
+const Nav = styled.nav`
+  ${
+    /**
+     * @param {Object} param
+     * @param {ComponentStyle} [param.componentStyle]
+     */
+    ({ componentStyle }) => {
+      switch (componentStyle) {
+        case 'side-index':
+          return navSideIndex
+        case 'side-bar':
+          return navSideMenu
+        default:
+        case 'side-index':
+          return navSideIndex
+      }
+    }
+  }
+`
+
+/**
+ * @callback HandleCloseSideBar
+ * @return {void | import('react').SetStateAction<boolean> }
+ */
 
 /**
  * @param {Object} props
  * @param {H2AndH3Block[]} props.h2AndH3Block
+ * @param {ComponentStyle} [props.componentStyle]
  * @param {JSX.Element} [props.children]
+ * @param {HandleCloseSideBar} [props.handleCloseSideBar]
  * @returns {JSX.Element}
  */
 export default function NavSubtitleNavigator({
   h2AndH3Block = [],
+  componentStyle = 'side-index',
   children = null,
+  handleCloseSideBar = () => {},
 }) {
   const [currentIndex, setCurrentIndex] = useState(undefined)
   const handleOnClick = (key) => {
@@ -84,10 +208,14 @@ export default function NavSubtitleNavigator({
     const { scrollY, innerHeight } = window
 
     const y = top + height * 0.5 + scrollY - innerHeight * 0.5
+
     scrollTo({
       top: y,
       behavior: 'smooth',
     })
+    if (componentStyle === 'side-bar') {
+      handleCloseSideBar()
+    }
   }
 
   useEffect(() => {
@@ -155,13 +283,14 @@ export default function NavSubtitleNavigator({
   }, [h2AndH3Block])
 
   return (
-    <NavWrapper>
-      <Nav>
+    <NavWrapper componentStyle={componentStyle}>
+      <Nav componentStyle={componentStyle}>
         {children}
         {h2AndH3Block.length ? (
           <ul>
             {h2AndH3Block.map((item) => (
               <NavItem
+                componentStyle={componentStyle}
                 isActive={
                   currentIndex ? currentIndex.includes(item.key) : false
                 }

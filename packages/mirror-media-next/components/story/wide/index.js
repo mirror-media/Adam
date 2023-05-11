@@ -13,14 +13,16 @@ import {
   sortArrayWithOtherArrayId,
 } from '../../../utils'
 import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
+
+import Header from './header'
 import DonateLink from '../shared/donate-link'
 import HeroImageAndVideo from './hero-image-and-video'
 import Credits from './credits'
-
 import DonateBanner from '../shared/donate-banner'
 import RelatedArticleList from './related-article-list'
 import AsideArticleList from './aside-article-list'
 import NavSubtitleNavigator from './nav-subtitle-navigator'
+
 import Divider from '../shared/divider'
 import ButtonCopyLink from '../shared/button-copy-link'
 import ButtonSocialNetworkShare from '../shared/button-social-network-share'
@@ -34,7 +36,7 @@ import { fetchAsidePosts } from '../../../apollo/query/posts'
 const Main = styled.main`
   margin: auto;
   width: 100%;
-  height: 100vh;
+
   background-color: white;
 `
 const StyledDonateLink = styled(DonateLink)`
@@ -224,59 +226,69 @@ export default function StoryWideStyle({ postData }) {
   const h2AndH3Block = getContentBlocksH2H3(content)
 
   return (
-    <Main>
-      <article>
-        <HeroImageAndVideo
-          heroImage={heroImage}
-          heroVideo={heroVideo}
-          heroCaption={heroCaption}
-          title={title}
-        />
-        <ContentWrapper>
-          <NavSubtitleNavigator h2AndH3Block={h2AndH3Block}>
-            <SocialMediaAndDonateLink>
-              <SocialMedia>
-                <ButtonSocialNetworkShare
-                  type="facebook"
-                  width={28}
-                  height={28}
-                />
-                <ButtonSocialNetworkShare type="line" width={28} height={28} />
-                <ButtonCopyLink width={28} height={28} />
-              </SocialMedia>
-              {/* <li>
+    <>
+      <Header h2AndH3Block={h2AndH3Block} />
+      <Main>
+        <article>
+          <HeroImageAndVideo
+            heroImage={heroImage}
+            heroVideo={heroVideo}
+            heroCaption={heroCaption}
+            title={title}
+          />
+          <ContentWrapper>
+            <NavSubtitleNavigator h2AndH3Block={h2AndH3Block}>
+              <SocialMediaAndDonateLink>
+                <SocialMedia>
+                  <ButtonSocialNetworkShare
+                    type="facebook"
+                    width={28}
+                    height={28}
+                  />
+                  <ButtonSocialNetworkShare
+                    type="line"
+                    width={28}
+                    height={28}
+                  />
+                  <ButtonCopyLink width={28} height={28} />
+                </SocialMedia>
+                {/* <li>
                 <DonateLink />
               </li> */}
-            </SocialMediaAndDonateLink>
-          </NavSubtitleNavigator>
-          <Credits credits={credits}></Credits>
-          <DateWrapper>
-            <Date>更新時間 {updatedAtFormatTime}</Date>
-            <Date>發布時間 {publishedDateFormatTime}</Date>
-          </DateWrapper>
-          <StyledDonateLink />
-          <section className="content">
-            <DraftRenderBlock rawContentBlock={brief} contentLayout="wide" />
-            <DraftRenderBlock rawContentBlock={content} contentLayout="wide" />
-          </section>
+              </SocialMediaAndDonateLink>
+            </NavSubtitleNavigator>
+            <Credits credits={credits}></Credits>
+            <DateWrapper>
+              <Date>更新時間 {updatedAtFormatTime}</Date>
+              <Date>發布時間 {publishedDateFormatTime}</Date>
+            </DateWrapper>
+            <StyledDonateLink />
+            <section className="content">
+              <DraftRenderBlock rawContentBlock={brief} contentLayout="wide" />
+              <DraftRenderBlock
+                rawContentBlock={content}
+                contentLayout="wide"
+              />
+            </section>
 
-          <StyledDonateBanner />
-        </ContentWrapper>
-        <Aside>
-          <RelatedArticleList relateds={relatedsWithOrdered} />
-          <AsideArticleList
-            heading="最新文章"
-            fetchArticle={handleFetchLatestNews}
-            renderAmount={6}
-          />
-          <Divider />
-          <AsideArticleList
-            heading="熱門文章"
-            fetchArticle={handleFetchPopularNews}
-            renderAmount={6}
-          />
-        </Aside>
-      </article>
-    </Main>
+            <StyledDonateBanner />
+          </ContentWrapper>
+          <Aside>
+            <RelatedArticleList relateds={relatedsWithOrdered} />
+            <AsideArticleList
+              heading="最新文章"
+              fetchArticle={handleFetchLatestNews}
+              renderAmount={6}
+            />
+            <Divider />
+            <AsideArticleList
+              heading="熱門文章"
+              fetchArticle={handleFetchPopularNews}
+              renderAmount={6}
+            />
+          </Aside>
+        </article>
+      </Main>
+    </>
   )
 }
