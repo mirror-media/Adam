@@ -7,8 +7,7 @@ import Image from 'next/image'
 const CopiedMessage = styled.div`
   position: fixed;
   top: 64px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: calc((100vw - min(80vw, 480px)) / 2);
   color: #fff;
   background: rgba(0, 0, 0, 0.87);
   border-radius: 2px;

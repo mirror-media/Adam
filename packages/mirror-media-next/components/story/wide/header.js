@@ -54,34 +54,42 @@ const SocialMedia = styled.li`
     margin-right: 10px;
   }
 `
-const SideBar = styled.section`
-  display: flex;
-  flex-direction: column;
-
+const SideBarModal = styled.section`
   position: fixed;
   top: 0;
 
   width: 100%;
   height: 100%;
-  background-color: #3e3e3e;
+  background-color: transparent;
   font-size: 14px;
   line-height: 1.5;
   z-index: 539;
   overflow-y: auto;
   right: 0;
-  transform: ${
-    /** @param {{shouldShowSidebar: Boolean}} props */
+  ${
+    /**
+     * @param {{shouldShowSidebar: Boolean}} props
+     */
     ({ shouldShowSidebar }) =>
-      shouldShowSidebar ? 'translateX(0)' : 'translateX(100%)'
+      shouldShowSidebar
+        ? 'transform: translateX(0%)'
+        : 'transform: translateX(100%)'
   };
-
+  overflow-x: hidden;
   transition: transform 0.5s ease-in-out;
 
-  ${({ theme }) => theme.breakpoint.md} {
-    width: 320px;
-  }
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
+  }
+`
+
+const SideBar = styled.section`
+  width: 100%;
+  height: 100%;
+  background-color: #3e3e3e;
+  margin-left: auto;
+  ${({ theme }) => theme.breakpoint.md} {
+    width: 320px;
   }
 `
 
@@ -112,22 +120,23 @@ export default function Header({ h2AndH3Block = [] }) {
         color="lightBlue"
         handleOnClick={() => setShouldOpenSideBar((val) => !val)}
       />
-
-      <SideBar shouldShowSidebar={shouldOpenSideBar} ref={sideBarRef}>
-        <CloseButton
-          handleOnClick={() => setShouldOpenSideBar((val) => !val)}
-        />
-        <NavSubtitleNavigator
-          h2AndH3Block={h2AndH3Block}
-          componentStyle="side-bar"
-          handleCloseSideBar={() => setShouldOpenSideBar(false)}
-        />
-        <SocialMedia>
-          <ButtonSocialNetworkShare type="facebook" width={28} height={28} />
-          <ButtonSocialNetworkShare type="line" width={28} height={28} />
-          <ButtonCopyLink width={28} height={28} />
-        </SocialMedia>
-      </SideBar>
+      <SideBarModal shouldShowSidebar={shouldOpenSideBar}>
+        <SideBar ref={sideBarRef}>
+          <CloseButton
+            handleOnClick={() => setShouldOpenSideBar((val) => !val)}
+          />
+          <NavSubtitleNavigator
+            h2AndH3Block={h2AndH3Block}
+            componentStyle="side-bar"
+            handleCloseSideBar={() => setShouldOpenSideBar(false)}
+          />
+          <SocialMedia>
+            <ButtonSocialNetworkShare type="facebook" width={28} height={28} />
+            <ButtonSocialNetworkShare type="line" width={28} height={28} />
+            <ButtonCopyLink width={28} height={28} />
+          </SocialMedia>
+        </SideBar>
+      </SideBarModal>
     </HeaderWrapper>
   )
 }
