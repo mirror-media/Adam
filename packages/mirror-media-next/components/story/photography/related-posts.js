@@ -54,7 +54,7 @@ const PostsList = styled.ul`
     justify-content: space-between;
   }
 `
-const PostCard = styled.div`
+const PostCard = styled.li`
   color: white;
   width: 280px;
   margin-bottom: 24px;

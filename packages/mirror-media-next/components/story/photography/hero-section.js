@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 /**
@@ -24,15 +23,8 @@ const HeroImage = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  background-attachment: ${({
-    // @ts-ignore
-    isIOS,
-  }) => (isIOS ? 'initial' : 'fixed')};
+  background-attachment: ${() => (!isIOS() ? 'fixed' : 'initial')};
 `
-const isIOS = () => {
-  // @ts-ignore
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-}
 
 const TitleBox = styled.div`
   width: 80%;
@@ -113,6 +105,11 @@ const BriefWrapper = styled.div`
   }
 `
 
+const isIOS = () => {
+  // @ts-ignore
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+}
+
 /**
  * @typedef {import('../../../apollo/fragments/post').HeroImage } HeroImage
  */
@@ -132,12 +129,6 @@ export default function HeroSection({
   brief = [],
   heroImage = null,
 }) {
-  const [isIOSDevice, setIsIOSDevice] = useState(false)
-
-  useEffect(() => {
-    setIsIOSDevice(isIOS())
-  }, [])
-
   return (
     <HeroImage
       imageUrl={
@@ -149,8 +140,6 @@ export default function HeroSection({
         heroImage?.resized?.w480 ||
         '/images/default-og-img.png'
       }
-      // @ts-ignore
-      isIOS={isIOSDevice}
     >
       <TitleBox>
         <div className="title-wrapper">
