@@ -22,6 +22,10 @@ import Aside from '../shared/aside'
  */
 
 /**
+ * @typedef {Pick<PostData,'content'>['content']} PostContent
+ */
+
+/**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
 const Main = styled.main`
@@ -96,9 +100,10 @@ const StyledCredits = styled(Credits)`
  *
  * @param {Object} param
  * @param {PostData} param.postData
- * @returns
+ * @param {PostContent} param.postContent
+ * @returns {JSX.Element}
  */
-export default function StoryWideStyle({ postData }) {
+export default function StoryWideStyle({ postData, postContent }) {
   const {
     title = '',
     heroImage = null,
@@ -120,7 +125,6 @@ export default function StoryWideStyle({ postData }) {
     relateds = [],
     manualOrderOfRelateds = [],
     slug = '',
-    content = null,
     brief = null,
     tags = [],
   } = postData
@@ -150,7 +154,7 @@ export default function StoryWideStyle({ postData }) {
     { extend_byline: extend_byline },
   ]
 
-  const h2AndH3Block = getContentBlocksH2H3(content)
+  const h2AndH3Block = getContentBlocksH2H3(postContent)
 
   return (
     <>
@@ -193,7 +197,7 @@ export default function StoryWideStyle({ postData }) {
             <section className="content">
               <DraftRenderBlock rawContentBlock={brief} contentLayout="wide" />
               <DraftRenderBlock
-                rawContentBlock={content}
+                rawContentBlock={postContent}
                 contentLayout="wide"
               />
             </section>

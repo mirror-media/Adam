@@ -19,6 +19,11 @@ const { getContentBlocksH2H3 } = MirrorMedia
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
  */
+
+/**
+ * @typedef {Pick<PostData,'content'>['content']} PostContent
+ */
+
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -95,9 +100,10 @@ function getSectionLabelFirst(sections) {
  *
  * @param {Object} props
  * @param {PostData} props.postData
+ * @param {PostContent} props.postContent
  * @returns {JSX.Element}
  */
-export default function StoryPremiumStyle({ postData }) {
+export default function StoryPremiumStyle({ postData, postContent }) {
   const [headerData, setHeaderData] = useState({
     sectionsData: [],
   })
@@ -105,7 +111,6 @@ export default function StoryPremiumStyle({ postData }) {
   const {
     title,
     brief = { blocks: [], entityMap: {} },
-    content = { blocks: [], entityMap: {} },
     sections = [],
     manualOrderOfSections = [],
     writers = [],
@@ -126,7 +131,7 @@ export default function StoryPremiumStyle({ postData }) {
     slug = '',
     manualOrderOfRelateds = [],
   } = postData
-  const h2AndH3Block = getContentBlocksH2H3(content)
+  const h2AndH3Block = getContentBlocksH2H3(postContent)
   const sectionsWithOrdered =
     manualOrderOfSections && manualOrderOfSections.length
       ? sortArrayWithOtherArrayId(sections, manualOrderOfSections)
@@ -242,7 +247,7 @@ export default function StoryPremiumStyle({ postData }) {
             <section className="content">
               <DraftRenderBlock
                 contentLayout="premium"
-                rawContentBlock={content}
+                rawContentBlock={postContent}
               ></DraftRenderBlock>
             </section>
             <CopyrightWarning />
