@@ -1,9 +1,12 @@
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 /**
  * @param {Object} props
  * @param {string} props.imageUrl
+ * @param {boolean} props.isIOS
  */
+
 const getImageUrl = (props) => props.imageUrl
 
 const HeroImage = styled.div`
@@ -23,8 +26,16 @@ const HeroImage = styled.div`
   flex-direction: column;
   justify-content: center;
 
-  background-attachment: ${() => (!isIOS() ? 'fixed' : 'initial')};
+  background-attachment: ${({ isIOS }) => (isIOS ? 'initial' : 'fixed')};
 `
+/**
+ * Check whether in iOS environment
+ * @returns {boolean} True if the current environment is iOS, false otherwise.
+ */
+const isIOS = () => {
+  // @ts-ignore
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+}
 
 const TitleBox = styled.div`
   width: 80%;
@@ -105,11 +116,6 @@ const BriefWrapper = styled.div`
   }
 `
 
-const isIOS = () => {
-  // @ts-ignore
-  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-}
-
 /**
  * @typedef {import('../../../apollo/fragments/post').HeroImage } HeroImage
  */
@@ -129,6 +135,12 @@ export default function HeroSection({
   brief = [],
   heroImage = null,
 }) {
+  const [isIOSDevice, setIsIOSDevice] = useState(false)
+
+  useEffect(() => {
+    setIsIOSDevice(isIOS())
+  }, [])
+
   return (
     <HeroImage
       imageUrl={
@@ -140,6 +152,7 @@ export default function HeroSection({
         heroImage?.resized?.w480 ||
         '/images/default-og-img.png'
       }
+      isIOS={isIOSDevice}
     >
       <TitleBox>
         <div className="title-wrapper">

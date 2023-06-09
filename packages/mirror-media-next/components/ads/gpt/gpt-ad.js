@@ -3,9 +3,6 @@ import { useEffect, useState } from 'react'
 import { getAdSlotParam, getAdWidth } from '../../../utils/gpt-ad.js'
 import styled from 'styled-components'
 
-// use global object store cross component div id name and prevent re-render when update
-const GPTAdSlotsDefined = {}
-
 const Wrapper = styled.div`
   /**
  * 廣告有時會替換掉原本 <Ad> 元件裡頭的根元素 <div>
@@ -43,11 +40,13 @@ const Ad = styled.div`
 `
 
 /**
+ * @typedef {function(googletag.events.SlotRequestedEvent):void} GoogleTagEventHandler
+ *
  * @param {Object} props
  * @param {string} props.pageKey - key to access GPT_UNITS first layer
  * @param {string} props.adKey - key to access GPT_UNITS second layer, might need to complete with device
- * @param {function} [props.onSlotRequested] - callback when slotRequested event occurs
- * @param {function} [props.onSlotRenderEnded] - callback when slotRenderEnded event occurs
+ * @param {GoogleTagEventHandler} [props.onSlotRequested] - callback when slotRequested event occurs
+ * @param {GoogleTagEventHandler} [props.onSlotRenderEnded] - callback when slotRenderEnded event occurs
  * @param {string} [props.className] - for styled-component method to add styles
  * @returns
  */
@@ -62,6 +61,12 @@ export default function GPTAd({
   const [adDivId, setAdDivId] = useState('')
 
   useEffect(() => {
+    if (!(pageKey && adKey)) {
+      console.error(
+        `GPTAd not receive necessary pageKey ${pageKey} or ${adKey}`
+      )
+      return
+    }
     const width = window.innerWidth
     const adSlotParam = getAdSlotParam(pageKey, adKey, width)
     if (!adSlotParam) {
@@ -76,53 +81,26 @@ export default function GPTAd({
     /**
      * Check https://developers.google.com/publisher-tag/guides/get-started?hl=en for the tutorial of the flow.
      */
-    let adSlot = GPTAdSlotsDefined[adDivId]
-    if (!adSlot) {
-      window.googletag.cmd.push(() => {
-        adSlot = window.googletag
-          .defineSlot(adUnitPath, adSize, adDivId)
-          .addService(window.googletag.pubads())
+    let adSlot
+    window.googletag.cmd.push(() => {
+      adSlot = window.googletag
+        .defineSlot(adUnitPath, adSize, adDivId)
+        .addService(window.googletag.pubads())
+    })
 
-        GPTAdSlotsDefined[adDivId] = adSlot
-      })
+    window.googletag.cmd.push(() => {
+      window.googletag.display(adDivId)
+    })
 
-      window.googletag.cmd.push(() => {
-        window.googletag.display(adDivId)
-      })
-    } else {
-      window.googletag.cmd.push(() => {
-        window.googletag.pubads().refresh([adSlot])
-      })
-    }
-
-    // see: https://developers.google.com/doubleclick-gpt/reference#googletag.service-addeventlistenereventtype,-listener
+    // all events, check https://developers.google.com/publisher-tag/reference?hl=en#googletag.events.eventtypemap for all events
     window.googletag.cmd.push(() => {
       const pubads = window.googletag.pubads()
-      const events = [
-        'slotRequested',
-        'slotRenderEnded',
-        'impressionViewable',
-        'slotOnload',
-        'slotVisibilityChanged',
-      ]
-      events.forEach((event) =>
-        // @ts-ignore
-        pubads.addEventListener(event, (e) => {
-          if (e.slot === adSlot) {
-            switch (event) {
-              case 'slotRequested':
-                onSlotRequested && onSlotRequested(e)
-                break
-              case 'slotRenderEnded':
-                onSlotRenderEnded && onSlotRenderEnded(e)
-                break
-
-              default:
-                break
-            }
-          }
-        })
-      )
+      if (onSlotRequested) {
+        pubads.addEventListener('slotRequested', onSlotRequested)
+      }
+      if (onSlotRenderEnded) {
+        pubads.addEventListener('slotRenderEnded', onSlotRenderEnded)
+      }
     })
 
     return () => {

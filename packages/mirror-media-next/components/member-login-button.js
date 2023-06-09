@@ -3,9 +3,10 @@
 
 import { useState, useRef } from 'react'
 import Image from 'next/legacy/image'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import useClickOutside from '../hooks/useClickOutside'
-
+import Link from 'next/link'
 import { useMembership, logout } from '../context/membership'
 
 const MemberLoginButtonWrapper = styled.div`
@@ -59,6 +60,8 @@ const dropdownMenuItem = [
 
 export default function MemberLoginButton() {
   const { isLoggedIn } = useMembership()
+  const router = useRouter()
+
   const [showSelectOptions, setShowSelectOptions] = useState(false)
   const selectWrapperRef = useRef(null)
   useClickOutside(selectWrapperRef, () => {
@@ -69,9 +72,7 @@ export default function MemberLoginButton() {
     setShowSelectOptions(false)
     logout()
   }
-  const handleLogIn = () => {
-    // setIsLoggedIn((val) => !val)
-  }
+
   let memberLoginButton
   if (isLoggedIn) {
     memberLoginButton = (
@@ -97,7 +98,11 @@ export default function MemberLoginButton() {
       </LoggedInWrapper>
     )
   } else {
-    memberLoginButton = <LoginButton onClick={handleLogIn}>登入</LoginButton>
+    memberLoginButton = (
+      <LoginButton>
+        <Link href={`/login?destination=${router.asPath && '/'}`}>登入</Link>
+      </LoginButton>
+    )
   }
   return (
     <MemberLoginButtonWrapper ref={selectWrapperRef}>

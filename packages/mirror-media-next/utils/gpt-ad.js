@@ -4,75 +4,19 @@ import { GPT_AD_NETWORK, GPT_UNITS } from '../constants/ads'
 import { mediaSize } from '../styles/media'
 
 /**
- * @param {googletag.SingleSizeArray[]} adSize
- * @returns {string}
- */
-function getAdSizeType(adSize = []) {
-  /**
-   * see: https://developers.google.com/doubleclick-gpt/guides/ad-sizes
-   * Ad size should be just ONE of these cases
-   */
-  const sizeValidators = [
-    function fixed() {
-      return checkFixedSize(adSize) ? 'fixed' : undefined
-    },
-    function multi() {
-      return adSize.length > 0 && adSize.every(checkFixedSize)
-        ? 'multi'
-        : undefined
-    },
-    function fluid() {
-      if (typeof adSize[0] !== 'string') {
-        return
-      }
-      return adSize.length === 1 && adSize[0] === 'fluid' ? 'fluid' : undefined
-    },
-  ]
-
-  // output 'fixed', 'multi, 'fluid' or undefined
-  const sizeValidator = sizeValidators.find(function findTruth(validator) {
-    return validator()
-  })
-
-  if (typeof sizeValidator === 'function') {
-    return sizeValidator()
-  }
-  return undefined
-
-  /**
-   *
-   * @param {googletag.GeneralSize} array
-   * @returns
-   */
-  function checkFixedSize(array = []) {
-    return (
-      array.length === 2 &&
-      Number.isFinite(array[0]) &&
-      Number.isFinite(array[1])
-    )
-  }
-}
-
-/**
- * generate the width of the ad's wrapper div
+ * Generate the width of the ad's wrapper div.
+ * For GPT ads, there will be three types of adSize 'fixed', 'multi', 'fluid'.
+ * Since we only use 'multi' type (ex: [[300, 250], [1, 1]]),
+ * the adWidth caculation will use 'multi' type caclulatin directly.
+ *
+ * backup for AdSize type detection: https://github.com/mirror-media/mirror-media-nuxt/blob/0b0a82ed372b1a9e50827dff857eae4a1df3427c/plugins/gpt-ad/util.js#L1-L37
+ * backup for AdWidth caculation: https://github.com/mirror-media/mirror-media-nuxt/blob/0b0a82ed372b1a9e50827dff857eae4a1df3427c/plugins/gpt-ad/index.vue#L56-L74
  * @param {googletag.SingleSizeArray[]} adSize
  * @returns {string}
  */
 export function getAdWidth(adSize) {
-  const adSizeType = getAdSizeType(adSize)
-  switch (adSizeType) {
-    case 'fixed': {
-      const width = adSize[0]
-      return `${width}px`
-    }
-    case 'multi': {
-      const widthMax = adSize.reduce((acc, curr) => Math.max(curr[0], acc), 0)
-      return `${widthMax}px`
-    }
-    case 'fluid':
-    default:
-      return '100%'
-  }
+  const widthMax = adSize.reduce((acc, curr) => Math.max(curr[0], acc), 0)
+  return `${widthMax}px`
 }
 
 /**
