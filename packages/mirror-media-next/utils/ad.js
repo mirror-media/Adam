@@ -6,7 +6,7 @@ import { MICRO_AD_UNITS } from '../constants/ads'
  * @param {number} index
  * @returns {boolean}
  */
-const needInsertMicroAdAfter = (index) => {
+const needInsertMicroAdAfter = (index = 0) => {
   if (typeof index !== 'number') {
     return false
   }
