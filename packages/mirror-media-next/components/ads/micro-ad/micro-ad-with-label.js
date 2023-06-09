@@ -198,7 +198,11 @@ const typeHome = css`
   }
 `
 const typeStory = css`
-  //Micro Ad container
+  ${({ theme }) => theme.breakpoint.xl} {
+    height: 90px;
+  }
+
+  // Micro AD container
   #compass-fit-widget-content {
     max-width: 280px;
     font-size: 18px;
@@ -216,13 +220,14 @@ const typeStory = css`
       flex-direction: row-reverse;
       justify-content: space-between;
       color: #808080;
-      background-color: #eeeeee;
+      background-color: rgb(244, 241, 233);
       gap: 20px;
     }
 
-    //IMAGE
+    // AD Image
     figure {
       height: 186.67px;
+      position: relative;
 
       img {
         height: 100%;
@@ -235,39 +240,116 @@ const typeStory = css`
         max-width: 87px;
         height: 100%;
       }
-
-      ${({ theme }) => theme.breakpoint.xl} {
-        min-width: 135px;
-        max-width: 135px;
-      }
     }
 
-    // Title
+    // AD Title
     .pop_item_title {
-      margin: 0;
-      position: relative;
-      padding: 16px 0 0 25.75px;
-      &::before {
-        position: absolute;
-        content: '';
-        width: 7.72px;
-        height: 100%;
-        background-color: #808080;
-        left: 0;
-        top: 0;
-      }
-
-      ${({ theme }) => theme.breakpoint.xl} {
-        padding: 16px 0 0 40px;
+      ${({ theme }) => theme.breakpoint.md} {
+        position: relative;
+        padding: 16px 0 0 25.75px;
         &::before {
-          width: 10px;
+          position: absolute;
+          content: '';
+          width: 7.72px;
+          height: 100%;
+          background-color: #808080;
+          left: 0;
+          top: 0;
         }
       }
     }
 
-    // Label('特企')
+    // AD Label('特企')
     .pop_item--colorBlock {
+      padding: 4px;
+      background: #bcbcbc;
+      width: 48px;
+      height: 22px;
+      color: #ffffff;
+      font-style: normal;
+      font-weight: 300;
+      font-size: 20px;
+      line-height: 14px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+
+      ${({ theme }) => theme.breakpoint.md} {
+        width: 40px;
+        font-size: 16px;
+      }
+    }
+
+    .compass-fit-clear {
       display: none;
+    }
+
+    // Desktop: Micro AD container
+    .popListVert-list__item {
+      ${({ theme }) => theme.breakpoint.xl} {
+        width: 100%;
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        position: relative;
+        height: 100%;
+      }
+
+      // AD Image
+      > a {
+        ${({ theme }) => theme.breakpoint.xl} {
+          min-width: 135px;
+          max-width: 135px;
+
+          img {
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+
+      .popListVert-list__item--text {
+        ${({ theme }) => theme.breakpoint.xl} {
+          // AD Label('特企')
+          > div {
+            padding: 4px;
+            background: #bcbcbc;
+            width: 48px;
+            height: 22px;
+            color: #ffffff;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 20px;
+            line-height: 14px;
+            position: absolute;
+            bottom: 0;
+            right: 87px;
+          }
+
+          // AD Title
+          h2 {
+            display: block;
+            height: 100%;
+            position: relative;
+            padding: 16px 0 0 40px;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 1.3;
+            color: #808080;
+
+            &::before {
+              position: absolute;
+              content: '';
+              width: 10px;
+              height: 100%;
+              background-color: #808080;
+              left: 0;
+              top: 0;
+            }
+          }
+        }
+      }
     }
   }
 `
