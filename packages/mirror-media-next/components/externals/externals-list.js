@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 import ExternalListItem from './externals-list-item'
+import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
+import StyledMicroAd from '../../components/ads/micro-ad/micro-ad-with-label'
+import { useMembership } from '../../context/membership'
 
 const ItemContainer = styled.div`
   display: grid;
@@ -27,10 +30,20 @@ const ItemContainer = styled.div`
  * @returns {React.ReactElement}
  */
 export default function ExternalList({ renderList }) {
+  const { isLoggedIn } = useMembership()
+
   return (
     <ItemContainer>
-      {renderList.map((item) => (
-        <ExternalListItem key={item.id} item={item} />
+      {renderList.map((item, index) => (
+        <>
+          <ExternalListItem key={item.id} item={item} />
+          {!isLoggedIn && needInsertMicroAdAfter(index) && (
+            <StyledMicroAd
+              unitId={getMicroAdUnitId(index, 'LISTING', 'RWD')}
+              microAdType="LISTING"
+            />
+          )}
+        </>
       ))}
     </ItemContainer>
   )
