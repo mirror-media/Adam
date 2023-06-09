@@ -3,10 +3,11 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import Link from 'next/link'
-import MicroAdWithLabel from '../../ads/micro-ad/micro-ad-with-label'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'
 import { MICRO_AD_UNITS } from '../../../constants/ads'
+import { useMembership } from '../../../context/membership'
+import StyledMicroAd from '../../../components/ads/micro-ad/micro-ad-with-label'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').HeroImage &
@@ -116,11 +117,23 @@ const ArticleWrapper = styled.ul`
 `
 
 const AdvertisementWrapper = styled.div`
-  height: 300px;
+  /* height: 300px;
   background-color: pink;
   padding: 28px 0 10px;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 20px 0 0;
+  } */
+
+  background: #eeeeee;
+  padding: 0px 10px 48px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    background: transparent;
+    padding: 20px 0 0;
+    gap: 20px;
   }
 `
 
@@ -131,9 +144,10 @@ const AdvertisementWrapper = styled.div`
  * @returns {JSX.Element}
  */
 export default function RelatedArticleList({ relateds }) {
+  const { isLoggedIn } = useMembership()
+
   const { width } = useWindowDimensions()
-  const isDesktopWidth = width >= mediaSize.xl
-  const device = isDesktopWidth ? 'PC' : 'MB'
+  const device = width >= mediaSize.xl ? 'PC' : 'MB'
 
   const relatedsArticleJsx = relateds.length ? (
     <ArticleWrapper>
@@ -169,17 +183,19 @@ export default function RelatedArticleList({ relateds }) {
     </ArticleWrapper>
   ) : null
 
+  const microAdJsx = !isLoggedIn
+    ? MICRO_AD_UNITS.STORY[device].map((unit) => (
+        <StyledMicroAd key={unit.name} unitId={unit.id} microAdType="STORY" />
+      ))
+    : null
+
   return (
     <Wrapper>
       <h2>延伸閱讀</h2>
       {relatedsArticleJsx}
       <AdvertisementWrapper>
-        特企區塊施工中......
-        {/* just a example, should be refactored as a separate componet including the device variable logic */}
-        {MICRO_AD_UNITS.STORY[device].map((unit) => (
-          <MicroAdWithLabel key={unit.name} unitId={unit.id} />
-        ))}
         {/* micro ad */}
+        {microAdJsx}
         {/* popin */}
       </AdvertisementWrapper>
     </Wrapper>
