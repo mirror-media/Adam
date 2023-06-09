@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import styled from 'styled-components'
 import ArticleListItem from './article-list-item'
 import StyledMicroAd from '../../components/ads/micro-ad/micro-ad-with-label'
@@ -36,15 +37,15 @@ export default function ArticleList({ renderList, section }) {
   return (
     <ItemContainer>
       {renderList.map((item, index) => (
-        <>
-          <ArticleListItem key={item.id} item={item} section={section} />
+        <Fragment key={item.id}>
+          <ArticleListItem item={item} section={section} />
           {!isLoggedIn && needInsertMicroAdAfter(index) && (
             <StyledMicroAd
               unitId={getMicroAdUnitId(index, 'LISTING', 'RWD')}
               microAdType="LISTING"
             />
           )}
-        </>
+        </Fragment>
       ))}
     </ItemContainer>
   )
