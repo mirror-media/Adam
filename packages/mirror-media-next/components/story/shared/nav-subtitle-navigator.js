@@ -238,6 +238,13 @@ export default function NavSubtitleNavigator({
       )
 
       /**
+       * Because content is currently render at client side, so we need to check element targets is existed.
+       * If not, then should not add intersection observer.
+       */
+      if (targets.some((element) => element === null)) {
+        return
+      }
+      /**
        * An Array to keep track of which subtitle is currently visible on the viewport.
        * Each object in the array has the following properties:
        *   - key: the key of the subtitle
@@ -287,6 +294,7 @@ export default function NavSubtitleNavigator({
         threshold: 0,
         rootMargin: '50% 0px -50% 0px',
       })
+
       targets.forEach((item) => observer.observe(item))
     }
     return () => {
