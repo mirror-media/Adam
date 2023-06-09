@@ -96,33 +96,104 @@ const typeHome = css`
     bottom: unset;
   }
 
-  // Micro Ad Container
-  #compass-fit-widget-content,
-  .latest-list_item {
+  // Mobile: AD Image
+  > a {
+    display: inline-block;
+    position: relative;
+    height: 134px;
+    min-width: 134px;
+  }
+
+  // Mobile: AD Detail
+  .latest-list_item_title {
+    flex-grow: 1;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-left: 20px;
+    //Since the advertiser uses inline-style to set the background-color, it is necessary to use !important.
+    background-color: #ffffff !important;
 
     ${({ theme }) => theme.breakpoint.md} {
-      display: block;
+      position: absolute;
+      bottom: 0;
+      z-index: 1;
+      padding-left: 0 !important;
     }
 
-    // Image
-    .listArticleBlock__figure {
-      position: relative;
-      height: 134px;
-      width: 134px;
+    // Mobile: AD Label('特企')
+    .latest-list_item_label {
+      width: fit-content;
+      height: 36px;
+      padding: 8px 10px;
+      text-align: center;
+      color: white;
+      font-size: 18px;
+      line-height: 20px;
+      font-weight: 400;
+    }
 
-      img {
-        height: 100%;
-        object-fit: cover;
+    // AD Title
+    > a {
+      text-align: left;
+      width: 134px;
+      font-size: 18px;
+      line-height: 1.3;
+      font-weight: 400;
+      color: rgba(0, 0, 0, 0.66);
+
+      h3 {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
       }
 
       ${({ theme }) => theme.breakpoint.md} {
         width: 244px;
-        height: 170px;
-      }
+        font-size: 16px;
+        line-height: 27px;
+        font-weight: 300;
+        color: white;
+        background-color: rgba(5, 79, 119, 0.8);
+        padding: 10px;
 
-      // Label ('特企')
-      .listArticleBlock__figure--colorBlock {
+        h3 {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          overflow: hidden;
+        }
+      }
+    }
+
+    // Mobile: AD Description Brief
+    span.brief {
+      display: none;
+    }
+  }
+
+  // Desktop: AD Container
+  .latest-list_item {
+    // Desktop: AD Image
+    > a {
+      ${({ theme }) => theme.breakpoint.md} {
+        display: inline-block;
+        position: relative;
+        width: 244px;
+        height: 170px;
+        position: relative;
+
+        .latest-list_item_img {
+          object-fit: cover;
+          height: 100%;
+        }
+      }
+    }
+
+    // Desktop: AD Label('特企')
+    .latest-list_item_label {
+      ${({ theme }) => theme.breakpoint.md} {
         width: fit-content;
         height: 36px;
         padding: 8px 10px;
@@ -130,69 +201,10 @@ const typeHome = css`
         color: white;
         font-size: 18px;
         line-height: 20px;
-        font-weight: 400;
-        background-color: #bcbcbc;
-        position: absolute;
-        top: 0;
-        right: -76px;
-
-        ${({ theme }) => theme.breakpoint.md} {
-          font-weight: 300;
-          top: auto;
-          right: auto;
-          bottom: 0;
-          left: 0;
-        }
-      }
-    }
-
-    .listArticleBlock__content {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding-left: 20px;
-
-      ${({ theme }) => theme.breakpoint.md} {
+        font-weight: 300;
         position: absolute;
         bottom: 0;
-        z-index: 1;
-        padding-left: 0;
-      }
-
-      // Title
-      h2 {
-        text-align: left;
-        width: 134px;
-        font-size: 18px;
-        line-height: 1.3;
-        font-weight: 400;
-        color: rgba(0, 0, 0, 0.66);
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-        overflow: hidden;
-        margin: 0;
-
-        ${({ theme }) => theme.breakpoint.md} {
-          width: 244px;
-          height: 75px;
-          font-size: 16px;
-          line-height: 27px;
-          font-weight: 300;
-          color: white;
-          background-color: rgba(5, 79, 119);
-          padding: 10px;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
-        }
-      }
-
-      // Description
-      p {
-        display: none;
+        left: 0;
       }
     }
   }
