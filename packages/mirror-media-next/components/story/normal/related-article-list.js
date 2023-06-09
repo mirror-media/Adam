@@ -117,13 +117,6 @@ const ArticleWrapper = styled.ul`
 `
 
 const AdvertisementWrapper = styled.div`
-  /* height: 300px;
-  background-color: pink;
-  padding: 28px 0 10px;
-  ${({ theme }) => theme.breakpoint.md} {
-    padding: 20px 0 0;
-  } */
-
   background: #eeeeee;
   padding: 0px 10px 48px 10px;
   display: flex;
