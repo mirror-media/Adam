@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
 const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
   MirrorMedia
@@ -27,20 +28,26 @@ export default function DraftRenderBlock({
   contentLayout = 'normal',
   wrapper = (children) => <>{children}</>,
 }) {
-  const draftWrapper = wrapper || ((children) => <>{children}</>)
-  const shouldRenderDraft = hasContentInRawContentBlock(rawContentBlock)
-  let draftJsx = null
+  const [draftRenderBlockJsx, setDraftRenderBlockJsx] = useState(null)
 
-  if (shouldRenderDraft) {
-    const contentWithRemovedEmptyBlock =
-      removeEmptyContentBlock(rawContentBlock)
-    draftJsx = draftWrapper(
-      <DraftRenderer
-        rawContentBlock={contentWithRemovedEmptyBlock}
-        contentLayout={contentLayout}
-      />
-    )
-  }
+  useEffect(() => {
+    const shouldRenderDraft = hasContentInRawContentBlock(rawContentBlock)
+    if (shouldRenderDraft) {
+      const contentWithRemovedEmptyBlock =
+        removeEmptyContentBlock(rawContentBlock)
+      /**
+       * Because `draft.js` has memory leak issue, so it is needed to prevent use `DraftRenderer` on server-side.
+       * @see [GitHub issue](https://github.com/facebookarchive/draft-js/issues/2391)
+       */
+      const jsx = (
+        <DraftRenderer
+          rawContentBlock={contentWithRemovedEmptyBlock}
+          contentLayout={contentLayout}
+        />
+      )
+      setDraftRenderBlockJsx(jsx)
+    }
+  }, [rawContentBlock, contentLayout])
 
-  return <>{draftJsx}</>
+  return <>{wrapper(draftRenderBlockJsx)}</>
 }
