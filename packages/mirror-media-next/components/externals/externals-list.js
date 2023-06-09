@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import styled from 'styled-components'
 import ExternalListItem from './externals-list-item'
 import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
@@ -35,15 +36,15 @@ export default function ExternalList({ renderList }) {
   return (
     <ItemContainer>
       {renderList.map((item, index) => (
-        <>
-          <ExternalListItem key={item.id} item={item} />
+        <Fragment key={item.id}>
+          <ExternalListItem item={item} />
           {!isLoggedIn && needInsertMicroAdAfter(index) && (
             <StyledMicroAd
               unitId={getMicroAdUnitId(index, 'LISTING', 'RWD')}
               microAdType="LISTING"
             />
           )}
-        </>
+        </Fragment>
       ))}
     </ItemContainer>
   )
