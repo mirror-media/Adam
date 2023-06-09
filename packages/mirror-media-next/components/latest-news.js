@@ -6,6 +6,11 @@ import LatestNewsItem from './latest-news-item'
 import { transformRawDataToArticleInfo } from '../utils'
 import { URL_STATIC_POST_EXTERNAL } from '../config/index.mjs'
 import Image from 'next/legacy/image'
+import StyledMicroAd from '../components/ads/micro-ad/micro-ad-with-label'
+import { needInsertMicroAdAfter, getMicroAdUnitId } from '../utils/ad'
+import { useMembership } from '../context/membership'
+import useWindowDimensions from '../hooks/use-window-dimensions'
+import { mediaSize } from '../styles/media'
 
 const Wrapper = styled.section`
   width: 100%;
@@ -135,6 +140,11 @@ export default function LatestNews(props) {
     return latestNews
   }
 
+  const { isLoggedIn } = useMembership()
+
+  const { width } = useWindowDimensions()
+  const device = width >= mediaSize.md ? 'PC' : 'MB'
+
   return (
     <Wrapper>
       <h2>最新文章</h2>
@@ -151,8 +161,16 @@ export default function LatestNews(props) {
       >
         {(renderList) => (
           <ItemContainer>
-            {renderList.map((item) => (
-              <LatestNewsItem key={item.slug} itemData={item}></LatestNewsItem>
+            {renderList.map((item, index) => (
+              <>
+                <LatestNewsItem key={item.slug} itemData={item} />
+                {!isLoggedIn && needInsertMicroAdAfter(index) && (
+                  <StyledMicroAd
+                    unitId={getMicroAdUnitId(index, 'HOME', device)}
+                    microAdType="HOME"
+                  />
+                )}
+              </>
             ))}
           </ItemContainer>
         )}
