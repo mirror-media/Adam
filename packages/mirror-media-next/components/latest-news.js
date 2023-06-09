@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import InfiniteScrollList from './infinite-scroll-list'
@@ -162,15 +163,15 @@ export default function LatestNews(props) {
         {(renderList) => (
           <ItemContainer>
             {renderList.map((item, index) => (
-              <>
-                <LatestNewsItem key={item.slug} itemData={item} />
+              <Fragment key={item.slug}>
+                <LatestNewsItem itemData={item} />
                 {!isLoggedIn && needInsertMicroAdAfter(index) && (
                   <StyledMicroAd
                     unitId={getMicroAdUnitId(index, 'HOME', device)}
                     microAdType="HOME"
                   />
                 )}
-              </>
+              </Fragment>
             ))}
           </ItemContainer>
         )}
