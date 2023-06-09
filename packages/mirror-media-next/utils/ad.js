@@ -17,7 +17,6 @@ const needInsertMicroAdAfter = (index) => {
 /**
  * @typedef {'HOME' | 'LISTING' | 'STORY' } MicroAdType
  */
-
 /**
  * @typedef {'PC' | 'MB' | 'RWD' } Device
  */
@@ -30,8 +29,16 @@ const needInsertMicroAdAfter = (index) => {
  * @param {Device} device
  * @returns {string | null}
  */
-const getMicroAdUnitId = (index, microAdType, device = 'RWD') => {
+const getMicroAdUnitId = (
+  index = 0,
+  microAdType = 'LISTING',
+  device = 'RWD'
+) => {
   let unitId = null
+
+  if (typeof index !== 'number') {
+    return null
+  }
 
   if (microAdType === 'LISTING') {
     const unitIndex = Math.floor((index - 1) / 2)
