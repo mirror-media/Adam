@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client'
-import { listingPost, asideListingPost, post } from '../fragments/post'
+import {
+  listingPost,
+  asideListingPost,
+  post,
+  postTrimmedContent,
+  postFullContent,
+} from '../fragments/post'
 
 const fetchAsidePosts = gql`
   ${asideListingPost}
@@ -38,11 +44,29 @@ const fetchPosts = gql`
 
 const fetchPostBySlug = gql`
   ${post}
+  ${postTrimmedContent}
+  ${postFullContent}
   query fetchPostBySlug($slug: String) {
     post(where: { slug: $slug }) {
       ...post
+      ...postTrimmedContent
+      ...postFullContent
     }
   }
 `
 
-export { fetchPosts, fetchAsidePosts, fetchPostBySlug }
+const fetchPostFullContentBySlug = gql`
+  ${postFullContent}
+  query fetchPostFullContentBySlug($slug: String) {
+    post(where: { slug: $slug }) {
+      ...postFullContent
+    }
+  }
+`
+
+export {
+  fetchPosts,
+  fetchAsidePosts,
+  fetchPostBySlug,
+  fetchPostFullContentBySlug,
+}

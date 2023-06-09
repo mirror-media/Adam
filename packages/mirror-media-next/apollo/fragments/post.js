@@ -135,6 +135,7 @@ export const asideListingPost = gql`
  * @property {string} heroCaption - caption to explain hero video or image
  * @property {Draft} brief - post brief
  * @property {Draft} content - post content
+ * @property {Draft} trimmedContent - post trimmed content
  * @property {Related[] } relateds related articles selected by cms users
  * @property {Related[] | null} manualOrderOfRelateds related articles with adjusted order
  * @property {boolean} isFeatured
@@ -198,7 +199,7 @@ export const post = gql`
     }
     heroCaption
     brief
-    content
+
     relateds {
       id
       slug
@@ -214,5 +215,16 @@ export const post = gql`
         w1200
       }
     }
+  }
+`
+
+export const postTrimmedContent = gql`
+  fragment postTrimmedContent on Post {
+    trimmedContent
+  }
+`
+export const postFullContent = gql`
+  fragment postFullContent on Post {
+    content
   }
 `
