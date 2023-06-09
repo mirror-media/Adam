@@ -1,5 +1,5 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-
+import { useState, useEffect } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
@@ -7,8 +7,11 @@ import dynamic from 'next/dynamic'
 import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import WineWarning from '../../components/story/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
-
-import { fetchPostBySlug } from '../../apollo/query/posts'
+import { useMembership } from '../../context/membership'
+import {
+  fetchPostBySlug,
+  fetchPostFullContentBySlug,
+} from '../../apollo/query/posts'
 import StoryNormalStyle from '../../components/story/normal'
 import Layout from '../../components/shared/layout'
 import { convertDraftToText, getResizedUrl } from '../../utils/index'
@@ -48,21 +51,69 @@ const Loading = styled.div`
 export default function Story({ postData }) {
   const {
     title = '',
+    slug = '',
     style = 'article',
     isMember = false,
     isAdult = false,
     categories = [],
+    content = null,
+    trimmedContent = null,
   } = postData
+
+  /**
+   * The logic for rendering the article content:
+   * We use the state `postContent` to manage the content should render in the story page.
+   * In most cases, the story page can retrieve the full content of the article.
+   * However, if the article is exclusive to members, it is required to get full content by using user's access token, but it is impossible to acquire it at server side.
+   * Before the full content is obtained, the truncated content `trimmedContent` will be used as the displayed data.
+   * If it didn't obtain the full content, and the user is logged in, story page will try to get the full content again by using the user's access token as the request payload.
+   * If successful, the full content will be displayed; if not, the truncated content will still be shown.
+   */
+  const { isLoggedIn, accessToken } = useMembership()
+  const [postContent, setPostContent] = useState(content ?? trimmedContent)
+
+  useEffect(() => {
+    if (!content && isLoggedIn) {
+      const getFullContent = async () => {
+        try {
+          const result = await client.query({
+            query: fetchPostFullContentBySlug,
+            variables: { slug },
+            context: {
+              headers: {
+                authorization: accessToken ? `Bearer ${accessToken}` : '',
+              },
+            },
+          })
+          const fullContent = result?.data?.post?.content ?? null
+          return fullContent
+        } catch (err) {
+          //TODO: send error log to our GCP log viewer
+          console.error(err)
+          return null
+        }
+      }
+      const updatePostContent = async () => {
+        const fullContent = await getFullContent()
+        if (fullContent) {
+          setPostContent(fullContent)
+        }
+      }
+      updatePostContent()
+    }
+  }, [isLoggedIn, content, accessToken, slug])
 
   const renderStoryLayout = () => {
     if (style === 'wide') {
-      return <StoryWideStyle postData={postData} />
+      return <StoryWideStyle postData={postData} postContent={postContent} />
     } else if (style === 'photography') {
-      return <StoryPhotographyStyle postData={postData} />
+      return (
+        <StoryPhotographyStyle postData={postData} postContent={postContent} />
+      )
     } else if (style === 'article' && isMember === true) {
-      return <StoryPremiumStyle postData={postData} />
+      return <StoryPremiumStyle postData={postData} postContent={postContent} />
     }
-    return <StoryNormalStyle postData={postData} />
+    return <StoryNormalStyle postData={postData} postContent={postContent} />
   }
   const storyLayout = renderStoryLayout()
 
@@ -119,11 +170,11 @@ export async function getServerSideProps({ params, req }) {
      * @type {PostData}
      */
     const postData = result?.data?.post
+
     if (!postData) {
       return { notFound: true }
     }
 
-    //redirect to specific slug or external url
     const redirect = postData?.redirect
     handleStoryPageRedirect(redirect)
 
