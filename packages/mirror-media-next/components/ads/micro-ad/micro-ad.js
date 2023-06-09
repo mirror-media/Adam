@@ -1,6 +1,9 @@
 import { useEffect } from 'react'
 
 /**
+ * @typedef {import('../../../utils/ad').MicroAdType} MicroAdType
+ */
+/**
  * This is the base component to deal with MicroAd scripts and handle lifecycle.
  * Wrap this component by levarge the styled-components function [styling any component](https://styled-components.com/docs/basics#styling-any-component)
  * to maintain MicroAd's ad as separate component.
@@ -8,6 +11,7 @@ import { useEffect } from 'react'
  * @param {Object} props
  * @param {string} props.unitId - MicroAd's unit id to connect to MicroAd's script and style
  * @param {string} [props.className] - styled-components property to set style for a React Component
+ * @param {MicroAdType} props.type
  * @returns {React.ReactElement}
  */
 export default function MicroAd({ unitId, className }) {
