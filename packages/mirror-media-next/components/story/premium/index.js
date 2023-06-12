@@ -135,10 +135,11 @@ export default function StoryPremiumStyle({ postData, postContent }) {
     heroCaption = '',
     relateds = [],
     slug = '',
-    content = null,
     manualOrderOfRelateds = [],
   } = postData
-  const shouldShowArticleMask = !isLoggedIn || !content
+
+  const shouldShowArticleMask =
+    !isLoggedIn || postContent.type === 'trimmedContent'
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
   const sectionsWithOrdered =
     manualOrderOfSections && manualOrderOfSections.length
