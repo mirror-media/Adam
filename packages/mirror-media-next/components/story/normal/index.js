@@ -67,8 +67,11 @@ import DableAd from '../../ads/dable/dable-ad'
 /**
  * @typedef {import('../../../apollo/fragments/post').Post } PostData
  */
+
 /**
- * @typedef {import('../../../type/draft-js').Draft} PostContent
+ * @typedef {Object} PostContent
+ * @property {'fullContent' | 'trimmedContent'} type
+ * @property {Pick<PostData,'content'>['content']} data
  */
 
 const sectionColor = css`
@@ -525,7 +528,7 @@ export default function StoryNormalStyle({ postData, postContent }) {
             sectionSlug={section?.slug}
             brief={brief}
           ></ArticleBrief>
-          <ArticleContent content={postContent} />
+          <ArticleContent content={postContent.data} />
           <DateUnderContent>
             <span>更新時間｜</span>
             <span className="time">{updatedTaipeiTime} 臺北時間</span>

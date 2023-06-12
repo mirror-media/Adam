@@ -110,7 +110,9 @@ const ArrowButton = styled.button`
  */
 
 /**
- * @typedef {Pick<PostData,'content'>['content']} PostContent
+ * @typedef {Object} PostContent
+ * @property {'fullContent' | 'trimmedContent'} type
+ * @property {Pick<PostData,'content'>['content']} data
  */
 
 /**
@@ -158,7 +160,7 @@ export default function StoryPhotographyStyle({ postData, postContent }) {
       : relateds
 
   // Get images array from content.entityMap
-  const photosArray = Object.values(postContent.entityMap).filter(
+  const photosArray = Object.values(postContent.data.entityMap).filter(
     (item) => item.type === 'image'
   )
 
@@ -249,7 +251,7 @@ export default function StoryPhotographyStyle({ postData, postContent }) {
         <ContentContainer>
           <section className="content">
             <DraftRenderBlock
-              rawContentBlock={postContent}
+              rawContentBlock={postContent.data}
               contentLayout="photography"
             />
           </section>

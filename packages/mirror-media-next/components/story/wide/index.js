@@ -22,7 +22,9 @@ import Aside from '../shared/aside'
  */
 
 /**
- * @typedef {Pick<PostData,'content'>['content']} PostContent
+ * @typedef {Object} PostContent
+ * @property {'fullContent' | 'trimmedContent'} type
+ * @property {Pick<PostData,'content'>['content']} data
  */
 
 /**
@@ -154,7 +156,7 @@ export default function StoryWideStyle({ postData, postContent }) {
     { extend_byline: extend_byline },
   ]
 
-  const h2AndH3Block = getContentBlocksH2H3(postContent)
+  const h2AndH3Block = getContentBlocksH2H3(postContent.data)
 
   return (
     <>
@@ -197,7 +199,7 @@ export default function StoryWideStyle({ postData, postContent }) {
             <section className="content">
               <DraftRenderBlock rawContentBlock={brief} contentLayout="wide" />
               <DraftRenderBlock
-                rawContentBlock={postContent}
+                rawContentBlock={postContent.data}
                 contentLayout="wide"
               />
             </section>

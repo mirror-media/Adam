@@ -30,6 +30,9 @@ import Skeleton from '../../public/images/skeleton.png'
 /**
  * @typedef {import('../../components/story/normal').PostData} PostData
  */
+/**
+ * @typedef {import('../../components/story/normal').PostContent} PostContent
+ */
 
 const Loading = styled.div`
   width: 100%;
@@ -69,8 +72,15 @@ export default function Story({ postData }) {
    * If it didn't obtain the full content, and the user is logged in, story page will try to get the full content again by using the user's access token as the request payload.
    * If successful, the full content will be displayed; if not, the truncated content will still be shown.
    */
+
   const { isLoggedIn, accessToken } = useMembership()
-  const [postContent, setPostContent] = useState(content ?? trimmedContent)
+  /** @type { [PostContent, import('react').Dispatch<PostContent> ]} */
+
+  const [postContent, setPostContent] = useState(
+    content
+      ? { type: 'fullContent', data: content }
+      : { type: 'trimmedContent', data: trimmedContent }
+  )
 
   useEffect(() => {
     if (!content && isLoggedIn) {
@@ -96,7 +106,7 @@ export default function Story({ postData }) {
       const updatePostContent = async () => {
         const fullContent = await getFullContent()
         if (fullContent) {
-          setPostContent(fullContent)
+          setPostContent({ type: 'fullContent', data: fullContent })
         }
       }
       updatePostContent()
