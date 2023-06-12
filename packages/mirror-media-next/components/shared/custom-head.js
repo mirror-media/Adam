@@ -109,7 +109,7 @@ export default function CustomHead(props) {
       width: '1200',
       height: '630',
       type: 'images/png',
-      url: props.imageUrl ?? `${SITE_URL}/images/default-og-img.png`,
+      url: props.imageUrl ?? `https://${SITE_URL}/images/default-og-img.png`,
     },
     card: 'summary_large_image',
   }
