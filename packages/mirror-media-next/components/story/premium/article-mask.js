@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Link from 'next/link'
 import { Frequency } from '../../../constants/membership'
+import { useMembership } from '../../../context/membership'
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -38,6 +39,7 @@ const InviteMemberCardWrapper = styled.div`
     margin: 0 auto;
     font-size: 16px;
     line-height: 2;
+    min-height: 32px;
 
     color: rgba(238, 238, 238, 1);
     .login {
@@ -86,6 +88,7 @@ const InviteMemberOption = styled.div`
   }
 `
 const InviteMemberCard = ({ postId = '' }) => {
+  const { isLoggedIn } = useMembership()
   return (
     <InviteMemberCardWrapper>
       <h3>
@@ -119,10 +122,14 @@ const InviteMemberCard = ({ postId = '' }) => {
         </InviteMemberOption>
       </OptionWrapper>
       <p className="already-member">
-        已經是會員？
-        <Link href="/login" className="login">
-          立即登入
-        </Link>
+        {isLoggedIn ? null : (
+          <>
+            已經是會員？
+            <Link href="/login" className="login">
+              立即登入
+            </Link>
+          </>
+        )}
       </p>
     </InviteMemberCardWrapper>
   )
