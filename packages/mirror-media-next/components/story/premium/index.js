@@ -15,6 +15,8 @@ import ButtonCopyLink from '../shared/button-copy-link'
 import ButtonSocialNetworkShare from '../shared/button-social-network-share'
 import DonateLink from '../shared/donate-link'
 import PremiumHeader from '../../premium-header'
+import ArticleMask from './article-mask'
+import { useMembership } from '../../../context/membership'
 const { getContentBlocksH2H3 } = MirrorMedia
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
@@ -107,8 +109,10 @@ export default function StoryPremiumStyle({ postData, postContent }) {
   const [headerData, setHeaderData] = useState({
     sectionsData: [],
   })
+  const { isLoggedIn } = useMembership()
   const [isHeaderDataLoaded, setIsHeaderDataLoaded] = useState(false)
   const {
+    id = '',
     title,
     brief = { blocks: [], entityMap: {} },
     sections = [],
@@ -129,8 +133,10 @@ export default function StoryPremiumStyle({ postData, postContent }) {
     heroCaption = '',
     relateds = [],
     slug = '',
+    content = null,
     manualOrderOfRelateds = [],
   } = postData
+  const shouldShowArticleMask = !isLoggedIn || !content
   const h2AndH3Block = getContentBlocksH2H3(postContent)
   const sectionsWithOrdered =
     manualOrderOfSections && manualOrderOfSections.length
@@ -251,6 +257,7 @@ export default function StoryPremiumStyle({ postData, postContent }) {
               ></DraftRenderBlock>
             </section>
             <CopyrightWarning />
+            {shouldShowArticleMask && <ArticleMask postId={id} />}
             <DonateBanner />
           </ContentWrapper>
         </article>
