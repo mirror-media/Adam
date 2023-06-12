@@ -15,8 +15,6 @@ steps:
 
   # Pull previous image
   - name: gcr.io/cloud-builders/docker
-    env:
-    - 'NEXT_PUBLIC_ENV=${BRANCH_NAME}'
     args:
       - '-c'
       - 'docker pull gcr.io/$PROJECT_ID/$_IMAGE_NAME:latest || exit 0'
@@ -24,6 +22,8 @@ steps:
 
   # Build image
   - name: gcr.io/cloud-builders/docker
+    env:
+    - 'NEXT_PUBLIC_ENV=${BRANCH_NAME}'
     args:
       - '-c'
       - >
