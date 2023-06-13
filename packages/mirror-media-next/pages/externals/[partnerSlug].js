@@ -12,10 +12,12 @@ import {
   fetchExternalCounts,
 } from '../../apollo/query/externals'
 import { fetchPartnerBySlug } from '../../apollo/query/partner'
-import { getExternalPartnerColor } from '../../utils/external'
+import {
+  getExternalPartnerColor,
+  getPageKeyByPartnerSlug,
+} from '../../utils/external'
 import GPTAd from '../../components/ads/gpt/gpt-ad'
-import { useMembership } from '../../context/membership'
-import { Z_INDEX, SECTION_IDS } from '../../constants/index'
+import { Z_INDEX } from '../../constants/index'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -89,7 +91,6 @@ const StickyGPTAd = styled(GPTAd)`
 `
 
 const RENDER_PAGE_SIZE = 12
-const EXTERNALS_GPT_SECTION_IDS = SECTION_IDS.news // The default section of the `[partnerSlug]` page is `時事`
 
 /**
  * @typedef {import('../../apollo/fragments/external').ListingExternal} ListingExternal
@@ -111,8 +112,6 @@ export default function ExternalPartner({
   partner,
   headerData,
 }) {
-  const { isLoggedIn } = useMembership()
-
   return (
     <Layout
       head={{ title: `${partner?.name}相關報導` }}
@@ -120,9 +119,10 @@ export default function ExternalPartner({
       footer={{ type: 'default' }}
     >
       <PartnerContainer>
-        {!isLoggedIn && (
-          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="HD" />
-        )}
+        <StyledGPTAd
+          pageKey={getPageKeyByPartnerSlug(partner.slug)}
+          adKey="HD"
+        />
         <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
           {partner?.name}
         </PartnerTitle>
@@ -132,12 +132,14 @@ export default function ExternalPartner({
           partner={partner}
           renderPageSize={RENDER_PAGE_SIZE}
         />
-        {!isLoggedIn && (
-          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="FT" />
-        )}
-        {!isLoggedIn && (
-          <StickyGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="ST" />
-        )}
+        <StyledGPTAd
+          pageKey={getPageKeyByPartnerSlug(partner.slug)}
+          adKey="FT"
+        />
+        <StickyGPTAd
+          pageKey={getPageKeyByPartnerSlug(partner.slug)}
+          adKey="ST"
+        />
       </PartnerContainer>
     </Layout>
   )

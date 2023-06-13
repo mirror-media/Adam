@@ -9,7 +9,6 @@ import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import GPTAd from '../../components/ads/gpt/gpt-ad'
-import { useMembership } from '../../context/membership'
 import { Z_INDEX } from '../../constants/index'
 
 const TagContainer = styled.main`
@@ -108,8 +107,6 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Tag({ postsCount, posts, tag, headerData }) {
-  const { isLoggedIn } = useMembership()
-
   return (
     <Layout
       head={{ title: `${tag?.name}相關報導` }}
@@ -117,7 +114,7 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
       footer={{ type: 'default' }}
     >
       <TagContainer>
-        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="HD" />}
+        <StyledGPTAd pageKey="other" adKey="HD" />
         <TagTitleWrapper>
           <TagTitle>{tag?.name}</TagTitle>
         </TagTitleWrapper>
@@ -127,8 +124,8 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
           tag={tag}
           renderPageSize={RENDER_PAGE_SIZE}
         />
-        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="FT" />}
-        {!isLoggedIn && <StickyGPTAd pageKey="other" adKey="ST" />}
+        <StyledGPTAd pageKey="other" adKey="FT" />
+        <StickyGPTAd pageKey="other" adKey="ST" />
       </TagContainer>
     </Layout>
   )

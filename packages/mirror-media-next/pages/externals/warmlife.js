@@ -11,13 +11,12 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import axios from 'axios'
 import GPTAd from '../../components/ads/gpt/gpt-ad'
-import { useMembership } from '../../context/membership'
 import { Z_INDEX, SECTION_IDS } from '../../constants/index'
 
 const RENDER_PAGE_SIZE = 12
-const WARM_LIFE_DEFAULT_TITLE = `生活暖流`
-const WARM_LIFE_DEFAULT_COLOR = 'lightBlue'
-const EXTERNALS_GPT_SECTION_IDS = SECTION_IDS.news // The default section of the `warmlife` page is `時事`
+const WARMLIFE_DEFAULT_TITLE = `生活暖流`
+const WARMLIFE_DEFAULT_COLOR = 'lightBlue'
+const WARMLIFE_GPT_SECTION_IDS = SECTION_IDS.news // The default section of `warmlife` page is `時事`
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -41,7 +40,7 @@ const WarmLifeTitle = styled.h1`
   line-height: 1.15;
   font-weight: 500;
 
-  color: ${({ theme }) => theme.color.brandColor[WARM_LIFE_DEFAULT_COLOR]};
+  color: ${({ theme }) => theme.color.brandColor[WARMLIFE_DEFAULT_COLOR]};
 
   ${({ theme }) => theme.breakpoint.md} {
     margin: 20px 0 24px;
@@ -95,29 +94,21 @@ const StickyGPTAd = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function WarmLife({ warmLifeData, headerData }) {
-  const { isLoggedIn } = useMembership()
-
   return (
     <Layout
-      head={{ title: `${WARM_LIFE_DEFAULT_TITLE}相關報導` }}
+      head={{ title: `${WARMLIFE_DEFAULT_TITLE}相關報導` }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
       <WarmLifeContainer>
-        {!isLoggedIn && (
-          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="HD" />
-        )}
-        <WarmLifeTitle>{WARM_LIFE_DEFAULT_TITLE}</WarmLifeTitle>
+        <StyledGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="HD" />
+        <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>
         <WarmLifeArticles
           warmLifeExternals={warmLifeData}
           renderPageSize={RENDER_PAGE_SIZE}
         />
-        {!isLoggedIn && (
-          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="FT" />
-        )}
-        {!isLoggedIn && (
-          <StickyGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="ST" />
-        )}
+        <StyledGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="FT" />
+        <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="ST" />
       </WarmLifeContainer>
     </Layout>
   )

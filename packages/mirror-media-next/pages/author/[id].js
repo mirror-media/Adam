@@ -9,7 +9,6 @@ import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import GPTAd from '../../components/ads/gpt/gpt-ad'
-import { useMembership } from '../../context/membership'
 import { Z_INDEX } from '../../constants/index'
 
 const AuthorContainer = styled.main`
@@ -88,8 +87,6 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Author({ postsCount, posts, author, headerData }) {
-  const { isLoggedIn } = useMembership()
-
   return (
     <Layout
       head={{ title: `${author?.name}相關報導` }}
@@ -97,7 +94,7 @@ export default function Author({ postsCount, posts, author, headerData }) {
       footer={{ type: 'default' }}
     >
       <AuthorContainer>
-        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="HD" />}
+        <StyledGPTAd pageKey="other" adKey="HD" />
         <AuthorTitle>{author?.name}</AuthorTitle>
         <AuthorArticles
           postsCount={postsCount}
@@ -105,8 +102,8 @@ export default function Author({ postsCount, posts, author, headerData }) {
           author={author}
           renderPageSize={RENDER_PAGE_SIZE}
         />
-        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="FT" />}
-        {!isLoggedIn && <StickyGPTAd pageKey="other" adKey="ST" />}
+        <StyledGPTAd pageKey="other" adKey="FT" />
+        <StickyGPTAd pageKey="other" adKey="ST" />
       </AuthorContainer>
     </Layout>
   )
