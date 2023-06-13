@@ -113,7 +113,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
       footer={{ type: 'default' }}
     >
       <SectionContainer>
-        <StyledGPTAd pageKey={GPT_PAGE_KEY} adKey="HD" />
+        <StyledGPTAd pageKey="57e1e0e5ee85930e00cad4e9" adKey="HD" />
         <SectionTitle sectionName={section?.slug}>{section?.name}</SectionTitle>
         <SectionArticles
           postsCount={postsCount}
