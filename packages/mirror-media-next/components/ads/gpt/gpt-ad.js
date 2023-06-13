@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { getAdSlotParam, getAdWidth } from '../../../utils/gpt-ad.js'
 import styled from 'styled-components'
+import { useMembership } from '../../../context/membership'
 
 const Wrapper = styled.div`
   /**
@@ -57,6 +58,8 @@ export default function GPTAd({
   onSlotRenderEnded,
   className,
 }) {
+  const { isLoggedIn } = useMembership()
+
   const [adWidth, setAdWidth] = useState('')
   const [adDivId, setAdDivId] = useState('')
 
@@ -110,9 +113,12 @@ export default function GPTAd({
     }
   }, [adKey, pageKey, onSlotRequested, onSlotRenderEnded])
 
-  return (
+  //The login member type has not been implemented yet. For now, we will temporarily use `isLoggedIn` as the basis for deciding whether to display GPT advertisements.
+  const gptAdJsx = !isLoggedIn ? (
     <Wrapper className={`${className} gpt-ad`}>
       <Ad width={adWidth} id={adDivId} />
     </Wrapper>
-  )
+  ) : null
+
+  return <>{gptAdJsx}</>
 }
