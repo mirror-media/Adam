@@ -9,6 +9,8 @@ import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import GPTAd from '../../components/ads/gpt/gpt-ad'
+import { Z_INDEX } from '../../constants/index'
+import { SECTION_IDS } from '../../constants/index'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -54,10 +56,31 @@ const SectionTitle = styled.h1`
 `
 
 const StyledGPTAd = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  margin: auto;
   height: 280px;
   margin-top: 20px;
+
   ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
     height: 250px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  width: 100%;
+  max-width: 320px;
+  margin: 60px auto 0px;
+  height: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: ${Z_INDEX.top};
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
   }
 `
 
@@ -77,6 +100,12 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Section({ postsCount, posts, section, headerData }) {
+  //When the section is `論壇`, use the `culture` AD unit.
+  const GPT_PAGE_KEY =
+    section?.slug === 'mirrorcolumn'
+      ? SECTION_IDS['culture']
+      : SECTION_IDS[section.slug]
+
   return (
     <Layout
       head={{ title: `${section?.name}分類報導` }}
@@ -84,7 +113,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
       footer={{ type: 'default' }}
     >
       <SectionContainer>
-        <StyledGPTAd pageKey="57e1e0e5ee85930e00cad4e9" adKey="HD" />
+        <StyledGPTAd pageKey={GPT_PAGE_KEY} adKey="HD" />
         <SectionTitle sectionName={section?.slug}>{section?.name}</SectionTitle>
         <SectionArticles
           postsCount={postsCount}
@@ -92,6 +121,8 @@ export default function Section({ postsCount, posts, section, headerData }) {
           section={section}
           renderPageSize={RENDER_PAGE_SIZE}
         />
+        <StyledGPTAd pageKey={GPT_PAGE_KEY} adKey="FT" />
+        <StickyGPTAd pageKey={GPT_PAGE_KEY} adKey="ST" />
       </SectionContainer>
     </Layout>
   )
