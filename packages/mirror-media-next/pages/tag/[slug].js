@@ -8,6 +8,8 @@ import TagArticles from '../../components/tag/tag-articles'
 import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
+import GPTAd from '../../components/ads/gpt/gpt-ad'
+import { useMembership } from '../../context/membership'
 
 const TagContainer = styled.main`
   width: 320px;
@@ -60,6 +62,35 @@ const TagTitle = styled.h1`
   }
 `
 
+const StyledGPTAd = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  margin: auto;
+  height: 280px;
+  margin-top: 20px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    height: 250px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  width: 100%;
+  max-width: 320px;
+  margin: 60px auto 0px;
+  height: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 419;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 const RENDER_PAGE_SIZE = 12
 
 /**
@@ -76,6 +107,8 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Tag({ postsCount, posts, tag, headerData }) {
+  const { isLoggedIn } = useMembership()
+
   return (
     <Layout
       head={{ title: `${tag?.name}相關報導` }}
@@ -83,6 +116,7 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
       footer={{ type: 'default' }}
     >
       <TagContainer>
+        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="HD" />}
         <TagTitleWrapper>
           <TagTitle>{tag?.name}</TagTitle>
         </TagTitleWrapper>
@@ -92,6 +126,8 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
           tag={tag}
           renderPageSize={RENDER_PAGE_SIZE}
         />
+        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="FT" />}
+        {!isLoggedIn && <StickyGPTAd pageKey="other" adKey="ST" />}
       </TagContainer>
     </Layout>
   )
