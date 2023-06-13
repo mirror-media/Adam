@@ -8,6 +8,9 @@ import AuthorArticles from '../../components/author/author-articles'
 import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
+import GPTAd from '../../components/ads/gpt/gpt-ad'
+import { useMembership } from '../../context/membership'
+import { Z_INDEX } from '../../constants/index'
 
 const AuthorContainer = styled.main`
   width: 320px;
@@ -40,6 +43,35 @@ const AuthorTitle = styled.h1`
   }
 `
 
+const StyledGPTAd = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  margin: auto;
+  height: 280px;
+  margin-top: 20px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    height: 250px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  width: 100%;
+  max-width: 320px;
+  margin: 60px auto 0px;
+  height: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: ${Z_INDEX.top};
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 const RENDER_PAGE_SIZE = 12
 
 /**
@@ -56,6 +88,8 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Author({ postsCount, posts, author, headerData }) {
+  const { isLoggedIn } = useMembership()
+
   return (
     <Layout
       head={{ title: `${author?.name}相關報導` }}
@@ -63,6 +97,7 @@ export default function Author({ postsCount, posts, author, headerData }) {
       footer={{ type: 'default' }}
     >
       <AuthorContainer>
+        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="HD" />}
         <AuthorTitle>{author?.name}</AuthorTitle>
         <AuthorArticles
           postsCount={postsCount}
@@ -70,6 +105,8 @@ export default function Author({ postsCount, posts, author, headerData }) {
           author={author}
           renderPageSize={RENDER_PAGE_SIZE}
         />
+        {!isLoggedIn && <StyledGPTAd pageKey="other" adKey="FT" />}
+        {!isLoggedIn && <StickyGPTAd pageKey="other" adKey="ST" />}
       </AuthorContainer>
     </Layout>
   )
