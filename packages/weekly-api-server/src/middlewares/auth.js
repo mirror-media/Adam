@@ -220,8 +220,11 @@ export function signAccessTokenForInternalColleague({ jwtSecret }) {
       res.locals.auth?.decodedIdToken?.uid
     const email = res.locals.auth?.decodedIdToken?.email
 
-    // skip this middleware if email does not ends with '@mirrormedia.mg'
-    if (typeof email === 'string' && !email.endsWith('@mirrormedia.mg')) {
+    // skip this middleware if email does not ends with certain email domains
+    if (typeof email === 'string' &&
+      !email.endsWith('@mirrormedia.mg') &&
+      !email.endsWith('@mnews.tw') &&
+      !email.endsWith('@mirrorfiction.com')) {
       return next()
     }
 
