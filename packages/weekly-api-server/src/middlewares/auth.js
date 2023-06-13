@@ -223,7 +223,7 @@ export function signAccessTokenForInternalColleague({ jwtSecret }) {
     // skip this middleware if email does not ends with certain email domains
     if (typeof email === 'string' &&
       !email.endsWith('@mirrormedia.mg') &&
-      !email.endsWith('@mnews.tw') &&
+      !email.endsWith('@mnews.com.tw') &&
       !email.endsWith('@mirrorfiction.com')) {
       return next()
     }
