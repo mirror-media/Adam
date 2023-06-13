@@ -8,6 +8,7 @@ import { sortArrayWithOtherArrayId } from '../../../utils'
 
 import Header from './header'
 import DonateLink from '../shared/donate-link'
+import SubscribeLink from '../shared/subscribe-link'
 import HeroImageAndVideo from '../shared/hero-image-and-video'
 import Credits from '../shared/credits'
 import DonateBanner from '../shared/donate-banner'
@@ -36,12 +37,7 @@ const Main = styled.main`
 
   background-color: white;
 `
-const StyledDonateLink = styled(DonateLink)`
-  margin: 20px auto 0;
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 12px auto 0;
-  }
-`
+
 const DateWrapper = styled.div`
   margin-top: 16px;
   ${({ theme }) => theme.breakpoint.md} {
@@ -97,6 +93,23 @@ const SocialMedia = styled.li`
 const StyledCredits = styled(Credits)`
   margin-left: auto;
   margin-right: auto;
+`
+
+const DonateSubscribeWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
+  margin-top: 20px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 12px;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 24px;
+  }
+
+  .subscribe-btn {
+    margin-left: 8px;
+  }
 `
 /**
  *
@@ -185,9 +198,6 @@ export default function StoryWideStyle({ postData, postContent }) {
                   />
                   <ButtonCopyLink width={28} height={28} />
                 </SocialMedia>
-                {/* <li>
-                <DonateLink />
-              </li> */}
               </SocialMediaAndDonateLink>
             </NavSubtitleNavigator>
             <StyledCredits credits={credits}></StyledCredits>
@@ -195,7 +205,10 @@ export default function StoryWideStyle({ postData, postContent }) {
               <StyledDate timeData={publishedDate} timeType="publishedDate" />
               <StyledDate timeData={updatedAt} timeType="updatedDate" />
             </DateWrapper>
-            <StyledDonateLink />
+            <DonateSubscribeWrapper>
+              <DonateLink />
+              <SubscribeLink className="subscribe-btn" />
+            </DonateSubscribeWrapper>
             <section className="content">
               <DraftRenderBlock rawContentBlock={brief} contentLayout="wide" />
               <DraftRenderBlock

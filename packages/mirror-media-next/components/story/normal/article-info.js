@@ -92,6 +92,10 @@ const StyledTags = styled(Tags)`
   }
 `
 
+const DonateSubscribeWrapper = styled.div`
+  display: flex;
+`
+
 /**
  * @typedef {import('../../../apollo/fragments/contact').Contact[]} Contacts
  */
@@ -145,8 +149,10 @@ export default function ArticleInfo({
           <ButtonSocialNetworkShare type="line" />
           <ButtonCopyLink />
         </SocialMedia>
-        <DonateLink />
-        <SubscribeLink className="subscribe-btn" />
+        <DonateSubscribeWrapper>
+          <DonateLink />
+          <SubscribeLink className="subscribe-btn" />
+        </DonateSubscribeWrapper>
       </SocialMediaAndDonateLink>
       <StyledTags tags={tags} />
     </ArticleInfoContainer>
