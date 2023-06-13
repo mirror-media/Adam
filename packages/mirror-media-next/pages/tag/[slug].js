@@ -10,6 +10,7 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { useMembership } from '../../context/membership'
+import { Z_INDEX } from '../../constants/index'
 
 const TagContainer = styled.main`
   width: 320px;
@@ -84,7 +85,7 @@ const StickyGPTAd = styled(GPTAd)`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 419;
+  z-index: ${Z_INDEX.top};
 
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
