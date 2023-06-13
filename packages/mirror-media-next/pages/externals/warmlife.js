@@ -17,7 +17,7 @@ import { Z_INDEX, SECTION_IDS } from '../../constants/index'
 const RENDER_PAGE_SIZE = 12
 const WARM_LIFE_DEFAULT_TITLE = `生活暖流`
 const WARM_LIFE_DEFAULT_COLOR = 'lightBlue'
-const DEFAULT_GPT_SECTION_IDS = SECTION_IDS.news
+const EXTERNALS_GPT_SECTION_IDS = SECTION_IDS.news // The default section of the `warmlife` page is `時事`
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -105,7 +105,7 @@ export default function WarmLife({ warmLifeData, headerData }) {
     >
       <WarmLifeContainer>
         {!isLoggedIn && (
-          <StyledGPTAd pageKey={DEFAULT_GPT_SECTION_IDS} adKey="HD" />
+          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="HD" />
         )}
         <WarmLifeTitle>{WARM_LIFE_DEFAULT_TITLE}</WarmLifeTitle>
         <WarmLifeArticles
@@ -113,10 +113,10 @@ export default function WarmLife({ warmLifeData, headerData }) {
           renderPageSize={RENDER_PAGE_SIZE}
         />
         {!isLoggedIn && (
-          <StyledGPTAd pageKey={DEFAULT_GPT_SECTION_IDS} adKey="FT" />
+          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="FT" />
         )}
         {!isLoggedIn && (
-          <StickyGPTAd pageKey={DEFAULT_GPT_SECTION_IDS} adKey="ST" />
+          <StickyGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="ST" />
         )}
       </WarmLifeContainer>
     </Layout>
