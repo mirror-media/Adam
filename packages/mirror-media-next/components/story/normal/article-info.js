@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import ButtonCopyLink from '../shared/button-copy-link'
 import DonateLink from '../shared/donate-link'
+import SubscribeLink from '../shared/subscribe-link'
 import ButtonSocialNetworkShare from '../shared/button-social-network-share'
 import Tags from '../shared/tags'
 import Credits from '../shared/credits'
@@ -68,6 +69,9 @@ const SocialMediaAndDonateLink = styled.div`
     ${({ theme }) => theme.breakpoint.md} {
       display: block;
     }
+  }
+  .subscribe-btn {
+    margin-left: 8px;
   }
 `
 
@@ -142,6 +146,7 @@ export default function ArticleInfo({
           <ButtonCopyLink />
         </SocialMedia>
         <DonateLink />
+        <SubscribeLink className="subscribe-btn" />
       </SocialMediaAndDonateLink>
       <StyledTags tags={tags} />
     </ArticleInfoContainer>

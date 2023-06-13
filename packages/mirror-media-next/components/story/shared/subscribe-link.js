@@ -1,9 +1,7 @@
-import Image from 'next/image'
-
 import styled from 'styled-components'
 
 const Link = styled.a`
-  background-color: black;
+  background-color: #1d9fb8;
   width: fit-content;
   height: 32px;
   padding: 9px 12px 9px 13.33px;
@@ -17,21 +15,15 @@ const Link = styled.a`
   border-radius: 32px;
   color: white;
   :hover {
-    background: rgba(0, 0, 0, 0.87);
+    background: #054f77;
     transition: background 0.3s ease;
   }
 `
 
-export default function DonateLink({ className = '' }) {
+export default function SubscribeLink({ className = '' }) {
   return (
-    <Link className={className} href="/donate" target="_blank">
-      <Image
-        src={'/images/donate.png'}
-        width={13.33}
-        height={13.33}
-        alt="donate"
-      ></Image>
-      <span>贊助本文</span>
+    <Link className={className} href="/subscribe" target="_blank">
+      <span>加入訂閱會員</span>
     </Link>
   )
 }
