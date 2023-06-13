@@ -112,11 +112,11 @@ function getCreditsHtml(credits = '') {
  *
  * @param {string} partnerSlug - The slug of the partner.
  * @return {string} - The GPT pageKey associated with the partner slug.
- * Returns 'other' if partnerSlug is invalid, otherwise returns 'SECTION_IDS.news'.
+ * Returns 'SECTION_IDS.news' if partnerSlug is valid, otherwise returns 'other'.
  */
 function getPageKeyByPartnerSlug(partnerSlug = '') {
-  const invalidSlugs = ['ebc', 'healthnews', 'zuchi', '5678news']
-  return invalidSlugs.includes(partnerSlug) ? 'other' : SECTION_IDS.news
+  const validSlugs = ['ebc', 'healthnews', 'zuchi', '5678news']
+  return validSlugs.includes(partnerSlug) ? SECTION_IDS.news : 'other'
 }
 
 export {
