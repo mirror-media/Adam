@@ -24,11 +24,11 @@ const DESKTOP_PROMOTION_LISTS = [
 const MOBILE_PROMOTION_LISTS = [PAPER_MAGAZINE_LINK, AD_LINK, AUTH_LINK]
 
 const FooterWrapper = styled.div`
-  background: #f5f5f5;
-  padding: 8px 0px;
+  background: #ffffff;
+  padding: 12px 0px;
   width: 100%;
   max-width: 1024px;
-  margin: 24px auto 0px;
+  margin: 20px auto 50px;
 
   .footer-desktop-promotion {
     display: none;
@@ -40,9 +40,9 @@ const FooterWrapper = styled.div`
 
   ${({ theme }) => theme.breakpoint.xl} {
     border-top: 4px solid #000000;
-    padding: 11px 0px 24px;
+    padding: 10px 0px;
     background: none;
-    margin: 32px auto 0px;
+    margin: 32px auto 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
