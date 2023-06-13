@@ -13,6 +13,9 @@ import {
 } from '../../apollo/query/externals'
 import { fetchPartnerBySlug } from '../../apollo/query/partner'
 import { getExternalPartnerColor } from '../../utils/external'
+import GPTAd from '../../components/ads/gpt/gpt-ad'
+import { useMembership } from '../../context/membership'
+import { Z_INDEX, SECTION_IDS } from '../../constants/index'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -56,7 +59,37 @@ const PartnerTitle = styled.h1`
   }
 `
 
+const StyledGPTAd = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  margin: auto;
+  height: 280px;
+  margin-top: 20px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    height: 250px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  width: 100%;
+  max-width: 320px;
+  margin: 60px auto 0px;
+  height: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: ${Z_INDEX.top};
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 const RENDER_PAGE_SIZE = 12
+const EXTERNALS_GPT_SECTION_IDS = SECTION_IDS.news // The default section of the `[partnerSlug]` page is `時事`
 
 /**
  * @typedef {import('../../apollo/fragments/external').ListingExternal} ListingExternal
@@ -78,6 +111,8 @@ export default function ExternalPartner({
   partner,
   headerData,
 }) {
+  const { isLoggedIn } = useMembership()
+
   return (
     <Layout
       head={{ title: `${partner?.name}相關報導` }}
@@ -85,6 +120,9 @@ export default function ExternalPartner({
       footer={{ type: 'default' }}
     >
       <PartnerContainer>
+        {!isLoggedIn && (
+          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="HD" />
+        )}
         <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
           {partner?.name}
         </PartnerTitle>
@@ -94,6 +132,12 @@ export default function ExternalPartner({
           partner={partner}
           renderPageSize={RENDER_PAGE_SIZE}
         />
+        {!isLoggedIn && (
+          <StyledGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="FT" />
+        )}
+        {!isLoggedIn && (
+          <StickyGPTAd pageKey={EXTERNALS_GPT_SECTION_IDS} adKey="ST" />
+        )}
       </PartnerContainer>
     </Layout>
   )
