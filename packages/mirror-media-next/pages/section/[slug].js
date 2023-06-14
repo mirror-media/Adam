@@ -72,7 +72,7 @@ const StickyGPTAd = styled(GPTAd)`
   position: fixed;
   width: 100%;
   max-width: 320px;
-  margin: 60px auto 0px;
+  margin: auto;
   height: 50px;
   left: 0;
   right: 0;
