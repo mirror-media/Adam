@@ -5,15 +5,27 @@ import axios from 'axios'
 import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
 
 /**
+ * @typedef {Object} MemberInfo
+ * @property {MemberType} memberType
+ */
+
+/**
  * @typedef {Object} Membership
  * @property {boolean} isLoggedIn
  * @property {string} accessToken
+ * @property {MemberInfo} memberInfo
  */
 
 /**
  * @typedef {Object} MembershipReducerAction
  * @property {"LOGIN" | "LOGOUT"} type
- * @property {Membership["accessToken"]} [accessToken]
+ * @property {Object} [payload]
+ * @property {Membership["accessToken"]} [payload.accessToken]
+ * @property {MemberInfo} [payload.memberInfo]
+ */
+
+/**
+ * @typedef { 'not-member' |'basic-member' | 'premium-member' | 'one-time-member' | 'one-time-member'} MemberType
  */
 
 /**
@@ -23,6 +35,7 @@ import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
 const initialMembership = {
   isLoggedIn: false,
   accessToken: '',
+  memberInfo: { memberType: 'not-member' },
 }
 
 /**
@@ -41,11 +54,29 @@ const MembershipDispatchContext = createContext(null)
  * @returns {Membership}
  */
 const membershipReducer = (membership, action) => {
+  const { memberInfo } = membership
   switch (action.type) {
     case 'LOGIN':
-      return { isLoggedIn: true, accessToken: action.accessToken }
+      const {
+        memberInfo: { memberType = 'not-member' } = {},
+        accessToken = '',
+      } = action?.payload
+      return {
+        isLoggedIn: true,
+        accessToken: accessToken,
+        memberInfo: {
+          ...memberInfo,
+          memberType: memberType,
+        },
+      }
     case 'LOGOUT':
-      return { isLoggedIn: false, accessToken: '' }
+      return {
+        isLoggedIn: false,
+        accessToken: '',
+        memberInfo: {
+          memberType: 'not-member',
+        },
+      }
 
     default: {
       throw Error('Unknown action: ' + action.type)
@@ -99,6 +130,25 @@ const MembershipProvider = ({ children }) => {
       }
     }
 
+    /**
+     * @param {string} accessToken
+     * @returns {MemberType}
+     */
+    const getMemberType = (accessToken) => {
+      try {
+        const JwtPayload = accessToken.split('.')[1]
+
+        const buffer = Buffer.from(JwtPayload, 'base64')
+        const decodedString = buffer.toString('utf-8')
+        const decodedJwtPayload = JSON.parse(decodedString)
+        const memberType = decodedJwtPayload.roles[0]
+        return memberType
+      } catch (e) {
+        //TODO: If unable to decode Jwt payload, it is needed to send error log to our GCP log viewer by using [Beacon API](https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API).
+        console.warn(e)
+        return 'not-member'
+      }
+    }
     const handleFirebaseAuthStateChanged = async (user) => {
       if (user) {
         const idToken = await getIdToken(user)
@@ -124,11 +174,15 @@ const MembershipProvider = ({ children }) => {
             },
             timeout: API_TIMEOUT,
           })
-          // TODO: get and store member info, not just access token.
-          // member info can get from WAS `/member/graphql`
           const accessToken = res?.data?.data['access_token']
+
+          const memberType = getMemberType(accessToken)
+
           if (accessToken) {
-            dispatch({ type: 'LOGIN', accessToken })
+            dispatch({
+              type: 'LOGIN',
+              payload: { accessToken, memberInfo: { memberType } },
+            })
             console.log('Has access token, hurray!')
           }
         } catch (error) {
