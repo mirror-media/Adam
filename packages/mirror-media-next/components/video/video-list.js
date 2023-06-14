@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import VideoListItem from '../shared/video-list-item'
+import GPTAd from '../../components/ads/gpt/gpt-ad'
 
 const Wrapper = styled.div`
   margin-top: 20px;
@@ -8,7 +9,7 @@ const Wrapper = styled.div`
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
-    margin-top: 28px;
+    margin-top: 0px;
   }
 `
 
@@ -49,6 +50,17 @@ const Title = styled.h2`
   }
 `
 
+const StyledGPTAd_R1 = styled(GPTAd)`
+  display: none;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: block;
+    width: 300px;
+    height: 600px;
+    margin: 0px auto 28px;
+  }
+`
+
 /**
  * @param {Object} props
  * @param {import('../../type/youtube').YoutubeVideo[]} props.videos
@@ -57,6 +69,7 @@ const Title = styled.h2`
 export default function VideoList({ videos }) {
   return (
     <Wrapper>
+      <StyledGPTAd_R1 pageKey="videohub" adKey="R1" />
       <Title>最新影音</Title>
       <Videos>
         {videos.map((video) => (

@@ -13,6 +13,8 @@ import YoutubeArticle from '../../components/video/youtube-article'
 import VideoList from '../../components/video/video-list'
 import YoutubePolicy from '../../components/shared/youtube-policy'
 import Layout from '../../components/shared/layout'
+import GPTAd from '../../components/ads/gpt/gpt-ad'
+import { Z_INDEX } from '../../constants/index'
 
 const Wrapper = styled.main`
   width: 320px;
@@ -24,6 +26,7 @@ const Wrapper = styled.main`
   ${({ theme }) => theme.breakpoint.xl} {
     width: 1024px;
     padding: 0;
+    display: grid;
   }
 `
 
@@ -39,6 +42,67 @@ const ContentWrapper = styled.div`
     flex-direction: row;
     margin-top: 40px;
     column-gap: 48px;
+  }
+`
+const StyledGPTAd_HD = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  height: 280px;
+  margin: 8px auto;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    margin: 24px auto;
+  }
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    height: 250px;
+    margin: 0px auto 28px;
+    order: -1;
+  }
+`
+
+const StyledGPTAd_E1 = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  height: 280px;
+  margin: 20px auto 0px;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    margin: 40px auto 0px;
+  }
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
+const StyledGPTAd_FT = styled(GPTAd)`
+  width: 100%;
+  max-width: 336px;
+  height: 280px;
+  margin: 20px auto 0px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    height: 250px;
+    margin: 28px auto 0px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  width: 100%;
+  max-width: 320px;
+  margin: auto;
+  height: 50px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: ${Z_INDEX.top};
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
   }
 `
 
@@ -62,11 +126,15 @@ export default function Video({ video, latestVideos, headerData }) {
     >
       <Wrapper>
         <YoutubeIframe videoId={video.id} />
+        <StyledGPTAd_HD pageKey="videohub" adKey="HD" />
         <ContentWrapper>
           <YoutubeArticle video={video} />
+          <StyledGPTAd_E1 pageKey="videohub" adKey="E1" />
           <VideoList videos={latestVideos} />
         </ContentWrapper>
         <YoutubePolicy />
+        <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
+        <StickyGPTAd pageKey="videohub" adKey="ST" />
       </Wrapper>
     </Layout>
   )
