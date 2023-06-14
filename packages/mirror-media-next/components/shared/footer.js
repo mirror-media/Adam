@@ -28,7 +28,7 @@ const FooterWrapper = styled.div`
   padding: 12px 0px;
   width: 100%;
   max-width: 1024px;
-  margin: 20px auto 50px;
+  margin: 20px auto 66px;
 
   .footer-desktop-promotion {
     display: none;
@@ -40,9 +40,9 @@ const FooterWrapper = styled.div`
 
   ${({ theme }) => theme.breakpoint.xl} {
     border-top: 4px solid #000000;
-    padding: 10px 0px;
+    padding: 10px 0px 16px;
     background: none;
-    margin: 32px auto 80px;
+    margin: 32px auto 0px;
     display: flex;
     align-items: center;
     justify-content: space-between;
