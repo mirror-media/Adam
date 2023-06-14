@@ -155,7 +155,7 @@ export function signAccessToken({ jwtSecret }) {
       }
       case 'none':
       default: {
-        roles = ['member']
+        roles = ['basic-member']
         scope = `read:posts read:member-info:${firebaseId} write:member-info:${firebaseId}`
         break
       }
