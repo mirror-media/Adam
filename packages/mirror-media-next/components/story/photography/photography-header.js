@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { Z_INDEX } from '../../../constants'
 import { DONATION_PAGE_URL } from '../../../config/index.mjs'
 import { ShareButton } from '@readr-media/share-button'
+import DonateLink from '../shared/donate-link'
+import SubscribeLink from '../shared/subscribe-link'
 
 const Nav = styled.nav`
   position: fixed;
@@ -53,11 +55,36 @@ const IconsWrapper = styled.div`
   .share-button {
     width: 22px;
     height: 22px;
-    margin-left: 20px;
+    margin-left: 12px;
 
     ${({ theme }) => theme.breakpoint.md} {
       width: 34px;
       height: 32px;
+      margin-left: 18px;
+    }
+  }
+
+  .donate-btn-pc {
+    padding: 8px 12px;
+    border: 1px solid #ffffff;
+    display: none;
+    ${({ theme }) => theme.breakpoint.md} {
+      display: flex;
+    }
+  }
+
+  .donate-btn-mb {
+    ${({ theme }) => theme.breakpoint.md} {
+      display: none;
+    }
+  }
+
+  .subscribe-btn {
+    padding: 8px 12px;
+    margin-left: 8px;
+    border: 1px solid #ffffff;
+    ${({ theme }) => theme.breakpoint.md} {
+      margin-left: 12px;
     }
   }
 `
@@ -66,11 +93,12 @@ const PhotosIndexButton = styled.button`
   .photos-index-icon {
     width: 22px;
     height: 22px;
-    margin-left: 20px;
+    margin-left: 12px;
 
     ${({ theme }) => theme.breakpoint.md} {
       width: 32px;
       height: 32px;
+      margin-left: 18px;
     }
   }
 `
@@ -92,14 +120,16 @@ export default function Header() {
       <IconsWrapper>
         <a href={DONATION_PAGE_URL} target="_blank" rel="noreferrer noopenner">
           <Image
-            src="/images/sponsor-button.svg"
+            src="/images/donate-circle.svg"
             alt="sponsor this article"
-            className="sponsor-button"
-            width={100}
+            className="donate-btn-mb"
+            width={32}
             height={32}
           />
         </a>
-        <PhotosIndexButton>
+        <DonateLink className="donate-btn-pc" />
+        <SubscribeLink className="subscribe-btn" />
+        {/* <PhotosIndexButton>
           <Image
             src="/images/photos-index-icon.svg"
             alt="photos index icon"
@@ -107,7 +137,7 @@ export default function Header() {
             width={32}
             height={32}
           />
-        </PhotosIndexButton>
+        </PhotosIndexButton> */}
         <ShareButton
           pathColor="#FFF"
           direction="vertical"
