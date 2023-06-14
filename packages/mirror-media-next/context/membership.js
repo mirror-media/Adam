@@ -14,6 +14,7 @@ import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
  * @property {boolean} isLoggedIn
  * @property {string} accessToken
  * @property {MemberInfo} memberInfo
+ * @property {boolean} isLogInProcessFinished
  */
 
 /**
@@ -36,6 +37,7 @@ const initialMembership = {
   isLoggedIn: false,
   accessToken: '',
   memberInfo: { memberType: 'not-member' },
+  isLogInProcessFinished: false,
 }
 
 /**
@@ -55,6 +57,7 @@ const MembershipDispatchContext = createContext(null)
  */
 const membershipReducer = (membership, action) => {
   const { memberInfo } = membership
+  const isLogInProcessFinished = true
   switch (action.type) {
     case 'LOGIN':
       const {
@@ -68,6 +71,7 @@ const membershipReducer = (membership, action) => {
           ...memberInfo,
           memberType: memberType,
         },
+        isLogInProcessFinished,
       }
     case 'LOGOUT':
       return {
@@ -76,6 +80,7 @@ const membershipReducer = (membership, action) => {
         memberInfo: {
           memberType: 'not-member',
         },
+        isLogInProcessFinished,
       }
 
     default: {
