@@ -156,8 +156,7 @@ export function signAccessToken({ jwtSecret }) {
       case 'none':
       default: {
         roles = ['member']
-        scope =
-          `read:posts read:member-info:${firebaseId} write:member-info:${firebaseId}`
+        scope = `read:posts read:member-info:${firebaseId} write:member-info:${firebaseId}`
         break
       }
     }
@@ -216,15 +215,16 @@ export function signAccessTokenForInternalColleague({ jwtSecret }) {
   return (req, res, next) => {
     const nowTs = Math.round(new Date().getTime() / 1000) // timestamp
     const expiresIn = nowTs + 3600 // one hour later
-    const firebaseId =
-      res.locals.auth?.decodedIdToken?.uid
+    const firebaseId = res.locals.auth?.decodedIdToken?.uid
     const email = res.locals.auth?.decodedIdToken?.email
 
     // skip this middleware if email does not ends with certain email domains
-    if (typeof email === 'string' &&
+    if (
+      typeof email === 'string' &&
       !email.endsWith('@mirrormedia.mg') &&
       !email.endsWith('@mnews.com.tw') &&
-      !email.endsWith('@mirrorfiction.com')) {
+      !email.endsWith('@mirrorfiction.com')
+    ) {
       return next()
     }
 
@@ -271,4 +271,3 @@ export function signAccessTokenForInternalColleague({ jwtSecret }) {
     next()
   }
 }
-
