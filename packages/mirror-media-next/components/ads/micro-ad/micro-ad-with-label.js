@@ -1,5 +1,8 @@
+import { useEffect, useState } from 'react'
 import styled, { css } from 'styled-components'
 import MicroAd from './micro-ad'
+
+import { useMembership } from '../../../context/membership'
 
 const typeListing = css`
   display: block;
@@ -395,5 +398,26 @@ const StyledMicroAd = styled(MicroAd)`
  * @returns {JSX.Element}
  */
 export default function MicroAdWithLabel({ unitId, microAdType }) {
-  return <StyledMicroAd unitId={unitId} type={microAdType} />
+  const { memberInfo, isLogInProcessFinished } = useMembership()
+  const { memberType } = memberInfo
+
+  const [microAdJsx, setMicroAdJsx] = useState(null)
+
+  //When the user's member type is 'not-member', 'one-time-member', or 'basic-member', the AD should be displayed.
+
+  // Since the member type needs to be determined on the client-side, the rendering of `microAdJsx` should be done on the client-side.
+
+  useEffect(() => {
+    const invalidMemberType = ['not-member', 'one-time-member', 'basic-member']
+
+    if (isLogInProcessFinished) {
+      if (invalidMemberType.includes(memberType)) {
+        setMicroAdJsx(<StyledMicroAd unitId={unitId} type={microAdType} />)
+      } else {
+        return
+      }
+    }
+  }, [isLogInProcessFinished, memberType, microAdType, unitId])
+
+  return <>{microAdJsx}</>
 }
