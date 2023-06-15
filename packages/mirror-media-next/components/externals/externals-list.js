@@ -1,9 +1,15 @@
 import { Fragment } from 'react'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 import ExternalListItem from './externals-list-item'
 import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
-import StyledMicroAd from '../../components/ads/micro-ad/micro-ad-with-label'
-import { useMembership } from '../../context/membership'
+
+const StyledMicroAd = dynamic(
+  () => import('../../components/ads/micro-ad/micro-ad-with-label'),
+  {
+    ssr: false,
+  }
+)
 
 const ItemContainer = styled.div`
   display: grid;
@@ -31,14 +37,12 @@ const ItemContainer = styled.div`
  * @returns {React.ReactElement}
  */
 export default function ExternalList({ renderList }) {
-  const { isLoggedIn } = useMembership()
-
   return (
     <ItemContainer>
       {renderList.map((item, index) => (
         <Fragment key={item.id}>
           <ExternalListItem item={item} />
-          {!isLoggedIn && needInsertMicroAdAfter(index) && (
+          {needInsertMicroAdAfter(index) && (
             <StyledMicroAd
               unitId={getMicroAdUnitId(index, 'LISTING', 'RWD')}
               microAdType="LISTING"

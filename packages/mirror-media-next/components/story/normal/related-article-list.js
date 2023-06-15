@@ -3,11 +3,17 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'
 import { MICRO_AD_UNITS } from '../../../constants/ads'
-import { useMembership } from '../../../context/membership'
-import StyledMicroAd from '../../../components/ads/micro-ad/micro-ad-with-label'
+
+const StyledMicroAd = dynamic(
+  () => import('../../../components/ads/micro-ad/micro-ad-with-label'),
+  {
+    ssr: false,
+  }
+)
 
 /**
  * @typedef {import('../../../apollo/fragments/post').HeroImage &
@@ -137,8 +143,6 @@ const AdvertisementWrapper = styled.div`
  * @returns {JSX.Element}
  */
 export default function RelatedArticleList({ relateds }) {
-  const { isLoggedIn } = useMembership()
-
   const { width } = useWindowDimensions()
   const device = width >= mediaSize.xl ? 'PC' : 'MB'
 
@@ -176,11 +180,9 @@ export default function RelatedArticleList({ relateds }) {
     </ArticleWrapper>
   ) : null
 
-  const microAdJsx = !isLoggedIn
-    ? MICRO_AD_UNITS.STORY[device].map((unit) => (
-        <StyledMicroAd key={unit.name} unitId={unit.id} microAdType="STORY" />
-      ))
-    : null
+  const microAdJsx = MICRO_AD_UNITS.STORY[device].map((unit) => (
+    <StyledMicroAd key={unit.name} unitId={unit.id} microAdType="STORY" />
+  ))
 
   return (
     <Wrapper>

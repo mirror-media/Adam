@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 import axios from 'axios'
 import InfiniteScrollList from './infinite-scroll-list'
 import LoadingPage from '../public/images/loading_page.gif'
@@ -7,11 +8,16 @@ import LatestNewsItem from './latest-news-item'
 import { transformRawDataToArticleInfo } from '../utils'
 import { URL_STATIC_POST_EXTERNAL } from '../config/index.mjs'
 import Image from 'next/legacy/image'
-import StyledMicroAd from '../components/ads/micro-ad/micro-ad-with-label'
 import { needInsertMicroAdAfter, getMicroAdUnitId } from '../utils/ad'
-import { useMembership } from '../context/membership'
 import useWindowDimensions from '../hooks/use-window-dimensions'
 import { mediaSize } from '../styles/media'
+
+const StyledMicroAd = dynamic(
+  () => import('../components/ads/micro-ad/micro-ad-with-label'),
+  {
+    ssr: false,
+  }
+)
 
 const Wrapper = styled.section`
   width: 100%;
@@ -141,8 +147,6 @@ export default function LatestNews(props) {
     return latestNews
   }
 
-  const { isLoggedIn } = useMembership()
-
   const { width } = useWindowDimensions()
   const device = width >= mediaSize.md ? 'PC' : 'MB'
 
@@ -165,7 +169,7 @@ export default function LatestNews(props) {
             {renderList.map((item, index) => (
               <Fragment key={item.slug}>
                 <LatestNewsItem itemData={item} />
-                {!isLoggedIn && needInsertMicroAdAfter(index) && (
+                {needInsertMicroAdAfter(index) && (
                   <StyledMicroAd
                     unitId={getMicroAdUnitId(index, 'HOME', device)}
                     microAdType="HOME"

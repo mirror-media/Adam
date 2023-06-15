@@ -1,9 +1,15 @@
 import { Fragment } from 'react'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 import ArticleListItem from './article-list-item'
-import StyledMicroAd from '../../components/ads/micro-ad/micro-ad-with-label'
 import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
-import { useMembership } from '../../context/membership'
+
+const StyledMicroAd = dynamic(
+  () => import('../../components/ads/micro-ad/micro-ad-with-label'),
+  {
+    ssr: false,
+  }
+)
 
 const ItemContainer = styled.div`
   display: grid;
@@ -32,14 +38,12 @@ const ItemContainer = styled.div`
  * @returns {React.ReactElement}
  */
 export default function ArticleList({ renderList, section }) {
-  const { isLoggedIn } = useMembership()
-
   return (
     <ItemContainer>
       {renderList.map((item, index) => (
         <Fragment key={item.id}>
           <ArticleListItem item={item} section={section} />
-          {!isLoggedIn && needInsertMicroAdAfter(index) && (
+          {needInsertMicroAdAfter(index) && (
             <StyledMicroAd
               unitId={getMicroAdUnitId(index, 'LISTING', 'RWD')}
               microAdType="LISTING"
