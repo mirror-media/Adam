@@ -1,5 +1,6 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 
 import client from '../../apollo/apollo-client'
 import { fetchContact } from '../../apollo/query/contact'
@@ -8,13 +9,15 @@ import AuthorArticles from '../../components/author/author-articles'
 import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
-import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { Z_INDEX } from '../../constants/index'
+
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 const AuthorContainer = styled.main`
   width: 320px;
   margin: 0 auto;
-
   ${({ theme }) => theme.breakpoint.md} {
     width: 672px;
   }

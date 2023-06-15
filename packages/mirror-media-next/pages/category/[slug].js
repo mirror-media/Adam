@@ -1,5 +1,6 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 
 import client from '../../apollo/apollo-client'
 import { fetchPosts } from '../../apollo/query/posts'
@@ -12,8 +13,11 @@ import {
   fetchHeaderDataInPremiumPageLayout,
 } from '../../utils/api'
 import Layout from '../../components/shared/layout'
-import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { Z_INDEX } from '../../constants/index'
+
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme

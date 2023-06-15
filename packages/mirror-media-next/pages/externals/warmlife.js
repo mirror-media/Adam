@@ -1,5 +1,6 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 
 import WarmLifeArticles from '../../components/externals/warmlife-articles'
 import {
@@ -10,8 +11,11 @@ import {
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import axios from 'axios'
-import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { Z_INDEX, SECTION_IDS } from '../../constants/index'
+
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 const RENDER_PAGE_SIZE = 12
 const WARMLIFE_DEFAULT_TITLE = `生活暖流`

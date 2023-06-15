@@ -1,6 +1,7 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import axios from 'axios'
+import dynamic from 'next/dynamic'
 
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { GCP_PROJECT_ID, URL_RESTFUL_SERVER } from '../../config/index.mjs'
@@ -13,8 +14,11 @@ import YoutubeArticle from '../../components/video/youtube-article'
 import VideoList from '../../components/video/video-list'
 import YoutubePolicy from '../../components/shared/youtube-policy'
 import Layout from '../../components/shared/layout'
-import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { Z_INDEX } from '../../constants/index'
+
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 const Wrapper = styled.main`
   width: 320px;

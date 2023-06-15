@@ -1,5 +1,6 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 
 import client from '../../apollo/apollo-client'
 import ExternalArticles from '../../components/externals/partner-articles'
@@ -16,8 +17,11 @@ import {
   getExternalPartnerColor,
   getPageKeyByPartnerSlug,
 } from '../../utils/external'
-import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { Z_INDEX } from '../../constants/index'
+
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
