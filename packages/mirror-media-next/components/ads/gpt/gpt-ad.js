@@ -58,10 +58,12 @@ export default function GPTAd({
   onSlotRenderEnded,
   className,
 }) {
-  const { isLoggedIn } = useMembership()
+  const { memberInfo, isLogInProcessFinished } = useMembership()
+  const { memberType } = memberInfo
 
   const [adWidth, setAdWidth] = useState('')
   const [adDivId, setAdDivId] = useState('')
+  const [gptAdJsx, setGptAdJsx] = useState(null)
 
   useEffect(() => {
     if (!(pageKey && adKey)) {
@@ -113,12 +115,25 @@ export default function GPTAd({
     }
   }, [adKey, pageKey, onSlotRequested, onSlotRenderEnded])
 
-  //The login member type has not been implemented yet. For now, we will temporarily use `isLoggedIn` as the basis for deciding whether to display GPT advertisements.
-  const gptAdJsx = !isLoggedIn ? (
-    <Wrapper className={`${className} gpt-ad`}>
-      <Ad width={adWidth} id={adDivId} />
-    </Wrapper>
-  ) : null
+  //When the user's member type is 'not-member', 'one-time-member', or 'basic-member', the AD should be displayed.
+
+  // Since the member type needs to be determined on the client-side, the rendering of `gptAdJsx` should be done on the client-side.
+
+  useEffect(() => {
+    const invalidMemberType = ['not-member', 'one-time-member', 'basic-member']
+
+    if (isLogInProcessFinished) {
+      if (invalidMemberType.includes(memberType)) {
+        setGptAdJsx(
+          <Wrapper className={`${className} gpt-ad`}>
+            <Ad width={adWidth} id={adDivId} />
+          </Wrapper>
+        )
+      } else {
+        return
+      }
+    }
+  }, [adDivId, adWidth, className, isLogInProcessFinished, memberType])
 
   return <>{gptAdJsx}</>
 }
