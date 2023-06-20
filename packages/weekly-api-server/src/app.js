@@ -146,14 +146,19 @@ export function createApp({
     })
   )
 
-  // mini app: isafel GraphQL API
-  app.use(
-    createGraphQLProxy({
-      jwtSecret,
-      proxyOrigin: israfelProxyOrigin,
-      proxyPath: '/member/graphql',
-    })
-  )
+  // TODO:
+  // proxy requests to Israfel GQL API
+  // after Israfel enables role based and
+  // request level authentication.
+  //
+  // mini app: Isafel GraphQL API
+  //app.use(
+  //  createGraphQLProxy({
+  //    jwtSecret,
+  //    proxyOrigin: israfelProxyOrigin,
+  //    proxyPath: '/member/graphql',
+  //  })
+  //)
 
   // mini app: GCS proxy
   app.use(
