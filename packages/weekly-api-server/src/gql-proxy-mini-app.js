@@ -63,17 +63,24 @@ export function createGraphQLProxy({
       // add `X-Access-Token-Scope` custom header.
       // The api servers use this custom header to implement access control mechanism.
       onProxyReq: (proxyReq, req, res) => {
+        // @ts-ignore `res.locals` is not defined in 'http-proxy-middleware' pkg,
+        // but it does exist in 'express' res object.
+        const scope = res?.locals?.auth?.decodedAccessToken?.scope || ''
+        proxyReq.setHeader('X-Access-Token-Scope', scope)
+
+        const sessionToken = res.locals.contentGQLSessionToken
+        proxyReq.setHeader('Cookie', `keystonejs-session=${sessionToken}`)
+
         console.log(
           JSON.stringify({
             severity: 'DEBUG',
             message: 'proxy to backed API origin server: ' + proxyOrigin + proxyReq.path,
             ...res?.locals?.globalLogFields,
+            debugPayload: {
+              'req.headers': proxyReq.getHeaders(),
+            }
           })
         )
-        // @ts-ignore `res.locals` is not defined in 'http-proxy-middleware' pkg,
-        // but it does exist in 'express' res object.
-        const scope = res?.locals?.auth?.decodedAccessToken?.scope || ''
-        proxyReq.setHeader('X-Access-Token-Scope', scope)
       },
       onError: (err, req, res, target) => { // eslint-disable-line
         const annotatingError = errors.helpers.wrap(

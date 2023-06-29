@@ -6,9 +6,12 @@ import {
   signAccessToken,
   signAccessTokenForInternalColleague,
 } from './auth'
+import { createContentGQLSessionTokenMw, createIsrafelSessionTokenMw } from './gql-session-token'
 
 const mws = {
   createLoggerMw,
+  createContentGQLSessionTokenMw,
+  createIsrafelSessionTokenMw,
   queryMemberInfo,
   verifyAccessToken,
   verifyIdTokenByFirebaseAdmin,

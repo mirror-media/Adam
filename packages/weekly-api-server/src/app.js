@@ -30,6 +30,12 @@ const statusCodes = consts.statusCodes
  *  @param {string} opts.gcsProxyOrigin
  *  @param {string} opts.youtubeProxyOrigin
  *  @param {string[]|'*'} [opts.corsAllowOrigin=[]]
+ *  @param {Object} opts.israfelHeadlessAccount
+ *  @param {string} opts.israfelHeadlessAccount.email
+ *  @param {string} opts.israfelHeadlessAccount.password
+ *  @param {Object} opts.contentGQLHeadlessAccount
+ *  @param {string} opts.contentGQLHeadlessAccount.email
+ *  @param {string} opts.contentGQLHeadlessAccount.password
  *  @return {express.Application}
  */
 export function createApp({
@@ -41,6 +47,8 @@ export function createApp({
   gcsProxyOrigin,
   corsAllowOrigin = [],
   youtubeProxyOrigin,
+  israfelHeadlessAccount,
+  contentGQLHeadlessAccount,
 }) {
   // create express app
   const app = express()
@@ -81,6 +89,10 @@ export function createApp({
       // otherwise, call next middlewares
       return next()
     },
+    middlewareCreator.createIsrafelSessionTokenMw({
+      apiUrl: israfelProxyOrigin + '/api/graphql',
+      headlessAccount: israfelHeadlessAccount,
+    }),
     middlewareCreator.queryMemberInfo({ apiUrl: israfelProxyOrigin + '/api/graphql' }), // query member access permission
     middlewareCreator.signAccessToken({ jwtSecret: jwtSecret }), // sign access token according to member permission
     /** @type {express.RequestHandler} */
@@ -135,6 +147,17 @@ export function createApp({
         }
       }
     }
+  )
+
+  // The order of next two middlewares
+  // should not be changed.
+  // We need to get session token before proxying requests to Content GQL.
+  app.use(
+    '/content/graphql',
+    middlewareCreator.createContentGQLSessionTokenMw({
+      apiUrl: weeklyProxyOrigin + '/api/graphql',
+      headlessAccount: contentGQLHeadlessAccount,
+    }),
   )
 
   // mini app: weekly GraphQL API

@@ -7,6 +7,8 @@ const {
   CORS_ALLOW_ORIGINS,
   GCS_ORIGIN,
   YOUTUBE_ORIGIN,
+  SECRET_RESOURCE_ID,
+  RELEASE_BRANCH,
 } = process.env
 
 /**
@@ -35,10 +37,10 @@ const envVar = {
   },
   apis: {
     israfel: {
-      origin: ISRAFEL_GQL_ORIGIN || 'https://israfel-gql.mirrormedia.mg',
+      origin: ISRAFEL_GQL_ORIGIN || 'https://dev-israfel-gql.mirrormedia.mg',
     },
     weekly: {
-      origin: WEEKLY_GQL_ORIGIN || 'https://weekly-gql.mirrormedia.mg',
+      origin: WEEKLY_GQL_ORIGIN || 'https://mirror-cms-dev-ufaummkd5q-de.a.run.app',
     },
   },
   cors: {
@@ -50,6 +52,8 @@ const envVar = {
   youtube: {
     origin: YOUTUBE_ORIGIN || 'https://api.mirrormedia.mg'
   },
+  secretResourceId: SECRET_RESOURCE_ID || 'projects/983956931553/secrets/dev-weekly-api-server/versions/1',
+  releaseBranch: RELEASE_BRANCH || 'prod',
 }
 
 export default envVar

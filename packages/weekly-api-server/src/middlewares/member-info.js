@@ -15,6 +15,7 @@ import express from 'express' // eslint-disable-line
  */
 export function queryMemberInfo(opts) {
   return async (req, res, next) => {
+    const sessionToken = res.locals.israfelSessionToken
     const firebaseId = res.locals.auth?.decodedIdToken?.uid
 
     const query = `
@@ -41,6 +42,7 @@ export function queryMemberInfo(opts) {
         {
           headers: {
             'X-Access-Token-Scope': `read:member-info:${firebaseId}`,
+            'Cookie': `keystonejs-session=${sessionToken}`
           },
         }
       )
