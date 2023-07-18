@@ -517,6 +517,10 @@ export default function StoryNormalStyle({
 
   const [section] = sectionsWithOrdered
 
+  const pageKeyForGptAd = postData.isAdvertised
+    ? 'other'
+    : getSectionGPTPageKey(section?.slug)
+
   /**
    * @returns {Promise<AsideArticleDataContainSectionsWithOrdered[] | []>}
    */
@@ -602,12 +606,7 @@ export default function StoryNormalStyle({
         }}
       />
 
-      {shouldShowAd && (
-        <StyledGPTAd_HD
-          pageKey={getSectionGPTPageKey(section?.slug)}
-          adKey="HD"
-        />
-      )}
+      {shouldShowAd && <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />}
 
       <Main>
         <Article>
@@ -652,20 +651,14 @@ export default function StoryNormalStyle({
           />
 
           {shouldShowAd && (
-            <StyledGPTAd_MB_AT3
-              pageKey={getSectionGPTPageKey(section?.slug)}
-              adKey="MB_AT3"
-            />
+            <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
           )}
           <SocialNetworkServiceLarge
             shouldShowLargePagePlugin={true}
             flexDirection="column"
           />
           {shouldShowAd && (
-            <StyledGPTAd_MB_E1
-              pageKey={getSectionGPTPageKey(section?.slug)}
-              adKey="MB_E1"
-            />
+            <StyledGPTAd_MB_E1 pageKey={pageKeyForGptAd} adKey="MB_E1" />
           )}
 
           {shouldShowAd && (
@@ -694,14 +687,8 @@ export default function StoryNormalStyle({
 
             {shouldShowAd && (
               <GPTAdContainer>
-                <StyledGPTAd_PC_E1
-                  pageKey={getSectionGPTPageKey(section?.slug)}
-                  adKey="PC_E1"
-                />
-                <StyledGPTAd_PC_E2
-                  pageKey={getSectionGPTPageKey(section?.slug)}
-                  adKey="PC_E2"
-                />
+                <StyledGPTAd_PC_E1 pageKey={pageKeyForGptAd} adKey="PC_E1" />
+                <StyledGPTAd_PC_E2 pageKey={pageKeyForGptAd} adKey="PC_E2" />
               </GPTAdContainer>
             )}
 
@@ -714,10 +701,7 @@ export default function StoryNormalStyle({
         </Article>
         <Aside>
           {shouldShowAd && (
-            <StyledGPTAd_PC_R1
-              pageKey={getSectionGPTPageKey(section?.slug)}
-              adKey="PC_R1"
-            />
+            <StyledGPTAd_PC_R1 pageKey={pageKeyForGptAd} adKey="PC_R1" />
           )}
           <AsideArticleList
             heading="最新文章"
@@ -727,10 +711,7 @@ export default function StoryNormalStyle({
           />
           <FixedContainer>
             {shouldShowAd && (
-              <StyledGPTAd_PC_R2
-                pageKey={getSectionGPTPageKey(section?.slug)}
-                adKey="PC_R2"
-              />
+              <StyledGPTAd_PC_R2 pageKey={pageKeyForGptAd} adKey="PC_R2" />
             )}
 
             <Divider />
@@ -771,18 +752,10 @@ export default function StoryNormalStyle({
         )}
       </StoryEndMobileTablet>
 
-      {shouldShowAd && (
-        <StyledGPTAd_FT
-          pageKey={getSectionGPTPageKey(section?.slug)}
-          adKey="FT"
-        />
-      )}
+      {shouldShowAd && <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />}
 
       {shouldShowAd && noCategoryOfWineSlug ? (
-        <StickyGPTAd_MB_ST
-          pageKey={getSectionGPTPageKey(section?.slug)}
-          adKey="MB_ST"
-        />
+        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} adKey="MB_ST" />
       ) : null}
 
       <Footer footerType="default" />
