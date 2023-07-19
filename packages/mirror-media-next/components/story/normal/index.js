@@ -635,6 +635,7 @@ export default function StoryNormalStyle({
             content={postContent.data}
             sectionSlug={section?.slug}
             hiddenAdvertised={hiddenAdvertised}
+            pageKeyForGptAd={pageKeyForGptAd}
           />
 
           <DateUnderContent>

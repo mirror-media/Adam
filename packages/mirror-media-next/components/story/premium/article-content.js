@@ -37,12 +37,14 @@ const ContentContainer = styled.section`
  * @param {Content} props.content
  * @param {string} [props.className]
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
+ * @param {string} [props.pageKeyForGptAd]
  * @returns {JSX.Element}
  */
 export default function PremiumArticleContent({
   content = { blocks: [], entityMap: {} },
   className = '',
   hiddenAdvertised = false,
+  pageKeyForGptAd = 'other',
 }) {
   const shouldShowAd = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
@@ -60,7 +62,7 @@ export default function PremiumArticleContent({
       {blocksLength > 1 && (
         <>
           {shouldShowAd && (
-            <StyledGPTAd pageKey={SECTION_IDS['member']} adKey="MB_AT1" />
+            <StyledGPTAd pageKey={pageKeyForGptAd} adKey="MB_AT1" />
           )}
 
           <DraftRenderBlock

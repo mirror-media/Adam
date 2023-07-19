@@ -51,18 +51,20 @@ const StyledGPTAd = styled(GPTAd)`
  * @param {Content} props.content
  * @param {string | undefined} props.sectionSlug
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
+ * @param {string} [props.pageKeyForGptAd]
  * @returns {JSX.Element}
  */
 export default function ArticleContent({
   content = { blocks: [], entityMap: {} },
   sectionSlug,
   hiddenAdvertised = false,
+  pageKeyForGptAd,
 }) {
   const shouldShowAd = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
 
   const blocksLength = getBlocksCount(content)
-  const GPTpageKey = getSectionGPTPageKey(sectionSlug)
+  const GPTpageKey = pageKeyForGptAd || getSectionGPTPageKey(sectionSlug)
 
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
   const MB_contentJsx = (
