@@ -517,6 +517,7 @@ export default function StoryNormalStyle({
 
   const [section] = sectionsWithOrdered
 
+  // 廣編文章的 pageKey 是 other
   const pageKeyForGptAd = postData.isAdvertised
     ? 'other'
     : getSectionGPTPageKey(section?.slug)
@@ -633,7 +634,6 @@ export default function StoryNormalStyle({
 
           <ArticleContent
             content={postContent.data}
-            sectionSlug={section?.slug}
             hiddenAdvertised={hiddenAdvertised}
             pageKeyForGptAd={pageKeyForGptAd}
           />

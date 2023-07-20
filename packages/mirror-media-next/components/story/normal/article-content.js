@@ -4,7 +4,6 @@ import { copyAndSliceDraftBlock, getBlocksCount } from '../../../utils/story'
 import dynamic from 'next/dynamic'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
-import { getSectionGPTPageKey } from '../../../utils/ad'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -49,22 +48,19 @@ const StyledGPTAd = styled(GPTAd)`
  *
  * @param {Object} props
  * @param {Content} props.content
- * @param {string | undefined} props.sectionSlug
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
- * @param {string} [props.pageKeyForGptAd]
+ * @param {string | undefined} [props.pageKeyForGptAd]
  * @returns {JSX.Element}
  */
 export default function ArticleContent({
   content = { blocks: [], entityMap: {} },
-  sectionSlug,
   hiddenAdvertised = false,
-  pageKeyForGptAd,
+  pageKeyForGptAd = '',
 }) {
   const shouldShowAd = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
 
   const blocksLength = getBlocksCount(content)
-  const GPTpageKey = pageKeyForGptAd || getSectionGPTPageKey(sectionSlug)
 
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
   const MB_contentJsx = (
@@ -77,7 +73,9 @@ export default function ArticleContent({
 
       {blocksLength > 1 && (
         <>
-          {shouldShowAd && <StyledGPTAd pageKey={GPTpageKey} adKey="MB_AT1" />}
+          {shouldShowAd && (
+            <StyledGPTAd pageKey={pageKeyForGptAd} adKey="MB_AT1" />
+          )}
 
           <DraftRenderBlock
             rawContentBlock={copyAndSliceDraftBlock(content, 1, 5)}
@@ -91,7 +89,9 @@ export default function ArticleContent({
 
       {blocksLength > 5 && (
         <>
-          {shouldShowAd && <StyledGPTAd pageKey={GPTpageKey} adKey="MB_AT2" />}
+          {shouldShowAd && (
+            <StyledGPTAd pageKey={pageKeyForGptAd} adKey="MB_AT2" />
+          )}
 
           <DraftRenderBlock
             rawContentBlock={copyAndSliceDraftBlock(content, 5)}
@@ -116,7 +116,9 @@ export default function ArticleContent({
 
       {blocksLength > 3 && (
         <>
-          {shouldShowAd && <StyledGPTAd pageKey={GPTpageKey} adKey="PC_AT1" />}
+          {shouldShowAd && (
+            <StyledGPTAd pageKey={pageKeyForGptAd} adKey="PC_AT1" />
+          )}
 
           <DraftRenderBlock
             rawContentBlock={copyAndSliceDraftBlock(content, 3)}
