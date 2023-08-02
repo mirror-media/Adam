@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
-    "@mirrormedia/lilith-draft-renderer": "^1.2.0-alpha.33",
+    "@mirrormedia/lilith-draft-renderer": "^1.2.0-alpha.34",
     "@next/font": "^13.1.2",
     "@readr-media/react-image": "^1.6.0",
     "@readr-media/share-button": "^1.0.3",

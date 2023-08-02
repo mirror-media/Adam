@@ -1682,10 +1682,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mirrormedia/lilith-draft-renderer@^1.2.0-alpha.33":
-  version "1.2.0-alpha.33"
-  resolved "https://registry.yarnpkg.com/@mirrormedia/lilith-draft-renderer/-/lilith-draft-renderer-1.2.0-alpha.33.tgz#41939b25c2c4b3aca9868970e404d75404833dac"
-  integrity sha512-woibNHBHoCU2Fokm9qd3abXbxx7Ex8Advjj6A8G8kTt1VMBMFZMMqronlmKcJkDMiHnjv7RzUydTH2UbzbsAvw==
+"@mirrormedia/lilith-draft-renderer@^1.2.0-alpha.34":
+  version "1.2.0-alpha.34"
+  resolved "https://registry.yarnpkg.com/@mirrormedia/lilith-draft-renderer/-/lilith-draft-renderer-1.2.0-alpha.34.tgz#093fde038114f4c2ac34793c984f1c2777e9d9b1"
+  integrity sha512-X6ky5PX0forugUZ9VF3b/wyEbYoEWtFfMJmeYdZiwRbZM6kuLgvbKiuTRIlUxywcc1foHjgqEP2vXatmclpuQQ==
   dependencies:
     "@readr-media/react-image" "1.6.0"
     body-scroll-lock "3.1.5"
