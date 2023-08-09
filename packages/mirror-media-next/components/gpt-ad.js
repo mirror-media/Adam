@@ -20,5 +20,5 @@ const GptAdWrapper = styled.div`
   }
 `
 export default function GptAd() {
-  return <GptAdWrapper>GptAd</GptAdWrapper>
+  return <GptAdWrapper>FakeGptAd</GptAdWrapper>
 }

@@ -5,7 +5,7 @@ import { mediaSize, minWidth } from '../../styles/media'
 import searchButtonWeb from '../../public/images/search-button-web.png'
 import SearchButtonMobileSVG from '../../public/images/search-button-mobile.svg'
 import SearchBarInput from './search-bar-input'
-import { SearchIconWidth as Search_Icon_Width } from '../../styles/header'
+import { Search_Icon_Width } from '../../styles/header'
 import useClickOutside from '../../hooks/useClickOutside'
 
 const SearchBarWrapper = styled.section`

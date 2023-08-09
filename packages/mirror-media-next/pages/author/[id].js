@@ -1,16 +1,26 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 
-import client from '../../apollo/apollo-client'
-import { fetchContact } from '../../apollo/query/contact'
-import { fetchPosts } from '../../apollo/query/posts'
-import AuthorArticles from '../../components/author-articles'
-import { GCP_PROJECT_ID } from '../../config'
+import AuthorArticles from '../../components/author/author-articles'
+import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+
+import Layout from '../../components/shared/layout'
+import { Z_INDEX } from '../../constants/index'
+import {
+  fetchAuthorByAuthorId,
+  fetchPostsByAuthorId,
+} from '../../utils/api/author'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 const AuthorContainer = styled.main`
   width: 320px;
   margin: 0 auto;
-
   ${({ theme }) => theme.breakpoint.md} {
     width: 672px;
   }
@@ -38,34 +48,88 @@ const AuthorTitle = styled.h1`
   }
 `
 
+const StyledGPTAd = styled(GPTAd)`
+  width: 100%;
+  height: auto;
+  max-width: 336px;
+  max-height: 280px;
+  margin: 20px auto 0px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    max-height: 250px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  max-width: 320px;
+  max-height: 50px;
+  margin: auto;
+  z-index: ${Z_INDEX.coverHeader};
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 const RENDER_PAGE_SIZE = 12
 
 /**
+ * @typedef {import('../../components/author/author-articles').Article} Article
+ * @typedef {import('../../components/author/author-articles').Author} Author
+ */
+
+/**
  * @param {Object} props
- * @param {import('../../type/shared/article').Article[]} props.posts
- * @param {import('../../type/author').Author} props.author
- * @param {Number} props.postsCount
+ * @param {Article[]} props.posts
+ * @param {Author} props.author
+ * @param {number} props.postsCount
+ * @param {Object} props.headerData
  * @returns {React.ReactElement}
  */
-export default function Author({ postsCount, posts, author }) {
+export default function Author({ postsCount, posts, author, headerData }) {
+  const authorName = author.name || ''
+  const shouldShowAd = useDisplayAd()
   return (
-    <AuthorContainer>
-      <AuthorTitle>{author?.name}</AuthorTitle>
-      <AuthorArticles
-        postsCount={postsCount}
-        posts={posts}
-        author={author}
-        renderPageSize={RENDER_PAGE_SIZE}
-      />
-    </AuthorContainer>
+    <Layout
+      head={{ title: `${authorName}相關報導` }}
+      header={{ type: 'default', data: headerData }}
+      footer={{ type: 'default' }}
+    >
+      <AuthorContainer>
+        {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
+        <AuthorArticles
+          postsCount={postsCount}
+          posts={posts}
+          authorId={author.id}
+          renderPageSize={RENDER_PAGE_SIZE}
+        />
+        {shouldShowAd && <StickyGPTAd pageKey="other" adKey="MB_ST" />}
+      </AuthorContainer>
+    </Layout>
   )
 }
 
 /**
  * @type {import('next').GetServerSideProps}
  */
-export async function getServerSideProps({ query, req }) {
-  const authorId = query.id
+export async function getServerSideProps({ query, req, res }) {
+  if (ENV === 'prod') {
+    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
+  } else {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+  }
+
+  const authorId = Array.isArray(query.id) ? query.id[0] : query.id
+  const mockError = query.error === '500'
+
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
@@ -76,38 +140,24 @@ export async function getServerSideProps({ query, req }) {
   }
 
   const responses = await Promise.allSettled([
-    client.query({
-      query: fetchPosts,
-      variables: {
-        take: RENDER_PAGE_SIZE * 2,
-        skip: 0,
-        orderBy: { publishedDate: 'desc' },
-        filter: {
-          state: { equals: 'published' },
-          OR: [
-            { writers: { some: { id: { equals: authorId } } } },
-            { photographers: { some: { id: { equals: authorId } } } },
-          ],
-        },
-      },
-    }),
-    client.query({
-      query: fetchContact,
-      variables: {
-        where: { id: authorId },
-      },
-    }),
+    fetchHeaderDataInDefaultPageLayout(),
+    fetchPostsByAuthorId(authorId, RENDER_PAGE_SIZE * 2, mockError ? NaN : 0),
+    fetchAuthorByAuthorId(authorId),
   ])
 
-  const handledResponses = responses.map((response) => {
+  const handledResponses = responses.map((response, index) => {
     if (response.status === 'fulfilled') {
-      return response.value.data
+      if ('data' in response.value) {
+        // handle gql requests
+        return response.value.data
+      }
+      return response.value
     } else if (response.status === 'rejected') {
       const { graphQLErrors, clientErrors, networkError } = response.reason
       const annotatingError = errors.helpers.wrap(
         response.reason,
         'UnhandledError',
-        'Error occurs while getting index page data'
+        'Error occurs while getting author page data'
       )
 
       console.log(
@@ -130,21 +180,52 @@ export async function getServerSideProps({ query, req }) {
           ...globalLogFields,
         })
       )
+      if (index === 1) {
+        // fetch key data (posts) failed, redirect to 500
+        throw new Error('fetch author posts failed')
+      }
       return
     }
   })
 
-  /** @type {Number} postsCount */
-  const postsCount = handledResponses[0]?.postsCount || 0
-  /** @type {import('../../type/shared/article').Article[]} */
-  const posts = handledResponses[0]?.posts || []
-  /** @type {import('../../type/author').Author} */
-  const author = handledResponses[1]?.contact || {}
+  //handle header data
+  const headerData =
+    handledResponses[0] && 'sectionsData' in handledResponses[0]
+      ? handledResponses[0]
+      : { sectionsData: [], topicsData: [] }
+  const sectionsData = Array.isArray(headerData.sectionsData)
+    ? headerData.sectionsData
+    : []
+  const topicsData = Array.isArray(headerData.topicsData)
+    ? headerData.topicsData
+    : []
+
+  // handle fetch post data
+  if (handledResponses[1]?.posts?.length === 0) {
+    // fetchPost return empty array -> wrong authorId -> 404
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `fetch post of authroId ${authorId} return empty posts, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
+  /** @type {number} postsCount */
+  const postsCount = handledResponses[1]?.postsCount || 0
+  /** @type {Article[]} */
+  const posts = handledResponses[1]?.posts || []
+
+  // handle fetch author data
+  /** @type {Author} */
+  const author = handledResponses[2]?.contact || { id: authorId }
 
   const props = {
     postsCount,
     posts,
     author,
+    headerData: { sectionsData, topicsData },
   }
 
   return { props }

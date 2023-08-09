@@ -1,7 +1,5 @@
 import axios from 'axios'
 
-import Header from '../../components/shared/mirror-media-header-old'
-import { RedirectUrlContext } from '../../context/redirectUrl'
 import {
   URL_STATIC_COMBO_SECTIONS,
   URL_MIRROR_MEDIA,
@@ -11,9 +9,9 @@ import {
   API_PORT,
 } from '../../config'
 import SearchResult from '../../components/search-result'
-import Footer from '../../components/shared/mirror-media-footer'
 import { getSearchResult } from '../../utils/api/programmable-search'
 import styled from 'styled-components'
+import Layout from '../../components/old-layout'
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,20 +19,20 @@ const Wrapper = styled.div`
   min-height: 100vh;
 `
 
-export default function Home({
-  sectionsData,
-  topicsData,
-  searchResult,
-  redirectUrl,
-}) {
+export default function Search({ searchResult }) {
   return (
     <Wrapper>
-      <RedirectUrlContext.Provider value={redirectUrl}>
-        <Header sectionsData={sectionsData} topicsData={topicsData} />
-        <SearchResult searchResult={searchResult} />
-        <Footer />
-      </RedirectUrlContext.Provider>
+      <SearchResult searchResult={searchResult} />
     </Wrapper>
+  )
+}
+
+Search.getLayout = function getLayout(page, pageProps) {
+  const { sectionsData = [], topicsData = [] } = pageProps
+  return (
+    <Layout sectionsData={sectionsData} topicsData={topicsData}>
+      {page}
+    </Layout>
   )
 }
 

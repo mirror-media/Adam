@@ -1,7 +1,12 @@
 import styled from 'styled-components'
 import Link from 'next/link'
 import Image from 'next/image'
-import ButtonCopyLink from '../button-copy-link'
+import ButtonCopyLink from '../shared/button-copy-link'
+import DonateLink from '../shared/donate-link'
+import SubscribeLink from '../shared/subscribe-link'
+import ButtonSocialNetworkShare from '../shared/button-social-network-share'
+import Tags from '../shared/tags'
+import Credits from '../shared/credits'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -10,66 +15,12 @@ const Date = styled.div`
   width: fit-content;
   height: auto;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1;
   color: #a1a1a1;
+  margin-bottom: 8px;
   ${({ theme }) => theme.breakpoint.md} {
     display: none;
   }
-`
-
-const Credits = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 20px;
-  }
-`
-
-const CreditTitle = styled.span`
-  color: rgba(0, 0, 0, 0.5);
-  width: fit-content;
-  ${({ theme }) => theme.breakpoint.md} {
-    color: rgba(52, 73, 94, 1);
-  }
-`
-
-const CreditList = styled.span`
-  display: flex;
-  gap: 0px 6px;
-  flex-wrap: wrap;
-  .link {
-    color: ${
-      /** @param {{theme:Theme}} param */
-      ({ theme }) => theme.color.brandColor.darkBlue
-    };
-  }
-
-  .no-link {
-    color: rgba(52, 73, 94, 1);
-  }
-`
-
-const Tag = styled.a`
-  font-size: 14px;
-  line-height: 20px;
-  padding: 4px 8px;
-  border-radius: 2px;
-  background-color: ${
-    /**
-     * @param {{theme:Theme}} param
-     */
-    ({ theme }) => theme.color.brandColor.darkBlue
-  };
-  color: white;
-  font-weight: 400;
-`
-const Tags = styled.div`
-  display: flex;
-  gap: 12px 8px;
-  flex-wrap: wrap;
 `
 
 const SocialMedia = styled.div`
@@ -77,8 +28,11 @@ const SocialMedia = styled.div`
   gap: 10px;
   padding: 0;
   position: relative;
+  margin-bottom: 20px;
+
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 0 20px;
+    padding: 0 40px;
+    margin-bottom: 0px;
     &::before,
     &::after {
       position: absolute;
@@ -90,29 +44,11 @@ const SocialMedia = styled.div`
       top: 50%;
     }
     &::before {
-      left: 0;
+      left: 20px;
     }
     &::after {
-      right: 0;
+      right: 20px;
     }
-  }
-`
-
-const DonateLink = styled.a`
-  background-color: black;
-  width: 100px;
-  height: 32px;
-  padding: 9px 12px 9px 13.33px;
-  display: flex;
-  gap: 5.33px;
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 400;
-  border-radius: 32px;
-  color: white;
-  img {
-    width: 13.33px;
-    height: 13.33px;
   }
 `
 
@@ -121,9 +57,12 @@ const SocialMediaAndDonateLink = styled.div`
   align-items: center;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  margin-top: 20px;
+
   ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 40px;
     flex-direction: row;
+    align-items: center;
   }
   .link-to-index {
     display: none;
@@ -131,48 +70,48 @@ const SocialMediaAndDonateLink = styled.div`
       display: block;
     }
   }
+  .subscribe-btn {
+    margin-left: 8px;
+  }
 `
 
 const ArticleInfoContainer = styled.div`
   border-left: 2px ${({ theme }) => theme.color.brandColor.darkBlue} solid;
   padding-left: 24px;
   margin: 32px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
   ${({ theme }) => theme.breakpoint.md} {
     border: none;
     padding-left: 0px;
-    margin: 0 0 16px;
-    gap: 12px;
-
-    ${Date} {
-      display: none;
-    }
+    margin: 0 0 24px;
   }
 `
-const CREDIT_TITLE_NAME_MAP = {
-  writers: '文',
-  photographers: '攝影',
-  camera_man: '影音',
-  designers: '設計',
-  engineers: '工程',
-  vocals: '主播',
-  extend_byline: '特約記者',
-}
+const StyledTags = styled(Tags)`
+  margin-top: 20px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 25.5px;
+  }
+`
+
+const DonateSubscribeWrapper = styled.div`
+  display: flex;
+`
 
 /**
- * @typedef {import('../../../type/post.typedef').Contact} Contact
+ * @typedef {import('../../../apollo/fragments/contact').Contact[]} Contacts
+ */
+
+/**
+ * @typedef {import('../../../apollo/fragments/tag').Tag[]} Tags
  */
 
 /**
  * @typedef {Object} Credit
- * @property {Contact[]} [writers]
- * @property {Contact[]} [photographers]
- * @property {Contact[]} [camera_man]
- * @property {Contact[]} [designers]
- * @property {Contact[]} [engineers]
- * @property {Contact[]} [vocals]
+ * @property {Contacts} [writers]
+ * @property {Contacts} [photographers]
+ * @property {Contacts} [camera_man]
+ * @property {Contacts} [designers]
+ * @property {Contacts} [engineers]
+ * @property {Contacts} [vocals]
  * @property {string} [extend_byline]
  */
 
@@ -181,7 +120,7 @@ const CREDIT_TITLE_NAME_MAP = {
  * @param {string} props.updatedDate
  * @param {string} props.publishedDate
  * @param {Credit[]} props.credits
- * @param {import('../../../type/post.typedef').Tag[]} props.tags
+ * @param {Tags} props.tags
  * @returns {JSX.Element}
  */
 export default function ArticleInfo({
@@ -190,61 +129,12 @@ export default function ArticleInfo({
   credits,
   tags,
 }) {
-  const creditsJsx = (
-    <Credits>
-      {credits.map((credit, index) => {
-        const title = Object.keys(credit)
-        const titleName = CREDIT_TITLE_NAME_MAP[title]
-        const [people] = Object.values(credit)
-        if (
-          !titleName ||
-          people.length === 0 ||
-          (typeof people === 'string' && !people.trim())
-        ) {
-          return null
-        }
-        return (
-          <CreditList key={index}>
-            <CreditTitle>{titleName} | </CreditTitle>
-            {Array.isArray(people) ? (
-              people.map((person) => (
-                <Link
-                  target="_blank"
-                  rel="noreferrer noopenner"
-                  href={`/author/${person.id}`}
-                  key={person.id}
-                  className="link"
-                >
-                  {person.name}
-                </Link>
-              ))
-            ) : (
-              <p className="no-link">{people}</p>
-            )}
-          </CreditList>
-        )
-      })}
-    </Credits>
-  )
-
-  const tagsJsx = (
-    <Tags>
-      {tags.map((tag) => (
-        <Tag key={tag.id} href={`/tag/${tag.slug}`} target="_blank">
-          {tag.name}
-        </Tag>
-      ))}
-    </Tags>
-  )
   return (
     <ArticleInfoContainer>
-      <div>
-        <Date>發布時間：{publishedDate}</Date>
-        <Date>更新時間：{updatedDate}</Date>
-      </div>
+      <Date>發布時間：{publishedDate} 臺北時間</Date>
+      <Date>更新時間：{updatedDate} 臺北時間</Date>
 
-      {creditsJsx}
-      {tagsJsx}
+      <Credits credits={credits}></Credits>
       <SocialMediaAndDonateLink>
         <Link className="link-to-index" href="/">
           <Image
@@ -255,35 +145,16 @@ export default function ArticleInfo({
           ></Image>
         </Link>
         <SocialMedia>
-          <Link href="/" target="_blank">
-            <Image
-              src={'/images/fb-logo.svg'}
-              width={35}
-              height={35}
-              alt="facebook-share"
-            ></Image>
-          </Link>
-          <Link href="/" target="_blank">
-            <Image
-              src={'/images/line-logo.svg'}
-              width={35}
-              height={35}
-              alt="line-share"
-            ></Image>
-          </Link>
+          <ButtonSocialNetworkShare type="facebook" />
+          <ButtonSocialNetworkShare type="line" />
           <ButtonCopyLink />
         </SocialMedia>
-        <DonateLink href="https://www.mirrormedia.mg/" target="_blank">
-          <Image
-            src={'/images/donate.png'}
-            width={13.33}
-            height={13.33}
-            alt="donate"
-          ></Image>
-
-          <span>贊助本文</span>
-        </DonateLink>
+        <DonateSubscribeWrapper>
+          <DonateLink className="GTM-donate-link-top" />
+          <SubscribeLink className="subscribe-btn GTM-subscribe-link-top" />
+        </DonateSubscribeWrapper>
       </SocialMediaAndDonateLink>
+      <StyledTags tags={tags} />
     </ArticleInfoContainer>
   )
 }

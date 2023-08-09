@@ -128,6 +128,3 @@ lib
 
 # vercel
 .vercel
-
-# jsconfig
-jsconfig.json

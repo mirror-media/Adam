@@ -1,11 +1,27 @@
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
+import dynamic from 'next/dynamic'
 
-import client from '../../apollo/apollo-client'
-import { fetchPosts } from '../../apollo/query/posts'
-import { fetchSection } from '../../apollo/query/sections'
-import SectionArticles from '../../components/section-articles'
-import { GCP_PROJECT_ID } from '../../config'
+import SectionArticles from '../../components/shared/section-articles'
+import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import Layout from '../../components/shared/layout'
+import { Z_INDEX } from '../../constants/index'
+import {
+  fetchPostsBySectionSlug,
+  fetchSectionBySectionSlug,
+} from '../../utils/api/section'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getSectionGPTPageKey } from '../../utils/ad'
+
+const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
+
+/**
+ * @typedef {import('../../type/theme').Theme} Theme
+ */
 
 const SectionContainer = styled.main`
   width: 320px;
@@ -46,34 +62,103 @@ const SectionTitle = styled.h1`
   }
 `
 
+const StyledGPTAd = styled(GPTAd)`
+  width: 100%;
+  height: auto;
+  max-width: 336px;
+  max-height: 280px;
+  margin: 20px auto 0px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    max-height: 250px;
+  }
+`
+
+const StickyGPTAd = styled(GPTAd)`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+  max-width: 320px;
+  max-height: 50px;
+  margin: auto;
+  z-index: ${Z_INDEX.coverHeader};
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
+`
+
 const RENDER_PAGE_SIZE = 12
 
 /**
+ * @typedef {import('../../components/shared/section-articles').Article} Article
+ * @typedef {import('../../components/shared/section-articles').Section} Section
+ */
+
+/**
  * @param {Object} props
- * @param {import('../../type/shared/article').Article[]} props.posts
- * @param {import('../../type/section').Section} props.section
- * @param {Number} props.postsCount
+ * @param {Article[]} props.posts
+ * @param {Section} props.section
+ * @param {number} props.postsCount
+ * @param {Object} props.headerData
  * @returns {React.ReactElement}
  */
-export default function Section({ postsCount, posts, section }) {
+export default function Section({ postsCount, posts, section, headerData }) {
+  const sectionName = section.name || ''
+  const shouldShowAd = useDisplayAd()
+
   return (
-    <SectionContainer>
-      <SectionTitle sectionName={section?.slug}>{section?.name}</SectionTitle>
-      <SectionArticles
-        postsCount={postsCount}
-        posts={posts}
-        section={section}
-        renderPageSize={RENDER_PAGE_SIZE}
-      />
-    </SectionContainer>
+    <Layout
+      head={{ title: `${sectionName}分類報導` }}
+      header={{ type: 'default', data: headerData }}
+      footer={{ type: 'default' }}
+    >
+      <SectionContainer>
+        {shouldShowAd && (
+          <StyledGPTAd
+            pageKey={getSectionGPTPageKey(section.slug)}
+            adKey="HD"
+          />
+        )}
+
+        {sectionName && (
+          <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
+        )}
+
+        <SectionArticles
+          postsCount={postsCount}
+          posts={posts}
+          section={section}
+          renderPageSize={RENDER_PAGE_SIZE}
+        />
+
+        {shouldShowAd && (
+          <StickyGPTAd
+            pageKey={getSectionGPTPageKey(section.slug)}
+            adKey="MB_ST"
+          />
+        )}
+      </SectionContainer>
+    </Layout>
   )
 }
 
 /**
  * @type {import('next').GetServerSideProps}
  */
-export async function getServerSideProps({ query, req }) {
-  const sectionSlug = query.slug
+export async function getServerSideProps({ query, req, res }) {
+  if (ENV === 'prod') {
+    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
+  } else {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+  }
+  const sectionSlug = Array.isArray(query.slug) ? query.slug[0] : query.slug
+  const mockError = query.error === '500'
+
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
@@ -84,35 +169,28 @@ export async function getServerSideProps({ query, req }) {
   }
 
   const responses = await Promise.allSettled([
-    client.query({
-      query: fetchPosts,
-      variables: {
-        take: RENDER_PAGE_SIZE * 2,
-        skip: 0,
-        orderBy: { publishedDate: 'desc' },
-        filter: {
-          state: { equals: 'published' },
-          sections: { some: { slug: { equals: sectionSlug } } },
-        },
-      },
-    }),
-    client.query({
-      query: fetchSection,
-      variables: {
-        where: { slug: sectionSlug },
-      },
-    }),
+    fetchHeaderDataInDefaultPageLayout(),
+    fetchPostsBySectionSlug(
+      sectionSlug,
+      RENDER_PAGE_SIZE * 2,
+      mockError ? NaN : 0
+    ),
+    fetchSectionBySectionSlug(sectionSlug),
   ])
 
-  const handledResponses = responses.map((response) => {
+  const handledResponses = responses.map((response, index) => {
     if (response.status === 'fulfilled') {
-      return response.value.data
+      if ('data' in response.value) {
+        // handle gql requests
+        return response.value.data
+      }
+      return response.value
     } else if (response.status === 'rejected') {
       const { graphQLErrors, clientErrors, networkError } = response.reason
       const annotatingError = errors.helpers.wrap(
         response.reason,
         'UnhandledError',
-        'Error occurs while getting index page data'
+        'Error occurs while getting section page data'
       )
 
       console.log(
@@ -135,21 +213,55 @@ export async function getServerSideProps({ query, req }) {
           ...globalLogFields,
         })
       )
+      if (index === 1) {
+        // fetch key data (posts) failed, redirect to 500
+        throw new Error('fetch section posts failed')
+      }
       return
     }
   })
 
-  /** @type {Number} postsCount */
-  const postsCount = handledResponses[0]?.postsCount || 0
-  /** @type {import('../../type/shared/article').Article[]} */
-  const posts = handledResponses[0]?.posts || []
-  /** @type {import('../../type/section').Section} */
-  const section = handledResponses[1]?.section || {}
+  // handle header data
+  const headerData =
+    handledResponses[0] && 'sectionsData' in handledResponses[0]
+      ? handledResponses[0]
+      : {
+          sectionsData: [],
+          topicsData: [],
+        }
+  const sectionsData = Array.isArray(headerData.sectionsData)
+    ? headerData.sectionsData
+    : []
+  const topicsData = Array.isArray(headerData.topicsData)
+    ? headerData.topicsData
+    : []
+
+  // handle fetch post data
+  if (handledResponses[1]?.posts?.length === 0) {
+    // fetchPost return empty array -> wrong authorId -> 404
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `fetch post of sectionSlug ${sectionSlug} return empty posts, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
+  /** @type {number} postsCount */
+  const postsCount = handledResponses[1]?.postsCount || 0
+  /** @type {Article[]} */
+  const posts = handledResponses[1]?.posts || []
+
+  // handle fetch section data
+  /** @type {Section} */
+  const section = handledResponses[2]?.section || { slug: sectionSlug }
 
   const props = {
     postsCount,
     posts,
     section,
+    headerData: { sectionsData, topicsData },
   }
 
   return { props }

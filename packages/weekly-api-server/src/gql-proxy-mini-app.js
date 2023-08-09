@@ -1,5 +1,4 @@
 import consts from './constants'
-import cors from 'cors'
 // @ts-ignore `@twreporter/errors` does not have tyepscript definition file yet
 import errors from '@twreporter/errors'
 import express from 'express'
@@ -14,32 +13,22 @@ const statusCodes = consts.statusCodes
  *  proxies requests to backed GraphQL API origin server.
  *
  *  @param {Object} opts
- *  @param {string} opts.gcpProjectId
  *  @param {string} opts.jwtSecret
  *  @param {string} opts.proxyOrigin
  *  @param {'/content/graphql'|'/member/graphql'} opts.proxyPath
- *  @param {string[]} [opts.corsAllowOrigin=[]]
  *  @return {express.Router}
  */
 export function createGraphQLProxy({
-  gcpProjectId,
   jwtSecret,
   proxyOrigin,
   proxyPath,
-  corsAllowOrigin = [],
 }) {
   // create express mini app
   const router = express.Router()
 
-  const corsOpts = {
-    origin: corsAllowOrigin,
-  }
-
-  // enable cors pre-flight request
+  // enable pre-flight request
   router.options(
     proxyPath,
-    middlewareCreator.createLoggerMw(gcpProjectId),
-    cors(corsOpts)
   )
 
   const verifyAccessToken = middlewareCreator.verifyAccessToken({
@@ -48,11 +37,6 @@ export function createGraphQLProxy({
 
   router.post(
     proxyPath,
-    // log request
-    middlewareCreator.createLoggerMw(gcpProjectId),
-
-    // handle cors request
-    cors(corsOpts),
 
     // verify access token if needed
     /** @type {express.RequestHandler} */

@@ -1,50 +1,104 @@
-//TODO: will fetch topic data twice (once in header, once in index),
-//should fetch only once by using Redux.
-//TODO: add typedef of editor choice data
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
-import client from '../apollo/apollo-client'
-import { gql } from '@apollo/client'
+import dynamic from 'next/dynamic'
+
 import {
   ENV,
   API_TIMEOUT,
-  URL_STATIC_COMBO_TOPICS,
-  URL_K3_FLASH_NEWS,
+  URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
   GCP_PROJECT_ID,
-} from '../config'
+} from '../config/index.mjs'
 
-import { transformRawDataToArticleInfo } from '../utils'
-import FlashNews from '../components/flash-news'
-import NavTopics from '../components/nav-topics'
-import SubscribeMagazine from '../components/subscribe-magazine'
+import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
+import { getSectionNameGql, getSectionSlugGql, getArticleHref } from '../utils'
+import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/editor-choice'
 import LatestNews from '../components/latest-news'
+import Layout from '../components/shared/layout'
+import { useDisplayAd } from '../hooks/useDisplayAd'
+
+const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
+
+const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
+
+/**
+ * @typedef {import('../components/shared/share-header').HeaderData['flashNewsData']} FlashNewsData
+ */
+/**
+ * @typedef {import('../components/shared/share-header').HeaderData['sectionsData']} SectionsData
+ */
+/**
+ * @typedef {import('../components/shared/share-header').HeaderData['topicsData']} TopicsData
+ */
+
+/**
+ * @typedef {import('../components/editor-choice').EditorChoiceRawData[]} EditorChoicesRawData
+ */
+/**
+ * @typedef {import('../components/latest-news').ArticleRawData[]} ArticlesRawData
+ */
+
 const IndexContainer = styled.main`
   background-color: rgba(255, 255, 255, 1);
   max-width: 596px;
 
   ${({ theme }) => theme.breakpoint.xl} {
     max-width: 1024px;
-    height: 500vh;
   }
   margin: 0 auto;
 `
 
-const IndexTop = styled.div`
-  display: flex;
+const StyledGPTAd_HD = styled(GPTAd)`
+  width: 100%;
+  height: auto;
+  max-width: 336px;
+  max-height: 280px;
+  margin: 20px auto 0px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 970px;
+    max-height: 250px;
+  }
+`
+
+const StyledGPTAd_PC_B1 = styled(GPTAd)`
+  width: 100%;
+  height: auto;
+  margin: 20px auto 0px;
+  display: none;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    max-width: 728px;
+    max-height: 90px;
+    display: block;
+  }
+`
+
+const StyledGPTAd_MB_L1 = styled(GPTAd)`
+  width: 100%;
+  height: auto;
+  max-width: 336px;
+  max-height: 280px;
+  margin: 20px auto 0px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: none;
+  }
 `
 
 /**
  *
  * @param {Object} props
- * @param {import('../type').Topic[]} props.topicsData
- * @param {import('../type').FlashNews[]} props.flashNewsData
- * @param {import('../type/raw-data.typedef').RawData[] } [props.editorChoicesData=[]]
- * @param {import('../type/raw-data.typedef').RawData[] } [props.latestNewsData=[]]
- * @param {String} [props.latestNewsTimestamp]
+ * @param {TopicsData} props.topicsData
+ * @param {FlashNewsData} props.flashNewsData
+ * @param {EditorChoicesRawData} [props.editorChoicesData=[]]
+ * @param {ArticlesRawData} [props.latestNewsData=[]]
+ * @param {Object[] } props.sectionsData
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -52,33 +106,42 @@ export default function Home({
   flashNewsData = [],
   editorChoicesData = [],
   latestNewsData = [],
-  latestNewsTimestamp,
+  sectionsData = [],
 }) {
-  const flashNews = flashNewsData.map(({ slug, title }) => {
-    return {
-      title,
-      slug,
-      href: `/story/${slug}`,
-    }
+  const editorChoice = editorChoicesData.map((item) => {
+    const sectionSlug = getSectionSlugGql(item.sections, undefined)
+    const sectionName = getSectionNameGql(item.sections, undefined)
+    const articleHref =
+      item.style !== 'projects'
+        ? `${getArticleHref(
+            item.slug,
+            item.style,
+            undefined
+          )}?${GA_UTM_EDITOR_CHOICES}`
+        : getArticleHref(item.slug, item.style, undefined)
+    return { sectionName, sectionSlug, articleHref, ...item }
   })
-  const editorChoice = transformRawDataToArticleInfo(editorChoicesData)
-  const topics = useMemo(
-    () => topicsData.filter((topic) => topic.isFeatured).slice(0, 9) ?? [],
-    [topicsData]
-  )
+
+  const shouldShowAd = useDisplayAd()
+
   return (
-    <IndexContainer>
-      <FlashNews flashNews={flashNews} />
-      <IndexTop>
-        <NavTopics topics={topics} />
-        <SubscribeMagazine />
-      </IndexTop>
-      <EditorChoice editorChoice={editorChoice}></EditorChoice>
-      <LatestNews
-        latestNewsData={latestNewsData}
-        latestNewsTimestamp={latestNewsTimestamp}
-      />
-    </IndexContainer>
+    <Layout
+      header={{
+        type: 'default-with-flash-news',
+        data: { sectionsData, topicsData, flashNewsData },
+      }}
+      footer={{
+        type: 'default',
+      }}
+    >
+      <IndexContainer>
+        {shouldShowAd && <StyledGPTAd_HD pageKey="home" adKey="HD" />}
+        <EditorChoice editorChoice={editorChoice}></EditorChoice>
+        {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
+        {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
+        <LatestNews latestNewsData={latestNewsData} />
+      </IndexContainer>
+    </Layout>
   )
 }
 
@@ -88,12 +151,9 @@ export default function Home({
 
 /**
  * @typedef {Object} DataRes
- * @property {Object} [_endpoints]
- * @property {Object} [_endpoints.topics]
- * @property {Items} [_endpoints.topics._items]
- * @property {Items} [_items]
- * @property {Object} _links
- * @property {Object} _meta
+ * @property {FlashNewsData} [posts]
+ * @property {TopicsData} [topics]
+ * @property {SectionsData} [sections]
  */
 
 //TODO: rename typedef, make it more clear
@@ -113,8 +173,10 @@ export default function Home({
  * @type {import('next').GetServerSideProps}
  */
 export async function getServerSideProps({ res, req }) {
-  if (ENV === 'dev' || ENV === 'staging' || ENV === 'prod') {
-    res.setHeader('Cache-Control', 'public, max-age=180')
+  if (ENV === 'prod') {
+    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 180 }, req.url)
+  } else {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
   const headers = req?.headers
@@ -131,171 +193,112 @@ export async function getServerSideProps({ res, req }) {
   let flashNewsData = []
   let editorChoicesData = []
   let latestNewsData = []
-  let latestNewsTimestamp = null
-
-  //request fetched by axios, should be replaced to `apollo-client` in the future
+  let sectionsData = []
   try {
+    const postResponse = await axios({
+      method: 'get',
+      url: `${URL_STATIC_POST_EXTERNAL}01.json`,
+      timeout: 5000, //since size of json file is large, we assign timeout as 5000ms to prevent content lost in poor network condition
+    })
+    editorChoicesData = Array.isArray(postResponse?.data?.choices)
+      ? postResponse?.data?.choices
+      : []
+
+    latestNewsData = Array.isArray(postResponse?.data?.latest)
+      ? postResponse?.data?.latest
+      : []
+
     const responses = await Promise.allSettled([
       axios({
         method: 'get',
-        url: URL_STATIC_COMBO_TOPICS,
+        url: URL_STATIC_POST_FLASH_NEWS,
         timeout: API_TIMEOUT,
       }),
-      axios({
-        method: 'get',
-        url: URL_K3_FLASH_NEWS,
-        timeout: API_TIMEOUT,
-      }),
-      axios({
-        method: 'get',
-        url: `${URL_STATIC_POST_EXTERNAL}01.json`,
-        timeout: API_TIMEOUT,
-      }),
+      fetchHeaderDataInDefaultPageLayout(),
     ])
 
     responses.forEach((response) => {
       if (response.status === 'fulfilled') {
-        console.log(
-          JSON.stringify({
-            severity: 'INFO',
-            message: `Successfully fetch data on ${response.value.request.res.responseUrl}`,
-          })
-        )
+        //TODO: because `fetchHeaderDataInDefaultPageLayout` will not return `value` which contain `request?.res?.responseUrl`,
+        //so we temporarily comment the console to prevent error.
+        // console.log(
+        //   JSON.stringify({
+        //     severity: 'INFO',
+        //     message: `Successfully fetch data on ${response.value?.request?.res?.responseUrl}`,
+        //   })
+        // )
       } else {
         const rejectedReason = response.reason
         const annotatingAxiosError =
           errors.helpers.annotateAxiosError(rejectedReason)
+        const errorMessage = errors.helpers.printAll(
+          annotatingAxiosError,
+          {
+            withStack: true,
+            withPayload: false,
+          },
+          0,
+          0
+        )
         console.error(
           JSON.stringify({
             severity: 'ERROR',
-            message: errors.helpers.printAll(annotatingAxiosError, {
-              withStack: true,
-              withPayload: true,
-            }),
+            message: errorMessage,
+            ...globalLogFields,
           })
         )
       }
     })
 
     /** @type {PromiseFulfilledResult<AxiosResponse>} */
-    const topicsResponse = responses[0].status === 'fulfilled' && responses[0]
-    /** @type {PromiseFulfilledResult<AxiosResponse>} */
     const flashNewsResponse =
+      responses[0].status === 'fulfilled' && responses[0]
+
+    const headerDataResponse =
       responses[1].status === 'fulfilled' && responses[1]
 
-    /** @type {PromiseFulfilledResult<AxiosPostResponse>} */
-    const postResponse = responses[2].status === 'fulfilled' && responses[2]
-    topicsData = Array.isArray(
-      topicsResponse?.value?.data?._endpoints?.topics?._items
-    )
-      ? topicsResponse?.value?.data?._endpoints?.topics?._items
+    flashNewsData = Array.isArray(flashNewsResponse.value?.data?.posts)
+      ? flashNewsResponse.value?.data?.posts
       : []
-    flashNewsData = Array.isArray(flashNewsResponse.value?.data?._items)
-      ? flashNewsResponse.value?.data?._items
+
+    sectionsData = Array.isArray(headerDataResponse.value?.sectionsData)
+      ? headerDataResponse.value?.sectionsData
       : []
-    editorChoicesData = Array.isArray(postResponse.value?.data?.choices)
-      ? postResponse.value?.data?.choices
+    topicsData = Array.isArray(headerDataResponse.value?.topicsData)
+      ? headerDataResponse.value?.topicsData
       : []
-    latestNewsData = Array.isArray(postResponse.value?.data?.latest)
-      ? postResponse.value?.data?.latest
-      : []
-    latestNewsTimestamp = postResponse.value?.data?.timestamp
+
+    return {
+      props: {
+        topicsData,
+        flashNewsData,
+        editorChoicesData,
+        latestNewsData,
+        sectionsData,
+      },
+    }
   } catch (err) {
     const annotatingError = errors.helpers.wrap(
       err,
       'UnhandledError',
       'Error occurs while getting index page data'
     )
-
+    const errorMessage = errors.helpers.printAll(
+      annotatingError,
+      {
+        withStack: true,
+        withPayload: false,
+      },
+      0,
+      0
+    )
     console.log(
       JSON.stringify({
         severity: 'ERROR',
-        message: errors.helpers.printAll(
-          annotatingError,
-          {
-            withStack: true,
-            withPayload: true,
-          },
-          0,
-          0
-        ),
+        message: errorMessage,
         ...globalLogFields,
       })
     )
-  }
-
-  //request fetched by `apollo`, should replace request fetched by `axios` in the future
-  try {
-    const editorChoiceApollo = await client.query({
-      query: gql`
-        query GetEditorChoices {
-          editorChoices(
-            orderBy: { order: asc }
-            where: {
-              state: { equals: "published" }
-              choices: { state: { equals: "published" } }
-            }
-          ) {
-            id
-            order
-            choices {
-              id
-              slug
-              title
-              subtitle
-              state
-              publishedDate
-              sections {
-                id
-                name
-              }
-              categories {
-                id
-                name
-              }
-            }
-          }
-        }
-      `,
-    })
-    console.log(editorChoiceApollo)
-  } catch (err) {
-    const { graphQLErrors, clientErrors, networkError } = err
-    const annotatingError = errors.helpers.wrap(
-      err,
-      'UnhandledError',
-      'Error occurs while getting index page data'
-    )
-
-    console.log(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errors.helpers.printAll(
-          annotatingError,
-          {
-            withStack: true,
-            withPayload: true,
-          },
-          0,
-          0
-        ),
-        debugPayload: {
-          graphQLErrors,
-          clientErrors,
-          networkError,
-        },
-        ...globalLogFields,
-      })
-    )
-  }
-
-  return {
-    props: {
-      topicsData,
-      flashNewsData,
-      editorChoicesData,
-      latestNewsData,
-      latestNewsTimestamp,
-    },
+    throw new Error(errorMessage)
   }
 }

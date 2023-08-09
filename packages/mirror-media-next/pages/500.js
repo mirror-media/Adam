@@ -1,15 +1,11 @@
 import styled from 'styled-components'
 
 const Page = styled.div`
-  height: calc(100vh - 119.5px);
+  height: 100vh;
   background-color: #f2f2f2;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    height: calc(100vh - 146px);
-  }
 `
 
 const MsgContainer = styled.div`

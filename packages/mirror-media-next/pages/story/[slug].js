@@ -1,269 +1,363 @@
+//TODO: add component to add html head dynamically, not jus write head in every pag
+import { useState, useEffect } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
-import styled, { css } from 'styled-components'
-import MockAdvertisement from '../../components/mock-advertisement'
+import styled from 'styled-components'
+import dynamic from 'next/dynamic'
+import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import WineWarning from '../../components/shared/wine-warning'
+import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
+import { useMembership } from '../../context/membership'
+import {
+  fetchPostBySlug,
+  fetchPostFullContentBySlug,
+} from '../../apollo/query/posts'
+import StoryNormalStyle from '../../components/story/normal'
+import Layout from '../../components/shared/layout'
+import {
+  convertDraftToText,
+  getResizedUrl,
+  getCategoryOfWineSlug,
+} from '../../utils'
+import { handleStoryPageRedirect } from '../../utils/story'
+import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
+import { sendGAEvent } from '../../utils/gtag'
+import { setPageCache } from '../../utils/cache-setting'
+
+import FullScreenAds from '../../components/ads/full-screen-ads'
+const { hasContentInRawContentBlock } = MirrorMedia
+
+const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
+const StoryPhotographyStyle = dynamic(() =>
+  import('../../components/story/photography')
+)
+const StoryPremiumStyle = dynamic(() =>
+  import('../../components/story/premium')
+)
 import Image from 'next/image'
-import ArticleInfo from '../../components/story/normal/article-info'
-import ArticleBrief from '../../components/story/normal/brief'
-import { transformTimeDataIntoTaipeiTime } from '../../utils'
-import GetPostBySlug from '../../apollo/query/get-post-by-slug.gql'
+import Skeleton from '../../public/images/skeleton.png'
 
 /**
- * @typedef {import('../../type/theme').Theme} Theme
+ * @typedef {import('../../components/story/normal').PostData} PostData
+ */
+/**
+ * @typedef {import('../../components/story/normal').PostContent} PostContent
  */
 
-const sectionColor = css`
-  ${
-    /**
-     * @param {Object} props
-     * @param {String} [props.sectionSlug]
-     * @param {Theme} [props.theme]
-     */
-    ({ sectionSlug, theme }) =>
-      sectionSlug && theme.color.sectionsColor[sectionSlug]
-        ? theme.color.sectionsColor[sectionSlug]
-        : 'black'
-  };
-`
+/**
+ * @typedef {'style-normal' | 'style-photography' | 'style-wide' | 'style-premium'} StoryLayoutType
+ */
 
-const StoryContainer = styled.div`
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
-  width: 100%;
-  height: auto;
-  max-width: 1200px;
-`
+  position: fixed;
 
-const StoryMockAdvertisement = styled(MockAdvertisement)`
-  margin: 24px auto;
-  text-align: center;
-  display: none;
-`
-const Title = styled.h1`
-  margin: 0 auto;
-  width: 100%;
-  text-align: center;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 34px;
-  ${({ theme }) => theme.breakpoint.md} {
-    font-weight: 500;
-    font-size: 32px;
-    line-height: 1.25;
-    text-align: left;
-  }
-`
-const Main = styled.main`
-  display: flex;
-  justify-content: center;
-  padding: 0 20px;
-  ${({ theme }) => theme.breakpoint.md} {
-    padding: 0 64px;
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-    padding: 0 40px 0 77px;
-    justify-content: space-between;
-  }
-`
-const Article = styled.article`
-  width: 640px;
-`
-
-const Section = styled.div`
-  color: ${
-    /**
-     * @param {{ sectionSlug: String}} props
-     */
-    ({ sectionSlug }) => sectionSlug && sectionColor
-  };
-  margin-left: 4px;
-  padding-left: 8px;
-  position: relative;
-  font-size: 16px;
-  line-height: 1.5;
-  text-align: center;
-  ${({ theme }) => theme.breakpoint.md} {
-    font-size: 18px;
-    line-height: 25px;
-    text-align: left;
-  }
-  &::before {
-    display: none;
-
-    ${({ theme }) => theme.breakpoint.md} {
-      display: block;
-      position: absolute;
-      content: '';
-      background-color: ${({ sectionSlug }) => sectionSlug && sectionColor};
-      left: -4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 4px;
-      height: 20px;
-    }
+  img {
+    margin: 0 auto;
   }
 `
 
-const Date = styled.div`
-  width: fit-content;
-  height: auto;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #a1a1a1;
-  display: none;
-  ${({ theme }) => theme.breakpoint.md} {
-    display: block;
+/**
+ *
+ * @param {import('../../components/story/normal').PostData['style']} articleStyle
+ * @param {import('../../components/story/normal').PostData['isMember']} isMemberOnlyArticle
+ * @returns {StoryLayoutType }
+ */
+const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
+  if (articleStyle === 'wide') {
+    return 'style-wide'
+  } else if (articleStyle === 'photography') {
+    return 'style-photography'
+  } else if (articleStyle === 'article' && isMemberOnlyArticle === true) {
+    return 'style-premium'
   }
-`
+  return 'style-normal'
+}
 
-const SectionAndDate = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 4px;
-  ${({ theme }) => theme.breakpoint.md} {
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-`
-
-const HeroImage = styled.div`
-  position: relative;
-  width: 100%;
-  height: auto;
-  margin: 20px 0 0;
-
-  .caption {
-    width: 100%;
-    height: auto;
-    margin-top: 9px;
-    font-size: 18px;
-    line-height: 25px;
-    font-weight: 600;
-    color: #9d9d9d;
-  }
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 0;
-  }
-`
-const InfoAndHero = styled.div`
-  display: flex;
-  flex-direction: column;
-  ${({ theme }) => theme.breakpoint.md} {
-    ${HeroImage} {
-      order: 10;
-    }
-  }
-`
-
-const Aside = styled.aside`
-  display: none;
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: block;
-    width: 365px;
-    border: 1px solid black;
-  }
-`
 /**
  *
  * @param {Object} props
- * @param {import('../../type/post.typedef').Post} props.postData
- * @returns
+ * @param {PostData} props.postData
+ * @param {any} props.headerData
+ * @param {StoryLayoutType} props.storyLayoutType
+ * @returns {JSX.Element}
  */
-export default function Story({ postData }) {
+export default function Story({ postData, headerData, storyLayoutType }) {
   const {
     title = '',
-    sections = [],
-    publishedDate = '',
-    updatedAt = '',
-    writers = [],
-    photographers = [],
-    camera_man = [],
-    designers = [],
-    engineers = [],
-    vocals = [],
-    extend_byline = '',
-    tags = [],
-    brief = [],
+    slug = '',
+    isAdult = false,
+    categories = [],
+    isMember = false,
+    content = null,
+    trimmedContent = null,
+    hiddenAdvertised = false,
   } = postData
+  /**
+   * The logic for rendering the article content:
+   * We use the state `postContent` to manage the content should render in the story page.
+   * In most cases, the story page can retrieve the full content of the article.
+   * However, if the article is exclusive to members, it is required to get full content by using user's access token, but it is impossible to acquire it at server side.
+   * Before the full content is obtained, the truncated content `trimmedContent` will be used as the displayed data.
+   * If it didn't obtain the full content, and the user is logged in, story page will try to get the full content again by using the user's access token as the request payload.
+   * If successful, the full content will be displayed; if not, the truncated content will still be shown.
+   */
 
-  const [section] = sections
-  const credits = [
-    { writers: writers },
-    { photographers: photographers },
-    { camera_man: camera_man },
-    { designers: designers },
-    { engineers: engineers },
-    { vocals: vocals },
-    { extend_byline: extend_byline },
-  ]
-  const publishedTaipeiTime = transformTimeDataIntoTaipeiTime(publishedDate)
-  const updatedTaipeiTime = transformTimeDataIntoTaipeiTime(updatedAt)
+  const { isLoggedIn, accessToken } = useMembership()
+  /** @type { [PostContent, import('react').Dispatch<PostContent> ]} */
+
+  const [postContent, setPostContent] = useState(
+    content
+      ? { type: 'fullContent', data: content }
+      : { type: 'trimmedContent', data: trimmedContent }
+  )
+
+  useEffect(() => {
+    if (!content && isLoggedIn) {
+      const getFullContent = async () => {
+        try {
+          const result = await client.query({
+            query: fetchPostFullContentBySlug,
+            variables: { slug },
+            context: {
+              headers: {
+                authorization: accessToken ? `Bearer ${accessToken}` : '',
+              },
+            },
+          })
+          const fullContent = result?.data?.post?.content ?? null
+          return fullContent
+        } catch (err) {
+          //TODO: send error log to our GCP log viewer
+          console.error(err)
+          return null
+        }
+      }
+      const updatePostContent = async () => {
+        const fullContent = await getFullContent()
+        if (fullContent) {
+          setPostContent({ type: 'fullContent', data: fullContent })
+        }
+      }
+      updatePostContent()
+    }
+  }, [isLoggedIn, content, accessToken, slug])
+
+  //Send custom event to Google Analytics
+  //Which event should be send is based on whether is member-only article.
+  useEffect(() => {
+    if (isMember) {
+      sendGAEvent('premium_page_view')
+    } else {
+      sendGAEvent('story_page_view')
+    }
+  }, [isMember])
+
+  const renderStoryLayout = () => {
+    switch (storyLayoutType) {
+      case 'style-normal':
+        return (
+          <StoryNormalStyle
+            postData={postData}
+            postContent={postContent}
+            headerData={headerData}
+          />
+        )
+      case 'style-premium':
+        return (
+          <StoryPremiumStyle
+            postData={postData}
+            postContent={postContent}
+            headerData={headerData}
+          />
+        )
+      case 'style-wide':
+        return <StoryWideStyle postData={postData} postContent={postContent} />
+      case 'style-photography':
+        return (
+          <StoryPhotographyStyle
+            postData={postData}
+            postContent={postContent}
+          />
+        )
+      default:
+        return (
+          <StoryNormalStyle
+            postData={postData}
+            postContent={postContent}
+            headerData={headerData}
+          />
+        )
+    }
+  }
+  const storyLayoutJsx = renderStoryLayout()
+  //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
+  const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
 
   return (
-    <StoryContainer>
-      <StoryMockAdvertisement
-        width="970px"
-        height="250px"
-        text="PC_HD 970*250"
-      ></StoryMockAdvertisement>
-      <Main>
-        <Article>
-          <SectionAndDate>
-            <Section sectionSlug={section?.slug}>{section?.name || ''}</Section>
-            <Date>{publishedTaipeiTime}</Date>
-          </SectionAndDate>
-          <Title>{title}</Title>
-          <InfoAndHero>
-            <HeroImage>
-              <Image
-                src={
-                  'https://storage.googleapis.com/static-mirrormedia-dev/images/20160929123258-7818228bd4c9933a170433e57a90616c-tablet.png'
-                }
-                width={640}
-                height={427}
-                alt="首圖"
-              ></Image>
-              <p className="caption">這是首圖圖說</p>
-            </HeroImage>
-
-            <ArticleInfo
-              updatedDate={updatedTaipeiTime}
-              publishedDate={publishedTaipeiTime}
-              credits={credits}
-              tags={tags}
-            ></ArticleInfo>
-          </InfoAndHero>
-          <ArticleBrief
-            sectionSlug={section?.slug}
-            brief={brief}
-          ></ArticleBrief>
-        </Article>
-        <Aside>這是側欄</Aside>
-      </Main>
-    </StoryContainer>
+    <Layout
+      head={{
+        title: `${title}`,
+        description:
+          convertDraftToText(postData.brief) ||
+          convertDraftToText(postData.content),
+        imageUrl:
+          getResizedUrl(postData.og_image?.resized) ||
+          getResizedUrl(postData.heroImage?.resized),
+      }}
+      header={{ type: 'empty' }}
+      footer={{ type: 'empty' }}
+    >
+      <>
+        {!storyLayoutJsx && (
+          <Loading>
+            <Image src={Skeleton} alt="loading..."></Image>
+          </Loading>
+        )}
+        {storyLayoutJsx}
+        <WineWarning categories={categories} />
+        <AdultOnlyWarning isAdult={isAdult} />
+        {noCategoryOfWineSlug && (
+          <FullScreenAds hiddenAdvertised={hiddenAdvertised} />
+        )}
+      </>
+    </Layout>
   )
 }
 
 /**
  * @type {import('next').GetServerSideProps}
  */
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps({ params, req, res }) {
+  if (ENV === 'prod') {
+    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 300 }, req.url)
+  } else {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+  }
+
   const { slug } = params
+  const traceHeader = req.headers?.['x-cloud-trace-context']
+  let globalLogFields = {}
+  if (traceHeader && !Array.isArray(traceHeader)) {
+    const [trace] = traceHeader.split('/')
+    globalLogFields[
+      'logging.googleapis.com/trace'
+    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+  }
   try {
     const result = await client.query({
-      query: GetPostBySlug,
-      variables: { Slug: slug },
+      query: fetchPostBySlug,
+      variables: { slug },
     })
-
+    /**
+     * @type {PostData}
+     */
     const postData = result?.data?.post
+
     if (!postData) {
       return { notFound: true }
+    }
+    const { style } = postData
+    /**
+     * If post style is 'projects' or 'campaign', redirect to certain route.
+     *
+     * There is no `/projects` or `/campaign` pages in mirror-media-next, when user enter path `/projects/_slug` or `/campaign`,
+     * Load balancer hosted by Google Cloud Platform will help us to get page content of project or campaign page.
+     * The content of certain page is placed at Google Cloud Storage.
+     */
+    if (style === 'projects' || style === 'campaign') {
+      return {
+        redirect: {
+          destination: `/${style}/${slug} `,
+          permanent: false,
+        },
+      }
+    }
+
+    // Check if the post data has content in the brief, trimmedContent, or content fields
+    const shouldCheckHasContent =
+      style === 'article' || style === 'wide' || style === 'photography'
+
+    if (shouldCheckHasContent) {
+      const hasBrief = hasContentInRawContentBlock(postData.brief)
+
+      const hasTrimmedContent = hasContentInRawContentBlock(
+        postData.trimmedContent
+      )
+      const hasFullContent = hasContentInRawContentBlock(postData.content)
+
+      // If none of the fields have content, return notFound as true
+      if (!hasBrief && !hasTrimmedContent && !hasFullContent) {
+        return { notFound: true }
+      }
+    }
+
+    const redirect = postData?.redirect
+    if (redirect) {
+      return handleStoryPageRedirect(redirect)
+    }
+    const storyLayoutType = getStoryLayoutType(
+      postData?.style,
+      postData?.isMember
+    )
+    let headerData = null
+    const shouldFetchDefaultHeaderData = storyLayoutType === 'style-normal'
+    const shouldFetchPremiumHeaderData = storyLayoutType === 'style-premium'
+    if (shouldFetchDefaultHeaderData) {
+      try {
+        headerData = await fetchHeaderDataInDefaultPageLayout()
+      } catch (err) {
+        headerData = { sectionsData: [], topicsData: [] }
+        const errorMessage = errors.helpers.printAll(
+          err,
+          {
+            withStack: true,
+            withPayload: false,
+          },
+          0,
+          0
+        )
+        console.log(
+          JSON.stringify({
+            severity: 'ERROR',
+            message: errorMessage,
+            ...globalLogFields,
+          })
+        )
+      }
+    } else if (shouldFetchPremiumHeaderData) {
+      try {
+        headerData = await fetchHeaderDataInPremiumPageLayout()
+      } catch (err) {
+        headerData = { sectionsData: [] }
+        const errorMessage = errors.helpers.printAll(
+          err,
+          {
+            withStack: true,
+            withPayload: false,
+          },
+          0,
+          0
+        )
+        console.log(
+          JSON.stringify({
+            severity: 'ERROR',
+            message: errorMessage,
+            ...globalLogFields,
+          })
+        )
+      }
     }
 
     return {
       props: {
         postData,
+        headerData,
+        storyLayoutType,
       },
     }
   } catch (err) {
@@ -271,28 +365,30 @@ export async function getServerSideProps({ params }) {
     const annotatingError = errors.helpers.wrap(
       err,
       'UnhandledError',
-      'Error occurs while getting index page data'
+      'Error occurs while getting story page data'
     )
 
+    const errorMessage = errors.helpers.printAll(
+      annotatingError,
+      {
+        withStack: true,
+        withPayload: true,
+      },
+      0,
+      0
+    )
     console.log(
       JSON.stringify({
         severity: 'ERROR',
-        message: errors.helpers.printAll(
-          annotatingError,
-          {
-            withStack: true,
-            withPayload: true,
-          },
-          0,
-          0
-        ),
+        message: errorMessage,
         debugPayload: {
           graphQLErrors,
           clientErrors,
           networkError,
         },
+        ...globalLogFields,
       })
     )
-    return { notFound: true }
+    throw new Error(errorMessage)
   }
 }

@@ -2,6 +2,8 @@ const delimiter = ','
 
 const URL_MIRROR_MEDIA =
   process.env.URL_MIRROR_MEDIA || 'https://www.mirrormedia.mg'
+const URL_MIRROR_MEDIA_V3 =
+  process.env.URL_MIRROR_MEDIA_V3 || 'https://dev-next.mirrormedia.mg'
 const URL_STATIC_COMBO_SECTIONS =
   'https://storage.googleapis.com/statics.mirrormedia.mg/json/sections.json'
 const URL_PROGRAMABLE_SEARCH =
@@ -53,6 +55,7 @@ export {
   API_PROTOCOL,
   API_TIMEOUT,
   URL_MIRROR_MEDIA,
+  URL_MIRROR_MEDIA_V3,
   URL_STATIC_COMBO_SECTIONS,
   URL_PROGRAMABLE_SEARCH,
   URL_HOST,

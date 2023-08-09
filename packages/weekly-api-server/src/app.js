@@ -4,7 +4,9 @@ import cors from 'cors'
 import errors from '@twreporter/errors'
 import express from 'express'
 import middlewareCreator from './middlewares'
+import { createGcsProxy } from './gcs-proxy-mini-app'
 import { createGraphQLProxy } from './gql-proxy-mini-app'
+import { createYoutubeProxy } from './youtube-proxy-mini-app'
 
 const statusCodes = consts.statusCodes
 
@@ -12,7 +14,7 @@ const statusCodes = consts.statusCodes
  *  This function creates an express application.
  *  This application aims to handle requests' authentication and authorization by
  *
- *  1. providing `/access_token` route, which will response access token
+ *  1. providing `/access-token` route, which will response access token
  *  if the request contains valid firebase ID token, and that firebase token
  *  refers to a valid member in our Israfel member system.
  *
@@ -25,7 +27,9 @@ const statusCodes = consts.statusCodes
  *  @param {string} opts.jwtSecret
  *  @param {string} opts.weeklyProxyOrigin
  *  @param {string} opts.israfelProxyOrigin
- *  @param {string[]} [opts.corsAllowOrigin=[]]
+ *  @param {string} opts.gcsProxyOrigin
+ *  @param {string} opts.youtubeProxyOrigin
+ *  @param {string[]|'*'} [opts.corsAllowOrigin=[]]
  *  @return {express.Application}
  */
 export function createApp({
@@ -34,7 +38,9 @@ export function createApp({
   jwtSecret,
   weeklyProxyOrigin,
   israfelProxyOrigin,
+  gcsProxyOrigin,
   corsAllowOrigin = [],
+  youtubeProxyOrigin,
 }) {
   // create express app
   const app = express()
@@ -43,19 +49,38 @@ export function createApp({
     origin: corsAllowOrigin,
   }
 
-  // enable cors pre-flight request
+  // common middlewares for every request
+  // 1. log requests
+  // 2. handle cors requests
+  app.use(
+    middlewareCreator.createLoggerMw(gcpProjectId),
+    cors(corsOpts),
+  )
+
+  // enable pre-flight request
   app.options(
     '/access-token',
-    middlewareCreator.createLoggerMw(gcpProjectId),
-    cors(corsOpts)
   )
 
   // api route for granting access token
   app.post(
     '/access-token',
-    middlewareCreator.createLoggerMw(gcpProjectId), // log request
-    cors(corsOpts), // handle cors request
     middlewareCreator.verifyIdTokenByFirebaseAdmin({ firebaseProjectId }), // check authentication
+    middlewareCreator.signAccessTokenForInternalColleague({jwtSecret: jwtSecret}),
+    /** @type {express.RequestHandler} */
+    (req, res, next) => {
+      const payload = res.locals.accessTokenPayload
+      // return response if jwt token is generated successfully
+      if (payload) {
+        res.status(statusCodes.ok).send({
+          status: 'success',
+          data: payload,
+        })
+        return
+      }
+      // otherwise, call next middlewares
+      return next()
+    },
     middlewareCreator.queryMemberInfo({ apiUrl: israfelProxyOrigin + '/api/graphql' }), // query member access permission
     middlewareCreator.signAccessToken({ jwtSecret: jwtSecret }), // sign access token according to member permission
     /** @type {express.RequestHandler} */
@@ -115,9 +140,7 @@ export function createApp({
   // mini app: weekly GraphQL API
   app.use(
     createGraphQLProxy({
-      gcpProjectId,
       jwtSecret,
-      corsAllowOrigin,
       proxyOrigin: weeklyProxyOrigin,
       proxyPath: '/content/graphql',
     })
@@ -126,11 +149,23 @@ export function createApp({
   // mini app: isafel GraphQL API
   app.use(
     createGraphQLProxy({
-      gcpProjectId,
       jwtSecret,
-      corsAllowOrigin,
       proxyOrigin: israfelProxyOrigin,
       proxyPath: '/member/graphql',
+    })
+  )
+
+  // mini app: GCS proxy
+  app.use(
+    createGcsProxy({
+      proxyOrigin: gcsProxyOrigin,
+    })
+  )
+
+  // mini app: youtube proxy
+  app.use(
+    createYoutubeProxy({
+      proxyOrigin: youtubeProxyOrigin,
     })
   )
 

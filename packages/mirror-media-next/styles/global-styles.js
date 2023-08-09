@@ -1,12 +1,21 @@
 import { createGlobalStyle } from 'styled-components'
-import { Noto_Sans_TC, Oswald } from '@next/font/google'
+import { Noto_Sans_TC, Oswald, Noto_Serif_TC, Inter } from '@next/font/google'
 
 const oswald = Oswald({
   subsets: ['latin'],
 })
 const notosansTC = Noto_Sans_TC({
   subsets: ['latin'],
-  weight: ['500'],
+  weight: ['900', '500', '400'],
+})
+const notoserifTC = Noto_Serif_TC({
+  subsets: ['latin'],
+  weight: ['500', '700'],
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500'],
 })
 
 export const GlobalStyles = createGlobalStyle`
@@ -24,12 +33,14 @@ export const GlobalStyles = createGlobalStyle`
 :root{
       --oswald-font : ${oswald.style.fontFamily};
       --notosansTC-font : ${notosansTC.style.fontFamily};
+      --notoserifTC-font : ${notoserifTC.style.fontFamily};
+      --inter-font : ${inter.style.fontFamily};
    }
 
  //default font family  
  html {
-  font-family: PingFang TC, ${notosansTC.style.fontFamily}, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
-  line-height: 1.15; /* 1 */
+  font-family: PingFang TC, ${notosansTC.style.fontFamily},${notoserifTC.style.fontFamily},${inter.style.fontFamily}, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
+  line-height: 1.5; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }
 
@@ -434,10 +445,6 @@ ul {
  *    to override it to ensure consistency even when using the default theme.
  */
 
-html {
-  font-family: PingFang TC, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; /* 1 */
-  line-height: 1.5; /* 2 */
-}
 
 /**
  * 1. Prevent padding and border from affecting element width.

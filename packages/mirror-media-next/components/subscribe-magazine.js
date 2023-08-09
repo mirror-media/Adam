@@ -1,9 +1,9 @@
 import styled from 'styled-components'
-import { minWidth } from '../styles/media'
 
+import Link from 'next/link'
 const SubscribeMagazineButton = styled.button`
   display: none;
-  @media ${minWidth.xl} {
+  ${({ theme }) => theme.breakpoint.xl} {
     display: block;
     width: 141px;
     background-color: rgba(0, 0, 0, 1);
@@ -13,5 +13,9 @@ const SubscribeMagazineButton = styled.button`
 `
 
 export default function SubscribeMagazine() {
-  return <SubscribeMagazineButton>鏡週刊雜誌訂閱</SubscribeMagazineButton>
+  return (
+    <SubscribeMagazineButton>
+      <Link href="/papermag">鏡週刊雜誌訂閱</Link>
+    </SubscribeMagazineButton>
+  )
 }
