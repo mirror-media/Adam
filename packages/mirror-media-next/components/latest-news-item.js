@@ -113,9 +113,12 @@ const Title = styled.div`
 
 
 
+/**
+ * @typedef {import('../apollo/fragments/partner').Partner} Partner 
+ */
 
 /**
- * @typedef {Pick<import('../apollo/fragments/post').Post, 'slug' | 'title' | 'style'| 'publishedDate' | 'heroImage' |'sections' | 'categories'  |'redirect'> & { partner: import('../apollo/fragments/partner').Partner | string}} ArticleRawData
+ * @typedef {Pick<import('../apollo/fragments/post').Post, 'slug' | 'title' | 'style'| 'publishedDate' | 'heroImage' |'sections' | 'categories'  |'redirect'> & { partner: '' | Partner}} ArticleRawData
  */
 
 /**
@@ -128,6 +131,20 @@ const Title = styled.div`
  * @returns {React.ReactElement}
  */
 export default function LatestNewsItem({ itemData }) {
+  /**
+   * If latest news is an external article, `itemData.heroImage` would be a url,
+   * such as 'https://www-somewebsite.com/some-image.jpeg'.
+   * @returns {{} | Article['heroImage']['resized']}
+   */
+  const getRenderImages = () => {
+    if (itemData.heroImage?.resized) {
+      return itemData.heroImage?.resized
+    } else if (typeof itemData.heroImage === 'string') {
+      return { original: itemData.heroImage }
+    }
+    return {}
+  }
+  const renderImages = getRenderImages()
   return (
     <Link
       href={itemData.articleHref}
@@ -140,7 +157,7 @@ export default function LatestNewsItem({ itemData }) {
           <CustomImage
             defaultImage="/images/default-og-img.png"
             loadingImage="images/loading.gif"
-            images={itemData.heroImage?.resized ?? {}}
+            images={renderImages}
             objectFit="cover"
             rwd={{
               mobile: '488px',

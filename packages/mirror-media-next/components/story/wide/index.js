@@ -29,6 +29,7 @@ import Aside from '../shared/aside'
  * @typedef {Object} PostContent
  * @property {'fullContent' | 'trimmedContent'} type
  * @property {Pick<PostData,'content'>['content']} data
+ * @property {boolean} isLoaded
  */
 
 /**

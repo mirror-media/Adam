@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 16px;
-  margin-bottom: 48px;
+  margin: 24px 0 48px;
 
   ${({ theme }) => theme.breakpoint.md} {
     margin-bottom: 60px;
@@ -53,10 +53,18 @@ const InputWrapper = styled.div`
     max-width: 200px;
   }
   label {
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 18px;
+    font-weight: 500;
     padding-right: 8px;
   }
 
   input {
+    ::placeholder {
+      color: rgba(0, 0, 0, 0.1);
+      font-size: 18px;
+      font-weight: 500;
+    }
     width: 100%;
     :focus {
       outline: none;
@@ -85,7 +93,7 @@ const ConfirmButton = styled.button`
 
   :hover {
     background: #9cb7c6;
-    color: #000;
+    color: rgba(0, 0, 0, 0.87);
   }
 
   transition: all 0.25s ease;

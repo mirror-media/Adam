@@ -30,10 +30,11 @@ let GPT_MODE = ''
 let FIREBASE_CONFIG = {}
 switch (ENV) {
   case 'prod':
-    SITE_URL = 'www.mirrormedia.mg'
+    SITE_URL = 'prod.mirrormedia.mg/'
     API_TIMEOUT = 1500
 
-    WEEKLY_API_SERVER_ORIGIN = '' //currently unset
+    WEEKLY_API_SERVER_ORIGIN =
+      'https://adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     URL_STATIC_PREMIUM_SECTIONS = `https://${WEEKLY_API_SERVER_ORIGIN}/gcs/files/json/header_member.json`
     URL_STATIC_NORMAL_SECTIONS = `https://${WEEKLY_API_SERVER_ORIGIN}/gcs/files/json/header_sections.json`

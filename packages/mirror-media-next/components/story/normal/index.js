@@ -84,6 +84,7 @@ const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
  * @typedef {Object} PostContent
  * @property {'fullContent' | 'trimmedContent'} type
  * @property {Pick<PostData,'content'>['content']} data
+ * @property {boolean} isLoaded
  */
 
 const sectionColor = css`

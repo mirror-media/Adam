@@ -61,8 +61,17 @@ const DiscountMsg = styled.div`
   }
 `
 
-export default function PurchaseInfo({ count, plan, renewCouponApplied }) {
-  const freight = plan === 1 ? 1040 * count : 2080 * count
+export default function PurchaseInfo({
+  count,
+  plan,
+  renewCouponApplied,
+  shouldCountFreight,
+}) {
+  const freight = shouldCountFreight
+    ? plan === 1
+      ? 1040 * count
+      : 2080 * count
+    : 0
   const price = plan === 1 ? 2880 * count : 5280 * count
   const renewDiscount = renewCouponApplied ? 80 * count : 0
   const total = price + freight - renewDiscount

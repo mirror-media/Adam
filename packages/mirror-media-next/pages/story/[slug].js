@@ -1,5 +1,5 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
@@ -106,46 +106,76 @@ export default function Story({ postData, headerData, storyLayoutType }) {
    * If it didn't obtain the full content, and the user is logged in, story page will try to get the full content again by using the user's access token as the request payload.
    * If successful, the full content will be displayed; if not, the truncated content will still be shown.
    */
-
-  const { isLoggedIn, accessToken } = useMembership()
-  /** @type { [PostContent, import('react').Dispatch<PostContent> ]} */
+  console.log('re-render')
+  const { isLoggedIn, accessToken, isLogInProcessFinished } = useMembership()
+  /** @type { [PostContent, React.Dispatch<React.SetStateAction<PostContent>> ]} */
 
   const [postContent, setPostContent] = useState(
     content
-      ? { type: 'fullContent', data: content }
-      : { type: 'trimmedContent', data: trimmedContent }
+      ? { type: 'fullContent', data: content, isLoaded: true }
+      : { type: 'trimmedContent', data: trimmedContent, isLoaded: false }
   )
-
   useEffect(() => {
-    if (!content && isLoggedIn) {
-      const getFullContent = async () => {
-        try {
-          const result = await client.query({
-            query: fetchPostFullContentBySlug,
-            variables: { slug },
-            context: {
-              headers: {
-                authorization: accessToken ? `Bearer ${accessToken}` : '',
-              },
+    const fetchPostFullContent = async () => {
+      try {
+        const result = await client.query({
+          query: fetchPostFullContentBySlug,
+          variables: { slug },
+          context: {
+            headers: {
+              authorization: accessToken ? `Bearer ${accessToken}` : '',
             },
-          })
-          const fullContent = result?.data?.post?.content ?? null
-          return fullContent
-        } catch (err) {
-          //TODO: send error log to our GCP log viewer
-          console.error(err)
-          return null
-        }
+          },
+        })
+        const fullContent = result?.data?.post?.content ?? null
+        return fullContent
+      } catch (err) {
+        //TODO: send error log to our GCP log viewer
+        console.error(err)
+        return null
       }
-      const updatePostContent = async () => {
-        const fullContent = await getFullContent()
-        if (fullContent) {
-          setPostContent({ type: 'fullContent', data: fullContent })
-        }
-      }
-      updatePostContent()
     }
-  }, [isLoggedIn, content, accessToken, slug])
+    const updatePostContent = async () => {
+      const fullContent = await fetchPostFullContent()
+      setPostContent((preState) => {
+        return {
+          type: fullContent ? 'fullContent' : preState.type,
+          data: fullContent ?? preState.data,
+          isLoaded: true,
+        }
+      })
+    }
+
+    if (!isLogInProcessFinished) {
+      return
+    }
+    if (isLoggedIn && !postContent.isLoaded) {
+      updatePostContent()
+    } else if (
+      storyLayoutType === 'style-wide' ||
+      storyLayoutType === 'style-premium'
+    ) {
+      /**
+       * Why we need to setPostContent, even if state is all based on previous state ?
+       * Because in premium and wide layout, we use component `NavSubtitleNavigator` to select `<h2>` and `<h3>` in story content.
+       * However, if we not setPostContent to trigger re-render, `NavSubtitleNavigator` would select h2 and h3 which is not append to html yet.
+       *
+       * This is a work-around solution and might have better solution.
+       */
+      setPostContent((preState) => {
+        return {
+          ...preState,
+        }
+      })
+    }
+  }, [
+    isLogInProcessFinished,
+    isLoggedIn,
+    accessToken,
+    slug,
+    postContent.isLoaded,
+    storyLayoutType,
+  ])
 
   //Send custom event to Google Analytics
   //Which event should be send is based on whether is member-only article.

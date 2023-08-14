@@ -34,6 +34,7 @@ const { getContentBlocksH2H3 } = MirrorMedia
  * @typedef {Object} PostContent
  * @property {'fullContent' | 'trimmedContent'} type
  * @property {Pick<PostData,'content'>['content']} data
+ * @property {boolean} isLoaded
  */
 
 /**
