@@ -34,7 +34,7 @@ switch (ENV) {
     API_TIMEOUT = 1500
 
     WEEKLY_API_SERVER_ORIGIN =
-      'https://adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
+      'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     URL_STATIC_PREMIUM_SECTIONS = `https://${WEEKLY_API_SERVER_ORIGIN}/gcs/files/json/header_member.json`
     URL_STATIC_NORMAL_SECTIONS = `https://${WEEKLY_API_SERVER_ORIGIN}/gcs/files/json/header_sections.json`
