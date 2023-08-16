@@ -19,6 +19,7 @@ import EditorChoice from '../components/editor-choice'
 import LatestNews from '../components/latest-news'
 import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
+import FullScreenAds from '../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -140,6 +141,7 @@ export default function Home({
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
         <LatestNews latestNewsData={latestNewsData} />
+        <FullScreenAds />
       </IndexContainer>
     </Layout>
   )

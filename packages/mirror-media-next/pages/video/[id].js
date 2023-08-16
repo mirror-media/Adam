@@ -20,6 +20,7 @@ import {
   fetchYoutubeLatestVideosByChannelId,
   fetchYoutubeVideoByVideoId,
 } from '../../utils/api/video'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -160,6 +161,7 @@ export default function Video({ video, latestVideos, headerData }) {
           <>
             <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
             <StickyGPTAd pageKey="videohub" adKey="MB_ST" />
+            <FullScreenAds />
           </>
         )}
       </Wrapper>

@@ -16,6 +16,7 @@ import {
 } from '../../utils/api/video-category.js'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -125,6 +126,7 @@ export default function VideoCategory({
           />
         )}
         {shouldShowAd && <StickyGPTAd_MB_ST pageKey="videohub" adKey="MB_ST" />}
+        {shouldShowAd && <FullScreenAds />}
       </Wrapper>
     </Layout>
   )

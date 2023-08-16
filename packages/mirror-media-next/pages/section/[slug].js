@@ -14,6 +14,7 @@ import {
 } from '../../utils/api/section'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '../../utils/ad'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -142,6 +143,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
             adKey="MB_ST"
           />
         )}
+        {shouldShowAd && <FullScreenAds />}
       </SectionContainer>
     </Layout>
   )

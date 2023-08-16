@@ -20,6 +20,8 @@ import { getPageKeyByPartnerSlug } from '../../utils/ad'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 
+import FullScreenAds from '../../components/ads/full-screen-ads'
+
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -147,6 +149,7 @@ export default function ExternalPartner({
             adKey="MB_ST"
           />
         )}
+        {shouldShowAd && <FullScreenAds />}
       </PartnerContainer>
     </Layout>
   )

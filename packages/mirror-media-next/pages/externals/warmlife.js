@@ -16,6 +16,8 @@ import axios from 'axios'
 import { Z_INDEX, SECTION_IDS } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 
+import FullScreenAds from '../../components/ads/full-screen-ads'
+
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -122,6 +124,7 @@ export default function WarmLife({ warmLifeData, headerData }) {
         {shouldShowAd && (
           <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="MB_ST" />
         )}
+        {shouldShowAd && <FullScreenAds />}
       </WarmLifeContainer>
     </Layout>
   )

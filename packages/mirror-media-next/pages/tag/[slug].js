@@ -10,6 +10,7 @@ import { Z_INDEX } from '../../constants/index'
 import { fetchPostsByTagSlug, fetchTagByTagSlug } from '../../utils/api/tag'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { setPageCache } from '../../utils/cache-setting'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -137,6 +138,7 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
         />
 
         {shouldShowAd && <StickyGPTAd pageKey="other" adKey="MB_ST" />}
+        {shouldShowAd && <FullScreenAds />}
       </TagContainer>
     </Layout>
   )

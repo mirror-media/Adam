@@ -7,6 +7,7 @@ import { fetchExternalBySlug } from '../../apollo/query/externals'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
@@ -27,6 +28,7 @@ export default function External({ external, headerData }) {
       footer={{ type: 'default' }}
     >
       <ExternalNormalStyle external={external} />
+      <FullScreenAds />
     </Layout>
   )
 }

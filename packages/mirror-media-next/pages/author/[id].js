@@ -17,6 +17,7 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const AuthorContainer = styled.main`
   width: 320px;
@@ -112,6 +113,7 @@ export default function Author({ postsCount, posts, author, headerData }) {
           renderPageSize={RENDER_PAGE_SIZE}
         />
         {shouldShowAd && <StickyGPTAd pageKey="other" adKey="MB_ST" />}
+        {shouldShowAd && <FullScreenAds />}
       </AuthorContainer>
     </Layout>
   )

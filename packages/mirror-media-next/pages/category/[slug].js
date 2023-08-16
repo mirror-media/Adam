@@ -23,6 +23,7 @@ import WineWarning from '../../components/shared/wine-warning'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -241,6 +242,7 @@ export default function Category({
           />
         ) : null}
         <WineWarning categories={[category]} />
+        {isNotWineCategory && <FullScreenAds />}
       </CategoryContainer>
     </Layout>
   )
