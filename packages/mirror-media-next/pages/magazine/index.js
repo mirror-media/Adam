@@ -29,6 +29,10 @@ const Page = styled.div`
   & ${Section}:nth-child(even) {
     background-color: #f2f2f2;
   }
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-bottom: -32px;
+  }
 `
 
 const Title = styled.h2`

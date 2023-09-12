@@ -2,26 +2,26 @@ import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
-import WarmLifeArticles from '../../components/externals/warmlife-articles'
-import {
-  GCP_PROJECT_ID,
-  API_TIMEOUT,
-  URL_STATIC_EXTERNALS_WARMLIFE,
-  ENV,
-} from '../../config/index.mjs'
+import PartnerArticles from '../../components/externals/partner-articles'
+import client from '../../apollo/apollo-client'
+import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
-import axios from 'axios'
 import { Z_INDEX, SECTION_IDS } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+
+import { fetchExternalCounts } from '../../apollo/query/externals'
+import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/externals'
+
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 
 const RENDER_PAGE_SIZE = 12
-const WARMLIFE_DEFAULT_TITLE = '生活暖流'
+const WARMLIFE_DEFAULT_TITLE = '暖流'
 const WARMLIFE_DEFAULT_COLOR = 'lightBlue'
 const WARMLIFE_GPT_SECTION_IDS = SECTION_IDS.news // the default section of `warmlife` page is `時事`
 
@@ -98,10 +98,15 @@ const StickyGPTAd = styled(GPTAd)`
 /**
  * @param {Object} props
  * @param {ListingExternal[]} props.warmLifeData
+ * @param {number} props.warmLifeDataCount
  * @param {Object} props.headerData
  * @returns {React.ReactElement}
  */
-export default function WarmLife({ warmLifeData, headerData }) {
+export default function WarmLife({
+  warmLifeData,
+  warmLifeDataCount,
+  headerData,
+}) {
   const shouldShowAd = useDisplayAd()
 
   return (
@@ -115,13 +120,16 @@ export default function WarmLife({ warmLifeData, headerData }) {
           <StyledGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="HD" />
         )}
         <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>
-        <WarmLifeArticles
-          warmLifeExternals={warmLifeData}
+        <PartnerArticles
+          externals={warmLifeData}
           renderPageSize={RENDER_PAGE_SIZE}
+          fetchExternalsFunction={fetchExternalsWhichPartnerIsNotShowOnIndex}
+          externalsCount={warmLifeDataCount}
         />
         {shouldShowAd && (
           <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="MB_ST" />
         )}
+        {shouldShowAd && <FullScreenAds />}
       </WarmLifeContainer>
     </Layout>
   )
@@ -130,13 +138,12 @@ export default function WarmLife({ warmLifeData, headerData }) {
 /**
  * @type {import('next').GetServerSideProps}
  */
-export async function getServerSideProps({ req, query, res }) {
+export async function getServerSideProps({ req, res }) {
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
-  const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
@@ -149,10 +156,18 @@ export async function getServerSideProps({ req, query, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    axios({
-      method: 'get',
-      url: URL_STATIC_EXTERNALS_WARMLIFE,
-      timeout: mockError ? 50 : API_TIMEOUT,
+    fetchExternalsWhichPartnerIsNotShowOnIndex(1, RENDER_PAGE_SIZE),
+    client.query({
+      query: fetchExternalCounts,
+      variables: {
+        filter: {
+          partner: {
+            showOnIndex: {
+              equals: false,
+            },
+          },
+        },
+      },
     }),
   ])
   const handledResponses = responses.map((response, index) => {
@@ -160,7 +175,6 @@ export async function getServerSideProps({ req, query, res }) {
       return response.value
     } else if (response.status === 'rejected') {
       const statusCode = response.reason.response?.status
-      console.log(statusCode, typeof statusCode)
 
       const annotatingError = errors.helpers.wrap(
         response.reason,
@@ -215,28 +229,18 @@ export async function getServerSideProps({ req, query, res }) {
   if (!handledResponses[1]) {
     return { notFound: true }
   }
-  const warmLifeData =
-    handledResponses[1] && 'data' in handledResponses[1]
-      ? handledResponses[1]?.data._items || []
-      : []
+  const warmLifeData = Array.isArray(handledResponses[1])
+    ? handledResponses[1]
+    : []
 
-  /** @type {ListingExternal[]} */
-  const filterWarmLifeData = warmLifeData.map((item) => ({
-    id: item._id || '',
-    title: item.title || '',
-    slug: item.name || '',
-    thumb: item.thumb || '',
-    brief: item.brief || '',
-    partner:
-      {
-        id: item.partner._id,
-        name: item.partner.display,
-        slug: item.partner.name,
-      } || null,
-  }))
+  const warmLifeDataCount =
+    'data' in handledResponses[2]
+      ? handledResponses[2]?.data?.externalsCount || 0
+      : 0
 
   const props = {
-    warmLifeData: filterWarmLifeData,
+    warmLifeData,
+    warmLifeDataCount,
     headerData: { sectionsData, topicsData },
   }
 

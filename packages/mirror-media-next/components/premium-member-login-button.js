@@ -58,9 +58,11 @@ const DesktopWrapper = styled.span`
 `
 
 const MobileWrapper = styled.span`
+  font-size: 14px;
   display: inline-block;
   transform: scale(calc(10 / 12));
   text-decoration-line: underline;
+  text-underline-offset: 2.5px;
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }

@@ -1,11 +1,9 @@
 import styled from 'styled-components'
-import client from '../../apollo/apollo-client'
 
 import InfiniteScrollList from '../infinite-scroll-list'
 import Image from 'next/legacy/image'
 import LoadingPage from '../../public/images/loading_page.gif'
 import ExternalList from './externals-list'
-import { fetchExternalsByPartnerSlug } from '../../apollo/query/externals'
 
 const Loading = styled.div`
   margin: 20px auto 0;
@@ -24,41 +22,29 @@ const Loading = styled.div`
  */
 
 /**
+ * @typedef {import('../../utils/api/externals').FetchExternalsByPartnerSlug} FetchExternalsByPartnerSlug
+ */
+/**
+ * @typedef {import('../../utils/api/externals').FetchExternalsWhichPartnerIsNotShowOnIndex} FetchExternalsWhichPartnerIsNotShowOnIndex
+ */
+
+/**
  *
  * @param {Object} props
  * @param {number} props.externalsCount
  * @param {ListingExternal[]} props.externals
- * @param {Partner} props.partner
+ * @param {FetchExternalsByPartnerSlug | FetchExternalsWhichPartnerIsNotShowOnIndex} props.fetchExternalsFunction
+ * @param {string} [props.partnerSlug]
  * @param {number} props.renderPageSize
  * @returns {React.ReactElement}
  */
 export default function ExternalArticles({
   externalsCount,
   externals,
-  partner,
+  fetchExternalsFunction,
   renderPageSize,
+  partnerSlug,
 }) {
-  async function fetchExternalsFromPage(page) {
-    try {
-      const response = await client.query({
-        query: fetchExternalsByPartnerSlug,
-        variables: {
-          take: renderPageSize * 2,
-          skip: (page - 1) * renderPageSize * 2,
-          orderBy: { publishedDate: 'desc' },
-          filter: {
-            state: { equals: 'published' },
-            partner: { slug: { equals: partner.slug } },
-          },
-        },
-      })
-      return response.data.externals
-    } catch (error) {
-      console.error(error)
-    }
-    return
-  }
-
   const loader = (
     <Loading key={0}>
       <Image src={LoadingPage} alt="loading page"></Image>
@@ -70,7 +56,9 @@ export default function ExternalArticles({
       initialList={externals}
       renderAmount={renderPageSize}
       fetchCount={Math.ceil(externalsCount / renderPageSize)}
-      fetchListInPage={fetchExternalsFromPage}
+      fetchListInPage={(page) =>
+        fetchExternalsFunction(page, renderPageSize, partnerSlug)
+      }
       loader={loader}
     >
       {(renderList) => <ExternalList renderList={renderList} />}

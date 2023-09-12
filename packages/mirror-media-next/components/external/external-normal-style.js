@@ -3,7 +3,7 @@
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
 import { useCallback } from 'react'
-import client from '../../apollo/apollo-client'
+
 import styled from 'styled-components'
 import Link from 'next/link'
 import axios from 'axios'
@@ -20,9 +20,16 @@ import MagazineInviteBanner from '../../components/story/shared/magazine-invite-
 import ExternalArticleContent from '../../components/external/external-article-content'
 import ExternalHeroImage from '../../components/external/external-hero-image'
 import Divider from '../../components/story/shared/divider'
-import { transformTimeDataIntoDotFormat } from '../../utils'
-import { fetchAsidePosts } from '../../apollo/query/posts'
-import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../config/index.mjs'
+import {
+  transformTimeDataIntoDotFormat,
+  getActiveOrderSection,
+} from '../../utils'
+
+import {
+  URL_STATIC_POPULAR_NEWS,
+  URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+  API_TIMEOUT,
+} from '../../config/index.mjs'
 import {
   transformStringToDraft,
   getExternalSectionTitle,
@@ -462,21 +469,21 @@ export default function ExternalNormalStyle({ external }) {
       /**
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
-      const res = await client.query({
-        query: fetchAsidePosts,
-        variables: {
-          take: 6,
-          sectionSlug: EXTERNAL_DEFAULT_SECTION.slug,
-          storySlug: slug,
-        },
+      const res = await axios({
+        method: 'get',
+        url: `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${EXTERNAL_DEFAULT_SECTION.slug}.json`,
+        timeout: API_TIMEOUT,
       })
-      return res.data?.posts.map((post) => {
-        const sectionsWithOrdered =
-          post.sectionsInInputOrder && post.sectionsInInputOrder.length
-            ? post.sectionsInInputOrder
-            : post.sections
-        return { sectionsWithOrdered, ...post }
-      })
+      return res.data?.posts
+        .filter((post) => post.slug !== slug)
+        .slice(0, 6)
+        .map((post) => {
+          const sectionsWithOrdered = getActiveOrderSection(
+            post.sections,
+            post.sectionsInInputOrder
+          )
+          return { sectionsWithOrdered, ...post }
+        })
     } catch (err) {
       console.error(err)
       return []
@@ -498,10 +505,11 @@ export default function ExternalNormalStyle({ external }) {
       })
       const popularNews = data
         .map((post) => {
-          const sectionsWithOrdered =
-            post.sectionsInInputOrder && post.sectionsInInputOrder.length
-              ? post.sectionsInInputOrder
-              : post.sections
+          const sectionsWithOrdered = getActiveOrderSection(
+            post.sections,
+            post.sectionsInInputOrder
+          )
+
           return { sectionsWithOrdered, ...post }
         })
         .slice(0, 6)

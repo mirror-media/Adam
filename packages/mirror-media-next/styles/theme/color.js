@@ -19,6 +19,7 @@ const sectionsColor = {
   carandwatch: '#1877F2',
   external: '#2ECDA7',
   mirrorcolumn: '#B79479',
+  life: '#2ECDA7',
 }
 const videoCategoryColor = {
   video_coverstory: '#30bac8',

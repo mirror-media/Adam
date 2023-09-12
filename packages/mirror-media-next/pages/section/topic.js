@@ -10,6 +10,7 @@ import Layout from '../../components/shared/layout'
 import { fetchTopicList } from '../../utils/api/section-topic'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -115,6 +116,7 @@ export default function Topics({ topics, topicsCount, headerData }) {
           renderPageSize={RENDER_PAGE_SIZE}
         />
         {shouldShowAd && <StickyGPTAd pageKey="other" adKey="MB_ST" />}
+        {shouldShowAd && <FullScreenAds />}
       </TopicsContainer>
     </Layout>
   )

@@ -316,6 +316,42 @@ const getNumberWithCommas = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
+/**
+ * Return sections that are in `active` state and sorted.
+ *
+ * @property {Sections} sections
+ * @property {Sections} sectionsInInputOrder
+ * @return {Sections}
+ */
+const getActiveOrderSection = (sections, sectionsInInputOrder) => {
+  /**
+   * Because `sections` can be filtered by `where` in GraphQL based on whether `state` is active,
+   * but `sectionsInInputOrder` doesn't have `where`.
+   *
+   * Need to filter state of `sectionsInInputOrder` to match the results of sections.
+   */
+  const activeSectionsOrder = Array.isArray(sectionsInInputOrder)
+    ? sectionsInInputOrder.filter((section) => section.state === 'active')
+    : []
+
+  /**
+   * Although `sections` already filter `state` at GraphQL ,
+   * for the sake of maintaining same logic between `sectionsInInputOrder` and `sections`,
+   * filter `state` status of `sections` again.
+   * */
+  const activeSections = Array.isArray(sections)
+    ? sections.filter((section) => section.state === 'active')
+    : []
+
+  if (activeSectionsOrder.length > 0) {
+    return activeSectionsOrder
+  } else if (activeSections.length > 0) {
+    return activeSections
+  } else {
+    return []
+  }
+}
+
 export {
   transformRawDataToArticleInfo,
   transformTimeDataIntoDotFormat,
@@ -329,4 +365,5 @@ export {
   convertDraftToText,
   getResizedUrl,
   getNumberWithCommas,
+  getActiveOrderSection,
 }

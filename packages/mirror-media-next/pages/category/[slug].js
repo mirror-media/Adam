@@ -23,6 +23,7 @@ import WineWarning from '../../components/shared/wine-warning'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -203,7 +204,9 @@ export default function Category({
   const isNotWineCategory = getCategoryOfWineSlug([category]).length === 0
 
   //The type of GPT ad to display depends on which category the section belongs to.
+  //If category not have related-section, use `other` ad units
   const sectionSlug = category?.sections?.[0]?.slug ?? ''
+  const GptPageKey = getSectionGPTPageKey(sectionSlug) ?? 'other'
 
   return (
     <Layout
@@ -212,9 +215,7 @@ export default function Category({
       footer={{ type: 'default' }}
     >
       <CategoryContainer isPremium={isPremium}>
-        {shouldShowAd && (
-          <StyledGPTAd pageKey={getSectionGPTPageKey(sectionSlug)} adKey="HD" />
-        )}
+        {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
 
         {isPremium ? (
           <PremiumCategoryTitle sectionName={sectionSlug}>
@@ -235,12 +236,10 @@ export default function Category({
         />
 
         {shouldShowAd && isNotWineCategory ? (
-          <StickyGPTAd
-            pageKey={getSectionGPTPageKey(sectionSlug)}
-            adKey="MB_ST"
-          />
+          <StickyGPTAd pageKey={GptPageKey} adKey="MB_ST" />
         ) : null}
         <WineWarning categories={[category]} />
+        {isNotWineCategory && <FullScreenAds />}
       </CategoryContainer>
     </Layout>
   )
@@ -275,6 +274,7 @@ export async function getServerSideProps({ query, req, res }) {
     sections: [],
     slug: categorySlug,
     isMemberOnly: false,
+    state: 'inactive',
   }
   try {
     const { data } = await fetchCategoryByCategorySlug(categorySlug)
@@ -306,6 +306,18 @@ export async function getServerSideProps({ query, req, res }) {
         ...globalLogFields,
       })
     )
+  }
+
+  // handle category state, if `inactive` -> redirect to 404
+  if (category.state === 'inactive') {
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `categorySlug '${categorySlug}' is inactive, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
   }
 
   const isPremium = category.isMemberOnly

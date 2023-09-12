@@ -14,7 +14,7 @@ const fetchSectionWithCategory = gql`
   ${sectionWithCategory}
   query ($where: SectionWhereUniqueInput!) {
     section(where: $where) {
-      ...section
+      ...sectionWithCategory
     }
   }
 `

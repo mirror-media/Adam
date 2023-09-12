@@ -8,188 +8,7 @@ import {
   PROMOTION_LINKS,
   SOCIAL_MEDIA_LINKS,
 } from '../constants'
-
-const DISPLAY_PARTNERS = [{ name: '生活暖流', href: '/externals/warmlife' }]
-
-const DEFAULT_NORMAL_SECTIONS_DATA = [
-  {
-    id: '42',
-    slug: 'member',
-    name: '會員專區',
-    categories: [
-      { id: '11', slug: 'food', name: '美食焦點', isMemberOnly: true },
-      { id: '12', slug: 'traveltaiwan', name: '旅行台灣', isMemberOnly: true },
-      { id: '17', slug: 'seetheworld', name: '看見世界', isMemberOnly: true },
-      { id: '18', slug: 'kitchenplay', name: '廚房密技', isMemberOnly: true },
-      { id: '29', slug: 'money', name: '理財', isMemberOnly: true },
-      { id: '35', slug: 'celebrity', name: '鏡大咖', isMemberOnly: true },
-      { id: '37', slug: 'column', name: '影劇專欄', isMemberOnly: true },
-      { id: '45', slug: 'wine', name: '好酒情報', isMemberOnly: true },
-      { id: '59', slug: 'somebody', name: '一鏡到底', isMemberOnly: true },
-      { id: '60', slug: 'world', name: '鏡相人間', isMemberOnly: true },
-      { id: '61', slug: 'truth', name: '心內話', isMemberOnly: true },
-      { id: '62', slug: 'mogul', name: '財經人物', isMemberOnly: true },
-      { id: '104', slug: 'timesquare', name: '時代現場', isMemberOnly: true },
-      { id: '122', slug: 'mg', name: '完整全文', isMemberOnly: false },
-      { id: '123', slug: 'dig', name: '新聞深探', isMemberOnly: true },
-    ],
-  },
-  {
-    id: '32',
-    slug: 'news',
-    name: '時事',
-    categories: [
-      { id: '19', slug: 'shopping', name: '消費', isMemberOnly: false },
-      { id: '27', slug: 'news', name: '焦點', isMemberOnly: false },
-      { id: '55', slug: 'political', name: '政治', isMemberOnly: false },
-      { id: '56', slug: 'life', name: '生活', isMemberOnly: false },
-      { id: '57', slug: 'city-news', name: '社會', isMemberOnly: false },
-      { id: '108', slug: 'boom', name: '鏡爆', isMemberOnly: false },
-      { id: '109', slug: 'global', name: '國際要聞', isMemberOnly: false },
-      { id: '118', slug: 'wine1', name: '微醺酩品', isMemberOnly: false },
-    ],
-  },
-  {
-    id: '37',
-    slug: 'businessmoney',
-    name: '財經理財',
-    categories: [
-      { id: '28', slug: 'business', name: '財經', isMemberOnly: false },
-      { id: '29', slug: 'money', name: '理財', isMemberOnly: true },
-    ],
-  },
-  {
-    id: '33',
-    slug: 'entertainment',
-    name: '娛樂',
-    categories: [
-      { id: '34', slug: 'latestnews', name: '娛樂頭條', isMemberOnly: false },
-      { id: '35', slug: 'celebrity', name: '鏡大咖', isMemberOnly: true },
-      { id: '37', slug: 'column', name: '影劇專欄', isMemberOnly: true },
-      { id: '46', slug: 'insight', name: '娛樂透視', isMemberOnly: false },
-      { id: '58', slug: 'comic', name: '動漫遊戲', isMemberOnly: false },
-      { id: '71', slug: 'rookie', name: '試鏡間', isMemberOnly: false },
-      { id: '72', slug: 'fashion', name: '穿衣鏡', isMemberOnly: false },
-      { id: '73', slug: 'madam', name: '蘭蘭夫人', isMemberOnly: false },
-      {
-        id: '74',
-        slug: 'superstar',
-        name: '我眼中的大明星',
-        isMemberOnly: false,
-      },
-    ],
-  },
-  {
-    id: '39',
-    slug: 'videohub',
-    name: '影音',
-    categories: [
-      {
-        id: '75',
-        slug: 'video_coverstory',
-        name: '鏡封面',
-        isMemberOnly: false,
-      },
-      {
-        id: '76',
-        slug: 'video_entertainment',
-        name: '鏡娛樂',
-        isMemberOnly: false,
-      },
-      { id: '77', slug: 'video_society', name: '鏡社會', isMemberOnly: false },
-      {
-        id: '78',
-        slug: 'video_investigation',
-        name: '鏡調查',
-        isMemberOnly: false,
-      },
-      {
-        id: '79',
-        slug: 'video_finance',
-        name: '財經理財',
-        isMemberOnly: false,
-      },
-      { id: '80', slug: 'video_people', name: '鏡人物', isMemberOnly: false },
-      {
-        id: '81',
-        slug: 'video_foodtravel',
-        name: '鏡食旅',
-        isMemberOnly: false,
-      },
-      {
-        id: '82',
-        slug: 'video_ent_perspective',
-        name: '娛樂透視',
-        isMemberOnly: false,
-      },
-      {
-        id: '83',
-        slug: 'video_carandwatch',
-        name: '汽車鐘錶',
-        isMemberOnly: false,
-      },
-    ],
-  },
-  {
-    id: '44',
-    slug: 'mirrorcolumn',
-    name: '論壇',
-    categories: [
-      {
-        id: '116',
-        slug: 'mirrorcolumn',
-        name: '名家專欄',
-        isMemberOnly: false,
-      },
-    ],
-  },
-  { id: '38', slug: 'mafalda', name: '瑪法達', categories: [] },
-  {
-    id: '36',
-    slug: 'culture',
-    name: '文化',
-    categories: [
-      {
-        id: '84',
-        slug: 'knowledgeprogram',
-        name: '知識好好玩',
-        isMemberOnly: false,
-      },
-      { id: '85', slug: 'bookreview', name: '書評', isMemberOnly: false },
-      { id: '86', slug: 'culture-column', name: '專欄', isMemberOnly: false },
-      { id: '87', slug: 'poem', name: '詩', isMemberOnly: false },
-      { id: '105', slug: 'booksummary', name: '鏡書摘', isMemberOnly: false },
-      { id: '120', slug: 'voice', name: '好聽人物', isMemberOnly: false },
-    ],
-  },
-  {
-    id: '30',
-    slug: 'carandwatch',
-    name: '汽車鐘錶',
-    categories: [
-      { id: '21', slug: 'watchfocus', name: '錶壇焦點', isMemberOnly: false },
-      { id: '22', slug: 'watchfeature', name: '鐘錶專題', isMemberOnly: false },
-      { id: '25', slug: 'blog', name: '編輯幕後', isMemberOnly: false },
-      { id: '66', slug: 'car_focus', name: '車壇焦點', isMemberOnly: false },
-      { id: '67', slug: 'car_features', name: '鏡車專題', isMemberOnly: false },
-      { id: '68', slug: 'test_drives', name: '靚俥試駕', isMemberOnly: false },
-      { id: '69', slug: 'pit_zone', name: '鏡車經', isMemberOnly: false },
-      {
-        id: '117',
-        slug: 'newwatches2021',
-        name: '新錶2021',
-        isMemberOnly: false,
-      },
-      { id: '121', slug: 'luxury', name: '奢華誌', isMemberOnly: false },
-      {
-        id: '124',
-        slug: 'newwatches2022',
-        name: '新錶2022',
-        isMemberOnly: false,
-      },
-    ],
-  },
-]
+import { DEFAULT_NORMAL_SECTIONS_DATA } from '../constants/header'
 
 import SubBrandList from './sub-brand-list'
 import SearchBarDesktop from './search-bar-desktop'
@@ -210,12 +29,11 @@ const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
 })
 
 /**
- *
- *  @typedef {import('../apollo/fragments/section').Section[]} Sections
- */
-
-/**
- * @typedef {import('./nav-sections').SectionWithHrefTemp} SectionWithHrefTemp
+ * @typedef {import('./nav-sections').HeadersDataSection} HeadersDataSection
+ * @typedef {import('./nav-sections').HeadersDataCategory} HeadersDataCategory
+ * @typedef {import('./nav-sections').HeadersDataCategoryWithHref} HeadersDataCategoryWithHref
+ * @typedef {import('./nav-sections').HeadersDataSectionWithHref} HeadersDataSectionWithHref
+ * @typedef {import('./nav-sections').SectionsAndCategoriesWithHref} SectionsAndCategoriesWithHref
  */
 
 /**
@@ -230,13 +48,13 @@ const HeaderTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 21px 8px 20px;
+  padding: 21px 15px 20px 8px;
   max-width: 596px;
   margin: 0 auto;
   height: 75px;
 
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 21px 8px 20px;
+    padding: 21px 0px 20px 0;
     height: 69.24px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
@@ -256,8 +74,8 @@ const HeaderLogo = styled(Logo)`
   display: none;
   ${({ theme }) => theme.breakpoint.md} {
     display: block;
-    width: 49px;
-    height: 20.72px;
+    width: 68px;
+    height: 29px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     display: block;
@@ -321,7 +139,13 @@ const SearchInputWrapper = styled.div`
 `
 
 const TopicsAndFlashNews = styled.section`
-  margin-top: 10px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 10px;
+  }
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 0px;
+  }
 `
 const TopicsAndSubscribe = styled.section`
   display: flex;
@@ -344,101 +168,163 @@ const StyledGPTAd = styled(GPTAd)`
   }
 `
 
-/**
- * Remove item from array `categories` if which is member only category.
- * @param {import('../apollo/fragments/section').Section} section
- * @returns {import('../apollo/fragments/section').Section}
- */
-function filterOutIsMemberOnlyCategoriesInNormalSection(section) {
-  return {
-    ...section,
-    categories:
-      section.slug === 'member'
-        ? section.categories
-        : section.categories.filter((category) => !category.isMemberOnly),
+const formatSectionItem = (section) => {
+  const sectionWithInsertedCategory = insertCategoryIntoCertainSection(section)
+  const sectionAndItsCategoriesWithHref = getSectionAndCategoryHref(
+    sectionWithInsertedCategory
+  )
+  return sectionAndItsCategoriesWithHref
+
+  /**
+   * @param {HeadersDataSection} section
+   * @returns {HeadersDataSection}
+   */
+  function insertCategoryIntoCertainSection(section) {
+    if (section.slug === 'member') {
+      return {
+        ...section,
+        categories: [
+          {
+            id: '7a7482edb739242537f11e24760d2c79', //hash for ensure it is unique from other category, no other usage.
+            slug: 'magazine',
+            name: '動態雜誌',
+            isMemberOnly: false,
+          },
+          ...section.categories,
+        ],
+      }
+    } else if (section.slug === 'life') {
+      return {
+        ...section,
+        categories: [
+          ...section.categories,
+          {
+            id: '306dac073da6dc1ddb4e34c228035915', //hash for ensure it is unique from other category, no other usage.
+            slug: 'warmlife',
+            name: '暖流',
+            isMemberOnly: false,
+          },
+        ],
+      }
+    }
+    return { ...section }
+  }
+  /**
+   * @param {HeadersDataSection} section
+   * @returns {HeadersDataSectionWithHref}
+   */
+  function getSectionAndCategoryHref(section) {
+    return {
+      ...section,
+      href: getSectionHref(section.slug),
+      categories: getCategoryInSectionWithHref(section),
+    }
+
+    /**
+     * @param {HeadersDataSection['slug']} sectionSlug
+     * @returns {HeadersDataCategoryWithHref['href']}
+     */
+    function getSectionHref(sectionSlug) {
+      if (sectionSlug === 'member') {
+        return `/premiumsection/${sectionSlug}`
+      } else {
+        return `/section/${sectionSlug}`
+      }
+    }
+
+    /**
+     * @param {HeadersDataSection} section
+     * @returns {HeadersDataSectionWithHref['categories']}
+     */
+    function getCategoryInSectionWithHref(section) {
+      const { categories = [] } = section
+      return categories.map((category) => {
+        return {
+          ...category,
+          href: getCategoryHref(section.slug, category.slug),
+        }
+      })
+      /**
+       * @param {HeadersDataSection['slug']} sectionSlug
+       * @param {import('./nav-sections').CategoryInHeadersDataSection['slug']} categorySlug
+       * @returns {string}
+       */
+      function getCategoryHref(sectionSlug, categorySlug) {
+        if (sectionSlug === 'videohub') {
+          return `/video_category/${categorySlug}`
+        }
+        if (categorySlug === 'magazine') {
+          return '/magazine/'
+        }
+        if (sectionSlug === 'life' && categorySlug === 'warmlife') {
+          return '/externals/warmlife'
+        }
+        return `/category/${categorySlug}`
+      }
+    }
   }
 }
 
-/**
- *
- * @param {import('../apollo/fragments/section').Section} section
- * @return {SectionWithHrefTemp}
- */
-function getSectionAndCategoryHref(section) {
-  const getCategoryHref = (sectionSlug, categorySlug) => {
-    if (sectionSlug === 'videohub') {
-      return `/video_category/${categorySlug}`
-    }
-    if (categorySlug === 'magazine') {
-      return '/magazine/'
-    }
-    return `/category/${categorySlug}`
-  }
+const formatCategoryItem = (category) => {
+  return getSectionAndCategoryHref(category)
 
   /**
    *
-   * @param {string} sectionSlug
-   * @returns {string}
+   * @param {HeadersDataCategory} section
+   * @return {HeadersDataCategoryWithHref}
    */
-  const getSectionHref = (sectionSlug) => {
-    if (sectionSlug === 'member') {
-      return `/premiumsection/${sectionSlug}`
-    } else {
-      return `/section/${sectionSlug}`
-    }
-  }
-  const getCategoryWithHref = (section, categories) => {
-    return categories.map((category) => {
-      return { ...category, href: getCategoryHref(section.slug, category.slug) }
-    })
-  }
-  const newSection = {
-    ...section,
-    href: getSectionHref(section.slug),
-    categories: getCategoryWithHref(section, section.categories),
-  }
-  return newSection
-}
-
-const insertMagazineIntoSections = (section) => {
-  if (section.slug === 'member') {
+  function getSectionAndCategoryHref(section) {
     return {
       ...section,
-      categories: [
-        {
-          id: '7a7482edb739242537f11e24760d2c79', //hash for ensure it is unique from other category, no other usage.
-          slug: 'magazine',
-          name: '動態雜誌',
-          isMemberOnly: false,
-        },
-        ...section.categories,
-      ],
+      href: getCategoryHref(section.sections, section.slug),
+    }
+
+    /**
+     *
+     * @param {HeadersDataCategory['sections']} sections
+     * @param {HeadersDataCategory['slug']} categorySlug
+     * @returns {string}
+     */
+    function getCategoryHref(sections, categorySlug) {
+      if (
+        sections &&
+        sections.length &&
+        sections.some((section) => section === 'videohub')
+      ) {
+        return `/video_category/${categorySlug}`
+      }
+      return `/category/${categorySlug}`
     }
   }
-  return { ...section }
 }
 /**
  *
- * @param {Sections} sectionsData
- * @returns {SectionWithHrefTemp[]}
+ * @param {(HeadersDataSection | HeadersDataCategory)[] } sectionsData
+ * @returns {SectionsAndCategoriesWithHref}
  */
 const formatSections = (sectionsData) => {
   const _sectionsData =
     sectionsData && sectionsData.length
       ? sectionsData
       : DEFAULT_NORMAL_SECTIONS_DATA
-  return (
-    _sectionsData
-      .map(insertMagazineIntoSections)
-      .map(filterOutIsMemberOnlyCategoriesInNormalSection)
-      .map(getSectionAndCategoryHref) ?? []
-  )
+  const formattedSectionData = _sectionsData.map((item) => {
+    switch (item.type) {
+      case 'section':
+        return formatSectionItem(item)
+      case 'category':
+        return formatCategoryItem(item)
+      default:
+        return null
+    }
+  })
+
+  return formattedSectionData
 }
 /**
  * TODO: use typedef in `../apollo/fragments/section` and  `../apollo/fragments/topic`
  * Should be done after fetch header data from new json file
  * @param {Object} props
- * @param {Sections} props.sectionsData
+ * @param {SectionsAndCategoriesWithHref} props.sectionsData
  * @param {Topics} props.topicsData
  * @param {JSX.Element} [props.children]
  * @returns {React.ReactElement}
@@ -516,8 +402,7 @@ export default function Header({
           <PromotionLinks links={PROMOTION_LINKS} />
           <MobileSidebar
             topics={topics}
-            sections={sections}
-            displayedPartners={DISPLAY_PARTNERS}
+            sectionsAndCategories={sections}
             subBrands={SUB_BRAND_LINKS}
             promotions={PROMOTION_LINKS}
             socialMedia={SOCIAL_MEDIA_LINKS}
@@ -547,7 +432,7 @@ export default function Header({
             }
           />
         </SearchInputWrapper>
-        <NavSections sections={sections} displayedPartners={DISPLAY_PARTNERS} />
+        <NavSections sectionsAndCategories={sections} />
         <TopicsAndFlashNews>
           {children}
           <TopicsAndSubscribe>
@@ -607,15 +492,15 @@ const SkeletonBlockBottomDown = styled(SkeletonBlock)`
 `
 const HeaderSkeleton = () => {
   const elementInBottomUp = []
-  const numberOfElementsInBottomUp = 9
+  const numberOfElementsInBottomUp = 10
 
   for (let i = 0; i < numberOfElementsInBottomUp; i++) {
     elementInBottomUp.push(
       <SkeletonBlock
         key={i}
-        mobile={{ width: '105px', height: '32px' }}
-        tablet={{ width: '105px', height: '32px' }}
-        desktop={{ width: '105px', height: '32px' }}
+        mobile={{ width: '90px', height: '32px' }}
+        tablet={{ width: '90px', height: '32px' }}
+        desktop={{ width: '90px', height: '32px' }}
       />
     )
   }

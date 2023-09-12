@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import ArticleListItem from './article-list-item'
@@ -59,23 +59,24 @@ const StyledGPTAd = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function ArticleList({ renderList, section }) {
+  const [GptPageKey, setGptPageKey] = useState('other')
   const shouldShowAd = useDisplayAd()
-  const GPT_PAGE_KEY = useRef('other')
 
+  /**
+   * 這個元件會被共用於 author/tag/category/section 列表頁
+   * 在 author/tag 列表頁時，GPT 廣告的 PageKey 固定為 'other'
+   * 在 section/category 列表頁時，GPT 廣告的 PageKey 設定為 'section.slug'
+   * 若 category 無所屬的 section (related-Section)，則 PageKey 一律為 'other'
+   */
   useEffect(() => {
-    const urlElements = window.location.pathname.split('/')
-    const pageType = urlElements[urlElements.length - 2]
-
-    switch (pageType) {
-      case 'author':
-      case 'tag':
-        GPT_PAGE_KEY.current = 'other'
-        break
-      case 'section':
-      case 'category':
-        GPT_PAGE_KEY.current = getSectionGPTPageKey(section.slug)
-        break
+    /**
+     * When the component is used on `author` or `tag` listing pages, there won't be a "section" parameter.
+     * As a result, it will return and directly use the default GptPageKey value: "other".
+     */
+    if (!section?.slug) {
+      return
     }
+    setGptPageKey(getSectionGPTPageKey(section.slug))
   }, [section])
 
   const renderListWithAd = shouldShowAd
@@ -102,9 +103,7 @@ export default function ArticleList({ renderList, section }) {
         ))}
       </ItemContainer>
 
-      {shouldShowAd && (
-        <StyledGPTAd pageKey={GPT_PAGE_KEY.current} adKey="FT" />
-      )}
+      {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="FT" />}
 
       <ItemContainer>
         {renderListWithoutAd.map((item) => (

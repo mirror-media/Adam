@@ -129,6 +129,7 @@ export default function GroupArticlesItem({ item }) {
       <ImageContainer>
         <Image
           images={item.heroImage?.resized}
+          imagesWebP={item.heroImage?.resizedWebp}
           alt={item.title}
           loadingImage="/images/loading.gif"
           defaultImage="/images/default-og-img.png"

@@ -13,6 +13,7 @@ import { gql } from '@apollo/client'
  * @property {string} id
  * @property {string} name
  * @property {string} slug
+ * @property {"active" | "inactive"} state
  * @property {SectionWithCategory[]} categories
  */
 
@@ -21,15 +22,16 @@ export const section = gql`
     id
     name
     slug
+    state
   }
 `
 
 export const sectionWithCategory = gql`
-  fragment section on Section {
+  fragment sectionWithCategory on Section {
     id
     name
     slug
-    categories {
+    categories(where: { state: { equals: "active" } }) {
       name
       slug
     }

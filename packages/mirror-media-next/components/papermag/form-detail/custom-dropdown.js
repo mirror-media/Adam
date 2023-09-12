@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
+import { Z_INDEX } from '../../../constants'
 
 const CustomDropdownContainer = styled.div`
   width: 100%;
   position: relative;
-  display: flex;
-  margin: 12px 0;
+  margin-top: 12px;
 `
 
 const DropdownButton = styled.button`
@@ -65,7 +65,7 @@ const OptionsList = styled.ul`
   border-radius: 8px;
   overflow: hidden;
   background-color: #fff;
-  z-index: 999; /* Ensure the options list appears above other content */
+  z-index: ${Z_INDEX.coverContent}; /* Ensure the options list appears above other content */
 `
 
 const Option = styled.li`
@@ -77,9 +77,15 @@ const Option = styled.li`
   }
 `
 
-export default function CustomDropdown({ options, defaultText = '請選擇' }) {
+export default function CustomDropdown({
+  options,
+  defaultText = '請選擇',
+  onSelect,
+}) {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedOption, setSelectedOption] = useState(null)
+
+  const containerRef = useRef(null)
 
   const toggleDropdown = (e) => {
     e.preventDefault()
@@ -89,10 +95,28 @@ export default function CustomDropdown({ options, defaultText = '請選擇' }) {
   const selectOption = (option) => {
     setSelectedOption(option)
     setIsOpen(false)
+
+    // Call the callback with the selected option
+    if (onSelect) {
+      onSelect(option)
+    }
   }
 
+  const handleOutsideClick = (event) => {
+    if (containerRef.current && !containerRef.current.contains(event.target)) {
+      setIsOpen(false)
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener('click', handleOutsideClick)
+    return () => {
+      document.removeEventListener('click', handleOutsideClick)
+    }
+  }, [])
+
   return (
-    <CustomDropdownContainer>
+    <CustomDropdownContainer ref={containerRef}>
       <DropdownButton
         // @ts-ignore
         isOpen={isOpen}

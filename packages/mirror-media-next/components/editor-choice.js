@@ -134,9 +134,13 @@ const ListItemLabel = styled.div`
         : theme.color.brandColor.darkBlue
   };
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 17px;
-  padding: 2px 8px 1px;
+  padding: 2px 10px 1px;
+  height: 24px;
+  display: flex;
+  align-items: center;
 `
 
 const ListItem = styled.a`
@@ -213,6 +217,7 @@ const editorChoiceImageJsx = (heroImage, title) => {
   return (
     <CustomImage
       images={heroImage?.resized}
+      imagesWebP={heroImage?.resizedWebp}
       defaultImage="/images/default-og-img.png"
       loadingImage="/images/loading.gif"
       rwd={{

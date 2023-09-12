@@ -4,7 +4,7 @@ import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
-import Steps from '../../components/papermag/steps'
+import Steps from '../../components/subscribe-steps'
 import Plan from '../../components/papermag/plan-selections'
 import Notice from '../../components/papermag/notice'
 

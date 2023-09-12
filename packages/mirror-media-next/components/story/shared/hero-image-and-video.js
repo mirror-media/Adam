@@ -1,18 +1,8 @@
 import styled, { css } from 'styled-components'
 import CustomImage from '@readr-media/react-image'
+
 /**
- * @typedef {import('../../../apollo/fragments/post').HeroImage &
- * {
- *  id: string,
- *  resized: {
- *    original: string,
- *    w480: string,
- *    w800: string,
- *    w1200: string,
- *    w1600: string,
- *    w2400: string
- *  }
- * } } HeroImage
+ * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
 
 /**
@@ -173,6 +163,7 @@ export default function HeroImageAndVideo({
       return (
         <CustomImage
           images={heroImage.resized}
+          imagesWebP={heroImage.resizedWebp}
           loadingImage={'/images/loading@4x.gif'}
           defaultImage={'/images/default-og-img.png'}
           alt={heroCaption ? heroCaption : title}

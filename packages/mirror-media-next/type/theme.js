@@ -33,6 +33,7 @@ export default {}
  * @property {String} sectionsColor.carandwatch
  * @property {String} sectionsColor.external
  * @property {String} sectionsColor.mirrorcolumn
+ * @property {String} sectionsColor.life
  *
  * @property {Object} videoCategoryColor
  * @property {String} videoCategoryColor.video_coverstory

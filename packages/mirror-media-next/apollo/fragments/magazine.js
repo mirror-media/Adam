@@ -13,6 +13,7 @@ import { gql } from '@apollo/client'
 /**
  * @typedef {Object} CoverPhoto
  * @property {Resized} resized
+ * @property {Resized} resizedWebp
  */
 
 /**
@@ -37,6 +38,14 @@ export const magazine = gql`
     urlOriginal
     coverPhoto {
       resized {
+        original
+        w480
+        w800
+        w1200
+        w1600
+        w2400
+      }
+      resizedWebp {
         original
         w480
         w800

@@ -7,6 +7,7 @@ import { section } from './section'
  * @property {string} name
  * @property {string} slug
  * @property {boolean} isMemberOnly
+ * @property {"active" | "inactive"} state
  * @property {import('./section').Section[]} sections it's singular but wrongly named as plural
  */
 
@@ -15,17 +16,19 @@ export const category = gql`
     id
     name
     slug
+    state
   }
 `
 
-export const categroyWithSection = gql`
+export const categoryWithSection = gql`
   ${section}
-  fragment categroyWithSection on Category {
+  fragment categoryWithSection on Category {
     id
     name
     slug
+    state
     isMemberOnly
-    sections {
+    sections(where: { state: { equals: "active" } }) {
       ...section
     }
   }

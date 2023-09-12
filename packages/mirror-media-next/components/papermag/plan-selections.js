@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import SubscribePaperMagBtn from './subscribe-papermag-btn'
+import SubscribePlanBtn from '../subscribe-plan-btn'
 
 const Page = styled.section`
   background-color: rgba(0, 0, 0, 0.05);
@@ -128,8 +128,9 @@ function Plan() {
           <PlanContent>訂購紙本鏡週刊 52 期，加贈 5 期</PlanContent>
           <OriginalPrice>原價 3,900</OriginalPrice>
           <SpecialPrice>特價 2,880</SpecialPrice>
-          <SubscribePaperMagBtn
+          <SubscribePlanBtn
             title="訂購一年方案"
+            subtitle="續訂另有優惠"
             bgColor="#1D9FB8"
             hoverColor="#054F77"
             hoverText="#fff"
@@ -143,8 +144,9 @@ function Plan() {
           <PlanContent>訂購紙本鏡週刊 104 期，加贈 10 期</PlanContent>
           <OriginalPrice>原價 7,800</OriginalPrice>
           <SpecialPrice>特價 5,280</SpecialPrice>
-          <SubscribePaperMagBtn
+          <SubscribePlanBtn
             title="訂購二年方案"
+            subtitle="續訂另有優惠"
             bgColor="#054F77"
             hoverColor="#9CB7C6"
             hoverText="#000"

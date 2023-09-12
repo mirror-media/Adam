@@ -4,9 +4,9 @@ import styled from 'styled-components'
  */
 
 const Close = styled.button`
-  width: 36px;
-  height: 36px;
-  padding: 4px;
+  width: 20px;
+  height: 20px;
+  margin: 20px;
   display: flex;
   position: absolute;
   top: 0px;
@@ -27,7 +27,7 @@ const Close = styled.button`
       ({ theme, color }) =>
         theme.color.brandColor[color] ? theme.color.brandColor[color] : color
     };
-    border-width: 1px;
+    border-width: 1.2px;
     border-style: solid;
     border-radius: 50%;
     height: 20px;

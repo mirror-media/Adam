@@ -9,8 +9,12 @@ import ArticleBrief from '../story/shared/brief'
 import DraftRenderBlock from '../story/shared/draft-renderer-block'
 import useSharedUrl from '../../hooks/use-shared-url'
 import AmpGptAd from '../../components/amp/amp-ads/amp-gpt-ad'
-import { copyAndSliceDraftBlock, getBlocksCount } from '../../utils/story'
+import {
+  copyAndSliceDraftBlock,
+  getSlicedIndexAndUnstyledBlocksCount,
+} from '../../utils/story'
 import { getAmpGptDataSlotSection } from '../../utils/ad'
+import { getActiveOrderSection } from '../../utils'
 
 const MainWrapper = styled.div`
   margin-top: 24px;
@@ -142,14 +146,17 @@ export default function AmpMain({ postData, isMember }) {
     tags = [],
     brief = { blocks: [], entityMap: {} },
     content = { blocks: [], entityMap: {} },
+    trimmedContent = { blocks: [], entityMap: {} },
   } = postData
+
+  const postContent = content ?? trimmedContent
 
   const sharedUrl = useSharedUrl()
 
-  const sectionsWithOrdered =
-    sectionsInInputOrder && sectionsInInputOrder.length
-      ? sectionsInInputOrder
-      : sections
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
+  )
   const [section] = sectionsWithOrdered
 
   const writersWithOrdered =
@@ -168,8 +175,8 @@ export default function AmpMain({ postData, isMember }) {
   ]
 
   const sectionSlot = getAmpGptDataSlotSection(section)
-  const blocksLength = getBlocksCount(content)
-
+  const { slicedIndex, unstyledBlocksCount } =
+    getSlicedIndexAndUnstyledBlocksCount(content)
   return (
     <MainWrapper>
       <AmpInfo
@@ -214,25 +221,36 @@ export default function AmpMain({ postData, isMember }) {
 
       <AmpContentContainer>
         <DraftRenderBlock
-          rawContentBlock={copyAndSliceDraftBlock(content, 0, 1)}
+          rawContentBlock={copyAndSliceDraftBlock(
+            postContent,
+            0,
+            slicedIndex.mb[0]
+          )}
           contentLayout="amp"
         />
 
-        {blocksLength > 1 && (
+        {unstyledBlocksCount > 1 && (
           <>
             <StyledAmpGptAd section={sectionSlot} position="AT1" />
-            <DraftRenderBlock
-              rawContentBlock={copyAndSliceDraftBlock(content, 1, 5)}
-              contentLayout="amp"
-            />
           </>
         )}
+        <DraftRenderBlock
+          rawContentBlock={copyAndSliceDraftBlock(
+            postContent,
+            slicedIndex.mb[0],
+            slicedIndex.mb[1]
+          )}
+          contentLayout="amp"
+        />
 
-        {blocksLength > 5 && (
+        {unstyledBlocksCount > 5 && (
           <>
             <StyledAmpGptAd section={sectionSlot} position="AT2" />
             <DraftRenderBlock
-              rawContentBlock={copyAndSliceDraftBlock(content, 5)}
+              rawContentBlock={copyAndSliceDraftBlock(
+                postContent,
+                slicedIndex.mb[1]
+              )}
               contentLayout="amp"
             />
           </>

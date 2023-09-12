@@ -15,7 +15,9 @@ const SubscribeMagazineButton = styled.button`
 export default function SubscribeMagazine() {
   return (
     <SubscribeMagazineButton>
-      <Link href="/papermag">鏡週刊雜誌訂閱</Link>
+      <Link href="/papermag" target="_blank">
+        鏡週刊雜誌訂閱
+      </Link>
     </SubscribeMagazineButton>
   )
 }

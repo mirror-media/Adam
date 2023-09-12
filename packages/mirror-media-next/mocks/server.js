@@ -15,6 +15,14 @@ app.get('/json/:filename', (req, res) => {
     },
   })
 })
+app.get('/json/:foldername/:filename', (req, res) => {
+  const filepath = path.resolve(__dirname, `./json/${req.params.foldername}/${req.params.filename}`)
+  res.sendFile(filepath, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+})
 
 
 

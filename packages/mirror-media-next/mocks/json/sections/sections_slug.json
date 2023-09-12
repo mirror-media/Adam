@@ -1,0 +1,58 @@
+{
+    "sections": [
+        {
+            "slug": "foodtravel"
+        },
+        {
+            "slug": "carandwatch"
+        },
+        {
+            "slug": "hotvideo"
+        },
+        {
+            "slug": "news"
+        },
+        {
+            "slug": "entertainment"
+        },
+        {
+            "slug": "international"
+        },
+        {
+            "slug": "people"
+        },
+        {
+            "slug": "culture"
+        },
+        {
+            "slug": "businessmoney"
+        },
+        {
+            "slug": "mafalda"
+        },
+        {
+            "slug": "videohub"
+        },
+        {
+            "slug": "audioSection2"
+        },
+        {
+            "slug": "audio-news"
+        },
+        {
+            "slug": "member"
+        },
+        {
+            "slug": "timesquare"
+        },
+        {
+            "slug": "mirrorcolumn"
+        },
+        {
+            "slug": "test-section"
+        },
+        {
+            "slug": "life"
+        }
+    ]
+}

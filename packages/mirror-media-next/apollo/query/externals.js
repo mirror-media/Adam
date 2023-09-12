@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { listingExternal, external } from '../fragments/external'
 
-const fetchExternalsByPartnerSlug = gql`
+const fetchExternals = gql`
   ${listingExternal}
   query (
     $take: Int
@@ -32,4 +32,4 @@ const fetchExternalBySlug = gql`
   }
 `
 
-export { fetchExternalsByPartnerSlug, fetchExternalCounts, fetchExternalBySlug }
+export { fetchExternalCounts, fetchExternalBySlug, fetchExternals }

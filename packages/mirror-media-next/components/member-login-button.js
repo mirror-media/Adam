@@ -9,15 +9,19 @@ import Link from 'next/link'
 import { useMembership, logout } from '../context/membership'
 
 const MemberLoginButtonWrapper = styled.div`
-  margin-left: 15px;
+  margin-left: 23px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-left: 16px;
+  }
 `
 const LoginButton = styled.button`
-  font-size: 13px;
+  font-size: 14px;
   line-height: 150%;
   text-decoration: underline;
   text-underline-offset: 2.5px;
   color: #000;
-  padding-left: 1px;
+
   &:focus {
     outline: none;
   }

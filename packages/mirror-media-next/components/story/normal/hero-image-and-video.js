@@ -3,18 +3,7 @@ import styled from 'styled-components'
 import Image from 'next/image'
 import defaultImage from '../../../public/images/default-og-img.png'
 /**
- * @typedef {import('../../../apollo/fragments/post').HeroImage &
- * {
- *  id: string,
- *  resized: {
- *    original: string,
- *    w480: string,
- *    w800: string,
- *    w1200: string,
- *    w1600: string,
- *    w2400: string
- *  }
- * } } HeroImage
+ * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
 
 /**
@@ -91,6 +80,7 @@ export default function HeroImageAndVideo({
 }) {
   const shouldShowHeroVideo = Boolean(heroVideo)
   const shouldShowHeroImage = Boolean(!shouldShowHeroVideo && heroImage)
+
   const heroJsx = () => {
     if (shouldShowHeroVideo) {
       return (
@@ -108,6 +98,7 @@ export default function HeroImageAndVideo({
         <HeroImage>
           <CustomImage
             images={heroImage.resized}
+            imagesWebP={heroImage.resizedWebp}
             loadingImage={'/images/loading@4x.gif'}
             defaultImage={'/images/default-og-img.png'}
             alt={heroCaption ? heroCaption : title}

@@ -106,7 +106,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
    * If it didn't obtain the full content, and the user is logged in, story page will try to get the full content again by using the user's access token as the request payload.
    * If successful, the full content will be displayed; if not, the truncated content will still be shown.
    */
-  console.log('re-render')
+
   const { isLoggedIn, accessToken, isLogInProcessFinished } = useMembership()
   /** @type { [PostContent, React.Dispatch<React.SetStateAction<PostContent>> ]} */
 

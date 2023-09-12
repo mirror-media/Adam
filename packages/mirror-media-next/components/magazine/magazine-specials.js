@@ -168,6 +168,7 @@ export default function MagazineSpecials({ specials }) {
             <ImageWrapper>
               <Image
                 images={magazine.coverPhoto?.resized}
+                imagesWebP={magazine.coverPhoto?.resizedWebp}
                 loadingImage="/images/loading.gif"
                 defaultImage="/images/default-og-img.png"
                 alt={magazine.title}

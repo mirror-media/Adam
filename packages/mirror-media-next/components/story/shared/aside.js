@@ -5,9 +5,14 @@ import RelatedArticleList from './related-article-list'
 import AsideArticleList from './aside-article-list'
 import Divider from './divider'
 import axios from 'axios'
-import client from '../../../apollo/apollo-client'
-import { URL_STATIC_POPULAR_NEWS, API_TIMEOUT } from '../../../config/index.mjs'
-import { fetchAsidePosts } from '../../../apollo/query/posts'
+
+import {
+  URL_STATIC_POPULAR_NEWS,
+  API_TIMEOUT,
+  URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+} from '../../../config/index.mjs'
+
+import { getActiveOrderSection } from '../../../utils'
 
 /**
  * @typedef {import('./related-article-list').Relateds} Relateds
@@ -54,21 +59,21 @@ export default function Aside({
       /**
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
-      const res = await client.query({
-        query: fetchAsidePosts,
-        variables: {
-          take: 6,
-          sectionSlug: sectionSlug,
-          storySlug: storySlug,
-        },
+      const res = await axios({
+        method: 'get',
+        url: `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`,
+        timeout: API_TIMEOUT,
       })
-      return res.data?.posts.map((post) => {
-        const sectionsWithOrdered =
-          post.sectionsInInputOrder && post.sectionsInInputOrder.length
-            ? post.sectionsInInputOrder
-            : post.sections
-        return { sectionsWithOrdered, ...post }
-      })
+      return res.data?.posts
+        .filter((post) => post.slug !== storySlug)
+        .slice(0, 6)
+        .map((post) => {
+          const sectionsWithOrdered = getActiveOrderSection(
+            post.sections,
+            post.sectionsInInputOrder
+          )
+          return { sectionsWithOrdered, ...post }
+        })
     } catch (err) {
       console.error(err)
       return []
@@ -91,10 +96,10 @@ export default function Aside({
 
       const popularNews = data
         .map((post) => {
-          const sectionsWithOrdered =
-            post.sectionsInInputOrder && post.sectionsInInputOrder.length
-              ? post.sectionsInInputOrder
-              : post.sections
+          const sectionsWithOrdered = getActiveOrderSection(
+            post.sections,
+            post.sectionsInInputOrder
+          )
           return { sectionsWithOrdered, ...post }
         })
         .slice(0, 6)

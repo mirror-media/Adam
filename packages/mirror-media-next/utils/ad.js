@@ -72,23 +72,28 @@ function getPageKeyByPartnerSlug(partnerSlug = '') {
  * @param {string} sectionSlug
  * @returns {string | undefined}
  */
-const getSectionGPTPageKey = (sectionSlug = '') => {
-  if (typeof sectionSlug !== 'string') {
-    console.error(
-      `The value for 'sectionSlug' is not of the correct data type 'string'. Please check the data type of the value being passed.`
-    )
-    return undefined
+const getSectionGPTPageKey = (sectionSlug) => {
+  if (!sectionSlug || typeof sectionSlug !== 'string') {
+    return
   }
+
+  let GptPageKey
 
   //if sectionSlug is `論壇(mirrorcolumn)` or `新聞深探(timesquare)`, use the `culture` ad unit.
   const invalidSections = ['mirrorcolumn', 'timesquare']
 
   if (invalidSections.includes(sectionSlug)) {
-    return SECTION_IDS['culture']
+    GptPageKey = SECTION_IDS['culture']
+  } else if (SECTION_IDS.hasOwnProperty(sectionSlug)) {
+    GptPageKey = SECTION_IDS[sectionSlug]
   } else {
-    return SECTION_IDS[sectionSlug]
+    //if SECTION_IDS doesn't include `sectionSlug` ad units, use `other` ad units
+    GptPageKey = 'other'
   }
+
+  return GptPageKey
 }
+
 
 /**
  * Determining whether to insert a `PopIn` advertisement after a specific post index.

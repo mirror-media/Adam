@@ -11,40 +11,37 @@ const Wrapper = styled.div`
 
 const Title = styled.h2`
   font-size: 20px;
+  font-weight: 400;
   line-height: 1.4;
   color: #4a4a4a;
   ${({ theme }) => theme.breakpoint.md} {
     font-size: 24px;
+    font-weight: 500;
     line-height: 1.5;
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-    font-size: 32px;
   }
 `
 const Date = styled.p`
   font-size: 14px;
   line-height: 1.4;
   color: #9b9b9b;
-  margin-top: 8px;
+  margin-top: 4px;
   ${({ theme }) => theme.breakpoint.md} {
     font-size: 16px;
     line-height: 1.5;
-    margin-top: 40px;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    font-size: 20px;
-    margin-top: 42px;
+    margin-top: 12px;
   }
 `
 
 const Description = styled.div`
   font-size: 16px;
+  font-weight: 400;
   line-height: 1.5;
   color: #9b9b9b;
-  margin-top: 12px;
+  margin-top: 20px;
   ${({ theme }) => theme.breakpoint.md} {
     font-size: 18px;
+    font-weight: 400;
+    margin-top: 28px;
   }
 
   > a {

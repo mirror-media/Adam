@@ -1,2 +1,4 @@
 /.yalc
 yalc.lock
+/.vscode
+.vscode/settings.json

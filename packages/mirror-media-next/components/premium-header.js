@@ -3,62 +3,13 @@ import styled from 'styled-components'
 
 import SearchBarDesktop from './search-bar-desktop'
 import { Z_INDEX } from '../constants'
+import { DEFAULT_PREMIUM_SECTIONS_DATA } from '../constants/header'
 import SearchBarInput from './search-bar-input'
 import Logo from './logo'
 import PremiumMobileSidebar from './premium-mobile-sidebar'
 import PremiumNavSections from './premium-nav-sections'
 import PremiumMemberLoginButton from './premium-member-login-button'
 import { SEARCH_URL } from '../config/index.mjs'
-
-const DEFAULT_PREMIUM_SECTIONS_DATA = [
-  {
-    id: '37',
-    name: '財經理財',
-    slug: 'businessmoney',
-    categories: [{ id: '29', name: '理財', slug: 'money' }],
-  },
-  {
-    id: '29',
-    name: '美食旅遊',
-    slug: 'foodtravel',
-    categories: [
-      { id: '11', name: '美食焦點', slug: 'food' },
-      { id: '12', name: '旅行台灣', slug: 'traveltaiwan' },
-      { id: '17', name: '看見世界', slug: 'seetheworld' },
-      { id: '18', name: '廚房密技', slug: 'kitchenplay' },
-      { id: '45', name: '好酒情報', slug: 'wine' },
-    ],
-  },
-  {
-    id: '35',
-    name: '人物',
-    slug: 'people',
-    categories: [
-      { id: '59', name: '一鏡到底', slug: 'somebody' },
-      { id: '60', name: '鏡相人間', slug: 'world' },
-      { id: '61', name: '心內話', slug: 'truth' },
-      { id: '62', name: '財經人物', slug: 'mogul' },
-    ],
-  },
-  {
-    id: '33',
-    name: '娛樂',
-    slug: 'entertainment',
-    categories: [
-      { id: '35', name: '鏡大咖', slug: 'celebrity' },
-      { id: '37', name: '影劇專欄', slug: 'column' },
-    ],
-  },
-  {
-    id: '43',
-    name: '新聞深探',
-    slug: 'timesquare',
-    categories: [
-      { id: '104', name: '時代現場', slug: 'timesquare' },
-      { id: '123', name: '新聞深探', slug: 'dig' },
-    ],
-  },
-]
 
 /**
  * @typedef {import('./premium-mobile-sidebar').H2AndH3Block} H2AndH3Block

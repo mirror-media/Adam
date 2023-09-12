@@ -1,6 +1,7 @@
 import ShareHeader from './share-header'
 import Footer from './footer'
 import CustomHead from './custom-head'
+import GDPRNotification from '../gdpr'
 
 /**
  * @typedef {Object} Header
@@ -31,6 +32,7 @@ export default function Layout({ head, header, footer, children }) {
       />
       <ShareHeader pageLayoutType={header.type} headerData={header.data} />
       {children}
+      <GDPRNotification />
       <Footer footerType={footer.type} />
     </>
   )

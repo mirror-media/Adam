@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Link from 'next/link'
 
-const StyledSubscribeBtn = styled.button`
+const StyledBtn = styled.button`
   :focus {
     outline: 0;
   }
@@ -10,38 +10,32 @@ const StyledSubscribeBtn = styled.button`
   width: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 72px;
   padding: 12px 16px;
   justify-content: center;
   align-items: center;
   gap: 6px;
+  border: 1px solid #054f77;
 
-  background: ${
-    /**
-     * @param {{bgColor: string}} param
-     */
-    ({ bgColor }) => bgColor
-  };
+  background: #fff;
 
   &:hover {
-    background: ${({
-      // @ts-ignore
-      hoverColor,
-    }) => hoverColor};
+    background: linear-gradient(
+        0deg,
+        rgba(5, 79, 119, 0.05) 0%,
+        rgba(5, 79, 119, 0.05) 100%
+      ),
+      #fff;
 
     .text,
     .title {
-      color: ${({
-        // @ts-ignore
-        hoverText,
-      }) => hoverText};
+      color: #054f77;
     }
   }
 
   transition: background 0.25s ease, color 0.25s ease;
 
   .title {
-    color: #fff;
+    color: #054f77;
     font-size: 18px;
     font-weight: 500;
   }
@@ -57,26 +51,16 @@ const StyledSubscribeBtn = styled.button`
 /**
  * @param {Object} props
  * @param {string} props.title
- * @param {string} props.bgColor
- * @param {string} props.hoverColor
- * @param {string} props.hoverText
  * @param {string} props.href
+ * @param {string} [props.className]
  * @return {JSX.Element}
  */
-function SubscribePaperMagBtn({ title, bgColor, hoverColor, hoverText, href }) {
+export default function SecondaryBlueBtn({ title, href, className = '' }) {
   return (
     <Link href={href}>
-      <StyledSubscribeBtn
-        bgColor={bgColor}
-        // @ts-ignore
-        hoverColor={hoverColor}
-        hoverText={hoverText}
-      >
+      <StyledBtn className={className}>
         <p className="title">{title}</p>
-        <p className="text">續訂另有優惠</p>
-      </StyledSubscribeBtn>
+      </StyledBtn>
     </Link>
   )
 }
-
-export default SubscribePaperMagBtn

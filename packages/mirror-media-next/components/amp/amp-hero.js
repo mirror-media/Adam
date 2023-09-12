@@ -59,10 +59,6 @@ export default function AmpHero({
   title = '',
 }) {
   const shouldShowHeroVideo = Boolean(heroVideo)
-  const shouldShowHeroImage = Boolean(!shouldShowHeroVideo && heroImage)
-  if (!shouldShowHeroVideo && !shouldShowHeroImage) {
-    return null
-  }
 
   // TODO: add srcset and callback
   // const srcset = Object.entries(heroImage?.resized)
@@ -73,14 +69,20 @@ export default function AmpHero({
 
   return (
     <figure>
-      {shouldShowHeroImage && (
+      {!shouldShowHeroVideo && (
         <HeroWrapper>
           {/** @ts-ignore */}
           <amp-img
-            src={heroImage.resized?.original}
+            src={heroImage?.resized?.original}
             alt={heroCaption ?? title}
             layout="fill"
-          />
+          >
+            <amp-img
+              src={'/images/default-og-img.png'}
+              alt={heroCaption ?? title}
+              layout="fill"
+            ></amp-img>
+          </amp-img>
         </HeroWrapper>
       )}
       {shouldShowHeroVideo && (

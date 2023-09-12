@@ -100,10 +100,15 @@ export default function FormInput(props) {
     setFocused(true)
   }
 
+  const handleInvalid = (event) => {
+    event.preventDefault()
+    setFocused(true) // Ensure the input is marked as focused to apply the invalid styling
+  }
+
   return (
     <InputWrapper>
       <label>{label}</label>
-      {label.includes('地址') && (
+      {label?.includes('地址') && (
         <p>
           請填完整郵遞區號和地址，如：114066 台北市內湖區堤頂大道一段 365 號 1
           樓
@@ -115,6 +120,7 @@ export default function FormInput(props) {
         onBlur={handleFocus}
         // eslint-disable-next-line react/no-unknown-property
         focused={focused.toString()}
+        onInvalid={handleInvalid}
       />
       <span>{errorMessage}</span>
     </InputWrapper>

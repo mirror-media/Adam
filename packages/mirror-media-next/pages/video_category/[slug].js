@@ -16,6 +16,7 @@ import {
 } from '../../utils/api/video-category.js'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -125,6 +126,7 @@ export default function VideoCategory({
           />
         )}
         {shouldShowAd && <StickyGPTAd_MB_ST pageKey="videohub" adKey="MB_ST" />}
+        {shouldShowAd && <FullScreenAds />}
       </Wrapper>
     </Layout>
   )
@@ -223,7 +225,6 @@ export async function getServerSideProps({ query, req, res }) {
     : []
 
   // handle fetch videos and get nextPageToken for infinite scroll
-
   if (handledResponses[1]?.items?.length === 0) {
   }
   const videos = handledResponses[1]?.items
@@ -238,6 +239,18 @@ export async function getServerSideProps({ query, req, res }) {
       )
     : []
   const ytNextPageToken = handledResponses[1]?.nextPageToken || ''
+
+  // handle category state, if `inactive` -> redirect to 404
+  if (handledResponses[2]?.category?.state === 'inactive') {
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `categorySlug '${videoCategorySlug}' is inactive, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
 
   const category = handledResponses[2]?.category || { slug: videoCategorySlug }
 

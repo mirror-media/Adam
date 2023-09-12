@@ -7,14 +7,14 @@ import styled from 'styled-components'
 const Hamburger = styled.button`
   user-select: none;
   display: block;
-  margin-left: 16px;
+  margin-left: 22px;
   &:focus {
     border: none;
     outline: none;
   }
   .hamburger {
     display: block;
-    width: 16px;
+    width: 20px;
     height: 2px;
     margin: 2px 0;
     border-radius: 12px;

@@ -22,6 +22,7 @@ import { gql } from '@apollo/client'
  * @property {string} name
  * @property {ImageFile} imageFile
  * @property {Resized} resized
+ * @property {Resized} resizedWebp
  */
 
 /**
@@ -38,6 +39,14 @@ export const heroImage = gql`
       height
     }
     resized {
+      original
+      w480
+      w800
+      w1200
+      w1600
+      w2400
+    }
+    resizedWebp {
       original
       w480
       w800

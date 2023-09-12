@@ -1,7 +1,10 @@
 import styled from 'styled-components'
 import DraftRenderBlock from '../shared/draft-renderer-block'
 import dynamic from 'next/dynamic'
-import { copyAndSliceDraftBlock, getBlocksCount } from '../../../utils/story'
+import {
+  copyAndSliceDraftBlock,
+  getSlicedIndexAndUnstyledBlocksCount,
+} from '../../../utils/story'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { SECTION_IDS } from '../../../constants'
@@ -48,32 +51,30 @@ export default function PremiumArticleContent({
 }) {
   const shouldShowAd = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
-  const blocksLength = getBlocksCount(content)
+  const { slicedIndex, unstyledBlocksCount } =
+    getSlicedIndexAndUnstyledBlocksCount(content, { mb: [0], pc: [] })
 
   //The GPT advertisement for the `mobile` version includes `AT1`
   const MB_contentJsx = (
     <section className={className}>
       <DraftRenderBlock
-        rawContentBlock={copyAndSliceDraftBlock(content, 0, 1)}
+        rawContentBlock={copyAndSliceDraftBlock(content, 0, slicedIndex.mb[0])}
         contentLayout="premium"
         wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
       />
 
-      {blocksLength > 1 && (
+      {unstyledBlocksCount > 1 && (
         <>
           {shouldShowAd && (
             <StyledGPTAd pageKey={pageKeyForGptAd} adKey="MB_AT1" />
           )}
-
-          <DraftRenderBlock
-            rawContentBlock={copyAndSliceDraftBlock(content, 1)}
-            contentLayout="premium"
-            wrapper={(children) => (
-              <ContentContainer>{children}</ContentContainer>
-            )}
-          />
         </>
       )}
+      <DraftRenderBlock
+        rawContentBlock={copyAndSliceDraftBlock(content, slicedIndex.mb[0])}
+        contentLayout="premium"
+        wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
+      />
     </section>
   )
 

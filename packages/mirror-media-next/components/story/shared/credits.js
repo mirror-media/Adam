@@ -84,7 +84,7 @@ const CREDIT_TITLE_NAME_MAP = {
   designers: '設計',
   engineers: '工程',
   vocals: '主播',
-  extend_byline: '特約記者',
+  extend_byline: '其他',
 }
 
 /**

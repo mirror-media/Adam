@@ -93,4 +93,71 @@ const getBlocksCount = (content) => {
   }
 }
 
-export { handleStoryPageRedirect, copyAndSliceDraftBlock, getBlocksCount }
+/**
+ * The Function for calculate which index we want to slice the original content.
+ * and amount of `content.blocks` which type is 'unstyled'.
+ *
+ * The reason why we need to calculate these variables is our business logic:
+ * The index of slice should only count the block item which type is `unstyled`.
+ *
+ * Take the following array as a example, which `1` is unstyled, `0` is not unstyled.
+ * ```
+ * [1, 0, 0, 1, 1, 0, 1, 1, 0, 1]
+ * ```
+ * If the slice index is [0,2], which means we what to slice **AFTER** the first and third unstyled item, which is:
+ * ```
+ * [1, | 0, 0, 1, 1, | 0 , 1, 0, 1] -> [1], [0, 0, 1, 1], [0, 1, 0, 1]
+ *     ^             ^
+ *
+ * ```
+ * so we need to find the index in original array we want to slice.
+ *
+ * @param {Content} content
+ * @param {{mb: number[], pc: number[]}} [unstyledBlockSliceIndex]
+ */
+const getSlicedIndexAndUnstyledBlocksCount = (
+  content,
+  unstyledBlockSliceIndex = { mb: [0, 4], pc: [2] }
+) => {
+  const hasContent = hasContentInRawContentBlock(content)
+  if (hasContent) {
+    const contentWithoutEmptyBlock = removeEmptyContentBlock(content)
+    /**
+     * @type {Content}
+     */
+    const newContent = JSON.parse(JSON.stringify(contentWithoutEmptyBlock))
+
+    const unstyledContentBlocks = newContent.blocks.filter(
+      (block) => block.type === 'unstyled'
+    )
+    /**
+     *
+     * @param {number[]} arr
+     */
+    const findSlicedIndex = (arr) => {
+      return arr
+        .map((i) =>
+          newContent.blocks.findIndex(
+            (block) => block.key === unstyledContentBlocks[i]?.key
+          )
+        )
+        .filter((item) => item >= 0)
+        .map((i) => i + 1)
+    }
+    const slicedIndex = {
+      mb: findSlicedIndex(unstyledBlockSliceIndex.mb),
+      pc: findSlicedIndex(unstyledBlockSliceIndex.pc),
+    }
+    const unstyledBlocksCount = unstyledContentBlocks?.length ?? 0
+    return { slicedIndex, unstyledBlocksCount }
+  } else {
+    return { slicedIndex: { mb: [], pc: [] }, unstyledBlocksCount: 0 }
+  }
+}
+
+export {
+  handleStoryPageRedirect,
+  copyAndSliceDraftBlock,
+  getBlocksCount,
+  getSlicedIndexAndUnstyledBlocksCount,
+}

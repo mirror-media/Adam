@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client'
-import { category, categroyWithSection } from '../fragments/category'
+import { category, categoryWithSection } from '../fragments/category'
 
 const fetchCategorySections = gql`
-  ${categroyWithSection}
+  ${categoryWithSection}
   query ($categorySlug: String) {
     category(where: { slug: $categorySlug }) {
-      ...categroyWithSection
+      ...categoryWithSection
     }
   }
 `

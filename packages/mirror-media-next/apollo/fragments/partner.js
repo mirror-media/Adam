@@ -20,6 +20,7 @@ import { gql } from '@apollo/client'
  * @property {string} id
  * @property {string} slug
  * @property {string} name
+ * @property {boolean} showOnIndex
  * @property {string} website
  * @property {boolean} public
  * @property {string} createdAt
@@ -29,7 +30,7 @@ import { gql } from '@apollo/client'
  */
 
 /**
- * @typedef {Pick<GenericPartner, 'id' | 'slug' | 'name'>} Partner
+ * @typedef {Pick<GenericPartner, 'id' | 'slug' | 'name' | 'showOnIndex'>} Partner
  */
 
 export const partner = gql`
@@ -37,5 +38,6 @@ export const partner = gql`
     id
     slug
     name
+    showOnIndex
   }
 `

@@ -6,7 +6,7 @@ import { ApolloProvider } from '@apollo/client'
 import client from '../apollo/apollo-client'
 import * as gtag from '../utils/gtag'
 import TagManager from 'react-gtm-module'
-import { ENV, GTM_ID } from '../config/index.mjs'
+import { GTM_ID } from '../config/index.mjs'
 import WholeSiteScript from '../components/whole-site-script'
 
 import { MembershipProvider } from '../context/membership'
@@ -22,10 +22,8 @@ import { MembershipProvider } from '../context/membership'
 function MyApp({ Component, pageProps }) {
   //Temporarily enable google analytics and google tag manager only in dev and local environment.
   useEffect(() => {
-    if (ENV === 'dev' || ENV === 'local') {
-      gtag.init()
-      TagManager.initialize({ gtmId: GTM_ID })
-    }
+    gtag.init()
+    TagManager.initialize({ gtmId: GTM_ID })
   }, [])
   return (
     <>

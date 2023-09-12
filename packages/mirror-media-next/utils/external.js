@@ -1,3 +1,5 @@
+import { theme } from '../styles/theme/index'
+const { color } = theme
 /**
  * The `brief` of the externals is string and not in the format of a draft.
  * Here convert the string into a data format with `blocks` and `entityMap`.
@@ -30,65 +32,42 @@ function transformStringToDraft(id = '', text = '') {
 
 /**
  * Special requirement:
- * When the partner's slug is 'healthnews', 'zuchi', or '5678news', the section title will be '生活'.
- * When the partner's slug is 'ebc', the section title will be '時事'.
- * For all other partners, the section title will be '合作媒體'.
+ * If the partner's property `showOnIndex` in true, then title be `時事`.
+ * If not, then title should be `生活`.
  *
  * @param {Partner | null} partner
  * @returns {string | undefined}
  */
 function getExternalSectionTitle(partner) {
-  let sectionTitle
-
-  if (partner && partner.slug) {
-    switch (partner.slug) {
-      case 'healthnews':
-      case 'zuchi':
-      case '5678news':
-        sectionTitle = '生活'
-        break
-      case 'ebc':
-        sectionTitle = '時事'
-        break
-      default:
-        sectionTitle = '合作媒體'
-        break
-    }
-  } else {
-    sectionTitle = undefined
+  if (!partner || !partner.slug) {
+    return undefined
   }
 
-  return sectionTitle
+  if (partner.showOnIndex) {
+    return '時事'
+  } else {
+    return '生活'
+  }
 }
 
 /**
  * Special requirement:
- * When the partner's slug is 'healthnews', 'zuchi', 'ebc' or '5678news', the title color will be '#61B8C6'
- * For all other partners, the title color will be '#3855BC'
+ * If the partner's property `showOnIndex` in true, then title color should be `#61B8C6`, which is section color of `news`.
+ * If not, then title color should be `#2ECDA7`, which is section color of `life`.
  *
  * @param {Partner | null} partner
  * @returns {string | undefined}
  */
 function getExternalPartnerColor(partner) {
-  let partnerColor
-
-  if (partner && partner.slug) {
-    switch (partner.slug) {
-      case 'healthnews':
-      case 'zuchi':
-      case '5678news':
-      case 'ebc':
-        partnerColor = '#61B8C6'
-        break
-      default:
-        partnerColor = '#3855BC'
-        break
-    }
-  } else {
-    partnerColor = undefined
+  if (!partner || !partner.slug) {
+    return undefined
   }
 
-  return partnerColor
+  if (partner.showOnIndex) {
+    return color.sectionsColor.news
+  } else {
+    return color.sectionsColor.life
+  }
 }
 
 /**

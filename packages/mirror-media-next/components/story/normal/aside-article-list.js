@@ -181,7 +181,7 @@ const Label = styled.div`
     color: white;
     font-size: 14px;
     line-height: 25px;
-    font-weight: 400;
+    font-weight: 600;
     background-color: ${
       /**
        * @param {Object} props
@@ -347,6 +347,7 @@ export default function AsideArticleList({
               >
                 <Image
                   images={item?.heroImage?.resized}
+                  imagesWebP={item?.heroImage?.resizedWebp}
                   alt={item.title}
                   loadingImage={'/images/loading.gif'}
                   defaultImage={'/images/default-og-img.png'}

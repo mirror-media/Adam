@@ -20,6 +20,7 @@ import Date from '../shared/date'
 import ButtonCopyLink from '../shared/button-copy-link'
 import ButtonSocialNetworkShare from '../shared/button-social-network-share'
 import Aside from '../shared/aside'
+import { getActiveOrderSection } from '../../../utils'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
@@ -144,10 +145,10 @@ export default function StoryWideStyle({ postData, postContent }) {
     tags = [],
   } = postData
 
-  const sectionsWithOrdered =
-    sectionsInInputOrder && sectionsInInputOrder.length
-      ? sectionsInInputOrder
-      : sections
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
+  )
   const [section] = sectionsWithOrdered
 
   const relatedsWithOrdered =

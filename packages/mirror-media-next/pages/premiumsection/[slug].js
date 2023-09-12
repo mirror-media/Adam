@@ -14,6 +14,7 @@ import {
 import { SECTION_IDS } from '../../constants/index'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import FullScreenAds from '../../components/ads/full-screen-ads'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -153,6 +154,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
         {shouldShowAd && (
           <StickyGPTAd_MB_ST pageKey={SECTION_IDS['member']} adKey="MB_ST" />
         )}
+        {shouldShowAd && <FullScreenAds />}
       </SectionContainer>
     </Layout>
   )

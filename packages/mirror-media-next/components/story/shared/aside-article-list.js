@@ -295,6 +295,7 @@ export default function AsideArticleList({
             <Link href={articleHref} target="_blank" className="article-image">
               <Image
                 images={item?.heroImage?.resized}
+                imagesWebP={item?.heroImage?.resizedWebp}
                 alt={item.title}
                 loadingImage={'/images/loading.gif'}
                 defaultImage={'/images/default-og-img.png'}

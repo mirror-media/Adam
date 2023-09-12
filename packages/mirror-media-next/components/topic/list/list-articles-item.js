@@ -106,12 +106,8 @@ const ItemBrief = styled.div`
  *  slug: string,
  * }} Category
  *
- * @typedef {import('../../../apollo/fragments/photo').Photo & {
- *  id: String,
- *  name: String,
- *  imageFile: import('../../../apollo/fragments/photo').ImageFile,
- *  resized: import('../../../apollo/fragments/photo').Resized
- * }} HeroImage
+ *
+ * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  *
  * @typedef {import('../../../apollo/fragments/post').Post & {
  *  id: string,
@@ -138,10 +134,11 @@ export default function ListArticlesItem({ item }) {
       <ImageContainer>
         <Image
           images={item.heroImage?.resized}
+          imagesWebP={item.heroImage?.resizedWebp}
           alt={item.title}
           loadingImage="/images/loading.gif"
           defaultImage="/images/default-og-img.png"
-          rwd={{ tablet: '320px', desktop: '220px' }}
+          rwd={{ mobile: '500px', tablet: '500px', desktop: '500px' }}
         />
         {itemSection && (
           <ItemSection sectionName={itemSection?.slug}>

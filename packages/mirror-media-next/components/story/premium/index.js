@@ -20,7 +20,7 @@ import Footer from '../../shared/footer'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { SECTION_IDS } from '../../../constants/index'
-import { getCategoryOfWineSlug } from '../../../utils'
+import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -237,10 +237,11 @@ export default function StoryPremiumStyle({
   const shouldShowArticleMask =
     !isLoggedIn || postContent.type === 'trimmedContent'
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
-  const sectionsWithOrdered =
-    sectionsInInputOrder && sectionsInInputOrder.length
-      ? sectionsInInputOrder
-      : sections
+
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
+  )
   const [section] = sectionsWithOrdered
   const sectionLabelFirst = getSectionLabelFirst(sectionsWithOrdered)
   const writersWithOrdered =

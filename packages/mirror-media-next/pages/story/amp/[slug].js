@@ -9,6 +9,7 @@ import {
   getCategoryOfWineSlug,
   convertDraftToText,
   getResizedUrl,
+  getActiveOrderSection,
 } from '../../../utils'
 
 import { handleStoryPageRedirect } from '../../../utils/story'
@@ -69,10 +70,10 @@ function StoryAmpPage({ postData }) {
     sectionsInInputOrder = [],
   } = postData
 
-  const sectionsWithOrdered =
-    sectionsInInputOrder && sectionsInInputOrder.length
-      ? sectionsInInputOrder
-      : sections
+  const sectionsWithOrdered = getActiveOrderSection(
+    sections,
+    sectionsInInputOrder
+  )
   const [section] = sectionsWithOrdered
 
   const sectionSlot = getAmpGptDataSlotSection(section)
@@ -83,6 +84,7 @@ function StoryAmpPage({ postData }) {
     relatedsInInputOrder && relatedsInInputOrder.length
       ? relatedsInInputOrder
       : relateds
+
   return (
     <>
       <Head>
@@ -194,10 +196,11 @@ export async function getServerSideProps({ params, req, res }) {
      * @type {PostData}
      */
     const postData = result?.data?.post
-    if (!postData) {
+    if (!postData || postData?.isAdvertised) {
       return { notFound: true }
     }
     const { style } = postData
+
     /**
      * If post style is 'projects' or 'campaign', redirect to certain route.
      *

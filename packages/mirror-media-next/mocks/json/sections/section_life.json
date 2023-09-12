@@ -1,0 +1,66 @@
+{
+    "posts": [
+        {
+            "id": "212265",
+            "slug": "slideshow-test",
+            "title": "slideshow-test",
+            "sections": [
+                {
+                    "id": "17",
+                    "name": "生活",
+                    "slug": "life",
+                    "state": "active"
+                }
+            ],
+            "sectionsInInputOrder": [
+                {
+                    "id": "17",
+                    "name": "生活",
+                    "slug": "life",
+                    "state": "active"
+                }
+            ],
+            "heroImage": null
+        },
+        {
+            "id": "212049",
+            "slug": "20230613mkt002",
+            "title": "【AI 2.0降臨特企】AIHPCcon台灣AI超算年會秀成果　華碩搶推繁中版企業級大語言模型",
+            "sections": [
+                {
+                    "id": "17",
+                    "name": "生活",
+                    "slug": "life",
+                    "state": "active"
+                }
+            ],
+            "sectionsInInputOrder": [
+                {
+                    "id": "17",
+                    "name": "生活",
+                    "slug": "life",
+                    "state": "active"
+                }
+            ],
+            "heroImage": {
+                "id": "655402",
+                "resized": {
+                    "original": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1.jpg",
+                    "w480": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w480.jpg",
+                    "w800": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w800.jpg",
+                    "w1200": "",
+                    "w1600": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w1600.jpg",
+                    "w2400": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w2400.jpg"
+                },
+                "resizedWebp": {
+                    "original": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1.webP",
+                    "w480": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w480.webP",
+                    "w800": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w800.webP",
+                    "w1200": "",
+                    "w1600": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w1600.webP",
+                    "w2400": "https://v3-statics-dev.mirrormedia.mg/images/20230613112341-dd6c3f65f43d35b068a254df430107a1-w2400.webP"
+                }
+            }
+        }
+    ]
+}

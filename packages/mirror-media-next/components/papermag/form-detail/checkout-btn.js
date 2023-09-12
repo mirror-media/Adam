@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import styled from 'styled-components'
+import Spinner from './spinner'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -40,11 +42,26 @@ const StyledCheckoutBtn = styled.button`
 `
 
 export default function CheckoutBtn({ isAcceptedConditions, receiptOption }) {
+  const [isLoading, setIsLoading] = useState(false)
   const isButtonDisabled = !isAcceptedConditions || receiptOption === null
+
+  const handleCheckout = () => {
+    if (!isAcceptedConditions || receiptOption === null) {
+      return
+    }
+
+    setIsLoading(true)
+
+    // Simulate an API call or some asynchronous operation
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 2000)
+  }
+
   return (
     <Wrapper>
-      <StyledCheckoutBtn disabled={isButtonDisabled}>
-        開始結帳
+      <StyledCheckoutBtn disabled={isButtonDisabled} onClick={handleCheckout}>
+        {isLoading ? <Spinner /> : '確認訂購'}
       </StyledCheckoutBtn>
     </Wrapper>
   )
