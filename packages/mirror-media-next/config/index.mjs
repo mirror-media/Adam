@@ -147,8 +147,8 @@ switch (ENV) {
     GTM_ID = 'GTM-PBNLSMX'
     SEARCH_URL = 'https://adam-mirror-media-search-dev-ufaummkd5q-de.a.run.app'
 
-    ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
-    ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
+    ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
+    ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
 
     GPT_MODE = 'dev'
     FIREBASE_CONFIG = {
