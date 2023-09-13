@@ -44,6 +44,7 @@ const InviteMemberCardWrapper = styled.div`
     color: rgba(238, 238, 238, 1);
     .login {
       text-decoration: underline;
+      text-underline-offset: 2.5px;
     }
   }
   ${({ theme }) => theme.breakpoint.md} {
@@ -100,7 +101,11 @@ const InviteMemberCard = ({ postId = '' }) => {
             限時優惠每月$49元 <br></br>全站看到飽
           </p>
 
-          <Link href="/subscribe" className="link GTM-subscribe-premium">
+          <Link
+            href="/subscribe"
+            target="_blank"
+            className="link GTM-subscribe-premium"
+          >
             加入premium會員
           </Link>
         </InviteMemberOption>

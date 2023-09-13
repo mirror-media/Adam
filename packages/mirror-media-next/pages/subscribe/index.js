@@ -11,6 +11,7 @@ import PlansForNonMember from '../../components/subscribe/plan-non-member'
 import PlanForBasicMember from '../../components/subscribe/plan-basic-member'
 import PlanForMonthlyMember from '../../components/subscribe/plan-monthly-member'
 import PlanForYearlyMember from '../../components/subscribe/plan-yearly-member'
+import { ACCESS_SUBSCRIBE_FEATURE_TOGGLE } from '../../config/index.mjs'
 
 const Page = styled.main`
   min-height: 70vh;
@@ -109,6 +110,15 @@ export async function getServerSideProps({ req, res }) {
     globalLogFields[
       'logging.googleapis.com/trace'
     ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+  }
+
+  if (ACCESS_SUBSCRIBE_FEATURE_TOGGLE !== 'on') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
   }
 
   // Fetch header data

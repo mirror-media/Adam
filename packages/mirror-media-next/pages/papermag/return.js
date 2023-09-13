@@ -9,6 +9,8 @@ import Steps from '../../components/subscribe-steps'
 import Succeeded from '../../components/papermag/succeeded'
 import Failed from '../../components/papermag/failed'
 
+import { ACCESS_PAPERMAG_FEATURE_TOGGLE } from '../../config/index.mjs'
+
 const Wrapper = styled.main`
   min-height: 50vh;
   max-width: 960px;
@@ -75,6 +77,15 @@ export async function getServerSideProps({ req, res }) {
     globalLogFields[
       'logging.googleapis.com/trace'
     ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+  }
+
+  if (ACCESS_PAPERMAG_FEATURE_TOGGLE !== 'on') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
   }
 
   // Fetch header data

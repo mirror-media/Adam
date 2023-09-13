@@ -164,14 +164,7 @@ export default function SocialNetworkService({
         facebookPagePluginSize={facebookPagePluginSize}
       />
       <SnsNav>
-        <ul>
-          {snsItem}
-          <SnsItem className="join-member-link">
-            <Link href="/login" target="_blank" rel="noreferrer noopener">
-              <button>加入會員</button>
-            </Link>
-          </SnsItem>
-        </ul>
+        <ul>{snsItem}</ul>
       </SnsNav>
     </Wrapper>
   )

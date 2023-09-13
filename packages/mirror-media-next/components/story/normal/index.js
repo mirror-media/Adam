@@ -12,7 +12,6 @@ import ArticleBrief from '../shared/brief'
 import AsideArticleList from '../../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../../components/story/normal/social-network-service'
-import SubscribeInviteBanner from '../../../components/story/normal/subscribe-invite-banner'
 import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
 import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
@@ -686,7 +685,6 @@ export default function StoryNormalStyle({
           </DateUnderContent>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
-          <SubscribeInviteBanner />
 
           <RelatedArticleList
             relateds={relatedsWithOrdered}

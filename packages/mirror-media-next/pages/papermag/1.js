@@ -6,6 +6,7 @@ import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
 import SubscribePaperMagForm from '../../components/papermag/subscribe-papermag-form'
+import { ACCESS_PAPERMAG_FEATURE_TOGGLE } from '../../config/index.mjs'
 
 const Page = styled.main`
   min-height: 65vh;
@@ -56,6 +57,15 @@ export async function getServerSideProps({ req, res }) {
     globalLogFields[
       'logging.googleapis.com/trace'
     ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+  }
+
+  if (ACCESS_PAPERMAG_FEATURE_TOGGLE !== 'on') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
   }
 
   // Fetch header data

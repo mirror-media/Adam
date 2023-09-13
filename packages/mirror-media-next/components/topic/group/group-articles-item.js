@@ -133,7 +133,7 @@ export default function GroupArticlesItem({ item }) {
           alt={item.title}
           loadingImage="/images/loading.gif"
           defaultImage="/images/default-og-img.png"
-          rwd={{ tablet: '320px', desktop: '220px' }}
+          rwd={{ mobile: '500px', tablet: '500px', laptop: '500px' }}
         />
       </ImageContainer>
       <ItemDetail className="groupListBlockContent">
