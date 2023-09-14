@@ -27,7 +27,7 @@ const Loading = styled.div`
  * @param {Object} props
  * @param {number} props.postsCount
  * @param {Article[]} props.posts
- * @param {string} props.topicId
+ * @param {string} props.topicSlug
  * @param {number} props.renderPageSize
  * @param {string} props.dfp
  * @returns {React.ReactElement}
@@ -35,20 +35,20 @@ const Loading = styled.div`
 export default function TopicListArticles({
   postsCount,
   posts,
-  topicId,
+  topicSlug,
   renderPageSize,
   dfp,
 }) {
   const fetchPageSize = renderPageSize
   async function fetchTopicPostsFromPage(page) {
-    if (!topicId) {
+    if (!topicSlug) {
       return
     }
     try {
       const take = fetchPageSize
       const skip = (page - 1) * take
-      const response = await fetchTopicByTopicSlug(topicId, take, skip)
-      return response.data.topic.posts
+      const response = await fetchTopicByTopicSlug(topicSlug, take, skip)
+      return response.data.topics[0].posts
     } catch (error) {
       // [to-do]: use beacon api to log error on gcs
       console.error(error)

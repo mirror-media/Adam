@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
-    "@mirrormedia/lilith-draft-renderer": "^1.3.0-alpha.2",
+    "@mirrormedia/lilith-draft-renderer": "^1.3.0-alpha.4",
     "@mirrormedia/newebpay-node": "^1.0.8",
     "@next/font": "^13.1.2",
     "@readr-media/react-image": "^2.1.3",

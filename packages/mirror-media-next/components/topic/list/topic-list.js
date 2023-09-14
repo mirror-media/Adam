@@ -168,6 +168,7 @@ const CustomSwiperNext = styled.div`
  * @typedef {import('./topic-list-articles').Article} Article
  * @typedef {import('../../../apollo/fragments/topic').Topic & {
  *  id: string;
+ *  slug: string;
  *  name: string;
  *  brief: import('../../../type/draft-js').Draft;
  *  heroImage: Photo;
@@ -189,7 +190,7 @@ const CustomSwiperNext = styled.div`
  */
 export default function TopicList({ topic, renderPageSize, slideshowImages }) {
   const [swiperRef, setSwiperRef] = useState(null)
-  const { postsCount, posts, id, style } = topic
+  const { postsCount, posts, slug, style } = topic
   const backgroundUrl = parseUrl(topic.style)
     ? ''
     : topic.og_image?.resized?.original || topic.heroImage?.resized?.original
@@ -247,7 +248,7 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
           </TopicLeading>
         </Topic>
         <TopicListArticles
-          topicId={id}
+          topicSlug={slug}
           posts={posts}
           postsCount={postsCount}
           renderPageSize={renderPageSize}

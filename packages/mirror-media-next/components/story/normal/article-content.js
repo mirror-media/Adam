@@ -26,6 +26,10 @@ const Wrapper = styled.section`
 const ContentContainer = styled.section`
   margin-top: 32px;
   margin-bottom: 32px;
+
+  .readr-media-react-image {
+    background-color: transparent !important;
+  }
 `
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;

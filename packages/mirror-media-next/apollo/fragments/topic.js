@@ -53,6 +53,7 @@ export const topic = gql`
   ${tag}
   fragment topic on Topic {
     id
+    slug
     name
     brief
     heroImage {

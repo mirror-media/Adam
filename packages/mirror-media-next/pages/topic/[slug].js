@@ -204,7 +204,7 @@ export async function getServerSideProps({ query, req, res }) {
           RENDER_PAGE_SIZE * 2,
           posts.length
         )
-        moreTopicPosts = topicData.data.topic?.posts || []
+        moreTopicPosts = topicData.data.topics?.[0].posts || []
       } catch (error) {
         const annotatingError = errors.helpers.wrap(
           error,
