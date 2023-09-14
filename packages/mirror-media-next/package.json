@@ -21,6 +21,7 @@
     "@readr-media/share-button": "^1.0.3",
     "@svgr/webpack": "^6.3.1",
     "@twreporter/errors": "^1.1.2",
+    "apollo-link-timeout": "^4.0.0",
     "axios": "^1.2.0",
     "body-scroll-lock": "3.1.5",
     "cors": "^2.8.5",

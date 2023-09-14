@@ -1,9 +1,18 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import ApolloLinkTimeout from 'apollo-link-timeout'
+import { HttpLink } from '@apollo/client'
 
-import { WEEKLY_API_SERVER_ORIGIN } from '../config/index.mjs'
+import { ApolloClient, InMemoryCache, concat } from '@apollo/client'
+
+import { API_TIMEOUT, WEEKLY_API_SERVER_ORIGIN } from '../config/index.mjs'
+
+const httpLink = new HttpLink({
+  uri: `https://${WEEKLY_API_SERVER_ORIGIN}/content/graphql`,
+})
+
+const timeoutLink = new ApolloLinkTimeout(API_TIMEOUT)
 
 const client = new ApolloClient({
-  uri: `https://${WEEKLY_API_SERVER_ORIGIN}/content/graphql`,
+  link: concat(timeoutLink, httpLink),
   cache: new InMemoryCache(),
   defaultOptions: {
     watchQuery: {
