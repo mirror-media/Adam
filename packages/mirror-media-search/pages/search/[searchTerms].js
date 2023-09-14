@@ -57,9 +57,9 @@ export async function getServerSideProps({ params }) {
     ])
 
     const props = {
-      sectionsData: responses[0].value.data._items,
-      topicsData: responses[1].value.data._endpoints.topics._items,
-      searchResult: responses[2].value.data,
+      sectionsData: responses[0].value?.data?._items || [],
+      topicsData: responses[1].value?.data?._endpoints?.topics?._items || [],
+      searchResult: responses[2].value?.data || {},
       redirectUrl: URL_MIRROR_MEDIA,
     }
 

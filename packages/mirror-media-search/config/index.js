@@ -29,7 +29,7 @@ const PROGRAMABLE_SEARCH_API_KEY =
 let GA_TRACKING_ID
 
 // The following variables are given values according to different `ENV`
-let API_TIMEOUT = 5000
+let API_TIMEOUT = 3000
 
 switch (ENV) {
   case 'prod':

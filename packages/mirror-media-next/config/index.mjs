@@ -65,7 +65,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
-    SEARCH_URL = 'https://adam-mirror-media-search-prod-ufaummkd5q-de.a.run.app'
+    SEARCH_URL = 'https://search.mirrormedia.mg'
 
     GPT_MODE = 'prod'
     FIREBASE_CONFIG = {
@@ -108,8 +108,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
-    SEARCH_URL =
-      'https://adam-mirror-media-search-staging-ufaummkd5q-de.a.run.app'
+    SEARCH_URL = 'https://search-staging.mirrormedia.mg'
 
     GPT_MODE = 'prod'
     FIREBASE_CONFIG = {
@@ -146,7 +145,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
-    SEARCH_URL = 'https://adam-mirror-media-search-dev-ufaummkd5q-de.a.run.app'
+    SEARCH_URL = 'https://search-dev.mirrormedia.mg'
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
@@ -191,7 +190,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
-    SEARCH_URL = 'https://adam-mirror-media-search-dev-ufaummkd5q-de.a.run.app'
+    SEARCH_URL = 'https://search-dev.mirrormedia.mg'
     GPT_MODE = 'dev'
     FIREBASE_CONFIG = {
       apiKey: 'AIzaSyAavk46-8OQ4B2cv0TOqxOMjd5Fe4tIauc',
