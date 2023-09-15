@@ -13,6 +13,7 @@ const NEWEBPAY_PAPERMAG_IV =
 let SITE_URL = ''
 
 let API_TIMEOUT = 5000
+let API_TIMEOUT_GRAPHQL = 5000
 let WEEKLY_API_SERVER_ORIGIN = ''
 let WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = ''
 let STATIC_FILE_DOMAIN = ''
@@ -41,7 +42,7 @@ switch (ENV) {
   case 'prod':
     SITE_URL = 'www.mirrormedia.mg/'
     API_TIMEOUT = 1500
-
+    API_TIMEOUT_GRAPHQL = 3000
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
     STATIC_FILE_DOMAIN = 'v3-statics.mirrormedia.mg'
@@ -82,6 +83,7 @@ switch (ENV) {
   case 'staging':
     SITE_URL = 'staging-next.mirrormedia.mg'
     API_TIMEOUT = 1500
+    API_TIMEOUT_GRAPHQL = 1500
 
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-staging-ufaummkd5q-de.a.run.app'
@@ -124,6 +126,8 @@ switch (ENV) {
   case 'dev':
     SITE_URL = 'dev-next.mirrormedia.mg'
     API_TIMEOUT = 5000
+    API_TIMEOUT_GRAPHQL = 5000
+
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
@@ -166,7 +170,7 @@ switch (ENV) {
   default:
     SITE_URL = 'localhost'
     API_TIMEOUT = 5000
-
+    API_TIMEOUT_GRAPHQL = 5000
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
@@ -209,6 +213,7 @@ export {
   SITE_URL,
   GCP_PROJECT_ID,
   API_TIMEOUT,
+  API_TIMEOUT_GRAPHQL,
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   URL_STATIC_PREMIUM_SECTIONS,
