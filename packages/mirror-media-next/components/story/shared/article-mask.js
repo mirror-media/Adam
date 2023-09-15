@@ -121,6 +121,7 @@ const InviteMemberCard = ({ postId = '' }) => {
                 : '/subscribe'
             }
             className="link GTM-subscribe-one-time"
+            target="blank"
           >
             解鎖單篇報導
           </Link>
