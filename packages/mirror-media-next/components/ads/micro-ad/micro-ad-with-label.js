@@ -116,8 +116,14 @@ const typeHome = css`
   > a {
     display: inline-block;
     position: relative;
-    height: 134px;
     min-width: 134px;
+
+    .latest-list_item_img {
+      padding-top: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 50%;
+    }
   }
 
   // Mobile: AD Detail
