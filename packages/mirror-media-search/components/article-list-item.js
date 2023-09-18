@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import gtag from '../utils/programmable-search/gtag'
 
 const ItemWrapper = styled.a`
   display: block;
@@ -89,9 +90,28 @@ const ItemBrief = styled.div`
   }
 `
 
-export default function ArticleListItem({ item }) {
+export default function ArticleListItem({ item, index, searchTerms }) {
+  const onClickHandler = () => {
+    if (index > 8) return
+    const order = [
+      'first',
+      'second',
+      'third',
+      'fourth',
+      'fifth',
+      'sixth',
+      'seventh',
+      'eighth',
+      'ninth',
+    ][index]
+    gtag.sendGAEvent(`search-${searchTerms}-click-${order}-post`)
+  }
   return (
-    <ItemWrapper href={`/story/${item.slug}`} target="_blank">
+    <ItemWrapper
+      href={`/story/${item.slug}`}
+      target="_blank"
+      onClick={onClickHandler}
+    >
       <ImageContainer>
         <Image
           images={{ original: item.pagemap.cse_image[0].src }}

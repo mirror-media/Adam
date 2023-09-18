@@ -28,7 +28,10 @@ const Wrapper = styled.div`
      * @param {boolean} props.shouldHideComponent
      * @returns
      */
-    ({ shouldHideComponent }) => shouldHideComponent && 'display: none;'
+    ({ shouldHideComponent }) => {
+      console.log(shouldHideComponent && 'display: none;')
+      return shouldHideComponent && 'display: none !important;'
+    }
   };
 `
 
@@ -81,6 +84,9 @@ export default function GPTAd({
   const adDivId = adUnitPath // Set the id of the ad `<div>` to be the same as the `adUnitPath`.
 
   const shouldHideComponent = useMemo(() => {
+    if (shouldHideAtFirst) {
+      console.log(hasScrolled, shouldHideAtFirst && !hasScrolled)
+    }
     return shouldHideAtFirst && !hasScrolled
   }, [shouldHideAtFirst, hasScrolled])
 

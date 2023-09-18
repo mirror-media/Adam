@@ -583,7 +583,7 @@ export default function StoryNormalStyle({
       console.error(err)
       return []
     }
-  }, [slug, section.slug])
+  }, [slug, section?.slug])
 
   /**
    * @returns {Promise<AsideArticleDataContainSectionsWithOrdered[] | []>}

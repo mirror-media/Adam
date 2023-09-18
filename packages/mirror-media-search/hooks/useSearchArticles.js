@@ -5,7 +5,6 @@ import {
   PROGRAMABLE_SEARCH_LIMIT_START,
   PROGRAMABLE_SEARCH_NUM,
 } from '../utils/programmable-search/const'
-import { logGAEvent } from '../utils/programmable-search/analytics'
 
 export default function useSearchArticles({ items: initialArticles, queries }) {
   const [searchTerms] = useState(queries.request[0].exactTerms)
@@ -13,7 +12,6 @@ export default function useSearchArticles({ items: initialArticles, queries }) {
   const [hasMore, setHasMore] = useState(!!queries.nextPage)
   const [articles, setArticles] = useState(initialArticles)
   const [isLoading, setIsLoading] = useState(false)
-  const [loadMoreTimes, setLoadMoreTimes] = useState(0)
 
   useEffect(() => {
     async function search(searchTerms, startIndex) {
@@ -60,18 +58,9 @@ export default function useSearchArticles({ items: initialArticles, queries }) {
     }
   }, [hasMore, searchTerms, startIndex])
 
-  useEffect(() => {
-    if (loadMoreTimes) {
-      logGAEvent('scroll', `${searchTerms}-loadmore-${loadMoreTimes}`)
-    }
-  }, [loadMoreTimes, searchTerms])
-
   const loadMore = useCallback(() => {
     if (hasMore) {
       setStartIndex((startIndex) => startIndex + PROGRAMABLE_SEARCH_NUM)
-      setLoadMoreTimes((prev) => {
-        return prev + 1
-      })
     }
   }, [hasMore])
 

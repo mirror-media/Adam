@@ -7,7 +7,6 @@ import useSearchArticles from '../hooks/useSearchArticles'
 import useWindowDimensions from '../hooks/useWindowDimensions'
 import LazyLoadImage from './shared/lazy-load-image.js'
 import Loader from './shared/loader'
-import { logGAEvent } from '../utils/programmable-search/analytics'
 
 const SearchResultWrapper = styled.div`
   position: relative;
@@ -155,28 +154,6 @@ export default function SearchResult({ searchResult }) {
     displayingArticles = hasMore ? articles.slice(0, end) : articles
   }
 
-  const handleOnClickSearchAeticleWrapper = (index) => {
-    if (index > 8) return
-    const device =
-      width >= mediaSize.xxl
-        ? 'desktop'
-        : width >= mediaSize.md
-        ? 'tablet'
-        : 'mobile'
-    const order = [
-      'first',
-      'second',
-      'third',
-      'fourth',
-      'fifth',
-      'sixth',
-      'seventh',
-      'eighth',
-      'ninth',
-    ][index]
-    logGAEvent('click', `${searchTerms}-${order}-post-${device}`)
-  }
-
   return (
     <SearchResultWrapper>
       <SearchTitle>&#8220; {searchTerms} &#8221;</SearchTitle>
@@ -185,10 +162,10 @@ export default function SearchResult({ searchResult }) {
           const lastOne = index === displayingArticles.length - 1
           return (
             <SearchArticleWraper
-              onClick={() => handleOnClickSearchAeticleWrapper(index)}
               key={article.title}
               href={article.link}
               alt={article.title}
+              className="testtest"
               target="_blank"
               rel="noreferrer"
               imageSrc={article.pagemap.cse_image[0].src}
