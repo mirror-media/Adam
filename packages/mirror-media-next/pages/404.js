@@ -247,8 +247,8 @@ export default function Custom404() {
               <PostWrapper>
                 <HeroImgWrapper>
                   <CustomImage
-                    loadingImage="/images/loading.gif"
-                    defaultImage="/images/default-og-img.png"
+                    loadingImage="/images-next/loading.gif"
+                    defaultImage="/images-next/default-og-img.png"
                     images={post.heroImage?.resized}
                     imagesWebP={post.heroImage?.resizedWebp}
                     rwd={{

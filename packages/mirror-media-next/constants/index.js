@@ -139,31 +139,31 @@ const MIRROR_YOUTUBE_CHANNELS = [
     title: '鏡週刊',
     id: 'UCYkldEK001GxR884OZMFnRw',
     name: 'media',
-    icon: '/images/video-mirror-weekly.svg',
+    icon: '/images-next/video-mirror-weekly.svg',
   },
   {
     title: '鏡人物',
     id: 'UCccoVnb8YmHzArr7yrX7bTA',
     name: 'people',
-    icon: '/images/video-mirror-people.svg',
+    icon: '/images-next/video-mirror-people.svg',
   },
   {
     title: '鏡娛樂',
     id: 'UCSGNZVECzarsXTxPsNS9Zow',
     name: 'fun',
-    icon: '/images/video-mirror-fun.svg',
+    icon: '/images-next/video-mirror-fun.svg',
   },
   {
     title: '鏡食旅',
     id: 'UCglE1_DI0TDSY70WfeoPSOQ',
     name: 'food',
-    icon: '/images/video-mirror-food.svg',
+    icon: '/images-next/video-mirror-food.svg',
   },
   {
     title: '鏡錶誌',
     id: 'UCbeskkrp36Virbj6lcxWxJA',
     name: 'watch',
-    icon: '/images/video-mirror-watch.svg',
+    icon: '/images-next/video-mirror-watch.svg',
   },
 ]
 

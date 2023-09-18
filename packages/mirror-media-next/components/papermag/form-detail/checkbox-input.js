@@ -36,7 +36,7 @@ const CheckBoxWrapper = styled.div`
       display: inline-block;
       width: 26px;
       height: 26px;
-      background-image: url('/images/checkbox-active.svg');
+      background-image: url('/images-next/checkbox-active.svg');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;

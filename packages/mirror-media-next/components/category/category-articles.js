@@ -8,7 +8,7 @@ import {
   fetchPostsByCategorySlug,
   fetchPremiumPostsByCategorySlug,
 } from '../../utils/api/category'
-import LoadingPage from '../../public/images/loading_page.gif'
+import LoadingPage from '../../public/images-next/loading_page.gif'
 
 const Loading = styled.div`
   margin: 20px auto 0;

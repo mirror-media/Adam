@@ -1,7 +1,7 @@
 import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
 import Image from 'next/image'
-import defaultImage from '../../../public/images/default-og-img.png'
+import defaultImage from '../../../public/images-next/default-og-img.png'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -99,8 +99,8 @@ export default function HeroImageAndVideo({
           <CustomImage
             images={heroImage.resized}
             imagesWebP={heroImage.resizedWebp}
-            loadingImage={'/images/loading@4x.gif'}
-            defaultImage={'/images/default-og-img.png'}
+            loadingImage={'/images-next/loading@4x.gif'}
+            defaultImage={'/images-next/default-og-img.png'}
             alt={heroCaption ? heroCaption : title}
             objectFit={'cover'}
             priority={true}

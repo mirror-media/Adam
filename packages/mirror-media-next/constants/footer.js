@@ -1,9 +1,9 @@
-import IconLine from '../public/images/footer-line.svg'
-import IconWeibo from '../public/images/footer-weibo.svg'
-import IconFacebook from '../public/images/footer-facebook.svg'
-import IconInstagram from '../public/images/footer-instagram.svg'
-import IconEmail from '../public/images/footer-email.svg'
-import IconRss from '../public/images/footer-rss.svg'
+import IconLine from '../public/images-next/footer-line.svg'
+import IconWeibo from '../public/images-next/footer-weibo.svg'
+import IconFacebook from '../public/images-next/footer-facebook.svg'
+import IconInstagram from '../public/images-next/footer-instagram.svg'
+import IconEmail from '../public/images-next/footer-email.svg'
+import IconRss from '../public/images-next/footer-rss.svg'
 import {
   LINE_LINK,
   WEIBO_LINK,

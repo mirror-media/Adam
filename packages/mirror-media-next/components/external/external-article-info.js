@@ -131,7 +131,7 @@ export default function ArticleInfo({ updatedDate, publishedDate, credits }) {
             width={35}
             height={35}
             alt="go-to-index-page"
-            src="/images/logo-circle@2x.png"
+            src="/images-next/logo-circle@2x.png"
           ></Image>
         </Link>
         <SocialMedia>

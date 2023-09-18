@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import useClickOutside from '../hooks/useClickOutside'
-import moreIcon from '../public/images/more-black.png'
+import moreIcon from '../public/images-next/more-black.png'
 
 const PromotionLinksWrapper = styled.div`
   display: none;

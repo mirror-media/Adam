@@ -20,7 +20,7 @@ import HeroImageAndVideo from './hero-image-and-video'
 import Divider from '../shared/divider'
 import ShareHeader from '../../shared/share-header'
 import Footer from '../../shared/footer'
-import SvgCloseIcon from '../../../public/images/close-black.svg'
+import SvgCloseIcon from '../../../public/images-next/close-black.svg'
 import {
   transformTimeDataIntoDotFormat,
   getCategoryOfWineSlug,
@@ -345,14 +345,12 @@ const StyledGPTAd_HD = styled(GPTAd)`
     max-height: 250px;
   }
 `
-
+//Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
 const StyledGPTAd_MB_AT3 = styled(GPTAd)`
   display: block;
   margin: 0 -20px;
   width: 100%;
   height: auto;
-  max-height: 280px;
-  max-width: 336px;
 
   @media (min-width: 336px) {
     margin: 0 auto;

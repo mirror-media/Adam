@@ -112,8 +112,8 @@ export default function RelatedPosts({ relateds = [] }) {
                       tablet: '87px',
                       laptop: '135px',
                     }}
-                    defaultImage={'/images/default-og-img.png'}
-                    loadingImage={'/images/loading.gif'}
+                    defaultImage={'/images-next/default-og-img.png'}
+                    loadingImage={'/images-next/loading.gif'}
                   />
                 </ImageWrapper>
               </Link>

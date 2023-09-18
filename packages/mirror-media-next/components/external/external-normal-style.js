@@ -275,12 +275,12 @@ const StyledGPTAd_HD = styled(GPTAd)`
   }
 `
 
+//Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
+
 const StyledGPTAd_MB_AT3 = styled(GPTAd)`
   display: block;
   width: 100%;
   height: auto;
-  max-height: 280px;
-  max-width: 336px;
   margin: 0 auto;
 
   ${({ theme }) => theme.breakpoint.xl} {

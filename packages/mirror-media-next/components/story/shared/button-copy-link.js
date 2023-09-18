@@ -76,7 +76,7 @@ export default function ButtonCopyLink({ width = 35, height = 35 }) {
         on="tap:clipboard-example.copy"
       >
         <Image
-          src={'/images/link-logo.svg'}
+          src={'/images-next/link-logo.svg'}
           width={width}
           height={height}
           className="GTM-share-link"

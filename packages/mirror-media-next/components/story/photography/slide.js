@@ -79,7 +79,7 @@ const ShowCaptionIcon = styled.div`
     left: -24px;
     width: 24px;
     height: 24px;
-    background-image: url(/images/caption-icon.svg);
+    background-image: url(/images-next/caption-icon.svg);
   }
 `
 
@@ -119,7 +119,7 @@ const Slide = ({ photoData, isTransparent, handleCaptionClick }) => {
           photoData?.data.resized?.w1200 ||
           photoData?.data.resized?.w800 ||
           photoData?.data.resized?.w480 ||
-          '/images/default-og-img.png'
+          '/images-next/default-og-img.png'
         }
         alt={photoData.data.desc}
       />

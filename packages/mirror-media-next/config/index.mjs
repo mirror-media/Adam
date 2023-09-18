@@ -3,6 +3,7 @@ const GCP_PROJECT_ID = 'mirrormedia-1470651750304'
 // The following variables are from environment variables
 
 const ENV = process.env.NEXT_PUBLIC_ENV || 'local'
+const IS_PREVIEW_MODE = process.env.NEXT_PUBLIC_IS_PREVIEW_MODE === 'true'
 const NEWEBPAY_PAPERMAG_KEY =
   process.env.NEWEBPAY_PAPERMAG_KEY || 'newebpay-papermag-key'
 const NEWEBPAY_PAPERMAG_IV =
@@ -14,6 +15,7 @@ let SITE_URL = ''
 let API_TIMEOUT = 5000
 let API_TIMEOUT_GRAPHQL = 5000
 let WEEKLY_API_SERVER_ORIGIN = ''
+let PREVIEW_SERVER_ORIGIN = ''
 let WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = ''
 let STATIC_FILE_DOMAIN = ''
 let ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
@@ -44,6 +46,7 @@ switch (ENV) {
     API_TIMEOUT_GRAPHQL = 3000
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
+    PREVIEW_SERVER_ORIGIN = ''
     STATIC_FILE_DOMAIN = 'v3-statics.mirrormedia.mg'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     URL_STATIC_PREMIUM_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_member.json`
@@ -86,6 +89,7 @@ switch (ENV) {
 
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-staging-ufaummkd5q-de.a.run.app'
+    PREVIEW_SERVER_ORIGIN = ''
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     STATIC_FILE_DOMAIN = 'v3-statics-staging.mirrormedia.mg'
 
@@ -129,6 +133,7 @@ switch (ENV) {
 
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app'
+    PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-dev-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
     URL_STATIC_PREMIUM_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_member.json`
@@ -170,6 +175,7 @@ switch (ENV) {
     SITE_URL = 'localhost'
     API_TIMEOUT = 5000
     API_TIMEOUT_GRAPHQL = 5000
+    PREVIEW_SERVER_ORIGIN = ''
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
@@ -209,6 +215,8 @@ switch (ENV) {
 
 export {
   ENV,
+  IS_PREVIEW_MODE,
+  PREVIEW_SERVER_ORIGIN,
   SITE_URL,
   GCP_PROJECT_ID,
   API_TIMEOUT,

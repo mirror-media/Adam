@@ -153,8 +153,8 @@ export default function RelatedArticleList({ relateds }) {
                 }}
                 width={'100%'}
                 height={'100%'}
-                defaultImage={'/images/default-og-img.png'}
-                loadingImage={'/images/loading.gif'}
+                defaultImage={'/images-next/default-og-img.png'}
+                loadingImage={'/images-next/loading.gif'}
               />
             </Link>
 

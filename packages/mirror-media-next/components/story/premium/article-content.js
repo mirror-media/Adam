@@ -7,7 +7,6 @@ import {
 } from '../../../utils/story'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
-import { SECTION_IDS } from '../../../constants'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -17,17 +16,11 @@ const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
  * @typedef {import('../../../type/draft-js').Draft} Content
  */
 
+//Because AT1, AT2 contain full-screen size ads content, should not set max-width and max-height
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 32px auto;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 640px;
-    max-height: 390px;
-  }
 `
 const ContentContainer = styled.section`
   margin-top: 32px;

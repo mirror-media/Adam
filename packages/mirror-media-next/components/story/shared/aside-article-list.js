@@ -297,8 +297,8 @@ export default function AsideArticleList({
                 images={item?.heroImage?.resized}
                 imagesWebP={item?.heroImage?.resizedWebp}
                 alt={item.title}
-                loadingImage={'/images/loading.gif'}
-                defaultImage={'/images/default-og-img.png'}
+                loadingImage={'/images-next/loading.gif'}
+                defaultImage={'/images-next/default-og-img.png'}
                 rwd={{ mobile: '276px', tablet: '266px', desktop: '120px' }}
               />
             </Link>

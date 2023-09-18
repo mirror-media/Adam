@@ -37,7 +37,7 @@ const StoryPremiumStyle = dynamic(() =>
   import('../../components/story/premium')
 )
 import Image from 'next/image'
-import Skeleton from '../../public/images/skeleton.png'
+import Skeleton from '../../public/images-next/skeleton.png'
 
 /**
  * @typedef {import('../../components/story/normal').PostData} PostData

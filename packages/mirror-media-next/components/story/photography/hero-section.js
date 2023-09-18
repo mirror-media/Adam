@@ -150,7 +150,7 @@ export default function HeroSection({
         heroImage?.resized?.w1200 ||
         heroImage?.resized?.w800 ||
         heroImage?.resized?.w480 ||
-        '/images/default-og-img.png'
+        '/images-next/default-og-img.png'
       }
       isIOS={isIOSDevice}
     >

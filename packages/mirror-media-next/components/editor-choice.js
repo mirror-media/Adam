@@ -218,8 +218,8 @@ const editorChoiceImageJsx = (heroImage, title) => {
     <CustomImage
       images={heroImage?.resized}
       imagesWebP={heroImage?.resizedWebp}
-      defaultImage="/images/default-og-img.png"
-      loadingImage="/images/loading.gif"
+      defaultImage="/images-next/default-og-img.png"
+      loadingImage="/images-next/loading.gif"
       rwd={{
         mobile: '320px',
         tablet: '460px',

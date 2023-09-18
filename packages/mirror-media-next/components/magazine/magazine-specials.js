@@ -3,7 +3,7 @@ import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 import { transformTimeDataIntoSlashFormat } from '../../utils/index'
 // @ts-ignore
-import DownloadSvg from '../../public/images/magazine-download-icon.svg'
+import DownloadSvg from '../../public/images-next/magazine-download-icon.svg'
 
 const CardsList = styled.ul`
   margin: auto;
@@ -169,8 +169,8 @@ export default function MagazineSpecials({ specials }) {
               <Image
                 images={magazine.coverPhoto?.resized}
                 imagesWebP={magazine.coverPhoto?.resizedWebp}
-                loadingImage="/images/loading.gif"
-                defaultImage="/images/default-og-img.png"
+                loadingImage="/images-next/loading.gif"
+                defaultImage="/images-next/default-og-img.png"
                 alt={magazine.title}
                 rwd={{ mobile: '132px', tablet: '144px', default: '100%' }}
               />

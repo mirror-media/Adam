@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import useClickOutside from '../../../hooks/useClickOutside'
 
-import LogoSvg from '../../../public/images/mirror-media-logo.svg'
+import LogoSvg from '../../../public/images-next/mirror-media-logo.svg'
 import HamburgerButton from '../../shared/hamburger-button'
 import CloseButton from '../../shared/close-button'
 import NavSubtitleNavigator from '../shared/nav-subtitle-navigator'

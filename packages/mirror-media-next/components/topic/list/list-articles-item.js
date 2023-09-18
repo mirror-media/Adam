@@ -136,8 +136,8 @@ export default function ListArticlesItem({ item }) {
           images={item.heroImage?.resized}
           imagesWebP={item.heroImage?.resizedWebp}
           alt={item.title}
-          loadingImage="/images/loading.gif"
-          defaultImage="/images/default-og-img.png"
+          loadingImage="/images-next/loading.gif"
+          defaultImage="/images-next/default-og-img.png"
           rwd={{ mobile: '500px', tablet: '500px', desktop: '500px' }}
         />
         {itemSection && (

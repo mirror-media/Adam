@@ -166,8 +166,8 @@ export default function LatestNewsItem({ itemData }) {
       <ItemWrapper>
         <ImageContainer>
           <CustomImage
-            defaultImage="/images/default-og-img.png"
-            loadingImage="images/loading.gif"
+            defaultImage="/images-next/default-og-img.png"
+            loadingImage="images-next/loading.gif"
             images={images}
             imagesWebP={imagesWebp}
             objectFit="cover"

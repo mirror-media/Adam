@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { getMagazineHrefFromSlug } from '../../utils/index'
 
 // @ts-ignore
-import ReadingSvg from '../../public/images/magazine-online.svg'
+import ReadingSvg from '../../public/images-next/magazine-online.svg'
 
 const CardsList = styled.ul`
   margin: auto;
@@ -153,8 +153,8 @@ export default function MagazineFeatures({ features }) {
             <ImageWrapper>
               <Image
                 images={magazine.coverPhoto?.resized}
-                loadingImage="/images/loading.gif"
-                defaultImage="/images/default-og-img.png"
+                loadingImage="/images-next/loading.gif"
+                defaultImage="/images-next/default-og-img.png"
                 alt={magazine.title}
                 rwd={{ tablet: '160px', desktop: '200px', default: '100%' }}
               />

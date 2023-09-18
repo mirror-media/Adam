@@ -27,11 +27,11 @@ const ContentContainer = styled.section`
   margin-top: 32px;
   margin-bottom: 32px;
 `
+//Because AT1, AT2 contain full-screen size ads content, should not set max-width and max-height
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
+
   margin: 32px auto;
   display: ${
     /**
@@ -40,11 +40,6 @@ const StyledGPTAd = styled(GPTAd)`
      */
     (props) => (props.pageKey ? 'block' : 'none')
   };
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 640px;
-    max-height: 390px;
-  }
 `
 
 /**

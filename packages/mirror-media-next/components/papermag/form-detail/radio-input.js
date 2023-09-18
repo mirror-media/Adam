@@ -32,7 +32,7 @@ const RadioInputContainer = styled.div`
       display: inline-block;
       width: 24px;
       height: 24px;
-      background-image: url('/images/radio-active.svg');
+      background-image: url('/images-next/radio-active.svg');
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;

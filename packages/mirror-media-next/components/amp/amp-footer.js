@@ -35,17 +35,17 @@ export default function AmpFooter() {
   /** @type {ShareItem[]} */
   const sharesArr = [
     {
-      icon: '/images/line_white.png',
+      icon: '/images-next/line_white.png',
       href: `${SHARE_URL_LINE}${sharedUrl}`,
       size: { width: 40, height: 16 },
     },
     {
-      icon: '/images/facebook_white.png',
+      icon: '/images-next/facebook_white.png',
       href: `${SHARE_URL_FACEBOOK}${sharedUrl}`,
       size: { width: 16, height: 24 },
     },
     {
-      icon: '/images/google-plus.png',
+      icon: '/images-next/google-plus.png',
       href: ``,
       size: { width: 24, height: 16 },
     },

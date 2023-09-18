@@ -82,7 +82,7 @@ export default function MemberLoginButton() {
     memberLoginButton = (
       <LoggedInWrapper>
         <Image
-          src="/images/membership-member-icon-logged-in.svg"
+          src="/images-next/membership-member-icon-logged-in.svg"
           alt="member-icon-logged-in"
           width={25.67}
           height={30.81}

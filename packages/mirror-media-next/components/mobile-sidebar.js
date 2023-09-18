@@ -235,7 +235,7 @@ const SocialMediaList = styled.div`
   img {
     width: 20px;
     height: 20px;
-    background-image: url(/images/social-media-white@2x.png);
+    background-image: url(/images-next/social-media-white@2x.png);
     display: block;
     background-size: 126px 120px;
     &.line {
@@ -355,7 +355,7 @@ export default function MobileSidebar({
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/images/${brand.name}-colorless.png`}
+                    src={`/images-next/${brand.name}-colorless.png`}
                     alt={brand.title}
                   />
                 </a>
@@ -383,7 +383,7 @@ export default function MobileSidebar({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={name}
-                src="/images/transperent.png"
+                src="/images-next/transperent.png"
                 alt={name}
               ></img>
             </a>

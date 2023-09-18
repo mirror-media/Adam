@@ -11,7 +11,7 @@ export default function LogoLink({ className }) {
   return (
     <div className={className}>
       <Image
-        src="/images/mirror-media-logo.svg"
+        src="/images-next/mirror-media-logo.svg"
         alt="mirrormedia"
         layout="responsive"
         width={107}

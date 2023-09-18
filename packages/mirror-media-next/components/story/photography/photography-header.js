@@ -109,7 +109,7 @@ export default function Header() {
       <LogoWrapper>
         <a href="/" target="_blank" rel="noreferrer noopenner">
           <Image
-            src="/images/weekly-logo-white.svg"
+            src="/images-next/weekly-logo-white.svg"
             alt="mirror media logo"
             className="logo"
             width={90}
@@ -120,7 +120,7 @@ export default function Header() {
       <IconsWrapper>
         <a href={DONATION_PAGE_URL} target="_blank" rel="noreferrer noopenner">
           <Image
-            src="/images/donate-circle.svg"
+            src="/images-next/donate-circle.svg"
             alt="sponsor this article"
             className="donate-btn-mb"
             width={32}
@@ -131,7 +131,7 @@ export default function Header() {
         <SubscribeLink className="subscribe-btn GTM-subscribe-link-top" />
         {/* <PhotosIndexButton>
           <Image
-            src="/images/photos-index-icon.svg"
+            src="/images-next/photos-index-icon.svg"
             alt="photos index icon"
             className="photos-index-icon"
             width={32}

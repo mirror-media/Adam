@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 import InfiniteScrollList from '../infinite-scroll-list'
 import Image from 'next/legacy/image'
-import LoadingPage from '../../public/images/loading_page.gif'
+import LoadingPage from '../../public/images-next/loading_page.gif'
 import ExternalList from './externals-list'
 
 const Loading = styled.div`

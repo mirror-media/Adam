@@ -174,8 +174,8 @@ export default function RelatedArticleList({
                   tablet: '500px',
                   laptop: '500px',
                 }}
-                defaultImage={'/images/default-og-img.png'}
-                loadingImage={'/images/loading.gif'}
+                defaultImage={'/images-next/default-og-img.png'}
+                loadingImage={'/images-next/loading.gif'}
               />
             </Link>
 

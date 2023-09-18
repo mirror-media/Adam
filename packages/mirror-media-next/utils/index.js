@@ -154,8 +154,8 @@ const transformRawDataToArticleInfo = (rawData) => {
       title,
       slug,
       href: getArticleHref(slug, style, partner),
-      imgSrcMobile: mobile?.url || '/images/default-og-img.png',
-      imgSrcTablet: tablet?.url || '/images/default-og-img.png',
+      imgSrcMobile: mobile?.url || '/images-next/default-og-img.png',
+      imgSrcTablet: tablet?.url || '/images-next/default-og-img.png',
       sectionTitle: getSectionTitle(sections, partner),
       sectionName: getSectionName(sections, partner),
     }

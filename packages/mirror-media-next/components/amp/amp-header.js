@@ -25,7 +25,7 @@ export default function AmpHeader() {
         <amp-img
           width="73.5"
           height="31.08"
-          src="/images/mirror-media-logo.svg"
+          src="/images-next/mirror-media-logo.svg"
           alt="mirrormedia"
           layout="responsive"
         />

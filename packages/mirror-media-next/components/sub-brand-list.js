@@ -37,7 +37,10 @@ export default function SubBrandList({ subBrands = [], className }) {
           target="_blank"
           rel="noopener noreferer"
         >
-          <SubBrandIcon src={`/images/${name}.png`} alt={title}></SubBrandIcon>
+          <SubBrandIcon
+            src={`/images-next/${name}.png`}
+            alt={title}
+          ></SubBrandIcon>
         </SubBrand>
       ))}
     </SubBrandListWrapper>

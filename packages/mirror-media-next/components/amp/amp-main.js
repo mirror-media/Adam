@@ -110,6 +110,7 @@ const AmpContentContainer = styled.section`
   margin-top: 36px;
 `
 
+//Because AT1, AT2 contain full-screen size ads content, should not set max-width and max-height
 const StyledAmpGptAd = styled(AmpGptAd)`
   margin: 32px 0;
 `

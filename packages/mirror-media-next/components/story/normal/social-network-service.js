@@ -3,10 +3,10 @@
 import styled from 'styled-components'
 import Image from 'next/image'
 import Link from 'next/link'
-import snsLine from '../../../public/images/sns-line.png'
-import snsIG from '../../../public/images/sns-ig.png'
-import snsYT from '../../../public/images/sns-yt.png'
-import snsMM from '../../../public/images/sns-mm.png'
+import snsLine from '../../../public/images-next/sns-line.png'
+import snsIG from '../../../public/images-next/sns-ig.png'
+import snsYT from '../../../public/images-next/sns-yt.png'
+import snsMM from '../../../public/images-next/sns-mm.png'
 import FbPagePlugin from './fb-page-plugin'
 
 /**

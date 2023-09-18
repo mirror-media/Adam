@@ -40,7 +40,7 @@ const DropdownButton = styled.button`
     transform: translateY(-50%);
     width: 28px;
     height: 28px;
-    background-image: url('/images/arrow-down.svg');
+    background-image: url('/images-next/arrow-down.svg');
     background-size: cover;
     transition: transform 0.3s ease-in-out;
     ${({

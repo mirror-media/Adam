@@ -25,14 +25,14 @@ export default function ButtonSocialNetworkShare({
     switch (type) {
       case 'facebook':
         return {
-          imageSrc: '/images/fb-logo.svg',
+          imageSrc: '/images-next/fb-logo.svg',
           imageAlt: 'facebook-share',
           link: `${FACEBOOK_SHARED_URL}${sharedUrl}`,
           gtmClassName: 'GTM-share-facebook',
         }
       case 'line':
         return {
-          imageSrc: '/images/line-logo.svg',
+          imageSrc: '/images-next/line-logo.svg',
           imageAlt: 'line-share',
           link: `${LINE_SHARED_URL}${sharedUrl}`,
           gtmClassName: 'GTM-share-line',
@@ -40,7 +40,7 @@ export default function ButtonSocialNetworkShare({
 
       default:
         return {
-          imageSrc: '/images/line-logo.svg',
+          imageSrc: '/images-next/line-logo.svg',
           imageAlt: 'line-share',
           link: `${FACEBOOK_SHARED_URL}${sharedUrl}`,
           gtmClassName: 'GTM-share-line',

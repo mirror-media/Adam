@@ -75,7 +75,7 @@ export default function WineWarning({ categories = [] }) {
         <span>駕</span>
         <Image
           className="wine-warning-image"
-          src={'/images/wine-warning-icon.png'}
+          src={'/images-next/wine-warning-icon.png'}
           width={50}
           height={50}
           alt="wine-warning-icon"

@@ -27,9 +27,9 @@ export default function CustomNextImage({ src }) {
         alt="image"
         layout="fill"
         placeholder="blur"
-        blurDataURL="/images/loading.gif"
+        blurDataURL="/images-next/loading.gif"
         objectFit="cover"
-        onError={() => setImageSrc('/images/default-og-img.png')}
+        onError={() => setImageSrc('/images-next/default-og-img.png')}
       ></Image>
     </Wrapper>
   )

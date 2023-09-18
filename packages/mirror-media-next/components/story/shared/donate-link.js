@@ -26,7 +26,7 @@ export default function DonateLink({ className = '' }) {
   return (
     <Link className={className} href="/donate" target="_blank">
       <Image
-        src={'/images/donate.png'}
+        src={'/images-next/donate.png'}
         width={13.33}
         height={13.33}
         alt="donate"

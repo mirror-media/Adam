@@ -116,8 +116,8 @@ export default function ExternalListItem({ item }) {
         <Image
           images={IMAGES_URL}
           alt={title}
-          loadingImage="/images/loading.gif"
-          defaultImage="/images/default-og-img.png"
+          loadingImage="/images-next/loading.gif"
+          defaultImage="/images-next/default-og-img.png"
           rwd={{ tablet: '320px', desktop: '220px' }}
         />
         {partner && (

@@ -396,7 +396,10 @@ export default function Header({
           />
           <SearchButtonMobile ref={mobileSearchButtonRef}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/search-button-mobile.svg" alt="search-button" />
+            <img
+              src="/images-next/search-button-mobile.svg"
+              alt="search-button"
+            />
           </SearchButtonMobile>
           <MemberLoginButton />
           <PromotionLinks links={PROMOTION_LINKS} />

@@ -24,6 +24,7 @@ steps:
   - name: gcr.io/cloud-builders/docker
     env:
     - 'NEXT_PUBLIC_ENV=${BRANCH_NAME}'
+    - 'NEXT_PUBLIC_IS_PREVIEW_MODE=$_IS_PREVIEW_MODE'
     args:
       - '-c'
       - >
@@ -80,3 +81,4 @@ substitutions:
   _TARGET_PACKAGE: '' # default value
   _IMAGE_NAME: '' # default value
   _CLOUD_RUN_SERVICE_NAMES: '' # default value
+  _IS_PREVIEW_MODE: 'false'  # default value

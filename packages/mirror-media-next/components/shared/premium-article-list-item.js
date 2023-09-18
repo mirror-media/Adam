@@ -127,8 +127,8 @@ export default function PremiumArticleListItem({ item, section }) {
           images={item.heroImage?.resized}
           imagesWebP={item.heroImage?.resizedWebp}
           alt={item.title}
-          loadingImage="/images/loading.gif"
-          defaultImage="/images/default-og-img.png"
+          loadingImage="/images-next/loading.gif"
+          defaultImage="/images-next/default-og-img.png"
           rwd={{ desktop: '320px' }}
         />
         {itemSection && (

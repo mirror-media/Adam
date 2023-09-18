@@ -42,8 +42,8 @@ export default function ExternalHeroImage({
       <HeroImage>
         <CustomImage
           images={images}
-          loadingImage={'/images/loading@4x.gif'}
-          defaultImage={'/images/default-og-img.png'}
+          loadingImage={'/images-next/loading@4x.gif'}
+          defaultImage={'/images-next/default-og-img.png'}
           alt={title}
           objectFit={'cover'}
           priority={true}
