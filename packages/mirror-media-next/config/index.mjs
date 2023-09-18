@@ -11,7 +11,6 @@ const NEWEBPAY_PAPERMAG_IV =
 // The following variables are given values according to different `ENV`
 
 let SITE_URL = ''
-
 let API_TIMEOUT = 5000
 let API_TIMEOUT_GRAPHQL = 5000
 let WEEKLY_API_SERVER_ORIGIN = ''
