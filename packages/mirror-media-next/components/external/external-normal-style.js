@@ -37,7 +37,7 @@ import {
 } from '../../utils/external'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
-import { getPageKeyByPartnerSlug } from '../../utils/ad'
+import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -265,14 +265,7 @@ const AsideFbPagePlugin = styled(FbPagePlugin)`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
 //Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
@@ -331,8 +324,6 @@ const StyledGPTAd_PC_E1 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
   }
 `
 
@@ -366,8 +357,6 @@ const StyledGPTAd_PC_R1 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 0 auto;
   }
 `
@@ -379,8 +368,6 @@ const StyledGPTAd_PC_R2 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 20px auto;
   }
 `
@@ -388,13 +375,9 @@ const StyledGPTAd_PC_R2 = styled(GPTAd)`
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 35px auto;
   }
 `
@@ -407,8 +390,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -529,7 +510,7 @@ export default function ExternalNormalStyle({ external }) {
     <>
       {shouldShowAd && (
         <StyledGPTAd_HD
-          pageKey={getPageKeyByPartnerSlug(partner.slug)}
+          pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
           adKey="HD"
         />
       )}
@@ -569,7 +550,7 @@ export default function ExternalNormalStyle({ external }) {
 
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="MB_AT3"
             />
           )}
@@ -581,7 +562,7 @@ export default function ExternalNormalStyle({ external }) {
 
           {shouldShowAd && (
             <StyledGPTAd_MB_E1
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="MB_E1"
             />
           )}
@@ -613,11 +594,11 @@ export default function ExternalNormalStyle({ external }) {
             {shouldShowAd && (
               <GPTAdContainer>
                 <StyledGPTAd_PC_E1
-                  pageKey={getPageKeyByPartnerSlug(partner.slug)}
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
                   adKey="PC_E1"
                 />
                 <StyledGPTAd_PC_E2
-                  pageKey={getPageKeyByPartnerSlug(partner.slug)}
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
                   adKey="PC_E2"
                 />
               </GPTAdContainer>
@@ -633,7 +614,7 @@ export default function ExternalNormalStyle({ external }) {
         <Aside>
           {shouldShowAd && (
             <StyledGPTAd_PC_R1
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="PC_R1"
             />
           )}
@@ -647,7 +628,7 @@ export default function ExternalNormalStyle({ external }) {
 
           {shouldShowAd && (
             <StyledGPTAd_PC_R2
-              pageKey={getPageKeyByPartnerSlug(partner.slug)}
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="PC_R2"
             />
           )}
@@ -692,11 +673,11 @@ export default function ExternalNormalStyle({ external }) {
       {shouldShowAd && (
         <>
           <StyledGPTAd_FT
-            pageKey={getPageKeyByPartnerSlug(partner.slug)}
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
             adKey="FT"
           />
           <StickyGPTAd_MB_ST
-            pageKey={getPageKeyByPartnerSlug(partner.slug)}
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
             adKey="MB_ST"
           />
         </>

@@ -58,8 +58,6 @@ const StyledGPTAd_R1 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 0px auto 28px;
   }
 `

@@ -57,14 +57,7 @@ const IndexContainer = styled.main`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
 const StyledGPTAd_PC_B1 = styled(GPTAd)`

@@ -154,8 +154,6 @@ const TopicsAndSubscribe = styled.section`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 110px;
-  max-height: 50px;
   margin-right: auto;
   ${({ theme }) => theme.breakpoint.md} {
     order: -1;

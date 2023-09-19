@@ -55,15 +55,16 @@ const getMicroAdUnitId = (
 }
 
 /**
- * Returns the GPT pageKey associated with partner's slug.
+ * Returns the GPT pageKey associated with partner's showOnIndex.
  *
- * @param {string} partnerSlug - The slug of the partner.
- * @return {string} - The GPT pageKey associated with the partner slug.
- * Returns 'SECTION_IDS.news' if partnerSlug is valid, otherwise returns 'other'.
+ * @param {boolean} partnerShowOnIndex - The showOnIndex of the partner.
+ * @return {string} - The GPT pageKey associated with the partner showOnIndex.
+ * Returns 'SECTION_IDS.news' if partnerShowOnIndex is valid, otherwise returns 'other'.
  */
-function getPageKeyByPartnerSlug(partnerSlug = '') {
-  const validPartnerSlugs = ['ebc', 'healthnews', 'zuchi', '5678news']
-  return validPartnerSlugs.includes(partnerSlug) ? SECTION_IDS['news'] : 'other'
+function getPageKeyByPartnerShowOnIndex(partnerShowOnIndex) {
+  return partnerShowOnIndex
+    ? SECTION_IDS['news'] ?? 'other'
+    : SECTION_IDS['life'] ?? 'other'
 }
 
 /**
@@ -93,7 +94,6 @@ const getSectionGPTPageKey = (sectionSlug) => {
 
   return GptPageKey
 }
-
 
 /**
  * Determining whether to insert a `PopIn` advertisement after a specific post index.
@@ -175,7 +175,7 @@ function getAmpGptDataSlotSection(section) {
 export {
   needInsertMicroAdAfter,
   getMicroAdUnitId,
-  getPageKeyByPartnerSlug,
+  getPageKeyByPartnerShowOnIndex,
   getSectionGPTPageKey,
   needInsertPopInAdAfter,
   getPopInId,

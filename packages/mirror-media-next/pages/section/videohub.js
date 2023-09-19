@@ -61,8 +61,6 @@ const StyledGPTAd_PC_HD = styled(GPTAd)`
     width: 100%;
     height: auto;
     margin: 20px auto 0px;
-    max-width: 970px;
-    max-height: 250px;
     display: block;
   }
 `
@@ -70,8 +68,6 @@ const StyledGPTAd_PC_HD = styled(GPTAd)`
 const StyledGPTAd_MB_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.xl} {
@@ -86,8 +82,6 @@ const StyledGPTAd_PC_FT = styled(GPTAd)`
     width: 100%;
     height: auto;
     margin: 20px auto 0px;
-    max-width: 970px;
-    max-height: 250px;
     display: block;
   }
 `
@@ -95,8 +89,6 @@ const StyledGPTAd_PC_FT = styled(GPTAd)`
 const StyledGPTAd_MB_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.xl} {
@@ -112,8 +104,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 

@@ -4,8 +4,7 @@ import dynamic from 'next/dynamic'
 import ExternalListItem from './externals-list-item'
 import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
-import { SECTION_IDS } from '../../constants/index'
-import { getPageKeyByPartnerSlug } from '../../utils/ad'
+import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -37,13 +36,9 @@ const ItemContainer = styled.div`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 35px auto;
   }
 `
@@ -60,15 +55,9 @@ export default function ExternalList({ renderList }) {
   const GPT_PAGE_KEY = useRef('other')
 
   useEffect(() => {
-    const urlElements = window.location.pathname.split('/')
-    const lastUrlElement = urlElements[urlElements.length - 1]
-
-    // the default section of `warmlife` page is `時事`
-    GPT_PAGE_KEY.current =
-      lastUrlElement === 'warmlife'
-        ? SECTION_IDS.news
-        : getPageKeyByPartnerSlug(lastUrlElement)
-  }, [])
+    const parnerOnIndex = renderList?.[0]?.partner?.showOnIndex
+    GPT_PAGE_KEY.current = getPageKeyByPartnerShowOnIndex(parnerOnIndex)
+  }, [renderList])
 
   const renderListWithAd = shouldShowAd
     ? renderList.slice(0, 9)

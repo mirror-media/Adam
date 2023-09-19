@@ -8,8 +8,9 @@ import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
-import { Z_INDEX, SECTION_IDS } from '../../constants/index'
+import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 
 import { fetchExternalCounts } from '../../apollo/query/externals'
 import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/externals'
@@ -23,7 +24,6 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 const RENDER_PAGE_SIZE = 12
 const WARMLIFE_DEFAULT_TITLE = '暖流'
 const WARMLIFE_DEFAULT_COLOR = 'lightBlue'
-const WARMLIFE_GPT_SECTION_IDS = SECTION_IDS.news // the default section of `warmlife` page is `時事`
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -64,14 +64,7 @@ const WarmLifeTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
 const StickyGPTAd = styled(GPTAd)`
@@ -81,8 +74,6 @@ const StickyGPTAd = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -108,6 +99,9 @@ export default function WarmLife({
   headerData,
 }) {
   const shouldShowAd = useDisplayAd()
+  const WARMLIFE_GPT_SECTION_IDS = getPageKeyByPartnerShowOnIndex(
+    warmLifeData?.[0]?.partner?.showOnIndex
+  )
 
   return (
     <Layout

@@ -1,7 +1,9 @@
-import { DONATION_PAGE_URL } from './config/index.mjs'
+import { DONATION_PAGE_URL, IS_PREVIEW_MODE } from './config/index.mjs'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Add assetPrefix to prevent /_next route collision between CMS and preview server
+  assetPrefix: IS_PREVIEW_MODE ? '/preview-server' : undefined,
   reactStrictMode: true,
   swcMinify: true,
   compiler: {

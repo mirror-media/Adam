@@ -82,26 +82,15 @@ const SocialMedia = styled.li`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 35px auto;
   }
 `
@@ -114,8 +103,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -128,7 +115,6 @@ const GPTAdContainer = styled.div`
   display: block;
   width: 100%;
   height: auto;
-  max-height: 280px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,7 +123,6 @@ const GPTAdContainer = styled.div`
 
   ${({ theme }) => theme.breakpoint.xl} {
     margin: 52px auto 0px;
-    max-height: 250px;
   }
 `
 

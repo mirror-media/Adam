@@ -1,7 +1,7 @@
 //TODO: refactor jsx structure, make it more readable.
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
@@ -15,12 +15,13 @@ import SocialNetworkService from '../../../components/story/normal/social-networ
 import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
 import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
+import GPTFloatingAd from '../../../components/ads/gpt/gpt-floating-ad'
 import ArticleContent from './article-content'
 import HeroImageAndVideo from './hero-image-and-video'
 import Divider from '../shared/divider'
 import ShareHeader from '../../shared/share-header'
 import Footer from '../../shared/footer'
-import SvgCloseIcon from '../../../public/images-next/close-black.svg'
+
 import {
   transformTimeDataIntoDotFormat,
   getCategoryOfWineSlug,
@@ -336,14 +337,7 @@ const DableADContainer_Mobile = styled.div`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
-  }
 `
 //Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
 const StyledGPTAd_MB_AT3 = styled(GPTAd)`
@@ -379,8 +373,6 @@ const StyledGPTAd_PC_R1 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 0 auto;
   }
 `
@@ -391,8 +383,6 @@ const StyledGPTAd_PC_R2 = styled(GPTAd)`
     display: block;
     width: 100%;
     height: auto;
-    max-width: 300px;
-    max-height: 600px;
     margin: 20px auto;
   }
 `
@@ -400,13 +390,9 @@ const StyledGPTAd_PC_R2 = styled(GPTAd)`
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
   margin: 20px auto;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 970px;
-    max-height: 250px;
     margin: 35px auto;
   }
 `
@@ -419,8 +405,6 @@ const StickyGPTAd_MB_ST = styled(GPTAd)`
   bottom: 0;
   width: 100%;
   height: auto;
-  max-width: 320px;
-  max-height: 50px;
   margin: auto;
   z-index: ${Z_INDEX.coverHeader};
 
@@ -449,29 +433,6 @@ const StyledGPTAd_PC_E1 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
-  }
-`
-
-const FloatingAdContainer = styled.div`
-  display: none;
-  ${({ theme }) => theme.breakpoint.xl} {
-    z-index: ${Z_INDEX.top};
-    display: block;
-    position: fixed;
-    top: 175px;
-    right: 15px;
-  }
-
-  .close-button {
-    position: absolute;
-    top: -12.5px;
-    right: -12.5px;
-    width: 25px;
-    height: auto;
-    cursor: pointer;
-    user-select: none;
   }
 `
 
@@ -538,10 +499,6 @@ export default function StoryNormalStyle({
       : writers
 
   const [section] = sectionsWithOrdered
-
-  const [shouldShowAdPcFloating, setShouldShowAdPcFloating] = useState(
-    section?.slug === 'carandwatch'
-  )
 
   // 廣編文章的 pageKey 是 other
   const pageKeyForGptAd = postData.isAdvertised
@@ -625,13 +582,6 @@ export default function StoryNormalStyle({
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
 
-  const handleRenderEndedAdPcFloating = (event) => {
-    const isEmpty = event?.isEmpty
-    if (isEmpty) {
-      setShouldShowAdPcFloating(false)
-    }
-  }
-
   return (
     <>
       <ShareHeader
@@ -696,20 +646,8 @@ export default function StoryNormalStyle({
             <StyledGPTAd_MB_E1 pageKey={pageKeyForGptAd} adKey="MB_E1" />
           )}
 
-          {shouldShowAd && shouldShowAdPcFloating && (
-            <FloatingAdContainer>
-              <GPTAd
-                pageKey={pageKeyForGptAd}
-                adKey="PC_FLOATING"
-                onSlotRenderEnded={handleRenderEndedAdPcFloating}
-              />
-              <button
-                className="close-button"
-                onClick={() => setShouldShowAdPcFloating(false)}
-              >
-                <SvgCloseIcon />
-              </button>
-            </FloatingAdContainer>
+          {shouldShowAd && section?.slug === 'carandwatch' && (
+            <GPTFloatingAd pageKey={pageKeyForGptAd} />
           )}
 
           {shouldShowAd && (

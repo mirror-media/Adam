@@ -36,8 +36,6 @@ const StyledGPTAd_PC_FT = styled(GPTAd)`
     width: 100%;
     height: auto;
     margin: 20px auto 0px;
-    max-width: 970px;
-    max-height: 250px;
     display: block;
   }
 `
