@@ -146,8 +146,6 @@ const StyledGPTAd_E1 = styled(GPTAd)`
   margin: 0px auto;
   width: 100%;
   height: auto;
-  max-height: 250px;
-  max-width: 300px;
 
   ${({ theme }) => theme.breakpoint.xl} {
     margin: 0;
@@ -162,8 +160,6 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
   }
 `
 

@@ -366,8 +366,6 @@ const StyledGPTAd_MB_E1 = styled(GPTAd)`
   margin: 24px auto;
   width: 100%;
   height: auto;
-  max-height: 280px;
-  max-width: 336px;
 
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
@@ -485,8 +483,6 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
     margin: 0;
     width: 100%;
     height: auto;
-    max-height: 250px;
-    max-width: 300px;
   }
 `
 

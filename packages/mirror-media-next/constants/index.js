@@ -188,6 +188,7 @@ const SECTION_IDS = {
   mafalda: '5971aa8ce531830d00e32812',
   culture: '5964418a4bbe120f002a3198',
   carandwatch: '57dfe3b0ee85930e00cad4d7',
+  life: 'lifeId',
 }
 
 const FB_APP_ID = '175313259598308'

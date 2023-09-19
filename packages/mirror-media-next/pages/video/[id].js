@@ -76,8 +76,7 @@ const StyledGPTAd_HD = styled(GPTAd)`
 const StyledGPTAd_E1 = styled(GPTAd)`
   width: 100%;
   height: auto;
-  max-width: 336px;
-  max-height: 280px;
+
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.md} {

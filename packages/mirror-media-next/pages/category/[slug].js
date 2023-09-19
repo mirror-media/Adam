@@ -206,7 +206,8 @@ export default function Category({
   //The type of GPT ad to display depends on which category the section belongs to.
   //If category not have related-section, use `other` ad units
   const sectionSlug = category?.sections?.[0]?.slug ?? ''
-  const GptPageKey = getSectionGPTPageKey(sectionSlug) ?? 'other'
+  const GptPageKey =
+    getSectionGPTPageKey(isPremium ? 'member' : sectionSlug) ?? 'other'
 
   return (
     <Layout
