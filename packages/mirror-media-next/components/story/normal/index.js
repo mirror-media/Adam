@@ -597,7 +597,14 @@ export default function StoryNormalStyle({
       <Main>
         <Article>
           <SectionAndDate>
-            <Section sectionSlug={section?.slug}>{section?.name || ''}</Section>
+            {/* hide section for advertised article but remain the same architecture*/}
+            {postData.isAdvertised ? (
+              <div />
+            ) : (
+              <Section sectionSlug={section?.slug}>
+                {section?.name || ''}
+              </Section>
+            )}
             <Date>{publishedTaipeiTime} 臺北時間</Date>
           </SectionAndDate>
           <Title>{title}</Title>

@@ -139,6 +139,16 @@ const AdvertisementWrapper = styled.div`
   }
 `
 
+const StyledFigcaption = styled.figcaption`
+  > a {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+`
+
 /**
  *
  * @param {Object} props
@@ -179,7 +189,7 @@ export default function RelatedArticleList({
               />
             </Link>
 
-            <figcaption className="article-title">
+            <StyledFigcaption className="article-title">
               <Link
                 href={`/story/${related.slug}`}
                 className="GTM-story-related-list"
@@ -187,7 +197,7 @@ export default function RelatedArticleList({
               >
                 {related.title}
               </Link>
-            </figcaption>
+            </StyledFigcaption>
           </Article>
         </li>
       ))}

@@ -20,14 +20,12 @@ const Wrapper = styled.figure`
 const HeroImage = styled.figure`
   position: relative;
   width: 100%;
-  height: 58.75vw;
   .readr-media-react-image {
     object-position: center center;
   }
 
   ${({ theme }) => theme.breakpoint.md} {
     width: 640px;
-    height: 428px;
   }
 `
 const HeroCaption = styled.figcaption`
@@ -102,7 +100,7 @@ export default function HeroImageAndVideo({
             loadingImage={'/images-next/loading@4x.gif'}
             defaultImage={'/images-next/default-og-img.png'}
             alt={heroCaption ? heroCaption : title}
-            objectFit={'cover'}
+            objectFit={'contain'}
             priority={true}
           />
         </HeroImage>
