@@ -25,6 +25,7 @@ import {
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -96,7 +97,7 @@ const StyledGPTAd_MB_FT = styled(GPTAd)`
   }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -169,7 +170,7 @@ export default function SectionVideohub({
           />
         ))}
         {shouldShowAd && <StyledGPTAd_PC_FT pageKey="videohub" adKey="PC_FT" />}
-        {shouldShowAd && <StickyGPTAd_MB_ST pageKey="videohub" adKey="MB_ST" />}
+        {shouldShowAd && <StickyGPTAd_MB_ST pageKey="videohub" />}
         {shouldShowAd && <FullScreenAds />}
       </Wrapper>
     </Layout>

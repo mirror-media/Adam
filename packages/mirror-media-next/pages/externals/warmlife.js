@@ -16,6 +16,7 @@ import { fetchExternalCounts } from '../../apollo/query/externals'
 import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/externals'
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -67,7 +68,7 @@ const StyledGPTAd = styled(GPTAd)`
   margin: 20px auto 0px;
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -120,9 +121,7 @@ export default function WarmLife({
           fetchExternalsFunction={fetchExternalsWhichPartnerIsNotShowOnIndex}
           externalsCount={warmLifeDataCount}
         />
-        {shouldShowAd && (
-          <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="MB_ST" />
-        )}
+        {shouldShowAd && <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} />}
         {shouldShowAd && <FullScreenAds />}
       </WarmLifeContainer>
     </Layout>

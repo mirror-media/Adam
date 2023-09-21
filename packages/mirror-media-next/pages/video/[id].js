@@ -21,6 +21,7 @@ import {
   fetchYoutubeVideoByVideoId,
 } from '../../utils/api/video'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -94,7 +95,7 @@ const StyledGPTAd_FT = styled(GPTAd)`
   }
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -149,7 +150,7 @@ export default function Video({ video, latestVideos, headerData }) {
         {shouldShowAd && (
           <>
             <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
-            <StickyGPTAd pageKey="videohub" adKey="MB_ST" />
+            <StickyGPTAd pageKey="videohub" />
             <FullScreenAds />
           </>
         )}

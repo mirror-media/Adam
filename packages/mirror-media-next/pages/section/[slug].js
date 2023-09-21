@@ -15,6 +15,7 @@ import {
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '../../utils/ad'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -69,7 +70,7 @@ const StyledGPTAd = styled(GPTAd)`
   margin: 20px auto 0px;
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -131,10 +132,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
         />
 
         {shouldShowAd && (
-          <StickyGPTAd
-            pageKey={getSectionGPTPageKey(section.slug)}
-            adKey="MB_ST"
-          />
+          <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
         )}
         {shouldShowAd && <FullScreenAds />}
       </SectionContainer>
