@@ -14,8 +14,8 @@ export default function GPTMbStAd({ pageKey, className }) {
   const hasScrolled = useFirstScrollDetector()
 
   return (
-    <div className={`${className}`}>
-      {hasScrolled && <GPTAd pageKey={pageKey} adKey="MB_ST" />}
-    </div>
+    hasScrolled && (
+      <GPTAd pageKey={pageKey} adKey="MB_ST" className={className} />
+    )
   )
 }
