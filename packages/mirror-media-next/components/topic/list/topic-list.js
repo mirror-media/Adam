@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper'
 import TopicListArticles from './topic-list-articles'
-
+import CustomImage from '@readr-media/react-image'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -67,7 +67,7 @@ const Topic = styled.div`
   } {
     height: 600px;
     padding-top: 0;
-  }}
+  }
 `
 const TopicTitle = styled.div`
   background-repeat: no-repeat;
@@ -231,13 +231,18 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
                 >
                   {slideshowImages.map((item) => (
                     <SwiperSlide key={item.id}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={
-                          item.resized.w800 ||
-                          item.resized.w1200 ||
-                          item.resized.original
-                        }
+                      <CustomImage
+                        images={item?.resized}
+                        imagesWebP={item?.resizedWebp}
+                        loadingImage={'/images-next/loading@4x.gif'}
+                        defaultImage={'/images-next/default-og-img.png'}
+                        rwd={{
+                          mobile: '450px',
+                          tablet: '850px',
+                          desktop: '850px',
+                          default: '850px',
+                        }}
+                        priority={true}
                         alt={item.name}
                       />
                     </SwiperSlide>

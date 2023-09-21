@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
 const HeaderWrapper = styled.header`
@@ -9,7 +8,7 @@ const HeaderWrapper = styled.header`
   justify-content: center;
 `
 
-const HeaderLogo = styled(Link)`
+const HeaderLogo = styled.a`
   position: relative;
   width: 73.5px;
 `

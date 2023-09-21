@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Link from 'next/link'
+
 import Image from 'next/image'
 import ButtonCopyLink from '../shared/button-copy-link'
 import DonateLink from '../shared/donate-link'
@@ -136,14 +136,15 @@ export default function ArticleInfo({
 
       <Credits credits={credits}></Credits>
       <SocialMediaAndDonateLink>
-        <Link className="link-to-index" href="/">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a className="link-to-index" href="/">
           <Image
             width={35}
             height={35}
             alt="go-to-index-page"
             src="/images-next/logo-circle@2x.png"
           ></Image>
-        </Link>
+        </a>
         <SocialMedia>
           <ButtonSocialNetworkShare type="facebook" />
           <ButtonSocialNetworkShare type="line" />

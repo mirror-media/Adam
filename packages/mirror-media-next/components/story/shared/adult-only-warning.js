@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { Z_INDEX } from '../../../constants'
-import NextLink from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import { useAmp } from 'next/amp'
@@ -150,9 +149,10 @@ export default function AdultOnlyWarning({ isAdult = false }) {
 
         <ButtonWrapper>
           {agreeBtnJsx}
-          <NextLink href="/" aria-label="離開">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a href="/" aria-label="離開">
             <button>離開</button>
-          </NextLink>
+          </a>
         </ButtonWrapper>
       </WarningContent>
     </Wrapper>

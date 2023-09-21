@@ -3,7 +3,7 @@
 import styled, { css } from 'styled-components'
 import { minWidth } from '../styles/media'
 import Logo from './logo'
-import Link from 'next/link'
+
 /**
  * @typedef {import('../type/theme').Theme} Theme
  */
@@ -229,9 +229,10 @@ export default function NavSections({ sectionsAndCategories = [] }) {
   return (
     <SectionsWrapper>
       <SectionLogo>
-        <Link href="/">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/">
           <LogoIcon />
-        </Link>
+        </a>
       </SectionLogo>
       <Sections>{sectionsAndCategoriesJsx}</Sections>
     </SectionsWrapper>

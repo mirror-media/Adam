@@ -24,6 +24,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -150,7 +151,7 @@ const StyledGPTAd = styled(GPTAd)`
   margin: 20px auto 0px;
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -230,7 +231,7 @@ export default function Category({
         />
 
         {shouldShowAd && isNotWineCategory ? (
-          <StickyGPTAd pageKey={GptPageKey} adKey="MB_ST" />
+          <StickyGPTAd pageKey={GptPageKey} />
         ) : null}
         <WineWarning categories={[category]} />
         {isNotWineCategory && <FullScreenAds />}

@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
-import Link from 'next/link'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import useClickOutside from '../../../hooks/useClickOutside'
 
@@ -111,9 +110,10 @@ export default function Header({ h2AndH3Block = [] }) {
 
   return (
     <HeaderWrapper>
-      <Link href="/">
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a href="/">
         <LogoSvg></LogoSvg>
-      </Link>
+      </a>
       <HamburgerButton
         color="lightBlue"
         handleOnClick={() => setShouldOpenSideBar((val) => !val)}

@@ -19,6 +19,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -71,7 +72,7 @@ const StyledGPTAd = styled(GPTAd)`
   margin: 20px auto 0px;
 `
 
-const StickyGPTAd = styled(GPTAd)`
+const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
   right: 0;
@@ -136,7 +137,6 @@ export default function ExternalPartner({
         {shouldShowAd && (
           <StickyGPTAd
             pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-            adKey="MB_ST"
           />
         )}
         {shouldShowAd && <FullScreenAds />}

@@ -21,6 +21,7 @@ import HeroImageAndVideo from './hero-image-and-video'
 import Divider from '../shared/divider'
 import ShareHeader from '../../shared/share-header'
 import Footer from '../../shared/footer'
+import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
 
 import {
   transformTimeDataIntoDotFormat,
@@ -397,7 +398,7 @@ const StyledGPTAd_FT = styled(GPTAd)`
   }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -751,7 +752,7 @@ export default function StoryNormalStyle({
       {shouldShowAd && <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />}
 
       {shouldShowAd && noCategoryOfWineSlug ? (
-        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} adKey="MB_ST" />
+        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
       ) : null}
 
       <Footer footerType="default" />

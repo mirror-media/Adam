@@ -21,6 +21,7 @@ import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
+import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -95,7 +96,7 @@ const StyledGPTAd_FT = styled(GPTAd)`
   }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -343,7 +344,7 @@ export default function StoryPremiumStyle({
 
       {shouldShowAd && <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />}
       {shouldShowAd && noCategoryOfWineSlug ? (
-        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} adKey="MB_ST" />
+        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
       ) : null}
 
       <Footer footerType="default" />

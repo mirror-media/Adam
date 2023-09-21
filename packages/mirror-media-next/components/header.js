@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
+
 import {
   SUB_BRAND_LINKS,
   PROMOTION_LINKS,
@@ -381,9 +381,10 @@ export default function Header({
   return (
     <HeaderWrapper>
       <HeaderTop>
-        <Link href="/" className="GTM-header-logo">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/" className="GTM-header-logo">
           <HeaderLogo />
-        </Link>
+        </a>
         {shouldShowAd && <StyledGPTAd pageKey="global" adKey="RWD_LOGO" />}
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />

@@ -139,6 +139,9 @@ const getPopInId = (index = 0) => {
 }
 
 /**
+ * TODO: the logic of selecting amp-gpt-ad unit is different from gpt-ad in normal page.
+ * Should refactor to prevent logic inconsistent.
+ *
  * Retrieves the data slot section for a given section name.
  *
  * @param {Object} section - The section object containing a name property.
@@ -167,6 +170,8 @@ function getAmpGptDataSlotSection(section) {
       return 'wat'
     case name?.includes('美食旅遊'):
       return 'tra'
+    case name?.includes('生活'):
+      return 'cul'
     default:
       return 'oth'
   }

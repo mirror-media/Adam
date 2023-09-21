@@ -24,6 +24,7 @@ import {
   transformTimeDataIntoDotFormat,
   getActiveOrderSection,
 } from '../../utils'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 import {
   URL_STATIC_POPULAR_NEWS,
@@ -382,7 +383,7 @@ const StyledGPTAd_FT = styled(GPTAd)`
   }
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -678,7 +679,6 @@ export default function ExternalNormalStyle({ external }) {
           />
           <StickyGPTAd_MB_ST
             pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-            adKey="MB_ST"
           />
         </>
       )}

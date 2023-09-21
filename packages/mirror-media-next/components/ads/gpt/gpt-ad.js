@@ -1,5 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
-import useFirstScrollDetector from '../../../hooks/useFirstScrollDetector.js'
+import { useState, useEffect } from 'react'
 
 import {
   getAdSlotParam,
@@ -22,16 +21,6 @@ const Wrapper = styled.div`
       display: block;
     }
   }
-  ${
-    /**
-     * @param {Object} props
-     * @param {boolean} props.shouldHideComponent
-     * @returns
-     */
-    ({ shouldHideComponent }) => {
-      return shouldHideComponent && 'display: none !important;'
-    }
-  };
 `
 
 const Ad = styled.div`
@@ -57,34 +46,32 @@ const Ad = styled.div`
 /**
  * @typedef {function(googletag.events.SlotRequestedEvent):void} GoogleTagEventHandler
  *
- * @param {Object} props
- * @param {string} [props.pageKey] - key to access GPT_UNITS first layer
- * @param {string} [props.adKey] - key to access GPT_UNITS second layer, might need to complete with device
- * @param {string} [props.adUnit]
- * @param {GoogleTagEventHandler} [props.onSlotRequested] - callback when slotRequested event occurs
- * @param {GoogleTagEventHandler} [props.onSlotRenderEnded] - callback when slotRenderEnded event occurs
- * @param {string} [props.className] - for styled-component method to add styles
+ * @typedef {object} GPTAdProps
+ * @property {string} [pageKey] - key to access GPT_UNITS first layer
+ * @property {string} [adKey] - key to access GPT_UNITS second layer, might need to complete with device
+ * @property {string} [adUnit]
+ * @property {GoogleTagEventHandler} [onSlotRequested] - callback when slotRequested event occurs
+ * @property {GoogleTagEventHandler} [onSlotRenderEnded] - callback when slotRenderEnded event occurs
+ * @property {string} [className] - for styled-component method to add styles
+ *
+ 
+/** 
+ * @param {GPTAdProps} props
  * @returns
  */
-export default function GPTAd({
+const GPTAdRoot = ({
   pageKey,
   adKey,
   adUnit,
   onSlotRequested,
   onSlotRenderEnded,
   className,
-}) {
+}) => {
   const [adSize, setAdSize] = useState([])
   const [adUnitPath, setAdUnitPath] = useState('')
   const [adWidth, setAdWidth] = useState('')
 
-  const hasScrolled = useFirstScrollDetector()
-  const shouldHideAtFirst = adKey === 'MB_ST'
   const adDivId = adUnitPath // Set the id of the ad `<div>` to be the same as the `adUnitPath`.
-
-  const shouldHideComponent = useMemo(() => {
-    return shouldHideAtFirst && !hasScrolled
-  }, [shouldHideAtFirst, hasScrolled])
 
   useEffect(() => {
     let newAdSize, newAdUnitPath, newAdWidth
@@ -177,11 +164,73 @@ export default function GPTAd({
   }, [adDivId, adSize, adUnitPath, adWidth, onSlotRenderEnded, onSlotRequested])
 
   return (
-    <Wrapper
-      className={`${className} gpt-ad`}
-      shouldHideComponent={shouldHideComponent}
-    >
+    <Wrapper className={`${className} gpt-ad`}>
       <Ad width={adWidth} id={adDivId} />
     </Wrapper>
+  )
+}
+
+/**
+ * @param {GPTAdProps} props
+ * @returns
+ */
+export default function GptAd({
+  pageKey,
+  adKey,
+  adUnit,
+  onSlotRequested,
+  onSlotRenderEnded,
+  className,
+}) {
+  const [shouldShowAd, setShouldAd] = useState(false)
+  const isBuildInAdUnit = pageKey && adKey
+  const isCustomAdUnit = adUnit
+  const isValidAd = isBuildInAdUnit || isCustomAdUnit
+
+  /**
+   * If adKey contain 'MB', which means this ad should only render at device which viewport is smaller then 1200px.
+   * If adKey contain 'PC', which means this ad should only render at device which viewport is smaller larger 1200px.
+   *
+   * Why we use `window.innerWidth` to decide should show GPT ad, not just using css `@media-query`?
+   * Because in GPT ad, ad unit will load even if ad is unseen (`display: none`).
+   * The inconsistency between the loading and rendering of ads does not align with our business logic.
+   */
+  useEffect(() => {
+    const width = window.innerWidth
+
+    if (!width || !isValidAd) {
+      return
+    }
+    const isDesktopWidth = width >= 1200
+    if (isBuildInAdUnit) {
+      switch (true) {
+        case adKey?.includes('MB'):
+          setShouldAd(!isDesktopWidth)
+          return
+        case adKey?.includes('PC'):
+          setShouldAd(isDesktopWidth)
+          return
+        default:
+          setShouldAd(true)
+          return
+      }
+    } else if (isCustomAdUnit) {
+      setShouldAd(true)
+      return
+    }
+  }, [adKey, pageKey, isBuildInAdUnit, isCustomAdUnit, isValidAd])
+  return (
+    <>
+      {shouldShowAd && isValidAd ? (
+        <GPTAdRoot
+          className={className}
+          pageKey={pageKey}
+          adKey={adKey}
+          adUnit={adUnit}
+          onSlotRenderEnded={onSlotRenderEnded}
+          onSlotRequested={onSlotRequested}
+        ></GPTAdRoot>
+      ) : null}
+    </>
   )
 }

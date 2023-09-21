@@ -177,7 +177,8 @@ export default function AmpMain({ postData, isMember }) {
 
   const sectionSlot = getAmpGptDataSlotSection(section)
   const { slicedIndex, unstyledBlocksCount } =
-    getSlicedIndexAndUnstyledBlocksCount(content)
+    getSlicedIndexAndUnstyledBlocksCount(postContent)
+
   return (
     <MainWrapper>
       <AmpInfo

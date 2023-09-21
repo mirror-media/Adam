@@ -29,6 +29,7 @@ import { gql } from '@apollo/client'
  * @typedef {Object} SlideshowImage
  * @property {string} id
  * @property {Resized} resized
+ * @property {Resized} resizedWebp
  * @property {string} name
  */
 

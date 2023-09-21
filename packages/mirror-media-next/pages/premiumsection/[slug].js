@@ -15,6 +15,7 @@ import { SECTION_IDS } from '../../constants/index'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -87,7 +88,7 @@ const StyledGPTAd_HD = styled(GPTAd)`
   margin: 20px auto 0px;
 `
 
-const StickyGPTAd_MB_ST = styled(GPTAd)`
+const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
   display: block;
   position: fixed;
   left: 0;
@@ -143,9 +144,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
           renderPageSize={RENDER_PAGE_SIZE}
           isPremium={true}
         />
-        {shouldShowAd && (
-          <StickyGPTAd_MB_ST pageKey={SECTION_IDS['member']} adKey="MB_ST" />
-        )}
+        {shouldShowAd && <StickyGPTAd_MB_ST pageKey={SECTION_IDS['member']} />}
         {shouldShowAd && <FullScreenAds />}
       </SectionContainer>
     </Layout>
