@@ -25,7 +25,7 @@ import {
   getActiveOrderSection,
 } from '../../utils'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-
+import GPT_Placeholder from '../ads/gpt/gpt-placeholder'
 import {
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
@@ -266,7 +266,6 @@ const AsideFbPagePlugin = styled(FbPagePlugin)`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 //Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
@@ -509,12 +508,14 @@ export default function ExternalNormalStyle({ external }) {
 
   return (
     <>
-      {shouldShowAd && (
-        <StyledGPTAd_HD
-          pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-          adKey="HD"
-        />
-      )}
+      <GPT_Placeholder>
+        {shouldShowAd && (
+          <StyledGPTAd_HD
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+            adKey="HD"
+          />
+        )}
+      </GPT_Placeholder>
 
       <Main>
         <Article>

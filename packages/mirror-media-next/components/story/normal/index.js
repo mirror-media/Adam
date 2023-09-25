@@ -37,6 +37,7 @@ import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
 import { getActiveOrderSection } from '../../../utils'
+import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
   ssr: false,
@@ -338,7 +339,6 @@ const DableADContainer_Mobile = styled.div`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 //Because AT1, AT2, AT3 contain full-screen size ads content, should not set max-width and max-height
 const StyledGPTAd_MB_AT3 = styled(GPTAd)`
@@ -593,7 +593,11 @@ export default function StoryNormalStyle({
         }}
       />
 
-      {shouldShowAd && <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />}
+      <GPT_Placeholder>
+        {shouldShowAd && (
+          <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />
+        )}
+      </GPT_Placeholder>
 
       <Main>
         <Article>

@@ -16,6 +16,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -85,7 +86,6 @@ const SectionTitle = styled.h1`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
@@ -131,9 +131,11 @@ export default function Section({ postsCount, posts, section, headerData }) {
       footer={{ type: 'default' }}
     >
       <SectionContainer>
-        {shouldShowAd && (
-          <StyledGPTAd_HD pageKey={SECTION_IDS['member']} adKey="HD" />
-        )}
+        <GPT_Placeholder>
+          {shouldShowAd && (
+            <StyledGPTAd_HD pageKey={SECTION_IDS['member']} adKey="HD" />
+          )}
+        </GPT_Placeholder>
         {sectionName && (
           <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
         )}

@@ -25,6 +25,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 })
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -148,7 +149,6 @@ const PremiumCategoryTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 const StickyGPTAd = styled(GPTMbStAd)`
@@ -210,7 +210,9 @@ export default function Category({
       footer={{ type: 'default' }}
     >
       <CategoryContainer isPremium={isPremium}>
-        {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
+        <GPT_Placeholder>
+          {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
+        </GPT_Placeholder>
 
         {isPremium ? (
           <PremiumCategoryTitle sectionName={sectionSlug}>

@@ -22,6 +22,7 @@ import { Z_INDEX } from '../../../constants/index'
 import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -83,7 +84,6 @@ const SocialMedia = styled.li`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 const StyledGPTAd_FT = styled(GPTAd)`
@@ -268,7 +268,11 @@ export default function StoryPremiumStyle({
         }}
       />
 
-      {shouldShowAd && <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />}
+      <GPT_Placeholder>
+        {shouldShowAd && (
+          <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />
+        )}
+      </GPT_Placeholder>
 
       <Main>
         <article>

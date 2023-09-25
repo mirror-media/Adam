@@ -15,6 +15,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const TagContainer = styled.main`
   width: 320px;
@@ -70,7 +71,6 @@ const TagTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 const StickyGPTAd = styled(GPTMbStAd)`
@@ -114,7 +114,9 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
       footer={{ type: 'default' }}
     >
       <TagContainer>
-        {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        <GPT_Placeholder>
+          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        </GPT_Placeholder>
 
         {tagName && (
           <TagTitleWrapper>

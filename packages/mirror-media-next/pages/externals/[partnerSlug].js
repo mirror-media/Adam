@@ -20,6 +20,7 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -69,7 +70,6 @@ const PartnerTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 const StickyGPTAd = styled(GPTMbStAd)`
@@ -118,12 +118,14 @@ export default function ExternalPartner({
       footer={{ type: 'default' }}
     >
       <PartnerContainer>
-        {shouldShowAd && (
-          <StyledGPTAd
-            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-            adKey="HD"
-          />
-        )}
+        <GPT_Placeholder>
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+              adKey="HD"
+            />
+          )}
+        </GPT_Placeholder>
         <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
           {partner?.name}
         </PartnerTitle>

@@ -22,6 +22,10 @@ import {
 } from '../../utils/api/video'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import {
+  GPT_Placeholder_Desktop,
+  GPT_Placeholder_MobileAndTablet,
+} from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -58,16 +62,6 @@ const ContentWrapper = styled.div`
 const StyledGPTAd_HD = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 8px auto;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 24px auto;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    margin: 0px auto 28px;
-    order: -1;
-  }
 `
 
 const StyledGPTAd_E1 = styled(GPTAd)`
@@ -109,6 +103,13 @@ const StickyGPTAd = styled(GPTMbStAd)`
     display: none;
   }
 `
+
+const GPT_PLACEHOLDER_SIZES = {
+  mobile: { width: '300px', height: '250px', margin: '8px auto' },
+  tablet: { width: '300px', height: '250px', margin: '24px auto' },
+  desktop: { width: '970px', height: '250px', margin: '0px auto 28px' },
+}
+
 /**
  * @param {Object} props
  * @param {import('../../type/youtube').YoutubeVideo} props.video
@@ -130,9 +131,14 @@ export default function Video({ video, latestVideos, headerData }) {
       footer={{ type: 'default' }}
     >
       <Wrapper>
+        <GPT_Placeholder_Desktop rwd={GPT_PLACEHOLDER_SIZES}>
+          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
+        </GPT_Placeholder_Desktop>
         <YoutubeIframe videoId={video.id} gtmClassName="GTM-video-yt-play" />
 
-        {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="HD" />}
+        <GPT_Placeholder_MobileAndTablet rwd={GPT_PLACEHOLDER_SIZES}>
+          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
+        </GPT_Placeholder_MobileAndTablet>
 
         <ContentWrapper>
           <YoutubeArticle video={video} />

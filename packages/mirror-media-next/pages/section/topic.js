@@ -12,6 +12,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -59,7 +60,6 @@ const TopicsTitle = styled.h1`
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 20px auto 0px;
 `
 
 const StickyGPTAd = styled(GPTMbStAd)`
@@ -100,7 +100,9 @@ export default function Topics({ topics, topicsCount, headerData }) {
       footer={{ type: 'default' }}
     >
       <TopicsContainer>
-        {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        <GPT_Placeholder>
+          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+        </GPT_Placeholder>
         <TopicsTitle>精選專區</TopicsTitle>
         <SectionTopics
           topicsCount={topicsCount}
