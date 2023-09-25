@@ -171,7 +171,7 @@ function getAmpGptDataSlotSection(section) {
     case name?.includes('美食旅遊'):
       return 'tra'
     case name?.includes('生活'):
-      return 'cul'
+      return 'life'
     default:
       return 'oth'
   }

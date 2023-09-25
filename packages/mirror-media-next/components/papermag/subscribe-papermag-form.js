@@ -95,7 +95,6 @@ export default function SubscribePaperMagForm({ plan }) {
 
   // update the receiptData state
   const [receiptData, setReceiptData] = useState({})
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     // Check for form validity
@@ -104,13 +103,17 @@ export default function SubscribePaperMagForm({ plan }) {
     // Make an API request or update the state here
     // carry encrypted paymentPayload and submit to newebpay
 
+    const code = `magazine_${plan === 2 ? 'two' : 'one'}_year${
+      shouldCountFreight ? '_with_shipping_fee' : ''
+    }`
+
     const requestBody = {
       data: {
         desc: 'mock_desc',
         comment: 'mock_comment',
         merchandise: {
           connect: {
-            code: `magazine_${plan === 2 ? 'two' : 'one'}_year`,
+            code,
           },
         },
         itemCount: count,
@@ -133,7 +136,6 @@ export default function SubscribePaperMagForm({ plan }) {
       `${window.location.origin}/api/papermag`,
       requestBody
     )
-
     if (data?.status !== 'success') {
       console.error(data.message)
       router.push(`/papermag/return?order-fail=true`)

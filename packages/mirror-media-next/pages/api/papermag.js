@@ -25,6 +25,7 @@ async function getPaymentDataOfPapermagSubscription(gateWayPayload) {
     TradeLimit: 900,
     NotifyURL:
       'https://mm-subscription-webhooks-publishers-dev-ufaummkd5q-de.a.run.app/newebpay/magazine',
+    ReturnURL: gateWayPayload.returnUrl,
   }
   return data
 }
@@ -33,7 +34,7 @@ export default async function EncryptInfo(req, res) {
   const tradeInfo = req.body
   try {
     const infoForNewebpay = await getPaymentDataOfPapermagSubscription(
-      tradeInfo
+      tradeInfo.data
     )
 
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)

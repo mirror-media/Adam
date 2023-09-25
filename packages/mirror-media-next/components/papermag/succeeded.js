@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Notice from './notice'
+import { getNumberWithCommas } from '../../utils'
 
 const Message = styled.h2`
   color: rgba(0, 0, 0, 0.87);
@@ -36,7 +37,7 @@ const GrayBox = styled.div`
 `
 
 const Title = styled.h2`
-  color: rgba(0, 0, 0, 0.87);
+  color: rgba(0, 0, 0, 0.66);
   font-size: 24px;
   font-weight: 500;
   margin-bottom: 8px;
@@ -69,7 +70,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   ${({ theme }) => theme.breakpoint.lg} {
     flex-direction: row;
-    margin: 24px 0;
+    margin: 16px 0 10px 0;
   }
 `
 const OrderContent = styled.div`
@@ -93,6 +94,10 @@ const Detail = styled.div`
 
   ${({ theme }) => theme.breakpoint.lg} {
     width: 664px;
+  }
+
+  .discount {
+    color: #054f77;
   }
 `
 
@@ -163,7 +168,33 @@ const CustomerItem = styled.div`
   }
 `
 
-export default function Succeeded() {
+/**
+ * @param {Object} props
+ * @param {Object} props.orderData
+ * @return {JSX.Element}
+ */
+
+export default function Succeeded({ orderData }) {
+  const {
+    orderId,
+    date,
+    discountCode,
+    orderInfoPurchasedList: {
+      name: itemName,
+      itemCount,
+      shippingCost,
+      costWithoutShipping,
+      discount,
+      total,
+    },
+    purchaseName,
+    purchaseEmail,
+    purchaseMobile,
+    receiveName,
+    receiveMobile,
+    receiveAddress,
+  } = orderData
+
   return (
     <>
       <Message>您已完成付款，以下為本次訂購資訊。</Message>
@@ -175,16 +206,18 @@ export default function Succeeded() {
         <Title>訂單資訊</Title>
         <ItemWrapper>
           <Item>訂單編號</Item>
-          <Info>2020122133</Info>
+          <Info>{orderId}</Info>
         </ItemWrapper>
         <ItemWrapper>
           <Item>訂單日期</Item>
-          <Info>2019-12-25</Info>
+          <Info>{date}</Info>
         </ItemWrapper>
-        <ItemWrapper>
-          <Item>優惠折扣碼</Item>
-          <Info>MJ00012345</Info>
-        </ItemWrapper>
+        {discountCode && (
+          <ItemWrapper>
+            <Item>優惠折扣碼</Item>
+            <Info>{discountCode}</Info>
+          </ItemWrapper>
+        )}
 
         {/* 訂單內容 */}
         <ContentWrapper>
@@ -192,24 +225,33 @@ export default function Succeeded() {
           <DetailWrapper>
             <Detail>
               <DetailItem>
-                <span>鏡週刊紙本雜誌 52 期</span>
+                <span>{itemName}</span>
                 <span>
-                  共<span className="number">99</span>份
+                  共<span className="number">{itemCount}</span>份
                 </span>
               </DetailItem>
-              <Price>NT$ 2,880</Price>
+              <Price>NT$ {getNumberWithCommas(costWithoutShipping)}</Price>
             </Detail>
 
             <Detail>
               <Item>運費</Item>
-              <Price>NT$ 0</Price>
+              <Price>NT$ {getNumberWithCommas(shippingCost)}</Price>
             </Detail>
+
+            {discount ? (
+              <Detail>
+                <DetailItem className="discount">折扣</DetailItem>
+                <Price className="discount">
+                  -NT$ {getNumberWithCommas(discount)}
+                </Price>
+              </Detail>
+            ) : null}
 
             <Hr />
 
             <Detail style={{ marginTop: '0' }}>
               <Item>付款金額</Item>
-              <Price>NT$ 2,880</Price>
+              <Price>NT$ {getNumberWithCommas(total)}</Price>
             </Detail>
           </DetailWrapper>
         </ContentWrapper>
@@ -219,29 +261,29 @@ export default function Succeeded() {
         <CustomerTitle style={{ marginTop: '16px' }}>訂購人</CustomerTitle>
         <CustomerItem style={{ marginTop: '12px' }}>
           <p className="name">姓名</p>
-          <p className="value">陳芳明</p>
+          <p className="value">{purchaseName}</p>
         </CustomerItem>
         <CustomerItem>
           <p className="name">電子信箱</p>
-          <p className="value">readr@gmail.com</p>
+          <p className="value">{purchaseEmail}</p>
         </CustomerItem>
         <CustomerItem>
           <p className="name">聯絡電話</p>
-          <p className="value">0977229955</p>
+          <p className="value">{purchaseMobile}</p>
         </CustomerItem>
 
         <CustomerTitle>收件人</CustomerTitle>
         <CustomerItem style={{ marginTop: '12px' }}>
           <p className="name">姓名</p>
-          <p className="value">陳芳明</p>
+          <p className="value">{receiveName}</p>
         </CustomerItem>
         <CustomerItem>
           <p className="name">聯絡電話</p>
-          <p className="value">0977229955</p>
+          <p className="value">{receiveMobile}</p>
         </CustomerItem>
         <CustomerItem>
           <p className="name">通訊地址</p>
-          <p className="value">台南市新營區林口街119號6樓之5</p>
+          <p className="value">{receiveAddress}</p>
         </CustomerItem>
         <CustomerItem>
           <p className="name">派送備註</p>
