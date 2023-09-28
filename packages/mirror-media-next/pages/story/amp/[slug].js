@@ -76,7 +76,7 @@ function StoryAmpPage({ postData }) {
   )
   const [section] = sectionsWithOrdered
 
-  const sectionSlot = getAmpGptDataSlotSection(section)
+  const gptSlotSection = getAmpGptDataSlotSection(section, isMember)
 
   const categoryOfWineSlug = getCategoryOfWineSlug(categories)
 
@@ -144,16 +144,16 @@ function StoryAmpPage({ postData }) {
               }`}
             >
               <AmpHeader />
-              <AmpGptAd section={sectionSlot} position="HD" />
+              <AmpGptAd section={gptSlotSection} position="HD" />
 
-              <AmpMain postData={postData} isMember={isMember} />
+              <AmpMain postData={postData} gptSlotSection={gptSlotSection} />
               <AmpRelated
                 relateds={relatedsWithOrdered}
-                section={sectionSlot}
+                gptSlotSection={gptSlotSection}
               />
               <Taboola title="你可能也喜歡這些文章" />
 
-              <AmpGptAd section={sectionSlot} position="FT" />
+              <AmpGptAd section={gptSlotSection} position="FT" />
 
               <AmpFooter />
               {/* If there are wine categories (length greater than 0), AmpGptStickyAd will not be shown. */}

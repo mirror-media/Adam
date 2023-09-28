@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import useSharedUrl from '../../hooks/use-shared-url'
+import useAmpSharedUrl from '../../hooks/use-amp-shared-url'
 import { SHARE_URL_FACEBOOK, SHARE_URL_LINE } from '../../constants'
 
 const FooterWrapper = styled.div`
@@ -31,7 +31,7 @@ const FooterItem = styled(Link)`
  * @returns {JSX.Element}
  */
 export default function AmpFooter() {
-  const sharedUrl = useSharedUrl()
+  const sharedUrl = useAmpSharedUrl()
   /** @type {ShareItem[]} */
   const sharesArr = [
     {

@@ -1,21 +1,23 @@
 ARG NODE_VERSION=16-slim
 
-FROM node:${NODE_VERSION} AS build
+# Install dependencies only when needed
+FROM node:${NODE_VERSION} AS deps
+WORKDIR /app
 
-WORKDIR /build
+# Install dependencies based on the preferred package manager
+COPY ["package.json", "yarn.lock", "./"]
+RUN yarn install --frozen-lockfile --production
 
-RUN echo "NEXT_PUBLIC_ENV: $NEXT_PUBLIC_ENV"
-
-COPY package.json yarn.lock /build/
-
-RUN yarn install
-
-COPY . /build/
+# Rebuild the source code only when needed
+FROM node:${NODE_VERSION} AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
 RUN yarn build
 
-
-FROM node:${NODE_VERSION}
+# Production image, copy all the files and run next
+FROM node:${NODE_VERSION} AS runner
 
 RUN set -e; \
     apt-get update -y && apt-get -y install tini; \
@@ -23,21 +25,23 @@ RUN set -e; \
 
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
 
 COPY package.json yarn.lock /app/
-RUN yarn install
+RUN yarn install --frozen-lockfile --production
 
-COPY --from=build /build/public ./public
-COPY --from=build /build/run.sh /app/
-COPY --from=build /build/amp-proxy-server.js /app/
+COPY --from=builder /app/run.sh ./
+COPY --from=builder /app/amp-proxy-server.js ./
+
+COPY --from=builder /app/public ./public
+
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=build /build/.next/standalone ./
-COPY --from=build /build/.next/static ./.next/static
-
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 RUN chmod +x run.sh
+
 ## Use tini to manage zombie processes and signal forwarding
 ## https://github.com/krallin/tini
 ENTRYPOINT ["/usr/bin/tini", "--"]

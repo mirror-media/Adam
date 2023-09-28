@@ -146,9 +146,13 @@ const getPopInId = (index = 0) => {
  *
  * @param {Object} section - The section object containing a name property.
  * @param {string} section.name - The name of the section.
+ * @param {boolean} isMemberArticle - The name of the section.
  * @return {string} The corresponding data slot section for the given section name.
  */
-function getAmpGptDataSlotSection(section) {
+function getAmpGptDataSlotSection(section, isMemberArticle) {
+  if (isMemberArticle) {
+    return 'member'
+  }
   const name = section?.name
 
   switch (true) {

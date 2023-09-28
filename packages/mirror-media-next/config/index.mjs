@@ -8,6 +8,13 @@ const NEWEBPAY_PAPERMAG_KEY =
   process.env.NEWEBPAY_PAPERMAG_KEY || 'newebpay-papermag-key'
 const NEWEBPAY_PAPERMAG_IV =
   process.env.NEWEBPAY_PAPERMAG_IV || 'newebpay-papermag-iv'
+const GOOGLE_SHEETS_PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY
+const GOOGLE_SHEETS_CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
+const GOOGLE_SHEETS_CLIENT_ID = process.env.GOOGLE_SHEETS_CLIENT_ID
+const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
+
+// should be applied in preview mode
+const SITE_BASE_PATH = IS_PREVIEW_MODE ? '/preview-server' : ''
 
 // The following variables are given values according to different `ENV`
 
@@ -218,6 +225,7 @@ export {
   IS_PREVIEW_MODE,
   PREVIEW_SERVER_ORIGIN,
   SITE_URL,
+  SITE_BASE_PATH,
   GCP_PROJECT_ID,
   API_TIMEOUT,
   API_TIMEOUT_GRAPHQL,
@@ -243,4 +251,8 @@ export {
   NEWEBPAY_PAPERMAG_IV,
   ACCESS_SUBSCRIBE_FEATURE_TOGGLE,
   ACCESS_PAPERMAG_FEATURE_TOGGLE,
+  GOOGLE_SHEETS_PRIVATE_KEY,
+  GOOGLE_SHEETS_CLIENT_EMAIL,
+  GOOGLE_SHEETS_CLIENT_ID,
+  GOOGLE_SHEET_SLOT_ID,
 }

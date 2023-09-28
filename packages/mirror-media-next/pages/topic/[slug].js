@@ -1,8 +1,11 @@
+// TODO: modify component `<WineWarning>`, no need to props `categories`
+
 import errors from '@twreporter/errors'
 
 import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
 import TopicList from '../../components/topic/list/topic-list'
 import TopicGroup from '../../components/topic/group/topic-group'
+import WineWarning from '../../components/shared/wine-warning'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
@@ -15,7 +18,14 @@ import {
 import { fetchTopicByTopicSlug } from '../../utils/api/topic'
 
 const RENDER_PAGE_SIZE = 12
-
+const WINE_TOPICS_SLUG = [
+  '5c25f9e3315ec51000903a82',
+  '5d22bb9fe311f3925c49396c',
+  '5a4d8e60160ac91000294611',
+  '5ff7d152127ff40f00d7125c',
+  '61d6ade96fef6b0f00f8407e',
+  '63b7907e7d893f1a00f1ddb1',
+]
 /**
  * @typedef {import('../../components/topic/list/topic-list').SlideshowImage} SlideshowImage
  * @typedef {import('../../components/topic/list/topic-list').Topic} Topic
@@ -29,6 +39,10 @@ const RENDER_PAGE_SIZE = 12
  * @returns
  */
 export default function Topic({ topic, slideshowImages, headerData }) {
+  const shouldShowWineWarning = WINE_TOPICS_SLUG.some(
+    (slug) => slug === topic.slug
+  )
+
   let topicJSX
 
   switch (topic.type) {
@@ -78,6 +92,12 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       footer={{ type: 'default' }}
     >
       {topicJSX}
+      {shouldShowWineWarning && (
+        <>
+          {/* @ts-ignore */}
+          <WineWarning categories={[{ slug: 'wine' }]}></WineWarning>
+        </>
+      )}
     </Layout>
   )
 }

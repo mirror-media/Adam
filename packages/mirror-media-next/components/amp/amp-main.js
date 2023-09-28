@@ -7,13 +7,13 @@ import AmpHero from './amp-hero'
 import AmpInfo from './amp-info'
 import ArticleBrief from '../story/shared/brief'
 import DraftRenderBlock from '../story/shared/draft-renderer-block'
-import useSharedUrl from '../../hooks/use-shared-url'
+import useAmpSharedUrl from '../../hooks/use-amp-shared-url'
 import AmpGptAd from '../../components/amp/amp-ads/amp-gpt-ad'
 import {
   copyAndSliceDraftBlock,
   getSlicedIndexAndUnstyledBlocksCount,
 } from '../../utils/story'
-import { getAmpGptDataSlotSection } from '../../utils/ad'
+
 import { getActiveOrderSection } from '../../utils'
 
 const MainWrapper = styled.div`
@@ -110,9 +110,19 @@ const AmpContentContainer = styled.section`
   margin-top: 36px;
 `
 
-//Because AT1, AT2 contain full-screen size ads content, should not set max-width and max-height
 const StyledAmpGptAd = styled(AmpGptAd)`
   margin: 32px 0;
+`
+
+const LinkToMemberStoryPage = styled.a`
+  width: fit-content;
+  display: block;
+  margin-top: 24px;
+  color: ${({ theme }) => theme.color.brandColor.darkBlue};
+
+  &:hover {
+    color: #ffa011;
+  }
 `
 
 /**
@@ -123,12 +133,13 @@ const StyledAmpGptAd = styled(AmpGptAd)`
  *
  * @param {Object} props
  * @param {PostData} props.postData
- * @param {boolean} props.isMember
+ * @param {string} props.gptSlotSection
  * @returns {JSX.Element}
  */
-export default function AmpMain({ postData, isMember }) {
+export default function AmpMain({ postData, gptSlotSection }) {
   const {
     title = '',
+    slug = '',
     sections = [],
     sectionsInInputOrder = [],
     heroImage = null,
@@ -148,11 +159,10 @@ export default function AmpMain({ postData, isMember }) {
     brief = { blocks: [], entityMap: {} },
     content = { blocks: [], entityMap: {} },
     trimmedContent = { blocks: [], entityMap: {} },
+    isMember = false,
   } = postData
 
   const postContent = content ?? trimmedContent
-
-  const sharedUrl = useSharedUrl()
 
   const sectionsWithOrdered = getActiveOrderSection(
     sections,
@@ -175,7 +185,6 @@ export default function AmpMain({ postData, isMember }) {
     { extend_byline: extend_byline },
   ]
 
-  const sectionSlot = getAmpGptDataSlotSection(section)
   const { slicedIndex, unstyledBlocksCount } =
     getSlicedIndexAndUnstyledBlocksCount(postContent)
 
@@ -188,8 +197,14 @@ export default function AmpMain({ postData, isMember }) {
         updatedAt={updatedAt}
       />
       <SharesWrapper>
-        <ButtonSocialNetworkShare type="facebook" />
-        <ButtonSocialNetworkShare type="line" />
+        <ButtonSocialNetworkShare
+          type="facebook"
+          handleGetShareUrl={useAmpSharedUrl}
+        />
+        <ButtonSocialNetworkShare
+          type="line"
+          handleGetShareUrl={useAmpSharedUrl}
+        />
         <ButtonCopyLink />
       </SharesWrapper>
       <AmpHero
@@ -230,11 +245,8 @@ export default function AmpMain({ postData, isMember }) {
           )}
           contentLayout="amp"
         />
-
         {unstyledBlocksCount > 1 && (
-          <>
-            <StyledAmpGptAd section={sectionSlot} position="AT1" />
-          </>
+          <StyledAmpGptAd section={gptSlotSection} position="AT1" />
         )}
         <DraftRenderBlock
           rawContentBlock={copyAndSliceDraftBlock(
@@ -244,24 +256,20 @@ export default function AmpMain({ postData, isMember }) {
           )}
           contentLayout="amp"
         />
-
-        {unstyledBlocksCount > 5 && (
-          <>
-            <StyledAmpGptAd section={sectionSlot} position="AT2" />
-            <DraftRenderBlock
-              rawContentBlock={copyAndSliceDraftBlock(
-                postContent,
-                slicedIndex.mb[1]
-              )}
-              contentLayout="amp"
-            />
-          </>
-        )}
-
+        {unstyledBlocksCount > 5 && !isMember ? (
+          <StyledAmpGptAd section={gptSlotSection} position="AT2" />
+        ) : null}
+        <DraftRenderBlock
+          rawContentBlock={copyAndSliceDraftBlock(
+            postContent,
+            slicedIndex.mb[1]
+          )}
+          contentLayout="amp"
+        />
         {isMember && (
-          <Link href={sharedUrl.replace('/amp/', '/')}>
+          <LinkToMemberStoryPage href={`/story/${slug}`}>
             【 加入鏡週刊會員，觀看全文 】
-          </Link>
+          </LinkToMemberStoryPage>
         )}
       </AmpContentContainer>
     </MainWrapper>

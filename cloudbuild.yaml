@@ -32,7 +32,9 @@ steps:
 
         cd packages/$_TARGET_PACKAGE
 
-        printenv > .env.local
+        echo "print environment variables and output to file"
+
+        printenv | tee .env.local
 
         docker build -t \
 

@@ -42,11 +42,11 @@ const StyledAmpGptAd = styled(AmpGptAd)`
  *
  * @param {Object} props
  * @param {Relateds} props.relateds
- * @param {string} props.section
+ * @param {string} props.gptSlotSection
  * @returns {JSX.Element}
  */
 
-export default function AmpRelated({ relateds, section }) {
+export default function AmpRelated({ relateds, gptSlotSection }) {
   const relatedsBefordAd = relateds.slice(0, 5)
   const relatedsAfterAd = relateds.slice(5)
 
@@ -67,7 +67,7 @@ export default function AmpRelated({ relateds, section }) {
 
       {relateds.length >= 5 && (
         <>
-          <StyledAmpGptAd section={section} position="E1" />
+          <StyledAmpGptAd section={gptSlotSection} position="E1" />
           {relatedsAfterAd.map((relatedItem, index) => (
             <RelatedItem
               href={`/story/${relatedItem.slug}`}
@@ -85,7 +85,7 @@ export default function AmpRelated({ relateds, section }) {
       {relateds.length === 4 && (
         <>
           <AmpPopIn />
-          <StyledAmpGptAd section={section} position="E1" />
+          <StyledAmpGptAd section={gptSlotSection} position="E1" />
         </>
       )}
 

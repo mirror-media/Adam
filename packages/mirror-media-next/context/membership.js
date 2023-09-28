@@ -13,6 +13,8 @@ import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
  * @typedef {Object} Membership
  * @property {boolean} isLoggedIn
  * @property {string} accessToken
+ * @property {string} userEmail
+ * @property {string} firebaseId
  * @property {MemberInfo} memberInfo
  * @property {boolean} isLogInProcessFinished
  */
@@ -23,6 +25,8 @@ import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
  * @property {Object} [payload]
  * @property {Membership["accessToken"]} [payload.accessToken]
  * @property {MemberInfo} [payload.memberInfo]
+ * @property {string} [payload.userEmail]
+ * @property {string} [payload.firebaseId]
  */
 
 /**
@@ -36,8 +40,10 @@ import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
 const initialMembership = {
   isLoggedIn: false,
   accessToken: '',
+  userEmail: '',
   memberInfo: { memberType: 'not-member' },
   isLogInProcessFinished: false,
+  firebaseId: '',
 }
 
 /**
@@ -63,24 +69,30 @@ const membershipReducer = (membership, action) => {
       const {
         memberInfo: { memberType = 'not-member' } = {},
         accessToken = '',
+        userEmail = '',
+        firebaseId = '',
       } = action?.payload
       return {
         isLoggedIn: true,
         accessToken: accessToken,
+        userEmail,
         memberInfo: {
           ...memberInfo,
           memberType: memberType,
         },
         isLogInProcessFinished,
+        firebaseId,
       }
     case 'LOGOUT':
       return {
         isLoggedIn: false,
         accessToken: '',
+        userEmail: '',
         memberInfo: {
           memberType: 'not-member',
         },
         isLogInProcessFinished,
+        firebaseId: '',
       }
 
     default: {
@@ -186,7 +198,12 @@ const MembershipProvider = ({ children }) => {
           if (accessToken) {
             dispatch({
               type: 'LOGIN',
-              payload: { accessToken, memberInfo: { memberType } },
+              payload: {
+                accessToken,
+                memberInfo: { memberType },
+                userEmail: user.email,
+                firebaseId: user.uid,
+              },
             })
             console.log('Has access token, hurray!')
           }

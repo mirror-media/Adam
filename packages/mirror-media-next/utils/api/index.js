@@ -58,6 +58,22 @@ const createAxiosRequest = (requestUrl) => {
 
 const errorLogger = (errorMessage) => {
   const annotatingAxiosError = errors.helpers.annotateAxiosError(errorMessage)
+  //WORKAROUND: print error in here. Should print in place where fetch function used, such as category/[slug]
+  console.log(
+    JSON.stringify({
+      severity: 'WARNING',
+      message: errors.helpers.printAll(
+        annotatingAxiosError,
+        {
+          withStack: true,
+          withPayload: true,
+        },
+        0,
+        0
+      ),
+    })
+  )
+
   throw annotatingAxiosError
 }
 
