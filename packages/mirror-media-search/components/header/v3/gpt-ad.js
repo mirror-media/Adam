@@ -6,7 +6,6 @@ const GptAdWrapper = styled.div`
   height: 42px;
   width: 80px;
   margin-right: auto;
-  background-color: gray;
   ${({ theme }) => theme.breakpoint.md} {
     order: -1;
     margin-right: 0;
@@ -20,5 +19,5 @@ const GptAdWrapper = styled.div`
   }
 `
 export default function GptAd() {
-  return <GptAdWrapper>GptAd</GptAdWrapper>
+  return <GptAdWrapper></GptAdWrapper>
 }
