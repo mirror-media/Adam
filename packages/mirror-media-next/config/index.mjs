@@ -50,7 +50,7 @@ switch (ENV) {
   case 'prod':
     SITE_URL = 'www.mirrormedia.mg/'
     API_TIMEOUT = 1500
-    API_TIMEOUT_GRAPHQL = 3000
+    API_TIMEOUT_GRAPHQL = 4000
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
     PREVIEW_SERVER_ORIGIN = ''
