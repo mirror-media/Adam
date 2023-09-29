@@ -336,7 +336,7 @@ export default function MobileSidebar({
           />
           <Topics>
             {topics.map((topic) => (
-              <Topic href={`topic/${topic.slug}`} key={topic.id}>
+              <Topic href={`/topic/${topic.slug}`} key={topic.id}>
                 {topic.name}
               </Topic>
             ))}
