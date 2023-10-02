@@ -48,7 +48,7 @@ let GPT_MODE = ''
 let FIREBASE_CONFIG = {}
 switch (ENV) {
   case 'prod':
-    SITE_URL = 'www.mirrormedia.mg/'
+    SITE_URL = 'www.mirrormedia.mg'
     API_TIMEOUT = 1500
     API_TIMEOUT_GRAPHQL = 4000
     WEEKLY_API_SERVER_ORIGIN =

@@ -23,7 +23,7 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 export default function External({ external, headerData }) {
   return (
     <Layout
-      head={{ title: `${external?.title}` }}
+      head={{ title: `${external?.title}`, imageUrl: external?.thumb }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >

@@ -107,11 +107,7 @@ export default function ArticleListItem({ item, index, searchTerms }) {
     gtag.sendGAEvent(`search-${searchTerms}-click-${order}-post`)
   }
   return (
-    <ItemWrapper
-      href={`/story/${item.slug}`}
-      target="_blank"
-      onClick={onClickHandler}
-    >
+    <ItemWrapper href={item.link} target="_blank" onClick={onClickHandler}>
       <ImageContainer>
         <Image
           images={{ original: item.pagemap.cse_image[0].src }}
