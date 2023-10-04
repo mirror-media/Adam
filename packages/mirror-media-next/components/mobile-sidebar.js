@@ -103,7 +103,6 @@ const Topics = styled.div`
 `
 const Topic = styled.a`
   font-weight: 500;
-  font-family: var(--notosansTC-font);
   color: #fff;
   text-decoration: underline;
   text-underline-offset: 3px;

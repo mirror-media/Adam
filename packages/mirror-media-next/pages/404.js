@@ -31,7 +31,6 @@ const MsgContainer = styled.div`
 `
 
 const H1 = styled.h1`
-  font-family: 'Helvetica Neue';
   font-weight: 400;
   font-size: 128px;
   line-height: 128px;
@@ -39,7 +38,6 @@ const H1 = styled.h1`
 `
 
 const Text = styled.p`
-  font-family: var(--notosansTC-font);
   font-size: 24px;
   color: #000000;
 `

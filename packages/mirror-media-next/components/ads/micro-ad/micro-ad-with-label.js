@@ -34,7 +34,6 @@ const typeListing = css`
         padding: 8px;
         color: white;
         background-color: #bcbcbc;
-        font-family: 'PingFang TC';
         font-style: normal;
         font-weight: 600;
         font-size: 18px;
@@ -305,7 +304,6 @@ const typeStory = css`
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'PingFang TC';
       font-style: normal;
       font-weight: 600;
       font-size: 18px;
@@ -365,7 +363,6 @@ const typeStory = css`
             position: absolute;
             bottom: 0;
             right: 103px;
-            font-family: 'PingFang TC';
             font-style: normal;
             font-weight: 600;
             font-size: 12px;

@@ -14,7 +14,6 @@ const Container = styled.div`
 
   .title {
     color: white;
-    font-family: 'PingFang TC';
     margin-bottom: 12px;
     font-weight: 500;
     font-size: 18px;
@@ -24,7 +23,6 @@ const Container = styled.div`
   }
 
   .desc {
-    font-family: 'PingFang TC';
     margin-bottom: 12px;
     font-style: normal;
     font-weight: 500;
@@ -38,7 +36,6 @@ const Container = styled.div`
     width: 100%;
     height: 70px;
     padding: 20px;
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 500;
     font-size: 20px;

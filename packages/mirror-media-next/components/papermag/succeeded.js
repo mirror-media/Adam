@@ -125,7 +125,6 @@ const Price = styled.div`
   color: var(--black-87, rgba(0, 0, 0, 0.87));
   text-align: right;
   /* Body_150% */
-  font-family: PingFang TC;
   font-size: 18px;
   font-style: normal;
   font-weight: 400;

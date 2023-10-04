@@ -19,7 +19,6 @@ const Container = styled.div`
 
   .title {
     color: white;
-    font-family: 'PingFang TC';
     font-weight: 500;
     font-size: 18px;
     line-height: 1.5;
@@ -56,7 +55,6 @@ const InnerBox = styled.div`
   border-radius: 20px;
 
   .desc {
-    font-family: 'PingFang TC';
     font-weight: 400;
     font-size: 14px;
     line-height: 150%;
@@ -69,7 +67,6 @@ const InnerBox = styled.div`
     width: 100%;
     height: 48px;
     padding: 10.5px;
-    font-family: 'PingFang TC';
     font-style: normal;
     font-weight: 500;
     font-size: 18px;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import errors from '@twreporter/errors'
 import { GCP_PROJECT_ID, ENV } from '../config/index.mjs'
 import { useMembership } from '../context/membership'
@@ -10,21 +10,25 @@ import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import styled from 'styled-components'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import useWindowDimensions from '../hooks/use-window-dimensions'
 
 const SlotContainer = styled.div`
   margin: 0 auto;
-  max-width: 600px;
   padding: 20px;
 `
 
 const Banner = styled.div`
-  width: 100%;
-  height: 0;
-  padding-top: 25.85%;
+  margin: 0 auto;
+  width: 760px;
+  height: 250px;
   position: relative;
 `
 
 const BannerLink = styled(Banner)`
+  width: 300px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 760px;
+  }
   &:hover {
     cursor: pointer;
   }
@@ -40,6 +44,9 @@ export default function Slot({ headerData = {} }) {
   const { isLoggedIn, userEmail, firebaseId } = useMembership()
   const { sectionsData = [], topicsData = [] } = headerData
   const router = useRouter()
+  const { width } = useWindowDimensions()
+  const isMobile = useMemo(() => width < 1200, [width])
+  const [isHover, setIsHover] = useState(false)
 
   const [status, setStatus] = useState({
     loading: true,
@@ -107,9 +114,15 @@ export default function Slot({ headerData = {} }) {
     if (status.loading) return null
     if (!firebaseId) {
       return (
-        <BannerLink onClick={() => router.push('/login')}>
+        <BannerLink
+          onClick={() =>
+            router.push(`/login?destination=${router.asPath || '/'}`)
+          }
+        >
           <Image
-            src="https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/not-login.jpg"
+            src={`https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/not-login-${
+              isMobile ? 'mobile' : 'desktop'
+            }.gif`}
             alt="請登入"
             fill={true}
           />
@@ -129,7 +142,9 @@ export default function Slot({ headerData = {} }) {
       return (
         <BannerLink onClick={handleClickSlot}>
           <Image
-            src="https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/default.jpg"
+            src={`https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/default-${
+              isMobile ? 'mobile' : 'desktop'
+            }.gif`}
             alt="抽獎"
             fill={true}
           />
@@ -139,20 +154,39 @@ export default function Slot({ headerData = {} }) {
     switch (winPrize) {
       case '0': {
         return (
-          <BannerLink onClick={handleClickSlot}>
+          <Banner>
             <Image
               src="https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/has-played.jpg"
               alt="明天再試"
               fill={true}
             />
+          </Banner>
+        )
+      }
+      case '50':
+      case '100': {
+        return (
+          <BannerLink
+            onClick={handleClickSlot}
+            onMouseEnter={() => {
+              setIsHover(true)
+            }}
+            onMouseLeave={() => {
+              setIsHover(false)
+            }}
+          >
+            <Image
+              src={`https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/win-${
+                isHover ? 'hover-' : ''
+              }${isMobile ? 'mobile' : 'desktop'}.gif`}
+              alt="抽獎"
+              fill={true}
+            />
           </BannerLink>
         )
       }
-      case '50': {
-        return <>恭喜你中了 {winPrize} 元！</>
-      }
     }
-  }, [status, winPrize, isLoggedIn, router])
+  }, [status, winPrize, isLoggedIn, router, width])
 
   return (
     <Layout

@@ -3,7 +3,7 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import Link from 'next/link'
-
+import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -104,8 +104,8 @@ const Article = styled.figure`
     align-items: center;
     background-color: transparent;
     color: rgba(0, 0, 0, 0.87);
+    ${defaultSerifFontFamily};
     font-weight: 500;
-    font-family: var(--notoserifTC-font);
     line-height: 1.5;
     margin-bottom: 36px;
     .article-image {

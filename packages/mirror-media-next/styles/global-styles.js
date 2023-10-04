@@ -1,22 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
-import { Noto_Sans_TC, Oswald, Noto_Serif_TC, Inter } from '@next/font/google'
 
-const oswald = Oswald({
-  subsets: ['latin'],
-})
-const notosansTC = Noto_Sans_TC({
-  subsets: ['latin'],
-  weight: ['900', '500', '400'],
-})
-const notoserifTC = Noto_Serif_TC({
-  subsets: ['latin'],
-  weight: ['500', '700'],
-})
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-})
+import { defaultSansSerifFontFamily } from './shared-style'
 
 export const GlobalStyles = createGlobalStyle`
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
@@ -29,17 +13,11 @@ export const GlobalStyles = createGlobalStyle`
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
 
-//add css variable if needed
-:root{
-      --oswald-font : ${oswald.style.fontFamily};
-      --notosansTC-font : ${notosansTC.style.fontFamily};
-      --notoserifTC-font : ${notoserifTC.style.fontFamily};
-      --inter-font : ${inter.style.fontFamily};
-   }
+
 
  //default font family  
  html {
-  font-family: PingFang TC, ${notosansTC.style.fontFamily},${notoserifTC.style.fontFamily},${inter.style.fontFamily}, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
+  ${defaultSansSerifFontFamily};
   line-height: 1.5; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
 }

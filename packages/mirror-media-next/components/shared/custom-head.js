@@ -117,7 +117,7 @@ export default function CustomHead(props) {
     image: {
       width: '1200',
       height: '630',
-      type: 'images-next/png',
+      type: 'image/png',
       url:
         props.imageUrl ?? `https://${SITE_URL}/images-next/default-og-img.png`,
     },

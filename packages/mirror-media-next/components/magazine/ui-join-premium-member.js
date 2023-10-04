@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import SubscribeLink from '../../components/story/shared/subscribe-link'
 
 const Wrapper = styled.div`
-  font-family: PingFang TC;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,7 +79,6 @@ const Box = styled.div`
     border-radius: 12px;
     box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
     font-size: 18px;
-    font-family: PingFang TC;
     font-style: normal;
     font-weight: 500;
     line-height: 150%;
