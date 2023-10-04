@@ -53,7 +53,7 @@ switch (ENV) {
     API_TIMEOUT_GRAPHQL = 4000
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
-    PREVIEW_SERVER_ORIGIN = ''
+    PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-prod-ufaummkd5q-de.a.run.app'
     STATIC_FILE_DOMAIN = 'v3-statics.mirrormedia.mg'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     URL_STATIC_PREMIUM_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_member.json`
@@ -96,7 +96,7 @@ switch (ENV) {
 
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-staging-ufaummkd5q-de.a.run.app'
-    PREVIEW_SERVER_ORIGIN = ''
+    PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-staging-ufaummkd5q-de.a.run.app'
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     STATIC_FILE_DOMAIN = 'v3-statics-staging.mirrormedia.mg'
 

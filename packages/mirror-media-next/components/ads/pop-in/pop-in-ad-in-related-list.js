@@ -67,7 +67,6 @@ const StyledPopInAd = styled(PopInAd)`
         display: flex;
         align-items: center;
         justify-content: center;
-        font-family: 'PingFang TC';
         font-style: normal;
         font-weight: 600;
         font-size: 18px;

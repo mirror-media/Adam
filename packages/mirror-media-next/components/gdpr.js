@@ -6,7 +6,6 @@ const Wrapper = styled.div`
   position: relative;
   z-index: ${Z_INDEX.coverHeader};
   color: white;
-  font-family: var(--notosansTC-font);
 
   ${
     /**

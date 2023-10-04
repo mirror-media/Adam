@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import CustomImage from '@readr-media/react-image'
-
+import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -20,7 +20,7 @@ const heroCssPremium = css`
 const ArticleTitle = styled.h1`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
-  font-family: var(--notoserifTC-font);
+  ${defaultSerifFontFamily};
   font-weight: 700;
   text-align: center;
   margin: 20px 10px 0;

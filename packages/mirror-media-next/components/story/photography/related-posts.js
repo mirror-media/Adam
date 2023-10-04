@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import Link from 'next/link'
-
+import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -18,7 +18,6 @@ const Wrapper = styled.div`
 
 const Title = styled.div`
   color: white;
-  font-family: 'PingFang TC';
   font-weight: 600;
   font-size: 21px;
   line-height: 150%;
@@ -65,8 +64,8 @@ const PostCard = styled.div`
     ${({ theme }) => theme.breakpoint.md} {
       margin-top: 16px;
       font-size: 18px;
-      font-family: var(--notoserifTC-font);
-      font-weight: 500px;
+      ${defaultSerifFontFamily};
+      font-weight: 500;
       line-height: 150%;
     }
   }
