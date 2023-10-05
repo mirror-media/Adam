@@ -86,8 +86,8 @@ export default async function handler(req, res) {
           now,
           userEmail,
           userFirebaseId,
-          prize === 100 ? '1' : '0',
-          prize === 50 ? '1' : '0',
+          prize === '100' ? '1' : '0',
+          prize === '50' ? '1' : '0',
           prize === '0' ? '1' : '0',
         ],
       ]

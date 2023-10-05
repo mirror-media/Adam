@@ -71,11 +71,11 @@ function getPageKeyByPartnerShowOnIndex(partnerShowOnIndex) {
  * Returns the GPT pageKey associated with section's slug.
  *
  * @param {string} sectionSlug
- * @returns {string | undefined}
+ * @returns {string}
  */
 const getSectionGPTPageKey = (sectionSlug) => {
   if (!sectionSlug || typeof sectionSlug !== 'string') {
-    return
+    return 'other'
   }
 
   let GptPageKey
