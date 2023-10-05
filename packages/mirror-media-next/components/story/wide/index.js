@@ -116,9 +116,14 @@ const DonateSubscribeWrapper = styled.div`
  * @param {Object} param
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
+ * @param {string} [param.classNameForGTM]
  * @returns {JSX.Element}
  */
-export default function StoryWideStyle({ postData, postContent }) {
+export default function StoryWideStyle({
+  postData,
+  postContent,
+  classNameForGTM = '',
+}) {
   const {
     id = '',
     title = '',
@@ -193,7 +198,7 @@ export default function StoryWideStyle({ postData, postContent }) {
   return (
     <>
       <Header h2AndH3Block={h2AndH3Block} />
-      <Main>
+      <Main className={classNameForGTM}>
         <article>
           <HeroImageAndVideo
             heroImage={heroImage}

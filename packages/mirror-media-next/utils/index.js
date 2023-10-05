@@ -289,18 +289,14 @@ const convertDraftToText = (rawContentBlock) => {
 /**
  * To get the URL link for `og-image`, sorted in ascending order based on file size.
  * Skip w480 to prevent image size minimum 200 x 200.
+ * It's recommended for using images which is at least 1200 * 630 pixels on high resolution devices, so we use w1600 at first.
+ * @see https://developers.facebook.com/docs/sharing/webmasters/images
  * @param {import('../apollo/fragments/photo').Resized | undefined | null} resized
  * @returns {string | undefined}
  */
 const getResizedUrl = (resized) => {
   if (resized) {
-    return (
-      resized?.w800 ||
-      resized?.w1200 ||
-      resized?.w1600 ||
-      resized?.w2400 ||
-      resized?.original
-    )
+    return resized?.w1600 || resized?.w2400 || resized?.original
   } else {
     return undefined
   }

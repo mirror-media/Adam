@@ -141,10 +141,15 @@ const ArrowButton = styled.button`
  * @param {Object} param
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
+ * @param {string} [param.classNameForGTM]
  * @returns
  */
 
-export default function StoryPhotographyStyle({ postData, postContent }) {
+export default function StoryPhotographyStyle({
+  postData,
+  postContent,
+  classNameForGTM = '',
+}) {
   const {
     title = '',
     heroImage = null,
@@ -246,6 +251,7 @@ export default function StoryPhotographyStyle({ postData, postContent }) {
     <Main
       // @ts-ignore
       isSafari={isSafariDevice}
+      className={classNameForGTM}
     >
       <Header />
       <Page>

@@ -23,7 +23,6 @@ import { handleStoryPageRedirect } from '../../utils/story'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
-import { sendGAEvent } from '../../utils/gtag'
 import { setPageCache } from '../../utils/cache-setting'
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
@@ -177,17 +176,13 @@ export default function Story({ postData, headerData, storyLayoutType }) {
     storyLayoutType,
   ])
 
-  //Send custom event to Google Analytics
-  //Which event should be send is based on whether is member-only article.
-  useEffect(() => {
-    if (isMember) {
-      sendGAEvent('premium_page_view')
-    } else {
-      sendGAEvent('story_page_view')
-    }
-  }, [isMember])
-
   const renderStoryLayout = () => {
+    /**
+     * Because GA is currently unable to send custom event, we use gtm className to collect custom page-view.
+     */
+    const classNameForGTM = isMember
+      ? 'GTM-premium-page-view'
+      : 'GTM-story-page-view'
     switch (storyLayoutType) {
       case 'style-normal':
         return (
@@ -195,6 +190,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             postData={postData}
             postContent={postContent}
             headerData={headerData}
+            classNameForGTM={classNameForGTM}
           />
         )
       case 'style-premium':
@@ -203,15 +199,23 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             postData={postData}
             postContent={postContent}
             headerData={headerData}
+            classNameForGTM={classNameForGTM}
           />
         )
       case 'style-wide':
-        return <StoryWideStyle postData={postData} postContent={postContent} />
+        return (
+          <StoryWideStyle
+            postData={postData}
+            postContent={postContent}
+            classNameForGTM={classNameForGTM}
+          />
+        )
       case 'style-photography':
         return (
           <StoryPhotographyStyle
             postData={postData}
             postContent={postContent}
+            classNameForGTM={classNameForGTM}
           />
         )
       default:
@@ -220,6 +224,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             postData={postData}
             postContent={postContent}
             headerData={headerData}
+            classNameForGTM={classNameForGTM}
           />
         )
     }

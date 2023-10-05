@@ -229,7 +229,7 @@ export const post = gql`
     redirect
     og_image {
       resized {
-        w1200
+        w1600
       }
     }
     hiddenAdvertised

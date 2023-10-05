@@ -16,7 +16,7 @@ export default function SubscribeMagazine() {
   return (
     <SubscribeMagazineButton>
       <Link href="/papermag" target="_blank">
-        鏡週刊雜誌訂閱
+        訂閱紙本雜誌
       </Link>
     </SubscribeMagazineButton>
   )
