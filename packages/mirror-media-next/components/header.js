@@ -152,7 +152,7 @@ const TopicsAndSubscribe = styled.section`
 `
 
 const StyledGPTAd = styled(GPTAd)`
-  width: 100%;
+  width: auto;
   height: auto;
   margin-right: auto;
   ${({ theme }) => theme.breakpoint.md} {

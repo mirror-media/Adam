@@ -19,7 +19,7 @@ import GDPRNotification from '../gdpr'
  * @param {Head} [props.head] - object that CustomHead needs to set the html meta
  * @param {Header} props.header - object that ShareHeader needs to render the specific type and the content
  * @param {Footer} props.footer - object that Footer needs to render the specific type
- * @param {JSX.Element} props.children - main content of the page
+ * @param {React.ReactNode} props.children - main content of the page
  * @returns {React.ReactElement}
  */
 export default function Layout({ head, header, footer, children }) {

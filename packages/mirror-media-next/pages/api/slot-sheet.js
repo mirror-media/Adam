@@ -9,6 +9,7 @@ import {
 
 function getHasPlayed(sheetData, userFirebaseId) {
   const today = new Date().toLocaleDateString('zh-TW', {
+    timeZone: 'Asia/Taipei',
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -73,6 +74,7 @@ export default async function handler(req, res) {
   if (dispatch === 'WRITE_NEW_LINE') {
     try {
       const now = new Date().toLocaleDateString('zh-TW', {
+        timeZone: 'Asia/Taipei',
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',

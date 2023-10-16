@@ -37,7 +37,16 @@ const MachineContainer = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(calc(-50% + 10px), calc(-50% + 42px)) scale(0.6);
+  ${({ hasPrize }) => {
+    return (
+      hasPrize &&
+      `
+      margin-top: -30px;
+    `
+    )
+  }}
   ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 0;
     transform: translate(calc(-50% + 15px), calc(-50% + 0px)) scale(1);
   }
 `
@@ -55,10 +64,6 @@ const SlotImage = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(calc(-50% + 10px), calc(-50% + 42px)) scale(0.6);
-  ${({ theme }) => theme.breakpoint.xl} {
-    transform: translate(calc(-50% + 15px), calc(-50% + 0px)) scale(1);
-  }
-
   ${({ isPlaying }) => {
     if (isPlaying)
       return `
@@ -79,6 +84,18 @@ const SlotImage = styled.div`
     animation: backgroundAnimation 3s infinite;
     `
   }}
+  ${({ hasPrize }) => {
+    return (
+      hasPrize &&
+      `
+      margin-top: -30px;
+    `
+    )
+  }}
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-top: 0;
+    transform: translate(calc(-50% + 15px), calc(-50% + 0px)) scale(1);
+  }
 `
 
 /**
@@ -89,12 +106,13 @@ export default function Slot() {
   const num_icons = 12
   const icon_height = (70 / 171) * 178
   const time_per_icon = 200
-  const { isLoggedIn, userEmail, firebaseId } = useMembership()
+  const { isLoggedIn, userEmail, firebaseId, isLogInProcessFinished } =
+    useMembership()
+  // const firebaseId = 'test-for-local'
   const router = useRouter()
   const { width } = useWindowDimensions()
   const isMobile = useMemo(() => width < 1200, [width])
   const [isHover, setIsHover] = useState(false)
-  const [hasMounted, setHasMounted] = useState(false)
 
   const [status, setStatus] = useState({
     loading: true,
@@ -136,16 +154,14 @@ export default function Slot() {
 
   const handleClickSlot = async (e) => {
     e.preventDefault()
+    if (!firebaseId || status.hasPlayed || !status.isLoggedIn) return
     const randomValue = Math.random()
     if (randomValue < probabilities.prize100) {
-      setWinPrize('100')
-      await rollAll([6, 1, 1])
+      await rollAll([6, 1, 1], () => setWinPrize('100'))
     } else if (randomValue < probabilities.prize50) {
-      setWinPrize('50')
-      await rollAll([9, 9, 9])
+      await rollAll([9, 9, 9], () => setWinPrize('50'))
     } else {
-      await rollAll()
-      setWinPrize('0')
+      await rollAll([], () => setWinPrize('0'))
     }
   }
 
@@ -197,7 +213,7 @@ export default function Slot() {
     })
   }
 
-  async function rollAll(targetArr) {
+  async function rollAll(targetArr, cb) {
     if (isPlaying) return
     setIsPlaying(true)
     const reelsList = document.querySelectorAll('.slots > .reel')
@@ -205,6 +221,7 @@ export default function Slot() {
       // Activate each reel, must convert NodeList to Array for this with spread operator
       .all([...reelsList].map((reel, i) => roll(reel, i, targetArr?.[i])))
     setIsPlaying(false)
+    cb()
     return deltas
   }
 
@@ -222,7 +239,6 @@ export default function Slot() {
   }
 
   useEffect(() => {
-    setHasMounted(true)
     if (!isLoggedIn) return setStatus({ ...status, loading: false })
     // fetch data
     getSlotSheetDataByUserId(firebaseId)
@@ -239,19 +255,20 @@ export default function Slot() {
   }, [winPrize])
 
   const ReelsComponent = useCallback(() => {
-    return (
-      <MachineContainer>
-        <Reels />
-      </MachineContainer>
-    )
+    return <Reels />
   }, [])
 
   const SlotImageComponent = useCallback(() => {
-    return <SlotImage isPlaying={isPlaying} />
-  }, [isPlaying])
+    return (
+      <SlotImage
+        isPlaying={isPlaying}
+        hasPrize={(winPrize === '50' || winPrize === '100') && !isPlaying}
+      />
+    )
+  }, [isPlaying, winPrize])
 
   const slotComponent = useCallback(() => {
-    if (status.loading || !hasMounted) return null
+    if (status.loading || !isLogInProcessFinished) return null
     if (!firebaseId) {
       return (
         <BannerLink
@@ -280,7 +297,7 @@ export default function Slot() {
           />
         </Banner>
       )
-    } else if (winPrize === '50' || winPrize === '100') {
+    } else if ((winPrize === '50' || winPrize === '100') && !isPlaying) {
       return (
         <BannerLink
           onMouseEnter={() => {
@@ -295,19 +312,20 @@ export default function Slot() {
             src={`https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/win-${
               isHover ? 'hover-' : ''
             }${isMobile ? 'mobile' : 'desktop'}.gif`}
-            alt="抽獎"
+            alt="中獎！"
             fill={true}
           />
+          <SlotImageComponent />
         </BannerLink>
       )
-    } else if (!winPrize || !isPlaying) {
+    } else if (winPrize !== '0') {
       return (
         <BannerLink>
           <Image
             src={`https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/default-${
               isMobile ? 'mobile' : 'desktop'
             }.gif`}
-            alt="抽獎"
+            alt="抽獎 banner"
             fill={true}
           />
         </BannerLink>
@@ -325,20 +343,23 @@ export default function Slot() {
         </Banner>
       )
     }
-  }, [status, winPrize, isLoggedIn, router, width])
+  }, [status, winPrize, isLoggedIn, router, width, isHover, isPlaying])
 
-  useEffect(() => {
-    console.log({ winPrize })
-  }, [winPrize])
+  useEffect(() => console.log({ winPrize }), [winPrize])
 
-  if (ENV === 'prod' || ENV === 'staging') return null
+  if (ENV === 'prod' || ENV === 'staging' || !isLogInProcessFinished)
+    return null
 
   return (
-    <SlotContainer onClick={canPlay ? null : handleClickSlot}>
+    <SlotContainer onClick={canPlay ? null : (e) => handleClickSlot(e)}>
       {slotComponent()}
       {firebaseId && !status.hasPlayed && (
         <>
-          <ReelsComponent />
+          <MachineContainer
+            hasPrize={(winPrize === '50' || winPrize === '100') && !isPlaying}
+          >
+            <ReelsComponent />
+          </MachineContainer>
           <SlotImageComponent />
         </>
       )}

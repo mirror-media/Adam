@@ -42,6 +42,7 @@ const Container = styled.main`
 `
 
 const Topic = styled.div`
+  display: block;
   background-repeat: no-repeat;
   height: auto;
   padding-top: 66.66%;
@@ -172,6 +173,7 @@ const CustomSwiperNext = styled.div`
  *  name: string;
  *  brief: import('../../../type/draft-js').Draft;
  *  heroImage: Photo;
+ *  heroUrl: string;
  *  leading: string;
  *  type: string;
  *  style: string;
@@ -206,7 +208,13 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
   return (
     <>
       <Container customCss={style}>
-        <Topic className="topic" backgroundUrl={backgroundUrl}>
+        <Topic
+          className="topic"
+          as={topic?.heroUrl ? 'a' : 'div'}
+          backgroundUrl={backgroundUrl}
+          href={topic?.heroUrl}
+          target={topic?.heroUrl ? '_blank' : null}
+        >
           <TopicTitle className="topic-title" />
           <TopicLeading className="leading">
             {!!slideshowImages.length && (

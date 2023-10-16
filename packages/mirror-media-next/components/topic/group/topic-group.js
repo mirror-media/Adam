@@ -38,6 +38,7 @@ const Container = styled.main`
 `
 
 const Topic = styled.div`
+  display: block;
   background-repeat: no-repeat;
   height: auto;
   padding-top: 66.66%;
@@ -119,7 +120,13 @@ export default function TopicGroup({ topic }) {
   return (
     <>
       <Container customCss={style} className="topicContainer">
-        <Topic className="topic" backgroundUrl={backgroundUrl} />
+        <Topic
+          as={topic?.heroUrl ? 'a' : 'div'}
+          className="topic"
+          backgroundUrl={backgroundUrl}
+          href={topic?.heroUrl}
+          target={topic?.heroUrl ? '_blank' : null}
+        />
         <TopicGroups className="groupList">
           {tags.map((tag) => (
             <TopicGroupArticles
