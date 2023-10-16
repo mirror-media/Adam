@@ -14,6 +14,7 @@ import { tag } from './tag'
  * @property {string} name
  * @property {import('../../type/draft-js').Draft} brief
  * @property {import('./photo').Photo} heroImage
+ * @property {string} heroUrl
  * @property {number} sortOrder
  * @property {string} createdAt
  * @property {string} leading
@@ -59,6 +60,7 @@ export const topic = gql`
     heroImage {
       ...heroImage
     }
+    heroUrl
     leading
     type
     style

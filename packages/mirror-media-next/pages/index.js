@@ -12,6 +12,7 @@ import {
   GCP_PROJECT_ID,
 } from '../config/index.mjs'
 
+import { fetchModEventsInDesc } from '../utils/api/event'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import { getSectionNameGql, getSectionSlugGql, getArticleHref } from '../utils'
 import { setPageCache } from '../utils/cache-setting'
@@ -21,7 +22,8 @@ import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
-
+import LiveYoutube from '../components/live-youtube'
+import { isDateInsideDatesRange } from '../utils/date'
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -43,6 +45,9 @@ const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
  */
 /**
  * @typedef {import('../components/latest-news').ArticleRawData[]} ArticlesRawData
+ */
+/**
+ * @typedef {import('../components/live-youtube').LiveYoutubeInfo} LiveYoutubeInfo
  */
 
 const IndexContainer = styled.main`
@@ -93,6 +98,7 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {EditorChoicesRawData} [props.editorChoicesData=[]]
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
+ * @param {LiveYoutubeInfo} props.liveYoutubeInfo
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -101,6 +107,7 @@ export default function Home({
   editorChoicesData = [],
   latestNewsData = [],
   sectionsData = [],
+  liveYoutubeInfo,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -135,6 +142,7 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
+        <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
@@ -191,6 +199,7 @@ export async function getServerSideProps({ res, req }) {
   let editorChoicesData = []
   let latestNewsData = []
   let sectionsData = []
+  let eventsData = []
   try {
     const postResponse = await axios({
       method: 'get',
@@ -212,9 +221,10 @@ export async function getServerSideProps({ res, req }) {
         timeout: API_TIMEOUT,
       }),
       fetchHeaderDataInDefaultPageLayout(),
+      fetchModEventsInDesc(),
     ])
 
-    responses.forEach((response) => {
+    responses.forEach((response, index) => {
       if (response.status === 'fulfilled') {
         //TODO: because `fetchHeaderDataInDefaultPageLayout` will not return `value` which contain `request?.res?.responseUrl`,
         //so we temporarily comment the console to prevent error.
@@ -238,6 +248,7 @@ export async function getServerSideProps({ res, req }) {
           0
         )
         console.error(
+          index,
           JSON.stringify({
             severity: 'ERROR',
             message: errorMessage,
@@ -254,6 +265,8 @@ export async function getServerSideProps({ res, req }) {
     const headerDataResponse =
       responses[1].status === 'fulfilled' && responses[1]
 
+    const eventsResponse = responses[2].status === 'fulfilled' && responses[2]
+
     flashNewsData = Array.isArray(flashNewsResponse.value?.data?.posts)
       ? flashNewsResponse.value?.data?.posts
       : []
@@ -265,6 +278,28 @@ export async function getServerSideProps({ res, req }) {
       ? headerDataResponse.value?.topicsData
       : []
 
+    eventsData = Array.isArray(eventsResponse.value?.data?.events)
+      ? eventsResponse.value?.data?.events
+      : []
+
+    const eventData =
+      eventsData.find((event) =>
+        // since the events are ordered in `publishedDate` with desc order,
+        // find the first event whose period is on-going.
+        isDateInsideDatesRange(new Date(), {
+          startDate: event.startDate,
+          endDate: event.endDate,
+        })
+      ) || {}
+    // live youtube video link should be like https://www.youtube.com/watch?v={youtubeVideoId}
+    // ignore other deprecated format
+    const liveYoutubeInfo = eventData.link?.includes('v=')
+      ? {
+          youtubeId: eventData.link.split('v=')[1],
+          name: eventData.name,
+        }
+      : {}
+
     return {
       props: {
         topicsData,
@@ -272,6 +307,7 @@ export async function getServerSideProps({ res, req }) {
         editorChoicesData,
         latestNewsData,
         sectionsData,
+        liveYoutubeInfo,
       },
     }
   } catch (err) {
