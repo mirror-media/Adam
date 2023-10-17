@@ -1,3 +1,5 @@
+import Head from 'next/head'
+
 import errors from '@twreporter/errors'
 import client from '../../../apollo/apollo-client'
 import Layout from '../../../components/shared/layout'
@@ -19,6 +21,7 @@ import {
   GCP_PROJECT_ID,
   ENV,
   GA_MEASUREMENT_ID,
+  SITE_URL,
 } from '../../../config/index.mjs'
 import styled from 'styled-components'
 import AdultOnlyWarning from '../../../components/story/shared/adult-only-warning'
@@ -29,7 +32,7 @@ import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import AmpGptAd from '../../../components/amp/amp-ads/amp-gpt-ad'
 import AmpGptStickyAd from '../../../components/amp/amp-ads/amp-gpt-sticky-ad'
 import { getAmpGptDataSlotSection } from '../../../utils/ad'
-import Head from 'next/head'
+import JsonLdsScript from '../../../components/story/shared/json-lds-script'
 
 export const config = { amp: true }
 
@@ -61,6 +64,7 @@ const AmpBody = styled.body`
 function StoryAmpPage({ postData }) {
   const {
     title = '',
+    slug = '',
     relateds = [],
     relatedsInInputOrder = [],
     isMember = false,
@@ -84,18 +88,28 @@ function StoryAmpPage({ postData }) {
     relatedsInInputOrder && relatedsInInputOrder.length
       ? relatedsInInputOrder
       : relateds
-
+  const nonAmpUrl = `https://${SITE_URL}/story/${slug}`
+  const ampGptStickyAdScript = (
+    <script
+      async
+      // eslint-disable-next-line react/no-unknown-property
+      custom-element="amp-sticky-ad"
+      src="https://cdn.ampproject.org/v0/amp-sticky-ad-1.0.js"
+    />
+  )
+  const canonicalLink = (
+    <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
+  )
   return (
     <>
       <Head>
-        {/* Add the script for amp-sticky-ad */}
-        <script
-          async
-          // eslint-disable-next-line react/no-unknown-property
-          custom-element="amp-sticky-ad"
-          src="https://cdn.ampproject.org/v0/amp-sticky-ad-1.0.js"
-        />
+        {ampGptStickyAdScript}
+        {canonicalLink}
       </Head>
+      <JsonLdsScript
+        postData={postData}
+        currentPage="/story/amp/"
+      ></JsonLdsScript>
       <Layout
         head={{
           title: `${title}`,
