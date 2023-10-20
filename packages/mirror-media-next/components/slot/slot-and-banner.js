@@ -69,7 +69,10 @@ const SlotImage = styled.div`
       return `
     @keyframes backgroundAnimation {
       0% {
-        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine.gif');
+        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-3.gif');
+      }
+      1% {
+        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-1.gif');
       }
       33.33% {
         background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-2.gif');
@@ -78,10 +81,10 @@ const SlotImage = styled.div`
         background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-3.gif');
       }
       100% {
-        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine.gif');
+        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-3.gif');
       }
     }
-    animation: backgroundAnimation 3s infinite;
+    animation: backgroundAnimation 3s forwards;
     `
   }}
   ${({ hasPrize }) => {
@@ -105,10 +108,9 @@ const SlotImage = styled.div`
 export default function Slot() {
   const num_icons = 12
   const icon_height = (70 / 171) * 178
-  const time_per_icon = 200
+  const time_per_icon = 30
   const { isLoggedIn, userEmail, firebaseId, isLogInProcessFinished } =
     useMembership()
-  // const firebaseId = 'test-for-local'
   const router = useRouter()
   const { width } = useWindowDimensions()
   const isMobile = useMemo(() => width < 1200, [width])
@@ -135,12 +137,12 @@ export default function Slot() {
       `${window.location.origin}/api/slot-sheet`,
       { dispatch: 'LOAD_SHEET', userFirebaseId }
     )
-    console.log({ sheetData })
     if (sheetData.status !== 'success') {
       return setStatus({
         ...status,
         loading: false,
         hasError: true,
+        isLoggedIn,
       })
     }
     const { hasPlayed, probabilities } = sheetData.data
@@ -148,6 +150,7 @@ export default function Slot() {
       ...status,
       loading: false,
       hasPlayed,
+      isLoggedIn,
     })
     setProbabilities({ ...probabilities })
   }

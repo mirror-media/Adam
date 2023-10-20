@@ -27,6 +27,7 @@ let WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = ''
 let STATIC_FILE_DOMAIN = ''
 let ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
 let ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
+let GCP_LOGGING_FEATURE_TOGGLE = 'off'
 
 let URL_STATIC_PREMIUM_SECTIONS = ''
 let URL_STATIC_NORMAL_SECTIONS = ''
@@ -46,6 +47,9 @@ let GPT_MODE = ''
 // It is safe to expose the configuration of Firebase.
 // See: https://firebase.google.com/docs/projects/api-keys
 let FIREBASE_CONFIG = {}
+
+let GCP_STACKDRIVER_LOG_NAME = ''
+
 switch (ENV) {
   case 'prod':
     SITE_URL = 'www.mirrormedia.mg'
@@ -71,6 +75,7 @@ switch (ENV) {
       'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
+    GCP_LOGGING_FEATURE_TOGGLE = 'off'
 
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
@@ -87,6 +92,7 @@ switch (ENV) {
       appId: '1:814835936704:web:ce5288f6d1c0f71828ec25',
       measurementId: 'G-2FDRC4S37L',
     }
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior'
     break
 
   case 'staging':
@@ -116,6 +122,7 @@ switch (ENV) {
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
+    GCP_LOGGING_FEATURE_TOGGLE = 'off'
 
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
@@ -131,6 +138,7 @@ switch (ENV) {
       messagingSenderId: '388524095772',
       appId: '1:388524095772:web:e3739160c042909827a2d9',
     }
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior_staging'
     break
 
   case 'dev':
@@ -164,6 +172,7 @@ switch (ENV) {
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
+    GCP_LOGGING_FEATURE_TOGGLE = 'on'
 
     GPT_MODE = 'dev'
     FIREBASE_CONFIG = {
@@ -176,6 +185,8 @@ switch (ENV) {
       appId: '1:305253456270:web:21f9851dd09f60ebfbacdf',
       measurementId: 'G-EY5CYC602Z',
     }
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior_dev'
+
     break
 
   default:
@@ -192,6 +203,7 @@ switch (ENV) {
       'https://ccore.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
+    GCP_LOGGING_FEATURE_TOGGLE = 'on'
 
     URL_STATIC_PREMIUM_SECTIONS = `http://localhost:8080/json/header_member.json`
     URL_STATIC_NORMAL_SECTIONS = `http://localhost:8080/json/header_sections.json`
@@ -218,6 +230,7 @@ switch (ENV) {
       appId: '1:305253456270:web:21f9851dd09f60ebfbacdf',
       measurementId: 'G-EY5CYC602Z',
     }
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior_local'
 }
 
 export {
@@ -251,8 +264,10 @@ export {
   NEWEBPAY_PAPERMAG_IV,
   ACCESS_SUBSCRIBE_FEATURE_TOGGLE,
   ACCESS_PAPERMAG_FEATURE_TOGGLE,
+  GCP_LOGGING_FEATURE_TOGGLE,
   GOOGLE_SHEETS_PRIVATE_KEY,
   GOOGLE_SHEETS_CLIENT_EMAIL,
   GOOGLE_SHEETS_CLIENT_ID,
   GOOGLE_SHEET_SLOT_ID,
+  GCP_STACKDRIVER_LOG_NAME,
 }

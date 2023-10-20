@@ -2,3 +2,6 @@
 yalc.lock
 /.vscode
 .vscode/settings.json
+
+# Google cloud service account key
+service-account-file.json
