@@ -244,6 +244,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
           slug={slug}
           shouldCreateAmpHtmlLink={state === 'published' && !isAdvertised}
         ></CanonicalLink>
+        <meta property="dable:item_id" content={slug} key="dable:item_id" />
       </Head>
       <JsonLdsScript postData={postData} currentPage="/story/"></JsonLdsScript>
 
