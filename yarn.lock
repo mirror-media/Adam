@@ -1754,10 +1754,10 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
-"@mirrormedia/lilith-draft-renderer@^1.3.0-alpha.8":
-  version "1.3.0-alpha.8"
-  resolved "https://registry.yarnpkg.com/@mirrormedia/lilith-draft-renderer/-/lilith-draft-renderer-1.3.0-alpha.8.tgz#1ee021063bd4dc088ae6a9a2a9b332bfd02428dd"
-  integrity sha512-cS1pFUKicLtlZxoJ1PTO3I5bVY/cZUIZfdq7g8rUdSr7xXrNTNhVI13DPFh+NDe3OorF9z9HO5glDpXPUiGJWg==
+"@mirrormedia/lilith-draft-renderer@^1.3.0-alpha.10":
+  version "1.3.0-alpha.10"
+  resolved "https://registry.yarnpkg.com/@mirrormedia/lilith-draft-renderer/-/lilith-draft-renderer-1.3.0-alpha.10.tgz#9b80a9faf75558eee8e1f08b3e60b1bd2043d61c"
+  integrity sha512-LtZk7a2ks5DDCx0oT140Qjho31w113y6G1wvccq79rUSU0Fj6xJA7DJca9q/V1/4AKLhJ/iyveHs2khNytmc6w==
   dependencies:
     "@readr-media/react-image" "2.1.3"
     body-scroll-lock "3.1.5"
@@ -5953,6 +5953,11 @@ regjsparser@^0.9.1:
   integrity sha512-dQUtn90WanSNl+7mQKcXAgZxvUe7Z0SqXlgzv0za4LwiUhyzBC58yQO3liFoUgu8GiJVInAhJjkj1N0EtQ5nkQ==
   dependencies:
     jsesc "~0.5.0"
+
+request-ip@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/request-ip/-/request-ip-3.3.0.tgz#863451e8fec03847d44f223e30a5d63e369fa611"
+  integrity sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==
 
 require-directory@^2.1.1:
   version "2.1.1"

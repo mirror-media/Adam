@@ -107,24 +107,26 @@ export default function ArticleListItem({ item, index, searchTerms }) {
     gtag.sendGAEvent(`search-${searchTerms}-click-${order}-post`)
   }
   return (
-    <ItemWrapper href={item.link} target="_blank" onClick={onClickHandler}>
+    <ItemWrapper href={item?.link} target="_blank" onClick={onClickHandler}>
       <ImageContainer>
         <Image
-          images={{ original: item.pagemap.cse_image[0].src }}
-          alt={item.title}
+          images={{ original: item?.pagemap?.cse_image?.[0]?.src }}
+          alt={item?.title}
           loadingImage="/images/loading.gif"
           defaultImage="/images/default-og-img.png"
         />
         <ItemSection
-          sectionName={item.pagemap?.metatags[0]['section-name'] ?? 'member'}
+          sectionName={
+            item?.pagemap?.metatags?.[0]?.['section-name'] ?? 'member'
+          }
         >
-          {item.pagemap?.metatags[0]['article:section'] ?? '會員專區'}
+          {item?.pagemap?.metatags?.[0]?.['article:section'] ?? '會員專區'}
         </ItemSection>
       </ImageContainer>
       <ItemDetail>
-        <ItemTitle>{item.title}</ItemTitle>
+        <ItemTitle>{item?.title}</ItemTitle>
         <ItemBrief>
-          {item.pagemap?.metatags[0]['og:description'] ?? ''}
+          {item?.pagemap?.metatags?.[0]?.['og:description'] ?? ''}
         </ItemBrief>
       </ItemDetail>
     </ItemWrapper>

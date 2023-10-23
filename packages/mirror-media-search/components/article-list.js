@@ -22,7 +22,7 @@ export default function ArticleList({ renderList, searchTerms }) {
     <ItemContainer>
       {renderList.map((item, index) => (
         <ArticleListItem
-          key={item.title}
+          key={item?.title || index}
           item={item}
           index={index}
           searchTerms={searchTerms}
