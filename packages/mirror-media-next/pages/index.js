@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
 import dynamic from 'next/dynamic'
-
 import {
   ENV,
   API_TIMEOUT,
@@ -186,6 +185,7 @@ export async function getServerSideProps({ res, req }) {
 
   const headers = req?.headers
   const traceHeader = headers?.['x-cloud-trace-context']
+
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
     const [trace] = traceHeader.split('/')

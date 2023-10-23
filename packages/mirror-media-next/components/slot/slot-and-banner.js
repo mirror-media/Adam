@@ -72,7 +72,7 @@ const SlotImage = styled.div`
         background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-3.gif');
       }
       1% {
-        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-1.gif');
+        background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine.gif');
       }
       33.33% {
         background-image: url('https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-2.gif');
@@ -131,6 +131,12 @@ export default function Slot() {
   const canPlay = useMemo(() => {
     return firebaseId && winPrize && !status.hasPlayed
   }, [firebaseId, winPrize, status])
+
+  const imagesToPreload = [
+    'https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine.gif',
+    'https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-2.gif',
+    'https://storage.googleapis.com/statics.mirrormedia.mg/campaigns/slot2023/machine-3.gif',
+  ]
 
   const getSlotSheetDataByUserId = async (userFirebaseId) => {
     const { data: sheetData } = await axios.post(
@@ -356,6 +362,11 @@ export default function Slot() {
   return (
     <SlotContainer onClick={canPlay ? null : (e) => handleClickSlot(e)}>
       {slotComponent()}
+      <div style={{}}>
+        {imagesToPreload.map((imageUrl, index) => (
+          <Image key={index} src={imageUrl} alt="" width={1} height={1} />
+        ))}
+      </div>
       {firebaseId && !status.hasPlayed && (
         <>
           <MachineContainer
