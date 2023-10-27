@@ -114,6 +114,7 @@ export default function AdultOnlyWarning({ isAdult = false }) {
     agreeBtnJsx = (
       <button
         className="agree-button"
+        // eslint-disable-next-line react/no-unknown-property
         on="tap:adult-only-warning.hide,amp-page.toggleClass(class='disable-scroll')"
         aria-label="是，我已年滿十八歲"
       >

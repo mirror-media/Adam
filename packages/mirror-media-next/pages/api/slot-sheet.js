@@ -16,6 +16,7 @@ function getHasPlayed(sheetData, userFirebaseId) {
   })
 
   for (const item of sheetData) {
+    // eslint-disable-next-line
     const [dateString, _, firebaseId] = item
     if (dateString.startsWith(today) && userFirebaseId === firebaseId) {
       return true
@@ -26,6 +27,7 @@ function getHasPlayed(sheetData, userFirebaseId) {
 }
 
 function calculateWinningProbabilities(inputArray) {
+  // eslint-disable-next-line
   const [_, __, ___, total100, total50, ____, _____, prob100, prob50] =
     inputArray
 

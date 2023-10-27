@@ -188,7 +188,7 @@ export default function Slot() {
       delta = (offset + 2) * num_icons + Math.round(Math.random() * num_icons)
     }
     // Return promise so we can wait for all reels to finish
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const style = getComputedStyle(reel),
         // Current background position
         backgroundPositionY = parseFloat(style['background-position-y']),
