@@ -124,6 +124,28 @@ const Title = styled.h1`
     text-align: left;
   }
 `
+
+const SubTitle = styled.h2`
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 34px;
+  font-size: 20px;
+  color: rgba(113, 113, 113, 0.87);
+  font-feature-settings: 'clig' off, 'liga' off;
+  line-height: normal;
+  margin-top: 0.5rem;
+  ${({ theme }) => theme.breakpoint.md} {
+    color: #717171;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 140%;
+    text-align: start;
+  }
+`
+
 const Main = styled.main`
   margin: 20px auto 0;
   width: 100%;
@@ -467,6 +489,7 @@ export default function StoryNormalStyle({
 }) {
   const {
     title = '',
+    subtitle = '',
     slug = '',
     sections = [],
     categories = [],
@@ -633,6 +656,7 @@ export default function StoryNormalStyle({
             <Date>{publishedTaipeiTime} 臺北時間</Date>
           </SectionAndDate>
           <Title>{title}</Title>
+          <SubTitle>{subtitle}</SubTitle>
           <InfoAndHero>
             <StyledHeroImageAndVideo
               heroImage={heroImage}
