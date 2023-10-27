@@ -127,6 +127,7 @@ export default function StoryWideStyle({
   const {
     id = '',
     title = '',
+    subtitle = '',
     heroImage = null,
     heroVideo = null,
     heroCaption = '',
@@ -205,6 +206,7 @@ export default function StoryWideStyle({
             heroVideo={heroVideo}
             heroCaption={heroCaption}
             title={title}
+            subtitle={subtitle}
           />
           <ContentWrapper>
             <NavSubtitleNavigator h2AndH3Block={h2AndH3Block}>
