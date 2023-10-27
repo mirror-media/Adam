@@ -99,14 +99,11 @@ const StyledPopInAd = styled(PopInAd)`
       padding: 0 0 0 18px;
       overflow: hidden;
       display: -webkit-box !important;
-      -webkit-line-clamp: 3; /* number of lines to show */
-      line-clamp: 3;
       -webkit-box-orient: vertical;
 
       ${({ theme }) => theme.breakpoint.md} {
         padding: 0 0 0 25.75px;
         height: 100%;
-        align-items: center;
       }
 
       ${({ theme }) => theme.breakpoint.xl} {
@@ -131,11 +128,12 @@ const StyledPopInAd = styled(PopInAd)`
         ${({ theme }) => theme.breakpoint.md} {
           margin: 0;
           position: relative;
-          display: flex;
+          display: flex !important;
           align-items: center;
           -webkit-line-clamp: 2; /* number of lines to show */
           line-clamp: 2;
           font-size: 18px;
+          height: 100%;
         }
       }
     }
