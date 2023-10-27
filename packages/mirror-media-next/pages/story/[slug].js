@@ -253,6 +253,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
           shouldCreateAmpHtmlLink={state === 'published' && !isAdvertised}
         ></CanonicalLink>
         <meta property="dable:item_id" content={slug} key="dable:item_id" />
+        <meta property="og:slug" content={slug} key="og:slug" />
         {section?.name && (
           <meta name="section:name" content={section.name} key="section:name" />
         )}
