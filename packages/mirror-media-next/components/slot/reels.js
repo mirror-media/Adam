@@ -14,8 +14,8 @@ const Slot = styled.div`
   display: flex;
   overflow: hidden;
   &:before {
-    content: ''
-    width: 90%
+    content: '';
+    width: 90%;
     height: 10px;
     background: red;
     position: absolute;
