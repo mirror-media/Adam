@@ -656,7 +656,7 @@ export default function StoryNormalStyle({
             <Date>{publishedTaipeiTime} 臺北時間</Date>
           </SectionAndDate>
           <Title>{title}</Title>
-          <SubTitle>{subtitle}</SubTitle>
+          {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
           <InfoAndHero>
             <StyledHeroImageAndVideo
               heroImage={heroImage}

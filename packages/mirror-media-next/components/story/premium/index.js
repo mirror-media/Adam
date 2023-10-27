@@ -193,6 +193,7 @@ export default function StoryPremiumStyle({
   const {
     id = '',
     title,
+    subtitle,
     brief = { blocks: [], entityMap: {} },
     sections = [],
     categories = [],
@@ -287,6 +288,7 @@ export default function StoryPremiumStyle({
             publishedDate={publishedDate}
             updatedAt={updatedAt}
             tags={tags}
+            subtitle={subtitle}
           />
 
           <ContentWrapper>
