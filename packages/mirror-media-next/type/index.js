@@ -29,11 +29,15 @@ export default {}
  */
 
 /**
+ * @typedef {{width: number, height:number}} ImageWidthAndHeight
+ *
  * @typedef {Object} SubBrand - Sub-brand belonging to Mirror Media, which propose is direct users to certain website of sub-brand
  * @property {string} name - English name of sub-brand
  * @property {string} title - Mandarin name of sub-brand
  * @property {string} href - Complete url of sub-brand
- * @property {{width: number, height: number}} imageSize - image size of sub-brand, use for setting <img> width and height to prevent CLS problem
+ * @property {Object} imageSize - image size of sub-brand, use for setting <img> width and height to prevent CLS problem
+ * @property {ImageWidthAndHeight} imageSize.normal - image size of sub-brand, use for setting <img> width and height to prevent CLS problem
+ * @property {ImageWidthAndHeight} imageSize.colorless - image size of sub-brand, use for setting <img> width and height to prevent CLS problem
  */
 
 /**

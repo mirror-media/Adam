@@ -34,8 +34,8 @@ export default function SubBrandList({ subBrands = [], className }) {
           rel="noopener noreferer"
         >
           <Image
-            width={imageSize.width}
-            height={imageSize.height}
+            width={imageSize.normal.width}
+            height={imageSize.normal.height}
             src={`/images-next/${name}.png`}
             alt={title}
             loading="eager"

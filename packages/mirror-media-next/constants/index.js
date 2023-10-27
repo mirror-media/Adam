@@ -94,8 +94,14 @@ const MIRRORVOICE_LINK = {
   title: '鏡好聽',
   href: 'https://voice.mirrorfiction.com/',
   imageSize: {
-    width: 131.25,
-    height: 30,
+    normal: {
+      width: 131.25,
+      height: 30,
+    },
+    colorless: {
+      width: 85,
+      height: 19,
+    },
   },
 }
 const MIRRORFICTION_LINK = {
@@ -103,8 +109,14 @@ const MIRRORFICTION_LINK = {
   title: '鏡文學',
   href: 'https://www.mirrorfiction.com/',
   imageSize: {
-    width: 131.25,
-    height: 30,
+    normal: {
+      width: 131.25,
+      height: 30,
+    },
+    colorless: {
+      width: 88,
+      height: 19,
+    },
   },
 }
 const READR_LINK = {
@@ -112,8 +124,14 @@ const READR_LINK = {
   title: 'READr 讀+',
   href: READR_URL,
   imageSize: {
-    width: 38,
-    height: 30,
+    normal: {
+      width: 38,
+      height: 30,
+    },
+    colorless: {
+      width: 21.11,
+      height: 19,
+    },
   },
 }
 const SUB_BRAND_LINKS = [MIRRORVOICE_LINK, MIRRORFICTION_LINK, READR_LINK]

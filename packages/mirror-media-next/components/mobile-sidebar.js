@@ -4,7 +4,7 @@ import useClickOutside from '../hooks/useClickOutside'
 import Link from 'next/link'
 import HamburgerButton from './shared/hamburger-button'
 import CloseButton from './shared/close-button'
-
+import Image from 'next/image'
 /**
  * @typedef {import('../apollo/fragments/section').Section} Section
  */
@@ -352,8 +352,9 @@ export default function MobileSidebar({
                   target="_blank"
                   rel="noopener noreferer noreferrer"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
+                    width={brand.imageSize.colorless.width}
+                    height={brand.imageSize.colorless.height}
                     src={`/images-next/${brand.name}-colorless.png`}
                     alt={brand.title}
                   />
