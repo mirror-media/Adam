@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import { heroImage } from './photo'
-import { category } from './category'
+import { category, categoryWithSection } from './category'
 import { section } from './section'
 import { contact } from './contact'
 import { tag } from './tag'
@@ -125,6 +125,7 @@ export const asideListingPost = gql`
  * @property {Section[] | null } sections - which sections does this post belong to
  * @property {Section[] | null} sectionsInInputOrder - sections with adjusted order
  * @property {Pick<Category, 'id' | 'name'  | 'slug' | 'state'>[] } categories - which categories does this post belong to
+ * @property {Pick<Category, 'id' | 'name'  | 'slug' | 'state'>[] | null} categoriesInInputOrder - categories with adjusted order
  * @property {Contact[] | null} writers -  the field called '作者' in cms
  * @property {Contact[] | null} writersInInputOrder - writers with adjusted order
  * @property {Contact[] } photographers - the field called '攝影' in cms
@@ -154,6 +155,7 @@ export const asideListingPost = gql`
 export const post = gql`
   ${section}
   ${category}
+  ${categoryWithSection}
   ${contact}
   ${tag}
   ${heroImage}
@@ -175,6 +177,9 @@ export const post = gql`
       ...section
     }
     categories(where: { state: { equals: "active" } }) {
+      ...categoryWithSection
+    }
+    categoriesInInputOrder {
       ...category
     }
 

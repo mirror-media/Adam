@@ -8,6 +8,9 @@ import utc from 'dayjs/plugin/utc'
 /**
  * @typedef {import('../apollo/fragments/section').Section[]} Sections
  */
+/**
+ * @typedef {import('../apollo/fragments/category').Category[]} Categories
+ */
 
 /**
  * Get path of article base on different article style, and whether is external article.
@@ -348,6 +351,53 @@ const getActiveOrderSection = (sections, sectionsInInputOrder) => {
   }
 }
 
+/**
+ * Return categories that are in `active` state and sorted.
+ *
+ * @property {Categories} categories
+ * @property {Categories} categoriesInInputOrder
+ * @return {Categories}
+ */
+const getActiveOrderCategory = (categories, categoriesInInputOrder) => {
+  /**
+   * Because `categories` can be filtered by `where` in GraphQL based on whether `state` is active,
+   * but `categoriesInInputOrder` doesn't have `where`.
+   *
+   * Need to filter state of `categoriesInInputOrder` to match the results of categories.
+   */
+  const activeCategoriesOrder = Array.isArray(categoriesInInputOrder)
+    ? categoriesInInputOrder.filter((section) => section.state === 'active')
+    : []
+
+  /**
+   * Although `categories` already filter `state` at GraphQL ,
+   * for the sake of maintaining same logic between `categoriesInInputOrder` and `categories`,
+   * filter `state` status of `scategories` again.
+   * */
+  const activeCategories = Array.isArray(categories)
+    ? categories.filter((section) => section.state === 'active')
+    : []
+
+  const categoryMap = activeCategories.reduce((acc, category) => {
+    acc[category.id] = category
+    return acc
+  }, {})
+
+  const orderedCategories = activeCategoriesOrder
+    .filter((section) => section.state === 'active')
+    .map((section) => categoryMap[section.id])
+
+  if (orderedCategories.length) return orderedCategories
+
+  if (activeCategoriesOrder.length > 0) {
+    return activeCategoriesOrder
+  } else if (activeCategories.length > 0) {
+    return activeCategories
+  } else {
+    return []
+  }
+}
+
 export {
   transformRawDataToArticleInfo,
   transformTimeDataIntoDotFormat,
@@ -362,4 +412,5 @@ export {
   getResizedUrl,
   getNumberWithCommas,
   getActiveOrderSection,
+  getActiveOrderCategory,
 }
