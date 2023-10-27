@@ -41,12 +41,8 @@ export default function UserBehaviorLogger({ isMemberArticle = false }) {
   //Since `usePathname()` is recommend to use at Next.js 13 App route, we use `useRouter` to get pathname instead to prevent unexpected error.
   const router = useRouter()
   const { asPath } = router
-  const isStoryPage = asPath.startsWith('/story/')
-  /**
-   * Story page need specific pathname, such as `/story/20231026-this-is-an-story`, other page only need which page is, such as `/section/[slug]`.
-   */
-  const pathname = isStoryPage ? asPath?.split('?')?.[0] : router.pathname
 
+  const pathname = asPath?.split('?')?.[0]
   const {
     isLogInProcessFinished,
     memberInfo: { memberType },
