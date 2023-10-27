@@ -33,6 +33,7 @@ export default {}
  * @property {string} name - English name of sub-brand
  * @property {string} title - Mandarin name of sub-brand
  * @property {string} href - Complete url of sub-brand
+ * @property {{width: number, height: number}} imageSize - image size of sub-brand, use for setting <img> width and height to prevent CLS problem
  */
 
 /**

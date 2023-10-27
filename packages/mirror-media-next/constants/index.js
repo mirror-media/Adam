@@ -93,16 +93,28 @@ const MIRRORVOICE_LINK = {
   name: 'mirrorvoice',
   title: '鏡好聽',
   href: 'https://voice.mirrorfiction.com/',
+  imageSize: {
+    width: 131.25,
+    height: 30,
+  },
 }
 const MIRRORFICTION_LINK = {
   name: 'mirrorfiction',
   title: '鏡文學',
   href: 'https://www.mirrorfiction.com/',
+  imageSize: {
+    width: 131.25,
+    height: 30,
+  },
 }
 const READR_LINK = {
   name: 'readr',
   title: 'READr 讀+',
   href: READR_URL,
+  imageSize: {
+    width: 38,
+    height: 30,
+  },
 }
 const SUB_BRAND_LINKS = [MIRRORVOICE_LINK, MIRRORFICTION_LINK, READR_LINK]
 
