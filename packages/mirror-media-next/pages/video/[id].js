@@ -124,8 +124,8 @@ export default function Video({ video, latestVideos, headerData }) {
   return (
     <>
       <Head>
-        <meta name="section:name" content="影音" key="section:name" />
-        <meta name="section:slug" content="videohub" key="section:slug" />
+        <meta property="section:name" content="影音" key="section:name" />
+        <meta property="section:slug" content="videohub" key="section:slug" />
       </Head>
       <Layout
         head={{
