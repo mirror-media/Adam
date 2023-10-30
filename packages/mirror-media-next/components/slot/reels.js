@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -14,8 +14,8 @@ const Slot = styled.div`
   display: flex;
   overflow: hidden;
   &:before {
-    content: ''
-    width: 90%
+    content: '';
+    width: 90%;
     height: 10px;
     background: red;
     position: absolute;

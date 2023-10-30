@@ -122,6 +122,28 @@ const Title = styled.h1`
     text-align: left;
   }
 `
+
+const SubTitle = styled.h2`
+  margin: 0 auto;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 34px;
+  font-size: 20px;
+  color: rgba(113, 113, 113, 0.87);
+  font-feature-settings: 'clig' off, 'liga' off;
+  line-height: normal;
+  margin-top: 0.5rem;
+  ${({ theme }) => theme.breakpoint.md} {
+    color: #717171;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 140%;
+    text-align: start;
+  }
+`
+
 const Main = styled.main`
   margin: 20px auto 0;
   width: 100%;
@@ -465,6 +487,7 @@ export default function StoryNormalStyle({
 }) {
   const {
     title = '',
+    subtitle = '',
     slug = '',
     sections = [],
     categories = [],
@@ -615,6 +638,7 @@ export default function StoryNormalStyle({
             <Date>{publishedTaipeiTime} 臺北時間</Date>
           </SectionAndDate>
           <Title>{title}</Title>
+          {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
           <InfoAndHero>
             <StyledHeroImageAndVideo
               heroImage={heroImage}
@@ -630,25 +654,21 @@ export default function StoryNormalStyle({
             />
           </InfoAndHero>
           <ArticleBrief sectionSlug={section?.slug} brief={brief} />
-
           <ArticleContent
             content={postContent.data}
             hiddenAdvertised={hiddenAdvertised}
             pageKeyForGptAd={pageKeyForGptAd}
           />
-
           <DateUnderContent>
             <span>更新時間｜</span>
             <span className="time">{updatedTaipeiTime} 臺北時間</span>
           </DateUnderContent>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
-
           <RelatedArticleList
             relateds={relatedsWithOrdered}
             hiddenAdvertised={hiddenAdvertised}
           />
-
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
           )}
@@ -659,17 +679,14 @@ export default function StoryNormalStyle({
           {shouldShowAd && (
             <StyledGPTAd_MB_E1 pageKey={pageKeyForGptAd} adKey="MB_E1" />
           )}
-
           {shouldShowAd && section?.slug === 'carandwatch' && (
             <GPTFloatingAd pageKey={pageKeyForGptAd} />
           )}
-
           {shouldShowAd && (
             <DableADContainer_Mobile>
               <DableAd isDesktop={false} />
             </DableADContainer_Mobile>
           )}
-
           <StoryEndDesktop>
             <StoryMoreInfo>
               更多內容，歡迎&nbsp;

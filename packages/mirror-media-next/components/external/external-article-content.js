@@ -9,6 +9,10 @@ const Wrapper = styled.section`
   ${({ theme }) => theme.breakpoint.md} {
     margin-top: 20px;
   }
+
+  iframe {
+    max-width: 100%;
+  }
 `
 
 /**

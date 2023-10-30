@@ -11,6 +11,7 @@ async function start() {
       gcpProjectId: envVar.gcp.projectId,
       firebaseProjectId: envVar.firebase.projectId,
       jwtSecret: envVar.jwt.secret,
+      jwtLifeTime: envVar.jwt.lifetime,
       israfelProxyOrigin: envVar.apis.israfel.origin,
       weeklyProxyOrigin: envVar.apis.weekly.origin,
       gcsProxyOrigin: envVar.gcs.origin,

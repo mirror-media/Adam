@@ -20,12 +20,12 @@ const Title = styled.h1`
   font-size: 24px;
   line-height: 1.4;
   max-width: 680px;
-  margin: 12px auto 14px;
+  margin: 12px auto 0;
   width: 100%;
   padding: 0 20px;
   color: rgba(0, 0, 0, 0.87);
   ${({ theme }) => theme.breakpoint.md} {
-    margin-bottom: 16px;
+    margin-bottom: 0;
     font-size: 40px;
     line-height: 1.5;
     font-weight: 600;
@@ -34,6 +34,29 @@ const Title = styled.h1`
     margin-bottom: 0;
   }
 `
+
+const SubTitle = styled.h2`
+  text-align: center;
+  color: #717171;
+  max-width: 680px;
+  padding: 0 20px;
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0 auto;
+  margin-bottom: 24px;
+  ${({ theme }) => theme.breakpoint.md} {
+    font-size: 32px;
+    line-height: 150%;
+    margin-top: 10px;
+  }
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-bottom: 0;
+  }
+`
+
 const Label = styled.div`
   margin: 0 auto;
   width: fit-content;
@@ -77,6 +100,9 @@ const TitleAndInfo = styled.section`
     ${Title} {
       order: -2;
     }
+    ${SubTitle} {
+      order: -2;
+    }
     ${StyledArticleInfo} {
       order: -1;
     }
@@ -87,6 +113,7 @@ const TitleAndInfo = styled.section`
  * @param {Object} props
  * @param {string} props.sectionLabelFirst
  * @param {string} props.title
+ * @param {string} props.subtitle
  * @param {HeroImage | null} props.heroImage
  * @param {HeroVideo | null} props.heroVideo
  * @param {string} props.heroCaption
@@ -106,6 +133,7 @@ export default function TitleAndInfoAndHero({
   publishedDate = '',
   updatedAt = '',
   tags = [],
+  subtitle = '',
 }) {
   return (
     <TitleAndInfo>
@@ -116,6 +144,7 @@ export default function TitleAndInfoAndHero({
         ) : null}
       </Label>
       <Title>{title}</Title>
+      {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
       <HeroImageAndVideo
         heroImage={heroImage}
         heroVideo={heroVideo}

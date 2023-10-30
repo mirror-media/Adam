@@ -17,31 +17,58 @@ const heroCssPremium = css`
   max-height: 800px;
   object-position: center center;
 `
+
+const TitleWrapper = styled.section`
+  margin: 20px 10px 0;
+  max-width: 800px;
+  width: auto;
+  ${({ theme }) => theme.breakpoint.md} {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - 100vh);
+    transform: translate(-50%, 0%);
+    margin: 0 auto;
+    width: 90vw;
+    margin-bottom: 10vh;
+    max-width: 800px;
+  }
+`
 const ArticleTitle = styled.h1`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
   ${defaultSerifFontFamily};
   font-weight: 700;
   text-align: center;
-  margin: 20px 10px 0;
   display: block;
-  width: auto;
-  max-width: 800px;
   ${({ theme }) => theme.breakpoint.md} {
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% - 100vh);
-    transform: translate(-50%, 0%);
     color: rgba(255, 255, 255, 0.87);
-    margin: 0 auto;
-    width: 90vw;
-    margin-bottom: 10vh;
-    max-width: 800px;
     font-size: 36px;
     line-height: 52px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     font-size: 40px;
+    line-height: 1.5;
+  }
+`
+
+const ArticleSubtitle = styled.h2`
+  color: #717171;
+  font-feature-settings: 'clig' off, 'liga' off;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: normal;
+  ${defaultSerifFontFamily};
+  text-align: center;
+  margin: 0.3rem;
+  ${({ theme }) => theme.breakpoint.md} {
+    ${defaultSerifFontFamily};
+    color: #c1c1c1;
+    font-size: 28px;
+    font-weight: 400;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    ${defaultSerifFontFamily};
+    font-size: 32px;
     line-height: 1.5;
   }
 `
@@ -133,6 +160,7 @@ const Video = styled.video`
  * @param {HeroVideo | null} props.heroVideo - The hero video data.
  * @param {string} props.heroCaption - The caption for the hero image or video.
  * @param {string} [props.title] - The title of the article. Optional, only render if `props.style` is wide
+ * @param {string} [props.subtitle] - The subtitle of the article
  * @returns {JSX.Element}
  */
 export default function HeroImageAndVideo({
@@ -141,6 +169,7 @@ export default function HeroImageAndVideo({
   heroCaption = '',
   title = '',
   style = 'wide',
+  subtitle = '',
 }) {
   const shouldShowHeroVideo = Boolean(heroVideo)
   const shouldShowHeroImage = Boolean(!shouldShowHeroVideo && heroImage)
@@ -188,7 +217,12 @@ export default function HeroImageAndVideo({
       ) : (
         <>{style === 'wide' ? <Empty /> : null}</>
       )}
-      {style === 'wide' && title ? <ArticleTitle>{title}</ArticleTitle> : null}
+      {style === 'wide' && (title || subtitle) ? (
+        <TitleWrapper>
+          <ArticleTitle>{title}</ArticleTitle>
+          <ArticleSubtitle>{subtitle}</ArticleSubtitle>
+        </TitleWrapper>
+      ) : null}
     </>
   )
 }

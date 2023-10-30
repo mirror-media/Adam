@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-
+import Image from 'next/image'
 import {
   SUB_BRAND_LINKS,
   PROMOTION_LINKS,
@@ -154,6 +154,20 @@ const TopicsAndSubscribe = styled.section`
 const StyledGPTAd = styled(GPTAd)`
   width: auto;
   height: auto;
+  margin-right: auto;
+  ${({ theme }) => theme.breakpoint.md} {
+    order: -1;
+    margin-right: 0;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-left: 20px;
+    margin-right: auto;
+    order: 0;
+  }
+`
+const GPTAdPlaceHolder = styled.div`
+  width: 95px;
+  height: 50px;
   margin-right: auto;
   ${({ theme }) => theme.breakpoint.md} {
     order: -1;
@@ -385,7 +399,11 @@ export default function Header({
         <a href="/" className="GTM-header-logo">
           <HeaderLogo />
         </a>
-        {shouldShowAd && <StyledGPTAd pageKey="global" adKey="RWD_LOGO" />}
+        {shouldShowAd ? (
+          <StyledGPTAd pageKey="global" adKey="RWD_LOGO" />
+        ) : (
+          <GPTAdPlaceHolder />
+        )}
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
           <SearchBarDesktop
@@ -394,10 +412,12 @@ export default function Header({
             goSearch={goSearch}
           />
           <SearchButtonMobile ref={mobileSearchButtonRef}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
+              width={20}
+              height={21}
               src="/images-next/search-button-mobile.svg"
               alt="search-button"
+              loading="eager"
             />
           </SearchButtonMobile>
           <MemberLoginButton />

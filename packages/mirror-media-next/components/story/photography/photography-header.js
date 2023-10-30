@@ -89,20 +89,6 @@ const IconsWrapper = styled.div`
   }
 `
 
-const PhotosIndexButton = styled.button`
-  .photos-index-icon {
-    width: 22px;
-    height: 22px;
-    margin-left: 12px;
-
-    ${({ theme }) => theme.breakpoint.md} {
-      width: 32px;
-      height: 32px;
-      margin-left: 18px;
-    }
-  }
-`
-
 export default function Header() {
   return (
     <Nav>

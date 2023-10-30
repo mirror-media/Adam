@@ -117,12 +117,13 @@ export function verifyAccessToken(opts = {}) {
  *
  *  @param {Object} opts
  *  @param {string} opts.jwtSecret
+ *  @param {number} opts.jwtLifeTime
  *  @returns {express.RequestHandler}
  */
-export function signAccessToken({ jwtSecret }) {
+export function signAccessToken({ jwtSecret, jwtLifeTime }) {
   return (req, res, next) => {
     const nowTs = Math.round(new Date().getTime() / 1000) // timestamp
-    const expiresIn = nowTs + 3600 // one hour later
+    const expiresIn = nowTs + jwtLifeTime
     const {
       id: memberId,
       type: memberType,
@@ -173,7 +174,7 @@ export function signAccessToken({ jwtSecret }) {
         'https://dev.mirrormedia.mg',
         'http://localhost:3000',
       ],
-      exp: expiresIn, // one hour later
+      exp: expiresIn,
       iat: nowTs,
       roles,
       scope,
@@ -209,12 +210,16 @@ export function signAccessToken({ jwtSecret }) {
  *
  *  @param {Object} opts
  *  @param {string} opts.jwtSecret
+ *  @param {number} opts.jwtLifeTime
  *  @returns {express.RequestHandler}
  */
-export function signAccessTokenForInternalColleague({ jwtSecret }) {
+export function signAccessTokenForInternalColleague({
+  jwtSecret,
+  jwtLifeTime,
+}) {
   return (req, res, next) => {
     const nowTs = Math.round(new Date().getTime() / 1000) // timestamp
-    const expiresIn = nowTs + 3600 // one hour later
+    const expiresIn = nowTs + jwtLifeTime
     const firebaseId = res.locals.auth?.decodedIdToken?.uid
     const email = res.locals.auth?.decodedIdToken?.email
 
@@ -243,7 +248,7 @@ export function signAccessTokenForInternalColleague({ jwtSecret }) {
         'https://dev.mirrormedia.mg',
         'http://localhost:3000',
       ],
-      exp: expiresIn, // one hour later
+      exp: expiresIn,
       iat: nowTs,
       roles: ['staff'],
       scope,
