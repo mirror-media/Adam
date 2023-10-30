@@ -33,6 +33,11 @@ export default function External({ external, headerData }) {
           content={Array.isArray(slug) ? slug?.[0] : slug}
           key="dable:item_id"
         />
+        <meta
+          property="og:slug"
+          content={Array.isArray(slug) ? slug?.[0] : slug}
+          key="og:slug"
+        />
       </Head>
       <Layout
         head={{

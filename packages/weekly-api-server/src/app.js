@@ -25,6 +25,7 @@ const statusCodes = consts.statusCodes
  *  @param {string} opts.gcpProjectId
  *  @param {string} opts.firebaseProjectId
  *  @param {string} opts.jwtSecret
+ *  @param {number} opts.jwtLifeTime
  *  @param {string} opts.weeklyProxyOrigin
  *  @param {string} opts.israfelProxyOrigin
  *  @param {string} opts.gcsProxyOrigin
@@ -36,6 +37,7 @@ export function createApp({
   gcpProjectId,
   firebaseProjectId,
   jwtSecret,
+  jwtLifeTime,
   weeklyProxyOrigin,
   israfelProxyOrigin,
   gcsProxyOrigin,
@@ -52,21 +54,19 @@ export function createApp({
   // common middlewares for every request
   // 1. log requests
   // 2. handle cors requests
-  app.use(
-    middlewareCreator.createLoggerMw(gcpProjectId),
-    cors(corsOpts),
-  )
+  app.use(middlewareCreator.createLoggerMw(gcpProjectId), cors(corsOpts))
 
   // enable pre-flight request
-  app.options(
-    '/access-token',
-  )
+  app.options('/access-token')
 
   // api route for granting access token
   app.post(
     '/access-token',
     middlewareCreator.verifyIdTokenByFirebaseAdmin({ firebaseProjectId }), // check authentication
-    middlewareCreator.signAccessTokenForInternalColleague({jwtSecret: jwtSecret}),
+    middlewareCreator.signAccessTokenForInternalColleague({
+      jwtSecret,
+      jwtLifeTime,
+    }),
     /** @type {express.RequestHandler} */
     (req, res, next) => {
       const payload = res.locals.accessTokenPayload
@@ -81,8 +81,10 @@ export function createApp({
       // otherwise, call next middlewares
       return next()
     },
-    middlewareCreator.queryMemberInfo({ apiUrl: israfelProxyOrigin + '/api/graphql' }), // query member access permission
-    middlewareCreator.signAccessToken({ jwtSecret: jwtSecret }), // sign access token according to member permission
+    middlewareCreator.queryMemberInfo({
+      apiUrl: israfelProxyOrigin + '/api/graphql',
+    }), // query member access permission
+    middlewareCreator.signAccessToken({ jwtSecret, jwtLifeTime }), // sign access token according to member permission
     /** @type {express.RequestHandler} */
     (req, res) => {
       const payload = res.locals.accessTokenPayload
@@ -188,10 +190,15 @@ export function createApp({
           // All exceptions that include a stack trace will be
           // integrated with Error Reporting.
           // See https://cloud.google.com/run/docs/error-reporting
-          message: errors.helpers.printAll(annotatingError, {
-            withStack: true,
-            withPayload: true,
-          }, 0, 0),
+          message: errors.helpers.printAll(
+            annotatingError,
+            {
+              withStack: true,
+              withPayload: true,
+            },
+            0,
+            0
+          ),
         },
         res.locals.globalLogFields
       )

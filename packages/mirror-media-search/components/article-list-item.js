@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import gtag from '../utils/programmable-search/gtag'
+import { useEffect, useState } from 'react'
 
 const ItemWrapper = styled.a`
   display: block;
@@ -30,12 +31,12 @@ const ItemSection = styled.div`
   background-color: ${
     /**
      * @param {Object} props
-     * @param {String } props.sectionName
+     * @param {String } props.sectionSlug
      * @param {Theme} [props.theme]
      */
-    ({ sectionName, theme }) =>
-      sectionName && theme.color.sectionsColor[sectionName]
-        ? theme.color.sectionsColor[sectionName]
+    ({ sectionSlug, theme }) =>
+      sectionSlug && theme.color.sectionsColor[sectionSlug]
+        ? theme.color.sectionsColor[sectionSlug]
         : theme.color.brandColor.lightBlue
   };
   ${({ theme }) => theme.breakpoint.md} {
@@ -91,6 +92,28 @@ const ItemBrief = styled.div`
 `
 
 export default function ArticleListItem({ item, index, searchTerms }) {
+  const [articleSection, setArticleSection] = useState({
+    name: item?.pagemap?.metatags?.[0]?.['section:name'],
+    slug: item?.pagemap?.metatags?.[0]?.['section:slug'],
+  })
+
+  useEffect(() => {
+    if (item?.link) {
+      const urlObject = new URL(item?.link)
+      if (urlObject.pathname.startsWith('/campaigns/')) {
+        setArticleSection({
+          name: '活動網站',
+          slug: 'campaign',
+        })
+      } else if (urlObject.pathname.startsWith('/projects/')) {
+        setArticleSection({
+          name: '專題',
+          slug: 'project',
+        })
+      }
+    }
+  }, [item?.link])
+
   const onClickHandler = () => {
     if (index > 8) return
     const order = [
@@ -115,13 +138,11 @@ export default function ArticleListItem({ item, index, searchTerms }) {
           loadingImage="/images/loading.gif"
           defaultImage="/images/default-og-img.png"
         />
-        <ItemSection
-          sectionName={
-            item?.pagemap?.metatags?.[0]?.['section-name'] ?? 'member'
-          }
-        >
-          {item?.pagemap?.metatags?.[0]?.['article:section'] ?? '會員專區'}
-        </ItemSection>
+        {articleSection.name && (
+          <ItemSection sectionSlug={articleSection.slug}>
+            {articleSection.name}
+          </ItemSection>
+        )}
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{item?.title}</ItemTitle>

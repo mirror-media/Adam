@@ -19,6 +19,8 @@ const sectionsColor = {
   carandwatch: '#1877F2',
   external: '#30bac8', //not updated yet
   mirrorcolumn: '#B79479',
+  project: '#F25F5F',
+  campaign: '#9DB172',
 }
 
 export const color = { brandColor, sectionsColor }

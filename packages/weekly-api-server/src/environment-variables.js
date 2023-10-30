@@ -1,5 +1,6 @@
 const {
   JWT_SECRET,
+  JWT_LIFE_TIME, // seconds
   GCP_PROJECT_ID,
   FIREBASE_PROJECT_ID,
   ISRAFEL_GQL_ORIGIN,
@@ -23,9 +24,13 @@ const getAllowOrigins = (cors) => {
     return ['https://www.mirrormedia.mg', 'https://mirrormedia.mg']
   }
 }
+
+const jwtLifeTime = Number(JWT_LIFE_TIME)
+
 const envVar = {
   jwt: {
     secret: JWT_SECRET || 'jwt-secret',
+    lifetime: Number.isNaN(jwtLifeTime) ? 3600 : jwtLifeTime,
   },
   gcp: {
     projectId: GCP_PROJECT_ID || 'mirrormedia-1470651750304',
@@ -45,10 +50,10 @@ const envVar = {
     allowOrigins: getAllowOrigins(CORS_ALLOW_ORIGINS),
   },
   gcs: {
-    origin: GCS_ORIGIN || 'https://v3-statics.mirrormedia.mg'
+    origin: GCS_ORIGIN || 'https://v3-statics.mirrormedia.mg',
   },
   youtube: {
-    origin: YOUTUBE_ORIGIN || 'https://api.mirrormedia.mg'
+    origin: YOUTUBE_ORIGIN || 'https://api.mirrormedia.mg',
   },
 }
 

@@ -92,7 +92,7 @@ switch (ENV) {
       appId: '1:814835936704:web:ce5288f6d1c0f71828ec25',
       measurementId: 'G-2FDRC4S37L',
     }
-    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior'
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
     break
 
   case 'staging':
@@ -138,7 +138,7 @@ switch (ENV) {
       messagingSenderId: '388524095772',
       appId: '1:388524095772:web:e3739160c042909827a2d9',
     }
-    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior_staging'
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
     break
 
   case 'dev':
@@ -185,7 +185,7 @@ switch (ENV) {
       appId: '1:305253456270:web:21f9851dd09f60ebfbacdf',
       measurementId: 'G-EY5CYC602Z',
     }
-    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior_dev'
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
 
     break
 
@@ -230,7 +230,7 @@ switch (ENV) {
       appId: '1:305253456270:web:21f9851dd09f60ebfbacdf',
       measurementId: 'G-EY5CYC602Z',
     }
-    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-nuxt-user-behavior_local'
+    GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_local'
 }
 
 export {

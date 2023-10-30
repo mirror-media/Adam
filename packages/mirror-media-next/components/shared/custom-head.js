@@ -41,78 +41,6 @@ const createCanonicalLink = (routerAsPath) => {
 }
 
 /**
- * @param {Object} props
- * @param {OGProperties} props.properties
- * @returns
- */
-const OpenGraph = ({ properties }) => {
-  const {
-    locale = 'zh_TW',
-    url,
-    site_name,
-    title,
-    type = 'website',
-    description,
-    image,
-    card = 'summary_large_image',
-    fbAppId,
-    fbPageId,
-  } = properties
-
-  return (
-    <>
-      <meta property="og:locale" content={locale || 'zh_TW'} key="og:locale" />
-      <meta property="og:title" content={title} key="og:title" />
-      <meta property="og:url" content={url} />
-      <meta property="og:type" content={type} key="og:type" />
-      <meta
-        property="og:description"
-        content={description || ''}
-        key="og:description"
-      />
-      <meta property="og:site_name" content={site_name} key="og:site_name" />
-
-      {image && (
-        <>
-          <meta property="og:image" content={image.url} key="og:image" />
-          <meta
-            property="og:image:secure_url"
-            content={image.url.replace('http://', 'https://')}
-            key="og:image:secure_url"
-          />
-          <meta
-            property="og:image:width"
-            content={image.width}
-            key="og:image:width"
-          />
-          <meta
-            property="og:image:height"
-            content={image.height}
-            key="og:image:height"
-          />
-          <meta
-            property="og:image:type"
-            content={image.type}
-            key="og:image:type"
-          />
-          <meta name="twitter:image" content={image.url} key="twitter:image" />
-        </>
-      )}
-      <meta property="fb:app_id" content={fbAppId} />
-      <meta property="fb:pages" content={fbPageId} />
-      <meta name="twitter:card" content={card} key="twitter:card" />
-      <meta name="twitter:url" content={url} key="twitter:url" />
-      <meta name="twitter:title" content={title} key="twitter:title" />
-      <meta
-        name="twitter:description"
-        content={description || ''}
-        key="twitter:description"
-      />
-    </>
-  )
-}
-
-/**
  * @typedef {Object} HeadProps
  * @property {string} [title] - head title used to setup title other title related meta
  * @property {string} [description] - head description used to setup description related meta
@@ -126,6 +54,7 @@ const OpenGraph = ({ properties }) => {
 export default function CustomHead(props) {
   const router = useRouter()
   const canonicalLink = createCanonicalLink(router.asPath)
+  /** @type {OGProperties} */
   const siteInformation = {
     title: props.title ? `${props.title} - ${SITE_TITLE}` : SITE_TITLE,
     description:
@@ -154,9 +83,85 @@ export default function CustomHead(props) {
         content={siteInformation.description}
         key="description"
       />
-      <OpenGraph properties={siteInformation} />
+      {/* <OpenGraph properties={siteInformation} /> */}
       <meta name="application-name" content={siteInformation.title} />
       {canonicalLink}
+
+      <meta property="og:locale" content="zh_TW" key="og:locale" />
+      <meta
+        property="og:title"
+        content={siteInformation.title}
+        key="og:title"
+      />
+      <meta property="og:url" content={'https://' + siteInformation.url} />
+      <meta property="og:type" content={siteInformation.type} key="og:type" />
+      <meta
+        property="og:description"
+        content={siteInformation.description || ''}
+        key="og:description"
+      />
+      <meta
+        property="og:site_name"
+        content={siteInformation.site_name}
+        key="og:site_name"
+      />
+
+      {siteInformation.image && (
+        <>
+          <meta
+            property="og:image"
+            content={siteInformation.image.url}
+            key="og:image"
+          />
+          <meta
+            property="og:image:secure_url"
+            content={siteInformation.image.url.replace('http://', 'https://')}
+            key="og:image:secure_url"
+          />
+          <meta
+            property="og:image:width"
+            content={siteInformation.image.width}
+            key="og:image:width"
+          />
+          <meta
+            property="og:image:height"
+            content={siteInformation.image.height}
+            key="og:image:height"
+          />
+          <meta
+            property="og:image:type"
+            content={siteInformation.image.type}
+            key="og:image:type"
+          />
+          <meta
+            name="twitter:image"
+            content={siteInformation.image.url}
+            key="twitter:image"
+          />
+        </>
+      )}
+      <meta property="fb:app_id" content={siteInformation.fbAppId} />
+      <meta property="fb:pages" content={siteInformation.fbPageId} />
+      <meta
+        name="twitter:card"
+        content={siteInformation.card}
+        key="twitter:card"
+      />
+      <meta
+        name="twitter:url"
+        content={siteInformation.url}
+        key="twitter:url"
+      />
+      <meta
+        name="twitter:title"
+        content={siteInformation.title}
+        key="twitter:title"
+      />
+      <meta
+        name="twitter:description"
+        content={siteInformation.description || ''}
+        key="twitter:description"
+      />
     </Head>
   )
 }

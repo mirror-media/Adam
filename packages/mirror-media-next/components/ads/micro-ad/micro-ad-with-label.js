@@ -231,6 +231,7 @@ const typeHome = css`
     }
   }
 `
+
 const typeStory = css`
   ${({ theme }) => theme.breakpoint.xl} {
     height: 90px;
@@ -238,15 +239,30 @@ const typeStory = css`
 
   // Mobile: Micro AD container
   #compass-fit-widget-content {
-    max-width: 280px;
-    font-size: 18px;
-    line-height: 1.5;
+    height: 74px;
+    font-size: 15px;
+    line-height: 1.3;
     color: black;
     font-weight: 400;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    color: #808080;
+    background-color: #eeeeee;
+    gap: 8px;
     margin: 0 auto;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    position: relative;
+
+    &::before {
+      position: absolute;
+      content: '';
+      width: 8px;
+      height: 100%;
+      background-color: #808080;
+      left: 0;
+      top: 0;
+    }
 
     ${({ theme }) => theme.breakpoint.md} {
       max-width: 640px;
@@ -257,11 +273,19 @@ const typeStory = css`
       //Since AD uses inline-style to set the background-color, it is necessary to use !important.
       background-color: #eeeeee !important;
       gap: 20px;
+      align-items: start;
+      font-size: 18px;
+      &::before {
+        width: 7.72px;
+      }
     }
 
     // Mobile: AD Image
     figure {
-      height: 186.67px;
+      width: 112px;
+      min-width: 112px;
+      max-width: 112px;
+      height: 74px;
       position: relative;
 
       img {
@@ -275,6 +299,7 @@ const typeStory = css`
         min-width: 87px;
         max-width: 87px;
         height: 100%;
+        margin-right: 0;
       }
     }
 
@@ -282,19 +307,26 @@ const typeStory = css`
     .pop_item_title {
       //Since AD uses inline-style to set the background-color, it is necessary to use !important.
       background: none !important;
+      position: relative;
+      padding: 0 0 0 18px;
+      overflow: hidden;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 3; /* number of lines to show */
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
       ${({ theme }) => theme.breakpoint.md} {
         position: relative;
         display: flex;
         align-items: center;
-        padding: 0 20px 0 25.75px;
-        &::before {
-          position: absolute;
-          content: '';
-          width: 7.72px;
-          height: 100%;
-          background-color: #808080;
-          left: 0;
-          top: 0;
+        padding: 0 0 0 25.75px;
+        -webkit-line-clamp: 2; /* number of lines to show */
+        line-clamp: 2;
+        a {
+          display: block;
+          height: 90px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
         }
       }
     }
@@ -305,10 +337,10 @@ const typeStory = css`
       align-items: center;
       justify-content: center;
       font-style: normal;
-      font-weight: 600;
-      font-size: 18px;
+      font-weight: 500;
+      font-size: 14px;
       line-height: 1;
-      padding: 8px;
+      padding: 4px;
       background: #bcbcbc;
       color: #ffffff;
       position: absolute;
@@ -318,7 +350,6 @@ const typeStory = css`
       ${({ theme }) => theme.breakpoint.md} {
         font-weight: 300;
         font-size: 12px;
-        padding: 4px;
         line-height: 14px;
       }
     }
@@ -364,7 +395,7 @@ const typeStory = css`
             bottom: 0;
             right: 103px;
             font-style: normal;
-            font-weight: 600;
+            font-weight: 300;
             font-size: 12px;
             line-height: 14px;
             padding: 4px;

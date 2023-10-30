@@ -37,33 +37,55 @@ const Wrapper = styled.section`
   margin: 16px auto 0;
   h2 {
     font-size: 21px;
-    line-height: 31.5px;
-    margin: 0 auto 20px;
+    line-height: 150%;
+    margin: 0 auto 32px;
     font-weight: 600;
     text-align: center;
+    font-size: 21px;
   }
   ${({ theme }) => theme.breakpoint.md} {
     margin-top: 24px;
     h2 {
       display: none;
+      margin: 0 auto 16px;
     }
   }
 `
 
 const Article = styled.figure`
-  max-width: 280px;
-  font-size: 18px;
-  line-height: 1.5;
+  height: 74px;
+  font-size: 15px;
+  line-height: 1.3;
   color: black;
   font-weight: 400;
-  .article-image {
-    height: 186.67px;
-  }
-
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  color: #808080;
+  background-color: #eeeeee;
+  gap: 12px;
   margin: 0 auto;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  position: relative;
+  .article-image {
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
+    height: 74px;
+  }
+  .article-title {
+    position: relative;
+    padding: 0 0 0 16px;
+  }
+  &::before {
+    position: absolute;
+    content: '';
+    width: 8px;
+    height: 100%;
+    background-color: #808080;
+    left: 0;
+    top: 0;
+  }
   ${({ theme }) => theme.breakpoint.md} {
     max-width: 640px;
     height: 90px;
@@ -72,24 +94,22 @@ const Article = styled.figure`
     color: #808080;
     background-color: #eeeeee;
     gap: 20px;
+    font-size: 18px;
     .article-image {
       width: 87px;
       min-width: 87px;
       max-width: 87px;
       height: 100%;
+      margin-right: 0;
     }
     .article-title {
       position: relative;
-      padding: 16px 0 0 25.75px;
-      &::before {
-        position: absolute;
-        content: '';
-        width: 7.72px;
-        height: 100%;
-        background-color: #808080;
-        left: 0;
-        top: 0;
-      }
+      padding: 0 0 0 25.75px;
+      display: flex;
+      justify-content: center;
+    }
+    &::before {
+      width: 7.72px;
     }
   }
   ${({ theme }) => theme.breakpoint.xl} {
@@ -98,7 +118,7 @@ const Article = styled.figure`
       max-width: 135px;
     }
     .article-title {
-      padding: 16px 0 0 40px;
+      padding: 0 0 0 40px;
       &::before {
         width: 10px;
       }
@@ -107,16 +127,16 @@ const Article = styled.figure`
 `
 
 const ArticleWrapper = styled.ul`
-  background: #eeeeee;
-  padding: 48px 10px;
+  background: transparent;
+  padding: 0 10px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 24px;
-  gap: 24px;
+  margin-bottom: 20px;
+  gap: 20px;
   ${({ theme }) => theme.breakpoint.md} {
-    background: transparent;
     padding: 0;
     gap: 20px;
+    margin-bottom: 20px;
   }
 `
 
@@ -125,7 +145,7 @@ const AdvertisementWrapper = styled.div`
   padding: 0px 10px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 
   ${({ theme }) => theme.breakpoint.md} {
     background: transparent;
@@ -143,9 +163,13 @@ const StyledFigcaption = styled.figcaption`
   > a {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
-    line-clamp: 2;
+    -webkit-line-clamp: 3; /* number of lines to show */
+    line-clamp: 3;
     -webkit-box-orient: vertical;
+    ${({ theme }) => theme.breakpoint.md} {
+      -webkit-line-clamp: 2; /* number of lines to show */
+      line-clamp: 2;
+    }
   }
 `
 

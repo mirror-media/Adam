@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
 import { ACCESS_SUBSCRIBE_FEATURE_TOGGLE } from '../../config/index.mjs'
 
 const Page = styled.main`

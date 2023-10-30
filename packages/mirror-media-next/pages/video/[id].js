@@ -26,6 +26,7 @@ import {
   GPT_Placeholder_Desktop,
   GPT_Placeholder_MobileAndTablet,
 } from '../../components/ads/gpt/gpt-placeholder'
+import Head from 'next/head'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -121,47 +122,57 @@ export default function Video({ video, latestVideos, headerData }) {
   const shouldShowAd = useDisplayAd()
 
   return (
-    <Layout
-      head={{
-        title: `${video?.title || ''}`,
-        description: video?.description || '',
-        imageUrl: video?.thumbnail || '',
-      }}
-      header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
-    >
-      <Wrapper>
-        <GPT_Placeholder_Desktop rwd={GPT_PLACEHOLDER_SIZES}>
-          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
-        </GPT_Placeholder_Desktop>
-        <YoutubeIframe videoId={video.id} gtmClassName="GTM-video-yt-play" />
+    <>
+      <Head>
+        <meta name="section:name" content="影音" key="section:name" />
+        <meta name="section:slug" content="videohub" key="section:slug" />
+      </Head>
+      <Layout
+        head={{
+          title: `${video?.title || ''}`,
+          description: video?.description || '',
+          imageUrl: video?.thumbnail || '',
+        }}
+        header={{ type: 'default', data: headerData }}
+        footer={{ type: 'default' }}
+      >
+        <Wrapper>
+          <GPT_Placeholder_Desktop rwd={GPT_PLACEHOLDER_SIZES}>
+            {shouldShowAd && (
+              <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />
+            )}
+          </GPT_Placeholder_Desktop>
+          <YoutubeIframe videoId={video.id} gtmClassName="GTM-video-yt-play" />
 
-        <GPT_Placeholder_MobileAndTablet rwd={GPT_PLACEHOLDER_SIZES}>
-          {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
-        </GPT_Placeholder_MobileAndTablet>
+          <GPT_Placeholder_MobileAndTablet rwd={GPT_PLACEHOLDER_SIZES}>
+            {shouldShowAd && (
+              <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />
+            )}
+          </GPT_Placeholder_MobileAndTablet>
 
-        <ContentWrapper>
-          <YoutubeArticle video={video} />
-          {shouldShowAd && <StyledGPTAd_E1 pageKey="videohub" adKey="E1" />}
-          {latestVideos.length > 0 && (
-            <VideoList
-              videos={latestVideos}
-              gtmClassName="GTM-video-latest-list"
-            />
+          <ContentWrapper>
+            <YoutubeArticle video={video} />
+            {shouldShowAd && <StyledGPTAd_E1 pageKey="videohub" adKey="E1" />}
+            {latestVideos.length > 0 && (
+              <VideoList
+                videos={latestVideos}
+                gtmClassName="GTM-video-latest-list"
+              />
+            )}
+          </ContentWrapper>
+
+          <YoutubePolicy />
+
+          {shouldShowAd && (
+            <>
+              <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
+              <StickyGPTAd pageKey="videohub" />
+              <FullScreenAds />
+            </>
           )}
-        </ContentWrapper>
-
-        <YoutubePolicy />
-
-        {shouldShowAd && (
-          <>
-            <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
-            <StickyGPTAd pageKey="videohub" />
-            <FullScreenAds />
-          </>
-        )}
-      </Wrapper>
-    </Layout>
+        </Wrapper>
+      </Layout>
+    </>
   )
 }
 
