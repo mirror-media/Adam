@@ -75,7 +75,7 @@ switch (ENV) {
       'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
-    GCP_LOGGING_FEATURE_TOGGLE = 'off'
+    GCP_LOGGING_FEATURE_TOGGLE = 'on'
 
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
@@ -122,7 +122,7 @@ switch (ENV) {
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
     ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
-    GCP_LOGGING_FEATURE_TOGGLE = 'off'
+    GCP_LOGGING_FEATURE_TOGGLE = 'on'
 
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
