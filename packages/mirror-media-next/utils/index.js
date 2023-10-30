@@ -366,16 +366,16 @@ const getActiveOrderCategory = (categories, categoriesInInputOrder) => {
    * Need to filter state of `categoriesInInputOrder` to match the results of categories.
    */
   const activeCategoriesOrder = Array.isArray(categoriesInInputOrder)
-    ? categoriesInInputOrder.filter((section) => section.state === 'active')
+    ? categoriesInInputOrder.filter((category) => category.state === 'active')
     : []
 
   /**
    * Although `categories` already filter `state` at GraphQL ,
    * for the sake of maintaining same logic between `categoriesInInputOrder` and `categories`,
-   * filter `state` status of `scategories` again.
+   * filter `state` status of `categories` again.
    * */
   const activeCategories = Array.isArray(categories)
-    ? categories.filter((section) => section.state === 'active')
+    ? categories.filter((category) => category.state === 'active')
     : []
 
   const categoryMap = activeCategories.reduce((acc, category) => {
@@ -383,9 +383,9 @@ const getActiveOrderCategory = (categories, categoriesInInputOrder) => {
     return acc
   }, {})
 
-  const orderedCategories = activeCategoriesOrder
-    .filter((section) => section.state === 'active')
-    .map((section) => categoryMap[section.id])
+  const orderedCategories = activeCategoriesOrder.map(
+    (category) => categoryMap[category.id]
+  )
 
   if (orderedCategories.length) return orderedCategories
 
