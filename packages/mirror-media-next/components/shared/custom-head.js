@@ -93,7 +93,7 @@ export default function CustomHead(props) {
         content={siteInformation.title}
         key="og:title"
       />
-      <meta property="og:url" content={siteInformation.url} />
+      <meta property="og:url" content={'https://' + siteInformation.url} />
       <meta property="og:type" content={siteInformation.type} key="og:type" />
       <meta
         property="og:description"
