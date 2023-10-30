@@ -665,12 +665,10 @@ export default function StoryNormalStyle({
           </DateUnderContent>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
-          (
           <RelatedArticleList
             relateds={relatedsWithOrdered}
             hiddenAdvertised={hiddenAdvertised}
           />
-          )
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
           )}
