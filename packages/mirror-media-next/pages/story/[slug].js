@@ -255,11 +255,15 @@ export default function Story({ postData, headerData, storyLayoutType }) {
         <meta property="dable:item_id" content={slug} key="dable:item_id" />
         <meta property="og:slug" content={slug} key="og:slug" />
         {section?.name && (
-          <meta name="section:name" content={section.name} key="section:name" />
+          <meta
+            property="section:name"
+            content={section.name}
+            key="section:name"
+          />
         )}
         {section?.slug && (
           <meta
-            name="section:slug"
+            property="section:slug"
             content={section.slug}
             key={'section:slug'}
           />

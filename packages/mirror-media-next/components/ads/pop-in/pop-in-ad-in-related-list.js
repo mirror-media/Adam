@@ -12,14 +12,14 @@ const StyledPopInAd = styled(PopInAd)`
   #_popIn_standard_mobile,
   #_popIn_standard_pc {
     ._popIn_recommend_article {
-      height: 92px;
+      height: 74px;
       color: black;
       font-weight: 400;
       flex-direction: row-reverse;
       justify-content: space-between;
       align-items: center;
       background-color: #eeeeee;
-      gap: 12px;
+      gap: 8px;
       margin: 0 auto;
       display: flex;
       position: relative;
@@ -39,11 +39,10 @@ const StyledPopInAd = styled(PopInAd)`
     ._popIn_recommend_art_img {
       order: unset;
       padding: 0px;
-      width: 100px;
-      min-width: 100px;
-      max-width: 100px;
-      height: 66px;
-      margin-right: 16px;
+      width: 112px;
+      min-width: 112px;
+      max-width: 112px;
+      height: 74px;
 
       ${({ theme }) => theme.breakpoint.md} {
         width: 87px;
@@ -96,7 +95,7 @@ const StyledPopInAd = styled(PopInAd)`
       width: 100%;
       margin: 0;
       position: relative;
-      padding: 0 0 0 18px;
+      padding: 0 0 0 16px;
       overflow: hidden;
       display: -webkit-box !important;
       -webkit-box-orient: vertical;
@@ -116,7 +115,7 @@ const StyledPopInAd = styled(PopInAd)`
         width: 100%;
         font-weight: 400;
         color: #808080 !important;
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.3;
         overflow: hidden;
         display: -webkit-box !important;
@@ -141,7 +140,7 @@ const StyledPopInAd = styled(PopInAd)`
     ._popIn_recommend_article::before {
       position: absolute;
       content: '';
-      width: 10px;
+      width: 8px;
       height: 100%;
       background-color: #808080;
       left: 0;

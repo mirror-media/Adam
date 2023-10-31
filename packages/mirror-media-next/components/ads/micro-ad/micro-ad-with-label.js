@@ -232,182 +232,6 @@ const typeHome = css`
   }
 `
 
-const typeStoryDeprecated = css`
-  ${({ theme }) => theme.breakpoint.xl} {
-    height: 90px;
-  }
-
-  // Mobile: Micro AD container
-  #compass-fit-widget-content {
-    max-width: 280px;
-    font-size: 18px;
-    line-height: 1.5;
-    color: black;
-    font-weight: 400;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    ${({ theme }) => theme.breakpoint.md} {
-      max-width: 640px;
-      height: 90px;
-      flex-direction: row-reverse;
-      justify-content: space-between;
-      color: #808080;
-      //Since AD uses inline-style to set the background-color, it is necessary to use !important.
-      background-color: #eeeeee !important;
-      gap: 20px;
-    }
-
-    // Mobile: AD Image
-    figure {
-      height: 186.67px;
-      position: relative;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      ${({ theme }) => theme.breakpoint.md} {
-        width: 87px;
-        min-width: 87px;
-        max-width: 87px;
-        height: 100%;
-      }
-    }
-
-    // Mobile: AD Title
-    .pop_item_title {
-      //Since AD uses inline-style to set the background-color, it is necessary to use !important.
-      background: none !important;
-      ${({ theme }) => theme.breakpoint.md} {
-        position: relative;
-        display: flex;
-        align-items: center;
-        padding: 0 20px 0 25.75px;
-        &::before {
-          position: absolute;
-          content: '';
-          width: 7.72px;
-          height: 100%;
-          background-color: #808080;
-          left: 0;
-          top: 0;
-        }
-      }
-    }
-
-    // Mobile: AD Label('特企')
-    .pop_item--colorBlock {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 18px;
-      line-height: 1;
-      padding: 8px;
-      background: #bcbcbc;
-      color: #ffffff;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-
-      ${({ theme }) => theme.breakpoint.md} {
-        font-weight: 300;
-        font-size: 12px;
-        padding: 4px;
-        line-height: 14px;
-      }
-    }
-
-    // Mobile: useless empty component
-    .compass-fit-clear {
-      display: none;
-    }
-
-    // Desktop: Micro AD container
-    .popListVert-list__item {
-      ${({ theme }) => theme.breakpoint.xl} {
-        width: 100%;
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: space-between;
-        position: relative;
-        height: 100%;
-      }
-
-      // Desktop: AD Image
-      > a {
-        ${({ theme }) => theme.breakpoint.xl} {
-          min-width: 135px;
-          max-width: 135px;
-
-          img {
-            height: 100%;
-            width: 100%;
-            object-fit: cover;
-          }
-        }
-      }
-
-      // Desktop: AD detail
-      .popListVert-list__item--text {
-        ${({ theme }) => theme.breakpoint.xl} {
-          // Desktop: AD Label('特企')
-          > div {
-            background: #bcbcbc;
-            color: #ffffff;
-            position: absolute;
-            bottom: 0;
-            right: 103px;
-            font-style: normal;
-            font-weight: 600;
-            font-size: 12px;
-            line-height: 14px;
-            padding: 4px;
-          }
-
-          // Desktop: AD Title
-          h2 {
-            text-align: left;
-            display: block;
-            height: 100%;
-            position: relative;
-            padding: 0 20px 0 40px;
-            font-style: normal;
-            //Since AD uses inline-style to set the font-weight, it is necessary to use !important.
-            font-weight: 400 !important;
-            font-size: 18px;
-            line-height: 1.5;
-            color: #808080;
-            display: flex;
-            align-items: center;
-
-            > a {
-              //Since AD uses inline-style to set the font-weight, it is necessary to use !important.
-              font-weight: 400 !important;
-            }
-
-            &::before {
-              position: absolute;
-              content: '';
-              width: 10px;
-              height: 100%;
-              background-color: #808080;
-              left: 0;
-              top: 0;
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 const typeStory = css`
   ${({ theme }) => theme.breakpoint.xl} {
     height: 90px;
@@ -415,8 +239,8 @@ const typeStory = css`
 
   // Mobile: Micro AD container
   #compass-fit-widget-content {
-    height: 92px;
-    font-size: 14px;
+    height: 74px;
+    font-size: 15px;
     line-height: 1.3;
     color: black;
     font-weight: 400;
@@ -425,7 +249,7 @@ const typeStory = css`
     align-items: center;
     color: #808080;
     background-color: #eeeeee;
-    gap: 12px;
+    gap: 8px;
     margin: 0 auto;
     display: flex;
     position: relative;
@@ -433,7 +257,7 @@ const typeStory = css`
     &::before {
       position: absolute;
       content: '';
-      width: 10px;
+      width: 8px;
       height: 100%;
       background-color: #808080;
       left: 0;
@@ -458,11 +282,10 @@ const typeStory = css`
 
     // Mobile: AD Image
     figure {
-      width: 100px;
-      min-width: 100px;
-      max-width: 100px;
-      height: 66px;
-      margin-right: 16px;
+      width: 112px;
+      min-width: 112px;
+      max-width: 112px;
+      height: 74px;
       position: relative;
 
       img {
@@ -629,8 +452,6 @@ const StyledMicroAd = styled(MicroAd)`
         return typeHome
       case 'LISTING':
         return typeListing
-      case 'STORY_DEPRECATED':
-        return typeStoryDeprecated
       case 'STORY':
         return typeStory
       default:

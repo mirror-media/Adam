@@ -15,7 +15,6 @@ import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
 import SubscribeInviteBanner from '../../components/story/normal/subscribe-invite-banner'
 import DonateBanner from '../../components/story/shared/donate-banner'
-import RelatedArticleListDeprecated from '../../components/story/normal/related-article-list-deprecated'
 import RelatedArticleList from '../../components/story/normal/related-article-list'
 import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
 import ExternalArticleContent from '../../components/external/external-article-content'
@@ -31,7 +30,6 @@ import {
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
   API_TIMEOUT,
-  RELATED_POST_FEATURE_TOGGLE,
 } from '../../config/index.mjs'
 import {
   transformStringToDraft,
@@ -550,11 +548,7 @@ export default function ExternalNormalStyle({ external }) {
           <SocialNetworkServiceSmall />
           <SubscribeInviteBanner />
 
-          {RELATED_POST_FEATURE_TOGGLE === 'on' ? (
-            <RelatedArticleList relateds={[]} />
-          ) : (
-            <RelatedArticleListDeprecated relateds={[]} />
-          )}
+          <RelatedArticleList relateds={[]} />
 
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3

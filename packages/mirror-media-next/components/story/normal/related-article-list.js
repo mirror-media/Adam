@@ -38,7 +38,7 @@ const Wrapper = styled.section`
   h2 {
     font-size: 21px;
     line-height: 150%;
-    margin: 0 auto 16px;
+    margin: 0 auto 32px;
     font-weight: 600;
     text-align: center;
     font-size: 21px;
@@ -47,13 +47,14 @@ const Wrapper = styled.section`
     margin-top: 24px;
     h2 {
       display: none;
+      margin: 0 auto 16px;
     }
   }
 `
 
 const Article = styled.figure`
-  height: 92px;
-  font-size: 14px;
+  height: 74px;
+  font-size: 15px;
   line-height: 1.3;
   color: black;
   font-weight: 400;
@@ -67,20 +68,19 @@ const Article = styled.figure`
   display: flex;
   position: relative;
   .article-image {
-    width: 100px;
-    min-width: 100px;
-    max-width: 100px;
-    height: 66px;
-    margin-right: 16px;
+    width: 112px;
+    min-width: 112px;
+    max-width: 112px;
+    height: 74px;
   }
   .article-title {
     position: relative;
-    padding: 0 0 0 18px;
+    padding: 0 0 0 16px;
   }
   &::before {
     position: absolute;
     content: '';
-    width: 10px;
+    width: 8px;
     height: 100%;
     background-color: #808080;
     left: 0;
@@ -131,8 +131,8 @@ const ArticleWrapper = styled.ul`
   padding: 0 10px;
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
-  gap: 12px;
+  margin-bottom: 20px;
+  gap: 20px;
   ${({ theme }) => theme.breakpoint.md} {
     padding: 0;
     gap: 20px;
@@ -145,7 +145,7 @@ const AdvertisementWrapper = styled.div`
   padding: 0px 10px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
 
   ${({ theme }) => theme.breakpoint.md} {
     background: transparent;

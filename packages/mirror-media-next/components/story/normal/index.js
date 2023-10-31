@@ -4,7 +4,6 @@
 import { useCallback, useMemo } from 'react'
 
 import styled, { css } from 'styled-components'
-import { RELATED_POST_FEATURE_TOGGLE } from '../../../config/index.mjs'
 import Link from 'next/link'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
@@ -16,7 +15,6 @@ import SocialNetworkService from '../../../components/story/normal/social-networ
 import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
 import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
-import RelatedArticleListDeprecated from '../normal/related-article-list-deprecated'
 import GPTFloatingAd from '../../../components/ads/gpt/gpt-floating-ad'
 import ArticleContent from './article-content'
 import HeroImageAndVideo from './hero-image-and-video'
@@ -672,32 +670,21 @@ export default function StoryNormalStyle({
             />
           </InfoAndHero>
           <ArticleBrief sectionSlug={section?.slug} brief={brief} />
-
           <ArticleContent
             content={postContent.data}
             hiddenAdvertised={hiddenAdvertised}
             pageKeyForGptAd={pageKeyForGptAd}
           />
-
           <DateUnderContent>
             <span>更新時間｜</span>
             <span className="time">{updatedTaipeiTime} 臺北時間</span>
           </DateUnderContent>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
-
-          {RELATED_POST_FEATURE_TOGGLE === 'on' ? (
-            <RelatedArticleList
-              relateds={relatedsWithOrdered}
-              hiddenAdvertised={hiddenAdvertised}
-            />
-          ) : (
-            <RelatedArticleListDeprecated
-              relateds={relatedsWithOrdered}
-              hiddenAdvertised={hiddenAdvertised}
-            />
-          )}
-
+          <RelatedArticleList
+            relateds={relatedsWithOrdered}
+            hiddenAdvertised={hiddenAdvertised}
+          />
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
           )}
@@ -708,17 +695,14 @@ export default function StoryNormalStyle({
           {shouldShowAd && (
             <StyledGPTAd_MB_E1 pageKey={pageKeyForGptAd} adKey="MB_E1" />
           )}
-
           {shouldShowAd && section?.slug === 'carandwatch' && (
             <GPTFloatingAd pageKey={pageKeyForGptAd} />
           )}
-
           {shouldShowAd && (
             <DableADContainer_Mobile>
               <DableAd isDesktop={false} />
             </DableADContainer_Mobile>
           )}
-
           <StoryEndDesktop>
             <StoryMoreInfo>
               更多內容，歡迎&nbsp;

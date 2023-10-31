@@ -19,7 +19,7 @@ const needInsertMicroAdAfter = (index = 0) => {
 }
 
 /**
- * @typedef {'HOME' | 'LISTING' | 'STORY' | 'STORY_DEPRECATED' } MicroAdType
+ * @typedef {'HOME' | 'LISTING' | 'STORY' } MicroAdType
  * @typedef {'PC' | 'MB' | 'RWD' } Device
  *
  * Determining which Micro advertisement ID to take based on the `index`.
