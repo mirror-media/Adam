@@ -72,9 +72,7 @@ const RENDER_PAGE_SIZE = 20
 
 /** number of json files has latest news, and we need to fetch  */
 const JSON_FILE_COUNT = 4
-/**
- * @typedef {import('../type/raw-data.typedef').RawData} RawData
- */
+
 /**
  * @typedef {import('../type/index').ArticleInfoCard} ArticleInfoCard
  */

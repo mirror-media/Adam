@@ -1,30 +1,71 @@
-import styled from 'styled-components'
-import React, { Fragment, useState, useRef, useContext } from 'react'
-import { v3SectionColors } from '../../../styles/sections-color'
+import styled, { css } from 'styled-components'
+import React, { Fragment, useState, useRef } from 'react'
 import useClickOutside from '../../../hooks/useClickOutside'
 import Link from 'next/link'
-import { RedirectUrlContext } from '../../../context/redirectUrl'
-const SideBarButton = styled.button`
-  user-select: none;
-  display: block;
-  margin-left: 16px;
-  &:focus {
-    border: none;
-    outline: none;
-  }
-  .hamburger {
-    display: block;
-    width: 16px;
-    height: 2px;
-    background-color: black;
-    margin: 2px 0;
-    border-radius: 12px;
-  }
+import HamburgerButton from './hamburger-button'
+import CloseButton from './close-button'
+import Image from 'next/image'
+/**
+ * @typedef {import('../apollo/fragments/section').Section} Section
+ */
 
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
+/**
+ * @typedef {import('../apollo/fragments/section').SectionWithCategory} SectionWithCategory
+ */
+
+/**
+ * @typedef {Omit<Section, 'categories' > & {href: string, categories: Array.<SectionWithCategory & { href: string }> }} SectionWithHrefTemp
+ */
+
+/**
+ * @typedef {import('../utils/api/index').HeadersDataSection} HeadersDataSection
+ */
+/**
+ * @typedef {import('../utils/api/index').CategoryInHeadersDataSection} CategoryInHeadersDataSection
+ */
+
+/**
+ * @typedef {import('../utils/api/index').HeadersDataCategory} HeadersDataCategory
+ */
+
+/**
+ * @typedef {Omit<HeadersDataSection, 'categories' > & {href: string, categories: Array.<CategoryInHeadersDataSection & { href: string }> }}HeadersDataSectionWithHref
+ */
+/**
+ * @typedef {HeadersDataCategory & {href: string }} HeadersDataCategoryWithHref
+ */
+
+/**
+ * @typedef { (HeadersDataCategoryWithHref | HeadersDataSectionWithHref )[]} SectionsAndCategoriesWithHref
+ */
+
+/**
+ * @typedef {Pick<import('../apollo/fragments/topic').Topic, 'id' | 'slug' | 'name'>[]} Topics
+ */
+
+/**
+ * @typedef {import('../type/theme').Theme} Theme
+ */
+
+const colorCss = css`
+  ${
+    /**
+     * @param {Object} param
+     * @param {string} [param.sectionSlug]
+     * @param {Theme} [param.theme]
+     */
+    ({ sectionSlug, theme }) => {
+      if (sectionSlug === 'member') {
+        return '#e51731'
+      } else if (sectionSlug && theme.color.sectionsColor[sectionSlug]) {
+        return theme.color.sectionsColor[sectionSlug]
+      } else {
+        return '#fff'
+      }
+    }
+  };
 `
+
 const SideBar = styled.section`
   display: flex;
   flex-direction: column;
@@ -46,65 +87,26 @@ const SideBar = styled.section`
 
   ${({ theme }) => theme.breakpoint.md} {
     width: 320px;
-    left: ${
-      /** @param {{shouldShowSidebar: Boolean}} props */
-      ({ shouldShowSidebar }) => (shouldShowSidebar ? '0' : '-100%')
-    };
+    left: ${({ shouldShowSidebar }) => (shouldShowSidebar ? '0' : '-100%')};
   }
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }
 `
-const CloseButton = styled.button`
-  width: 36px;
-  height: 36px;
-  padding: 4px;
-  display: flex;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  &:focus {
-    outline: none;
-  }
-  .close {
-    border: 1px solid #fff;
-    border-radius: 50%;
-    height: 20px;
-    width: 20px;
-    margin: 0 5px 0 0;
-    position: relative;
-    &:before,
-    :after {
-      position: absolute;
-      left: 8.5px;
-      top: 5px;
-      transform: translate(-50%, -50%);
-      content: ' ';
-      height: 8.5px;
-      width: 1.2px;
-      background-color: #fff;
-    }
-    &:before {
-      transform: rotate(45deg);
-    }
-    &:after {
-      transform: rotate(-45deg);
-    }
-  }
-`
+
 const Topics = styled.div`
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  padding-right: 19px;
+  width: 90%;
+  margin-bottom: 30px;
 `
 const Topic = styled.a`
   font-weight: 500;
   color: #fff;
   text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 0.7px;
 `
 const Section = styled.div`
   display: flex;
@@ -128,7 +130,13 @@ const Section = styled.div`
     left: 0;
     width: 8px;
     height: 16px;
-    background-color: ${({ color }) => (color ? color : '#fff')};
+    background-color: ${
+      /**
+       * @param {Object} param
+       * @param {string} [param.sectionSlug]
+       */
+      ({ sectionSlug }) => (sectionSlug ? colorCss : '#fff')
+    };
   }
 `
 
@@ -168,22 +176,24 @@ const Categories = styled.div`
   font-weight: 400;
   flex-wrap: wrap;
   gap: 4px 12px;
-  color: ${({ color }) => (color ? color : '#fff')};
-  margin-top: ${
-    /** @param {{shouldShowCategories: Boolean}} props */
-    ({ shouldShowCategories }) => (shouldShowCategories ? '12px' : '0px')
+  color: ${
+    /**
+     * @param {Object} param
+     * @param {string} [param.sectionSlug]
+     * @param {boolean} [param.shouldShowCategories]
+     */
+    ({ sectionSlug }) => (sectionSlug ? colorCss : '#fff')
   };
-  gap: ${
-    /** @param {{shouldShowCategories: Boolean}} props */
-    ({ shouldShowCategories }) => (shouldShowCategories ? '4px 12px' : '0px')
-  };
+
+  margin: ${({ shouldShowCategories }) =>
+    shouldShowCategories ? '12px 0' : '0px'};
+  gap: ${({ shouldShowCategories }) =>
+    shouldShowCategories ? '4px 20px' : '0px'};
   transition: all 0.5s ease-in-out;
 
   a {
-    height: ${
-      /** @param {{shouldShowCategories: Boolean}} props */
-      ({ shouldShowCategories }) => (shouldShowCategories ? '21px' : '0')
-    };
+    height: ${({ shouldShowCategories }) =>
+      shouldShowCategories ? '21px' : '0'};
     visibility: ${({ shouldShowCategories }) =>
       shouldShowCategories ? 'visible' : 'hidden'};
     opacity: ${({ shouldShowCategories }) =>
@@ -206,14 +216,12 @@ const SubBrandList = styled.ul`
   }
 `
 const PromotionList = styled.ul`
-  display: flex;
   color: #bcbcbc;
-  justify-content: start;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   flex-wrap: wrap;
   row-gap: 9px;
-  li {
-    min-width: 33.33%;
-  }
 `
 // The way to display social-media link is copied from mirror-media-nuxt,
 // should be refactor if has separate image of each social media.
@@ -251,10 +259,11 @@ const SocialMediaList = styled.div`
   }
 `
 /**
- *
+ * TODO: use typedef in `../apollo/fragments/section`
+ * Should be done after fetch header data from new json file
  * @param {Object} props
- * @param {import('../type').Topic[]} props.topics
- * @param {import('../type').Section[]} props.sections
+ * @param {Topics} props.topics
+ * @param {SectionsAndCategoriesWithHref} props.sectionsAndCategories
  * @param {import('../type').SubBrand[]} props.subBrands
  * @param {import('../type').Promotion[]} props.promotions
  * @param {import('../type').SocialMedia[]} props.socialMedia
@@ -262,7 +271,7 @@ const SocialMediaList = styled.div`
  */
 export default function MobileSidebar({
   topics,
-  sections,
+  sectionsAndCategories = [],
   subBrands,
   promotions,
   socialMedia,
@@ -270,60 +279,69 @@ export default function MobileSidebar({
   const [openSidebar, setOpenSidebar] = useState(false)
   const [openSection, setOpenSection] = useState('')
   const sideBarRef = useRef(null)
-  const redirectUrl = useContext(RedirectUrlContext)
   useClickOutside(sideBarRef, () => {
     setOpenSidebar(false)
   })
 
+  const sectionsAndCategoriesJsx = sectionsAndCategories.map((item) => {
+    switch (item.type) {
+      case 'section':
+        return (
+          <Fragment key={item.order}>
+            <Section sectionSlug={item.slug}>
+              <a style={{ width: '50%' }} href={item.href}>
+                <h3>{item.name}</h3>
+              </a>
+              <SectionToggle
+                onClick={() => setOpenSection(item.slug)}
+                shouldOpen={item.slug === openSection}
+              ></SectionToggle>
+            </Section>
+
+            <Categories
+              shouldShowCategories={item.slug === openSection}
+              sectionSlug={item.slug}
+            >
+              {item.categories.map((category) => (
+                <a key={category.id} href={category.href}>
+                  {category.name}
+                </a>
+              ))}
+            </Categories>
+          </Fragment>
+        )
+      case 'category':
+        const renderSectionSlug = item.sections?.[0]
+
+        return (
+          <Section key={item.order} sectionSlug={renderSectionSlug}>
+            <a style={{ width: '100%' }} href={item.href}>
+              <h3>{item.name}</h3>
+            </a>
+          </Section>
+        )
+      default:
+        break
+    }
+  })
   return (
     <>
-      <SideBarButton onClick={() => setOpenSidebar((val) => !val)}>
-        <i className="hamburger"></i>
-        <i className="hamburger"></i>
-        <i className="hamburger"></i>
-      </SideBarButton>
+      <HamburgerButton handleOnClick={() => setOpenSidebar((val) => !val)} />
       <SideBar shouldShowSidebar={openSidebar} ref={sideBarRef}>
         <SideBarTop>
-          <CloseButton onClick={() => setOpenSidebar((val) => !val)}>
-            <i className="close"></i>
-          </CloseButton>
+          <CloseButton
+            color="white"
+            handleOnClick={() => setOpenSidebar((val) => !val)}
+          />
           <Topics>
             {topics.map((topic) => (
-              <Topic href={`${redirectUrl}/topic/${topic._id}`} key={topic._id}>
+              <Topic href={`/topic/${topic.slug}`} key={topic.id}>
                 {topic.name}
               </Topic>
             ))}
-            <Topic href={`${redirectUrl}/section/topic`}>更多</Topic>
+            <Topic href={`/section/topic`}>更多</Topic>
           </Topics>
-          {sections.map(({ _id, title, categories, name }) => (
-            <Fragment key={_id}>
-              <Section color={v3SectionColors[name]}>
-                <Link
-                  style={{ width: '50%' }}
-                  href={`${redirectUrl}/section/${title}`}
-                >
-                  <h3>{title}</h3>
-                </Link>
-                <SectionToggle
-                  onClick={() => setOpenSection(name)}
-                  shouldOpen={name === openSection}
-                ></SectionToggle>
-              </Section>
-              <Categories
-                shouldShowCategories={name === openSection}
-                color={v3SectionColors[name]}
-              >
-                {categories.map((category) => (
-                  <a
-                    key={category._id}
-                    href={`${redirectUrl}/category/${category.name}`}
-                  >
-                    {category.title}
-                  </a>
-                ))}
-              </Categories>
-            </Fragment>
-          ))}
+          {sectionsAndCategoriesJsx}
         </SideBarTop>
         <SideBarBottom>
           <SubBrandList>
@@ -334,8 +352,9 @@ export default function MobileSidebar({
                   target="_blank"
                   rel="noopener noreferer noreferrer"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
+                    width={brand.imageSize.colorless.width}
+                    height={brand.imageSize.colorless.height}
                     src={`/images/${brand.name}-colorless.png`}
                     alt={brand.title}
                   />
@@ -346,7 +365,9 @@ export default function MobileSidebar({
           <PromotionList>
             {promotions.map((promotion) => (
               <li key={promotion.name}>
-                <a href={promotion.href}>{promotion.title}</a>
+                <Link href={promotion.href} target="_blank">
+                  {promotion.title}
+                </Link>
               </li>
             ))}
           </PromotionList>

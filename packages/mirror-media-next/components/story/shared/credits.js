@@ -78,7 +78,7 @@ const CreditList = styled.figure`
 `
 
 const CREDIT_TITLE_NAME_MAP = {
-  writers: '記者',
+  writers: '文 ',
   photographers: '攝影',
   camera_man: '影音',
   designers: '設計',
@@ -133,7 +133,7 @@ export default function Credits({ credits = [], className = '' }) {
         }
         return (
           <CreditList key={index}>
-            <CreditTitle>{titleName}</CreditTitle>
+            {titleName !== '協力' && <CreditTitle>{titleName}</CreditTitle>}
             <ul
               className={Array.isArray(people) ? 'link-list' : 'no-link-list'}
             >

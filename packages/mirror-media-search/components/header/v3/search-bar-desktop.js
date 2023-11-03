@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import searchButtonWeb from '../../../public/images/search-button-web.png'
 import SearchBarInput from './search-bar-input'
 
 const SearchBarWrapper = styled.section`
@@ -29,7 +28,7 @@ const SearchButton = styled.button`
     background-size: 15px;
     cursor: pointer;
     user-select: none;
-    background-image: url(${searchButtonWeb.src});
+    background-image: url(/images/search-button-web.png);
     background-color: #888;
     background-position: center;
     background-repeat: no-repeat;

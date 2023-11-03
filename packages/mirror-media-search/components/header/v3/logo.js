@@ -16,6 +16,7 @@ export default function LogoLink({ className }) {
         layout="responsive"
         width={107}
         height={45}
+        loading="eager"
       ></Image>
     </div>
   )

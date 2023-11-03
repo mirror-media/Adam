@@ -4,8 +4,6 @@ const URL_MIRROR_MEDIA =
   process.env.URL_MIRROR_MEDIA || 'https://www.mirrormedia.mg'
 const URL_MIRROR_MEDIA_V3 =
   process.env.URL_MIRROR_MEDIA_V3 || 'https://dev-next.mirrormedia.mg'
-const URL_STATIC_COMBO_SECTIONS =
-  'https://storage.googleapis.com/statics.mirrormedia.mg/json/sections.json'
 const URL_PROGRAMABLE_SEARCH =
   'https://www.googleapis.com/customsearch/v1/siterestrict'
 
@@ -31,28 +29,36 @@ const PROGRAMABLE_SEARCH_API_KEY =
 let API_TIMEOUT = 3000
 let GA_MEASUREMENT_ID = ''
 let GTM_ID = ''
+let STATIC_FILE_DOMAIN = ''
 
 switch (ENV) {
   case 'prod':
     API_TIMEOUT = 1500
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
+    STATIC_FILE_DOMAIN = 'v3-statics.mirrormedia.mg'
     break
   case 'staging':
     API_TIMEOUT = 1500
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
+    STATIC_FILE_DOMAIN = 'v3-statics-staging.mirrormedia.mg'
     break
   case 'dev':
     API_TIMEOUT = 5000
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
+    STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
     break
   default:
     API_TIMEOUT = 5000
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
+    STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
 }
+
+let URL_STATIC_HEADER_HEADERS = `https://${STATIC_FILE_DOMAIN}/files/json/header_headers.json`
+let URL_STATIC_TOPICS = `https://${STATIC_FILE_DOMAIN}/files/json/header_topics.json`
 
 export {
   API_HOST,
@@ -61,7 +67,8 @@ export {
   API_TIMEOUT,
   URL_MIRROR_MEDIA,
   URL_MIRROR_MEDIA_V3,
-  URL_STATIC_COMBO_SECTIONS,
+  URL_STATIC_HEADER_HEADERS,
+  URL_STATIC_TOPICS,
   URL_PROGRAMABLE_SEARCH,
   URL_HOST,
   READ_REDIS_HOST,

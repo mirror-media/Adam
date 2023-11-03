@@ -84,6 +84,13 @@ const ArticleInfoContainer = styled.div`
     padding-left: 0px;
     margin: 0 0 24px;
   }
+
+  .normal-credits {
+    max-width: 640px;
+    ${({ theme }) => theme.breakpoint.xl} {
+      max-width: 457.312px;
+    }
+  }
 `
 const StyledTags = styled(Tags)`
   margin-top: 20px;
@@ -134,7 +141,7 @@ export default function ArticleInfo({
       <Date>發布時間：{publishedDate} 臺北時間</Date>
       <Date>更新時間：{updatedDate} 臺北時間</Date>
 
-      <Credits credits={credits}></Credits>
+      <Credits credits={credits} className="normal-credits"></Credits>
       <SocialMediaAndDonateLink>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a className="link-to-index" href="/">
