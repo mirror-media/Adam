@@ -195,7 +195,12 @@ const Section = styled.div`
       display: block;
       position: absolute;
       content: '';
-      background-color: ${sectionColor};
+      background-color: ${
+        /**
+         * @param {{ sectionSlug: String}} props
+         */
+        ({ sectionSlug }) => sectionSlug && sectionColor
+      };
       left: -4px;
       top: 50%;
       transform: translateY(-50%);
@@ -613,7 +618,7 @@ export default function StoryNormalStyle({
     if (!category) return {}
     return {
       name: category.name,
-      slug: category.sections?.[0]?.slug || '',
+      slug: category.sections?.[0]?.slug || 'none',
     }
   }, [section, categories, categoriesInInputOrder])
 
