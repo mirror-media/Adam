@@ -1,32 +1,73 @@
 //TODO: When user at certain section, at category which belongs to certain section, at story which belongs to certain section
 //component <Section> will change color of title to section color defined at /styles/sections-color.
-//TODO: Replace <a> to <Link> for Single Page Application
-import { useContext } from 'react'
-import styled from 'styled-components'
-import { RedirectUrlContext } from '../../../context/redirectUrl'
+import styled, { css } from 'styled-components'
 import { minWidth } from '../../../styles/media'
-import { v3SectionColors } from '../../../styles/sections-color'
 import Logo from './logo'
+
+/**
+ * @typedef {import('../type/theme').Theme} Theme
+ */
+
+const colorCss = css`
+  color: ${
+    /**
+     * @param {Object} param
+     * @param {string} [param.sectionSlug]
+     * @param {Theme} [param.theme]
+     */
+    ({ sectionSlug, theme }) => {
+      if (sectionSlug === 'member') {
+        return '#e51731'
+      } else if (sectionSlug && theme.color.sectionsColor[sectionSlug]) {
+        return theme.color.sectionsColor[sectionSlug]
+      } else {
+        return '#000'
+      }
+    }
+  };
+`
+
+/**
+ * @typedef {import('../utils/api/index').HeadersDataSection} HeadersDataSection
+ */
+/**
+ * @typedef {import('../utils/api/index').CategoryInHeadersDataSection} CategoryInHeadersDataSection
+ */
+
+/**
+ * @typedef {import('../utils/api/index').HeadersDataCategory} HeadersDataCategory
+ */
+
+/**
+ * @typedef {Omit<HeadersDataSection, 'categories' > & {href: string, categories: Array.<CategoryInHeadersDataSection & { href: string }> }}HeadersDataSectionWithHref
+ */
+/**
+ * @typedef {HeadersDataCategory & {href: string }} HeadersDataCategoryWithHref
+ */
+
+/**
+ * @typedef { (HeadersDataCategoryWithHref | HeadersDataSectionWithHref )[]} SectionsAndCategoriesWithHref
+ */
 const SectionsWrapper = styled.nav`
   font-size: 14px;
   line-height: 1.5;
   // to hide scrollbar
   overflow: hidden;
   width: 100%;
-  margin: 0 auto 8px;
+  margin: 0 auto;
   display: flex;
   gap: 10px;
   @media ${minWidth.xl} {
     font-size: 16px;
     height: auto;
     overflow: visible;
-    margin-bottom: 10px;
   }
 `
 const Sections = styled.ul`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
   margin: 0 auto;
   text-align: center;
@@ -40,35 +81,49 @@ const Sections = styled.ul`
     width: 0;
     height: 0;
   }
-  @media ${minWidth.md} {
+  ${({ theme }) => theme.breakpoint.md} {
     width: 100%;
     justify-content: space-between;
   }
-  @media ${minWidth.xl} {
-    height: auto;
+  ${({ theme }) => theme.breakpoint.xl} {
+    height: 55px;
     overflow: visible;
   }
 `
 const Section = styled.li`
   flex: 0 0 auto;
+  :not(:last-child) {
+    padding-right: 8px;
+  }
   position: relative;
   cursor: pointer;
   user-select: none;
   line-height: 1.15;
   color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  font-weight: 600;
 
-  @media ${minWidth.xl} {
+  ${({ theme }) => theme.breakpoint.xl} {
+    :not(:last-child) {
+      padding-right: 0;
+    }
     line-height: 150%;
     flex-shrink: 1;
     width: 100%;
-    min-width: calc(100% / 11);
+    min-width: calc(100% / 12);
     &.member {
       color: #fff;
       background-color: #000000;
     }
   }
   &:hover {
-    ${({ color }) => color && `color: ${color}`}
+    ${
+      /**
+       * @param {Object} param
+       * @param {string} [param.sectionSlug]
+       */
+      ({ sectionSlug }) => (sectionSlug ? colorCss : 'color: #000;')
+    }
   }
 `
 const SectionLink = styled.a`
@@ -76,23 +131,23 @@ const SectionLink = styled.a`
   width: 100%;
   font-weight: 700;
   padding: 7px 6px 5px 6px;
-  @media ${minWidth.xl} {
-    padding: 9px 16px 9px 16px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    padding: 9px 12px 9px 12px;
   }
 `
 
 const LogoIcon = styled(Logo)`
-  width: 49px;
-  height: 20.72px;
-  @media ${minWidth.md} {
+  width: 68px;
+  height: 29px;
+  ${({ theme }) => theme.breakpoint.md} {
     display: none;
   }
 `
 const SectionLogo = styled.div`
   background-color: #fff;
 
-  padding: 4px 0 4px 8px;
-  @media ${minWidth.md} {
+  padding: 4px 0 10px 8px;
+  ${({ theme }) => theme.breakpoint.md} {
     display: none;
   }
 `
@@ -107,7 +162,7 @@ const SectionDropDown = styled.div`
   text-align: center;
   z-index: 20;
   color: #fff;
-  @media ${minWidth.xl} {
+  ${({ theme }) => theme.breakpoint.xl} {
     ${Section}:hover & {
       display: block;
     }
@@ -116,63 +171,70 @@ const SectionDropDown = styled.div`
 const CategoryLink = styled.a`
   display: block;
   &:hover {
-    ${({ color }) => color && `color: ${color};`}
+    ${
+      /**
+       * @param {Object} param
+       * @param {string} param.sectionSlug
+       */
+      ({ sectionSlug }) => (sectionSlug ? colorCss : 'color: #fff;')
+    }
   }
-  @media ${minWidth.xl} {
-    padding: 8px 14px 8px 14px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    padding: 8px 12px 8px 12px;
   }
 `
-function getCategoryHref(redirectUrl, sectionName, categoryName) {
-  if (sectionName === 'videohub') {
-    return `${redirectUrl}/video_category/${categoryName}`
-  }
-  if (categoryName === 'magazine') {
-    return `${redirectUrl}/magazine/`
-  }
-  return `${redirectUrl}/category/${categoryName}`
-}
+
 /**
- * @param {{sections: import('../type').Section[] | []  }} props
+ * @param {Object} props
+ * @param {SectionsAndCategoriesWithHref} props.sectionsAndCategories
  * @returns {React.ReactElement}
  */
-export default function NavSections({ sections }) {
-  const redirectUrl = useContext(RedirectUrlContext)
-  return (
-    <SectionsWrapper>
-      <SectionLogo>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href={`${redirectUrl}`}>
-          <LogoIcon />
-        </a>
-      </SectionLogo>
-      <Sections>
-        {sections.map((section) => (
-          <Section
-            key={section._id}
-            color={v3SectionColors[section.name]}
-            className={section.name}
-          >
-            <SectionLink href={`${redirectUrl}/section/${section.name}`}>
-              <h2>{section.title}</h2>
+export default function NavSections({ sectionsAndCategories = [] }) {
+  const sectionsAndCategoriesJsx = sectionsAndCategories.map((section) => {
+    switch (section?.type) {
+      case 'section':
+        return (
+          <Section key={section.order} sectionSlug={section?.slug}>
+            <SectionLink href={section.href}>
+              <h2>{section.name}</h2>
             </SectionLink>
+
             <SectionDropDown>
               {section.categories.map((category) => (
                 <CategoryLink
-                  key={category._id}
-                  href={getCategoryHref(
-                    redirectUrl,
-                    section.name,
-                    category.name
-                  )}
-                  color={v3SectionColors[section.name]}
+                  key={category.id}
+                  href={category.href}
+                  sectionSlug={section?.slug}
                 >
-                  <h3>{category.title}</h3>
+                  <h3>{category.name}</h3>
                 </CategoryLink>
               ))}
             </SectionDropDown>
           </Section>
-        ))}
-      </Sections>
+        )
+      case 'category':
+        const renderSectionSlug = section.sections?.[0]
+
+        return (
+          <Section key={section.order} sectionSlug={renderSectionSlug}>
+            <SectionLink href={section.href}>
+              <h2>{section.name}</h2>
+            </SectionLink>
+          </Section>
+        )
+      default:
+        return null
+    }
+  })
+  return (
+    <SectionsWrapper>
+      <SectionLogo>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/">
+          <LogoIcon />
+        </a>
+      </SectionLogo>
+      <Sections>{sectionsAndCategoriesJsx}</Sections>
     </SectionsWrapper>
   )
 }

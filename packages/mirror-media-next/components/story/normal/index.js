@@ -1,7 +1,7 @@
 //TODO: refactor jsx structure, make it more readable.
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
@@ -36,7 +36,7 @@ import {
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
-import { getActiveOrderSection } from '../../../utils'
+import { getActiveOrderSection, getActiveOrderCategory } from '../../../utils'
 import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
@@ -195,7 +195,12 @@ const Section = styled.div`
       display: block;
       position: absolute;
       content: '';
-      background-color: ${({ sectionSlug }) => sectionSlug && sectionColor};
+      background-color: ${
+        /**
+         * @param {{ sectionSlug: String}} props
+         */
+        ({ sectionSlug }) => sectionSlug && sectionColor
+      };
       left: -4px;
       top: 50%;
       transform: translateY(-50%);
@@ -492,6 +497,7 @@ export default function StoryNormalStyle({
     sections = [],
     categories = [],
     sectionsInInputOrder = [],
+    categoriesInInputOrder = [],
     heroImage = null,
     heroVideo = null,
     heroCaption = '',
@@ -601,6 +607,21 @@ export default function StoryNormalStyle({
     { extend_byline: extend_byline },
   ]
 
+  // 如無大分區section，但有分類category，文內的頁籤顯示category
+  const tagBeforeTitle = useMemo(() => {
+    if (section) return section
+    const categoriesWithOrdered = getActiveOrderCategory(
+      categories,
+      categoriesInInputOrder
+    )
+    const [category] = categoriesWithOrdered
+    if (!category) return {}
+    return {
+      name: category.name,
+      slug: category.sections?.[0]?.slug || 'none',
+    }
+  }, [section, categories, categoriesInInputOrder])
+
   const publishedTaipeiTime = transformTimeDataIntoDotFormat(publishedDate)
   const updatedTaipeiTime = transformTimeDataIntoDotFormat(updatedAt)
 
@@ -631,8 +652,8 @@ export default function StoryNormalStyle({
             {postData.isAdvertised ? (
               <div />
             ) : (
-              <Section sectionSlug={section?.slug}>
-                {section?.name || ''}
+              <Section sectionSlug={tagBeforeTitle?.slug}>
+                {tagBeforeTitle?.name || ''}
               </Section>
             )}
             <Date>{publishedTaipeiTime} 臺北時間</Date>

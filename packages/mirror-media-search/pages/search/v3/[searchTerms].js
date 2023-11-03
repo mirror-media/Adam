@@ -9,6 +9,8 @@ import {
   API_PROTOCOL,
   API_HOST,
   API_PORT,
+  URL_STATIC_HEADER_HEADERS,
+  URL_STATIC_TOPICS,
 } from '../../../config'
 import { getSearchResult } from '../../../utils/api/programmable-search'
 import SearchedArticles from '../../../components/searched-articles'
@@ -111,13 +113,9 @@ export default function Search({ searchResult }) {
 }
 
 Search.getLayout = function getLayout(page, pageProps) {
-  const { sectionsData = [], topicsData = [] } = pageProps
+  const { headerData } = pageProps
 
-  return (
-    <Layout sectionsData={sectionsData} topicsData={topicsData}>
-      {page}
-    </Layout>
-  )
+  return <Layout header={{ type: 'default', data: headerData }}>{page}</Layout>
 }
 
 export async function getServerSideProps({ params }) {
@@ -126,12 +124,12 @@ export async function getServerSideProps({ params }) {
     const responses = await Promise.allSettled([
       axios({
         method: 'get',
-        url: URL_STATIC_COMBO_SECTIONS,
+        url: URL_STATIC_HEADER_HEADERS,
         timeout: API_TIMEOUT,
       }),
       axios({
         method: 'get',
-        url: `${API_PROTOCOL}://${API_HOST}:${API_PORT}/combo?endpoint=topics`,
+        url: URL_STATIC_TOPICS,
         timeout: API_TIMEOUT,
       }),
       getSearchResult({
@@ -140,9 +138,11 @@ export async function getServerSideProps({ params }) {
       }),
     ])
 
+    const sectionsData = responses[0].value?.data?.headers || []
+    const topicsData = responses[1].value?.data?.topics || []
+
     const props = {
-      sectionsData: responses[0].value?.data?._items || [],
-      topicsData: responses[1].value?.data._endpoints?.topics?._items || [],
+      headerData: { sectionsData, topicsData },
       searchResult: responses[2].value?.data || {},
       redirectUrl: URL_MIRROR_MEDIA_V3,
     }
@@ -158,8 +158,7 @@ export async function getServerSideProps({ params }) {
     console.log(JSON.stringify({ severity: 'ERROR', message: error.stack }))
     return {
       props: {
-        sectionsData: [],
-        topicsData: [],
+        headerData: { sectionsData: [], topicsData: [] },
         searchResult: {},
         redirectUrl: URL_MIRROR_MEDIA_V3,
       },
