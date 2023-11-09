@@ -12,7 +12,7 @@ const WEIBO_LINK = {
   href: 'http://www.weibo.com/u/6030041924?is_all=1',
 }
 const FACEBOOK_LINK = {
-  name: 'facebook',
+  name: 'facebook-fanpage',
   href: 'https://www.facebook.com/mirrormediamg/',
 }
 const INSTAGRAM_LINK = {
@@ -20,7 +20,7 @@ const INSTAGRAM_LINK = {
   href: 'https://www.instagram.com/mirror_media/',
 }
 const RSS_LINK = {
-  name: 'rss',
+  name: 'mirrormedia-rss',
   href: 'https://www.mirrormedia.mg/rss/rss.xml',
 }
 const EMAIL_LINK = {

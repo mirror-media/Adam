@@ -72,6 +72,7 @@ export default function ButtonCopyLink({ width = 35, height = 35 }) {
 
       <ClickButton
         onClick={handleCopyLink}
+        aria-label="link-share-icon"
         // @ts-ignore
         on="tap:clipboard-example.copy"
       >
@@ -85,6 +86,7 @@ export default function ButtonCopyLink({ width = 35, height = 35 }) {
       </ClickButton>
 
       <input
+        aria-label="link-share-icon"
         id="clipboard-example"
         type="text"
         value={sharedUrl}

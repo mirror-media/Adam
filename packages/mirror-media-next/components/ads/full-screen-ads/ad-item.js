@@ -137,7 +137,12 @@ export default function FullScreenAdItem({
         <Wrapper fullScreenAdStyle={fullScreenAdStyle}>
           <div className="ad-item">
             {children}
-            {shouldShowCloseButton && <CloseButton onClick={closeFullAd} />}
+            {shouldShowCloseButton && (
+              <CloseButton
+                aria-label="close-advertisement"
+                onClick={closeFullAd}
+              />
+            )}
           </div>
         </Wrapper>
       )}

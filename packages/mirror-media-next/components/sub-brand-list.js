@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Image from 'next/image'
+import Link from 'next/link'
 const SubBrandListWrapper = styled.ul`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
@@ -9,9 +10,9 @@ const SubBrandListWrapper = styled.ul`
     position: relative;
   }
 `
-const SubBrand = styled.a`
-  padding-left: 10px;
-  padding-right: 10px;
+const ListItem = styled.li`
+  margin-left: 10px;
+  margin-right: 10px;
   flex: 0 0 auto;
   cursor: pointer;
 `
@@ -27,20 +28,22 @@ export default function SubBrandList({ subBrands = [], className }) {
   return (
     <SubBrandListWrapper className={className}>
       {subBrands.map(({ name, title, href, imageSize }) => (
-        <SubBrand
-          key={name}
-          href={href}
-          target="_blank"
-          rel="noopener noreferer"
-        >
-          <Image
-            width={imageSize.normal.width}
-            height={imageSize.normal.height}
-            src={`/images-next/${name}.png`}
-            alt={title}
-            loading="eager"
-          ></Image>
-        </SubBrand>
+        <ListItem key={name}>
+          <Link
+            href={href}
+            target="_blank"
+            rel="noopener noreferer"
+            aria-label={title}
+          >
+            <Image
+              width={imageSize.normal.width}
+              height={imageSize.normal.height}
+              src={`/images-next/${name}.png`}
+              alt={title}
+              loading="eager"
+            ></Image>
+          </Link>
+        </ListItem>
       ))}
     </SubBrandListWrapper>
   )

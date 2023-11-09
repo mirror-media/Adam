@@ -192,7 +192,7 @@ const CustomSwiperNext = styled.div`
  */
 export default function TopicList({ topic, renderPageSize, slideshowImages }) {
   const [swiperRef, setSwiperRef] = useState(null)
-  const { postsCount, posts, slug, style } = topic
+  const { postsCount, posts, slug, style, featuredPostsCount } = topic
   const backgroundUrl = parseUrl(topic.style)
     ? ''
     : topic.og_image?.resized?.original || topic.heroImage?.resized?.original
@@ -262,8 +262,9 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
         </Topic>
         <TopicListArticles
           topicSlug={slug}
-          posts={posts}
+          initialPosts={posts}
           postsCount={postsCount}
+          featuredPostsCount={featuredPostsCount}
           renderPageSize={renderPageSize}
           dfp={topic.dfp}
         />

@@ -108,6 +108,13 @@ const AmpBriefContainer = styled.section`
 const AmpContentContainer = styled.section`
   padding: 0 20px;
   margin-top: 36px;
+  .link-to-story {
+    background: #f9f9f9;
+    &:hover {
+      background: #ebebeb;
+      cursor: pointer;
+    }
+  }
 `
 
 const StyledAmpGptAd = styled(AmpGptAd)`

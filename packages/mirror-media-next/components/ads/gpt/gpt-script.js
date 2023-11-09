@@ -11,11 +11,13 @@ export default function GPTScript() {
           as="script"
         />
       </Head>
-      <Script src="https://securepubads.g.doubleclick.net/tag/js/gpt.js" />
+      <Script
+        async
+        src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
+      />
       <Script id="gpt-setup">
         {`
-        window.googletag = window.googletag || {}
-        window.googletag.cmd = window.googletag.cmd || []
+        window.googletag = window.googletag || {cmd: []};
         window.googletag.cmd.push(() => {
           /**
            * Do not use lazy loading with SRA.

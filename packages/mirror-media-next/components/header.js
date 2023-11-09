@@ -396,7 +396,7 @@ export default function Header({
     <HeaderWrapper>
       <HeaderTop>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/" className="GTM-header-logo">
+        <a href="/" className="GTM-header-logo" aria-label="go-to-index-page">
           <HeaderLogo />
         </a>
         {shouldShowAd ? (

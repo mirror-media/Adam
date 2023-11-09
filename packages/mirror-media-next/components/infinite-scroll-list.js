@@ -1,9 +1,6 @@
 import styled from 'styled-components'
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 
-// force page index start from 1 to prevent counting miscalculation
-const INITIAL_PAGE = 1
-
 const Test = styled.div`
   display: none;
   position: fixed;
@@ -52,11 +49,17 @@ export default function InfiniteScrollList({
    */
 
   const [dataList, setDataList] = useState([...initialList])
+  /**
+   * Force page index start from 1 to prevent counting miscalculation.
+   * If initialList is an empty array, it means that no elements have been displayed at the beginning,
+   * so initialPage needs to be set to 0, to avoid setting it to 1 and causing undisplayed elements be skipped.
+   */
+  const initialPage = initialList.length ? 1 : 0
 
   /**
    * The number of fetches that is send currently. State will possibly change when executing function `handleLoadMore`
    */
-  const [fetchPage, setFetchPage] = useState(INITIAL_PAGE)
+  const [fetchPage, setFetchPage] = useState(initialPage)
 
   const [renderCount, setRenderCount] = useState(renderAmount)
 

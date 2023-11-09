@@ -21,6 +21,7 @@ import { tag } from './tag'
  * @property {string} type
  * @property {string} style
  * @property {number} postsCount
+ * @property {number} featuredPostsCount
  * @property {import('./post').Post[]} posts
  * @property {import('./tag').Tag[]} tags
  * @property {string} og_description
@@ -65,6 +66,7 @@ export const topic = gql`
     type
     style
     postsCount(where: $postsFilter)
+    featuredPostsCount: postsCount(where: $featuredPostsCountFilter)
     posts(
       where: $postsFilter
       orderBy: $postsOrderBy
@@ -72,6 +74,7 @@ export const topic = gql`
       skip: $postsSkip
     ) {
       ...post
+      isFeatured
     }
     tags {
       ...tag

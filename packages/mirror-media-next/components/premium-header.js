@@ -240,7 +240,10 @@ export default function PremiumHeader({
             setSearchTerms={setSearchTerms}
             goSearch={goSearch}
           />
-          <SearchButtonMobile ref={mobileSearchButtonRef}>
+          <SearchButtonMobile
+            aria-label="search-button"
+            ref={mobileSearchButtonRef}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images-next/search-button-mobile.svg"

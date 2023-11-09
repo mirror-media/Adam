@@ -21,6 +21,7 @@ const fetchTopic = gql`
   query (
     $topicFilter: TopicWhereInput!
     $postsFilter: PostWhereInput!
+    $featuredPostsCountFilter: PostWhereInput
     $postsOrderBy: [PostOrderByInput!]!
     $postsTake: Int
     $postsSkip: Int!
@@ -30,5 +31,15 @@ const fetchTopic = gql`
     }
   }
 `
+const fetchTopicPostCount = gql`
+  query Topic(
+    $topicFilter: TopicWhereUniqueInput!
+    $postsCountFilter: PostWhereInput
+  ) {
+    topic(where: $topicFilter) {
+      postsCount(where: $postsCountFilter)
+    }
+  }
+`
 
-export { fetchTopics, fetchTopic }
+export { fetchTopics, fetchTopic, fetchTopicPostCount }
