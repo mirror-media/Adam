@@ -39,7 +39,7 @@ export default function HamburgerButton({
   handleOnClick = () => {},
 }) {
   return (
-    <Hamburger color={color} onClick={handleOnClick}>
+    <Hamburger aria-label="side-bar" color={color} onClick={handleOnClick}>
       <i className="hamburger"></i>
       <i className="hamburger"></i>
       <i className="hamburger"></i>

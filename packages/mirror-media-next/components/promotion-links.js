@@ -59,6 +59,7 @@ export default function PromotionLinks({ links }) {
   return (
     <PromotionLinksWrapper ref={moreLinksWrapperRef}>
       <PromotionLinksButton
+        aria-label="menu-bar"
         onClick={() => {
           setShowLinks((val) => !val)
         }}

@@ -12,6 +12,10 @@ export function fetchTopicByTopicSlug(topicSlug, postsTake, postsSkip) {
     variables: {
       topicFilter: { slug: { equals: topicSlug } },
       postsFilter: { state: { equals: 'published' } },
+      featuredPostsCountFilter: {
+        state: { equals: 'published' },
+        isFeatured: { equals: true },
+      },
       postsOrderBy: [{ isFeatured: 'desc' }, { publishedDate: 'desc' }],
       postsTake,
       postsSkip,

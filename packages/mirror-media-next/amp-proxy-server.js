@@ -22,40 +22,15 @@ app.use(
     target: API_SERVICE_URL,
     changeOrigin: true,
     selfHandleResponse: true,
-    onProxyRes: responseInterceptor(async (responseBuffer) => {
+    onProxyRes: responseInterceptor(async (responseBuffer, req, res) => {
       const response = responseBuffer.toString('utf8') // convert buffer to string
-      return response.replace(
-        /contenteditable|spellcheck/g,
-        (match) => `data-${match}`
-      )
-
-      // const dom = new JSDOM(responseRemoveAmpProhibitAttributes)
-      // const doc = dom.window.document
-      // const styleTags = doc.querySelectorAll('body style')
-      // const scriptTags = doc.querySelectorAll('body script')
-
-      // if (styleTags.length || scriptTags.length) {
-      //   let head = doc.querySelector('head')
-      //   if (!head) {
-      //     head = doc.createElement('head')
-      //     doc.documentElement.insertBefore(head, doc.body)
-      //   }
-
-      //   // 找到 <head> 標籤
-      //   styleTags?.forEach((styleTag) => {
-      //     head.appendChild(styleTag)
-      //     styleTag.remove()
-      //   })
-      //   scriptTags?.forEach((scriptTag) => {
-      //     scriptTag.remove()
-      //     head.appendChild(scriptTag)
-      //   })
-      // }
-
-      // const updatedResponse = dom.serialize()
-
-      // // manipulate html to remove all amp prohibit attributes
-      // return Buffer.from(updatedResponse, 'utf8')
+      const originStoryUrl = res.url?.replace('/story/amp/', '/story/')
+      return response
+        .replace(/contenteditable|spellcheck/g, (match) => `data-${match}`)
+        .replace(
+          /<a class="link-to-story"/g,
+          (match) => `${match} href=${originStoryUrl} target="_blank"`
+        )
     }),
   })
 )

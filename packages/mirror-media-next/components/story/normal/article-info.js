@@ -144,11 +144,11 @@ export default function ArticleInfo({
       <Credits credits={credits} className="normal-credits"></Credits>
       <SocialMediaAndDonateLink>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a className="link-to-index" href="/">
+        <a className="link-to-index" href="/" aria-label="go-to-index-page">
           <Image
             width={35}
             height={35}
-            alt="go-to-index-page"
+            alt="mm-logo"
             src="/images-next/logo-circle@2x.png"
           ></Image>
         </a>

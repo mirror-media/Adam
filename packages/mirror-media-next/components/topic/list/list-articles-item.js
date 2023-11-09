@@ -109,6 +109,7 @@ const ItemBrief = styled.div`
  *
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  *
+ * //TODO: using Pick to write typedef
  * @typedef {import('../../../apollo/fragments/post').Post & {
  *  id: string,
  *  slug: string,

@@ -59,6 +59,7 @@ export default function ButtonSocialNetworkShare({
     <Link
       href={imageInfo.link}
       target="_blank"
+      aria-label={imageInfo.imageAlt}
       className={imageInfo.gtmClassName}
     >
       <Image

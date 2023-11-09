@@ -1,20 +1,5 @@
 import styled from 'styled-components'
 import ListArticlesItem from './list-articles-item'
-import dynamic from 'next/dynamic'
-
-import { useDisplayAd } from '../../../hooks/useDisplayAd'
-const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
-  ssr: false,
-})
-
-const StyledGPTAd = styled(GPTAd)`
-  width: 100%;
-  height: auto;
-  margin: 0 auto 20px auto;
-  ${({ theme }) => theme.breakpoint.xl} {
-    margin: 0 auto 35px auto;
-  }
-`
 
 const ItemContainer = styled.div`
   display: grid;
@@ -40,27 +25,14 @@ const ItemContainer = styled.div`
 /**
  * @param {Object} props
  * @param {Article[]} props.renderList
- * @param {string} props.dfp
  * @returns {React.ReactElement}
  */
-export default function ListArticles({ renderList, dfp }) {
-  const shouldShowAd = useDisplayAd()
-  const renderListBeforeAd = renderList.slice(0, 12)
-  const renderListAfterAd = renderList.slice(12)
-
+export default function ListArticles({ renderList }) {
   return (
-    <>
-      <ItemContainer>
-        {renderListBeforeAd.map((item) => (
-          <ListArticlesItem key={item.id} item={item} />
-        ))}
-      </ItemContainer>
-      {shouldShowAd && dfp && <StyledGPTAd adUnit={dfp} />}
-      <ItemContainer>
-        {renderListAfterAd.map((item) => (
-          <ListArticlesItem key={item.id} item={item} />
-        ))}
-      </ItemContainer>
-    </>
+    <ItemContainer>
+      {renderList.map((item) => (
+        <ListArticlesItem key={item.id} item={item} />
+      ))}
+    </ItemContainer>
   )
 }

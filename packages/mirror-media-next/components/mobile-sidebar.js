@@ -293,6 +293,7 @@ export default function MobileSidebar({
                 <h3>{item.name}</h3>
               </a>
               <SectionToggle
+                aria-label={`open-section-${item.slug}`}
                 onClick={() => setOpenSection(item.slug)}
                 shouldOpen={item.slug === openSection}
               ></SectionToggle>

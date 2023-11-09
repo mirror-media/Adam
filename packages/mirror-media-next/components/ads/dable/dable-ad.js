@@ -20,6 +20,8 @@ export default function DableAd({ isDesktop }) {
   return (
     <>
       <Script
+        async
+        strategy="lazyOnload"
         id="dable"
         dangerouslySetInnerHTML={{
           __html: `

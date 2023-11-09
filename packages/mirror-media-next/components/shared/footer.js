@@ -132,6 +132,7 @@ function Footer() {
         <Nextink
           href={item.href}
           target="_blank"
+          aria-label={item.name}
           rel="noopener noreferrer external nofollow"
         >
           <item.svgIcon />

@@ -1,6 +1,6 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
 import React, { useState, useEffect } from 'react'
-import Head from 'next/head'
+
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
@@ -16,6 +16,7 @@ import {
 import StoryNormalStyle from '../../components/story/normal'
 import Layout from '../../components/shared/layout'
 import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
+import StoryHead from '../../components/story/shared/story-head'
 import {
   convertDraftToText,
   getResizedUrl,
@@ -27,7 +28,6 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 
-import CanonicalLink from '../../components/story/shared/canonical-link'
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 const { hasContentInRawContentBlock } = MirrorMedia
@@ -245,30 +245,15 @@ export default function Story({ postData, headerData, storyLayoutType }) {
     ? { name: '會員專區', slug: 'member' }
     : sections?.[0]
 
+  //information for canonical link
+  const shouldCreateAmpHtmlLink = state === 'published' && !isAdvertised
   return (
     <>
-      <Head>
-        <CanonicalLink
-          slug={slug}
-          shouldCreateAmpHtmlLink={state === 'published' && !isAdvertised}
-        ></CanonicalLink>
-        <meta property="dable:item_id" content={slug} key="dable:item_id" />
-        <meta property="og:slug" content={slug} key="og:slug" />
-        {section?.name && (
-          <meta
-            property="section:name"
-            content={section.name}
-            key="section:name"
-          />
-        )}
-        {section?.slug && (
-          <meta
-            property="section:slug"
-            content={section.slug}
-            key={'section:slug'}
-          />
-        )}
-      </Head>
+      <StoryHead
+        slug={slug}
+        section={section}
+        shouldCreateAmpHtmlLink={shouldCreateAmpHtmlLink}
+      />
       <JsonLdsScript postData={postData} currentPage="/story/"></JsonLdsScript>
       <Layout
         head={{

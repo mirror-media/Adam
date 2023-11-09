@@ -260,7 +260,10 @@ export default function PremiumMobileSidebar({
           </SideBarTop>
         )}
         <SideBarBottom isLargerMarginTop={!shouldShowSubtitleNavigator}>
-          <CloseButton onClick={() => setOpenSidebar((val) => !val)}>
+          <CloseButton
+            aria-label="close-side-bar-button"
+            onClick={() => setOpenSidebar((val) => !val)}
+          >
             <i className="close"></i>
           </CloseButton>
           {sections.map(({ id, name, categories, slug }) => (
@@ -270,6 +273,7 @@ export default function PremiumMobileSidebar({
                   <h3>{name}</h3>
                 </a>
                 <SectionToggle
+                  aria-label={`open-section-${slug}`}
                   onClick={() => setOpenSection(slug)}
                   shouldOpen={slug === openSection}
                   sectionSlug={slug}
