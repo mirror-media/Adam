@@ -11,9 +11,9 @@ import { useDisplayAd } from '../../../hooks/useDisplayAd'
 const StyledGPTAd = styled(GPTAd)`
   width: 100%;
   height: auto;
-  margin: 0 auto 20px auto;
+  margin: 24px auto 20px auto;
   ${({ theme }) => theme.breakpoint.xl} {
-    margin: 0 auto 35px auto;
+    margin: 24px auto 35px auto;
   }
 `
 
