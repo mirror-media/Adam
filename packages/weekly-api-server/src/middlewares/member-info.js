@@ -11,7 +11,7 @@ import express from 'express' // eslint-disable-line
  *
  *  @param {Object} opts
  *  @param {string} opts.apiUrl
- *  @return {express.RequestHandler} express middleware
+ *  @returns {express.RequestHandler} express middleware
  */
 export function queryMemberInfo(opts) {
   return async (req, res, next) => {

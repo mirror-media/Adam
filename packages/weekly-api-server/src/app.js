@@ -1,4 +1,4 @@
-import consts from './constants'
+import { statusCodes } from './constants'
 import cors from 'cors'
 // @ts-ignore `@twreporter/errors` does not have tyepscript definition file yet
 import errors from '@twreporter/errors'
@@ -7,8 +7,6 @@ import middlewareCreator from './middlewares'
 import { createGcsProxy } from './gcs-proxy-mini-app'
 import { createGraphQLProxy } from './gql-proxy-mini-app'
 import { createYoutubeProxy } from './youtube-proxy-mini-app'
-
-const statusCodes = consts.statusCodes
 
 /**
  *  This function creates an express application.
@@ -31,7 +29,7 @@ const statusCodes = consts.statusCodes
  *  @param {string} opts.gcsProxyOrigin
  *  @param {string} opts.youtubeProxyOrigin
  *  @param {string[]|'*'} [opts.corsAllowOrigin=[]]
- *  @return {express.Application}
+ *  @returns {express.Application}
  */
 export function createApp({
   gcpProjectId,
@@ -157,6 +155,7 @@ export function createApp({
     })
   )
 
+  // Deprecated API, don't use it anymore
   // mini app: GCS proxy
   app.use(
     createGcsProxy({
