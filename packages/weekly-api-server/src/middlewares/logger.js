@@ -7,7 +7,7 @@ import express from 'express' // eslint-disable-line
  *  @param {Object} req
  *  @param {Function} req.header
  *  @param {string} projectId
- *  @return {Object} globalLogFields
+ *  @returns {Object} globalLogFields
  */
 function getGlobalLogFields(req, projectId) {
   const globalLogFields = {}
@@ -26,7 +26,7 @@ function getGlobalLogFields(req, projectId) {
 /**
  *  Create an express middleware to log request.
  *  @param {string} projectId
- *  @return {express.RequestHandler} express middleware
+ *  @returns {express.RequestHandler} express middleware
  */
 export function createLoggerMw(projectId) {
   return (req, res, next) => {

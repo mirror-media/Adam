@@ -2,8 +2,8 @@ import express from 'express' // eslint-disable-line
 // @ts-ignore `@twreporter/errors` does not provide typescript definition file.
 import errors from '@twreporter/errors'
 import jwt from 'jsonwebtoken'
-import { AppOptions, initializeApp, App } from 'firebase-admin/app' // eslint-disable-line
-import { getAuth } from 'firebase-admin/auth' // eslint-disable-line
+import { initializeApp, App } from 'firebase-admin/app' // eslint-disable-line
+import { getAuth, DecodedIdToken } from 'firebase-admin/auth' // eslint-disable-line
 
 /** @type {App} */
 let firebaseApp
@@ -17,7 +17,7 @@ let firebaseApp
  *
  *  @param {Object} [opts={}]
  *  @param {string} [opts.firebaseProjectId]
- *  @return {express.RequestHandler} express middleware
+ *  @returns {express.RequestHandler} express middleware
  */
 export function verifyIdTokenByFirebaseAdmin(opts = {}) {
   return async (req, res, next) => {
@@ -65,7 +65,7 @@ export function verifyIdTokenByFirebaseAdmin(opts = {}) {
  *
  *  @param {Object} [opts={}]
  *  @param {string} [opts.jwtSecret='']
- *  @return {express.RequestHandler} express middleware
+ *  @returns {express.RequestHandler} express middleware
  */
 export function verifyAccessToken(opts = {}) {
   const jwtSecret = opts.jwtSecret || ''
@@ -125,7 +125,7 @@ export function signAccessToken({ jwtSecret, jwtLifeTime }) {
     const nowTs = Math.round(new Date().getTime() / 1000) // timestamp
     const expiresIn = nowTs + jwtLifeTime
     const {
-      id: memberId,
+      id: memberId, // eslint-disable-line no-unused-vars
       type: memberType,
       subscription: subscriptions,
     } = res.locals.memberInfo || {}
@@ -204,6 +204,34 @@ export function signAccessToken({ jwtSecret, jwtLifeTime }) {
 }
 
 /**
+ * verify whether the user is internal colleague with decodeIdToken
+ *
+ * @param {DecodedIdToken} [decodedIdToken]
+ * @returns {boolean}
+ */
+function isInternalColleage(decodedIdToken = {}) {
+  let pass = false
+
+  const domainList = [
+    '@mirrormedia.mg',
+    '@mnews.com.tw',
+    '@mnews.tw',
+    '@mirrorfiction.com',
+  ]
+
+  const email = decodedIdToken.email
+  const signInProvider = decodedIdToken.firebase?.sign_in_provider
+
+  if (typeof email === 'string' && signInProvider === 'google.com') {
+    pass = domainList.reduce((prev, domain) => {
+      return (prev = prev || email.endsWith(domain))
+    }, pass)
+  }
+
+  return pass
+}
+
+/**
  *  This function creates an Express middleware.
  *  The created middleware could sign the JWT access token
  *  to our internal colleagues.
@@ -221,15 +249,9 @@ export function signAccessTokenForInternalColleague({
     const nowTs = Math.round(new Date().getTime() / 1000) // timestamp
     const expiresIn = nowTs + jwtLifeTime
     const firebaseId = res.locals.auth?.decodedIdToken?.uid
-    const email = res.locals.auth?.decodedIdToken?.email
 
-    // skip this middleware if email does not ends with certain email domains
-    if (
-      typeof email === 'string' &&
-      !email.endsWith('@mirrormedia.mg') &&
-      !email.endsWith('@mnews.com.tw') &&
-      !email.endsWith('@mirrorfiction.com')
-    ) {
+    // skip this middleware if not internal colleague
+    if (!isInternalColleage(res.locals.auth?.decodedIdToken)) {
       return next()
     }
 
