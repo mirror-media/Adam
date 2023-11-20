@@ -88,7 +88,7 @@ export default function HeroImageAndVideo({
           playsInline={true}
           controls={true}
           poster={heroVideo?.heroImage?.resized?.original}
-          src={heroVideo.urlOriginal}
+          src={heroVideo.videoSrc}
         />
       )
     } else if (shouldShowHeroImage) {

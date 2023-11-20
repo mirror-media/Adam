@@ -59,38 +59,67 @@ export default function AmpHero({
   title = '',
 }) {
   const shouldShowHeroVideo = Boolean(heroVideo)
+  const shouldShowHeroImage = Boolean(heroImage)
+  const shouldShowHeroCaption =
+    heroCaption && (shouldShowHeroVideo || shouldShowHeroImage)
 
-  // TODO: add srcset and callback
-  // const srcset = Object.entries(heroImage?.resized)
-  //   .filter(([key, value]) => key !== 'original' && value !== '')
-  //   .filter(([key, value]) => key !== '__typename')
-  //   .map(([key, value]) => `${value} ${key.replace('w', '')}w`)
-  //   .join(', ')
-
-  return (
-    <figure>
-      {!shouldShowHeroVideo && (
-        <HeroWrapper>
-          {/** @ts-ignore */}
-          <amp-img
-            src={heroImage?.resized?.original}
-            alt={heroCaption ?? title}
-            layout="fill"
-          ></amp-img>
-        </HeroWrapper>
-      )}
-      {shouldShowHeroVideo && (
+  const heroJsx = () => {
+    const imageAlt = heroCaption ? heroCaption : title
+    if (shouldShowHeroVideo) {
+      return (
         <HeroWrapper>
           {/** @ts-ignore */}
           <amp-video
             controls
             layout="fill"
             poster={heroVideo?.heroImage?.resized?.original}
-            src={heroVideo.urlOriginal}
+            src={heroVideo.videoSrc}
+            title={imageAlt}
           />
         </HeroWrapper>
-      )}
-      {heroCaption && <HeroCaption>{heroCaption}</HeroCaption>}
+      )
+    } else if (shouldShowHeroImage) {
+      /**
+       * The rules for fallback of the heroImage:
+       * 1. Show w800 first.
+       * 2. If the URL of w800 is an empty string or an invalid URL, then show the original by using <amp-img> with `fallback` attribute.
+       * 3. If the URL of original is an empty string, then show the default image url by replacing src of <amp-img>.
+       */
+      return (
+        <HeroWrapper>
+          {/** @ts-ignore */}
+          <amp-img src={heroImage?.resized?.w800} alt={imageAlt} layout="fill">
+            {/** @ts-ignore */}
+            <amp-img
+              fallback
+              src={
+                heroImage?.resized?.original
+                  ? heroImage?.resized?.original
+                  : '/images-next/default-og-img.png'
+              }
+              alt={imageAlt}
+              layout="fill"
+            ></amp-img>
+          </amp-img>
+        </HeroWrapper>
+      )
+    }
+    return (
+      <HeroWrapper>
+        {/** @ts-ignore */}
+        <amp-img
+          src="/images-next/default-og-img.png"
+          alt={imageAlt}
+          layout="fill"
+        ></amp-img>
+      </HeroWrapper>
+    )
+  }
+
+  return (
+    <figure>
+      {heroJsx()}
+      {shouldShowHeroCaption && <HeroCaption>{heroCaption}</HeroCaption>}
     </figure>
   )
 }

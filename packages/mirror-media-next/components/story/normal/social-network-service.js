@@ -142,6 +142,7 @@ export default function SocialNetworkService({
     'data-tabs': 'events',
     'data-small-header': true,
     'data-width': 180,
+    'data-height': 71,
   }
   let facebookPagePluginSize = {
     width: '180px',
@@ -151,10 +152,12 @@ export default function SocialNetworkService({
     facebookPagePluginSetting = {
       'data-tabs': 'timeline',
       'data-small-header': false,
+      'data-width': 340,
+      'data-height': 500,
     }
     facebookPagePluginSize = {
-      width: '100%',
-      height: '100%',
+      width: '340px',
+      height: '500px',
     }
   }
   return (
