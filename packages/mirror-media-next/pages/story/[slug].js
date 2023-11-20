@@ -9,6 +9,7 @@ import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
 import { useMembership } from '../../context/membership'
+import useSaveMemberArticleHistoryLocally from '../../hooks/member-article-history/use-save-member-article-history-locally'
 import {
   fetchPostBySlug,
   fetchPostFullContentBySlug,
@@ -121,6 +122,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
       ? { type: 'fullContent', data: content, isLoaded: true }
       : { type: 'trimmedContent', data: trimmedContent, isLoaded: false }
   )
+  useSaveMemberArticleHistoryLocally(slug)
   useEffect(() => {
     const fetchPostFullContent = async () => {
       try {

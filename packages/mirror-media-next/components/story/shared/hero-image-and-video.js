@@ -185,7 +185,7 @@ export default function HeroImageAndVideo({
           muted={true}
           loop={true}
           poster={heroVideo?.heroImage?.resized?.original}
-          src={heroVideo.urlOriginal}
+          src={heroVideo.videoSrc}
         />
       )
     } else if (shouldShowHeroImage) {
