@@ -91,7 +91,7 @@ export default function AmpHero({
           <amp-img src={heroImage?.resized?.w800} alt={imageAlt} layout="fill">
             {/** @ts-ignore */}
             <amp-img
-              fallback
+              fallback=""
               src={
                 heroImage?.resized?.original
                   ? heroImage?.resized?.original
