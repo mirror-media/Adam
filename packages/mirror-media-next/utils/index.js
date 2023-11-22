@@ -5,7 +5,10 @@ import utc from 'dayjs/plugin/utc'
  * @typedef {import('../apollo/fragments/section').Section[]} Sections
  */
 /**
- * @typedef {import('../apollo/fragments/category').Category[]} Categories
+ * @typedef {import('../apollo/fragments/category').Category} Category
+ */
+/**
+ * @typedef {Category[]} Categories
  */
 
 /**
@@ -159,10 +162,6 @@ const getMagazineHrefFromSlug = (slug) => {
 }
 
 /**
- * @typedef {import('../apollo/fragments/category').Category} Category - category information
- */
-
-/**
  * array of categories with the slug 'wine' or 'wine1'.
  * @param {Pick<Category, 'id' | 'name' | 'slug'>[]} categories - certain category information
  * @returns {Pick<Category, 'id' | 'name' | 'slug'>[] | []}
@@ -230,8 +229,8 @@ const getNumberWithCommas = (num) => {
 /**
  * Return sections that are in `active` state and sorted.
  *
- * @property {Sections} sections
- * @property {Sections} sectionsInInputOrder
+ * @param {Sections} sections
+ * @param {Sections} sectionsInInputOrder
  * @return {Sections}
  */
 const getActiveOrderSection = (sections, sectionsInInputOrder) => {
@@ -266,8 +265,8 @@ const getActiveOrderSection = (sections, sectionsInInputOrder) => {
 /**
  * Return categories that are in `active` state and sorted.
  *
- * @property {Categories} categories
- * @property {Categories} categoriesInInputOrder
+ * @param {Categories | null} categories
+ * @param {Categories} categoriesInInputOrder
  * @return {Categories}
  */
 const getActiveOrderCategory = (categories, categoriesInInputOrder) => {
@@ -289,17 +288,6 @@ const getActiveOrderCategory = (categories, categoriesInInputOrder) => {
   const activeCategories = Array.isArray(categories)
     ? categories.filter((category) => category.state === 'active')
     : []
-
-  const categoryMap = activeCategories.reduce((acc, category) => {
-    acc[category.id] = category
-    return acc
-  }, {})
-
-  const orderedCategories = activeCategoriesOrder.map(
-    (category) => categoryMap[category.id]
-  )
-
-  if (orderedCategories.length) return orderedCategories
 
   if (activeCategoriesOrder.length > 0) {
     return activeCategoriesOrder

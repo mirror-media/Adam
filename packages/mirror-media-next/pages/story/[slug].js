@@ -94,15 +94,12 @@ export default function Story({ postData, headerData, storyLayoutType }) {
   const {
     title = '',
     slug = '',
-    state = 'draft',
     isAdult = false,
     categories = [],
     isMember = false,
     content = null,
     trimmedContent = null,
     hiddenAdvertised = false,
-    isAdvertised = false,
-    sections,
   } = postData
   /**
    * The logic for rendering the article content:
@@ -242,20 +239,9 @@ export default function Story({ postData, headerData, storyLayoutType }) {
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
 
-  // use to set meta section:name, section:slug
-  const section = isMember
-    ? { name: '會員專區', slug: 'member' }
-    : sections?.[0]
-
-  //information for canonical link
-  const shouldCreateAmpHtmlLink = state === 'published' && !isAdvertised
   return (
     <>
-      <StoryHead
-        slug={slug}
-        section={section}
-        shouldCreateAmpHtmlLink={shouldCreateAmpHtmlLink}
-      />
+      <StoryHead postData={postData} />
       <JsonLdsScript postData={postData} currentPage="/story/"></JsonLdsScript>
       <Layout
         head={{
