@@ -26,6 +26,7 @@ app.use(
       const response = responseBuffer.toString('utf8') // convert buffer to string
       const originStoryUrl = res.url?.replace('/story/amp/', '/story/')
       return response
+        .replace('<amp-video controls="true"', '<amp-video controls')
         .replace(/contenteditable|spellcheck/g, (match) => `data-${match}`)
         .replace(
           /<a class="link-to-story"/g,
