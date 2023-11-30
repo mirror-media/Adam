@@ -1,10 +1,11 @@
 import errors from '@twreporter/errors'
+import axiosInstance from '../../axios/index.js'
 import {
+  URL_STATIC_HEADER_HEADERS,
+  URL_STATIC_PODCAST_LIST,
   URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
-  URL_STATIC_HEADER_HEADERS,
 } from '../../config/index.mjs'
-import axiosInstance from '../../axios/index.js'
 
 /**
  * @typedef {Object} Category
@@ -85,11 +86,14 @@ const fetchTopics = createAxiosRequest(URL_STATIC_TOPICS)
 
 const fetchPremiumSections = createAxiosRequest(URL_STATIC_PREMIUM_SECTIONS)
 
+const fetchPodcastList = createAxiosRequest(URL_STATIC_PODCAST_LIST)
+
 const fetchHeaderDataInDefaultPageLayout = async () => {
   /** @type {HeadersData} */
   let sectionsData = []
   /** @type {Topics} */
   let topicsData = []
+
   try {
     const responses = await Promise.allSettled([
       fetchNormalSections(),
@@ -127,4 +131,5 @@ const fetchHeaderDataInPremiumPageLayout = async () => {
 export {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
+  fetchPodcastList,
 }
