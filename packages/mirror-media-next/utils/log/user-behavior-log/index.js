@@ -58,7 +58,7 @@ const generateUserBehaviorLogInfo = (
   const pageInfo = {
     referral: document.referrer,
     'page-url': window.location.href,
-    'pate-type': getFormattedPageType(pathname, isMemberArticle),
+    'page-type': getFormattedPageType(pathname, isMemberArticle),
   }
 
   if (pathname.startsWith('/story/')) {
