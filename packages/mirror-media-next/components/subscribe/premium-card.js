@@ -1,10 +1,6 @@
 import styled from 'styled-components'
 import SubscribePlanBtn from '../subscribe-plan-btn'
-import {
-  PREMIUM_FEATURES,
-  DISCOUNT_MESSAGE,
-  SERVICE_EMAIL,
-} from '../../constants/subscribe-constants'
+import { PREMIUM_FEATURES } from '../../constants/subscribe-constants'
 import Badge from './badge-icon'
 import Check from './check-icon'
 
@@ -95,11 +91,6 @@ export default function PremiumCard({
           </div>
         ))}
       </FeaturesList>
-
-      <DiscountMsg>
-        <p>{DISCOUNT_MESSAGE}</p>
-        <p>{SERVICE_EMAIL}</p>
-      </DiscountMsg>
 
       <BtnWrapper>
         <SubscribePlanBtn

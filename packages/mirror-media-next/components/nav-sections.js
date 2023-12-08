@@ -1,6 +1,7 @@
 //TODO: When user at certain section, at category which belongs to certain section, at story which belongs to certain section
 //component <Section> will change color of title to section color defined at /styles/sections-color.
 import styled, { css } from 'styled-components'
+import { Z_INDEX } from '../constants'
 import { minWidth } from '../styles/media'
 import Logo from './logo'
 
@@ -160,7 +161,7 @@ const SectionDropDown = styled.div`
   top: 100%;
   background-color: #333;
   text-align: center;
-  z-index: 20;
+  z-index: ${Z_INDEX.header};
   color: #fff;
   ${({ theme }) => theme.breakpoint.xl} {
     ${Section}:hover & {
