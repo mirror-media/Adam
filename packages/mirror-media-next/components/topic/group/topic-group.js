@@ -1,6 +1,6 @@
+import dynamic from 'next/dynamic'
 import styled from 'styled-components'
 import TopicGroupArticles from './topic-group-articles'
-import dynamic from 'next/dynamic'
 
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { parseUrl } from '../../../utils/topic'
@@ -137,8 +137,8 @@ export default function TopicGroup({ topic }) {
               )}
             />
           ))}
-          {shouldShowAd && dfp && <StyledGPTAd adUnit={dfp} />}
         </TopicGroups>
+        {shouldShowAd && dfp && <StyledGPTAd adUnit={dfp} />}
       </Container>
     </>
   )

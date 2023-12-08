@@ -1,6 +1,7 @@
 import errors from '@twreporter/errors'
 import { useState } from 'react'
 import styled from 'styled-components'
+import AudioPlayer from '../../components/podcast/audio-player'
 import Dropdown from '../../components/podcast/author-select-dropdown'
 import PodcastList from '../../components/podcast/podcast-list'
 import Layout from '../../components/shared/layout'
@@ -23,7 +24,7 @@ const PageWrapper = styled.main`
   margin: auto;
 
   ${({ theme }) => theme.breakpoint.md} {
-    width: 672px;
+    width: 516px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     width: 1024px;
@@ -92,6 +93,11 @@ const Title = styled.p`
 export default function Podcast({ headerData, podcastListData }) {
   const [selectedPodcasts, setSelectedPodcasts] = useState([])
   const [selectedAuthor, setSelectedAuthor] = useState('')
+  const [listeningPodcast, setListeningPodcast] = useState(null)
+
+  const handlePodcastSelect = (podcast) => {
+    setListeningPodcast(podcast)
+  }
 
   // Function to group podcasts by author
   function groupPodcastsByAuthor(podcasts) {
@@ -146,7 +152,7 @@ export default function Podcast({ headerData, podcastListData }) {
     >
       <PageWrapper>
         <TitleSelectorWrapper>
-          <Title>Podcast</Title>
+          <Title>Podcasts</Title>
           <Dropdown
             authors={authors}
             displayPodcastsByAuthor={displayPodcastsByAuthor}
@@ -156,7 +162,12 @@ export default function Podcast({ headerData, podcastListData }) {
           selectedPodcasts={selectedPodcasts}
           allPodcasts={podcastListData}
           selectedAuthor={selectedAuthor}
+          onPodcastSelect={handlePodcastSelect}
+          listeningPodcast={listeningPodcast}
         />
+        {listeningPodcast && ( // Display AudioPlayer only if a podcast is selected
+          <AudioPlayer listeningPodcast={listeningPodcast} />
+        )}
       </PageWrapper>
     </Layout>
   )

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Z_INDEX } from '../../../constants'
 
@@ -43,10 +43,13 @@ const DropdownButton = styled.button`
     background-image: url('/images-next/arrow-down.svg');
     background-size: cover;
     transition: transform 0.3s ease-in-out;
-    ${({
-      // @ts-ignore
-      isOpen,
-    }) => (isOpen ? 'transform: translateY(-50%) rotate(180deg);' : '')}
+    ${
+      /**
+       * @param {Object} param
+       * @param {boolean} param.isOpen
+       */ ({ isOpen }) =>
+        isOpen ? 'transform: translateY(-50%) rotate(180deg);' : ''
+    }
   }
 `
 
@@ -117,11 +120,7 @@ export default function CustomDropdown({
 
   return (
     <CustomDropdownContainer ref={containerRef}>
-      <DropdownButton
-        // @ts-ignore
-        isOpen={isOpen}
-        onClick={toggleDropdown}
-      >
+      <DropdownButton isOpen={isOpen} onClick={toggleDropdown}>
         {selectedOption ? selectedOption : defaultText}
       </DropdownButton>
       {isOpen && (
