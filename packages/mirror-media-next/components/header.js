@@ -1,26 +1,27 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
-import React, { useState, useRef, useEffect } from 'react'
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
+import React, { useEffect, useRef, useState } from 'react'
+import styled from 'styled-components'
 import {
-  SUB_BRAND_LINKS,
   PROMOTION_LINKS,
   SOCIAL_MEDIA_LINKS,
+  SUB_BRAND_LINKS,
 } from '../constants'
 import { DEFAULT_NORMAL_SECTIONS_DATA } from '../constants/header'
 
-import SubBrandList from './sub-brand-list'
-import SearchBarDesktop from './search-bar-desktop'
-import PromotionLinks from './promotion-links'
-import NavSections from './nav-sections'
-import MemberLoginButton from './member-login-button'
-import SearchBarInput from './search-bar-input'
-import MobileSidebar from './mobile-sidebar'
-import Logo from './logo'
-import SubscribeMagazine from './subscribe-magazine'
-import NavTopics from './nav-topics'
+import SubscribeMagazineButton from '../components/subscribe-papermag-mb-btn'
 import { SEARCH_URL } from '../config/index.mjs'
+import EntranceButton from './entrance-button'
+import Logo from './logo'
+import MemberLoginButton from './member-login-button'
+import MobileSidebar from './mobile-sidebar'
+import NavSections from './nav-sections'
+import NavTopics from './nav-topics'
+import PromotionLinks from './promotion-links'
+import SearchBarDesktop from './search-bar-desktop'
+import SearchBarInput from './search-bar-input'
+import SubBrandList from './sub-brand-list'
 
 import { useDisplayAd } from '../hooks/useDisplayAd'
 
@@ -154,11 +155,7 @@ const TopicsAndSubscribe = styled.section`
 const StyledGPTAd = styled(GPTAd)`
   width: auto;
   height: auto;
-  margin-right: auto;
-  ${({ theme }) => theme.breakpoint.md} {
-    order: -1;
-    margin-right: 0;
-  }
+
   ${({ theme }) => theme.breakpoint.xl} {
     margin-left: 20px;
     margin-right: auto;
@@ -169,15 +166,32 @@ const GPTAdPlaceHolder = styled.div`
   width: 95px;
   height: 50px;
   margin-right: auto;
-  ${({ theme }) => theme.breakpoint.md} {
-    order: -1;
-    margin-right: 0;
-  }
+
   ${({ theme }) => theme.breakpoint.xl} {
     margin-left: 20px;
     margin-right: auto;
     order: 0;
   }
+`
+
+const LogoBtnWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-right: 150px;
+  }
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    flex-direction: row;
+  }
+`
+
+const AdPaperMagBtnWrapper = styled.div`
+  display: flex;
 `
 
 const formatSectionItem = (section) => {
@@ -395,15 +409,26 @@ export default function Header({
   return (
     <HeaderWrapper>
       <HeaderTop>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/" className="GTM-header-logo" aria-label="go-to-index-page">
-          <HeaderLogo />
-        </a>
-        {shouldShowAd ? (
-          <StyledGPTAd pageKey="global" adKey="RWD_LOGO" />
-        ) : (
-          <GPTAdPlaceHolder />
-        )}
+        <LogoBtnWrapper>
+          <>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a
+              href="/"
+              className="GTM-header-logo"
+              aria-label="go-to-index-page"
+            >
+              <HeaderLogo />
+            </a>
+          </>
+          <AdPaperMagBtnWrapper>
+            <SubscribeMagazineButton />
+            {shouldShowAd ? (
+              <StyledGPTAd pageKey="global" adKey="RWD_LOGO" />
+            ) : (
+              <GPTAdPlaceHolder />
+            )}
+          </AdPaperMagBtnWrapper>
+        </LogoBtnWrapper>
         <ActionWrapper>
           <SubBrandList subBrands={SUB_BRAND_LINKS} />
           <SearchBarDesktop
@@ -459,7 +484,12 @@ export default function Header({
           {children}
           <TopicsAndSubscribe>
             <NavTopics topics={topics} />
-            <SubscribeMagazine />
+            <EntranceButton href="/podcasts" width="98px">
+              Podcasts
+            </EntranceButton>
+            <EntranceButton href="/papermag" width="144px">
+              訂閱紙本雜誌
+            </EntranceButton>
           </TopicsAndSubscribe>
         </TopicsAndFlashNews>
       </HeaderBottom>

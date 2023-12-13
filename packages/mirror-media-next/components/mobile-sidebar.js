@@ -1,10 +1,11 @@
-import styled, { css } from 'styled-components'
-import React, { Fragment, useState, useRef } from 'react'
-import useClickOutside from '../hooks/useClickOutside'
-import Link from 'next/link'
-import HamburgerButton from './shared/hamburger-button'
-import CloseButton from './shared/close-button'
 import Image from 'next/image'
+import Link from 'next/link'
+import React, { Fragment, useRef, useState } from 'react'
+import styled, { css } from 'styled-components'
+import EnterPodcastBtn from '../components/podcast-mb-btn'
+import useClickOutside from '../hooks/useClickOutside'
+import CloseButton from './shared/close-button'
+import HamburgerButton from './shared/hamburger-button'
 /**
  * @typedef {import('../apollo/fragments/section').Section} Section
  */
@@ -99,7 +100,7 @@ const Topics = styled.div`
   gap: 10px;
   flex-wrap: wrap;
   width: 90%;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 `
 const Topic = styled.a`
   font-weight: 500;
@@ -342,6 +343,7 @@ export default function MobileSidebar({
             ))}
             <Topic href={`/section/topic`}>更多</Topic>
           </Topics>
+          <EnterPodcastBtn />
           {sectionsAndCategoriesJsx}
         </SideBarTop>
         <SideBarBottom>
