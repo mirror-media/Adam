@@ -75,8 +75,6 @@ const Overlay = styled.div`
       width: 28px;
       height: 28px;
       opacity: 0.9;
-      animation: ${pulseAnimation} 1.2s infinite;
-      box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.4); /* Halo effect */
     }
   }
 

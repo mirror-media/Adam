@@ -72,6 +72,11 @@ const Desc = styled.p`
   ${({ theme }) => theme.breakpoint.md} {
     font-size: 18px;
   }
+
+  br,
+  p {
+    margin-top: 12px;
+  }
 `
 
 export default function PodcastModal({ podcast, onClose }) {
@@ -116,30 +121,49 @@ export default function PodcastModal({ podcast, onClose }) {
     }
   }
 
-  // Format the podcast description with line breaks and wrap links in <a> tags
+  // Function to format the podcast description with line breaks and wrap links in <a> tags
   const formatDescriptionWithLineBreaks = (description) => {
-    const linkRegex = /(https?:\/\/\S+)(?=\s|$)/g // Regex pattern to match links
+    // Consolidate consecutive line breaks into a single one
+    const consolidatedDescription = description.replace(/\n+/g, '\n')
 
-    return description.split(linkRegex).map((segment, index) => {
-      if (segment.match(linkRegex)) {
-        return (
-          <a
-            key={index}
-            href={segment}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {segment}
-          </a>
-        )
-      } else {
-        return (
-          <Desc key={index}>
-            {segment}
-            <br /> {/* Render a line break after each paragraph */}
-          </Desc>
-        )
-      }
+    // Split the description into paragraphs based on line breaks
+    const paragraphs = consolidatedDescription.split('\n')
+
+    return paragraphs.map((paragraph, index) => {
+      // Split each paragraph into segments based on URL patterns
+      const segments = paragraph.split(/(https?:\/\/\S+)/)
+
+      return (
+        <Desc key={index}>
+          {segments.map((segment, segmentIndex) => {
+            // Check if the segment is a URL
+            if (segment.match(/https?:\/\/\S+/)) {
+              // If it's a URL, wrap it in an <a> tag
+              return (
+                <a
+                  key={segmentIndex}
+                  href={segment}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {segment}
+                </a>
+              )
+            } else {
+              // If it's not a URL, add line breaks for the first non-empty segment
+              if (segment.trim() !== '') {
+                return (
+                  <Desc key={segmentIndex}>
+                    {segment}
+                    <br />
+                  </Desc>
+                )
+              }
+              return null // If it's an empty segment, return null to avoid rendering an extra line break
+            }
+          })}
+        </Desc>
+      )
     })
   }
 
