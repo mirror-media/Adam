@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+import { DRAFT_RENDERER_FEATURE_TOGGLE } from '../../../config/index.mjs'
 const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
   MirrorMedia
 
@@ -41,9 +42,34 @@ export default function DraftRenderBlock({
 
   const jsx = isAmp
     ? AmpRenderBlock(rawContentBlock, contentLayout)
+    : DRAFT_RENDERER_FEATURE_TOGGLE === 'on'
+    ? NormalSSRRenderBlock(rawContentBlock, contentLayout)
     : NormalRenderBlock(rawContentBlock, contentLayout)
 
   return <>{shouldRenderDraft && wrapper(jsx)}</>
+}
+/**
+ *
+ * @param {RawContentBlock} rawContentBlock
+ * @param {ContentLayout} contentLayout
+ * @returns {JSX.Element}
+ */
+function NormalSSRRenderBlock(rawContentBlock, contentLayout) {
+  const shouldRenderDraft = hasContentInRawContentBlock(rawContentBlock)
+  let draftJsx = null
+
+  if (shouldRenderDraft) {
+    const contentWithRemovedEmptyBlock =
+      removeEmptyContentBlock(rawContentBlock)
+    draftJsx = (
+      <DraftRenderer
+        rawContentBlock={contentWithRemovedEmptyBlock}
+        contentLayout={contentLayout}
+      />
+    )
+  }
+
+  return draftJsx
 }
 /**
  *

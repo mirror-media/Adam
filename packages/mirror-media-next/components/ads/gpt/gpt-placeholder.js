@@ -13,6 +13,7 @@ import styled from 'styled-components'
  */
 
 const Container = styled.div`
+  position: relative;
   min-width: ${
     /** @param {{rwd: Rwd}} props*/
     ({ rwd }) => rwd.mobile.width

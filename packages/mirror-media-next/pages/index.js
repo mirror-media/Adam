@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
@@ -21,6 +21,7 @@ import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../components/ads/gpt/gpt-translate-container'
 import LiveYoutube from '../components/live-youtube'
 import { isDateInsideDatesRange } from '../utils/date'
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
@@ -123,6 +124,11 @@ export default function Home({
   })
 
   const shouldShowAd = useDisplayAd()
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
 
   return (
     <Layout
@@ -136,13 +142,23 @@ export default function Home({
     >
       <IndexContainer>
         <GPT_Placeholder>
-          {shouldShowAd && <StyledGPTAd_HD pageKey="home" adKey="HD" />}
+          {shouldShowAd && (
+            <StyledGPTAd_HD
+              pageKey="home"
+              adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
+            />
+          )}
         </GPT_Placeholder>
-        <EditorChoice editorChoice={editorChoice}></EditorChoice>
-        {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
-        {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-        <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
-        <LatestNews latestNewsData={latestNewsData} />
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            <EditorChoice editorChoice={editorChoice}></EditorChoice>
+            {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
+            {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
+            <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
+            <LatestNews latestNewsData={latestNewsData} />
+          </>
+        </GPT_TranslateContainer>
         <FullScreenAds />
       </IndexContainer>
     </Layout>
