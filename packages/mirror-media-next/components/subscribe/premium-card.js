@@ -59,10 +59,10 @@ const Hr = styled.hr`
   margin: 12px 0;
 `
 
-const DiscountMsg = styled.div`
-  color: #054f77;
-  font-size: 14px;
-`
+// const DiscountMsg = styled.div`
+//   color: #054f77;
+//   font-size: 14px;
+// `
 
 /**
  * @param {Object} props
