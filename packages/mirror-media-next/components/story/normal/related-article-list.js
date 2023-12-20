@@ -35,7 +35,7 @@ const StyledPopInAdRelated = dynamic(
 
 const Wrapper = styled.section`
   margin: 16px auto 0;
-  h2 {
+  .title {
     font-size: 21px;
     line-height: 150%;
     margin: 0 auto 32px;
@@ -45,7 +45,7 @@ const Wrapper = styled.section`
   }
   ${({ theme }) => theme.breakpoint.md} {
     margin-top: 24px;
-    h2 {
+    .title {
       display: none;
       margin: 0 auto 16px;
     }
@@ -241,7 +241,7 @@ export default function RelatedArticleList({
 
   return (
     <Wrapper>
-      <h2>延伸閱讀</h2>
+      <div className="title">延伸閱讀</div>
       {relatedsArticleJsx}
       {advertisementJsx}
     </Wrapper>

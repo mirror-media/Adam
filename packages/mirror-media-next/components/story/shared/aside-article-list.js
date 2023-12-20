@@ -34,7 +34,7 @@ const Heading = styled.section`
       background-color: ${({ theme }) => theme.color.brandColor.darkBlue};
     }
   }
-  h2 {
+  .title {
     width: fit-content;
     text-align: center;
     margin: 0 auto;
@@ -56,7 +56,7 @@ const Heading = styled.section`
   }
 `
 const HeadingLoading = styled(Heading)`
-  h2 {
+  .title {
     background-color: #efefef;
     color: #efefef;
   }
@@ -330,11 +330,11 @@ export default function AsideArticleList({
       <Wrapper>
         {isLoaded ? (
           <Heading color={headingColor}>
-            <h2>{heading}</h2>
+            <div className="title">{heading}</div>
           </Heading>
         ) : (
           <HeadingLoading>
-            <h2>{heading}</h2>
+            <div className="title">{heading}</div>
           </HeadingLoading>
         )}
         <ArticleWrapper renderAmount={renderAmount} ref={wrapperRef}>

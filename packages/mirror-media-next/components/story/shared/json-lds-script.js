@@ -1,6 +1,7 @@
 import { SITE_URL } from '../../../config/index.mjs'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../../constants/index'
 import Script from 'next/script'
+import { changeUtcToGmtTimeStamp } from '../../../utils/story'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post } PostData
@@ -55,8 +56,8 @@ const generateJsonLdsData = (postData, currentPage) => {
     },
     headline: title,
     image: imageUrl,
-    datePublished: publishedDate,
-    dateModified: updatedAt,
+    datePublished: changeUtcToGmtTimeStamp(publishedDate),
+    dateModified: changeUtcToGmtTimeStamp(updatedAt),
     author: {
       '@type': hasWriter ? 'Person' : 'Organization',
       name: authorName,

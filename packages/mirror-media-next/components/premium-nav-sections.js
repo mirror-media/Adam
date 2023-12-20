@@ -168,7 +168,7 @@ export default function PremiumNavSections({ sections, children }) {
         {sections.map((section) => (
           <Section key={section.id} sectionSlug={section?.slug}>
             <SectionLink href={`/premiumsection/${section.slug}`}>
-              <h2>{section.name}</h2>
+              <div>{section.name}</div>
             </SectionLink>
             <SectionDropDown>
               {section.categories.map((category) => (
@@ -177,7 +177,7 @@ export default function PremiumNavSections({ sections, children }) {
                   href={`/category/${category.slug}`}
                   sectionSlug={section.slug}
                 >
-                  <h3>{category.name}</h3>
+                  <div>{category.name}</div>
                 </CategoryLink>
               ))}
             </SectionDropDown>
@@ -185,7 +185,7 @@ export default function PremiumNavSections({ sections, children }) {
         ))}
         <Section>
           <SectionLink href={`/magazine`}>
-            <h2>動態雜誌</h2>
+            <div>動態雜誌</div>
           </SectionLink>
         </Section>
       </Sections>
