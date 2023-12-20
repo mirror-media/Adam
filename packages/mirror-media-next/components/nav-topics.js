@@ -54,12 +54,12 @@ export default function NavTopics({ topics = [] }) {
       <Topics>
         {topics.map((topic) => (
           <Topic key={topic.id} href={`/topic/${topic.slug}`}>
-            <h2>{topic.name}</h2>
+            <div>{topic.name}</div>
           </Topic>
         ))}
       </Topics>
       <Topic href={`/section/topic`}>
-        <h2>更多</h2>
+        <div>更多</div>
       </Topic>
     </TopicsWrapper>
   )

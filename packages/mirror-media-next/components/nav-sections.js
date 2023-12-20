@@ -197,7 +197,7 @@ export default function NavSections({ sectionsAndCategories = [] }) {
         return (
           <Section key={section.order} sectionSlug={section?.slug}>
             <SectionLink href={section.href}>
-              <h2>{section.name}</h2>
+              <div>{section.name}</div>
             </SectionLink>
 
             <SectionDropDown>
@@ -207,7 +207,7 @@ export default function NavSections({ sectionsAndCategories = [] }) {
                   href={category.href}
                   sectionSlug={section?.slug}
                 >
-                  <h3>{category.name}</h3>
+                  <div>{category.name}</div>
                 </CategoryLink>
               ))}
             </SectionDropDown>
@@ -219,7 +219,7 @@ export default function NavSections({ sectionsAndCategories = [] }) {
         return (
           <Section key={section.order} sectionSlug={renderSectionSlug}>
             <SectionLink href={section.href}>
-              <h2>{section.name}</h2>
+              <div>{section.name}</div>
             </SectionLink>
           </Section>
         )

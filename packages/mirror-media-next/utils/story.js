@@ -155,9 +155,28 @@ const getSlicedIndexAndUnstyledBlocksCount = (
   }
 }
 
+/**
+ * Convert the UTC timestamp to GMT timestamp by adding 8 hours.
+ *
+ * @param {string} utcTimeStamp
+ * @return {string}
+ */
+const changeUtcToGmtTimeStamp = (utcTimeStamp) => {
+  const inputDate = new Date(utcTimeStamp)
+  inputDate.setHours(inputDate.getHours() + 8)
+  const gmtTimeStamp = inputDate.toISOString() //change to `YYYY-MM-DDTHH:mm:ss.sssZ` format
+
+  if (typeof gmtTimeStamp !== 'string') {
+    return utcTimeStamp
+  }
+
+  return gmtTimeStamp
+}
+
 export {
   handleStoryPageRedirect,
   copyAndSliceDraftBlock,
   getBlocksCount,
   getSlicedIndexAndUnstyledBlocksCount,
+  changeUtcToGmtTimeStamp,
 }

@@ -26,7 +26,7 @@ const Wrapper = styled.section`
   max-width: 320px;
   text-align: center;
 
-  h2 {
+  .title {
     color: ${({ theme }) => theme.color.brandColor.darkBlue};
     font-size: 20px;
     line-height: 1.4;
@@ -166,7 +166,7 @@ export default function LatestNews(props) {
 
   return (
     <Wrapper>
-      <h2>最新文章</h2>
+      <div className="title">最新文章</div>
       <InfiniteScrollList
         initialList={transformRawDataContent([...props.latestNewsData])}
         renderAmount={RENDER_PAGE_SIZE}

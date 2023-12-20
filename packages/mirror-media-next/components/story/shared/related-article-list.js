@@ -14,7 +14,7 @@ import { defaultSerifFontFamily } from '../../../styles/shared-style'
 
 const Wrapper = styled.section`
   margin: 0 auto;
-  h2 {
+  .title {
     font-size: 21px;
     line-height: 1.5;
     margin: 0 auto;
@@ -22,14 +22,13 @@ const Wrapper = styled.section`
     text-align: center;
   }
   ${({ theme }) => theme.breakpoint.md} {
-    h2 {
+    .title {
       display: none;
     }
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    h2 {
+    .title {
       font-weight: 500;
-
       display: block;
       font-size: 28px;
     }
@@ -171,7 +170,7 @@ export default function RelatedArticleList({ relateds }) {
 
   return (
     <Wrapper>
-      <h2>延伸閱讀</h2>
+      <div className="title">延伸閱讀</div>
       {relatedsArticleJsx}
     </Wrapper>
   )
