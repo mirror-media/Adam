@@ -35,9 +35,11 @@ const createCanonicalLink = (routerAsPath) => {
   if (isStoryPage) {
     return null
   }
-  const url = 'https://' + SITE_URL + routerAsPath
 
-  return <link rel="canonical" href={url} key="canonical" />
+  const url = new URL(routerAsPath, 'https://' + SITE_URL)
+  url.search = '' //remove query params in url
+
+  return <link rel="canonical" href={url.toString()} key="canonical" />
 }
 
 /**
