@@ -17,6 +17,8 @@ import { getSectionGPTPageKey } from '../../utils/ad'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
+import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -106,6 +108,12 @@ export default function Section({ postsCount, posts, section, headerData }) {
   const sectionName = section.name || ''
   const shouldShowAd = useDisplayAd()
 
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
+
   return (
     <Layout
       head={{ title: `${sectionName}分類報導` }}
@@ -118,23 +126,30 @@ export default function Section({ postsCount, posts, section, headerData }) {
             <StyledGPTAd
               pageKey={getSectionGPTPageKey(section.slug)}
               adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
             />
           )}
         </GPT_Placeholder>
-        {sectionName && (
-          <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
-        )}
 
-        <SectionArticles
-          postsCount={postsCount}
-          posts={posts}
-          section={section}
-          renderPageSize={RENDER_PAGE_SIZE}
-        />
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            {sectionName && (
+              <SectionTitle sectionName={section.slug}>
+                {sectionName}
+              </SectionTitle>
+            )}
 
-        {shouldShowAd && (
-          <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
-        )}
+            <SectionArticles
+              postsCount={postsCount}
+              posts={posts}
+              section={section}
+              renderPageSize={RENDER_PAGE_SIZE}
+            />
+            {shouldShowAd && (
+              <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
+            )}
+          </>
+        </GPT_TranslateContainer>
         {shouldShowAd && <FullScreenAds />}
       </SectionContainer>
     </Layout>

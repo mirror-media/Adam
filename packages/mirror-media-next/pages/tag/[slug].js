@@ -16,6 +16,8 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 })
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
+import { useCallback, useState } from 'react'
 
 const TagContainer = styled.main`
   width: 320px;
@@ -106,6 +108,10 @@ const RENDER_PAGE_SIZE = 12
 export default function Tag({ postsCount, posts, tag, headerData }) {
   const tagName = tag.name || ''
   const shouldShowAd = useDisplayAd()
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
 
   return (
     <Layout
@@ -115,21 +121,31 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
     >
       <TagContainer>
         <GPT_Placeholder>
-          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey="other"
+              adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
+            />
+          )}
         </GPT_Placeholder>
 
-        {tagName && (
-          <TagTitleWrapper>
-            <TagTitle>{tagName}</TagTitle>
-          </TagTitleWrapper>
-        )}
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            {tagName && (
+              <TagTitleWrapper>
+                <TagTitle>{tagName}</TagTitle>
+              </TagTitleWrapper>
+            )}
 
-        <TagArticles
-          postsCount={postsCount}
-          posts={posts}
-          tagSlug={tag.slug}
-          renderPageSize={RENDER_PAGE_SIZE}
-        />
+            <TagArticles
+              postsCount={postsCount}
+              posts={posts}
+              tagSlug={tag.slug}
+              renderPageSize={RENDER_PAGE_SIZE}
+            />
+          </>
+        </GPT_TranslateContainer>
 
         {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}

@@ -2,7 +2,7 @@
 //TODO: refactor jsx structure, make it more readable.
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import styled from 'styled-components'
 import Link from 'next/link'
@@ -39,6 +39,7 @@ import {
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
+import GPT_TranslateContainer from '../ads/gpt/gpt-translate-container'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -506,6 +507,12 @@ export default function ExternalNormalStyle({ external }) {
 
   const shouldShowAd = useDisplayAd()
 
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
+
   return (
     <>
       <GPT_Placeholder>
@@ -513,69 +520,148 @@ export default function ExternalNormalStyle({ external }) {
           <StyledGPTAd_HD
             pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
             adKey="HD"
+            onSlotRenderEnded={handleObSlotRenderEnded}
           />
         )}
       </GPT_Placeholder>
 
-      <Main>
-        <Article>
-          <SectionAndDate>
-            <ExternalSection partnerColor={partnerColor}>
-              {externalSectionTitle}
-            </ExternalSection>
-            <Date>{publishedTaipeiTime} 臺北時間</Date>
-          </SectionAndDate>
-          <Title>{title}</Title>
-          <InfoAndHero>
-            <StyledExternalHeroImage
-              images={EXTERNAL_IMAGES_URL}
-              title={title}
-            />
-            <ExternalArticleInfo
-              updatedDate={updatedTaipeiTime}
-              publishedDate={publishedTaipeiTime}
-              credits={extend_byline}
-            />
-          </InfoAndHero>
+      <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <>
+          <Main>
+            <Article>
+              <SectionAndDate>
+                <ExternalSection partnerColor={partnerColor}>
+                  {externalSectionTitle}
+                </ExternalSection>
+                <Date>{publishedTaipeiTime} 臺北時間</Date>
+              </SectionAndDate>
+              <Title>{title}</Title>
+              <InfoAndHero>
+                <StyledExternalHeroImage
+                  images={EXTERNAL_IMAGES_URL}
+                  title={title}
+                />
+                <ExternalArticleInfo
+                  updatedDate={updatedTaipeiTime}
+                  publishedDate={publishedTaipeiTime}
+                  credits={extend_byline}
+                />
+              </InfoAndHero>
 
-          <ArticleBrief brief={externalBrief} />
+              <ArticleBrief brief={externalBrief} />
 
-          <ExternalArticleContent content={content} />
+              <ExternalArticleContent content={content} />
 
-          {updatedTimeJsx}
+              {updatedTimeJsx}
 
-          <DonateBanner />
-          <SocialNetworkServiceSmall />
-          <SubscribeInviteBanner />
+              <DonateBanner />
+              <SocialNetworkServiceSmall />
+              <SubscribeInviteBanner />
 
-          <RelatedArticleList relateds={[]} />
+              <RelatedArticleList relateds={[]} />
 
-          {shouldShowAd && (
-            <StyledGPTAd_MB_AT3
-              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-              adKey="MB_AT3"
-            />
-          )}
+              {shouldShowAd && (
+                <StyledGPTAd_MB_AT3
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+                  adKey="MB_AT3"
+                />
+              )}
 
-          <SocialNetworkServiceLarge
-            shouldShowLargePagePlugin={true}
-            flexDirection="column"
-          />
+              <SocialNetworkServiceLarge
+                shouldShowLargePagePlugin={true}
+                flexDirection="column"
+              />
 
-          {shouldShowAd && (
-            <StyledGPTAd_MB_E1
-              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-              adKey="MB_E1"
-            />
-          )}
+              {shouldShowAd && (
+                <StyledGPTAd_MB_E1
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+                  adKey="MB_E1"
+                />
+              )}
 
-          {shouldShowAd && (
-            <DableADContainer_Mobile>
-              <DableAd isDesktop={false} />
-            </DableADContainer_Mobile>
-          )}
+              {shouldShowAd && (
+                <DableADContainer_Mobile>
+                  <DableAd isDesktop={false} />
+                </DableADContainer_Mobile>
+              )}
 
-          <StoryEndDesktop>
+              <StoryEndDesktop>
+                <StoryMoreInfo>
+                  更多內容，歡迎&nbsp;
+                  <Link href="/papermag" target="_blank">
+                    鏡週刊紙本雜誌
+                  </Link>
+                  、
+                  <Link href="/subscribe" target="_blank">
+                    鏡週刊數位訂閱
+                  </Link>
+                  、
+                  <Link href="/story/webauthorize/" target="_blank">
+                    了解內容授權資訊
+                  </Link>
+                  。
+                </StoryMoreInfo>
+                <MagazineInviteBanner />
+
+                {shouldShowAd && (
+                  <GPTAdContainer>
+                    <StyledGPTAd_PC_E1
+                      pageKey={getPageKeyByPartnerShowOnIndex(
+                        partner?.showOnIndex
+                      )}
+                      adKey="PC_E1"
+                    />
+                    <StyledGPTAd_PC_E2
+                      pageKey={getPageKeyByPartnerShowOnIndex(
+                        partner?.showOnIndex
+                      )}
+                      adKey="PC_E2"
+                    />
+                  </GPTAdContainer>
+                )}
+
+                {shouldShowAd && (
+                  <DableADContainer_Desktop>
+                    <DableAd isDesktop={true} />
+                  </DableADContainer_Desktop>
+                )}
+              </StoryEndDesktop>
+            </Article>
+            <Aside>
+              {shouldShowAd && (
+                <StyledGPTAd_PC_R1
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+                  adKey="PC_R1"
+                />
+              )}
+
+              <AsideArticleList
+                listType={'latestNews'}
+                fetchArticle={handleFetchLatestNews}
+                shouldReverseOrder={false}
+                renderAmount={6}
+              />
+
+              {shouldShowAd && (
+                <StyledGPTAd_PC_R2
+                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+                  adKey="PC_R2"
+                />
+              )}
+
+              <Divider />
+
+              <AsideArticleList
+                listType={'popularNews'}
+                fetchArticle={handleFetchPopularNews}
+                shouldReverseOrder={false}
+                renderAmount={6}
+              />
+
+              <AsideFbPagePlugin />
+            </Aside>
+          </Main>
+          <StoryEndMobileTablet>
             <StoryMoreInfo>
               更多內容，歡迎&nbsp;
               <Link href="/papermag" target="_blank">
@@ -594,95 +680,25 @@ export default function ExternalNormalStyle({ external }) {
             <MagazineInviteBanner />
 
             {shouldShowAd && (
-              <GPTAdContainer>
-                <StyledGPTAd_PC_E1
-                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-                  adKey="PC_E1"
-                />
-                <StyledGPTAd_PC_E2
-                  pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-                  adKey="PC_E2"
-                />
-              </GPTAdContainer>
-            )}
-
-            {shouldShowAd && (
               <DableADContainer_Desktop>
                 <DableAd isDesktop={true} />
               </DableADContainer_Desktop>
             )}
-          </StoryEndDesktop>
-        </Article>
-        <Aside>
-          {shouldShowAd && (
-            <StyledGPTAd_PC_R1
-              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-              adKey="PC_R1"
-            />
-          )}
-
-          <AsideArticleList
-            listType={'latestNews'}
-            fetchArticle={handleFetchLatestNews}
-            shouldReverseOrder={false}
-            renderAmount={6}
-          />
+          </StoryEndMobileTablet>
 
           {shouldShowAd && (
-            <StyledGPTAd_PC_R2
-              pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-              adKey="PC_R2"
-            />
+            <>
+              <StyledGPTAd_FT
+                pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+                adKey="FT"
+              />
+              <StickyGPTAd_MB_ST
+                pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+              />
+            </>
           )}
-
-          <Divider />
-
-          <AsideArticleList
-            listType={'popularNews'}
-            fetchArticle={handleFetchPopularNews}
-            shouldReverseOrder={false}
-            renderAmount={6}
-          />
-
-          <AsideFbPagePlugin />
-        </Aside>
-      </Main>
-      <StoryEndMobileTablet>
-        <StoryMoreInfo>
-          更多內容，歡迎&nbsp;
-          <Link href="/papermag" target="_blank">
-            鏡週刊紙本雜誌
-          </Link>
-          、
-          <Link href="/subscribe" target="_blank">
-            鏡週刊數位訂閱
-          </Link>
-          、
-          <Link href="/story/webauthorize/" target="_blank">
-            了解內容授權資訊
-          </Link>
-          。
-        </StoryMoreInfo>
-        <MagazineInviteBanner />
-
-        {shouldShowAd && (
-          <DableADContainer_Desktop>
-            <DableAd isDesktop={true} />
-          </DableADContainer_Desktop>
-        )}
-      </StoryEndMobileTablet>
-
-      {shouldShowAd && (
-        <>
-          <StyledGPTAd_FT
-            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-            adKey="FT"
-          />
-          <StickyGPTAd_MB_ST
-            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-          />
         </>
-      )}
+      </GPT_TranslateContainer>
     </>
   )
 }

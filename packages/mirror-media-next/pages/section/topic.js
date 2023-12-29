@@ -13,6 +13,8 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import { useCallback, useState } from 'react'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -92,6 +94,10 @@ const RENDER_PAGE_SIZE = 12
  */
 export default function Topics({ topics, topicsCount, headerData }) {
   const shouldShowAd = useDisplayAd()
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
 
   return (
     <Layout
@@ -101,14 +107,24 @@ export default function Topics({ topics, topicsCount, headerData }) {
     >
       <TopicsContainer>
         <GPT_Placeholder>
-          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey="other"
+              adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
+            />
+          )}
         </GPT_Placeholder>
-        <TopicsTitle>精選專區</TopicsTitle>
-        <SectionTopics
-          topicsCount={topicsCount}
-          topics={topics}
-          renderPageSize={RENDER_PAGE_SIZE}
-        />
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            <TopicsTitle>精選專區</TopicsTitle>
+            <SectionTopics
+              topicsCount={topicsCount}
+              topics={topics}
+              renderPageSize={RENDER_PAGE_SIZE}
+            />
+          </>
+        </GPT_TranslateContainer>
         {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}
       </TopicsContainer>

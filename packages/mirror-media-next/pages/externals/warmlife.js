@@ -18,6 +18,8 @@ import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/exte
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
+import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -103,6 +105,10 @@ export default function WarmLife({
   const WARMLIFE_GPT_SECTION_IDS = getPageKeyByPartnerShowOnIndex(
     warmLifeData?.[0]?.partner?.showOnIndex
   )
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
 
   return (
     <Layout
@@ -113,16 +119,26 @@ export default function WarmLife({
       <WarmLifeContainer>
         <GPT_Placeholder>
           {shouldShowAd && (
-            <StyledGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="HD" />
+            <StyledGPTAd
+              pageKey={WARMLIFE_GPT_SECTION_IDS}
+              adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
+            />
           )}
         </GPT_Placeholder>
-        <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>
-        <PartnerArticles
-          externals={warmLifeData}
-          renderPageSize={RENDER_PAGE_SIZE}
-          fetchExternalsFunction={fetchExternalsWhichPartnerIsNotShowOnIndex}
-          externalsCount={warmLifeDataCount}
-        />
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>
+            <PartnerArticles
+              externals={warmLifeData}
+              renderPageSize={RENDER_PAGE_SIZE}
+              fetchExternalsFunction={
+                fetchExternalsWhichPartnerIsNotShowOnIndex
+              }
+              externalsCount={warmLifeDataCount}
+            />
+          </>
+        </GPT_TranslateContainer>
         {shouldShowAd && <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} />}
         {shouldShowAd && <FullScreenAds />}
       </WarmLifeContainer>

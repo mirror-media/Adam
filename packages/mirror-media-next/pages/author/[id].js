@@ -20,6 +20,8 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
+import { useCallback, useState } from 'react'
 
 const AuthorContainer = styled.main`
   width: 320px;
@@ -91,6 +93,11 @@ const RENDER_PAGE_SIZE = 12
 export default function Author({ postsCount, posts, author, headerData }) {
   const authorName = author.name || ''
   const shouldShowAd = useDisplayAd()
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
   return (
     <Layout
       head={{ title: `${authorName}相關報導` }}
@@ -99,15 +106,25 @@ export default function Author({ postsCount, posts, author, headerData }) {
     >
       <AuthorContainer>
         <GPT_Placeholder>
-          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey="other"
+              adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
+            />
+          )}
         </GPT_Placeholder>
-        {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
-        <AuthorArticles
-          postsCount={postsCount}
-          posts={posts}
-          authorId={author.id}
-          renderPageSize={RENDER_PAGE_SIZE}
-        />
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
+            <AuthorArticles
+              postsCount={postsCount}
+              posts={posts}
+              authorId={author.id}
+              renderPageSize={RENDER_PAGE_SIZE}
+            />
+          </>
+        </GPT_TranslateContainer>
         {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}
       </AuthorContainer>

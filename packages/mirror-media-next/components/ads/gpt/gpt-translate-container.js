@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 /**
@@ -16,13 +17,19 @@ const Container = styled.div`
   ${
     /** @param {{rwd: Rwd, shouldTranslate: boolean}} props*/
     ({ shouldTranslate, rwd }) =>
-      shouldTranslate && `transform: translate(0, -${rwd.mobile.height})`
+      shouldTranslate &&
+      `
+      transform: translate(0, -${rwd.mobile.height});
+      `
   }
   ${({ theme }) => theme.breakpoint.md} {
     ${
       /** @param {{rwd: Rwd, shouldTranslate: boolean}} props*/
       ({ shouldTranslate, rwd }) =>
-        shouldTranslate && `transform: translate(0, -${rwd.tablet.height})`
+        shouldTranslate &&
+        `
+        transform: translate(0, -${rwd.tablet.height});
+        `
     }
   }
 
@@ -30,7 +37,10 @@ const Container = styled.div`
     ${
       /** @param {{rwd: Rwd, shouldTranslate: boolean}} props*/
       ({ shouldTranslate, rwd }) =>
-        shouldTranslate && `transform: translate(0, -${rwd.tablet.height})`
+        shouldTranslate &&
+        `
+        transform: translate(0, -${rwd.tablet.height});
+        `
     }
   }
 `
@@ -66,8 +76,26 @@ export default function GPT_TranslateContainer({
   children,
   shouldTranslate,
 }) {
+  const containerRef = useRef(null)
+  // const [originalHeight, setOriginalHeight] = useState(0)
+
+  // useEffect(() => {
+  //   const containerHeight = containerRef.current.clientHeight
+  //   setOriginalHeight(containerHeight)
+  // }, [setOriginalHeight])
+
+  // useEffect(() => {
+  //   if (shouldTranslate && containerRef.current) {
+  //     const translationHeight = parseInt(rwd.mobile.height, 10)
+  //     containerRef.current.style.height = `${
+  //       originalHeight - translationHeight
+  //     }px`
+  //   } else {
+  //     containerRef.current.style.height = `fit-content`
+  //   }
+  // }, [shouldTranslate, rwd.mobile.height, originalHeight])
   return (
-    <Container rwd={rwd} shouldTranslate={shouldTranslate}>
+    <Container rwd={rwd} shouldTranslate={shouldTranslate} ref={containerRef}>
       {children}
     </Container>
   )

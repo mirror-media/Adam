@@ -154,10 +154,21 @@ const Wrapper = styled.div`
     background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, white 80%);
   }
 `
-
+/**
+ * The Article Mask for story page, displayed when user is not subscribe certain member only article.
+ * @param {Object} props
+ * @param {string} props.postId
+ * @returns
+ */
 export default function ArticleMask({ postId = '' }) {
+  /**
+   * Why we need class name `paywall`?
+   * Because we need to indicate this is a paywall component and there are paywalled content behind.
+   * To achieve that, we need to assign which one is paywall component by using certain class name in component `json-lds-script`,
+   * @see https://developers.google.com/search/docs/appearance/structured-data/paywalled-content
+   */
   return (
-    <Wrapper>
+    <Wrapper className="paywall">
       <InviteMemberCard postId={postId}></InviteMemberCard>
     </Wrapper>
   )

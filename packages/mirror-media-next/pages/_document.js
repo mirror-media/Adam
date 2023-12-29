@@ -72,6 +72,10 @@ export default class MyDocument extends Document {
             href="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
             as="script"
           />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap"
+            rel="stylesheet"
+          />
         </Head>
 
         <body>
