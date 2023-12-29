@@ -13,6 +13,7 @@ import Script from 'next/script'
 import { useRouter } from 'next/router'
 
 import { MembershipProvider } from '../context/membership'
+
 /**
  *
  * @param {Object} props

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { SITE_URL } from '../../../config/index.mjs'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../../constants/index'
 import Script from 'next/script'
@@ -25,6 +26,7 @@ const generateJsonLdsData = (postData, currentPage) => {
     updatedAt = '',
     og_description = '',
     brief = { blocks: [], entityMap: {} },
+    isMember = false,
   } = postData
 
   const writersWithOrdered =
@@ -74,6 +76,14 @@ const generateJsonLdsData = (postData, currentPage) => {
     url: pageUrl,
     thumbnailUrl: imageUrl,
     articleSection: hasSection ? sectionWithOrdered[0].name : undefined,
+    isAccessibleForFree: 'True',
+  }
+  if (isMember) {
+    jsonLdNewsArticle.hasPart = {
+      '@type': 'WebPageElement',
+      isAccessibleForFree: 'False',
+      cssSelector: '.paywall',
+    }
   }
   //second Person
   const jsonLdPerson = hasWriter
@@ -110,7 +120,7 @@ const generateJsonLdsData = (postData, currentPage) => {
         '@type': 'ListItem',
         position: 1,
         name: SITE_TITLE,
-        item: SITE_URL,
+        item: `https://${SITE_URL}`,
       },
     ]
 
@@ -140,7 +150,7 @@ const generateJsonLdsData = (postData, currentPage) => {
  * @param {PostData} props.postData
  * @param {'/story/' | '/story/amp/'} props.currentPage
  */
-export default function JsonLdsScript({ postData, currentPage = '/story/' }) {
+const JsonLdsScript = ({ postData, currentPage = '/story/' }) => {
   const jsonLdsData = generateJsonLdsData(postData, currentPage)
 
   const structuredDataScript = jsonLdsData.map((jsonLd) => {
@@ -165,3 +175,5 @@ export default function JsonLdsScript({ postData, currentPage = '/story/' }) {
 
   return structuredDataScript
 }
+const MemoJsonLdsScript = memo(JsonLdsScript)
+export default MemoJsonLdsScript

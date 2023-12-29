@@ -26,6 +26,8 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
+import { useCallback, useState } from 'react'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -202,6 +204,12 @@ export default function Category({
   const sectionSlug = category?.sections?.[0]?.slug ?? ''
   const GptPageKey = getSectionGPTPageKey(isPremium ? 'member' : sectionSlug)
 
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
+
   return (
     <Layout
       head={{ title: `${categoryName}分類報導` }}
@@ -210,31 +218,41 @@ export default function Category({
     >
       <CategoryContainer isPremium={isPremium}>
         <GPT_Placeholder>
-          {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
+          {shouldShowAd && (
+            <StyledGPTAd
+              pageKey={GptPageKey}
+              adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
+            />
+          )}
         </GPT_Placeholder>
 
-        {isPremium ? (
-          <PremiumCategoryTitle sectionName={sectionSlug}>
-            {categoryName}
-          </PremiumCategoryTitle>
-        ) : (
-          <CategoryTitle sectionName={sectionSlug}>
-            {categoryName}
-          </CategoryTitle>
-        )}
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            {isPremium ? (
+              <PremiumCategoryTitle sectionName={sectionSlug}>
+                {categoryName}
+              </PremiumCategoryTitle>
+            ) : (
+              <CategoryTitle sectionName={sectionSlug}>
+                {categoryName}
+              </CategoryTitle>
+            )}
 
-        <CategoryArticles
-          postsCount={postsCount}
-          posts={posts}
-          category={category}
-          renderPageSize={RENDER_PAGE_SIZE}
-          isPremium={isPremium}
-        />
+            <CategoryArticles
+              postsCount={postsCount}
+              posts={posts}
+              category={category}
+              renderPageSize={RENDER_PAGE_SIZE}
+              isPremium={isPremium}
+            />
 
-        {shouldShowAd && isNotWineCategory ? (
-          <StickyGPTAd pageKey={GptPageKey} />
-        ) : null}
-        <WineWarning categories={[category]} />
+            {shouldShowAd && isNotWineCategory ? (
+              <StickyGPTAd pageKey={GptPageKey} />
+            ) : null}
+            <WineWarning categories={[category]} />
+          </>
+        </GPT_TranslateContainer>
         {isNotWineCategory && <FullScreenAds />}
       </CategoryContainer>
     </Layout>

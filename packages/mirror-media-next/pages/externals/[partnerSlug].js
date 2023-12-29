@@ -21,6 +21,8 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
+import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -110,6 +112,11 @@ export default function ExternalPartner({
   headerData,
 }) {
   const shouldShowAd = useDisplayAd()
+  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
+  const handleObSlotRenderEnded = useCallback((e) => {
+    setISHDAdEmpty(e.isEmpty)
+  }, [])
 
   return (
     <Layout
@@ -123,25 +130,30 @@ export default function ExternalPartner({
             <StyledGPTAd
               pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="HD"
+              onSlotRenderEnded={handleObSlotRenderEnded}
             />
           )}
         </GPT_Placeholder>
-        <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
-          {partner?.name}
-        </PartnerTitle>
-        <ExternalArticles
-          externalsCount={externalsCount}
-          externals={externals}
-          fetchExternalsFunction={fetchExternalsByPartnerSlug}
-          renderPageSize={RENDER_PAGE_SIZE}
-          partnerSlug={partner.slug}
-        />
-        {shouldShowAd && (
-          <StickyGPTAd
-            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-          />
-        )}
-        {shouldShowAd && <FullScreenAds />}
+        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+          <>
+            <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
+              {partner?.name}
+            </PartnerTitle>
+            <ExternalArticles
+              externalsCount={externalsCount}
+              externals={externals}
+              fetchExternalsFunction={fetchExternalsByPartnerSlug}
+              renderPageSize={RENDER_PAGE_SIZE}
+              partnerSlug={partner.slug}
+            />
+            {shouldShowAd && (
+              <StickyGPTAd
+                pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+              />
+            )}
+            {shouldShowAd && <FullScreenAds />}
+          </>
+        </GPT_TranslateContainer>
       </PartnerContainer>
     </Layout>
   )
