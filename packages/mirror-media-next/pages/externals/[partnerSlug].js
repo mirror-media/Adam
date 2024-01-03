@@ -21,7 +21,6 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -125,7 +124,7 @@ export default function ExternalPartner({
       footer={{ type: 'default' }}
     >
       <PartnerContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
@@ -134,26 +133,22 @@ export default function ExternalPartner({
             />
           )}
         </GPT_Placeholder>
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
-              {partner?.name}
-            </PartnerTitle>
-            <ExternalArticles
-              externalsCount={externalsCount}
-              externals={externals}
-              fetchExternalsFunction={fetchExternalsByPartnerSlug}
-              renderPageSize={RENDER_PAGE_SIZE}
-              partnerSlug={partner.slug}
-            />
-            {shouldShowAd && (
-              <StickyGPTAd
-                pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
-              />
-            )}
-            {shouldShowAd && <FullScreenAds />}
-          </>
-        </GPT_TranslateContainer>
+        <PartnerTitle partnerColor={getExternalPartnerColor(partner)}>
+          {partner?.name}
+        </PartnerTitle>
+        <ExternalArticles
+          externalsCount={externalsCount}
+          externals={externals}
+          fetchExternalsFunction={fetchExternalsByPartnerSlug}
+          renderPageSize={RENDER_PAGE_SIZE}
+          partnerSlug={partner.slug}
+        />
+        {shouldShowAd && (
+          <StickyGPTAd
+            pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
+          />
+        )}
+        {shouldShowAd && <FullScreenAds />}
       </PartnerContainer>
     </Layout>
   )

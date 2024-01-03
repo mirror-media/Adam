@@ -21,7 +21,6 @@ import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../components/ads/gpt/gpt-translate-container'
 import LiveYoutube from '../components/live-youtube'
 import { isDateInsideDatesRange } from '../utils/date'
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
@@ -141,7 +140,7 @@ export default function Home({
       }}
     >
       <IndexContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd_HD
               pageKey="home"
@@ -150,15 +149,11 @@ export default function Home({
             />
           )}
         </GPT_Placeholder>
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            <EditorChoice editorChoice={editorChoice}></EditorChoice>
-            {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
-            {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-            <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
-            <LatestNews latestNewsData={latestNewsData} />
-          </>
-        </GPT_TranslateContainer>
+        <EditorChoice editorChoice={editorChoice}></EditorChoice>
+        {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
+        {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
+        <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
+        <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
     </Layout>

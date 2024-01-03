@@ -81,14 +81,14 @@ export default function AmpHero({
     } else if (shouldShowHeroImage) {
       /**
        * The rules for fallback of the heroImage:
-       * 1. Show w800 first.
-       * 2. If the URL of w800 is an empty string or an invalid URL, then show the original by using <amp-img> with `fallback` attribute.
+       * 1. Show w1600 first.
+       * 2. If the URL of w1600 is an empty string or an invalid URL, then show the original by using <amp-img> with `fallback` attribute.
        * 3. If the URL of original is an empty string, then show the default image url by replacing src of <amp-img>.
        */
       return (
         <HeroWrapper>
           {/** @ts-ignore */}
-          <amp-img src={heroImage?.resized?.w800} alt={imageAlt} layout="fill">
+          <amp-img src={heroImage?.resized?.w1600} alt={imageAlt} layout="fill">
             {/** @ts-ignore */}
             <amp-img
               fallback=""

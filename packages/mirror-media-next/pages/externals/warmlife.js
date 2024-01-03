@@ -18,7 +18,6 @@ import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/exte
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -117,7 +116,7 @@ export default function WarmLife({
       footer={{ type: 'default' }}
     >
       <WarmLifeContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={WARMLIFE_GPT_SECTION_IDS}
@@ -126,19 +125,13 @@ export default function WarmLife({
             />
           )}
         </GPT_Placeholder>
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>
-            <PartnerArticles
-              externals={warmLifeData}
-              renderPageSize={RENDER_PAGE_SIZE}
-              fetchExternalsFunction={
-                fetchExternalsWhichPartnerIsNotShowOnIndex
-              }
-              externalsCount={warmLifeDataCount}
-            />
-          </>
-        </GPT_TranslateContainer>
+        <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>
+        <PartnerArticles
+          externals={warmLifeData}
+          renderPageSize={RENDER_PAGE_SIZE}
+          fetchExternalsFunction={fetchExternalsWhichPartnerIsNotShowOnIndex}
+          externalsCount={warmLifeDataCount}
+        />
         {shouldShowAd && <StickyGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} />}
         {shouldShowAd && <FullScreenAds />}
       </WarmLifeContainer>

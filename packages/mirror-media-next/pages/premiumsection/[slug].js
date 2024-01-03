@@ -17,7 +17,6 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -139,7 +138,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
       footer={{ type: 'default' }}
     >
       <SectionContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd_HD
               pageKey={SECTION_IDS['member']}
@@ -148,22 +147,16 @@ export default function Section({ postsCount, posts, section, headerData }) {
             />
           )}
         </GPT_Placeholder>
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            {sectionName && (
-              <SectionTitle sectionName={section.slug}>
-                {sectionName}
-              </SectionTitle>
-            )}
-            <SectionArticles
-              postsCount={postsCount}
-              posts={posts}
-              section={section}
-              renderPageSize={RENDER_PAGE_SIZE}
-              isPremium={true}
-            />
-          </>
-        </GPT_TranslateContainer>
+        {sectionName && (
+          <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
+        )}
+        <SectionArticles
+          postsCount={postsCount}
+          posts={posts}
+          section={section}
+          renderPageSize={RENDER_PAGE_SIZE}
+          isPremium={true}
+        />
         {shouldShowAd && <StickyGPTAd_MB_ST pageKey={SECTION_IDS['member']} />}
         {shouldShowAd && <FullScreenAds />}
       </SectionContainer>

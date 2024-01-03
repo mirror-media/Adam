@@ -15,24 +15,47 @@ import styled from 'styled-components'
 const Container = styled.div`
   position: relative;
   min-width: ${
-    /** @param {{rwd: Rwd}} props*/
+    /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
     ({ rwd }) => rwd.mobile.width
   };
-  min-height: ${({ rwd }) => rwd.mobile.height};
-  margin: ${({ rwd }) => rwd.mobile.margin};
+  min-height: ${
+    /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+    ({ rwd, shouldTranslate }) => (shouldTranslate ? '0px' : rwd.mobile.height)
+  };
+  margin: ${
+    /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+    ({ rwd }) => rwd.mobile.margin
+  };
   ${({ theme }) => theme.breakpoint.md} {
     min-width: ${
       /** @param {{rwd: Rwd}} props*/
       ({ rwd }) => rwd.tablet.width
     };
-    min-height: ${({ rwd }) => rwd.tablet.height};
-    margin: ${({ rwd }) => rwd.tablet.margin};
+    min-height: ${
+      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+      ({ rwd, shouldTranslate }) =>
+        shouldTranslate ? '0px' : rwd.tablet.height
+    };
+    margin: ${
+      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+      ({ rwd }) => rwd.tablet.margin
+    };
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
-    min-width: ${({ rwd }) => rwd.desktop.width};
-    min-height: ${({ rwd }) => rwd.desktop.height};
-    margin: ${({ rwd }) => rwd.desktop.margin};
+    min-width: ${
+      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+      ({ rwd }) => rwd.desktop.width
+    };
+    min-height: ${
+      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+      ({ rwd, shouldTranslate }) =>
+        shouldTranslate ? '0px' : rwd.desktop.height
+    };
+    margin: ${
+      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+      ({ rwd }) => rwd.desktop.margin
+    };
   }
 `
 const ContainerMobileAndTablet = styled(Container)`
@@ -71,10 +94,19 @@ const DEFAULT_SIZES = {
  * @param {Object} props
  * @param {Rwd} [props.rwd]
  * @param {JSX.Element} props.children
+ * @param {boolean} [props.shouldTranslate]
  * @returns {JSX.Element}
  */
-export default function GPT_Placeholder({ rwd = DEFAULT_SIZES, children }) {
-  return <Container rwd={rwd}>{children}</Container>
+export default function GPT_Placeholder({
+  rwd = DEFAULT_SIZES,
+  children,
+  shouldTranslate = false,
+}) {
+  return (
+    <Container rwd={rwd} shouldTranslate={shouldTranslate}>
+      {children}
+    </Container>
+  )
 }
 /**
  *

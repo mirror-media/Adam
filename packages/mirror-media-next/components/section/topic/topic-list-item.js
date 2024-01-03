@@ -78,7 +78,7 @@ export default function TopicListItem({ item }) {
     item.og_image?.resized ||
     (parseUrl(item.style) ? { original: parseUrl(item.style) } : null) ||
     item.heroImage?.resized
-  console.log('images', images)
+  console.log(item)
   return (
     <ItemWrapper href={`/topic/${item.slug}`} target="_blank">
       <ImageContainer>
@@ -92,7 +92,7 @@ export default function TopicListItem({ item }) {
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{item.name}</ItemTitle>
-        <ItemBrief>{item.brief?.blocks[0]?.text}</ItemBrief>
+        <ItemBrief>{item.brief?.blocks?.[0]?.text}</ItemBrief>
       </ItemDetail>
     </ItemWrapper>
   )

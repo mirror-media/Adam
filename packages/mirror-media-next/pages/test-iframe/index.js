@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 export default function TestIFrame() {
   return (
     <Wrapper>
-      <iframe src="https://dev.mirrormedia.mg/projects/dev-election2024-homepage-1227-8/index.html"></iframe>
+      <iframe src="https://dev.mirrormedia.mg/projects/dev-election2024-homepage-1229/index.html"></iframe>
     </Wrapper>
   )
 }

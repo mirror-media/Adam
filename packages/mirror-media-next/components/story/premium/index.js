@@ -23,7 +23,6 @@ import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -278,7 +277,7 @@ export default function StoryPremiumStyle({
         }}
       />
 
-      <GPT_Placeholder>
+      <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
         {shouldShowAd && (
           <StyledGPTAd_HD
             pageKey={pageKeyForGptAd}
@@ -287,94 +286,85 @@ export default function StoryPremiumStyle({
           />
         )}
       </GPT_Placeholder>
-      <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-        <>
-          <Main className={classNameForGTM}>
-            <article>
-              <TitleAndInfoAndHero
-                sectionLabelFirst={sectionLabelFirst}
-                title={title}
-                heroImage={heroImage}
-                heroVideo={heroVideo}
-                heroCaption={heroCaption}
-                credits={credits}
-                publishedDate={publishedDate}
-                updatedAt={updatedAt}
-                tags={tags}
-                subtitle={subtitle}
-              />
-
-              <ContentWrapper>
-                <NavSubtitleNavigator h2AndH3Block={h2AndH3Block}>
-                  <SocialMediaAndDonateLink>
-                    <SocialMedia>
-                      <ButtonSocialNetworkShare
-                        type="facebook"
-                        width={28}
-                        height={28}
-                      />
-                      <ButtonSocialNetworkShare
-                        type="line"
-                        width={28}
-                        height={28}
-                      />
-                      <ButtonCopyLink width={28} height={28} />
-                    </SocialMedia>
-                    <li>
-                      <DonateLink className="GTM-donate-link-side" />
-                      {(memberType === 'not-member' ||
-                        memberType === 'basic-member' ||
-                        memberType === 'one-time-member') && (
-                        <SubscribeLink className="subscribe-btn GTM-subscribe-link-side" />
-                      )}
-                    </li>
-                  </SocialMediaAndDonateLink>
-                </NavSubtitleNavigator>
-                <section className="content">
-                  <ArticleBrief
-                    sectionSlug="member"
-                    brief={brief}
-                    contentLayout="premium"
-                  />
-                </section>
-                <PremiumArticleContent
-                  className="content"
-                  content={postContent.data}
-                  hiddenAdvertised={hiddenAdvertised}
-                  pageKeyForGptAd={pageKeyForGptAd}
-                />
-                <CopyrightWarning />
-                {shouldShowArticleMask && <ArticleMask postId={id} />}
-                {supportBanner}
-                {shouldShowAd && (
-                  <GPTAdContainer>
-                    <StyledGPTAd_E1 pageKey={pageKeyForGptAd} adKey="E1" />
-                    <StyledGPTAd_PC_E2
-                      pageKey={pageKeyForGptAd}
-                      adKey="PC_E2"
-                    />
-                  </GPTAdContainer>
-                )}
-              </ContentWrapper>
-            </article>
-          </Main>
-
-          <Aside
-            relateds={relatedsWithOrdered}
-            sectionSlug={section?.slug || 'news'}
-            storySlug={slug}
+      <Main className={classNameForGTM}>
+        <article>
+          <TitleAndInfoAndHero
+            sectionLabelFirst={sectionLabelFirst}
+            title={title}
+            heroImage={heroImage}
+            heroVideo={heroVideo}
+            heroCaption={heroCaption}
+            credits={credits}
+            publishedDate={publishedDate}
+            updatedAt={updatedAt}
+            tags={tags}
+            subtitle={subtitle}
           />
 
-          {shouldShowAd && (
-            <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />
-          )}
-          {shouldShowAd && noCategoryOfWineSlug ? (
-            <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
-          ) : null}
+          <ContentWrapper>
+            <NavSubtitleNavigator h2AndH3Block={h2AndH3Block}>
+              <SocialMediaAndDonateLink>
+                <SocialMedia>
+                  <ButtonSocialNetworkShare
+                    type="facebook"
+                    width={28}
+                    height={28}
+                  />
+                  <ButtonSocialNetworkShare
+                    type="line"
+                    width={28}
+                    height={28}
+                  />
+                  <ButtonCopyLink width={28} height={28} />
+                </SocialMedia>
+                <li>
+                  <DonateLink className="GTM-donate-link-side" />
+                  {(memberType === 'not-member' ||
+                    memberType === 'basic-member' ||
+                    memberType === 'one-time-member') && (
+                    <SubscribeLink className="subscribe-btn GTM-subscribe-link-side" />
+                  )}
+                </li>
+              </SocialMediaAndDonateLink>
+            </NavSubtitleNavigator>
+            <section className="content">
+              <ArticleBrief
+                sectionSlug="member"
+                brief={brief}
+                contentLayout="premium"
+              />
+            </section>
+            <PremiumArticleContent
+              className="content"
+              content={postContent.data}
+              hiddenAdvertised={hiddenAdvertised}
+              pageKeyForGptAd={pageKeyForGptAd}
+            />
+            <CopyrightWarning />
+            {shouldShowArticleMask && <ArticleMask postId={id} />}
+            {supportBanner}
+            {shouldShowAd && (
+              <GPTAdContainer>
+                <StyledGPTAd_E1 pageKey={pageKeyForGptAd} adKey="E1" />
+                <StyledGPTAd_PC_E2 pageKey={pageKeyForGptAd} adKey="PC_E2" />
+              </GPTAdContainer>
+            )}
+          </ContentWrapper>
+        </article>
+      </Main>
 
-          <Footer footerType="default" />
-        </>
-      </GPT_TranslateContainer>
+      <Aside
+        relateds={relatedsWithOrdered}
+        sectionSlug={section?.slug || 'news'}
+        storySlug={slug}
+      />
+
+      {shouldShowAd && <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />}
+      {shouldShowAd && noCategoryOfWineSlug ? (
+        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
+      ) : null}
+
+      <Footer footerType="default" />
     </>
   )
 }
