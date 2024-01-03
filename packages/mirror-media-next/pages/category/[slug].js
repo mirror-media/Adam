@@ -26,7 +26,6 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 
 /**
@@ -217,7 +216,7 @@ export default function Category({
       footer={{ type: 'default' }}
     >
       <CategoryContainer isPremium={isPremium}>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={GptPageKey}
@@ -227,32 +226,28 @@ export default function Category({
           )}
         </GPT_Placeholder>
 
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            {isPremium ? (
-              <PremiumCategoryTitle sectionName={sectionSlug}>
-                {categoryName}
-              </PremiumCategoryTitle>
-            ) : (
-              <CategoryTitle sectionName={sectionSlug}>
-                {categoryName}
-              </CategoryTitle>
-            )}
+        {isPremium ? (
+          <PremiumCategoryTitle sectionName={sectionSlug}>
+            {categoryName}
+          </PremiumCategoryTitle>
+        ) : (
+          <CategoryTitle sectionName={sectionSlug}>
+            {categoryName}
+          </CategoryTitle>
+        )}
 
-            <CategoryArticles
-              postsCount={postsCount}
-              posts={posts}
-              category={category}
-              renderPageSize={RENDER_PAGE_SIZE}
-              isPremium={isPremium}
-            />
+        <CategoryArticles
+          postsCount={postsCount}
+          posts={posts}
+          category={category}
+          renderPageSize={RENDER_PAGE_SIZE}
+          isPremium={isPremium}
+        />
 
-            {shouldShowAd && isNotWineCategory ? (
-              <StickyGPTAd pageKey={GptPageKey} />
-            ) : null}
-            <WineWarning categories={[category]} />
-          </>
-        </GPT_TranslateContainer>
+        {shouldShowAd && isNotWineCategory ? (
+          <StickyGPTAd pageKey={GptPageKey} />
+        ) : null}
+        <WineWarning categories={[category]} />
         {isNotWineCategory && <FullScreenAds />}
       </CategoryContainer>
     </Layout>

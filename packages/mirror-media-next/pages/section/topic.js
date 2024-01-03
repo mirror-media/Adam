@@ -14,7 +14,6 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -106,7 +105,7 @@ export default function Topics({ topics, topicsCount, headerData }) {
       footer={{ type: 'default' }}
     >
       <TopicsContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd
               pageKey="other"
@@ -115,16 +114,12 @@ export default function Topics({ topics, topicsCount, headerData }) {
             />
           )}
         </GPT_Placeholder>
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            <TopicsTitle>精選專區</TopicsTitle>
-            <SectionTopics
-              topicsCount={topicsCount}
-              topics={topics}
-              renderPageSize={RENDER_PAGE_SIZE}
-            />
-          </>
-        </GPT_TranslateContainer>
+        <TopicsTitle>精選專區</TopicsTitle>
+        <SectionTopics
+          topicsCount={topicsCount}
+          topics={topics}
+          renderPageSize={RENDER_PAGE_SIZE}
+        />
         {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}
       </TopicsContainer>

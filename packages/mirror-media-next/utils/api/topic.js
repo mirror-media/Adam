@@ -10,7 +10,10 @@ export function fetchTopicByTopicSlug(topicSlug, postsTake, postsSkip) {
   return client.query({
     query: fetchTopic,
     variables: {
-      topicFilter: { slug: { equals: topicSlug } },
+      topicFilter: {
+        slug: { equals: topicSlug },
+        state: { equals: 'published' },
+      },
       postsFilter: { state: { equals: 'published' } },
       featuredPostsCountFilter: {
         state: { equals: 'published' },

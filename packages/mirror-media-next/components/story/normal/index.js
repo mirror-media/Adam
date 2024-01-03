@@ -22,7 +22,6 @@ import Divider from '../shared/divider'
 import ShareHeader from '../../shared/share-header'
 import Footer from '../../shared/footer'
 import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
-import GPT_TranslateContainer from '../../ads/gpt/gpt-translate-container'
 
 import {
   transformTimeDataIntoDotFormat,
@@ -645,7 +644,7 @@ export default function StoryNormalStyle({
         }}
       />
 
-      <GPT_Placeholder>
+      <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
         {shouldShowAd && (
           <StyledGPTAd_HD
             pageKey={pageKeyForGptAd}
@@ -654,138 +653,70 @@ export default function StoryNormalStyle({
           />
         )}
       </GPT_Placeholder>
-
-      <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-        <>
-          <Main className={classNameForGTM}>
-            <Article>
-              <SectionAndDate>
-                {/* hide section for advertised article but remain the same architecture*/}
-                {postData.isAdvertised ? (
-                  <div />
-                ) : (
-                  <Section sectionSlug={tagBeforeTitle?.slug}>
-                    {tagBeforeTitle?.name || ''}
-                  </Section>
-                )}
-                <Date>{publishedTaipeiTime} 臺北時間</Date>
-              </SectionAndDate>
-              <Title>{title}</Title>
-              {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
-              <InfoAndHero>
-                <StyledHeroImageAndVideo
-                  heroImage={heroImage}
-                  heroCaption={heroCaption}
-                  heroVideo={heroVideo}
-                  title={title}
-                />
-                <ArticleInfo
-                  updatedDate={updatedTaipeiTime}
-                  publishedDate={publishedTaipeiTime}
-                  credits={credits}
-                  tags={tags}
-                />
-              </InfoAndHero>
-              <ArticleBrief sectionSlug={section?.slug} brief={brief} />
-              <ArticleContent
-                content={postContent.data}
-                hiddenAdvertised={hiddenAdvertised}
-                pageKeyForGptAd={pageKeyForGptAd}
-              />
-              <DateUnderContent>
-                <span>更新時間｜</span>
-                <span className="time">{updatedTaipeiTime} 臺北時間</span>
-              </DateUnderContent>
-              <SupportMirrorMediaBanner />
-              <SocialNetworkServiceSmall />
-              <RelatedArticleList
-                relateds={relatedsWithOrdered}
-                hiddenAdvertised={hiddenAdvertised}
-              />
-              {shouldShowAd && (
-                <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
-              )}
-              <SocialNetworkServiceLarge
-                shouldShowLargePagePlugin={true}
-                flexDirection="column"
-              />
-              {shouldShowAd && (
-                <StyledGPTAd_MB_E1 pageKey={pageKeyForGptAd} adKey="MB_E1" />
-              )}
-              {shouldShowAd && section?.slug === 'carandwatch' && (
-                <GPTFloatingAd pageKey={pageKeyForGptAd} />
-              )}
-              {shouldShowAd && (
-                <DableADContainer_Mobile>
-                  <DableAd isDesktop={false} />
-                </DableADContainer_Mobile>
-              )}
-              <StoryEndDesktop>
-                <StoryMoreInfo>
-                  更多內容，歡迎&nbsp;
-                  <Link href="/papermag" target="_blank">
-                    鏡週刊紙本雜誌
-                  </Link>
-                  、
-                  <Link href="/subscribe" target="_blank">
-                    鏡週刊數位訂閱
-                  </Link>
-                  、
-                  <Link href="/story/webauthorize/" target="_blank">
-                    了解內容授權資訊
-                  </Link>
-                  。
-                </StoryMoreInfo>
-                <MagazineInviteBanner />
-
-                {shouldShowAd && (
-                  <GPTAdContainer>
-                    <StyledGPTAd_PC_E1
-                      pageKey={pageKeyForGptAd}
-                      adKey="PC_E1"
-                    />
-                    <StyledGPTAd_PC_E2
-                      pageKey={pageKeyForGptAd}
-                      adKey="PC_E2"
-                    />
-                  </GPTAdContainer>
-                )}
-
-                {shouldShowAd && (
-                  <DableADContainer_Desktop>
-                    <DableAd isDesktop={true} />
-                  </DableADContainer_Desktop>
-                )}
-              </StoryEndDesktop>
-            </Article>
-            <Aside>
-              {shouldShowAd && (
-                <StyledGPTAd_PC_R1 pageKey={pageKeyForGptAd} adKey="PC_R1" />
-              )}
-              <AsideArticleList
-                listType={'latestNews'}
-                fetchArticle={handleFetchLatestNews}
-                shouldReverseOrder={false}
-                renderAmount={6}
-              />
-              <FixedContainer>
-                {shouldShowAd && (
-                  <StyledGPTAd_PC_R2 pageKey={pageKeyForGptAd} adKey="PC_R2" />
-                )}
-
-                <Divider />
-                <AsideArticleList
-                  listType={'popularNews'}
-                  fetchArticle={handleFetchPopularNews}
-                  shouldReverseOrder={false}
-                  renderAmount={6}
-                  hiddenAdvertised={hiddenAdvertised}
-                />
-                <AsideFbPagePlugin />
-              </FixedContainer>
-            </Aside>
-          </Main>
-          <StoryEndMobileTablet>
+      <Main className={classNameForGTM}>
+        <Article>
+          <SectionAndDate>
+            {/* hide section for advertised article but remain the same architecture*/}
+            {postData.isAdvertised ? (
+              <div />
+            ) : (
+              <Section sectionSlug={tagBeforeTitle?.slug}>
+                {tagBeforeTitle?.name || ''}
+              </Section>
+            )}
+            <Date>{publishedTaipeiTime} 臺北時間</Date>
+          </SectionAndDate>
+          <Title>{title}</Title>
+          {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
+          <InfoAndHero>
+            <StyledHeroImageAndVideo
+              heroImage={heroImage}
+              heroCaption={heroCaption}
+              heroVideo={heroVideo}
+              title={title}
+            />
+            <ArticleInfo
+              updatedDate={updatedTaipeiTime}
+              publishedDate={publishedTaipeiTime}
+              credits={credits}
+              tags={tags}
+            />
+          </InfoAndHero>
+          <ArticleBrief sectionSlug={section?.slug} brief={brief} />
+          <ArticleContent
+            content={postContent.data}
+            hiddenAdvertised={hiddenAdvertised}
+            pageKeyForGptAd={pageKeyForGptAd}
+          />
+          <DateUnderContent>
+            <span>更新時間｜</span>
+            <span className="time">{updatedTaipeiTime} 臺北時間</span>
+          </DateUnderContent>
+          <SupportMirrorMediaBanner />
+          <SocialNetworkServiceSmall />
+          <RelatedArticleList
+            relateds={relatedsWithOrdered}
+            hiddenAdvertised={hiddenAdvertised}
+          />
+          {shouldShowAd && (
+            <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
+          )}
+          <SocialNetworkServiceLarge
+            shouldShowLargePagePlugin={true}
+            flexDirection="column"
+          />
+          {shouldShowAd && (
+            <StyledGPTAd_MB_E1 pageKey={pageKeyForGptAd} adKey="MB_E1" />
+          )}
+          {shouldShowAd && section?.slug === 'carandwatch' && (
+            <GPTFloatingAd pageKey={pageKeyForGptAd} />
+          )}
+          {shouldShowAd && (
+            <DableADContainer_Mobile>
+              <DableAd isDesktop={false} />
+            </DableADContainer_Mobile>
+          )}
+          <StoryEndDesktop>
             <StoryMoreInfo>
               更多內容，歡迎&nbsp;
               <Link href="/papermag" target="_blank">
@@ -801,26 +732,80 @@ export default function StoryNormalStyle({
               </Link>
               。
             </StoryMoreInfo>
-
             <MagazineInviteBanner />
+
+            {shouldShowAd && (
+              <GPTAdContainer>
+                <StyledGPTAd_PC_E1 pageKey={pageKeyForGptAd} adKey="PC_E1" />
+                <StyledGPTAd_PC_E2 pageKey={pageKeyForGptAd} adKey="PC_E2" />
+              </GPTAdContainer>
+            )}
 
             {shouldShowAd && (
               <DableADContainer_Desktop>
                 <DableAd isDesktop={true} />
               </DableADContainer_Desktop>
             )}
-          </StoryEndMobileTablet>
-
+          </StoryEndDesktop>
+        </Article>
+        <Aside>
           {shouldShowAd && (
-            <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />
+            <StyledGPTAd_PC_R1 pageKey={pageKeyForGptAd} adKey="PC_R1" />
           )}
+          <AsideArticleList
+            listType={'latestNews'}
+            fetchArticle={handleFetchLatestNews}
+            shouldReverseOrder={false}
+            renderAmount={6}
+          />
+          <FixedContainer>
+            {shouldShowAd && (
+              <StyledGPTAd_PC_R2 pageKey={pageKeyForGptAd} adKey="PC_R2" />
+            )}
 
-          {shouldShowAd && noCategoryOfWineSlug ? (
-            <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
-          ) : null}
-        </>
-      </GPT_TranslateContainer>
+            <Divider />
+            <AsideArticleList
+              listType={'popularNews'}
+              fetchArticle={handleFetchPopularNews}
+              shouldReverseOrder={false}
+              renderAmount={6}
+              hiddenAdvertised={hiddenAdvertised}
+            />
+            <AsideFbPagePlugin />
+          </FixedContainer>
+        </Aside>
+      </Main>
+      <StoryEndMobileTablet>
+        <StoryMoreInfo>
+          更多內容，歡迎&nbsp;
+          <Link href="/papermag" target="_blank">
+            鏡週刊紙本雜誌
+          </Link>
+          、
+          <Link href="/subscribe" target="_blank">
+            鏡週刊數位訂閱
+          </Link>
+          、
+          <Link href="/story/webauthorize/" target="_blank">
+            了解內容授權資訊
+          </Link>
+          。
+        </StoryMoreInfo>
 
+        <MagazineInviteBanner />
+
+        {shouldShowAd && (
+          <DableADContainer_Desktop>
+            <DableAd isDesktop={true} />
+          </DableADContainer_Desktop>
+        )}
+      </StoryEndMobileTablet>
+
+      {shouldShowAd && <StyledGPTAd_FT pageKey={pageKeyForGptAd} adKey="FT" />}
+
+      {shouldShowAd && noCategoryOfWineSlug ? (
+        <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
+      ) : null}
       <Footer footerType="default" />
     </>
   )

@@ -16,7 +16,6 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 })
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 
 const TagContainer = styled.main`
@@ -120,7 +119,7 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
       footer={{ type: 'default' }}
     >
       <TagContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd
               pageKey="other"
@@ -130,22 +129,18 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
           )}
         </GPT_Placeholder>
 
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            {tagName && (
-              <TagTitleWrapper>
-                <TagTitle>{tagName}</TagTitle>
-              </TagTitleWrapper>
-            )}
+        {tagName && (
+          <TagTitleWrapper>
+            <TagTitle>{tagName}</TagTitle>
+          </TagTitleWrapper>
+        )}
 
-            <TagArticles
-              postsCount={postsCount}
-              posts={posts}
-              tagSlug={tag.slug}
-              renderPageSize={RENDER_PAGE_SIZE}
-            />
-          </>
-        </GPT_TranslateContainer>
+        <TagArticles
+          postsCount={postsCount}
+          posts={posts}
+          tagSlug={tag.slug}
+          renderPageSize={RENDER_PAGE_SIZE}
+        />
 
         {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}

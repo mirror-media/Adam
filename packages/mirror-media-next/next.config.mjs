@@ -54,6 +54,10 @@ const nextConfig = {
         source: '/robots.txt',
         destination: '/api/robots',
       },
+      {
+        source: '/story/:slug*/index.html',
+        destination: '/story/:slug*',
+      },
     ]
   },
 

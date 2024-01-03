@@ -20,7 +20,6 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import GPT_TranslateContainer from '../../components/ads/gpt/gpt-translate-container'
 import { useCallback, useState } from 'react'
 
 const AuthorContainer = styled.main`
@@ -105,7 +104,7 @@ export default function Author({ postsCount, posts, author, headerData }) {
       footer={{ type: 'default' }}
     >
       <AuthorContainer>
-        <GPT_Placeholder>
+        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
           {shouldShowAd && (
             <StyledGPTAd
               pageKey="other"
@@ -114,17 +113,15 @@ export default function Author({ postsCount, posts, author, headerData }) {
             />
           )}
         </GPT_Placeholder>
-        <GPT_TranslateContainer shouldTranslate={!shouldShowAd || isHDAdEmpty}>
-          <>
-            {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
-            <AuthorArticles
-              postsCount={postsCount}
-              posts={posts}
-              authorId={author.id}
-              renderPageSize={RENDER_PAGE_SIZE}
-            />
-          </>
-        </GPT_TranslateContainer>
+
+        {authorName && <AuthorTitle>{authorName}</AuthorTitle>}
+        <AuthorArticles
+          postsCount={postsCount}
+          posts={posts}
+          authorId={author.id}
+          renderPageSize={RENDER_PAGE_SIZE}
+        />
+
         {shouldShowAd && <StickyGPTAd pageKey="other" />}
         {shouldShowAd && <FullScreenAds />}
       </AuthorContainer>
