@@ -31,6 +31,7 @@ import { gql } from '@apollo/client'
  * @property {Resized} resized
  * @property {Resized} resizedWebp
  * @property {string} name
+ * @property {string} topicKeywords
  */
 
 export const heroImage = gql`
@@ -70,5 +71,6 @@ export const slideshowImage = gql`
       w2400
     }
     name
+    topicKeywords
   }
 `
