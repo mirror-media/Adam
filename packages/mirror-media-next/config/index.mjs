@@ -99,7 +99,7 @@ switch (ENV) {
   case 'staging':
     SITE_URL = 'staging-next.mirrormedia.mg'
     API_TIMEOUT = 1500
-    API_TIMEOUT_GRAPHQL = 1500
+    API_TIMEOUT_GRAPHQL = 4000
 
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-staging-ufaummkd5q-de.a.run.app'

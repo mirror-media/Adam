@@ -9,8 +9,7 @@ export default function useSharedUrl(url = '') {
 
   useEffect(() => {
     const sharedUrl = url ? url : window.location.href
-
-    setShareUrl(`${encodeURIComponent(sharedUrl)}`)
+    setShareUrl(`${sharedUrl}`)
   }, [url])
   return shareUrl
 }

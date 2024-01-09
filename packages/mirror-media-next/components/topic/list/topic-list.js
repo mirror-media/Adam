@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation } from 'swiper'
+import Link from 'next/link'
+
 import TopicListArticles from './topic-list-articles'
 import CustomImage from '@readr-media/react-image'
 // Import Swiper styles
@@ -43,6 +45,7 @@ const Container = styled.main`
 
 const Topic = styled.div`
   display: block;
+  position: relative;
   background-repeat: no-repeat;
   height: auto;
   padding-top: 66.66%;
@@ -149,6 +152,14 @@ const CustomSwiperNext = styled.div`
   }
 `
 
+const TopicLink = styled(Link)`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`
+
 /**
  * @typedef {import('../../../apollo/fragments/photo').Photo & {
  *  id: string;
@@ -208,13 +219,10 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
   return (
     <>
       <Container customCss={style}>
-        <Topic
-          className="topic"
-          as={topic?.heroUrl ? 'a' : 'div'}
-          backgroundUrl={backgroundUrl}
-          href={topic?.heroUrl}
-          target={topic?.heroUrl ? '_blank' : null}
-        >
+        <Topic className="topic" backgroundUrl={backgroundUrl}>
+          {topic?.heroUrl && (
+            <TopicLink href={topic?.heroUrl} target="_blank" />
+          )}
           <TopicTitle className="topic-title" />
           <TopicLeading className="leading">
             {!!slideshowImages.length && (
@@ -238,21 +246,45 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
                   modules={[Autoplay, Navigation]}
                 >
                   {slideshowImages.map((item) => (
-                    <SwiperSlide key={item.id}>
-                      <CustomImage
-                        images={item?.resized}
-                        imagesWebP={item?.resizedWebp}
-                        loadingImage={'/images-next/loading@4x.gif'}
-                        defaultImage={'/images-next/default-og-img.png'}
-                        rwd={{
-                          mobile: '450px',
-                          tablet: '850px',
-                          desktop: '850px',
-                          default: '850px',
-                        }}
-                        priority={true}
-                        alt={item.name}
-                      />
+                    <SwiperSlide key={item?.id}>
+                      {item?.topicKeywords &&
+                      item?.topicKeywords.startsWith('@-') ? (
+                        <Link
+                          href={item.topicKeywords.slice(2)}
+                          target="_blank"
+                          rel="noreferrer noopenner"
+                        >
+                          <CustomImage
+                            images={item?.resized}
+                            imagesWebP={item?.resizedWebp}
+                            loadingImage={'/images-next/loading@4x.gif'}
+                            defaultImage={'/images-next/default-og-img.png'}
+                            rwd={{
+                              mobile: '450px',
+                              tablet: '850px',
+                              desktop: '850px',
+                              default: '850px',
+                            }}
+                            priority={true}
+                            alt={item.name}
+                          />
+                        </Link>
+                      ) : (
+                        <CustomImage
+                          images={item?.resized}
+                          imagesWebP={item?.resizedWebp}
+                          loadingImage={'/images-next/loading@4x.gif'}
+                          defaultImage={'/images-next/default-og-img.png'}
+                          rwd={{
+                            mobile: '450px',
+                            tablet: '850px',
+                            desktop: '850px',
+                            default: '850px',
+                          }}
+                          priority={true}
+                          alt={item.name}
+                        />
+                      )}
                     </SwiperSlide>
                   ))}
                 </Swiper>

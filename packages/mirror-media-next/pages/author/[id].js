@@ -90,7 +90,7 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Author({ postsCount, posts, author, headerData }) {
-  const authorName = author.name || ''
+  const authorName = author?.name || ''
   const shouldShowAd = useDisplayAd()
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
 
@@ -118,7 +118,7 @@ export default function Author({ postsCount, posts, author, headerData }) {
         <AuthorArticles
           postsCount={postsCount}
           posts={posts}
-          authorId={author.id}
+          authorId={author?.id}
           renderPageSize={RENDER_PAGE_SIZE}
         />
 
@@ -140,7 +140,6 @@ export async function getServerSideProps({ query, req, res }) {
   }
 
   const authorId = Array.isArray(query.id) ? query.id[0] : query.id
-  const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
@@ -153,8 +152,8 @@ export async function getServerSideProps({ query, req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchPostsByAuthorId(authorId, RENDER_PAGE_SIZE * 2, mockError ? NaN : 0),
     fetchAuthorByAuthorId(authorId),
+    fetchPostsByAuthorId(authorId, RENDER_PAGE_SIZE * 2, 0),
   ])
 
   const handledResponses = responses.map((response, index) => {
@@ -193,8 +192,8 @@ export async function getServerSideProps({ query, req, res }) {
         })
       )
       if (index === 1) {
-        // fetch key data (posts) failed, redirect to 500
-        throw new Error('fetch author posts failed')
+        // fetch key data (author) failed, redirect to 500
+        throw new Error('fetch author failed')
       }
       return
     }
@@ -212,26 +211,24 @@ export async function getServerSideProps({ query, req, res }) {
     ? headerData.topicsData
     : []
 
-  // handle fetch post data
-  if (handledResponses[1]?.posts?.length === 0) {
-    // fetchPost return empty array -> wrong authorId -> 404
+  // handle fetch author data
+  /** @type {Author} */
+  const author = handledResponses[1]?.contact
+  if (!author) {
     console.log(
       JSON.stringify({
         severity: 'WARNING',
-        message: `fetch post of authroId ${authorId} return empty posts, redirect to 404`,
+        message: `The author which id is '${authorId}' does not exist, redirect to 404`,
         globalLogFields,
       })
     )
     return { notFound: true }
   }
-  /** @type {number} postsCount */
-  const postsCount = handledResponses[1]?.postsCount || 0
-  /** @type {Article[]} */
-  const posts = handledResponses[1]?.posts || []
 
-  // handle fetch author data
-  /** @type {Author} */
-  const author = handledResponses[2]?.contact || { id: authorId }
+  /** @type {number} postsCount */
+  const postsCount = handledResponses[2]?.postsCount || 0
+  /** @type {Article[]} */
+  const posts = handledResponses[2]?.posts || []
 
   const props = {
     postsCount,

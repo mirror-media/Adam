@@ -105,7 +105,7 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Tag({ postsCount, posts, tag, headerData }) {
-  const tagName = tag.name || ''
+  const tagName = tag?.name || ''
   const shouldShowAd = useDisplayAd()
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
   const handleObSlotRenderEnded = useCallback((e) => {
@@ -138,7 +138,7 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
         <TagArticles
           postsCount={postsCount}
           posts={posts}
-          tagSlug={tag.slug}
+          tagSlug={tag?.slug}
           renderPageSize={RENDER_PAGE_SIZE}
         />
 
@@ -159,7 +159,6 @@ export async function getServerSideProps({ query, req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
   const tagSlug = Array.isArray(query.slug) ? query.slug[0] : query.slug
-  const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
@@ -172,8 +171,8 @@ export async function getServerSideProps({ query, req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchPostsByTagSlug(tagSlug, RENDER_PAGE_SIZE * 2, mockError ? NaN : 0),
     fetchTagByTagSlug(tagSlug),
+    fetchPostsByTagSlug(tagSlug, RENDER_PAGE_SIZE * 2, 0),
   ])
 
   const handledResponses = responses.map((response, index) => {
@@ -212,8 +211,8 @@ export async function getServerSideProps({ query, req, res }) {
         })
       )
       if (index === 1) {
-        // fetch key data (posts) failed, redirect to 500
-        throw new Error('fetch tag posts failed')
+        // fetch key data (tag) failed, redirect to 500
+        throw new Error('fetch tag failed')
       }
       return
     }
@@ -231,26 +230,25 @@ export async function getServerSideProps({ query, req, res }) {
     ? headerData.topicsData
     : []
 
-  // handle fetch post data
-  if (handledResponses[1]?.posts?.length === 0) {
-    // fetchPost return empty array -> wrong authorId -> 404
+  // handle fetch tag data
+  /** @type {Tag} */
+  const tag = handledResponses[1]?.tag
+  if (!tag) {
     console.log(
       JSON.stringify({
         severity: 'WARNING',
-        message: `fetch post of tagSlug ${tagSlug} return empty posts, redirect to 404`,
+        message: `The tag which slug is '${tagSlug}' does not exist, redirect to 404`,
         globalLogFields,
       })
     )
     return { notFound: true }
   }
-  /** @type {number} postsCount */
-  const postsCount = handledResponses[1]?.postsCount || 0
-  /** @type {Article[]} */
-  const posts = handledResponses[1]?.posts || []
 
-  // handle fetch tag data
-  /** @type {Tag} */
-  const tag = handledResponses[2]?.tag || { slug: tagSlug }
+  // handle fetch post data
+  /** @type {number} postsCount */
+  const postsCount = handledResponses[2]?.postsCount || 0
+  /** @type {Article[]} */
+  const posts = handledResponses[2]?.posts || []
 
   const props = {
     postsCount,
