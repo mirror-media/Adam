@@ -5,12 +5,10 @@ import { useEffect } from 'react'
 import { RedirectUrlContext } from '../context/redirectUrl'
 import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
-import gtag from '../utils/programmable-search/gtag'
 import TagManager from 'react-gtm-module'
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    gtag.init()
     TagManager.initialize({ gtmId: GTM_ID })
   }, [])
 

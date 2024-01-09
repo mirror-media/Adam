@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
-import gtag from '../utils/programmable-search/gtag'
 import { useEffect, useState } from 'react'
 
 const ItemWrapper = styled.a`
@@ -127,7 +126,6 @@ export default function ArticleListItem({ item, index, searchTerms }) {
       'eighth',
       'ninth',
     ][index]
-    gtag.sendGAEvent(`search-${searchTerms}-click-${order}-post`)
   }
   return (
     <ItemWrapper href={item?.link} target="_blank" onClick={onClickHandler}>

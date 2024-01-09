@@ -6,7 +6,6 @@ import Image from 'next/legacy/image'
 import LoadingPage from '../public/images/loading_page.gif'
 import ArticleList from './article-list'
 import { API_TIMEOUT } from '../config'
-import gtag from '../utils/programmable-search/gtag'
 
 const Loading = styled.div`
   margin: 20px auto 0;
@@ -23,7 +22,6 @@ export default function SearchedArticles({ searchResult }) {
   const { items: initialArticles, queries } = searchResult
   const searchTerms = queries.request[0].exactTerms
   async function fetchPostsFromPage(page) {
-    gtag.sendGAEvent(`search-${searchTerms}-loadmore-${page}`)
     try {
       const { data } = await axios({
         method: 'get',
