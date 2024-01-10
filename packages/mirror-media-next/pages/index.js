@@ -22,6 +22,7 @@ import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 import LiveYoutube from '../components/live-youtube'
+import Election2024Homepage from '../components/election-2024-homepage'
 import { isDateInsideDatesRange } from '../utils/date'
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -149,6 +150,8 @@ export default function Home({
             />
           )}
         </GPT_Placeholder>
+        {/* should remove after 2024 taiwan election is finished */}
+        <Election2024Homepage />
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}

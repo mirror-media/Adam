@@ -141,6 +141,16 @@ export async function getServerSideProps({ query, req, res }) {
 
   const authorId = Array.isArray(query.id) ? query.id[0] : query.id
 
+  //When `authorId` is not only numeric, redirect to the '/'.
+  if (!/^\d+$/.test(authorId)) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    }
+  }
+
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
