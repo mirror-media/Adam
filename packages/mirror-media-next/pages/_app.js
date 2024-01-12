@@ -8,7 +8,6 @@ import TagManager from 'react-gtm-module'
 import { GTM_ID } from '../config/index.mjs'
 import WholeSiteScript from '../components/whole-site-script'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
-import Script from 'next/script'
 import { useRouter } from 'next/router'
 
 import { MembershipProvider } from '../context/membership'
@@ -50,24 +49,6 @@ function MyApp({ Component, pageProps }) {
           </ThemeProvider>
         </ApolloProvider>
       </MembershipProvider>
-      <Script
-        id="comScore"
-        dangerouslySetInnerHTML={{
-          __html: `var _comscore = _comscore || [];
-        _comscore.push({ c1: "2", c2: "24318560" });
-        (function() {
-        var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
-        s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
-        el.parentNode.insertBefore(s, el);
-        })();`,
-        }}
-      />
-      <noscript
-        data-hid="comScoreNoScript"
-        dangerouslySetInnerHTML={{
-          __html: `<img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=24318560&amp;cv=3.6.0&amp;cj=1" />`,
-        }}
-      ></noscript>
     </>
   )
 }
