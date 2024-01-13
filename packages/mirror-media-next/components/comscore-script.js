@@ -1,6 +1,6 @@
 import Script from 'next/script'
 import { useRouter } from 'next/router'
-import Head from 'next/head'
+// import Head from 'next/head'
 
 /**
  * Component for implement comScore script.
@@ -13,33 +13,7 @@ export default function ComScoreScript() {
   const { pathname } = router
   const isAmpStoryPage = pathname.startsWith('/story/amp/')
   if (isAmpStoryPage) {
-    return (
-      <Head>
-        <script
-          async
-          // eslint-disable-next-line react/no-unknown-property
-          custom-element="amp-analytics"
-          src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"
-        ></script>
-        {/* @ts-ignore */}
-        <amp-analytics type="comscore">
-          <script
-            type="application/json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                vars: {
-                  c2: '24318560',
-                },
-                extraUrlParams: {
-                  comscorekw: 'amp',
-                },
-              }),
-            }}
-          ></script>
-          {/* @ts-ignore */}
-        </amp-analytics>
-      </Head>
-    )
+    return null
   }
 
   return (
