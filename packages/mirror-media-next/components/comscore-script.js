@@ -1,5 +1,6 @@
 import Script from 'next/script'
 import { useRouter } from 'next/router'
+import Head from 'next/head'
 
 /**
  * Component for implement comScore script.
@@ -13,7 +14,7 @@ export default function ComScoreScript() {
   const isAmpStoryPage = pathname.startsWith('/story/amp/')
   if (isAmpStoryPage) {
     return (
-      <>
+      <Head>
         <script
           async
           // eslint-disable-next-line react/no-unknown-property
@@ -37,7 +38,7 @@ export default function ComScoreScript() {
           ></script>
           {/* @ts-ignore */}
         </amp-analytics>
-      </>
+      </Head>
     )
   }
 
