@@ -98,7 +98,7 @@ switch (ENV) {
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
     ELECTION_2024 = {
-      url: 'https://www.mirrormedia.mg/projects/election2024-homepage/index.html',
+      url: '/projects/election2024-homepage/index.html',
       shouldShowToggleButton: false,
     }
     break
@@ -152,7 +152,7 @@ switch (ENV) {
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
     ELECTION_2024 = {
-      url: 'https://www.mirrormedia.mg/projects/election2024-homepage/index.html',
+      url: '/projects/election2024-homepage/index.html',
       shouldShowToggleButton: false,
     }
     break
@@ -206,7 +206,7 @@ switch (ENV) {
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
     ELECTION_2024 = {
-      url: 'https://dev.mirrormedia.mg/projects/election2024-homepage/index.html',
+      url: '/projects/election2024-homepage/index.html',
       shouldShowToggleButton: true,
     }
     break
@@ -257,7 +257,7 @@ switch (ENV) {
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_local'
     ELECTION_2024 = {
-      url: 'https://dev.mirrormedia.mg/projects/election2024-homepage/index.html',
+      url: '/projects/election2024-homepage/index.html',
       shouldShowToggleButton: true,
     }
 }
