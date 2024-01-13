@@ -6,8 +6,11 @@ const Wrapper = styled.div`
   padding-top: 20px;
   iframe {
     background-color: #f5f5f5;
-    height: 600px;
+    height: 480px;
     width: 100%;
+    ${({ theme }) => theme.breakpoint.xl} {
+      height: 520px;
+    }
   }
 `
 
