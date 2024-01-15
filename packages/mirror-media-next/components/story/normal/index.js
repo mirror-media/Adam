@@ -22,7 +22,7 @@ import Divider from '../shared/divider'
 import ShareHeader from '../../shared/share-header'
 import Footer from '../../shared/footer'
 import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
-import Election2024Homepage from '../../election-2024-homepage'
+
 import {
   transformTimeDataIntoDotFormat,
   getCategoryOfWineSlug,
@@ -38,14 +38,6 @@ import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
 import { getActiveOrderSection, getActiveOrderCategory } from '../../../utils'
 import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
-
-const StyledElection2024Homepage = styled(Election2024Homepage)`
-  iframe {
-    margin: 0 auto;
-    background-color: #fff;
-    max-width: 1200px;
-  }
-`
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
   ssr: false,
@@ -661,7 +653,7 @@ export default function StoryNormalStyle({
           />
         )}
       </GPT_Placeholder>
-      <StyledElection2024Homepage />
+
       <Main className={classNameForGTM}>
         <Article>
           <SectionAndDate>
