@@ -27,7 +27,7 @@ import { useCallback, useState } from 'react'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
-import Election2024Homepage from '../../election-2024-homepage'
+
 const { getContentBlocksH2H3 } = MirrorMedia
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
@@ -43,14 +43,6 @@ const { getContentBlocksH2H3 } = MirrorMedia
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
-
-const StyledElection2024Homepage = styled(Election2024Homepage)`
-  iframe {
-    margin: 0 auto;
-    background-color: #fff;
-    max-width: 1200px;
-  }
-`
 
 const Main = styled.main`
   width: 100%;
@@ -294,7 +286,6 @@ export default function StoryPremiumStyle({
           />
         )}
       </GPT_Placeholder>
-      <StyledElection2024Homepage></StyledElection2024Homepage>
       <Main className={classNameForGTM}>
         <article>
           <TitleAndInfoAndHero
