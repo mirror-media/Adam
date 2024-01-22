@@ -186,6 +186,15 @@ export async function getServerSideProps({ query, req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
   const videoId = Array.isArray(query.id) ? query.id[0] : query.id
+
+  const userAgent = req.headers['user-agent']
+  console.log(
+    JSON.stringify({
+      severity: 'DEBUG',
+      message: `[Youtube] open /video/${videoId} with agent ${userAgent}`,
+    })
+  )
+
   const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']

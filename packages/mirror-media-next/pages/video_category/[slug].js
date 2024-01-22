@@ -131,6 +131,15 @@ export async function getServerSideProps({ query, req, res }) {
   const videoCategorySlug = Array.isArray(query.slug)
     ? query.slug[0]
     : query.slug
+
+  const userAgent = req.headers['user-agent']
+  console.log(
+    JSON.stringify({
+      severity: 'DEBUG',
+      message: `[Youtube] open /video_category/${videoCategorySlug} with agent ${userAgent}`,
+    })
+  )
+
   const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']

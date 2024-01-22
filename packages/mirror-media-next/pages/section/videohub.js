@@ -17,10 +17,9 @@ import LeadingVideo from '../../components/shared/leading-video.js'
 import Layout from '../../components/shared/layout.js'
 import {
   fetchVideohubSection,
-  fetchYoutubeHighestViewCountInOneWeek,
   fetchYoutubeLatestVideos,
   fetchYoutubePlaylistByChannelId,
-  fetcYoutubeVideoForFullDescription,
+  fetchYoutubeVideosWithStatistics,
 } from '../../utils/api/section-videohub'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
@@ -170,6 +169,14 @@ export default function SectionVideohub({
 }
 
 export async function getServerSideProps({ query, req, res }) {
+  const userAgent = req.headers['user-agent']
+  console.log(
+    JSON.stringify({
+      severity: 'DEBUG',
+      message: `[Youtube] open /section/videohub with agent ${userAgent}`,
+    })
+  )
+
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 900 }, req.url)
   } else {
@@ -188,7 +195,6 @@ export async function getServerSideProps({ query, req, res }) {
 
   let responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchYoutubeHighestViewCountInOneWeek(),
     fetchYoutubeLatestVideos(),
     fetchVideohubSection(),
   ])
@@ -237,16 +243,19 @@ export async function getServerSideProps({ query, req, res }) {
     ? headerData.topicsData
     : []
 
-  let highestViewCountVideo = handledResponses[1]?.items
-    ? simplifyYoutubeSearchedVideo(handledResponses[1]?.items)[0]
-    : {}
-
-  const latestVideos = handledResponses[2]?.items
-    ? simplifyYoutubeSearchedVideo(handledResponses[2]?.items)
+  /**
+   * fetch 50 latest videos for two usage:
+   * 1. get fetch statistics for 50 videos to get the most viewed video (熱門影片)
+   * 2. slice the first 4 videos for the front-end to render (最新影片)
+   */
+  const latest50Videos = handledResponses[1]?.items
+    ? simplifyYoutubeSearchedVideo(handledResponses[1]?.items)
     : []
+  const latestVideos = latest50Videos.slice(0, 4)
+  const latest50VideoIds = latest50Videos.map((video) => video.id).join(',')
 
-  const categories = handledResponses[3]?.section?.categories
-    ? handledResponses[3]?.section?.categories
+  const categories = handledResponses[2]?.section?.categories
+    ? handledResponses[2]?.section?.categories
     : []
 
   const channelIds = categories.map(
@@ -254,11 +263,7 @@ export async function getServerSideProps({ query, req, res }) {
   )
 
   const playlistResponses = await Promise.allSettled([
-    // fetch highest view count with youtube/videos to get full snippet.description
-    // cause in youtube/search we only receieve truncated one
-    highestViewCountVideo.id
-      ? fetcYoutubeVideoForFullDescription(highestViewCountVideo.id)
-      : Promise.resolve({}),
+    fetchYoutubeVideosWithStatistics(latest50VideoIds),
     ...channelIds.map((channelId) =>
       fetchYoutubePlaylistByChannelId(channelId)
     ),
@@ -292,9 +297,19 @@ export async function getServerSideProps({ query, req, res }) {
     }
   })
 
-  highestViewCountVideo = handledPlaylistResponses[0]?.items
-    ? simplifyYoutubeVideo(handledPlaylistResponses[0]?.items)[0]
-    : highestViewCountVideo
+  const latest50VideosWithStatistics = handledPlaylistResponses[0]?.items
+  const highestViewCountRawVideo = latest50VideosWithStatistics.reduce(
+    (popularVideo, video) => {
+      return Number(popularVideo?.statistics?.viewCount) >
+        Number(video.statistics?.viewCount)
+        ? popularVideo
+        : video
+    },
+    null
+  )
+  const highestViewCountVideo = simplifyYoutubeVideo([
+    highestViewCountRawVideo,
+  ])[0]
 
   const playlistsVideos = categories.map((category, index) => ({
     ...category,
