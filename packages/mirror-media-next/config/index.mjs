@@ -47,10 +47,7 @@ let GPT_MODE = ''
 let FIREBASE_CONFIG = {}
 
 let GCP_STACKDRIVER_LOG_NAME = ''
-let ELECTION_2024 = {
-  url: '',
-  shouldShowToggleButton: false,
-}
+
 switch (ENV) {
   case 'prod':
     SITE_URL = 'www.mirrormedia.mg'
@@ -97,10 +94,7 @@ switch (ENV) {
       measurementId: 'G-2FDRC4S37L',
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
-    ELECTION_2024 = {
-      url: '/projects/election2024-homepage/index.html',
-      shouldShowToggleButton: false,
-    }
+
     break
 
   case 'staging':
@@ -151,10 +145,6 @@ switch (ENV) {
       appId: '1:388524095772:web:e3739160c042909827a2d9',
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
-    ELECTION_2024 = {
-      url: '/projects/election2024-homepage/index.html',
-      shouldShowToggleButton: false,
-    }
     break
 
   case 'dev':
@@ -205,10 +195,6 @@ switch (ENV) {
       measurementId: 'G-EY5CYC602Z',
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
-    ELECTION_2024 = {
-      url: '/projects/election2024-homepage/index.html',
-      shouldShowToggleButton: true,
-    }
     break
 
   default:
@@ -256,10 +242,6 @@ switch (ENV) {
       measurementId: 'G-EY5CYC602Z',
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_local'
-    ELECTION_2024 = {
-      url: '/projects/election2024-homepage/index.html',
-      shouldShowToggleButton: true,
-    }
 }
 
 export {
@@ -297,5 +279,4 @@ export {
   URL_STATIC_TOPICS,
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
-  ELECTION_2024,
 }
