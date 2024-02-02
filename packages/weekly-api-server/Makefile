@@ -9,7 +9,7 @@ build-lib:
 
 dev-server:
 	@echo "$(P) Start dev server"
-	NODE_ENV=development yarn babel-node src/server
+	RELEASE_BRANCH=local NODE_ENV=development yarn babel-node src/server
 
 dev:
 	yarn nodemon --exec make dev-server

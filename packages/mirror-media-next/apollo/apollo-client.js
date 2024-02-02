@@ -2,20 +2,33 @@ import ApolloLinkTimeout from 'apollo-link-timeout'
 import { HttpLink } from '@apollo/client'
 import { IS_PREVIEW_MODE } from '../config/index.mjs'
 import { ApolloClient, InMemoryCache, concat } from '@apollo/client'
-
 import {
   API_TIMEOUT_GRAPHQL,
   WEEKLY_API_SERVER_ORIGIN,
   PREVIEW_SERVER_ORIGIN,
 } from '../config/index.mjs'
 
-const httpLink = new HttpLink({
-  uri: IS_PREVIEW_MODE
-    ? `https://${PREVIEW_SERVER_ORIGIN}/api/graphql`
-    : `https://${WEEKLY_API_SERVER_ORIGIN}/content/graphql`,
-})
+const DEFAULT_URI = '/graphql'
+const serverOrigin = IS_PREVIEW_MODE
+  ? `https://${PREVIEW_SERVER_ORIGIN}`
+  : `https://${WEEKLY_API_SERVER_ORIGIN}`
 
+/**
+ * Because we have two GraphQL endpoint, `/content/graphql` and `/member/graphql`,
+ * we need to change endpoint by using `context.uri` in `client.query`.
+ * @param {string} uri
+ * @param {RequestInit} options
+ */
+const customFetch = (uri, options) => {
+  const endpoint =
+    uri === DEFAULT_URI
+      ? `${serverOrigin}/content/graphql`
+      : `${serverOrigin}${uri}`
+  return fetch(endpoint, options)
+}
 const timeoutLink = new ApolloLinkTimeout(API_TIMEOUT_GRAPHQL)
+
+const httpLink = new HttpLink({ fetch: customFetch })
 
 const client = new ApolloClient({
   link: concat(timeoutLink, httpLink),

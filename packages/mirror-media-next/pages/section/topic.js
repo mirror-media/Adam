@@ -130,13 +130,12 @@ export default function Topics({ topics, topicsCount, headerData }) {
 /**
  * @type {import('next').GetServerSideProps}
  */
-export async function getServerSideProps({ req, query, res }) {
+export async function getServerSideProps({ req, res }) {
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
-  const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
@@ -149,7 +148,7 @@ export async function getServerSideProps({ req, query, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchTopicList(RENDER_PAGE_SIZE * 2, mockError ? NaN : 0),
+    fetchTopicList(RENDER_PAGE_SIZE * 2, 0),
   ])
 
   const handledResponses = responses.map((response, index) => {

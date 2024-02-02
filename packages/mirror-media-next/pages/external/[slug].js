@@ -10,6 +10,7 @@ import Layout from '../../components/shared/layout'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import JsonLdsScripts from '../../components/externals/shared/json-lds-scripts'
 
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
@@ -39,6 +40,7 @@ export default function External({ external, headerData }) {
           key="og:slug"
         />
       </Head>
+      <JsonLdsScripts external={external} currentPage="/external/" />
       <Layout
         head={{
           title: `${external?.title}`,

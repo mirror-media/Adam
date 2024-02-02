@@ -14,9 +14,15 @@ import { createProxyMiddleware } from 'http-proxy-middleware'
  *  @param {string} opts.jwtSecret
  *  @param {string} opts.proxyOrigin
  *  @param {'/content/graphql'|'/member/graphql'} opts.proxyPath
+ *  @param {string} [opts.sessionTokenKey]
  *  @returns {express.Router}
  */
-export function createGraphQLProxy({ jwtSecret, proxyOrigin, proxyPath }) {
+export function createGraphQLProxy({
+  jwtSecret,
+  proxyOrigin,
+  proxyPath,
+  sessionTokenKey,
+}) {
   // create express mini app
   const router = express.Router()
 
@@ -54,6 +60,18 @@ export function createGraphQLProxy({ jwtSecret, proxyOrigin, proxyPath }) {
       // add `X-Access-Token-Scope` custom header.
       // The api servers use this custom header to implement access control mechanism.
       onProxyReq: (proxyReq, req, res) => {
+        // @ts-ignore `res.locals` is not defined in 'http-proxy-middleware' pkg,
+        // but it does exist in 'express' res object.
+        const scope = res?.locals?.auth?.decodedAccessToken?.scope || ''
+        proxyReq.setHeader('X-Access-Token-Scope', scope)
+
+        if (sessionTokenKey) {
+          const sessionToken = res.locals[sessionTokenKey]
+          // remove Authorization header to prevent authenication fail on gql side
+          proxyReq.removeHeader('Authorization')
+          proxyReq.setHeader('Cookie', `keystonejs-session=${sessionToken}`)
+        }
+
         console.log(
           JSON.stringify({
             severity: 'DEBUG',
@@ -62,14 +80,18 @@ export function createGraphQLProxy({ jwtSecret, proxyOrigin, proxyPath }) {
               proxyOrigin +
               proxyReq.path,
             ...res?.locals?.globalLogFields,
+            debugPayload: {
+              'req.headers': proxyReq.getHeaders(),
+            },
           })
         )
-        // @ts-ignore `res.locals` is not defined in 'http-proxy-middleware' pkg,
-        // but it does exist in 'express' res object.
-        const scope = res?.locals?.auth?.decodedAccessToken?.scope || ''
-        proxyReq.setHeader('X-Access-Token-Scope', scope)
       },
-      onError: (err, req, res, target) => { // eslint-disable-line
+      onError: (
+        err,
+        req,
+        res,
+        /* eslint-disable-line no-unused-vars */ target
+      ) => {
         const annotatingError = errors.helpers.wrap(
           err,
           'ProxyError',

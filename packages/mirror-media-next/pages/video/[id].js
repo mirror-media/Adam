@@ -195,8 +195,6 @@ export async function getServerSideProps({ query, req, res }) {
     })
   )
 
-  const mockError = query.error === '500'
-
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
@@ -298,17 +296,11 @@ export async function getServerSideProps({ query, req, res }) {
     }
   }
 
-  const props = mockError
-    ? {
-        video: { id: videoId, channelId: '' },
-        latestVideos: [],
-        headerData: { sectionsData, topicsData },
-      }
-    : {
-        video,
-        latestVideos,
-        headerData: { sectionsData, topicsData },
-      }
+  const props = {
+    video,
+    latestVideos,
+    headerData: { sectionsData, topicsData },
+  }
 
   return { props }
 }

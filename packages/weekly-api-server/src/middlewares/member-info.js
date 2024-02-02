@@ -11,20 +11,22 @@ import express from 'express' // eslint-disable-line
  *
  *  @param {Object} opts
  *  @param {string} opts.apiUrl
+ *  @param {string} opts.sessionTokenKey
  *  @returns {express.RequestHandler} express middleware
  */
 export function queryMemberInfo(opts) {
   return async (req, res, next) => {
+    const sessionToken = res.locals[opts.sessionTokenKey]
     const firebaseId = res.locals.auth?.decodedIdToken?.uid
 
     const query = `
   query {
-    allMembers(where: { firebaseId: "${firebaseId}"}) {
+    members(where: { firebaseId: { equals: "${firebaseId}" }}) {
       id
       firebaseId
       type
       email
-      subscription(where: { isActive: true }){
+      subscription(where: { isActive: { equals: true }}){
         postId
       }
     }
@@ -41,6 +43,7 @@ export function queryMemberInfo(opts) {
         {
           headers: {
             'X-Access-Token-Scope': `read:member-info:${firebaseId}`,
+            Cookie: `keystonejs-session=${sessionToken}`,
           },
         }
       )
@@ -68,7 +71,7 @@ export function queryMemberInfo(opts) {
     }
 
     // set `res.locals.auth.memberInfo` for next middlewares
-    res.locals.memberInfo = data?.allMembers?.[0]
+    res.locals.memberInfo = data?.members?.[0]
 
     next()
   }

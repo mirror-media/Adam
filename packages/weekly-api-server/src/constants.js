@@ -3,3 +3,8 @@ export const statusCodes = {
   unauthorized: 401,
   internalServerError: 500,
 }
+
+export const sessionTokenKey = {
+  member: 'israfelSessionToken',
+  content: 'contentGQLSessionToken',
+}
