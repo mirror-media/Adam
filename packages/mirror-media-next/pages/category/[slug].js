@@ -264,7 +264,6 @@ export async function getServerSideProps({ query, req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
   const categorySlug = Array.isArray(query.slug) ? query.slug[0] : query.slug
-  const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
@@ -338,16 +337,12 @@ export async function getServerSideProps({ query, req, res }) {
           fetchPremiumPostsByCategorySlug(
             categorySlug,
             RENDER_PAGE_SIZE * 2,
-            mockError ? NaN : 0
+            0
           ),
         ]
       : [
           fetchHeaderDataInDefaultPageLayout(),
-          fetchPostsByCategorySlug(
-            categorySlug,
-            RENDER_PAGE_SIZE * 2,
-            mockError ? NaN : 0
-          ),
+          fetchPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
         ]
   )
 

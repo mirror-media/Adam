@@ -13,6 +13,25 @@ const Wrapper = styled.section`
   iframe {
     max-width: 100%;
   }
+
+  .amp-img-wrapper {
+    margin-top: 20px;
+    width: 100%;
+    height: 50vw;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    img {
+      object-fit: contain;
+    }
+  }
+  .amp-iframe-wrapper {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    overflow: hidden;
+  }
 `
 
 /**

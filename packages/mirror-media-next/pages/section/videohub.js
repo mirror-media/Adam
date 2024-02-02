@@ -168,7 +168,7 @@ export default function SectionVideohub({
   )
 }
 
-export async function getServerSideProps({ query, req, res }) {
+export async function getServerSideProps({ req, res }) {
   const userAgent = req.headers['user-agent']
   console.log(
     JSON.stringify({
@@ -182,7 +182,6 @@ export async function getServerSideProps({ query, req, res }) {
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
-  const mockError = query.error === '500'
 
   const traceHeader = req.headers?.['x-cloud-trace-context']
   let globalLogFields = {}
@@ -322,19 +321,12 @@ export async function getServerSideProps({ query, req, res }) {
     ),
   }))
 
-  const props = mockError
-    ? {
-        highestViewCountVideo: {},
-        latestVideos: [],
-        playlistsVideos: [],
-        headerData: { sectionsData, topicsData },
-      }
-    : {
-        highestViewCountVideo,
-        latestVideos,
-        playlistsVideos,
-        headerData: { sectionsData, topicsData },
-      }
+  const props = {
+    highestViewCountVideo,
+    latestVideos,
+    playlistsVideos,
+    headerData: { sectionsData, topicsData },
+  }
 
   return { props }
 }

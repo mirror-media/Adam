@@ -7,6 +7,7 @@ import middlewareCreator from './middlewares'
 import { createGcsProxy } from './gcs-proxy-mini-app'
 import { createGraphQLProxy } from './gql-proxy-mini-app'
 import { createYoutubeProxy } from './youtube-proxy-mini-app'
+import { sessionTokenKey } from './constants'
 
 /**
  *  This function creates an express application.
@@ -29,6 +30,12 @@ import { createYoutubeProxy } from './youtube-proxy-mini-app'
  *  @param {string} opts.gcsProxyOrigin
  *  @param {string} opts.youtubeProxyOrigin
  *  @param {string[]|'*'} [opts.corsAllowOrigin=[]]
+ *  @param {Object} opts.israfelHeadlessAccount
+ *  @param {string} opts.israfelHeadlessAccount.email
+ *  @param {string} opts.israfelHeadlessAccount.password
+ *  @param {Object} opts.contentGQLHeadlessAccount
+ *  @param {string} opts.contentGQLHeadlessAccount.email
+ *  @param {string} opts.contentGQLHeadlessAccount.password
  *  @returns {express.Application}
  */
 export function createApp({
@@ -41,6 +48,8 @@ export function createApp({
   gcsProxyOrigin,
   corsAllowOrigin = [],
   youtubeProxyOrigin,
+  israfelHeadlessAccount,
+  contentGQLHeadlessAccount, // eslint-disable-line no-unused-vars
 }) {
   // create express app
   const app = express()
@@ -79,8 +88,13 @@ export function createApp({
       // otherwise, call next middlewares
       return next()
     },
+    middlewareCreator.createIsrafelSessionTokenMw({
+      apiUrl: israfelProxyOrigin + '/api/graphql',
+      headlessAccount: israfelHeadlessAccount,
+    }),
     middlewareCreator.queryMemberInfo({
       apiUrl: israfelProxyOrigin + '/api/graphql',
+      sessionTokenKey: sessionTokenKey.member,
     }), // query member access permission
     middlewareCreator.signAccessToken({ jwtSecret, jwtLifeTime }), // sign access token according to member permission
     /** @type {express.RequestHandler} */
@@ -146,12 +160,24 @@ export function createApp({
     })
   )
 
+  // The order of next two middlewares
+  // should not be changed.
+  // We need to get session token before proxying requests to Member GQL.
+  app.use(
+    '/member/graphql',
+    middlewareCreator.createIsrafelSessionTokenMw({
+      apiUrl: israfelProxyOrigin + '/api/graphql',
+      headlessAccount: israfelHeadlessAccount,
+    })
+  )
+
   // mini app: isafel GraphQL API
   app.use(
     createGraphQLProxy({
       jwtSecret,
       proxyOrigin: israfelProxyOrigin,
       proxyPath: '/member/graphql',
+      sessionTokenKey: sessionTokenKey.member,
     })
   )
 
@@ -176,7 +202,7 @@ export function createApp({
      *  error handler
      *  @type {express.ErrorRequestHandler}
      */
-    (err, req, res, next) => { // eslint-disable-line
+    (err, req, res, /* eslint-disable-line no-unused-vars */ next) => {
       const annotatingError = errors.helpers.wrap(
         err,
         'UnknownError',

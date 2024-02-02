@@ -11,7 +11,8 @@ import UserBehaviorLogger from '../components/shared/user-behavior-logger'
 import { useRouter } from 'next/router'
 
 import { MembershipProvider } from '../context/membership'
-
+import { Provider } from 'react-redux'
+import store from '../store'
 /**
  *
  * @param {Object} props
@@ -33,22 +34,24 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalStyles />
-      <MembershipProvider>
-        <ApolloProvider client={client}>
-          <ThemeProvider theme={theme}>
-            {/* some script may need member type to decide render or not,
+      <Provider store={store}>
+        <MembershipProvider>
+          <ApolloProvider client={client}>
+            <ThemeProvider theme={theme}>
+              {/* some script may need member type to decide render or not,
            make sure the WholeSiteScript component is placed inside contextProvider or other provider  */}
-            <WholeSiteScript />
-            {/* Since user behavior log need member info, make sure the
+              <WholeSiteScript />
+              {/* Since user behavior log need member info, make sure the
             UserBehaviorLogger component is placed inside contextProvider or
             other provider */}
-            {/* Story page has its own UserBehaviorLogger.
+              {/* Story page has its own UserBehaviorLogger.
             In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
-            {!isStoryPage && <UserBehaviorLogger />}
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </ApolloProvider>
-      </MembershipProvider>
+              {!isStoryPage && <UserBehaviorLogger />}
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </ApolloProvider>
+        </MembershipProvider>
+      </Provider>
     </>
   )
 }
