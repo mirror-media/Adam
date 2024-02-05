@@ -26,7 +26,7 @@ import JsonLdsScripts from '../../components/externals/shared/json-lds-scripts'
 export default function External({ external, headerData }) {
   const router = useRouter()
   const { slug } = router.query
-  const ampUrl = `https://${SITE_URL}/story/amp/${slug}`
+  const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
   return (
     <>
       <Head>
