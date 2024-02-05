@@ -1,7 +1,7 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { GCP_PROJECT_ID, ENV, SITE_URL } from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
 import { fetchExternalBySlug } from '../../apollo/query/externals'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
@@ -26,6 +26,7 @@ import JsonLdsScripts from '../../components/externals/shared/json-lds-scripts'
 export default function External({ external, headerData }) {
   const router = useRouter()
   const { slug } = router.query
+  const ampUrl = `https://${SITE_URL}/story/amp/${slug}`
   return (
     <>
       <Head>
@@ -39,6 +40,7 @@ export default function External({ external, headerData }) {
           content={Array.isArray(slug) ? slug?.[0] : slug}
           key="og:slug"
         />
+        <link rel="amphtml" href={ampUrl} key="amphtml" />
       </Head>
       <JsonLdsScripts external={external} currentPage="/external/" />
       <Layout
