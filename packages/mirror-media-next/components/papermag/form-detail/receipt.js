@@ -60,14 +60,33 @@ export default function Receipt({
   }
 
   const donateOptions = [
-    '財團法人台灣兒童暨家庭扶助基金會',
-    '財團法人創世社會福利基金會',
-    '財團法人台灣癌症基金會',
-    '財團法人伊甸社會福利基金會',
-    '財團法人門諾社會福利慈善事業基金會',
+    {
+      name: '財團法人台灣兒童暨家庭扶助基金會',
+      code: 8585,
+    },
+    {
+      name: '財團法人創世社會福利基金會',
+      code: 919,
+    },
+    {
+      name: '財團法人台灣癌症基金會',
+      code: 1799,
+    },
+    {
+      name: '財團法人伊甸社會福利基金會',
+      code: 25585,
+    },
+    {
+      name: '財團法人門諾社會福利慈善事業基金會',
+      code: 5260,
+    },
   ]
 
-  const invoiceWithCarrierOptions = ['電子發票載具', '手機條碼', '自然人憑證']
+  const invoiceWithCarrierOptions = [
+    { id: 0, name: '手機條碼' },
+    { id: 1, name: '自然人憑證' },
+    { id: 2, name: '電子發票載具' },
+  ]
 
   const [showDetails, setShowDetails] = useState(false)
 
@@ -108,23 +127,24 @@ export default function Receipt({
   // Initialize the receipt data object using useMemo
   const receiptData = useMemo(() => {
     let data = {}
+
     if (receiptOption === 'donate') {
       data = {
         name: '捐贈發票',
         value: selectedDonateOption,
       }
     } else if (receiptOption === 'invoiceWithCarrier') {
-      if (selectedInvoiceCarrierOption === '電子發票載具') {
+      if (selectedInvoiceCarrierOption?.name === '電子發票載具') {
         data = {
           name: '二聯式發票（含載具）- 電子發票載具',
           value: selectedInvoiceCarrierOption,
         }
-      } else if (selectedInvoiceCarrierOption === '手機條碼') {
+      } else if (selectedInvoiceCarrierOption?.name === '手機條碼') {
         data = {
           name: '二聯式發票（含載具）- 手機條碼',
           value: barcodeValue,
         }
-      } else if (selectedInvoiceCarrierOption === '自然人憑證') {
+      } else if (selectedInvoiceCarrierOption?.name === '自然人憑證') {
         data = {
           name: '二聯式發票（含載具）- 自然人憑證',
           value: certificateValue,
@@ -192,7 +212,7 @@ export default function Receipt({
                 options={invoiceWithCarrierOptions}
                 onSelect={handleInvoiceCarrierOptionSelect}
               />
-              {selectedInvoiceCarrierOption === '手機條碼' && (
+              {selectedInvoiceCarrierOption?.name === '手機條碼' && (
                 <FormInput
                   name="barcode"
                   type="text"
@@ -205,7 +225,7 @@ export default function Receipt({
                   style={{ marginTop: '-16px' }}
                 />
               )}
-              {selectedInvoiceCarrierOption === '自然人憑證' && (
+              {selectedInvoiceCarrierOption?.name === '自然人憑證' && (
                 <FormInput
                   name="certificate"
                   type="text"

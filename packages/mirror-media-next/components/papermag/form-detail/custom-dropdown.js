@@ -121,13 +121,13 @@ export default function CustomDropdown({
   return (
     <CustomDropdownContainer ref={containerRef}>
       <DropdownButton isOpen={isOpen} onClick={toggleDropdown}>
-        {selectedOption ? selectedOption : defaultText}
+        {selectedOption ? selectedOption.name : defaultText}
       </DropdownButton>
       {isOpen && (
         <OptionsList>
           {options.map((option, index) => (
             <Option key={index} onClick={() => selectOption(option)}>
-              {option}
+              {option.name}
             </Option>
           ))}
         </OptionsList>

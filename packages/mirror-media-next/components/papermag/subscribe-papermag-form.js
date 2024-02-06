@@ -49,11 +49,12 @@ const RightWrapper = styled.div`
 `
 
 export default function SubscribePaperMagForm({ plan }) {
+  const router = useRouter()
+
   const [count, setCount] = useState(1)
   const [renewCouponApplied, setRenewCouponApplied] = useState(false)
   const [shouldCountFreight, setShouldCountFreight] = useState(false)
-  const [loveCode, setLoveCode] = useState(null)
-  const router = useRouter()
+  const [promoteCode, setPromoteCode] = useState(null)
 
   const [ordererValues, setOrdererValues] = useState({
     username: '',
@@ -72,7 +73,7 @@ export default function SubscribePaperMagForm({ plan }) {
     address: '',
   })
 
-  const [paymentPayload, setPaymentPlayload] = useState({
+  const [paymentPayload, setPaymentPayload] = useState({
     MerchantID: '',
     TradeInfo: '',
     TradeSha: '',
@@ -85,6 +86,7 @@ export default function SubscribePaperMagForm({ plan }) {
 
   //show a warning message if the isAcceptedConditions is true but the receiptOption is null
   const [showWarning, setShowWarning] = useState(false)
+
   useEffect(() => {
     if (isAcceptedConditions && receiptOption === null) {
       setShowWarning(true)
@@ -93,42 +95,85 @@ export default function SubscribePaperMagForm({ plan }) {
     }
   }, [isAcceptedConditions, receiptOption])
 
-  // update the receiptData state
-  const [receiptData, setReceiptData] = useState({})
+  const [receiptData, setReceiptData] = useState(null) // update the receiptData state
+
   const handleSubmit = async (event) => {
     event.preventDefault()
-    // Check for form validity
+
+    // TODO: Check form validity again
+
+    const merchandiseName = `magazine_${plan === 2 ? 'two' : 'one'}_year${
+      shouldCountFreight ? '_with_shipping_fee' : ''
+    }`
+
+    const orderDesc = `${
+      plan === 1 ? '一年鏡週刊 52 期' : '二年鏡週刊 104 期'
+    }${shouldCountFreight ? '加掛號運費' : ''}`
+
+    const promoteCodeStr = promoteCode ? `MR${promoteCode}` : ''
+    const loveCode =
+      receiptOption === 'donate' ? Number(receiptData.value.code) : null
+    const receiptType = receiptOption === 'tripleInvoice' ? 'B2B' : 'B2C'
+    const buyerName =
+      receiptOption === 'tripleInvoice' ? receiptData.value['抬頭'] : ''
+    const buyerUBN =
+      receiptOption === 'tripleInvoice' ? receiptData.value['統一編號'] : ''
+
+    let carrierType = '' //載具類別
+    let carrierNum = '' //載具編號
+
+    if (receiptOption === 'invoiceWithCarrier') {
+      switch (receiptData.name) {
+        case '二聯式發票（含載具）- 手機條碼':
+          carrierType = '0'
+          carrierNum = receiptData.value
+          break
+        case '二聯式發票（含載具）- 自然人憑證':
+          carrierType = '1'
+          carrierNum = receiptData.value
+          break
+        case '二聯式發票（含載具）- 電子發票載具':
+          carrierType = '2'
+          carrierNum = ordererValues.email
+          break
+        default:
+          carrierNum = ''
+          carrierType = ''
+          break
+      }
+    }
 
     // If everything is valid, proceed with submitting the form data
     // Make an API request or update the state here
     // carry encrypted paymentPayload and submit to newebpay
 
-    const code = `magazine_${plan === 2 ? 'two' : 'one'}_year${
-      shouldCountFreight ? '_with_shipping_fee' : ''
-    }`
-
     const requestBody = {
       data: {
-        desc: 'mock_desc',
-        comment: 'mock_comment',
+        desc: orderDesc, //訂單描述
+        comment: '', //約定事項
         merchandise: {
           connect: {
-            code,
+            code: merchandiseName, //商品名稱
           },
         },
-        itemCount: count,
-        purchaseDatetime: new Date(),
-        purchaseName: ordererValues.username,
-        purchaseAddress: ordererValues.address,
-        purchaseEmail: ordererValues.email,
-        receiveName: recipientValues.username,
-        receiveAddress: recipientValues.address,
-        category: 'B2C',
-        purchaseMobile: ordererValues.cellphone,
-        receiveMobile: recipientValues.cellphone,
-        loveCode,
-        carrierType: receiptData,
-        returnUrl: `${window.location.origin}/papermag/return`,
+        promoteCode: promoteCodeStr, //使用優惠碼
+        itemCount: count, //商品數量
+        purchaseDatetime: new Date(), // 訂購時間
+        purchaseName: ordererValues.username, //購買者姓名
+        purchaseAddress: ordererValues.address, //購買者地址
+        purchaseEmail: ordererValues.email, //購買者信箱
+        purchaseMobile: ordererValues.cellphone, //購買者手機
+        purchasePhone: `${ordererValues.phone} ${ordererValues.phoneExt}`, //購買者電話
+        receiveName: recipientValues.username, //收件者姓名
+        receiveAddress: recipientValues.address, //收件者地址
+        receiveMobile: recipientValues.cellphone, //收件者手機
+        receivePhone: `${recipientValues.phone} ${recipientValues.phoneExt}`, //收件者電話
+        category: receiptType, //發票種類
+        loveCode: loveCode, // 捐贈碼
+        carrierType: carrierType, //載具類別
+        carrierNum: carrierNum, //載具編號（二聯式發票）
+        buyerName: buyerName, //買受人名稱（三聯式發票）
+        buyerUBN: buyerUBN, //買受人統一編號（三聯式發票）
       },
     }
 
@@ -141,7 +186,7 @@ export default function SubscribePaperMagForm({ plan }) {
       router.push(`/papermag/return?order-fail=true`)
     }
 
-    setPaymentPlayload(data.data)
+    setPaymentPayload(data.data)
     // 為了確保資料先填入 form 中而使用 setTimeout
     setTimeout(() => {
       const formDOM = document.forms.newebpay
@@ -157,8 +202,8 @@ export default function SubscribePaperMagForm({ plan }) {
           <ApplyDiscount
             setRenewCouponApplied={setRenewCouponApplied}
             renewCouponApplied={renewCouponApplied}
-            loveCode={loveCode}
-            setLoveCode={setLoveCode}
+            promoteCode={promoteCode}
+            setPromoteCode={setPromoteCode}
           />
           <Orderer
             ordererValues={ordererValues}
@@ -199,6 +244,7 @@ export default function SubscribePaperMagForm({ plan }) {
           />
         </RightWrapper>
       </Form>
+
       <NewebpayForm
         merchantId={paymentPayload.MerchantID}
         tradeInfo={paymentPayload.TradeInfo}
