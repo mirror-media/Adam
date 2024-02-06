@@ -153,17 +153,17 @@ const RemoveButton = styled.button`
 export default function ApplyDiscount({
   renewCouponApplied,
   setRenewCouponApplied,
-  loveCode,
-  setLoveCode,
+  promoteCode,
+  setPromoteCode,
 }) {
   const handleInputChange = (event) => {
     const value = event.target.value
     if (/^[0-9]*$/.test(value) && value.length <= 8) {
-      setLoveCode(value)
+      setPromoteCode(value)
     }
   }
 
-  const isInputValid = loveCode?.length === 8
+  const isInputValid = promoteCode?.length === 8
 
   const handleConfirmClick = (e) => {
     e.preventDefault()
@@ -174,7 +174,7 @@ export default function ApplyDiscount({
 
   const handleRemoveClick = () => {
     setRenewCouponApplied(false)
-    setLoveCode('')
+    setPromoteCode('')
   }
 
   return (
@@ -189,7 +189,7 @@ export default function ApplyDiscount({
           <label>MR</label>
           <input
             placeholder="12345678"
-            value={loveCode}
+            value={promoteCode}
             onChange={handleInputChange}
             disabled={renewCouponApplied}
           />
