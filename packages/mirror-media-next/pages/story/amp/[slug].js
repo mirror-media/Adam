@@ -119,6 +119,7 @@ function StoryAmpPage({ postData }) {
           imageUrl:
             getResizedUrl(postData.og_image?.resized) ||
             getResizedUrl(postData.heroImage?.resized),
+          skipCanonical: true,
         }}
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}

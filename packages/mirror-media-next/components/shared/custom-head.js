@@ -30,12 +30,6 @@ import { useRouter } from 'next/router'
  * @return {null | JSX.Element}
  */
 const createCanonicalLink = (routerAsPath) => {
-  const isStoryPage = routerAsPath.startsWith('/story/')
-
-  if (isStoryPage) {
-    return null
-  }
-
   const url = new URL(routerAsPath, 'https://' + SITE_URL)
   url.search = '' //remove query params in url
 
@@ -47,20 +41,30 @@ const createCanonicalLink = (routerAsPath) => {
  * @property {string} [title] - head title used to setup title other title related meta
  * @property {string} [description] - head description used to setup description related meta
  * @property {string} [imageUrl] - image url used to setup image related meta
+ * @property {boolean} [skipCanonical] - flag to indicates whether the canonical should be added here
  */
 
 /**
  * @param {HeadProps} props
  * @returns
  */
-export default function CustomHead(props) {
+export default function CustomHead({
+  skipCanonical = false,
+  title,
+  description,
+  imageUrl,
+}) {
   const router = useRouter()
-  const canonicalLink = createCanonicalLink(router.asPath)
+  const canonicalLink = skipCanonical ? (
+    <></>
+  ) : (
+    createCanonicalLink(router.asPath)
+  )
   /** @type {OGProperties} */
   const siteInformation = {
-    title: props.title ? `${props.title} - ${SITE_TITLE}` : SITE_TITLE,
+    title: title ? `${title} - ${SITE_TITLE}` : SITE_TITLE,
     description:
-      props.description ??
+      description ??
       '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。',
     site_name: SITE_TITLE,
     url: SITE_URL + router.asPath,
@@ -69,8 +73,7 @@ export default function CustomHead(props) {
       width: '1200',
       height: '630',
       type: 'image/png',
-      url:
-        props.imageUrl ?? `https://${SITE_URL}/images-next/default-og-img.png`,
+      url: imageUrl ?? `https://${SITE_URL}/images-next/default-og-img.png`,
     },
     card: 'summary_large_image',
     fbAppId: FB_APP_ID,

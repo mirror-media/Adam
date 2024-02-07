@@ -105,11 +105,9 @@ export default function SubscribePaperMagForm({ plan }) {
     const merchandiseName = `magazine_${plan === 2 ? 'two' : 'one'}_year${
       shouldCountFreight ? '_with_shipping_fee' : ''
     }`
-
     const orderDesc = `${
       plan === 1 ? '一年鏡週刊 52 期' : '二年鏡週刊 104 期'
     }${shouldCountFreight ? '加掛號運費' : ''}`
-
     const promoteCodeStr = promoteCode ? `MR${promoteCode}` : ''
     const loveCode =
       receiptOption === 'donate' ? Number(receiptData.value.code) : null
@@ -121,6 +119,11 @@ export default function SubscribePaperMagForm({ plan }) {
 
     let carrierType = '' //載具類別
     let carrierNum = '' //載具編號
+    let recipient = recipientValues //收件者資料
+
+    if (sameAsOrderer) {
+      recipient = { ...ordererValues }
+    }
 
     if (receiptOption === 'invoiceWithCarrier') {
       switch (receiptData.name) {
@@ -164,10 +167,10 @@ export default function SubscribePaperMagForm({ plan }) {
         purchaseEmail: ordererValues.email, //購買者信箱
         purchaseMobile: ordererValues.cellphone, //購買者手機
         purchasePhone: `${ordererValues.phone} ${ordererValues.phoneExt}`, //購買者電話
-        receiveName: recipientValues.username, //收件者姓名
-        receiveAddress: recipientValues.address, //收件者地址
-        receiveMobile: recipientValues.cellphone, //收件者手機
-        receivePhone: `${recipientValues.phone} ${recipientValues.phoneExt}`, //收件者電話
+        receiveName: recipient.username, //收件者姓名
+        receiveAddress: recipient.address, //收件者地址
+        receiveMobile: recipient.cellphone, //收件者手機
+        receivePhone: `${recipient.phone} ${recipient.phoneExt}`, //收件者電話
         category: receiptType, //發票種類
         loveCode: loveCode, // 捐贈碼
         carrierType: carrierType, //載具類別
