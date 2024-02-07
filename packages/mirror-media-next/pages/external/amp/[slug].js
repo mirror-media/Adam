@@ -66,6 +66,7 @@ export default function External({ external }) {
           title,
           description: brief,
           imageUrl: thumb,
+          skipCanonical: true,
         }}
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}

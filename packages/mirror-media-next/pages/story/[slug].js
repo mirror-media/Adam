@@ -252,6 +252,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
           imageUrl:
             getResizedUrl(postData.og_image?.resized) ||
             getResizedUrl(postData.heroImage?.resized),
+          skipCanonical: true,
         }}
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}
