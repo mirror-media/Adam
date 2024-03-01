@@ -35,4 +35,25 @@ function getMerchandiseAndShippingFeeInfo(merchandiseCode) {
   return plan
 }
 
-export { getMerchandiseAndShippingFeeInfo }
+function checkOrdererValues(orderItem) {
+  return !(
+    orderItem.username === '' ||
+    orderItem.cellphone === '' ||
+    orderItem.address === '' ||
+    orderItem.email === ''
+  )
+}
+
+function checkRecipientValues(recipientItem) {
+  return !(
+    recipientItem.username === '' ||
+    recipientItem.cellphone === '' ||
+    recipientItem.address === ''
+  )
+}
+
+export {
+  getMerchandiseAndShippingFeeInfo,
+  checkOrdererValues,
+  checkRecipientValues,
+}

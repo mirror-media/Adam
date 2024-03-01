@@ -8,7 +8,8 @@ import styled from 'styled-components'
 import useClickOutside from '../hooks/useClickOutside'
 import { useRouter } from 'next/router'
 import { useMembership, logout } from '../context/membership'
-
+import { useAppDispatch } from '../hooks/useRedux'
+import { loginActions } from '../slice/login-slice'
 const MemberLoginButtonWrapper = styled.div`
   cursor: pointer;
 `
@@ -86,9 +87,10 @@ export default function PremiumMemberLoginButton({ className }) {
   })
   const router = useRouter()
   const { isLoggedIn } = useMembership()
-
+  const dispatch = useAppDispatch()
   const handleLogOut = () => {
     setShowSelectOptions(false)
+    dispatch(loginActions.resetLoginState())
     logout()
   }
   const handleLogIn = () => {

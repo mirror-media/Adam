@@ -1,6 +1,6 @@
 //See examples: https://github.com/vercel/next.js/tree/09f235d9be8d3c6ae23bfad1baccdf68bd501390/examples/with-redux
 import { configureStore } from '@reduxjs/toolkit'
-import counterReducer from '../slice/login-slice'
+import loginReducer from '../slice/login-slice'
 /**
  * @typedef {ReturnType<typeof store.getState>} AppState
  * @typedef {typeof store.dispatch} AppDispatch
@@ -14,7 +14,7 @@ import counterReducer from '../slice/login-slice'
 
 // create a makeStore function
 
-const makeStore = () => configureStore({ reducer: { counter: counterReducer } })
+const makeStore = () => configureStore({ reducer: { login: loginReducer } })
 const store = makeStore()
 
 export default store

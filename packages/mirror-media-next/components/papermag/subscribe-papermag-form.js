@@ -11,6 +11,7 @@ import CheckoutBtn from './form-detail/checkout-btn'
 import Orderer from './form-detail/orderer'
 import Recipient from './form-detail/recipient'
 import NewebpayForm from './form-detail/newebpay-form'
+import { checkOrdererValues, checkRecipientValues } from '../../utils/papermag'
 
 import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
 import { useRouter } from 'next/router'
@@ -97,11 +98,25 @@ export default function SubscribePaperMagForm({ plan }) {
 
   const [receiptData, setReceiptData] = useState(null) // update the receiptData state
 
-  const handleSubmit = async (event) => {
-    event.preventDefault()
+  const checkValidation = () => {
+    let recipient = recipientValues //收件者資料
+    if (sameAsOrderer) {
+      recipient = { ...ordererValues } //收件者同訂購人資訊
+    }
 
-    // TODO: Check form validity again
+    if (
+      checkOrdererValues(ordererValues) &&
+      checkRecipientValues(recipient) &&
+      isAcceptedConditions &&
+      receiptOption !== null
+    ) {
+      return true
+    } else {
+      return false
+    }
+  }
 
+  const formateOrderPayload = () => {
     const merchandiseName = `magazine_${plan === 2 ? 'two' : 'one'}_year${
       shouldCountFreight ? '_with_shipping_fee' : ''
     }`
@@ -146,10 +161,44 @@ export default function SubscribePaperMagForm({ plan }) {
       }
     }
 
-    // If everything is valid, proceed with submitting the form data
-    // Make an API request or update the state here
-    // carry encrypted paymentPayload and submit to newebpay
+    return {
+      merchandiseName,
+      orderDesc,
+      promoteCodeStr,
+      loveCode,
+      receiptType,
+      buyerName,
+      buyerUBN,
+      carrierNum,
+      carrierType,
+      recipient,
+    }
+  }
 
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    // Check form validity again: if invalid, redirect to return fail page
+    if (!checkValidation()) {
+      router.push(`/papermag/return?order-fail=true`)
+      return
+    }
+
+    const {
+      merchandiseName,
+      orderDesc,
+      promoteCodeStr,
+      loveCode,
+      receiptType,
+      buyerName,
+      buyerUBN,
+      carrierNum,
+      carrierType,
+      recipient,
+    } = formateOrderPayload()
+
+    // If everything is valid, proceed with submitting the form data
+    // carry encrypted paymentPayload and submit to newebpay
     const requestBody = {
       data: {
         desc: orderDesc, //訂單描述

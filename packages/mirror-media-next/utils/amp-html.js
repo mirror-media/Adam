@@ -38,6 +38,27 @@ export function transformHtmlIntoAmpHtml(html, currentPageUrl) {
 
   const redirectUrl = currentPageUrl.replace('/external/amp/', '/external/')
 
+  const invalidElementArrtibPairs = [
+    {
+      element: 'div',
+      attribute: `data-progress-bar-1"`,
+      selector: 'div[data-progress-bar-1\\"]',
+    },
+    { element: 'a', attribute: 'spellcheck' },
+    { element: 'span', attribute: 'sans-serif' },
+  ]
+
+  // handle some html tag with invalid attribute which will grows when new source is added..
+  for (const invalidElementAttribPair of invalidElementArrtibPairs) {
+    const selector =
+      invalidElementAttribPair.selector ||
+      invalidElementAttribPair.element +
+        `[${invalidElementAttribPair.attribute}]`
+    for (const ele of CSSselect.selectAll(selector, dom)) {
+      delete ele.attribs?.[invalidElementAttribPair.attribute]
+    }
+  }
+
   // 1. remove prohibited element and show hint to redirect to the non-amp page.
   for (const prohibitedTag of prohibitedTags) {
     for (const ele of CSSselect.selectAll(prohibitedTag, dom)) {
@@ -109,6 +130,14 @@ export function transformHtmlIntoAmpHtml(html, currentPageUrl) {
       let ampEle
 
       if (replacedTag === 'img') {
+        // if img wihout src, remove it directly
+        if (!ele.attribs?.src) {
+          DomUtils.removeElement(ele)
+          continue
+        }
+
+        delete ele.attribs?.decoding
+        delete ele.attribs?.loading
         // reset the original image style and let it fills the parent's width
         const ampImgEle = {
           type: 'tag',
@@ -157,6 +186,11 @@ export function transformHtmlIntoAmpHtml(html, currentPageUrl) {
         }
         ampEle = ampVideoEle
       } else if (replacedTag === 'audio') {
+        if (!ele.attribs?.src) {
+          DomUtils.removeElement(ele)
+          continue
+        }
+
         const ampAudioEle = {
           type: 'tag',
           name: 'amp-audio',
