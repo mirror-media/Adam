@@ -34,9 +34,9 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <GlobalStyles />
-      <Provider store={store}>
-        <MembershipProvider>
-          <ApolloProvider client={client}>
+      <MembershipProvider>
+        <ApolloProvider client={client}>
+          <Provider store={store}>
             <ThemeProvider theme={theme}>
               {/* some script may need member type to decide render or not,
            make sure the WholeSiteScript component is placed inside contextProvider or other provider  */}
@@ -49,9 +49,9 @@ function MyApp({ Component, pageProps }) {
               {!isStoryPage && <UserBehaviorLogger />}
               <Component {...pageProps} />
             </ThemeProvider>
-          </ApolloProvider>
-        </MembershipProvider>
-      </Provider>
+          </Provider>
+        </ApolloProvider>
+      </MembershipProvider>
     </>
   )
 }

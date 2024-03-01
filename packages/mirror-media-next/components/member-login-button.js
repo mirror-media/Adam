@@ -7,7 +7,8 @@ import styled from 'styled-components'
 import useClickOutside from '../hooks/useClickOutside'
 import Link from 'next/link'
 import { useMembership, logout } from '../context/membership'
-
+import { useAppDispatch } from '../hooks/useRedux'
+import { loginActions } from '../slice/login-slice'
 const MemberLoginButtonWrapper = styled.div`
   margin-left: 23px;
 
@@ -68,12 +69,15 @@ export default function MemberLoginButton() {
 
   const [showSelectOptions, setShowSelectOptions] = useState(false)
   const selectWrapperRef = useRef(null)
+  const dispatch = useAppDispatch()
+
   useClickOutside(selectWrapperRef, () => {
     setShowSelectOptions(false)
   })
 
   const handleLogOut = () => {
     setShowSelectOptions(false)
+    dispatch(loginActions.resetLoginState())
     logout()
   }
 
