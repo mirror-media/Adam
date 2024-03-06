@@ -11,7 +11,7 @@ import Head from 'next/head'
 export default function ComScoreScript() {
   const router = useRouter()
   const { pathname } = router
-  const isAmpStoryPage = pathname.startsWith('/story/amp/')
+  const isAmpStoryPage = pathname.startsWith('/story/amp/') || pathname.startsWith('/external/amp/')
   if (isAmpStoryPage) {
     return (
       <>
