@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react'
 
 import styled from 'styled-components'
 /**
- * @typedef {Pick<import('../apollo/fragments/post').Post, 'id' | 'slug' |'title'>} FlashNews
+ * @typedef {Pick<import('../../../apollo/fragments/post').Post, 'id' | 'slug' |'title'>} FlashNews
  */
 const FlashNewsWrapper = styled.div`
   display: flex;

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 /**
- * @typedef {Pick<import('../apollo/fragments/topic').Topic, 'id' | 'slug' | 'name'>[]} Topics
+ * @typedef {Pick<import('../../../apollo/fragments/topic').Topic, 'id' | 'slug' | 'name'>[]} Topics
  */
 const TopicsWrapper = styled.section`
   display: none;

@@ -1,12 +1,12 @@
 //TODO: When user at certain section, at category which belongs to certain section, at story which belongs to certain section
 //component <Section> will change color of title to section color defined at /styles/sections-color.
 import styled, { css } from 'styled-components'
-import { Z_INDEX } from '../constants'
-import { minWidth } from '../styles/media'
+import { Z_INDEX } from '../../../constants'
+import { minWidth } from '../../../styles/media'
 import Logo from './logo'
 
 /**
- * @typedef {import('../type/theme').Theme} Theme
+ * @typedef {import('../../../type/theme').Theme} Theme
  */
 
 const colorCss = css`
@@ -29,14 +29,14 @@ const colorCss = css`
 `
 
 /**
- * @typedef {import('../utils/api/index').HeadersDataSection} HeadersDataSection
+ * @typedef {import('../../../utils/api/index').HeadersDataSection} HeadersDataSection
  */
 /**
- * @typedef {import('../utils/api/index').CategoryInHeadersDataSection} CategoryInHeadersDataSection
+ * @typedef {import('../../../utils/api/index').CategoryInHeadersDataSection} CategoryInHeadersDataSection
  */
 
 /**
- * @typedef {import('../utils/api/index').HeadersDataCategory} HeadersDataCategory
+ * @typedef {import('../../../utils/api/index').HeadersDataCategory} HeadersDataCategory
  */
 
 /**

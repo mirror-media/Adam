@@ -6,12 +6,12 @@ import CustomImage from '@readr-media/react-image'
 import { URL_STATIC_404_POPULAR_NEWS } from '../config/index.mjs'
 import { API_TIMEOUT } from '../config/index.mjs'
 import Layout from '../components/shared/layout'
-import ShareHeader from '../components/shared/share-header'
-import { HeaderSkeleton } from '../components/header'
+import ShareHeader from '../components/header/share-header'
+import { HeaderSkeleton } from '../components/header/normal/header'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 /** @typedef {import('../apollo/fragments/post').AsideListingPost & {brief: import('../apollo/fragments/post').Post['brief']} } ArticleDataWithBrief */
 /**
- * @typedef {import('../components/shared/share-header').HeaderData} HeaderData
+ * @typedef {import('../components/header/share-header').HeaderData} HeaderData
  */
 
 const PageWrapper = styled.div`

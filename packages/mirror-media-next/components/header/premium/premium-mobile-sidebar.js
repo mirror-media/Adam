@@ -1,10 +1,10 @@
 import styled, { css } from 'styled-components'
 import React, { Fragment, useState, useRef } from 'react'
-import useClickOutside from '../hooks/useClickOutside'
-import NavSubtitleNavigator from './story/shared/nav-subtitle-navigator'
+import useClickOutside from '../../../hooks/useClickOutside'
+import NavSubtitleNavigator from '../../story/shared/nav-subtitle-navigator'
 
 /**
- * @typedef {import('../type/theme').Theme} Theme
+ * @typedef {import('../../../type/theme').Theme} Theme
  */
 
 const colorCss = css`
@@ -26,7 +26,7 @@ const colorCss = css`
   };
 `
 /**
- * @typedef {import('./story/shared/nav-subtitle-navigator').H2AndH3Block} H2AndH3Block
+ * @typedef {import('../../story/shared/nav-subtitle-navigator').H2AndH3Block} H2AndH3Block
  */
 const SideBarButton = styled.button`
   user-select: none;

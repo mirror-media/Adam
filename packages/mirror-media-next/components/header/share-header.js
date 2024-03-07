@@ -1,15 +1,15 @@
 //TODO: add jsDoc of param  on component `Share-Header`
 
-import Header from '../header'
-import PremiumHeader from '../premium-header'
-import FlashNews from '../flash-news'
+import Header from './normal/header'
+import PremiumHeader from './premium/premium-header'
+import FlashNews from './shared/flash-news'
 
 /**
- * @typedef {import('../header').Sections} NormalSectionsData
- * @typedef {import('../header').Topics} TopicsData
- * @typedef {import('../flash-news').FlashNews[]} FlashNewsData
- * @typedef {import('../premium-header').PremiumHeaderSections} PremiumSectionsData
- * @typedef {import('../premium-header').H2AndH3Block[]}  H2AndH3Blocks
+ * @typedef {import('./normal/header').Sections} NormalSectionsData
+ * @typedef {import('./normal/header').Topics} TopicsData
+ * @typedef {import('./shared/flash-news').FlashNews[]} FlashNewsData
+ * @typedef {import('./premium/premium-header').PremiumHeaderSections} PremiumSectionsData
+ * @typedef {import('./premium/premium-header').H2AndH3Block[]}  H2AndH3Blocks
  */
 
 /**

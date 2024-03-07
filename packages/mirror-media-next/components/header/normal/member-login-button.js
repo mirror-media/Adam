@@ -1,24 +1,31 @@
-//TODOs:
-//1. set login feature
-//2. set logout feature
+//REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
 
 import { useState, useRef } from 'react'
 import Image from 'next/legacy/image'
-import styled from 'styled-components'
-import useClickOutside from '../hooks/useClickOutside'
 import { useRouter } from 'next/router'
-import { useMembership, logout } from '../context/membership'
-import { useAppDispatch } from '../hooks/useRedux'
-import { loginActions } from '../slice/login-slice'
+import styled from 'styled-components'
+import useClickOutside from '../../../hooks/useClickOutside'
+import Link from 'next/link'
+import { useMembership, logout } from '../../../context/membership'
+import { useAppDispatch } from '../../../hooks/useRedux'
+import { loginActions } from '../../../slice/login-slice'
 const MemberLoginButtonWrapper = styled.div`
-  cursor: pointer;
-`
+  margin-left: 23px;
 
-const LoginButton = styled.span`
-  font-size: 13px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin-left: 16px;
+  }
+`
+const LoginButton = styled.button`
+  font-size: 14px;
   line-height: 150%;
+  text-decoration: underline;
+  text-underline-offset: 2.5px;
   color: #000;
-  padding-left: 1px;
+
+  &:focus {
+    outline: none;
+  }
 `
 const LoggedInWrapper = styled.div`
   position: relative;
@@ -49,53 +56,31 @@ const DropdownMenuItem = styled.a`
   padding: 24px 0;
   text-align: center;
   border-bottom: 1px solid #d8d8d8;
+  cursor: pointer;
 `
-
-const DesktopWrapper = styled.span`
-  display: none;
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: inline-block;
-  }
-`
-
-const MobileWrapper = styled.span`
-  font-size: 14px;
-  display: inline-block;
-  transform: scale(calc(10 / 12));
-  text-decoration-line: underline;
-  text-underline-offset: 2.5px;
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
-`
-
 const dropdownMenuItem = [
   { title: '個人資料', href: '/profile' },
   { title: '訂閱紀錄', href: '/profile/purchase' },
 ]
 
-/**
- * @param {Object} props
- * @param {string} [props.className]
- * @returns {React.ReactElement}
- */
-export default function PremiumMemberLoginButton({ className }) {
+export default function MemberLoginButton() {
+  const { isLoggedIn } = useMembership()
+  const router = useRouter()
+
   const [showSelectOptions, setShowSelectOptions] = useState(false)
   const selectWrapperRef = useRef(null)
+  const dispatch = useAppDispatch()
+
   useClickOutside(selectWrapperRef, () => {
     setShowSelectOptions(false)
   })
-  const router = useRouter()
-  const { isLoggedIn } = useMembership()
-  const dispatch = useAppDispatch()
+
   const handleLogOut = () => {
     setShowSelectOptions(false)
     dispatch(loginActions.resetLoginState())
     logout()
   }
-  const handleLogIn = () => {
-    router.push(`/login?destination=${router.asPath || '/'}`)
-  }
+
   let memberLoginButton
   if (isLoggedIn) {
     memberLoginButton = (
@@ -105,6 +90,7 @@ export default function PremiumMemberLoginButton({ className }) {
           alt="member-icon-logged-in"
           width={25.67}
           height={30.81}
+          className="GTM-header-login"
           onClick={() => setShowSelectOptions((val) => !val)}
         ></Image>
 
@@ -122,14 +108,18 @@ export default function PremiumMemberLoginButton({ className }) {
     )
   } else {
     memberLoginButton = (
-      <LoginButton onClick={handleLogIn}>
-        <DesktopWrapper>註冊/登入</DesktopWrapper>
-        <MobileWrapper>登入</MobileWrapper>
+      <LoginButton>
+        <Link
+          href={`/login?destination=${router.asPath || '/'}`}
+          className="GTM-header-login"
+        >
+          <span>登入</span>
+        </Link>
       </LoginButton>
     )
   }
   return (
-    <MemberLoginButtonWrapper ref={selectWrapperRef} className={className}>
+    <MemberLoginButtonWrapper ref={selectWrapperRef}>
       {memberLoginButton}
     </MemberLoginButtonWrapper>
   )

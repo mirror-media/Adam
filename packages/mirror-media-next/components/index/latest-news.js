@@ -2,19 +2,23 @@ import { Fragment } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
-import InfiniteScrollList from './infinite-scroll-list'
-import LoadingPage from '../public/images-next/loading_page.gif'
+import InfiniteScrollList from '../infinite-scroll-list'
+import LoadingPage from '../../public/images-next/loading_page.gif'
 import LatestNewsItem from './latest-news-item'
-import { URL_STATIC_POST_EXTERNAL } from '../config/index.mjs'
+import { URL_STATIC_POST_EXTERNAL } from '../../config/index.mjs'
 import Image from 'next/legacy/image'
-import { needInsertMicroAdAfter, getMicroAdUnitId } from '../utils/ad'
-import useWindowDimensions from '../hooks/use-window-dimensions'
-import { mediaSize } from '../styles/media'
-import { useDisplayAd } from '../hooks/useDisplayAd'
-import { getSectionNameGql, getSectionSlugGql, getArticleHref } from '../utils'
+import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
+import useWindowDimensions from '../../hooks/use-window-dimensions'
+import { mediaSize } from '../../styles/media'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import {
+  getSectionNameGql,
+  getSectionSlugGql,
+  getArticleHref,
+} from '../../utils'
 
 const StyledMicroAd = dynamic(
-  () => import('../components/ads/micro-ad/micro-ad-with-label'),
+  () => import('../ads/micro-ad/micro-ad-with-label'),
   {
     ssr: false,
   }
@@ -74,7 +78,7 @@ const RENDER_PAGE_SIZE = 20
 const JSON_FILE_COUNT = 4
 
 /**
- * @typedef {import('../type/index').ArticleInfoCard} ArticleInfoCard
+ * @typedef {import('../../type/index').ArticleInfoCard} ArticleInfoCard
  */
 
 /**

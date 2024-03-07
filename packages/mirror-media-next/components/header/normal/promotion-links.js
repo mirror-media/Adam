@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
-import useClickOutside from '../hooks/useClickOutside'
-import moreIcon from '../public/images-next/more-black.png'
+import useClickOutside from '../../../hooks/useClickOutside'
+import moreIcon from '../../../public/images-next/more-black.png'
 
 const PromotionLinksWrapper = styled.div`
   display: none;
@@ -46,7 +46,7 @@ const Link = styled.a`
 /**
  *
  * @param {Object} props
- * @param {import('../type').Promotion[]} props.links
+ * @param {import('../../../type').Promotion[]} props.links
  * @returns {React.ReactElement}
  */
 export default function PromotionLinks({ links }) {

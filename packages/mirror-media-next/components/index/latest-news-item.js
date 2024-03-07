@@ -5,7 +5,7 @@ import Link from 'next/link'
 import CustomImage from '@readr-media/react-image'
 
 /**
- * @typedef {import('../type/theme').Theme} Theme
+ * @typedef {import('../../type/theme').Theme} Theme
  */
 
 const ItemWrapper = styled.article`
@@ -110,11 +110,11 @@ const Title = styled.div`
 
 
 /**
- * @typedef {import('../apollo/fragments/partner').Partner} Partner 
+ * @typedef {import('../../apollo/fragments/partner').Partner} Partner 
  */
 
 /**
- * @typedef {Pick<import('../apollo/fragments/post').Post, 'slug' | 'title' | 'style'| 'publishedDate' | 'heroImage' |'sections' | 'categories'  |'redirect'> & { partner: '' | Partner}} ArticleRawData
+ * @typedef {Pick<import('../../apollo/fragments/post').Post, 'slug' | 'title' | 'style'| 'publishedDate' | 'heroImage' |'sections' | 'categories'  |'redirect'> & { partner: '' | Partner}} ArticleRawData
  */
 
 /**
