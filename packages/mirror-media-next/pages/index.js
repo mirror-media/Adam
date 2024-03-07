@@ -15,8 +15,8 @@ import { fetchModEventsInDesc } from '../utils/api/event'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import { getSectionNameGql, getSectionSlugGql, getArticleHref } from '../utils'
 import { setPageCache } from '../utils/cache-setting'
-import EditorChoice from '../components/editor-choice'
-import LatestNews from '../components/latest-news'
+import EditorChoice from '../components/index/editor-choice'
+import LatestNews from '../components/index/latest-news'
 import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
@@ -31,20 +31,20 @@ const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
 const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
 
 /**
- * @typedef {import('../components/shared/share-header').HeaderData['flashNewsData']} FlashNewsData
+ * @typedef {import('../components/header/share-header').HeaderData['flashNewsData']} FlashNewsData
  */
 /**
- * @typedef {import('../components/shared/share-header').HeaderData['sectionsData']} SectionsData
+ * @typedef {import('../components/header/share-header').HeaderData['sectionsData']} SectionsData
  */
 /**
- * @typedef {import('../components/shared/share-header').HeaderData['topicsData']} TopicsData
+ * @typedef {import('../components/header/share-header').HeaderData['topicsData']} TopicsData
  */
 
 /**
- * @typedef {import('../components/editor-choice').EditorChoiceRawData[]} EditorChoicesRawData
+ * @typedef {import('../components/index/editor-choice').EditorChoiceRawData[]} EditorChoicesRawData
  */
 /**
- * @typedef {import('../components/latest-news').ArticleRawData[]} ArticlesRawData
+ * @typedef {import('../components/index/latest-news').ArticleRawData[]} ArticlesRawData
  */
 /**
  * @typedef {import('../components/live-youtube').LiveYoutubeInfo} LiveYoutubeInfo

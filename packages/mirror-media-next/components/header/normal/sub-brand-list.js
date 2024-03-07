@@ -20,7 +20,7 @@ const ListItem = styled.li`
 /**
  *
  * @param {Object} props
- * @param {import('../type').SubBrand[]} props.subBrands
+ * @param {import('../../../type').SubBrand[]} props.subBrands
  * @param {string} [props.className]
  * @returns
  */

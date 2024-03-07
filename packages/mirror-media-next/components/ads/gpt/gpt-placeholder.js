@@ -15,47 +15,30 @@ import styled from 'styled-components'
 const Container = styled.div`
   position: relative;
   min-width: ${
-    /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
+    /**
+     *
+     * @param {Object} props
+     * @param {Rwd} props.rwd
+     * @param {boolean} [props.shouldTranslate]
+     */
     ({ rwd }) => rwd.mobile.width
   };
-  min-height: ${
-    /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-    ({ rwd, shouldTranslate }) => (shouldTranslate ? '0px' : rwd.mobile.height)
-  };
-  margin: ${
-    /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-    ({ rwd }) => rwd.mobile.margin
-  };
+  min-height: ${({ rwd, shouldTranslate }) =>
+    shouldTranslate ? '0px' : rwd.mobile.height};
+  margin: ${({ rwd }) => rwd.mobile.margin};
+
   ${({ theme }) => theme.breakpoint.md} {
-    min-width: ${
-      /** @param {{rwd: Rwd}} props*/
-      ({ rwd }) => rwd.tablet.width
-    };
-    min-height: ${
-      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-      ({ rwd, shouldTranslate }) =>
-        shouldTranslate ? '0px' : rwd.tablet.height
-    };
-    margin: ${
-      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-      ({ rwd }) => rwd.tablet.margin
-    };
+    min-width: ${({ rwd }) => rwd.tablet.width};
+    min-height: ${({ rwd, shouldTranslate }) =>
+      shouldTranslate ? '0px' : rwd.tablet.height};
+    margin: ${({ rwd }) => rwd.tablet.margin};
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
-    min-width: ${
-      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-      ({ rwd }) => rwd.desktop.width
-    };
-    min-height: ${
-      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-      ({ rwd, shouldTranslate }) =>
-        shouldTranslate ? '0px' : rwd.desktop.height
-    };
-    margin: ${
-      /** @param {{rwd: Rwd, shouldTranslate: boolean?}} props*/
-      ({ rwd }) => rwd.desktop.margin
-    };
+    min-width: ${({ rwd }) => rwd.desktop.width};
+    min-height: ${({ rwd, shouldTranslate }) =>
+      shouldTranslate ? '0px' : rwd.desktop.height};
+    margin: ${({ rwd }) => rwd.desktop.margin};
   }
 `
 const ContainerMobileAndTablet = styled(Container)`

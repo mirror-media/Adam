@@ -19,7 +19,7 @@ import GPTFloatingAd from '../../../components/ads/gpt/gpt-floating-ad'
 import ArticleContent from './article-content'
 import HeroImageAndVideo from './hero-image-and-video'
 import Divider from '../shared/divider'
-import ShareHeader from '../../shared/share-header'
+import ShareHeader from '../../header/share-header'
 import Footer from '../../shared/footer'
 import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
 

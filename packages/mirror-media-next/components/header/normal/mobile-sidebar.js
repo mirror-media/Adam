@@ -2,16 +2,16 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { Fragment, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import EnterPodcastBtn from '../components/podcast-mb-btn'
-import useClickOutside from '../hooks/useClickOutside'
-import CloseButton from './shared/close-button'
-import HamburgerButton from './shared/hamburger-button'
+import EnterPodcastBtn from './podcast-mb-btn'
+import useClickOutside from '../../../hooks/useClickOutside'
+import CloseButton from '../../shared/close-button'
+import HamburgerButton from './hamburger-button'
 /**
- * @typedef {import('../apollo/fragments/section').Section} Section
+ * @typedef {import('../../../apollo/fragments/section').Section} Section
  */
 
 /**
- * @typedef {import('../apollo/fragments/section').SectionWithCategory} SectionWithCategory
+ * @typedef {import('../../../apollo/fragments/section').SectionWithCategory} SectionWithCategory
  */
 
 /**
@@ -19,14 +19,14 @@ import HamburgerButton from './shared/hamburger-button'
  */
 
 /**
- * @typedef {import('../utils/api/index').HeadersDataSection} HeadersDataSection
+ * @typedef {import('../../../utils/api/index').HeadersDataSection} HeadersDataSection
  */
 /**
- * @typedef {import('../utils/api/index').CategoryInHeadersDataSection} CategoryInHeadersDataSection
+ * @typedef {import('../../../utils/api/index').CategoryInHeadersDataSection} CategoryInHeadersDataSection
  */
 
 /**
- * @typedef {import('../utils/api/index').HeadersDataCategory} HeadersDataCategory
+ * @typedef {import('../../../utils/api/index').HeadersDataCategory} HeadersDataCategory
  */
 
 /**
@@ -41,11 +41,11 @@ import HamburgerButton from './shared/hamburger-button'
  */
 
 /**
- * @typedef {Pick<import('../apollo/fragments/topic').Topic, 'id' | 'slug' | 'name'>[]} Topics
+ * @typedef {Pick<import('../../../apollo/fragments/topic').Topic, 'id' | 'slug' | 'name'>[]} Topics
  */
 
 /**
- * @typedef {import('../type/theme').Theme} Theme
+ * @typedef {import('../../../type/theme').Theme} Theme
  */
 
 const colorCss = css`
@@ -265,9 +265,9 @@ const SocialMediaList = styled.div`
  * @param {Object} props
  * @param {Topics} props.topics
  * @param {SectionsAndCategoriesWithHref} props.sectionsAndCategories
- * @param {import('../type').SubBrand[]} props.subBrands
- * @param {import('../type').Promotion[]} props.promotions
- * @param {import('../type').SocialMedia[]} props.socialMedia
+ * @param {import('../../../type').SubBrand[]} props.subBrands
+ * @param {import('../../../type').Promotion[]} props.promotions
+ * @param {import('../../../type').SocialMedia[]} props.socialMedia
  * @returns {React.ReactElement}
  */
 export default function MobileSidebar({

@@ -3,7 +3,7 @@
 //TODO: Replace <a> to <Link> for Single Page Application
 import styled, { css } from 'styled-components'
 /**
- * @typedef {import('../type/theme').Theme} Theme
+ * @typedef {import('../../../type/theme').Theme} Theme
  */
 
 const colorCss = css`

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import searchButtonWeb from '../public/images-next/search-button-web.png'
+import searchButtonWeb from '../../../public/images-next/search-button-web.png'
 import SearchBarInput from './search-bar-input'
 
 const SearchBarWrapper = styled.section`

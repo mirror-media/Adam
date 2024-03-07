@@ -18,6 +18,7 @@ import { createSlice } from '@reduxjs/toolkit'
  * @typedef {string} Email
  * @typedef {string} Password
  * @typedef {'initial' | 'register' |'login' | 'recoverPassword'} LoginFormMode
+ * @typedef {Boolean} IsFederatedRedirectResultLoading
  */
 
 /**
@@ -28,6 +29,7 @@ import { createSlice } from '@reduxjs/toolkit'
  * @property {Email} email
  * @property {Password} password
  * @property {LoginFormMode} loginFormMode
+ * @property {IsFederatedRedirectResultLoading} isFederatedRedirectResultLoading
  */
 
 /**@type {InitialState} */
@@ -38,6 +40,7 @@ const initialState = {
   email: '',
   password: '',
   loginFormMode: 'initial',
+  isFederatedRedirectResultLoading: true,
 }
 
 // The function below is called a selector and allows us to select a value from
@@ -80,6 +83,13 @@ const loginFormMode = (
    */
   state
 ) => state.login.loginFormMode
+
+const loginIsFederatedRedirectResultLoading = (
+  /**
+   * @type {AppState}
+   */
+  state
+) => state.login.isFederatedRedirectResultLoading
 
 const loginSlice = createSlice({
   name: 'login',
@@ -143,6 +153,15 @@ const loginSlice = createSlice({
     ) => {
       state.shouldShowHint = action.payload
     },
+    changeIsFederatedRedirectResultLoading: (
+      state,
+      /**
+       * @type {import('@reduxjs/toolkit').PayloadAction<IsFederatedRedirectResultLoading>}
+       */
+      action
+    ) => {
+      state.isFederatedRedirectResultLoading = action.payload
+    },
     resetLoginState: (state) => {
       state.state = 'form'
       state.prevAuthMethod = ''
@@ -161,6 +180,7 @@ export {
   loginEmail,
   loginPassword,
   loginFormMode,
+  loginIsFederatedRedirectResultLoading,
 }
 export const loginActions = loginSlice.actions
 

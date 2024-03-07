@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 /**
- * @typedef {import('../../type/theme').Theme} Theme
+ * @typedef {import('../../../type/theme').Theme} Theme
  */
 
 const Hamburger = styled.button`

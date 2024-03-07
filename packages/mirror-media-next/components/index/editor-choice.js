@@ -12,7 +12,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 /**
- * @typedef {import('../type/theme').Theme} Theme
+ * @typedef {import('../../type/theme').Theme} Theme
  */
 
 /**
@@ -197,7 +197,7 @@ const EditorChoiceContainer = styled.section`
 
 
 /**
- * @typedef {Pick<import('../apollo/fragments/post').Post, 'slug' | 'title' | 'style'| 'publishedDate' | 'sections'| 'heroImage' >} EditorChoiceRawData
+ * @typedef {Pick<import('../../apollo/fragments/post').Post, 'slug' | 'title' | 'style'| 'publishedDate' | 'sections'| 'heroImage' >} EditorChoiceRawData
  */
 
 /**

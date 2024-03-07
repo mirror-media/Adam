@@ -13,7 +13,7 @@ import {
 import { setPageCache } from '../../utils/cache-setting'
 
 /**
- * @typedef {import('../../components/shared/share-header').HeaderData} HeaderData
+ * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
  */
 
 const PageWrapper = styled.main`
