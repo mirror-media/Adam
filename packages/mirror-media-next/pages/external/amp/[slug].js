@@ -21,6 +21,7 @@ import AmpMain from '../../../components/amp/external/amp-main'
 import { transformHtmlIntoAmpHtml } from '../../../utils/amp-html'
 import Script from 'next/script'
 import JsonLdsScripts from '../../../components/externals/shared/json-lds-scripts'
+import { getAmpGptDataSlotSection } from '../../../utils/ad'
 
 export const config = { amp: true }
 
@@ -40,7 +41,13 @@ const AmpBody = styled.body`
  * @returns {JSX.Element}
  */
 export default function External({ external }) {
-  const { slug, title, brief, thumb } = external
+  const {
+    slug,
+    title,
+    brief,
+    thumb,
+    partner: { showOnIndex },
+  } = external
   const ampGptStickyAdScript = (
     <Script
       async
@@ -53,6 +60,8 @@ export default function External({ external }) {
   const canonicalLink = (
     <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
   )
+
+  const gptAdSection = showOnIndex ? 'news' : 'life'
 
   return (
     <>
@@ -101,12 +110,12 @@ export default function External({ external }) {
           <AmpBody>
             <section id="amp-page">
               <AmpHeader />
-              <AmpGptAd section="oth" position="HD" />
+              <AmpGptAd section={gptAdSection} position="HD" />
 
               <AmpMain external={external} />
 
               <Taboola title="你可能也喜歡這些文章" />
-              <AmpGptAd section="oth" position="FT" />
+              <AmpGptAd section={gptAdSection} position="FT" />
               <AmpFooter />
               <AmpGptStickyAd />
             </section>
