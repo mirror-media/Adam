@@ -58,8 +58,11 @@ async function addRowToGoogleSheet(googleSheet) {
       throw new Error('without new row data')
     }
 
-    const GOOGLE_SHEETS_PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY
+    let GOOGLE_SHEETS_PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY
     const GOOGLE_SHEETS_CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
+
+    // env variable in google cloud will turn \n into \\n, convert it back to \n
+    GOOGLE_SHEETS_PRIVATE_KEY = GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n')
 
     const serviceAccountAuth = new JWT({
       email: GOOGLE_SHEETS_CLIENT_EMAIL,
@@ -68,11 +71,8 @@ async function addRowToGoogleSheet(googleSheet) {
     })
 
     const doc = new GoogleSpreadsheet(id, serviceAccountAuth)
-
     await doc.loadInfo()
-
-    const sheet = doc.sheetsByTitle[title]
-
+    let sheet = doc.sheetsByTitle[title]
     await sheet.addRow(row)
   } catch (e) {
     if (e.message.startsWith('without')) {
