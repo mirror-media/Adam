@@ -1,14 +1,6 @@
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import Script from 'next/script'
-import { mediaSize } from '../../../styles/media'
 
 export default function AvividScript() {
-  const { width } = useWindowDimensions()
-  const isDesktopWidth = width >= mediaSize.xl
-
-  if (!isDesktopWidth) {
-    return <></>
-  }
   return (
     <Script
       async

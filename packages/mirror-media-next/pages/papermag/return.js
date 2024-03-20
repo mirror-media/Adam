@@ -17,6 +17,9 @@ import { parseBody } from 'next/dist/server/api-utils/node'
 import { getMerchandiseAndShippingFeeInfo } from '../../utils/papermag'
 
 import { ACCESS_PAPERMAG_FEATURE_TOGGLE } from '../../config/index.mjs'
+import client from '../../apollo/apollo-client'
+import { fetchAllMemberByOrderNo } from '../../apollo/query/magazine-orders'
+import { transformTimeData } from '../../utils/index'
 
 const Wrapper = styled.main`
   min-height: 50vh;
@@ -153,49 +156,23 @@ export async function getServerSideProps({ query, req, res }) {
       decryptedTradeInfo.Result?.MerchantOrderNo ||
       JSON.parse(Object.keys(decryptedTradeInfo)[0]).Result.MerchantOrderNo
 
-    // TODO: fetch DB
-    const mockDate = '2023-09-01'
-    const result = {
-      data: {
-        allMagazineOrders: [
-          {
-            id: '703',
-            orderNumber: MerchantOrderNo,
-            purchaseDatetime: mockDate,
-            merchandise: {
-              name: '鏡週刊紙本雜誌 52 期',
-              code: 'magazine_one_year',
-              price: 2880,
-            },
-            itemCount: 1,
-            totalAmount: 2800,
-            purchaseName: '購買者',
-            purchaseEmail: 'readr@gmail.com',
-            purchaseMobile: '0911111111',
-            purchaseAddress: '台南市新營區林口街119號6樓之5',
-            receiveName: '訂購者',
-            receiveMobile: '0911111111',
-            receiveAddress: '台南市新營區林口街119號6樓之5',
-            createdAt: mockDate,
-            promoteCode: 'MJ00012345',
-          },
-        ],
-      },
-    }
-    if (result.errors) {
-      throw new Error(result.errors)
-    }
-    const decryptInfoData = result?.data?.allMagazineOrders[0]
-    if (!decryptInfoData) {
+    const result = await client.query({
+      query: fetchAllMemberByOrderNo,
+      context: { uri: '/member/graphql' },
+      variables: { orderNumber: MerchantOrderNo },
+    })
+
+    const magazineOrderData = result?.data?.magazineOrders?.[0]
+    if (!magazineOrderData) {
       return {
         props: { sectionsData, topicsData, orderStatus, orderData },
       }
     }
 
-    const { itemCount, promoteCode, totalAmount } = decryptInfoData
+    const { itemCount, promoteCode, totalAmount } = magazineOrderData
 
     const { name, shippingFee } = getMerchandiseAndShippingFeeInfo(
-      decryptInfoData?.merchandise?.code
+      magazineOrderData?.merchandise?.code
     )
 
     const discount = promoteCode ? 80 * itemCount : 0
@@ -211,17 +188,16 @@ export async function getServerSideProps({ query, req, res }) {
     }
 
     orderData = {
-      orderId: decryptInfoData.orderNumber,
-      date: decryptInfoData.createdAt,
-      discountCode: decryptInfoData.promoteCode,
+      orderId: magazineOrderData.orderNumber,
+      date: transformTimeData(magazineOrderData.createdAt, 'dash'),
+      discountCode: magazineOrderData.promoteCode,
       orderInfoPurchasedList,
-      purchaseName: decryptInfoData.purchaseName,
-      purchaseEmail: decryptInfoData.purchaseEmail,
-      purchaseMobile: decryptInfoData.purchaseMobile,
-      purchaseAddress: decryptInfoData.purchaseAddress,
-      receiveName: decryptInfoData.receiveName,
-      receiveMobile: decryptInfoData.receiveMobile,
-      receiveAddress: decryptInfoData.receiveAddress,
+      purchaseName: magazineOrderData.purchaseName,
+      purchaseEmail: magazineOrderData.purchaseEmail,
+      purchaseMobile: magazineOrderData.purchaseMobile,
+      receiveName: magazineOrderData.receiveName,
+      receiveMobile: magazineOrderData.receiveMobile,
+      receiveAddress: magazineOrderData.receiveAddress,
     }
     orderStatus = infoData.Status
   } catch (err) {

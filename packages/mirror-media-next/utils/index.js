@@ -85,7 +85,7 @@ function getSectionNameGql(sections = [], partner) {
  * depend on the type 'dot' or 'slash' or 'slashWithTime'
  * If `time` is not a valid date, this function will return undefined
  * @param {string} time
- * @param {'dot' | 'slash'| 'slashWithTime'} format
+ * @param {'dot' | 'slash'| 'slashWithTime'|'dash'} format
  * @returns {string | undefined}
  */
 const transformTimeData = (time, format) => {
@@ -105,6 +105,9 @@ const transformTimeData = (time, format) => {
 
       case 'slashWithTime':
         return timeData.format('YYYY/MM/DD HH:mm')
+
+      case 'dash':
+        return timeData.format('YYYY-MM-DD')
 
       default:
         return undefined
@@ -312,4 +315,5 @@ export {
   getNumberWithCommas,
   getActiveOrderSection,
   getActiveOrderCategory,
+  transformTimeData,
 }
