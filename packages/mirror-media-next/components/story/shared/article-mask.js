@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Link from 'next/link'
 import { Frequency } from '../../../constants/membership'
 import { useMembership } from '../../../context/membership'
+import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -98,7 +99,7 @@ const InviteMemberCard = ({ postId = '' }) => {
       <OptionWrapper>
         <InviteMemberOption optionType="premium">
           <p className="description">
-            限時優惠每月$49元 <br></br>全站看到飽
+            限時優惠每月${PRIZE_LIST.monthly}元 <br></br>全站看到飽
           </p>
 
           <Link
@@ -111,7 +112,7 @@ const InviteMemberCard = ({ postId = '' }) => {
         </InviteMemberOption>
         <InviteMemberOption optionType="oneTime">
           <p className="description">
-            ＄5元可享單篇好文14天 <br></br>無限瀏覽
+            ＄{PRIZE_LIST.oneTime}元可享單篇好文14天 <br></br>無限瀏覽
           </p>
 
           <Link

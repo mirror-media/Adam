@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import SubscribePlanBtn from '../subscribe-plan-btn'
+import { useMemo } from 'react'
 
 const Page = styled.section`
   background-color: rgba(0, 0, 0, 0.05);
@@ -111,16 +112,25 @@ const SpecialPrice = styled.p`
 `
 
 function Plan() {
+  const shouldShowAnnouncement = useMemo(() => {
+    const startUtc = new Date(Date.UTC(2024, 2, 19, 16))
+    const endUtc = new Date(Date.UTC(2024, 3, 8, 16))
+    const nowUtc = new Date(Date.now())
+
+    // 2024/3/20 ~ 4/9
+    return nowUtc > startUtc && nowUtc < endUtc
+  }, [])
   return (
     <Page>
-      <Announcement>
-        <p className="announce-title">訂戶派送公告</p>
-        <p className="announce-text">預祝新春如意！</p>
-        <p className="announce-text">
-          因逢春節連假，330 期將延後與 331 期一併於 2/1
-          陸續派送，造成困擾敬請見諒。
-        </p>
-      </Announcement>
+      {!!shouldShowAnnouncement && (
+        <Announcement>
+          <p className="announce-title">[4月份訂戶派送異動公告]</p>
+          <p className="announce-text">預祝清明佳節愉快！</p>
+          <p className="announce-text">
+            因逢清明連續假期，392期(4/3出刊)的雜誌最晚4/8(一)完成配送，造成困擾敬請見諒。
+          </p>
+        </Announcement>
+      )}
       <PlansWrapper>
         <PlanCard>
           <PlanTitle>一年方案</PlanTitle>

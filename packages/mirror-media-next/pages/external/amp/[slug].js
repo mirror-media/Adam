@@ -21,7 +21,6 @@ import AmpMain from '../../../components/amp/external/amp-main'
 import { transformHtmlIntoAmpHtml } from '../../../utils/amp-html'
 import Script from 'next/script'
 import JsonLdsScripts from '../../../components/externals/shared/json-lds-scripts'
-import { getAmpGptDataSlotSection } from '../../../utils/ad'
 
 export const config = { amp: true }
 
@@ -41,13 +40,7 @@ const AmpBody = styled.body`
  * @returns {JSX.Element}
  */
 export default function External({ external }) {
-  const {
-    slug,
-    title,
-    brief,
-    thumb,
-    partner: { showOnIndex },
-  } = external
+  const { slug, title, brief, thumb, partner } = external
   const ampGptStickyAdScript = (
     <Script
       async
@@ -61,6 +54,11 @@ export default function External({ external }) {
     <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
   )
 
+  // The property `partner` for external article may lost for some reasons, `showOnIndex` will be set to true to handle this case.
+  const showOnIndex =
+    partner && partner.hasOwnProperty('showOnIndex')
+      ? partner.showOnIndex
+      : 'true'
   const gptAdSection = showOnIndex ? 'news' : 'life'
 
   return (

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import SubscribeLink from '../../components/story/shared/subscribe-link'
+import { PRIZE_LIST } from '../../constants/subscribe-constants'
 
 const Wrapper = styled.div`
   display: flex;
@@ -99,7 +100,7 @@ export default function JoinPremiumMember() {
         <Box>
           <p className="textL">準備好升級為鏡週刊 Premium 會員了嗎？</p>
           <p className="textS">
-            每月 $49 元，暢享專區零廣告閱讀、優質報導看到飽
+            每月 ${PRIZE_LIST.monthly} 元，暢享專區零廣告閱讀、優質報導看到飽
           </p>
           <SubscribeLink className="subscribe-btn" />
         </Box>
