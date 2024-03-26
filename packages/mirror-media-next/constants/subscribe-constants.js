@@ -3,7 +3,7 @@ import { IS_PRIZE_RIZED } from '../config/index.mjs'
 const PRIZE_LIST = {
   yearly: 499,
   monthly: IS_PRIZE_RIZED ? 79 : 49,
-  oneTime: 10,
+  oneTime: IS_PRIZE_RIZED ? 10 : 5,
 }
 
 const PREMIUM_FEATURES = [
