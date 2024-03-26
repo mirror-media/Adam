@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import DonateLink from './donate-link'
 import SubscribeLink from './subscribe-link'
+import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 
 const Container = styled.div`
   margin: 32px 0;
@@ -105,7 +106,7 @@ export default function SupportMirrorMediaBanner({ className }) {
         </InnerBox>
         <InnerBox>
           <p className="desc">
-            每月 $49 元全站看到飽
+            每月 ${PRIZE_LIST.monthly} 元全站看到飽
             <br />
             暢享無廣告閱讀體驗
           </p>

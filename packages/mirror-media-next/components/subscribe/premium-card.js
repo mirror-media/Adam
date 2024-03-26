@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 import SubscribePlanBtn from '../subscribe-plan-btn'
-import { PREMIUM_FEATURES } from '../../constants/subscribe-constants'
+import {
+  PREMIUM_FEATURES,
+  PRIZE_LIST,
+} from '../../constants/subscribe-constants'
 import Badge from './badge-icon'
 import Check from './check-icon'
 
@@ -95,7 +98,7 @@ export default function PremiumCard({
       <BtnWrapper>
         <SubscribePlanBtn
           title="訂購年方案"
-          subtitle="優惠 $499 元"
+          subtitle={`優惠 ${PRIZE_LIST.yearly} 元`}
           bgColor="#054F77"
           hoverColor="#9CB7C6"
           hoverText="#000"
@@ -104,7 +107,7 @@ export default function PremiumCard({
         {!shouldHideMonthlyButton && (
           <SubscribePlanBtn
             title="訂購月方案"
-            subtitle="優惠 $49 元"
+            subtitle={`優惠 ${PRIZE_LIST.monthly} 元`}
             bgColor="#1D9FB8"
             hoverColor="#054F77"
             hoverText="#fff"
