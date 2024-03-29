@@ -1,4 +1,3 @@
-import Script from 'next/script'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
@@ -11,7 +10,8 @@ import Head from 'next/head'
 export default function ComScoreScript() {
   const router = useRouter()
   const { pathname } = router
-  const isAmpStoryPage = pathname.startsWith('/story/amp/') || pathname.startsWith('/external/amp/')
+  const isAmpStoryPage =
+    pathname.startsWith('/story/amp/') || pathname.startsWith('/external/amp/')
   if (isAmpStoryPage) {
     return (
       <>
@@ -47,16 +47,17 @@ export default function ComScoreScript() {
 
   return (
     <>
-      <Script
+      {/* use react script rather than next/Script to let the script show on the source of the html (view-source:) */}
+      <script
         id="comScore"
         dangerouslySetInnerHTML={{
-          __html: `var _comscore = _comscore || [];
-        _comscore.push({ c1: "2", c2: "24318560" });
-        (function() {
-        var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
-        s.src = (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js";
-        el.parentNode.insertBefore(s, el);
-        })();`,
+          __html: ` var _comscore = _comscore || [];
+          _comscore.push({ c1: "2", c2: "24318560" });
+          (function() {
+           var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+           s.src = "https://sb.scorecardresearch.com/cs/24318560/beacon.js";
+           el.parentNode.insertBefore(s, el);
+          })();`,
         }}
       />
       <noscript

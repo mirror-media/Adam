@@ -46,4 +46,28 @@ const FOOTER_SOCIAL_MEDIA_LISTS = [
   },
 ]
 
-export { FOOTER_SOCIAL_MEDIA_LISTS }
+const CUSTOMER_SERVICE_MAIL = {
+  name: 'customer-service-email',
+  title: '客服信箱',
+  description: 'MM-onlineservice@mirrormedia.mg',
+}
+
+const CUSTOMER_SERVICE_PHONE = {
+  name: 'customer-service-phone',
+  title: '客服電話',
+  description: '02-6633-3966',
+}
+
+const CUSTOMER_SERVICE_HOUR = {
+  name: 'customer-service-hour',
+  title: '服務時間',
+  description: '週一至週五上午10時至下午6時',
+}
+
+const CUSTOMER_SERVICE_INFOS = [
+  CUSTOMER_SERVICE_MAIL,
+  CUSTOMER_SERVICE_PHONE,
+  CUSTOMER_SERVICE_HOUR,
+]
+
+export { FOOTER_SOCIAL_MEDIA_LISTS, CUSTOMER_SERVICE_INFOS }

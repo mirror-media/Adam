@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 import { heroImage, slideshowImage } from './photo'
-import { post } from './post'
+import { topicPost } from './post'
 import { tag } from './tag'
 
 /**
@@ -22,7 +22,7 @@ import { tag } from './tag'
  * @property {string} style
  * @property {number} postsCount
  * @property {number} featuredPostsCount
- * @property {import('./post').Post[]} posts
+ * @property {import('./post').TopicPost[]} posts
  * @property {import('./tag').Tag[]} tags
  * @property {string} og_description
  * @property {import('./photo').Photo} og_image
@@ -51,7 +51,7 @@ export const simpleTopic = gql`
 export const topic = gql`
   ${slideshowImage}
   ${heroImage}
-  ${post}
+  ${topicPost}
   ${tag}
   fragment topic on Topic {
     id
@@ -73,7 +73,7 @@ export const topic = gql`
       take: $postsTake
       skip: $postsSkip
     ) {
-      ...post
+      ...topicPost
       isFeatured
     }
     tags {
