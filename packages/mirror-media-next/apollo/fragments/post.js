@@ -72,6 +72,45 @@ export const asideListingPost = gql`
 `
 
 /**
+ * @typedef {Object} TopicPost
+ * @property {string} id - unique id of post
+ * @property {string} slug - post slug
+ * @property {string} title - post title
+ * @property {string} publishedDate - post published date
+ * @property {Draft} brief - post brief
+ * @property {Pick<Category, 'id' | 'name' | 'slug' | 'state'>[]} categories - which categories does this post belong to
+ * @property {Pick<Section, 'id' | 'name' | 'slug' | 'state'>[]} sections - which sections does this post belong to
+ * @property {Pick<HeroImage, 'imageFile' | 'resized' | 'resizedWebp'> | null} heroImage
+ * @property {Tag[] } tags - tags of the post
+ */
+
+export const topicPost = gql`
+  ${section}
+  ${category}
+  ${heroImage}
+  ${tag}
+  fragment topicPost on Post {
+    id
+    slug
+    title
+    publishedDate
+    brief
+    categories(where: { state: { equals: "active" } }) {
+      ...category
+    }
+    sections(where: { state: { equals: "active" } }) {
+      ...section
+    }
+    heroImage {
+      ...heroImage
+    }
+    tags {
+      ...tag
+    }
+  }
+`
+
+/**
  * @typedef {'published' | 'draft' | 'scheduled' | 'archived' | 'invisible'} PostState
  */
 
