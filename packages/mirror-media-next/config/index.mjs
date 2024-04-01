@@ -95,7 +95,7 @@ switch (ENV) {
       measurementId: 'G-2FDRC4S37L',
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
-    IS_PRIZE_RIZED = false
+    IS_PRIZE_RIZED = true
 
     break
 
@@ -146,7 +146,7 @@ switch (ENV) {
       appId: '1:388524095772:web:e3739160c042909827a2d9',
     }
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
-    IS_PRIZE_RIZED = false
+    IS_PRIZE_RIZED = true
     break
 
   case 'dev':
