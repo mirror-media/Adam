@@ -312,7 +312,7 @@ export default function MobileSidebar({
             </Categories>
           </Fragment>
         )
-      case 'category':
+      case 'category': {
         const renderSectionSlug = item.sections?.[0]
 
         return (
@@ -322,6 +322,7 @@ export default function MobileSidebar({
             </a>
           </Section>
         )
+      }
       default:
         break
     }

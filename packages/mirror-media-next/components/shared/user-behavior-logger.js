@@ -36,8 +36,12 @@ import { generateUserBehaviorLogInfo } from '../../utils/log/user-behavior-log'
  *
  * @param {Object} props
  * @param {boolean} [props.isMemberArticle = false] Whether is a member-only article. Optional, value only existed when this components used at story-page.
+ * @param {string} props.writers - used only in story page
  */
-export default function UserBehaviorLogger({ isMemberArticle = false }) {
+export default function UserBehaviorLogger({
+  isMemberArticle = false,
+  writers,
+}) {
   //Since `usePathname()` is recommend to use at Next.js 13 App route, we use `useRouter` to get pathname instead to prevent unexpected error.
   const router = useRouter()
   const { asPath } = router
@@ -56,8 +60,9 @@ export default function UserBehaviorLogger({ isMemberArticle = false }) {
       userEmail,
       firebaseId,
       isMemberArticle,
+      writers,
     }
-  }, [memberType, userEmail, firebaseId, isMemberArticle])
+  }, [memberType, userEmail, firebaseId, isMemberArticle, writers])
 
   //pageview event
   useEffect(() => {

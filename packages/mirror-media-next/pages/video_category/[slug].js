@@ -219,8 +219,6 @@ export async function getServerSideProps({ query, req, res }) {
     : []
 
   // handle fetch videos and get nextPageToken for infinite scroll
-  if (handledResponses[1]?.items?.length === 0) {
-  }
   const videos = handledResponses[1]?.items
     ? simplifyYoutubePlaylistVideo(
         handledResponses[1]?.items.filter(

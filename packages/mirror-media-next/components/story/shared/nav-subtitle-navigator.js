@@ -32,12 +32,10 @@ const NavWrapper = styled.section`
      */
     ({ componentStyle }) => {
       switch (componentStyle) {
-        case 'side-index':
-          return navWrapperSideIndex
         case 'side-bar':
           return navWrapperSideMenu
-        default:
         case 'side-index':
+        default:
           return navWrapperSideIndex
       }
     }
@@ -129,14 +127,10 @@ const NavItem = styled.li`
   }
   ${({ componentStyle }) => {
     switch (componentStyle) {
-      case 'side-index':
-        return navItemSideIndex
-
       case 'side-bar':
         return navItemSideMenu
-
-      default:
       case 'side-index':
+      default:
         return navItemSideIndex
     }
   }}
@@ -166,12 +160,10 @@ const Nav = styled.nav`
      */
     ({ componentStyle }) => {
       switch (componentStyle) {
-        case 'side-index':
-          return navSideIndex
         case 'side-bar':
           return navSideMenu
-        default:
         case 'side-index':
+        default:
           return navSideIndex
       }
     }
