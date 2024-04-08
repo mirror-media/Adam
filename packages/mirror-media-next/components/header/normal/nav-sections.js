@@ -213,7 +213,7 @@ export default function NavSections({ sectionsAndCategories = [] }) {
             </SectionDropDown>
           </Section>
         )
-      case 'category':
+      case 'category': {
         const renderSectionSlug = section.sections?.[0]
 
         return (
@@ -223,6 +223,7 @@ export default function NavSections({ sectionsAndCategories = [] }) {
             </SectionLink>
           </Section>
         )
+      }
       default:
         return null
     }

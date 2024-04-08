@@ -56,7 +56,7 @@ export default function External({ external }) {
 
   // The property `partner` for external article may lost for some reasons, `showOnIndex` will be set to true to handle this case.
   const showOnIndex =
-    partner && partner.hasOwnProperty('showOnIndex')
+    partner && Object.prototype.hasOwnProperty.call(partner, 'showOnIndex')
       ? partner.showOnIndex
       : 'true'
   const gptAdSection = showOnIndex ? 'news' : 'life'
@@ -191,6 +191,17 @@ export async function getServerSideProps({ params, req, res, resolvedUrl }) {
     handledResponses[0] && 'data' in handledResponses[0]
       ? handledResponses[0]?.data?.externals[0] || {}
       : {}
+
+  if (!Object.keys(external).length) {
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `The external article which slug is '${slug}' does not exist, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
 
   // transform html into valid amp html, check transformHtmlIntoAmpHtml function for further detail.
   const html = external.content

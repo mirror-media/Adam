@@ -1,11 +1,15 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 
 import client from '../../apollo/apollo-client'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import {
+  GCP_PROJECT_ID,
+  ENV,
+  TEST_GPT_AD_FEATURE_TOGGLE,
+} from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
 import { useMembership } from '../../context/membership'
@@ -42,6 +46,7 @@ const StoryPremiumStyle = dynamic(() =>
 )
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
+import DevGptAd from '../../components/story/dev-gpt-ad'
 
 /**
  * @typedef {import('../../components/story/normal').PostData} PostData
@@ -100,6 +105,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
     content = null,
     trimmedContent = null,
     hiddenAdvertised = false,
+    writers = [],
   } = postData
   /**
    * The logic for rendering the article content:
@@ -120,6 +126,14 @@ export default function Story({ postData, headerData, storyLayoutType }) {
       : { type: 'trimmedContent', data: trimmedContent, isLoaded: false }
   )
   useSaveMemberArticleHistoryLocally(slug)
+  const writersInString = useMemo(() => {
+    return writers
+      .map((writer) => {
+        return writer.name
+      })
+      .join(',')
+  }, [writers])
+
   useEffect(() => {
     const fetchPostFullContent = async () => {
       try {
@@ -257,7 +271,10 @@ export default function Story({ postData, headerData, storyLayoutType }) {
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}
       >
-        <UserBehaviorLogger isMemberArticle={isMember} />
+        <UserBehaviorLogger
+          isMemberArticle={isMember}
+          writers={writersInString}
+        />
         {!storyLayoutJsx && (
           <Loading>
             <Image src={Skeleton} alt="loading..."></Image>
@@ -269,6 +286,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
         {noCategoryOfWineSlug && (
           <FullScreenAds hiddenAdvertised={hiddenAdvertised} />
         )}
+        {TEST_GPT_AD_FEATURE_TOGGLE === 'on' && <DevGptAd />}
       </Layout>
     </>
   )
