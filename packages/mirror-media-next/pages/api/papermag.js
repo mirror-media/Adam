@@ -1,31 +1,28 @@
-import axios from 'axios'
 import errors from '@twreporter/errors'
 import NewebPay from '@mirrormedia/newebpay-node'
 import {
   NEWEBPAY_PAPERMAG_KEY,
   NEWEBPAY_PAPERMAG_IV,
-  ISRAFEL_ORIGIN,
   SITE_URL,
   ENV,
 } from '../../config/index.mjs'
-
-const apiUrl = `${ISRAFEL_ORIGIN}/member/graphql`
+import client from '../../apollo/apollo-client'
+import { fetchPaymentDataOfPapermag } from '../../apollo/membership/mutation/magazine-order'
 
 // TODO: Add JSDocs
-async function fireGqlRequest(query, variables, apiUrl) {
+async function fireGqlRequest(mutation, variables) {
   let result = {}
   try {
-    const { data: result } = await axios({
-      url: apiUrl,
-      method: 'post',
-      data: {
-        query,
-        variables,
+    result = await client.mutate({
+      mutation: mutation,
+      context: {
+        uri: '/member/graphql',
+        headers: {
+          'content-type': 'application/json',
+          'Cache-Control': 'no-cache',
+        },
       },
-      headers: {
-        'content-type': 'application/json',
-        'Cache-Control': 'no-cache',
-      },
+      variables,
     })
     if (result.errors) {
       throw new Error(result.errors)
@@ -38,28 +35,9 @@ async function fireGqlRequest(query, variables, apiUrl) {
 }
 
 async function getPaymentDataOfMagazineOrders(gateWayPayload) {
-  const fetchPaymentDataOfPapermag = `mutation fetchPaymentDataOfPapermag(
-    $data: createNewebpayTradeInfoForMagazineOrderInput!
-  ) {
-    createNewebpayTradeInfoForMagazineOrder(data: $data) {
-      MerchantID
-      RespondType
-      TimeStamp
-      Version
-      MerchantOrderNo
-      Amt
-      ItemDesc
-      LoginType
-      Email
-      TradeLimit
-      NotifyURL
-    }
-  }
-  `
-  const { data } = await fireGqlRequest(
+  const { data = {} } = await fireGqlRequest(
     fetchPaymentDataOfPapermag,
-    gateWayPayload,
-    apiUrl
+    gateWayPayload
   )
   data.createNewebpayTradeInfoForMagazineOrder.ReturnURL =
     ENV === 'local'
@@ -74,7 +52,6 @@ export default async function EncryptInfo(req, res) {
   try {
     const data = await getPaymentDataOfMagazineOrders(tradeInfo)
     const infoForNewebpay = data.createNewebpayTradeInfoForMagazineOrder
-
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
     const encryptPostData = await newebpay.getEncryptedFormPostData(
       infoForNewebpay
