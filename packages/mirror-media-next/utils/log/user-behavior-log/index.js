@@ -1,9 +1,18 @@
-import Bowser from 'bowser'
-import { transformTimeDataIntoSlashFormat } from '../../index'
+import {
+  getBrowserInfo,
+  getDeviceInfo,
+  detectIsInApp,
+  getWindowSizeInfo,
+  getFormattedPageType,
+} from '../shared'
+import {
+  getClientSideOnlyError,
+  isServer,
+  transformTimeDataIntoSlashFormat,
+} from '../../index'
 
 /**
  * @typedef {'pageview' | 'exit' | 'scroll-to-80%' | 'click'} EventType
- * @typedef {import('next/router').NextRouter['pathname']} Pathname
  *
  * @typedef {import('../../../context/membership').MemberType} MemberType
  *
@@ -20,12 +29,11 @@ import { transformTimeDataIntoSlashFormat } from '../../index'
  * Caution: Since this function have use Web API, such as `window.location.href`, `window.navigator.userAgent`,
  * this function should be ONLY executed at client-side.
  * @param {EventType} eventType
- * @param {Pathname} pathname
  * @param {Payload} payload
+ * @throws {Error}
  */
 const generateUserBehaviorLogInfo = (
   eventType,
-  pathname = '',
   payload = {
     memberType: 'not-member',
     userEmail: '',
@@ -34,6 +42,10 @@ const generateUserBehaviorLogInfo = (
     writers: '',
   }
 ) => {
+  if (isServer()) throw getClientSideOnlyError('generateUserBehaviorLogInfo')
+
+  const pathname = window.location.pathname
+
   const {
     memberType = 'not-member',
     userEmail = '',
@@ -41,7 +53,7 @@ const generateUserBehaviorLogInfo = (
     isMemberArticle = false,
     writers,
   } = payload
-  const userAgent = window?.navigator?.userAgent
+  const userAgent = window.navigator.userAgent
   const triggerEvent = {
     'event-type': eventType,
     datetime: transformTimeDataIntoSlashFormat(new Date().toISOString(), true),
@@ -69,92 +81,6 @@ const generateUserBehaviorLogInfo = (
     pageInfo['story-author'] = writers
   }
   return { triggerEvent, clientInfo, pageInfo }
-}
-
-function getBrowserInfo(userAgent = '') {
-  if (!userAgent) {
-    return {
-      name: '',
-      version: '',
-    }
-  }
-  const browser = Bowser.getParser(userAgent)
-  const browserInfo = browser.getBrowser()
-  return browserInfo
-}
-function getDeviceInfo(userAgent = '') {
-  if (!userAgent) {
-    return {
-      name: '',
-      version: '',
-    }
-  }
-  const browser = Bowser.getParser(userAgent)
-  const deviceInfo = browser.getOS()
-  return {
-    name: deviceInfo?.name,
-    version: deviceInfo?.version,
-  }
-}
-/**
- *  Inspired by https://github.com/f2etw/detect-inapp
- */
-function detectIsInApp(userAgent = '') {
-  if (!userAgent) {
-    return false
-  }
-  const rules = [
-    'WebView',
-    '(iPhone|iPod|iPad)(?!.*Safari/)',
-    'Android.*(wv|.0.0.0)',
-  ]
-  const regex = new RegExp(`(${rules.join('|')})`, 'ig')
-  return Boolean(userAgent.match(regex))
-}
-function getWindowSizeInfo() {
-  return {
-    width: document.documentElement.clientWidth || document.body.clientWidth,
-    height: document.documentElement.clientHeight || document.body.clientHeight,
-  }
-}
-/**
- *
- * @param {Pathname} pathname
- * @param {boolean} isMemberArticle
- * @returns
- */
-function getFormattedPageType(pathname = '', isMemberArticle = false) {
-  switch (true) {
-    case pathname.startsWith('/') && pathname.length === 1:
-      return 'index'
-
-    case pathname.startsWith('/story/') && isMemberArticle:
-      return 'premium-story'
-
-    case pathname.startsWith('/story/') && !isMemberArticle:
-      return 'story'
-
-    case pathname.startsWith('/external/'):
-      return 'external'
-
-    case pathname.startsWith('/topic/'):
-      return 'topic'
-
-    case pathname.startsWith('/video/'):
-      return 'video'
-
-    case pathname.startsWith('/section/') ||
-      pathname.startsWith('/premiumsection/') ||
-      pathname.startsWith('/externals/'):
-      return 'section'
-
-    case pathname.startsWith('/category/') ||
-      pathname.startsWith('/video_category/'):
-      return 'category'
-
-    default:
-      return 'other'
-  }
 }
 
 export { generateUserBehaviorLogInfo }

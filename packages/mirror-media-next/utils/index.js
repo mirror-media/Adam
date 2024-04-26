@@ -301,6 +301,88 @@ const getActiveOrderCategory = (categories, categoriesInInputOrder) => {
   }
 }
 
+/**
+ * Verify email input
+ *
+ * @param {string} email
+ * @returns {boolean}
+ */
+const isValidEmail = (email) => {
+  const regex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+  return regex.test(email)
+}
+
+/**
+ * Verify password input
+ *
+ * @param {string} password
+ * @returns {boolean}
+ */
+const isValidPassword = (password) => {
+  return typeof password === 'string' && password.length >= 6
+}
+
+/**
+ * @param {import('next/router').NextRouter} router
+ * @returns {import('next/link').LinkProps['href']}
+ */
+const getLoginHref = (router) => {
+  const pathname = router.pathname
+
+  if (pathname === '/login') {
+    const queryParam = router.query
+    let destination = queryParam.destination
+
+    if (Array.isArray(destination)) {
+      destination = destination.join(',')
+    }
+
+    if (destination) {
+      return {
+        pathname: '/login',
+        query: {
+          ...queryParam,
+        },
+      }
+    } else {
+      return {
+        pathname: '/login',
+        query: {
+          destination: '/',
+          ...queryParam,
+        },
+      }
+    }
+  } else {
+    const urlObject = new URL(
+      router.asPath,
+      'https://www.google.com' /** sample base */
+    )
+    const searchParams = Object.fromEntries(urlObject.searchParams.entries())
+
+    return {
+      pathname: '/login',
+      query: {
+        destination: urlObject.pathname, // avoid dynamic route repreentaion, e.g., /story/[slug]
+        ...searchParams,
+      },
+    }
+  }
+}
+
+const isServer = () => {
+  return typeof window === 'undefined' ? true : false
+}
+
+/**
+ * @param {string} functionName
+ * @returns
+ */
+const getClientSideOnlyError = (functionName) => {
+  return new Error(`Method ${functionName} is client-side only`)
+}
+
 export {
   transformTimeDataIntoDotFormat,
   transformTimeDataIntoSlashFormat,
@@ -315,5 +397,10 @@ export {
   getNumberWithCommas,
   getActiveOrderSection,
   getActiveOrderCategory,
+  isValidEmail,
+  isValidPassword,
   transformTimeData,
+  getLoginHref,
+  isServer,
+  getClientSideOnlyError,
 }

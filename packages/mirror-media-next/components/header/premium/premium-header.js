@@ -133,7 +133,7 @@ const DesktopPremiumMemberLoginButton = styled(PremiumMemberLoginButton)`
     flex-shrink: 0;
     align-items: center;
     text-decoration: none;
-    > span {
+    > a {
       display: inline-flex;
       padding: 5px 8px;
       background-color: #054f77;
@@ -228,7 +228,10 @@ export default function PremiumHeader({
   const sections = getSections()
 
   return (
-    <HeaderWrapper shouldSticky={shouldShowSubtitleNavigator}>
+    <HeaderWrapper
+      shouldSticky={shouldShowSubtitleNavigator}
+      className="header header-premium"
+    >
       <HeaderTop>
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a href="/">

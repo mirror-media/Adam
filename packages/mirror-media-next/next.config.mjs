@@ -1,4 +1,8 @@
-import { DONATION_PAGE_URL, SITE_BASE_PATH } from './config/index.mjs'
+import {
+  DONATION_PAGE_URL,
+  SITE_BASE_PATH,
+  FIREBASE_AUTH_DOMAIN,
+} from './config/index.mjs'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -57,6 +61,14 @@ const nextConfig = {
       {
         source: '/story/:slug*/index.html',
         destination: '/story/:slug*',
+      },
+      /**
+       * deal with 3rd party login issue
+       * @see https://firebase.google.com/docs/auth/web/redirect-best-practices
+       */
+      {
+        source: '/__/auth/:path*',
+        destination: `https://${FIREBASE_AUTH_DOMAIN}/__/auth/:path*`,
       },
     ]
   },

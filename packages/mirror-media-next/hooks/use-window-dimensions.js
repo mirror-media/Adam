@@ -1,5 +1,17 @@
 import { useState, useEffect } from 'react'
 
+/**
+ * @typedef {Object} WindowDimension
+ * @property {number | undefined} width
+ * @property {number | undefined} height
+ */
+
+/** @type {WindowDimension} */
+const initialWindowDimension = {
+  width: undefined,
+  height: undefined,
+}
+
 function getWindowDimensions() {
   const { innerWidth: width, innerHeight: height } = window
   return {
@@ -10,10 +22,9 @@ function getWindowDimensions() {
 
 export default function useWindowDimensions() {
   // Initialize state with undefined width/height so server and client renders match
-  const [windowDimensions, setWindowDimensions] = useState({
-    width: undefined,
-    height: undefined,
-  })
+  const [windowDimensions, setWindowDimensions] = useState(
+    initialWindowDimension
+  )
 
   useEffect(() => {
     function handleResize() {

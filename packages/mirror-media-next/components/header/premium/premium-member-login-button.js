@@ -10,11 +10,14 @@ import { useRouter } from 'next/router'
 import { useMembership, logout } from '../../../context/membership'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { loginActions } from '../../../slice/login-slice'
+import { getLoginHref } from '../../../utils'
+import Link from 'next/link'
+
 const MemberLoginButtonWrapper = styled.div`
   cursor: pointer;
 `
 
-const LoginButton = styled.span`
+const LoginButton = styled(Link)`
   font-size: 13px;
   line-height: 150%;
   color: #000;
@@ -93,9 +96,7 @@ export default function PremiumMemberLoginButton({ className }) {
     dispatch(loginActions.resetLoginState())
     logout()
   }
-  const handleLogIn = () => {
-    router.push(`/login?destination=${router.asPath || '/'}`)
-  }
+
   let memberLoginButton
   if (isLoggedIn) {
     memberLoginButton = (
@@ -122,7 +123,7 @@ export default function PremiumMemberLoginButton({ className }) {
     )
   } else {
     memberLoginButton = (
-      <LoginButton onClick={handleLogIn}>
+      <LoginButton href={getLoginHref(router)}>
         <DesktopWrapper>註冊/登入</DesktopWrapper>
         <MobileWrapper>登入</MobileWrapper>
       </LoginButton>

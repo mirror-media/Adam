@@ -5,19 +5,34 @@ import { useCallback } from 'react'
 /**
  *
  * @param {import('next/router').NextRouter} router
- * @returns {string}
+ * @returns {import('next/link').LinkProps['href']}
  */
 const getDestination = (router) => {
   const destination = router?.query?.destination
   if (!destination) {
-    return defaultDestination
+    return {
+      pathname: defaultDestination,
+      query: router.query,
+    }
   }
+
+  const queryParam = Object.assign({}, router.query)
+  delete queryParam['destination']
+
+  /** @type {string} */
+  let destinationString
+
   if (Array.isArray(destination)) {
-    const destinationString =
+    destinationString =
       destination.filter((path) => path)?.[0] ?? defaultDestination
-    return destinationString
+  } else {
+    destinationString = destination
   }
-  return destination
+
+  return {
+    pathname: destinationString,
+    query: queryParam,
+  }
 }
 
 export default function useRedirect() {

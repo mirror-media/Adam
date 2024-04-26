@@ -9,7 +9,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import ExternalArticleInfo from '../../components/external/external-article-info'
-import ArticleBrief from '../../components/story/shared/brief'
+import ExternalArticleBrief from '../../components/external/external-article-brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
@@ -32,7 +32,6 @@ import {
   API_TIMEOUT,
 } from '../../config/index.mjs'
 import {
-  transformStringToDraft,
   getExternalSectionTitle,
   getExternalPartnerColor,
 } from '../../utils/external'
@@ -406,7 +405,6 @@ const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
  */
 export default function ExternalNormalStyle({ external }) {
   const {
-    id = '',
     slug = '',
     title = '',
     thumb = '',
@@ -435,7 +433,6 @@ export default function ExternalNormalStyle({ external }) {
   const updatedTaipeiTime = transformTimeDataIntoDotFormat(updatedAt)
 
   const externalSectionTitle = getExternalSectionTitle(partner)
-  const externalBrief = transformStringToDraft(id, brief)
   const partnerColor = getExternalPartnerColor(partner)
 
   /**
@@ -546,7 +543,7 @@ export default function ExternalNormalStyle({ external }) {
             />
           </InfoAndHero>
 
-          <ArticleBrief brief={externalBrief} />
+          <ExternalArticleBrief brief={brief} />
 
           <ExternalArticleContent content={content} />
 

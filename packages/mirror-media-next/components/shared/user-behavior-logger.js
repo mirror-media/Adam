@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import debounce from 'debounce'
-import { sendLog } from '../../utils/log/send-log'
+import { sendUserBehaviorLog } from '../../utils/log/send-log'
 import { useMembership } from '../../context/membership'
 
 import { generateUserBehaviorLogInfo } from '../../utils/log/user-behavior-log'
@@ -36,7 +36,7 @@ import { generateUserBehaviorLogInfo } from '../../utils/log/user-behavior-log'
  *
  * @param {Object} props
  * @param {boolean} [props.isMemberArticle = false] Whether is a member-only article. Optional, value only existed when this components used at story-page.
- * @param {string} props.writers - used only in story page
+ * @param {string} [props.writers] - used only in story page
  */
 export default function UserBehaviorLogger({
   isMemberArticle = false,
@@ -44,9 +44,7 @@ export default function UserBehaviorLogger({
 }) {
   //Since `usePathname()` is recommend to use at Next.js 13 App route, we use `useRouter` to get pathname instead to prevent unexpected error.
   const router = useRouter()
-  const { asPath } = router
 
-  const pathname = asPath?.split('?')?.[0]
   const {
     isLogInProcessFinished,
     memberInfo: { memberType },
@@ -72,11 +70,10 @@ export default function UserBehaviorLogger({
 
     const info = generateUserBehaviorLogInfo(
       'pageview',
-      pathname,
       userBehaviorLogInfoPayload
     )
-    sendLog(info)
-  }, [pathname, isLogInProcessFinished, userBehaviorLogInfoPayload])
+    sendUserBehaviorLog(info)
+  }, [isLogInProcessFinished, userBehaviorLogInfoPayload])
 
   //exit event
   useEffect(() => {
@@ -86,24 +83,20 @@ export default function UserBehaviorLogger({
     if (!isLogInProcessFinished) {
       return
     }
-    const info = generateUserBehaviorLogInfo(
-      'exit',
-      pathname,
-      userBehaviorLogInfoPayload
-    )
+    const info = generateUserBehaviorLogInfo('exit', userBehaviorLogInfoPayload)
 
     const beforeUnloadEvent = () => {
       if (ignore) {
         return
       }
       hasBeforeUnloadEventTriggered = true
-      sendLog(info)
+      sendUserBehaviorLog(info)
     }
     const beforeHistoryChangeEvent = () => {
       if (ignore || hasBeforeUnloadEventTriggered) {
         return
       }
-      sendLog(info)
+      sendUserBehaviorLog(info)
     }
     window.addEventListener('beforeunload', beforeUnloadEvent)
     router.events.on('beforeHistoryChange', beforeHistoryChangeEvent)
@@ -112,7 +105,7 @@ export default function UserBehaviorLogger({
       window.removeEventListener('beforeunload', beforeUnloadEvent)
       router.events.off('beforeHistoryChange', beforeHistoryChangeEvent)
     }
-  }, [router, pathname, isLogInProcessFinished, userBehaviorLogInfoPayload])
+  }, [router, isLogInProcessFinished, userBehaviorLogInfoPayload])
 
   //scroll-to-80% event
   useEffect(() => {
@@ -135,10 +128,9 @@ export default function UserBehaviorLogger({
       if (isScrollToBottom) {
         const info = generateUserBehaviorLogInfo(
           'scroll-to-80%',
-          pathname,
           userBehaviorLogInfoPayload
         )
-        sendLog(info)
+        sendUserBehaviorLog(info)
       }
     }
     window.addEventListener('scroll', debounce(scrollToBottomEvent, 500))
@@ -146,7 +138,7 @@ export default function UserBehaviorLogger({
       ignore = true
       window.removeEventListener('scroll', debounce(scrollToBottomEvent, 500))
     }
-  }, [pathname, isLogInProcessFinished, userBehaviorLogInfoPayload])
+  }, [isLogInProcessFinished, userBehaviorLogInfoPayload])
 
   //click event
   useEffect(() => {
@@ -160,17 +152,16 @@ export default function UserBehaviorLogger({
       }
       const info = generateUserBehaviorLogInfo(
         'click',
-        pathname,
         userBehaviorLogInfoPayload
       )
-      sendLog(info)
+      sendUserBehaviorLog(info)
     }
     window.addEventListener('click', clickEvent)
     return () => {
       ignore = true
       window.removeEventListener('click', clickEvent)
     }
-  }, [isLogInProcessFinished, pathname, userBehaviorLogInfoPayload])
+  }, [isLogInProcessFinished, userBehaviorLogInfoPayload])
 
   return null
 }

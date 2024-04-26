@@ -1,6 +1,7 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { JWT } from 'google-auth-library'
 import Cors from 'cors'
+import { runMiddleware } from '../../utils/api-route'
 
 /**
  * @typedef {import("next").NextApiRequest} NextApiRequest
@@ -83,37 +84,20 @@ async function addRowToGoogleSheet(googleSheet) {
 }
 
 /**
- *
- * @param {NextApiRequest} req
- * @param {NextApiResponse} res
- * @param {Function} fn
- */
-function runMiddleware(req, res, fn) {
-  return new Promise((resolve, reject) => {
-    fn(req, res, async (result) => {
-      if (result instanceof Error) {
-        return reject(result)
-      }
-
-      try {
-        const { googleSheet } = req.body
-        await addRowToGoogleSheet(googleSheet)
-      } catch (e) {
-        reject(e)
-      }
-
-      return resolve(result)
-    })
-  })
-}
-
-/**
  * google sheet api to add row to specific google spreadsheet
  * To balance security and experience of development, allow cors in dev and local environment.
  * @param {NextApiRequest} req
  * @param {NextApiResponse} res
  */
 export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res
+      .status(405)
+      .setHeader('Allow', ['HEAD', 'POST'])
+      .send({ error: 'Method Not Allowed' })
+    return
+  }
+
   try {
     const { googleSheet } = req.body
 
@@ -123,9 +107,8 @@ export default async function handler(req, res) {
     ) {
       // only dev and local env support CORS
       await runMiddleware(req, res, cors)
-    } else {
-      await addRowToGoogleSheet(googleSheet)
     }
+    await addRowToGoogleSheet(googleSheet)
 
     console.log(
       JSON.stringify({

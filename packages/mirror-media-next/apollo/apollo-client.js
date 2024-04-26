@@ -20,10 +20,17 @@ const serverOrigin = IS_PREVIEW_MODE
  * @param {RequestInit} options
  */
 const customFetch = (uri, options) => {
-  const endpoint =
-    uri === DEFAULT_URI
-      ? `${serverOrigin}/content/graphql`
-      : `${serverOrigin}${uri}`
+  let endpoint
+
+  if (IS_PREVIEW_MODE) {
+    // in preview, we fetch data from CMS directly
+    endpoint = `${serverOrigin}/api/graphql`
+  } else {
+    endpoint =
+      uri === DEFAULT_URI
+        ? `${serverOrigin}/content/graphql`
+        : `${serverOrigin}${uri}`
+  }
   return fetch(endpoint, options)
 }
 const timeoutLink = new ApolloLinkTimeout(API_TIMEOUT_GRAPHQL)

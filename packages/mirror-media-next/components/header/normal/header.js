@@ -407,7 +407,7 @@ export default function Header({
   const shouldShowAd = useDisplayAd()
 
   return (
-    <HeaderWrapper>
+    <HeaderWrapper className="header header-default">
       <HeaderTop>
         <LogoBtnWrapper>
           <>
