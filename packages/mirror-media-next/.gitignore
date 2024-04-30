@@ -5,3 +5,8 @@ yalc.lock
 
 # Google cloud service account key
 service-account-file.json
+
+# generated service work files
+/public/sw.js*
+/public/workbox-*
+/public/worker-*

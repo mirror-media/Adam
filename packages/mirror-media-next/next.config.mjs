@@ -3,6 +3,14 @@ import {
   SITE_BASE_PATH,
   FIREBASE_AUTH_DOMAIN,
 } from './config/index.mjs'
+import withPWA from 'next-pwa'
+
+/** @type {import('next-pwa').PWAConfig} */
+const pwaConfig = {
+  dest: 'public',
+  customWorkerDir: 'service-worker',
+  mode: 'production',
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -76,4 +84,4 @@ const nextConfig = {
   output: 'standalone',
 }
 
-export default nextConfig
+export default withPWA(pwaConfig)(nextConfig)

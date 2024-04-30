@@ -1,4 +1,3 @@
-import { SESSION_COOKIE_NAME } from '../config/index.mjs'
 import { getAdminAuth } from '../firebase/admin'
 import { URLSearchParams } from 'node:url'
 
@@ -66,13 +65,13 @@ const redirectToDestinationWhileAuthed =
   ) =>
   async (/** @type {SSRPropsContext<Q, D>} */ ctx) => {
     const { req, query } = ctx
-    const sessionCookie = req.cookies[SESSION_COOKIE_NAME] ?? ''
+    const authToken = req.headers.authorization?.split(' ')[1]
 
     try {
-      await getAdminAuth().verifySessionCookie(sessionCookie)
+      await getAdminAuth().verifyIdToken(authToken, true)
 
       /**
-       * user with valid session cookie
+       * user with valid id token
        */
       /** @type {string} */
       let destination = '/section/member'
@@ -98,7 +97,7 @@ const redirectToDestinationWhileAuthed =
       }
     } catch (err) {
       /**
-       * user without valid session cookie or other errors
+       * user without valid id token or other errors
        */
 
       if (!('codePrefix' in err) || err.codePrefix !== 'auth') {

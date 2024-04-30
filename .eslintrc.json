@@ -5,7 +5,8 @@
     "plugin:prettier/recommended"
   ],
   "env": {
-    "es6": true
+    "es6": true,
+    "worker": true
   },
   "plugins": ["prettier"],
   "parserOptions": {

@@ -200,20 +200,6 @@ const MembershipProvider = ({ children }) => {
          * @see https://github.com/mirror-media/Adam/blob/dev/packages/weekly-api-server/README.md
          */
         try {
-          /**
-           * apply session cookie
-           */
-          {
-            await axios({
-              method: 'post',
-              url: '/api/login',
-              timeout: API_TIMEOUT,
-              data: {
-                idToken,
-              },
-            })
-          }
-
           const res = await axios({
             method: 'post',
             url: `https://${WEEKLY_API_SERVER_ORIGIN}/access-token`,
@@ -262,25 +248,6 @@ const MembershipProvider = ({ children }) => {
           }
         }
       } else {
-        /**
-         * remove seesion cookie
-         */
-        try {
-          {
-            await axios({
-              method: 'post',
-              url: '/api/logout',
-              timeout: API_TIMEOUT,
-            })
-          }
-        } catch (err) {
-          const errorLog = generateErrorReportInfo(err, {
-            userEmail: membership.userEmail,
-            firebaseId: membership.firebaseId,
-          })
-          sendErrorLog(errorLog)
-        }
-
         /**
          * If user is not log in firebase, we should dispatch a "LOGOUT" action to clear access token.
          */

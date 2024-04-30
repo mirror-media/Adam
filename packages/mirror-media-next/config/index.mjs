@@ -1,5 +1,4 @@
 const GCP_PROJECT_ID = 'mirrormedia-1470651750304'
-const SESSION_COOKIE_NAME = 'member-session-cookie'
 
 // The following variables are from environment variables
 
@@ -308,5 +307,4 @@ export {
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   IS_PRIZE_RIZED,
-  SESSION_COOKIE_NAME,
 }
