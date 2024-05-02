@@ -1,4 +1,5 @@
 /* eslint-env worker */
+import { FIREBASE_CONFIG } from '../config/firebase.mjs'
 
 const ignorePaths = [
   '\u002F__webpack_hmr',
@@ -24,16 +25,7 @@ const ignorePaths = [
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js')
 /* eslint-disable-next-line no-undef */
-firebase.initializeApp({
-  apiKey: 'AIzaSyAavk46-8OQ4B2cv0TOqxOMjd5Fe4tIauc',
-  authDomain: 'mirrormediaapptest.firebaseapp.com',
-  databaseURL: 'https:\u002F\u002Fmirrormediaapptest.firebaseio.com',
-  projectId: 'mirrormediaapptest',
-  storageBucket: 'mirrormediaapptest.appspot.com',
-  messagingSenderId: '305253456270',
-  appId: '1:305253456270:web:21f9851dd09f60ebfbacdf',
-  measurementId: 'G-8YH4MW9NX5',
-})
+firebase.initializeApp(FIREBASE_CONFIG)
 
 // Initialize authService
 /* eslint-disable-next-line no-undef */

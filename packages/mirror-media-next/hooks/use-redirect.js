@@ -26,7 +26,7 @@ const getDestination = (router) => {
     destinationString =
       destination.filter((path) => path)?.[0] ?? defaultDestination
   } else {
-    destinationString = destination
+    destinationString = destination === '/' ? defaultDestination : destination
   }
 
   return {
