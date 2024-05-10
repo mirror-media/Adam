@@ -18,26 +18,40 @@ export default function DevGptAd() {
     }
   }, [width, isMobile])
 
-  return (
-    <>
-      <Script id="test-google-tag-ad">
-        {`
-            window.googletag = window.googletag || {cmd: []};
-            const slotId = window.innerWidth < 1200 ? 'test_mirror_m_ros_out_ADBRO' : 'test_mirror_pc_ros_out_ADBRO';
-            const divId = window.innerWidth < 1200 ?   'div-gpt-ad-1710755205915-0' : 'div-gpt-ad-1710755093650-0';
-            console.log(slotId, divId)
-            googletag.cmd.push(function() {
-              googletag.defineOutOfPageSlot('/40175602/' + slotId, divId).addService(googletag.pubads());
-              googletag.pubads().enableSingleRequest();
-              googletag.enableServices();
-            });
-          `}
-      </Script>
-      <div
-        id={
-          isMobile ? 'div-gpt-ad-1710755205915-0' : 'div-gpt-ad-1710755093650-0'
-        }
-      />
-    </>
-  )
+  let testAdJsx = null
+  if (width) {
+    testAdJsx = isMobile ? (
+      <>
+        <Script id="test-google-tag-ad">
+          {`  
+          window.googletag = window.googletag || {cmd: []};
+          googletag.cmd.push(function() {
+            googletag.defineOutOfPageSlot('/40175602/test_mirror_m_ros_out_ADBRO', 'div-gpt-ad-1710755205915-0').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+          });
+        `}
+        </Script>
+        {/* /40175602/test_mirror_m_ros_out_ADBRO */}
+        <div id="div-gpt-ad-1710755205915-0" />
+      </>
+    ) : (
+      <>
+        <Script id="test-google-tag-ad">
+          {`  
+          window.googletag = window.googletag || {cmd: []};
+          googletag.cmd.push(function() {
+            googletag.defineOutOfPageSlot('/40175602/test_mirror_pc_ros_out_ADBRO', 'div-gpt-ad-1710755093650-0').addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+          });
+        `}
+        </Script>
+        {/* /40175602/test_mirror_pc_ros_out_ADBRO */}
+        <div id="div-gpt-ad-1710755093650-0" />
+      </>
+    )
+  }
+
+  return testAdJsx
 }

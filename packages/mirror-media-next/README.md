@@ -5,8 +5,6 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
-npm run dev
-# or
 yarn dev
 ```
 
@@ -26,12 +24,6 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 ## Reminder
 
@@ -61,6 +53,13 @@ Ref: [ECMAScript Modules | Node.js](https://nodejs.org/docs/latest-v13.x/api/esm
 
 該className僅用於協助Google Tag Manager蒐集數據，請勿使用該className切版。
 
+### 使用 JSDoc 寫出與 TypeScript 中 `as const` 等效的註解
+```
+/** @type {const} */ ([something]) 
+```
+ref: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#casts
+
+
 ## Environment Variables (環境變數)
 
 | 變數名稱            | 資料型態   | 初始值  | 變數說明                        |
@@ -68,3 +67,4 @@ Ref: [ECMAScript Modules | Node.js](https://nodejs.org/docs/latest-v13.x/api/esm
 | PROXY_AMP           | 字串(布林) | 'false' | 是否為 proxy AMP 模式           |
 | PROXY_SERVER_PORT   | 字串(整數) | '3000'  | proxy server port               |
 | PROXIED_SERVER_PORT | 字串(整數) | '3001'  | 被 proxy 的 next.js server port |
+| FIREBASE_ADMIN_CREDENTIAL | 字串(JSON) | '' | Firebase 專案所屬服務帳號的密鑰資訊，參考：[Initialize the SDK in non-Google environments#To generate a private key file for your service account](https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments) |

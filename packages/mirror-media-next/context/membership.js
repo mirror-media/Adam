@@ -3,6 +3,8 @@ import { auth } from '../firebase'
 import { signOut } from '@firebase/auth'
 import axios from 'axios'
 import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
+import { generateErrorReportInfo } from '../utils/log/error-log'
+import { sendErrorLog } from '../utils/log/send-log'
 
 /**
  * @typedef {Object} MemberInfo
@@ -65,13 +67,13 @@ const membershipReducer = (membership, action) => {
   const { memberInfo } = membership
   const isLogInProcessFinished = true
   switch (action.type) {
-    case 'LOGIN':
+    case 'LOGIN': {
       const {
         memberInfo: { memberType = 'not-member' } = {},
         accessToken = '',
         userEmail = '',
         firebaseId = '',
-      } = action?.payload
+      } = action?.payload ?? {}
       return {
         isLoggedIn: true,
         accessToken: accessToken,
@@ -83,6 +85,7 @@ const membershipReducer = (membership, action) => {
         isLogInProcessFinished,
         firebaseId,
       }
+    }
     case 'LOGOUT':
       return {
         isLoggedIn: false,
@@ -142,7 +145,12 @@ const MembershipProvider = ({ children }) => {
         const idToken = await user.getIdToken()
         return idToken
       } catch (err) {
-        console.warn(err)
+        const errorLog = generateErrorReportInfo(err, {
+          userEmail: membership.userEmail,
+          firebaseId: membership.firebaseId,
+        })
+        sendErrorLog(errorLog)
+
         return null
       }
     }
@@ -161,11 +169,20 @@ const MembershipProvider = ({ children }) => {
         const memberType = decodedJwtPayload.roles[0]
         return memberType
       } catch (e) {
-        //TODO: If unable to decode Jwt payload, it is needed to send error log to our GCP log viewer by using [Beacon API](https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API).
-        console.warn(e)
+        const errorLog = generateErrorReportInfo(e, {
+          userEmail: membership.userEmail,
+          firebaseId: membership.firebaseId,
+        })
+        sendErrorLog(errorLog)
+
         return 'not-member'
       }
     }
+
+    /**
+     * @typedef {import('firebase/auth').Auth} Auth
+     * @type {Parameters<Auth['onAuthStateChanged']>[0]}
+     */
     const handleFirebaseAuthStateChanged = async (user) => {
       if (user) {
         const idToken = await getIdToken(user)
@@ -220,13 +237,14 @@ const MembershipProvider = ({ children }) => {
               signOut(auth)
               break
             case 500:
-              // TODO: Send this error to our GCP log viewer by using [Beacon API](https://developer.mozilla.org/en-US/docs/Web/API/Beacon_API).
-
-              console.warn(error)
+            default: {
+              const errorLog = generateErrorReportInfo(error, {
+                userEmail: user.email,
+                firebaseId: user.uid,
+              })
+              sendErrorLog(errorLog)
               break
-            default:
-              console.warn(error)
-              break
+            }
           }
         }
       } else {
@@ -262,10 +280,16 @@ const useMembershipDispatch = () => {
 }
 
 const handleFirebaseSignOut = async () => {
+  const currentUser = auth.currentUser
+
   try {
     await signOut(auth)
   } catch (error) {
-    console.warn(error)
+    const errorLog = generateErrorReportInfo(error, {
+      userEmail: currentUser?.email,
+      firebaseId: currentUser?.uid,
+    })
+    sendErrorLog(errorLog)
   }
 }
 export {

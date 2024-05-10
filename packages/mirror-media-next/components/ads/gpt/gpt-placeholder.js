@@ -24,20 +24,21 @@ const Container = styled.div`
     ({ rwd }) => rwd.mobile.width
   };
   min-height: ${({ rwd, shouldTranslate }) =>
-    shouldTranslate ? '0px' : rwd.mobile.height};
+    // 反著寫的原因可參見該描述：https://app.asana.com/0/1181156545719626/1206976463067891/f
+    !shouldTranslate ? rwd.mobile.height : '0px'};
   margin: ${({ rwd }) => rwd.mobile.margin};
 
   ${({ theme }) => theme.breakpoint.md} {
     min-width: ${({ rwd }) => rwd.tablet.width};
     min-height: ${({ rwd, shouldTranslate }) =>
-      shouldTranslate ? '0px' : rwd.tablet.height};
+      !shouldTranslate ? rwd.tablet.height : '0px'};
     margin: ${({ rwd }) => rwd.tablet.margin};
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
     min-width: ${({ rwd }) => rwd.desktop.width};
     min-height: ${({ rwd, shouldTranslate }) =>
-      shouldTranslate ? '0px' : rwd.desktop.height};
+      !shouldTranslate ? '0px' : rwd.desktop.height};
     margin: ${({ rwd }) => rwd.desktop.margin};
   }
 `

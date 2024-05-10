@@ -8,7 +8,6 @@ import requestIp from 'request-ip'
 import {
   GCP_PROJECT_ID,
   GCP_STACKDRIVER_LOG_NAME,
-  GCP_LOGGING_FEATURE_TOGGLE,
 } from '../../config/index.mjs'
 
 const loggingClient = new Logging({
@@ -24,22 +23,24 @@ export default function handler(req, res) {
   try {
     res.send({ msg: 'Received.' })
     const query = req.body
-    const logName = getDefaultLogName()
-    const log = loggingClient.log(logName)
+    const log = loggingClient.log(GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
     const clientIp = requestIp.getClientIp(req)
 
     query.clientInfo.ip = clientIp
 
-    if (GCP_LOGGING_FEATURE_TOGGLE === 'on') {
-      const entry = log.entry(metadata, query)
-      log.write(entry)
-    }
+    const entry = log.entry(metadata, query)
+    log.write(entry)
   } catch (error) {
-    console.error(`[ERROR] Client info logging error occurred: ${error}.`)
+    console.error(
+      JSON.stringify({
+        severity: 'ERROR',
+        message: 'encouter errored while writing user behavior log',
+        debugPayload: {
+          error,
+          log: req.body,
+        },
+      })
+    )
   }
-}
-
-function getDefaultLogName() {
-  return GCP_STACKDRIVER_LOG_NAME
 }

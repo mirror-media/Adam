@@ -239,11 +239,18 @@ export default function SubscribePaperMagForm({ plan }) {
     }
 
     setPaymentPayload(data.data)
-    // 為了確保資料先填入 form 中而使用 setTimeout
-    setTimeout(() => {
+
+    let trySubmitTime = 0
+    // 為了確保資料先填入 form 中
+    let intervalId = setInterval(() => {
       const formDOM = document.forms.newebpay
-      formDOM.submit()
-    }, 0)
+      if (formDOM.elements.MerchantID.value) {
+        formDOM.submit()
+        clearInterval(intervalId) // 停止 interval
+      } else {
+        trySubmitTime += 1
+      }
+    }, trySubmitTime * 1000)
   }
 
   return (
