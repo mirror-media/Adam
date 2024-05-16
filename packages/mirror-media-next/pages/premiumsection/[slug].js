@@ -123,7 +123,7 @@ const RENDER_PAGE_SIZE = 12
 export default function Section({ postsCount, posts, section, headerData }) {
   const sectionName = section.name || ''
 
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
 
@@ -138,7 +138,11 @@ export default function Section({ postsCount, posts, section, headerData }) {
       footer={{ type: 'default' }}
     >
       <SectionContainer>
-        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isHDAdEmpty={isHDAdEmpty}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && (
             <StyledGPTAd_HD
               pageKey={SECTION_IDS['member']}

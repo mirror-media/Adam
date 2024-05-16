@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 
 /**
  * @param {Object} props
- * @param {JSX.Element} props.children
+ * @param {JSX.Element | JSX.Element[]} props.children
  */
 export default function FormWrapper({ children }) {
   return <Wrapper>{children}</Wrapper>

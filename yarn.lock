@@ -3951,6 +3951,10 @@ concurrently@^7.4.0:
     tree-kill "^1.2.2"
     yargs "^17.3.1"
 
+constants@mirror-media/constants#v2.0.0:
+  version "0.0.0"
+  resolved "https://codeload.github.com/mirror-media/constants/tar.gz/691672f39fc7269fdac42776e9c916a42386e464"
+
 content-disposition@0.5.4:
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/content-disposition/-/content-disposition-0.5.4.tgz#8b82b4efac82512a02bb0b1dcec9d2c5e8eb5bfe"
@@ -6399,7 +6403,6 @@ log-update@^4.0.0:
     wrap-ansi "^6.2.0"
 
 long@^4.0.0:
-  name loose-envify
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==

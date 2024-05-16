@@ -404,7 +404,7 @@ export default function Header({
     location.assign(`${SEARCH_URL}/search/v3/${trimedSearchTerms}`)
   }
 
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   return (
     <HeaderWrapper className="header header-default">

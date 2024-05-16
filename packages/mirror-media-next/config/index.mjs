@@ -44,6 +44,9 @@ let NEWEBPAY_PAPERMAG_API_URL = ''
 let URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = ''
 let GPT_MODE = ''
 
+/** @type {import("firebase/auth").ActionCodeSettings} */
+let ACTION_CODE_SETTING
+
 /**
  * domain for handling SSO
  *
@@ -92,6 +95,17 @@ switch (ENV) {
     GPT_MODE = 'prod'
 
     FIREBASE_AUTH_DOMAIN = 'mirror-weekly.firebaseapp.com'
+    ACTION_CODE_SETTING = {
+      url: '',
+      handleCodeInApp: true,
+      iOS: {
+        bundleId: 'com.mirrormedia.news',
+      },
+      android: {
+        packageName: 'com.mirrormedia.news',
+        installApp: false,
+      },
+    }
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log'
@@ -138,6 +152,17 @@ switch (ENV) {
     GPT_MODE = 'prod'
 
     FIREBASE_AUTH_DOMAIN = 'mirrormedia-staging.firebaseapp.com'
+    ACTION_CODE_SETTING = {
+      url: '',
+      handleCodeInApp: true,
+      iOS: {
+        bundleId: 'com.mirrormedia.news.dev',
+      },
+      android: {
+        packageName: 'com.mirrormedia.news.dev',
+        installApp: false,
+      },
+    }
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_staging'
@@ -181,6 +206,17 @@ switch (ENV) {
     GPT_MODE = 'dev'
 
     FIREBASE_AUTH_DOMAIN = 'mirrormediaapptest.firebaseapp.com'
+    ACTION_CODE_SETTING = {
+      url: '',
+      handleCodeInApp: true,
+      iOS: {
+        bundleId: 'com.mirrormedia.news.dev',
+      },
+      android: {
+        packageName: 'com.mirrormedia.news.dev',
+        installApp: false,
+      },
+    }
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_dev'
@@ -222,6 +258,18 @@ switch (ENV) {
     SEARCH_URL = 'https://search-dev.mirrormedia.mg'
     GPT_MODE = 'dev'
     FIREBASE_AUTH_DOMAIN = 'mirrormediaapptest.firebaseapp.com'
+    ACTION_CODE_SETTING = {
+      url: '',
+      handleCodeInApp: true,
+      iOS: {
+        bundleId: 'com.mirrormedia.news.dev',
+      },
+      android: {
+        packageName: 'com.mirrormedia.news.dev',
+        installApp: false,
+      },
+    }
+
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_local'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_local'
     IS_PRIZE_RIZED = true
@@ -241,6 +289,7 @@ export {
   ENV,
   FIREBASE_CONFIG,
   FIREBASE_AUTH_DOMAIN,
+  ACTION_CODE_SETTING,
   GA_MEASUREMENT_ID,
   GCP_PROJECT_ID,
   GCP_STACKDRIVER_LOG_NAME,

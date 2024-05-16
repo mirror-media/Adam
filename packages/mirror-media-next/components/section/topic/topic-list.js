@@ -52,7 +52,7 @@ const StyledGPTAd = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function TopicList({ renderList }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   const renderListWithAd = shouldShowAd
     ? renderList.slice(0, 9)

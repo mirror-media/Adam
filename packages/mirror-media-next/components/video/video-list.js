@@ -69,7 +69,7 @@ const StyledGPTAd_R1 = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function VideoList({ videos, gtmClassName = '' }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   return (
     <Wrapper>

@@ -274,7 +274,7 @@ export default function AsideArticleList({
   renderAmount = 6,
   hiddenAdvertised = false,
 }) {
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
 
   const wrapperRef = useRef(null)
   const [item, setItem] = useState([])

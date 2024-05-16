@@ -248,7 +248,8 @@ export default function StoryPremiumStyle({
   ]
   const pageKeyForGptAd = SECTION_IDS['member']
 
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd, isLogInProcessFinished } =
+    useDisplayAd(hiddenAdvertised)
 
   let supportBanner
   if (postContent.type === 'fullContent') {
@@ -277,7 +278,11 @@ export default function StoryPremiumStyle({
         }}
       />
 
-      <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+      <GPT_Placeholder
+        shouldShowAd={shouldShowAd}
+        isHDAdEmpty={isHDAdEmpty}
+        isLogInProcessFinished={isLogInProcessFinished}
+      >
         {shouldShowAd && (
           <StyledGPTAd_HD
             pageKey={pageKeyForGptAd}

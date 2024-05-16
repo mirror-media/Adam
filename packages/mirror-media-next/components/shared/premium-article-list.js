@@ -46,7 +46,7 @@ const StyledGPTAd = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function PremiumArticleList({ renderList, section }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   const renderListBeforeAd = renderList.slice(0, 12)
   const renderListAfterAd = renderList.slice(12)

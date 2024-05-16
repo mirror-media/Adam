@@ -3,7 +3,7 @@ import { useMembership } from '../context/membership'
 /**
  *
  * @param {boolean} [hiddenAdvertised] - `Posts` 的「google廣告違規」欄位是否有被勾選（如有勾選則不顯示所有廣告）
- * @return {boolean} - indicating whether or not to display advertisement.
+ * @returns {{ shouldShowAd: boolean, isLogInProcessFinished: boolean }} - 返回一個布林值，表示是否顯示廣告，以及用戶登入過程是否已完成。
  */
 export const useDisplayAd = (hiddenAdvertised = false) => {
   const { memberInfo, isLogInProcessFinished } = useMembership()
@@ -18,5 +18,5 @@ export const useDisplayAd = (hiddenAdvertised = false) => {
       invalidMemberType.includes(memberType)
   )
 
-  return shouldShowAd
+  return { shouldShowAd, isLogInProcessFinished }
 }

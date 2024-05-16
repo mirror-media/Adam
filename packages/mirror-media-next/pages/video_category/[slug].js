@@ -81,7 +81,7 @@ export default function VideoCategory({
   const remainingVideos = videos.slice(1)
   const categoryName = category.name || ''
 
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   return (
     <Layout

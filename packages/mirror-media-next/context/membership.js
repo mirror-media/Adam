@@ -1,10 +1,12 @@
 import { createContext, useReducer, useContext, useEffect } from 'react'
 import { auth } from '../firebase'
 import { signOut } from '@firebase/auth'
-import axios from 'axios'
-import { WEEKLY_API_SERVER_ORIGIN, API_TIMEOUT } from '../config/index.mjs'
 import { generateErrorReportInfo } from '../utils/log/error-log'
 import { sendErrorLog } from '../utils/log/send-log'
+import {
+  getAccessToken,
+  removeAccessTokenFromStorage,
+} from '../utils/membership'
 
 /**
  * @typedef {Object} MemberInfo
@@ -200,16 +202,7 @@ const MembershipProvider = ({ children }) => {
          * @see https://github.com/mirror-media/Adam/blob/dev/packages/weekly-api-server/README.md
          */
         try {
-          const res = await axios({
-            method: 'post',
-            url: `https://${WEEKLY_API_SERVER_ORIGIN}/access-token`,
-            headers: {
-              authorization: `Bearer ${idToken}`,
-            },
-            timeout: API_TIMEOUT,
-          })
-          const accessToken = res?.data?.data['access_token']
-
+          const accessToken = await getAccessToken(idToken)
           const memberType = getMemberType(accessToken)
 
           if (accessToken) {
@@ -252,6 +245,7 @@ const MembershipProvider = ({ children }) => {
          * If user is not log in firebase, we should dispatch a "LOGOUT" action to clear access token.
          */
         dispatch({ type: 'LOGOUT' })
+        removeAccessTokenFromStorage()
       }
     }
 

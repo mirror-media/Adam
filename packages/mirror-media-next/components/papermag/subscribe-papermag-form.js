@@ -15,6 +15,7 @@ import { checkOrdererValues, checkRecipientValues } from '../../utils/papermag'
 
 import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
 import { useRouter } from 'next/router'
+import { SECOND } from '../../constants/time-unit'
 
 const Form = styled.form`
   display: flex;
@@ -242,7 +243,7 @@ export default function SubscribePaperMagForm({ plan }) {
 
     let trySubmitTime = 0
     // 為了確保資料先填入 form 中
-    let intervalId = setInterval(() => {
+    let intervalId = window.setInterval(() => {
       const formDOM = document.forms.newebpay
       if (formDOM.elements.MerchantID.value) {
         formDOM.submit()
@@ -250,7 +251,7 @@ export default function SubscribePaperMagForm({ plan }) {
       } else {
         trySubmitTime += 1
       }
-    }, trySubmitTime * 1000)
+    }, trySubmitTime * SECOND)
   }
 
   return (

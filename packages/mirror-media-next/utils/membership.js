@@ -13,6 +13,7 @@ import { API_TIMEOUT, WEEKLY_API_SERVER_ORIGIN } from '../config/index.mjs'
 import { FormState } from '../slice/login-slice'
 import { generateErrorReportInfo } from './log/error-log'
 import { sendErrorLog } from './log/send-log'
+import { SECOND } from '../constants/time-unit'
 
 /**
  * there are 3 error situation:
@@ -105,13 +106,54 @@ const fetchBasicMemberInfoInIsrafel = async (firebaseUid) => {
   }
 }
 
+const ACCESS_TOKEN_STORE_KEY = 'access-token'
+
+/**
+ * @typedef {import('../type/raw-data.typedef').AccessTokenData} AccessTokenData
+ */
+
+/**
+ * get access token data from localStorage
+ *
+ * @returns {string | undefined}
+ */
+const getAccessTokenFromStorage = () => {
+  try {
+    /** @type {AccessTokenData} */
+    const accessTokenData = JSON.parse(
+      localStorage.getItem(ACCESS_TOKEN_STORE_KEY)
+    )
+    const now = new Date().valueOf() / SECOND
+    if (accessTokenData.expires_in > now) {
+      return accessTokenData.access_token
+    }
+  } catch (e) {
+    // ignore error
+  }
+  return undefined
+}
+
+/**
+ * remove access token data from localStorage
+ */
+const removeAccessTokenFromStorage = () => {
+  localStorage.removeItem(ACCESS_TOKEN_STORE_KEY)
+}
+
 /**
  * @param {string} idToken
+ * @param {boolean} [forceUpdate] - fetch from WAS instead of storage
  * @throws {Error}
  * @returns {Promise<string | undefined>}
  */
-const getAccessToken = async (idToken) => {
+const getAccessToken = async (idToken, forceUpdate = false) => {
   try {
+    if (!forceUpdate) {
+      const accessToken = getAccessTokenFromStorage()
+
+      if (accessToken) return accessToken
+    }
+
     const res = await axios({
       method: 'post',
       url: `https://${WEEKLY_API_SERVER_ORIGIN}/access-token`,
@@ -120,8 +162,19 @@ const getAccessToken = async (idToken) => {
       },
       timeout: API_TIMEOUT,
     })
-    const accessToken = res?.data?.data['access_token'] //
-    return accessToken
+
+    /** @type {AccessTokenData | undefined} */
+    const accessTokenData = res.data.data
+
+    if (accessTokenData) {
+      localStorage.setItem(
+        ACCESS_TOKEN_STORE_KEY,
+        JSON.stringify(accessTokenData)
+      )
+      return accessTokenData.access_token
+    }
+
+    throw Error()
   } catch (error) {
     const statusCode = error?.response?.status
     let errorMessage = ''
@@ -174,4 +227,9 @@ const loginPageOnAuthStateChangeAction = async (
   }
 }
 
-export { errorHandler, loginPageOnAuthStateChangeAction, getAccessToken }
+export {
+  errorHandler,
+  loginPageOnAuthStateChangeAction,
+  getAccessToken,
+  removeAccessTokenFromStorage,
+}

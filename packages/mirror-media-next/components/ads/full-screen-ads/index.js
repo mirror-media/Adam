@@ -46,7 +46,7 @@ export default function FullScreenAdsContainer({ hiddenAdvertised = false }) {
   const hasAdFourth = displayedAd === 'fourth'
 
   const hasAdThirdOrFourth = hasAdThird || hasAdFourth
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
   /** @type {[FullScreenAdStyle,import('react').Dispatch<FullScreenAdStyle>]} */
   const [fullScreenAdStyle, setFullScreenAdStyle] = useState(
     /** @type {FullScreenAdStyle} */

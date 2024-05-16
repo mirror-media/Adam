@@ -117,7 +117,7 @@ export default function SectionVideohub({
   const hasHVCVideo = Object.keys(highestViewCountVideo).length > 0
   const hasLatestVideo = latestVideos.length > 0
 
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   return (
     <Layout

@@ -112,7 +112,7 @@ const StyledGPTAd = styled(GPTAd)`
  */
 export default function TopicGroup({ topic }) {
   const { style, posts, tags, dfp } = topic
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
   const backgroundUrl = parseUrl(topic.style)
     ? ''
     : topic.og_image?.resized?.original || topic.heroImage?.resized?.original

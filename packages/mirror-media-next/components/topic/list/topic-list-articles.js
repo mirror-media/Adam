@@ -40,7 +40,7 @@ export default function TopicListArticles({
   renderPageSize,
   dfp,
 }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
   const hasNonFeaturedPostsInListAboveAd = initialPosts.some(
     (post) => !post.isFeatured
   )

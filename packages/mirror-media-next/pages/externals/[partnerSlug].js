@@ -110,7 +110,7 @@ export default function ExternalPartner({
   partner,
   headerData,
 }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
 
   const handleObSlotRenderEnded = useCallback((e) => {
@@ -124,7 +124,11 @@ export default function ExternalPartner({
       footer={{ type: 'default' }}
     >
       <PartnerContainer>
-        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isHDAdEmpty={isHDAdEmpty}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
