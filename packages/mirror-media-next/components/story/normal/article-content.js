@@ -55,7 +55,7 @@ export default function ArticleContent({
   hiddenAdvertised = false,
   pageKeyForGptAd = '',
 }) {
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
 
   const { slicedIndex, unstyledBlocksCount } =

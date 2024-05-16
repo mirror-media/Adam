@@ -114,3 +114,10 @@ export default {}
  * @property {String} _id - article unique id
  *
  */
+
+/**
+ * @typedef {Object} AccessTokenData
+ * @property {string} access_token
+ * @property {string} token_type
+ * @property {number} expires_in
+ */

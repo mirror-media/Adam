@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 
 import { useMembership } from '../../context/membership'
 import { LOCAL_STORAGE_KEY } from '../../constants/member-article-history'
-const HISTORY_EXPIRE_TIME = 30 * 60 * 1000 //milliseconds, which is equal to 30 minutes
+import { MINUTE } from '../../constants/time-unit'
+const HISTORY_EXPIRE_TIME = MINUTE * 30 //milliseconds, which is equal to 30 minutes
 
 /**
  * @typedef {{ts: number,slug: string}} ArticleRecord

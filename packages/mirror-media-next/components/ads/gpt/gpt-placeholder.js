@@ -24,21 +24,21 @@ const Container = styled.div`
     ({ rwd }) => rwd.mobile.width
   };
   min-height: ${({ rwd, shouldTranslate }) =>
-    // 反著寫的原因可參見該描述：https://app.asana.com/0/1181156545719626/1206976463067891/f
-    !shouldTranslate ? rwd.mobile.height : '0px'};
+    shouldTranslate ? rwd.mobile.height : '0px'};
   margin: ${({ rwd }) => rwd.mobile.margin};
 
   ${({ theme }) => theme.breakpoint.md} {
     min-width: ${({ rwd }) => rwd.tablet.width};
     min-height: ${({ rwd, shouldTranslate }) =>
-      !shouldTranslate ? rwd.tablet.height : '0px'};
+      shouldTranslate ? rwd.tablet.height : '0px'};
     margin: ${({ rwd }) => rwd.tablet.margin};
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
     min-width: ${({ rwd }) => rwd.desktop.width};
-    min-height: ${({ rwd, shouldTranslate }) =>
-      !shouldTranslate ? '0px' : rwd.desktop.height};
+    min-height: ${({ rwd, shouldTranslate }) => {
+      return shouldTranslate ? rwd.desktop.height : '0px'
+    }};
     margin: ${({ rwd }) => rwd.desktop.margin};
   }
 `
@@ -52,6 +52,20 @@ const ContainerDesktop = styled(Container)`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
     display: block;
+  }
+`
+
+const ContainerAside = styled.div`
+  position: relative;
+  ${({ theme }) => theme.breakpoint.xl} {
+    min-height: ${
+      /**
+       *
+       * @param {Object} props
+       * @param {boolean} [props.shouldTranslate]
+       */
+      ({ shouldTranslate }) => (shouldTranslate ? '300px' : '0px')
+    };
   }
 `
 
@@ -78,16 +92,24 @@ const DEFAULT_SIZES = {
  * @param {Object} props
  * @param {Rwd} [props.rwd]
  * @param {JSX.Element} props.children
- * @param {boolean} [props.shouldTranslate]
+ * @param {boolean} [props.shouldShowAd]
+ * @param {boolean} [props.isHDAdEmpty]
+ * @param {boolean} [props.isLogInProcessFinished]
  * @returns {JSX.Element}
  */
 export default function GPT_Placeholder({
   rwd = DEFAULT_SIZES,
   children,
-  shouldTranslate = false,
+  // 為了 cls 先暫時移除
+  isHDAdEmpty = false,
+  shouldShowAd = true,
+  isLogInProcessFinished = false,
 }) {
   return (
-    <Container rwd={rwd} shouldTranslate={shouldTranslate}>
+    <Container
+      rwd={rwd}
+      shouldTranslate={shouldShowAd || !isLogInProcessFinished}
+    >
       {children}
     </Container>
   )
@@ -108,4 +130,28 @@ const GPT_Placeholder_Desktop = ({ rwd = DEFAULT_SIZES, children }) => {
   return <ContainerDesktop rwd={rwd}>{children}</ContainerDesktop>
 }
 
-export { GPT_Placeholder_MobileAndTablet, GPT_Placeholder_Desktop }
+/**
+ *
+ * @param {Object} props
+ * @param {JSX.Element} props.children
+ * @param {boolean} [props.shouldShowAd]
+ * @param {boolean} [props.isLogInProcessFinished]
+ * @returns
+ */
+const GPT_Placeholder_Aside = ({
+  children,
+  shouldShowAd = true,
+  isLogInProcessFinished = false,
+}) => {
+  return (
+    <ContainerAside shouldTranslate={shouldShowAd || !isLogInProcessFinished}>
+      {children}
+    </ContainerAside>
+  )
+}
+
+export {
+  GPT_Placeholder_MobileAndTablet,
+  GPT_Placeholder_Desktop,
+  GPT_Placeholder_Aside,
+}

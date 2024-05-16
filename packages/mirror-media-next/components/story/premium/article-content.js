@@ -42,7 +42,7 @@ export default function PremiumArticleContent({
   hiddenAdvertised = false,
   pageKeyForGptAd = 'other',
 }) {
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
   const { slicedIndex, unstyledBlocksCount } =
     getSlicedIndexAndUnstyledBlocksCount(content, { mb: [0], pc: [] })

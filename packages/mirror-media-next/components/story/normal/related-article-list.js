@@ -187,7 +187,7 @@ export default function RelatedArticleList({
   const { width } = useWindowDimensions()
   const device = width >= mediaSize.xl ? 'PC' : 'MB'
 
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
 
   const relatedsArticleJsx = relateds.length ? (
     <ArticleWrapper>

@@ -166,7 +166,7 @@ export default function LatestNews(props) {
   const { width } = useWindowDimensions()
   const device = width >= mediaSize.md ? 'PC' : 'MB'
 
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
 
   return (
     <Wrapper>

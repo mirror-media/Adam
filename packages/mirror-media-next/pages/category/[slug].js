@@ -193,7 +193,7 @@ export default function Category({
   headerData,
 }) {
   const categoryName = category.name || ''
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const isNotWineCategory = getCategoryOfWineSlug([category]).length === 0
@@ -216,7 +216,11 @@ export default function Category({
       footer={{ type: 'default' }}
     >
       <CategoryContainer isPremium={isPremium}>
-        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isHDAdEmpty={isHDAdEmpty}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={GptPageKey}

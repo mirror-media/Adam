@@ -78,7 +78,6 @@ export default function TopicListItem({ item }) {
     item.og_image?.resized ||
     (parseUrl(item.style) ? { original: parseUrl(item.style) } : null) ||
     item.heroImage?.resized
-  console.log(item)
   return (
     <ItemWrapper href={`/topic/${item.slug}`} target="_blank">
       <ImageContainer>

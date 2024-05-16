@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import FormWrapper from '../shared/form-wrapper'
 import useRedirect from '../../hooks/use-redirect'
 import { useEffect } from 'react'
+import { SECOND } from '../../constants/time-unit'
 
 const REDIRECTION_DELAY = 3 // 秒，Nuxt 2.0 時期的設定
 
@@ -32,7 +33,7 @@ export default function RegistrationSuccess() {
   const { redirect } = useRedirect()
 
   useEffect(() => {
-    const task = setTimeout(() => redirect(), 1000 * REDIRECTION_DELAY)
+    const task = setTimeout(() => redirect(), SECOND * REDIRECTION_DELAY)
 
     return () => {
       clearTimeout(task)
@@ -42,16 +43,14 @@ export default function RegistrationSuccess() {
   return (
     <Main>
       <FormWrapper>
-        <>
-          <PrimayText>
-            註冊成功！
-            <br />
-            歡迎加入鏡週刊
-          </PrimayText>
-          <SecondaryText>
-            將於 {REDIRECTION_DELAY} 秒後自動跳轉至首頁...
-          </SecondaryText>
-        </>
+        <PrimayText>
+          註冊成功！
+          <br />
+          歡迎加入鏡週刊
+        </PrimayText>
+        <SecondaryText>
+          將於 {REDIRECTION_DELAY} 秒後自動跳轉至首頁...
+        </SecondaryText>
       </FormWrapper>
     </Main>
   )

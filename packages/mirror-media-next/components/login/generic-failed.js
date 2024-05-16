@@ -35,21 +35,19 @@ export default function GenericFailed({ onBack }) {
   return (
     <Main>
       <FormWrapper>
-        <>
-          <PrimayText>
-            抱歉，出了點狀況...
-            <br />
-            請回上一頁重試
-          </PrimayText>
-          <SecondaryText>
-            或是聯繫客服信箱{' '}
-            <StyledLink href="mailto:mm-onlineservice@mirrormedia.mg">
-              mm-onlineservice@mirrormedia.mg
-            </StyledLink>{' '}
-            / 致電 (02)6633-3966 由專人為您服務。
-          </SecondaryText>
-          <DefaultButton onClick={onBack}>回上一步</DefaultButton>
-        </>
+        <PrimayText>
+          抱歉，出了點狀況...
+          <br />
+          請回上一頁重試
+        </PrimayText>
+        <SecondaryText>
+          或是聯繫客服信箱{' '}
+          <StyledLink href="mailto:mm-onlineservice@mirrormedia.mg">
+            mm-onlineservice@mirrormedia.mg
+          </StyledLink>{' '}
+          / 致電 (02)6633-3966 由專人為您服務。
+        </SecondaryText>
+        <DefaultButton onClick={onBack}>回上一步</DefaultButton>
       </FormWrapper>
     </Main>
   )

@@ -51,7 +51,7 @@ const StyledGPTAd = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function ExternalList({ renderList }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
   const GPT_PAGE_KEY = useRef('other')
 
   useEffect(() => {

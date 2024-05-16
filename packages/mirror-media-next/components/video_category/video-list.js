@@ -58,7 +58,7 @@ const StyledGPTAd_MB_FT = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function VideoList({ videos }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
   const { width } = useWindowDimensions()
   const isDesktopWidth = width >= mediaSize.xl
 

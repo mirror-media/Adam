@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
@@ -123,7 +123,7 @@ export default function Home({
     return { sectionName, sectionSlug, articleHref, ...item }
   })
 
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
 
   const handleObSlotRenderEnded = useCallback((e) => {
@@ -141,7 +141,11 @@ export default function Home({
       }}
     >
       <IndexContainer>
-        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isHDAdEmpty={isHDAdEmpty}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && (
             <StyledGPTAd_HD
               pageKey="home"

@@ -92,7 +92,7 @@ const RENDER_PAGE_SIZE = 12
  * @returns {React.ReactElement}
  */
 export default function Topics({ topics, topicsCount, headerData }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
   const handleObSlotRenderEnded = useCallback((e) => {
     setISHDAdEmpty(e.isEmpty)
@@ -105,7 +105,11 @@ export default function Topics({ topics, topicsCount, headerData }) {
       footer={{ type: 'default' }}
     >
       <TopicsContainer>
-        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isHDAdEmpty={isHDAdEmpty}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && (
             <StyledGPTAd
               pageKey="other"

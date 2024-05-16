@@ -22,6 +22,7 @@ import Divider from '../shared/divider'
 import ShareHeader from '../../header/share-header'
 import Footer from '../../shared/footer'
 import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
+import { GPT_Placeholder_Aside } from '../../ads/gpt/gpt-placeholder'
 
 import {
   transformTimeDataIntoDotFormat,
@@ -626,7 +627,8 @@ export default function StoryNormalStyle({
   const publishedTaipeiTime = transformTimeDataIntoDotFormat(publishedDate)
   const updatedTaipeiTime = transformTimeDataIntoDotFormat(updatedAt)
 
-  const shouldShowAd = useDisplayAd(hiddenAdvertised)
+  const { shouldShowAd, isLogInProcessFinished } =
+    useDisplayAd(hiddenAdvertised)
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
 
@@ -644,7 +646,11 @@ export default function StoryNormalStyle({
         }}
       />
 
-      <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+      <GPT_Placeholder
+        shouldShowAd={shouldShowAd}
+        isHDAdEmpty={isHDAdEmpty}
+        isLogInProcessFinished={isLogInProcessFinished}
+      >
         {shouldShowAd && (
           <StyledGPTAd_HD
             pageKey={pageKeyForGptAd}
@@ -750,9 +756,12 @@ export default function StoryNormalStyle({
           </StoryEndDesktop>
         </Article>
         <Aside>
-          {shouldShowAd && (
+          <GPT_Placeholder_Aside
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
             <StyledGPTAd_PC_R1 pageKey={pageKeyForGptAd} adKey="PC_R1" />
-          )}
+          </GPT_Placeholder_Aside>
           <AsideArticleList
             listType={'latestNews'}
             fetchArticle={handleFetchLatestNews}

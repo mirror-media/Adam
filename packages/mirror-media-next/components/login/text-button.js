@@ -7,14 +7,16 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const LinkWrapper = styled(Link)``
+const LinkWrapper = styled(Link)`
+  display: inline-block;
+  font-size: 14px;
+  line-height: 200%;
+`
 
 const Button = styled.button`
   display: inline-block;
   color: #1d9fb8;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 21px;
+  line-height: 150%;
 
   &:hover,
   &:active {

@@ -55,7 +55,7 @@ const StyledGPTAd = styled(GPTAd)`
  * @returns {React.ReactElement}
  */
 export default function ArticleList({ renderList, section }) {
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd } = useDisplayAd()
   /**
    * 這個元件會被共用於 author/tag/category/section 列表頁
    * 在 author/tag 列表頁時，由於沒有section?.slug，函式 `getSectionGPTPageKey`會回傳 'other'

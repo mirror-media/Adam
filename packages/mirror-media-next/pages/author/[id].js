@@ -91,7 +91,7 @@ const RENDER_PAGE_SIZE = 12
  */
 export default function Author({ postsCount, posts, author, headerData }) {
   const authorName = author?.name || ''
-  const shouldShowAd = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
 
   const handleObSlotRenderEnded = useCallback((e) => {
@@ -104,7 +104,11 @@ export default function Author({ postsCount, posts, author, headerData }) {
       footer={{ type: 'default' }}
     >
       <AuthorContainer>
-        <GPT_Placeholder shouldTranslate={!shouldShowAd || isHDAdEmpty}>
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isHDAdEmpty={isHDAdEmpty}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && (
             <StyledGPTAd
               pageKey="other"
