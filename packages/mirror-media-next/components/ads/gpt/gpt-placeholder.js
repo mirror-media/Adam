@@ -64,7 +64,7 @@ const ContainerAside = styled.div`
        * @param {Object} props
        * @param {boolean} [props.shouldTranslate]
        */
-      ({ shouldTranslate }) => (shouldTranslate ? '300px' : '0px')
+      ({ shouldTranslate }) => (shouldTranslate ? '600px' : '0px')
     };
   }
 `
