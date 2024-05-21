@@ -117,6 +117,7 @@ const ACCESS_TOKEN_STORE_KEY = 'access-token'
  *
  * @returns {string | undefined}
  */
+/* eslint-disable-next-line no-unused-vars */
 const getAccessTokenFromStorage = () => {
   try {
     /** @type {AccessTokenData} */
@@ -149,9 +150,16 @@ const removeAccessTokenFromStorage = () => {
 const getAccessToken = async (idToken, forceUpdate = false) => {
   try {
     if (!forceUpdate) {
+      // TODO：uncomment following codes
+      // 備註：暫時性關閉這個功能
+      // 說明：
+      //     因為與會員狀態變動有關的功能（如：單篇解鎖、會員訂閱）還沒實作，無法在會員狀態更新時，強制更新 access token 資訊，
+      //     這可能會導致使用者解鎖單篇文章後，無法立即看到文章解鎖的結果
+      /**
       const accessToken = getAccessTokenFromStorage()
 
       if (accessToken) return accessToken
+       */
     }
 
     const res = await axios({
