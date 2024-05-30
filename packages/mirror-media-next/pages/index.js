@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
@@ -8,12 +8,21 @@ import {
   API_TIMEOUT,
   URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
-  GCP_PROJECT_ID,
 } from '../config/index.mjs'
 
 import { fetchModEventsInDesc } from '../utils/api/event'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
-import { getSectionNameGql, getSectionSlugGql, getArticleHref } from '../utils'
+import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
+import {
+  getSectionNameGql,
+  getSectionSlugGql,
+  getArticleHref,
+  getLogTraceObject,
+} from '../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../utils/response-handle'
 import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/index/editor-choice'
 import LatestNews from '../components/index/latest-news'
@@ -200,23 +209,18 @@ export async function getServerSideProps({ res, req }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
-  const headers = req?.headers
-  const traceHeader = headers?.['x-cloud-trace-context']
+  const globalLogFields = getLogTraceObject(req)
 
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
-
+  /** @type {import('../utils/api').HeadersData} */
+  let sectionsData = []
+  /** @type {import('../utils/api').Topics} */
   let topicsData = []
+  /** @type {FlashNewsData} */
   let flashNewsData = []
   let editorChoicesData = []
   let latestNewsData = []
-  let sectionsData = []
   let eventsData = []
+
   try {
     const postResponse = await axios({
       method: 'get',
@@ -241,63 +245,31 @@ export async function getServerSideProps({ res, req }) {
       fetchModEventsInDesc(),
     ])
 
-    responses.forEach((response, index) => {
-      if (response.status === 'fulfilled') {
-        //TODO: because `fetchHeaderDataInDefaultPageLayout` will not return `value` which contain `request?.res?.responseUrl`,
-        //so we temporarily comment the console to prevent error.
-        // console.log(
-        //   JSON.stringify({
-        //     severity: 'INFO',
-        //     message: `Successfully fetch data on ${response.value?.request?.res?.responseUrl}`,
-        //   })
-        // )
-      } else {
-        const rejectedReason = response.reason
-        const annotatingAxiosError =
-          errors.helpers.annotateAxiosError(rejectedReason)
-        const errorMessage = errors.helpers.printAll(
-          annotatingAxiosError,
-          {
-            withStack: true,
-            withPayload: false,
-          },
-          0,
-          0
-        )
-        console.error(
-          index,
-          JSON.stringify({
-            severity: 'ERROR',
-            message: errorMessage,
-            ...globalLogFields,
-          })
-        )
-      }
-    })
+    flashNewsData = handleAxiosResponse(
+      responses[0],
+      (/** @type {AxiosResponse} */ axiosData) => {
+        return axiosData?.data?.posts ?? []
+      },
+      'Error occurs while getting flash news in index page',
+      globalLogFields
+    )
 
-    /** @type {PromiseFulfilledResult<AxiosResponse>} */
-    const flashNewsResponse =
-      responses[0].status === 'fulfilled' && responses[0]
+    // handle header data
+    ;[sectionsData, topicsData] = handleAxiosResponse(
+      responses[1],
+      getSectionAndTopicFromDefaultHeaderData,
+      'Error occurs while getting header data in index page',
+      globalLogFields
+    )
 
-    const headerDataResponse =
-      responses[1].status === 'fulfilled' && responses[1]
-
-    const eventsResponse = responses[2].status === 'fulfilled' && responses[2]
-
-    flashNewsData = Array.isArray(flashNewsResponse.value?.data?.posts)
-      ? flashNewsResponse.value?.data?.posts
-      : []
-
-    sectionsData = Array.isArray(headerDataResponse.value?.sectionsData)
-      ? headerDataResponse.value?.sectionsData
-      : []
-    topicsData = Array.isArray(headerDataResponse.value?.topicsData)
-      ? headerDataResponse.value?.topicsData
-      : []
-
-    eventsData = Array.isArray(eventsResponse.value?.data?.events)
-      ? eventsResponse.value?.data?.events
-      : []
+    eventsData = handleGqlResponse(
+      responses[2],
+      (gqlData) => {
+        return gqlData?.data?.events || []
+      },
+      'Error occurs while getting event data in index page',
+      globalLogFields
+    )
 
     const eventData =
       eventsData.find((event) =>
@@ -331,7 +303,7 @@ export async function getServerSideProps({ res, req }) {
     const annotatingError = errors.helpers.wrap(
       err,
       'UnhandledError',
-      'Error occurs while getting index page data'
+      'Error occurs while getting data in index page'
     )
     const errorMessage = errors.helpers.printAll(
       annotatingError,
@@ -342,7 +314,7 @@ export async function getServerSideProps({ res, req }) {
       0,
       0
     )
-    console.log(
+    console.error(
       JSON.stringify({
         severity: 'ERROR',
         message: errorMessage,

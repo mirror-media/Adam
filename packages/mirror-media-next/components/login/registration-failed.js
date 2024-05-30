@@ -6,6 +6,7 @@ export default function RegistrationFailed() {
   const dispatch = useAppDispatch()
   return (
     <GenericFailed
+      primaryText="請回上一頁重試"
       onBack={() => dispatch(loginActions.goToRegistrationForm())}
     />
   )

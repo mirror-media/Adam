@@ -145,15 +145,19 @@ const GPTAdRoot = ({
       })
 
       return () => {
-        const pubads = window.googletag.pubads()
+        const pubads =
+          'pubads' in window.googletag &&
+          typeof window.googletag.pubads === 'function'
+            ? window.googletag?.pubads()
+            : undefined
 
-        window.googletag.cmd.push(() => {
-          window.googletag.destroySlots([adSlot])
+        window.googletag?.cmd.push(() => {
+          window.googletag?.destroySlots([adSlot])
           if (onSlotRenderEnded) {
-            pubads.removeEventListener('slotRequested', handleOnSlotRequested)
+            pubads?.removeEventListener('slotRequested', handleOnSlotRequested)
           }
           if (onSlotRenderEnded) {
-            pubads.removeEventListener(
+            pubads?.removeEventListener(
               'slotRenderEnded',
               handleOnSlotRenderEnded
             )

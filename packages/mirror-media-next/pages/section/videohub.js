@@ -1,7 +1,6 @@
-import errors from '@twreporter/errors'
 import dynamic from 'next/dynamic'
 
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api/index.js'
 import { setPageCache } from '../../utils/cache-setting'
@@ -29,6 +28,12 @@ import {
   GPT_Placeholder_Desktop,
   GPT_Placeholder_MobileAndTablet,
 } from '../../components/ads/gpt/gpt-placeholder'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -183,14 +188,7 @@ export async function getServerSideProps({ req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   let responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
@@ -198,64 +196,49 @@ export async function getServerSideProps({ req, res }) {
     fetchVideohubSection(),
   ])
 
-  let handledResponses = responses.map((response) => {
-    if (response.status === 'fulfilled') {
-      if ('data' in response.value) {
-        // retrieve data for simple axios and gql request
-        return response.value.data
-      }
-      return response.value
-    } else if (response.status === 'rejected') {
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs white getting video category page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          ...globalLogFields,
-        })
-      )
-      return
-    }
-  })
-
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : { sectionsData: [], topicsData: [] }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  // handle header data
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in section/videohub page',
+    globalLogFields
+  )
 
   /**
    * fetch 50 latest videos for two usage:
    * 1. get fetch statistics for 50 videos to get the most viewed video (熱門影片)
    * 2. slice the first 4 videos for the front-end to render (最新影片)
    */
-  const latest50Videos = handledResponses[1]?.items
-    ? simplifyYoutubeSearchedVideo(handledResponses[1]?.items)
-    : []
-  const latestVideos = latest50Videos.slice(0, 4)
-  const latest50VideoIds = latest50Videos.map((video) => video.id).join(',')
+  const [latestVideos, latest50VideoIds] = handleAxiosResponse(
+    responses[1],
+    (
+      /** @type {Awaited<ReturnType<typeof fetchYoutubeLatestVideos>>} */ axiosData
+    ) => {
+      if (!axiosData) return [[], '']
 
-  const categories = handledResponses[2]?.section?.categories
-    ? handledResponses[2]?.section?.categories
-    : []
+      const data = axiosData.data
+      const latest50Videos = data?.items
+        ? simplifyYoutubeSearchedVideo(data?.items)
+        : []
+      const latestVideos = latest50Videos.slice(0, 4)
+      const latest50VideoIds = latest50Videos.map((video) => video.id).join(',')
+
+      return [latestVideos, latest50VideoIds]
+    },
+    'Error occurs while getting video data in section/videohub page',
+    globalLogFields
+  )
+
+  const categories = handleGqlResponse(
+    responses[2],
+    (gqlData) => {
+      if (!gqlData) return []
+
+      return gqlData?.data?.section?.categories || []
+    },
+    'Error occurs while getting categories in section/videohub page',
+    globalLogFields
+  )
 
   const channelIds = categories.map(
     (category) => VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING[category.slug]
@@ -267,59 +250,58 @@ export async function getServerSideProps({ req, res }) {
       fetchYoutubePlaylistByChannelId(channelId)
     ),
   ])
-  const handledPlaylistResponses = playlistResponses.map((response) => {
-    if (response.status === 'fulfilled') {
-      return response.value.data
-    } else if (response.status === 'rejected') {
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs white getting video category page data'
-      )
 
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          ...globalLogFields,
-        })
+  const highestViewCountVideo = handleAxiosResponse(
+    playlistResponses[0],
+    (
+      /** @type {Awaited<ReturnType<typeof fetchYoutubeVideosWithStatistics>>} */ axiosData
+    ) => {
+      if (!axiosData) return null
+
+      const latest50VideosWithStatistics = axiosData?.data?.items
+      const highestViewCountRawVideo = latest50VideosWithStatistics.reduce(
+        (popularVideo, video) => {
+          return Number(popularVideo?.statistics?.viewCount) >
+            Number(video.statistics?.viewCount)
+            ? popularVideo
+            : video
+        },
+        null
       )
-      return
+      return simplifyYoutubeVideo([highestViewCountRawVideo])[0]
+    },
+    'Error occurs while getting latest 50 videos in section/videohub page',
+    globalLogFields
+  )
+
+  const playlistsVideos = categories.map((category, index) => {
+    const response = playlistResponses[index + 1]
+    let items
+
+    if (response) {
+      items = handleAxiosResponse(
+        response,
+        (
+          /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByChannelId>>} */ axiosData
+        ) => {
+          return (
+            axiosData?.data?.items?.filter(
+              (item) => item.status.privacyStatus === 'public'
+            ) || []
+          )
+        },
+        `Error occurs while getting playlist(${category?.name}) in section/videohub page`,
+        globalLogFields
+      )
+    } else {
+      items = []
+    }
+
+    return {
+      ...category,
+      items: simplifyYoutubePlaylistVideo(items),
     }
   })
-
-  const latest50VideosWithStatistics = handledPlaylistResponses[0]?.items
-  const highestViewCountRawVideo = latest50VideosWithStatistics.reduce(
-    (popularVideo, video) => {
-      return Number(popularVideo?.statistics?.viewCount) >
-        Number(video.statistics?.viewCount)
-        ? popularVideo
-        : video
-    },
-    null
-  )
-  const highestViewCountVideo = simplifyYoutubeVideo([
-    highestViewCountRawVideo,
-  ])[0]
-
-  const playlistsVideos = categories.map((category, index) => ({
-    ...category,
-    items: simplifyYoutubePlaylistVideo(
-      handledPlaylistResponses[index + 1]?.items
-        ? handledPlaylistResponses[index + 1].items
-            ?.filter((item) => item.status.privacyStatus === 'public')
-            .slice(0, 4)
-        : []
-    ),
-  }))
 
   const props = {
     highestViewCountVideo,

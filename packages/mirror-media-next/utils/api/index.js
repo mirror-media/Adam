@@ -128,6 +128,7 @@ const fetchHeaderDataInPremiumPageLayout = async () => {
     errorLogger(err)
   }
 }
+
 export {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,

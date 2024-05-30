@@ -1,9 +1,9 @@
-import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { ENV } from '../../config/index.mjs'
 import {
   simplifyYoutubeSearchedVideo,
   simplifyYoutubeVideo,
@@ -27,6 +27,9 @@ import {
   GPT_Placeholder_MobileAndTablet,
 } from '../../components/ads/gpt/gpt-placeholder'
 import Head from 'next/head'
+import { getLogTraceObject } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
+import { logAxiosError } from '../../utils/log/shared'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -195,67 +198,34 @@ export async function getServerSideProps({ query, req, res }) {
     })
   )
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
     fetchYoutubeVideoByVideoId(videoId),
   ])
 
-  const handledResponses = responses.map((response) => {
-    if (response.status === 'fulfilled') {
-      if ('data' in response.value) {
-        // handle simple axios request
-        return response.value.data
-      }
-      return response.value
-    } else if (response.status === 'rejected') {
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs white getting video page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          ...globalLogFields,
-        })
-      )
-      return
-    }
-  })
-
   // handle header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : { sectionsData: [], topicsData: [] }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    `Error occurs while getting header data in video page (videoId: ${videoId})`,
+    globalLogFields
+  )
 
   // handle fetch video data
-  if (handledResponses[1]?.items?.length === 0) {
+  const videos = handleAxiosResponse(
+    responses[1],
+    (
+      /** @type {Awaited<ReturnType<typeof fetchYoutubeVideoByVideoId>>} */ axiosData
+    ) => {
+      return axiosData ? axiosData.data?.items : []
+    },
+    `Error occurs while getting video data in video page (videoId: ${videoId})`,
+    globalLogFields
+  )
+
+  if (videos.length === 0) {
     console.log(
       JSON.stringify({
         severity: 'ERROR',
@@ -270,30 +240,23 @@ export async function getServerSideProps({ query, req, res }) {
       },
     }
   }
-  const video = handledResponses[1]?.items
-    ? simplifyYoutubeVideo(handledResponses[1]?.items)[0]
-    : { id: videoId, channelId: '' }
-  const channelId = video?.channelId
+
+  const video = simplifyYoutubeVideo(videos)[0]
+
+  const channelId = video.channelId
 
   /** @type {import('../../type/youtube').YoutubeVideo[]} */
   let latestVideos = []
-  if (channelId) {
-    try {
-      const { data } = await fetchYoutubeLatestVideosByChannelId(channelId)
-      latestVideos = simplifyYoutubeSearchedVideo(data.items)
-    } catch (error) {
-      const annotatingAxiosError = errors.helpers.annotateAxiosError(error)
-      console.error(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(annotatingAxiosError, {
-            withStack: true,
-            withPayload: true,
-          }),
-          ...globalLogFields,
-        })
-      )
-    }
+
+  try {
+    const { data } = await fetchYoutubeLatestVideosByChannelId(channelId)
+    latestVideos = simplifyYoutubeSearchedVideo(data.items)
+  } catch (error) {
+    logAxiosError(
+      error,
+      `Error occurs while getting latest videos of channel (${channelId}) in video page (videoId: ${videoId})`,
+      globalLogFields
+    )
   }
 
   const props = {

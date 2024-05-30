@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import FormWrapper from '../shared/form-wrapper'
+import FormWrapper from './form-wrapper'
 import StyledLink from './styled-link'
 import DefaultButton from '../shared/buttons/default-button'
 
@@ -9,7 +9,7 @@ const Main = styled.main`
   align-items: center;
 `
 
-const PrimayText = styled.p`
+const PrimaryText = styled.p`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
   font-style: normal;
@@ -29,17 +29,18 @@ const SecondaryText = styled.p`
 
 /**
  * @param {Object} props
+ * @param {string} props.primaryText
  * @param {import('react').MouseEventHandler<HTMLButtonElement>} props.onBack
  */
-export default function GenericFailed({ onBack }) {
+export default function GenericFailed({ primaryText, onBack }) {
   return (
     <Main>
       <FormWrapper>
-        <PrimayText>
+        <PrimaryText>
           抱歉，出了點狀況...
           <br />
-          請回上一頁重試
-        </PrimayText>
+          {primaryText}
+        </PrimaryText>
         <SecondaryText>
           或是聯繫客服信箱{' '}
           <StyledLink href="mailto:mm-onlineservice@mirrormedia.mg">

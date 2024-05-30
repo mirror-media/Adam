@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import errors from '@twreporter/errors'
-import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { getLogTraceObject } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
@@ -45,15 +46,6 @@ export default PaperMag
 export async function getServerSideProps({ req, res }) {
   setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
-
   if (ACCESS_PAPERMAG_FEATURE_TOGGLE !== 'on') {
     return {
       redirect: {
@@ -63,31 +55,19 @@ export async function getServerSideProps({ req, res }) {
     }
   }
 
-  // Fetch header data
-  let sectionsData = []
-  let topicsData = []
+  const globalLogFields = getLogTraceObject(req)
 
-  try {
-    const headerData = await fetchHeaderDataInDefaultPageLayout()
-    if (Array.isArray(headerData.sectionsData)) {
-      sectionsData = headerData.sectionsData
-    }
-    if (Array.isArray(headerData.topicsData)) {
-      topicsData = headerData.topicsData
-    }
-  } catch (err) {
-    const annotatingAxiosError = errors.helpers.annotateAxiosError(err)
-    console.error(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errors.helpers.printAll(annotatingAxiosError, {
-          withStack: true,
-          withPayload: true,
-        }),
-        ...globalLogFields,
-      })
-    )
-  }
+  // Fetch header data
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
+
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in papermag page',
+    globalLogFields
+  )
 
   return {
     props: {

@@ -1,10 +1,13 @@
-import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import TagArticles from '../../components/tag/tag-articles'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import {
+  getSectionAndTopicFromDefaultHeaderData,
+  getPostsAndPostscountFromGqlData,
+} from '../../utils/data-process'
 import Layout from '../../components/shared/layout'
 import { Z_INDEX } from '../../constants/index'
 import { fetchPostsByTagSlug, fetchTagByTagSlug } from '../../utils/api/tag'
@@ -17,6 +20,11 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
 
 const TagContainer = styled.main`
   width: 320px;
@@ -164,14 +172,7 @@ export async function getServerSideProps({ query, req, res }) {
   }
   const tagSlug = Array.isArray(query.slug) ? query.slug[0] : query.slug
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
@@ -179,64 +180,25 @@ export async function getServerSideProps({ query, req, res }) {
     fetchPostsByTagSlug(tagSlug, RENDER_PAGE_SIZE * 2, 0),
   ])
 
-  const handledResponses = responses.map((response, index) => {
-    if (response.status === 'fulfilled') {
-      if ('data' in response.value) {
-        // handle gql requests
-        return response.value.data
-      }
-      return response.value
-    } else if (response.status === 'rejected') {
-      const { graphQLErrors, clientErrors, networkError } = response.reason
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting tag page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          debugPayload: {
-            graphQLErrors,
-            clientErrors,
-            networkError,
-          },
-          ...globalLogFields,
-        })
-      )
-      if (index === 1) {
-        // fetch key data (tag) failed, redirect to 500
-        throw new Error('fetch tag failed')
-      }
-      return
-    }
-  })
-
   // handle header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : { sectionsData: [], topicsData: [] }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    `Error occurs while getting header data in tag page (tagSlug: ${tagSlug})`,
+    globalLogFields
+  )
 
   // handle fetch tag data
-  /** @type {Tag} */
-  const tag = handledResponses[1]?.tag
+  /** @type {Tag | undefined} */
+  const tag = handleGqlResponse(
+    responses[1],
+    (gqlData) => {
+      return gqlData?.data?.tag
+    },
+    `Error occurs while getting tag data in tag page (tagSlug: ${tagSlug})`,
+    globalLogFields
+  )
+
   if (!tag) {
     console.log(
       JSON.stringify({
@@ -249,10 +211,12 @@ export async function getServerSideProps({ query, req, res }) {
   }
 
   // handle fetch post data
-  /** @type {number} postsCount */
-  const postsCount = handledResponses[2]?.postsCount || 0
-  /** @type {Article[]} */
-  const posts = handledResponses[2]?.posts || []
+  const [postsCount, posts] = handleGqlResponse(
+    responses[2],
+    getPostsAndPostscountFromGqlData,
+    `Error occurs while getting post data in tag page (tagSlug: ${tagSlug})`,
+    globalLogFields
+  )
 
   const props = {
     postsCount,

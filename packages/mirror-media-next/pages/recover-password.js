@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { setPageCache } from '../utils/cache-setting'
-import { GCP_PROJECT_ID, ACTION_CODE_SETTING } from '../config/index.mjs'
+import { ACTION_CODE_SETTING } from '../config/index.mjs'
 import { InputState } from '../constants/form'
 import LayoutFull from '../components/shared/layout-full'
-import FormWrapper from '../components/shared/form-wrapper'
+import FormWrapper from '../components/login/form-wrapper'
 import GenericTextInput from '../components/shared/inputs/generic-text-input'
 import PrimaryButton from '../components/shared/buttons/primary-button'
 import TextButton from '../components/login/text-button'
-import { isValidEmail } from '../utils'
+import { getLogTraceObject, isValidEmail } from '../utils'
+import { handleAxiosResponse } from '../utils/response-handle'
 import redirectToDestinationWhileAuthed from '../utils/redirect-to-destination-while-authed'
 import { auth } from '../firebase'
 import { FirebaseError } from 'firebase/app'
@@ -18,6 +19,8 @@ import { sendErrorLog } from '../utils/log/send-log'
 import { SECOND } from '../constants/time-unit'
 import Hints, { HINT_STATE } from '../components/recover-password/hints'
 import { FirebaseAuthError } from '../constants/firebase'
+import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */
@@ -28,6 +31,9 @@ const { DEFAULT, NOT_REGISRATED, ERROR, IN_PROGRESS, SUCCESS } = HINT_STATE
 /**
  * @typedef {Object} PageProps
  * @property {string} emailData
+ * @property {Object} headerData
+ * @property {import('../utils/api').HeadersData} headerData.sectionsData
+ * @property {import('../utils/api').Topics} headerData.topicsData
  */
 
 const Container = styled.div`
@@ -51,7 +57,7 @@ const TextGroup = styled.div`
   row-gap: 16px;
 `
 
-const PrimayText = styled.p`
+const PrimaryText = styled.p`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
   font-style: normal;
@@ -83,7 +89,7 @@ const PrimaryButtonAndHint = styled.div`
 /**
  * @param {PageProps} props
  */
-export default function Login({ emailData }) {
+export default function Login({ emailData, headerData }) {
   const COOLDOWN_STORAGE_KEY = 'recover-password-cooldown'
   const AVOID_SPAM_COOLDOWN = SECOND * 30
 
@@ -187,12 +193,15 @@ export default function Login({ emailData }) {
   }, [avoidSpamCooldown])
 
   return (
-    <LayoutFull header={{ type: 'default' }} footer={{ type: 'default' }}>
+    <LayoutFull
+      header={{ type: 'default', data: headerData }}
+      footer={{ type: 'default' }}
+    >
       <Container>
         <Main>
           <FormWrapper>
             <TextGroup>
-              <PrimayText>如果您忘記/尚未設定密碼</PrimayText>
+              <PrimaryText>如果您忘記/尚未設定密碼</PrimaryText>
               <SecondaryText>
                 請輸入您註冊時使用的 Email 信箱。我們會發送一封 Email
                 到這個地址，裡面附有重設/設定密碼的連結。
@@ -236,18 +245,32 @@ export default function Login({ emailData }) {
 export const getServerSideProps = redirectToDestinationWhileAuthed()(
   async ({ req, res, query }) => {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
-    const traceHeader = req.headers?.['x-cloud-trace-context']
-    let globalLogFields = {}
-    if (traceHeader && !Array.isArray(traceHeader)) {
-      const [trace] = traceHeader.split('/')
-      globalLogFields[
-        'logging.googleapis.com/trace'
-      ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-    }
+
+    const globalLogFields = getLogTraceObject(req)
 
     const { email } = query
     const emailData = Array.isArray(email) ? email.join(',') : email ?? ''
 
-    return { props: { emailData } }
+    const responses = await Promise.allSettled([
+      fetchHeaderDataInDefaultPageLayout(),
+    ])
+
+    // handle header data
+    const [sectionsData, topicsData] = handleAxiosResponse(
+      responses[0],
+      getSectionAndTopicFromDefaultHeaderData,
+      'Error occurs while getting header data in recover password page',
+      globalLogFields
+    )
+
+    return {
+      props: {
+        emailData,
+        headerData: {
+          sectionsData,
+          topicsData,
+        },
+      },
+    }
   }
 )

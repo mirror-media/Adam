@@ -10,4 +10,6 @@ export const FirebaseAuthError = /** @type {const} */ ({
   USER_DISABLED: 'auth/user-disabled',
   USER_NOT_FOUND: 'auth/user-not-found',
   WRONG_PASSWORD: 'auth/wrong-password',
+  EXPIRED_ACTION_CODE: 'auth/expired-action-code',
+  INVALID_ACTION_CODE: 'auth/invalid-action-code',
 })

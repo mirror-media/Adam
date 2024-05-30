@@ -1,16 +1,18 @@
-import errors from '@twreporter/errors'
 import { useState } from 'react'
 import styled from 'styled-components'
 import AudioPlayer from '../../components/podcast/audio-player'
 import Dropdown from '../../components/podcast/author-select-dropdown'
 import PodcastList from '../../components/podcast/podcast-list'
 import Layout from '../../components/shared/layout'
-import { ENV, GCP_PROJECT_ID } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import {
   fetchHeaderDataInDefaultPageLayout,
   fetchPodcastList,
 } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
+import { getLogTraceObject } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
 
 /**
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
@@ -179,78 +181,39 @@ export async function getServerSideProps({ req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
     fetchPodcastList(),
   ])
 
-  const handledResponses = responses.map((response, index) => {
-    if (response.status === 'fulfilled') {
-      return response.value
-    } else if (response.status === 'rejected') {
-      const statusCode = response.reason.response?.status
-
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting podcast list data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          ...globalLogFields,
-        })
-      )
-      if (index === 1) {
-        if (statusCode === 404) {
-          // leave undefined to be checked and redirect to 404
-          return
-        } else {
-          // fetch key data (posts) failed, redirect to 500
-          throw new Error('fetch podcast list failed')
-        }
-      }
-      return
-    }
-  })
-
   // handle header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : {
-          sectionsData: [],
-          topicsData: [],
-        }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in podcasts page',
+    globalLogFields
+  )
 
   // Extracting podcast list data
-  const podcastListData =
-    responses[1].status === 'fulfilled' ? responses[1].value.data || [] : []
+  /** @type {PodcastData[]} */
+  const podcastListData = handleAxiosResponse(
+    responses[1],
+    (
+      /** @type {Awaited<ReturnType<typeof fetchPodcastList>> | undefined} */ axiosData
+    ) => {
+      return axiosData?.data ?? []
+    },
+    'Error occurs while getting podcast list in podcasts page',
+    globalLogFields
+  )
+
+  if (podcastListData.length === 0) {
+    return {
+      notFound: true,
+    }
+  }
 
   const props = {
     headerData: { sectionsData, topicsData },

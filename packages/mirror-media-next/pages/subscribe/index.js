@@ -1,9 +1,10 @@
+// TODO: add handle-go-to-marketing middleware
+
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import errors from '@twreporter/errors'
-import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
@@ -12,6 +13,8 @@ import PlanForBasicMember from '../../components/subscribe/plan-basic-member'
 import PlanForMonthlyMember from '../../components/subscribe/plan-monthly-member'
 import PlanForYearlyMember from '../../components/subscribe/plan-yearly-member'
 import { ACCESS_SUBSCRIBE_FEATURE_TOGGLE } from '../../config/index.mjs'
+import { getLogTraceObject } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
 
 const Page = styled.main`
   min-height: 70vh;
@@ -103,14 +106,7 @@ export default Subscribe
 export async function getServerSideProps({ req, res }) {
   setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   if (ACCESS_SUBSCRIBE_FEATURE_TOGGLE !== 'on') {
     return {
@@ -122,30 +118,16 @@ export async function getServerSideProps({ req, res }) {
   }
 
   // Fetch header data
-  let sectionsData = []
-  let topicsData = []
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
 
-  try {
-    const headerData = await fetchHeaderDataInDefaultPageLayout()
-    if (Array.isArray(headerData.sectionsData)) {
-      sectionsData = headerData.sectionsData
-    }
-    if (Array.isArray(headerData.topicsData)) {
-      topicsData = headerData.topicsData
-    }
-  } catch (err) {
-    const annotatingAxiosError = errors.helpers.annotateAxiosError(err)
-    console.error(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errors.helpers.printAll(annotatingAxiosError, {
-          withStack: true,
-          withPayload: true,
-        }),
-        ...globalLogFields,
-      })
-    )
-  }
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in subscribe page',
+    globalLogFields
+  )
 
   return {
     props: {

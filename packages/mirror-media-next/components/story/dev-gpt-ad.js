@@ -23,7 +23,7 @@ export default function DevGptAd() {
     testAdJsx = isMobile ? (
       <>
         <Script id="test-google-tag-ad">
-          {`  
+          {`
           window.googletag = window.googletag || {cmd: []};
           googletag.cmd.push(function() {
             googletag.defineOutOfPageSlot('/40175602/test_mirror_m_ros_out_ADBRO', 'div-gpt-ad-1710755205915-0').addService(googletag.pubads());
@@ -38,7 +38,7 @@ export default function DevGptAd() {
     ) : (
       <>
         <Script id="test-google-tag-ad">
-          {`  
+          {`
           window.googletag = window.googletag || {cmd: []};
           googletag.cmd.push(function() {
             googletag.defineOutOfPageSlot('/40175602/test_mirror_pc_ros_out_ADBRO', 'div-gpt-ad-1710755093650-0').addService(googletag.pubads());

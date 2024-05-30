@@ -173,10 +173,38 @@ const changeUtcToGmtTimeStamp = (utcTimeStamp) => {
   return gmtTimeStamp
 }
 
+function modifyFirstImageEntity(rawContentBlock) {
+  const { blocks, entityMap } = rawContentBlock
+
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i]
+    if (block.type === 'atomic') {
+      for (let j = 0; j < block.entityRanges.length; j++) {
+        const entityKey = block.entityRanges[j].key
+        const entity = entityMap[entityKey]
+        if (entity && entity.type === 'image') {
+          // 修改第一個 'image'，添加 isFirstImage
+          entityMap[entityKey] = {
+            ...entity,
+            data: {
+              ...entity.data,
+              isFirstImage: true,
+            },
+          }
+          return { ...rawContentBlock, entityMap }
+        }
+      }
+    }
+  }
+
+  return rawContentBlock
+}
+
 export {
   handleStoryPageRedirect,
   copyAndSliceDraftBlock,
   getBlocksCount,
   getSlicedIndexAndUnstyledBlocksCount,
   changeUtcToGmtTimeStamp,
+  modifyFirstImageEntity,
 }

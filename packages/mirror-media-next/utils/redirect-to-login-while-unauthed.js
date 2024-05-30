@@ -64,7 +64,7 @@ const redirectToLoginWhileUnauthed =
     /** @type {import('next').GetServerSideProps<P, Q, D>} */ getServerSidePropsFunc
   ) =>
   async (/** @type {SSRPropsContext<Q, D>} */ ctx) => {
-    const { req, query } = ctx
+    const { req, query, resolvedUrl } = ctx
     const authToken = req.headers.authorization?.split(' ')[1]
 
     try {
@@ -113,7 +113,7 @@ const redirectToLoginWhileUnauthed =
       const searchParamsObject = new URLSearchParams(query)
       searchParamsObject.set(
         'destination',
-        new URL(req.url, 'https://www.google.com').pathname
+        new URL(resolvedUrl, 'https://www.google.com').pathname
       )
       const searchParams = searchParamsObject.toString()
       const destination = `/login?${searchParams}`
