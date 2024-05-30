@@ -183,9 +183,14 @@ export default function BodyEmailVerification() {
           const destination = '/subscribe'
 
           if (isLoggedIn) {
+            window.location.href = destination
+            /**
+             * TODO: 等待會員訂購頁完成後，改用 router 來處理跳轉
+             * 
             router.push({
               pathname: destination,
             })
+            */
           } else {
             router.push({
               pathname: '/login',
