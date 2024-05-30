@@ -74,7 +74,7 @@ const redirectToDestinationWhileAuthed =
        * user with valid id token
        */
       /** @type {string} */
-      let destination = '/section/member'
+      let destination = '/premiumsection/member'
 
       if ('destination' in query) {
         const dest = query.destination

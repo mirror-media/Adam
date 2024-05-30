@@ -1,10 +1,9 @@
-import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import PartnerArticles from '../../components/externals/partner-articles'
 import client from '../../apollo/apollo-client'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
@@ -19,6 +18,12 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -153,14 +158,7 @@ export async function getServerSideProps({ req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
@@ -178,73 +176,39 @@ export async function getServerSideProps({ req, res }) {
       },
     }),
   ])
-  const handledResponses = responses.map((response, index) => {
-    if (response.status === 'fulfilled') {
-      return response.value
-    } else if (response.status === 'rejected') {
-      const statusCode = response.reason.response?.status
-
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting section page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          ...globalLogFields,
-        })
-      )
-      if (index === 1) {
-        if (statusCode === 404) {
-          // leave undefined to be checked and redirect to 404
-          return
-        } else {
-          // fetch key data (posts) failed, redirect to 500
-          throw new Error('fetch warmlife posts failed')
-        }
-      }
-      return
-    }
-  })
 
   // handle header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : {
-          sectionsData: [],
-          topicsData: [],
-        }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in externals warmlife page',
+    globalLogFields
+  )
 
   // handle fetch warmlife post data
-  if (!handledResponses[1]) {
+  const warmLifeData = handleGqlResponse(
+    responses[1],
+    (
+      /** @type {import('../../utils/api/externals').ExternalsQueryResult | undefined} */ gqlData
+    ) => gqlData?.data?.externals,
+    'Error occurs while getting external posts in externals warmlife page',
+    globalLogFields
+  )
+
+  if (!warmLifeData) {
     return { notFound: true }
   }
-  const warmLifeData = Array.isArray(handledResponses[1])
-    ? handledResponses[1]
-    : []
 
-  const warmLifeDataCount =
-    'data' in handledResponses[2]
-      ? handledResponses[2]?.data?.externalsCount || 0
-      : 0
+  const warmLifeDataCount = handleGqlResponse(
+    responses[2],
+    (
+      /** @type {import('@apollo/client').ApolloQueryResult<{externalsCount: number}> | undefined} */ gqlData
+    ) => {
+      return gqlData?.data?.externalsCount || 0
+    },
+    'Error occurs while getting warmLifeDataCount in externals warmlife page',
+    req
+  )
 
   const props = {
     warmLifeData,

@@ -1,6 +1,5 @@
 import Head from 'next/head'
 
-import errors from '@twreporter/errors'
 import client from '../../../apollo/apollo-client'
 import Layout from '../../../components/shared/layout'
 import AmpHeader from '../../../components/amp/amp-header'
@@ -12,17 +11,13 @@ import {
   convertDraftToText,
   getResizedUrl,
   getActiveOrderSection,
+  getLogTraceObject,
 } from '../../../utils'
 
 import { handleStoryPageRedirect } from '../../../utils/story'
 import { setPageCache } from '../../../utils/cache-setting'
 import { fetchPostBySlug } from '../../../apollo/query/posts'
-import {
-  GCP_PROJECT_ID,
-  ENV,
-  GA_MEASUREMENT_ID,
-  SITE_URL,
-} from '../../../config/index.mjs'
+import { ENV, GA_MEASUREMENT_ID, SITE_URL } from '../../../config/index.mjs'
 import styled from 'styled-components'
 import AdultOnlyWarning from '../../../components/story/shared/adult-only-warning'
 import WineWarning from '../../../components/shared/wine-warning'
@@ -33,6 +28,7 @@ import AmpGptAd from '../../../components/amp/amp-ads/amp-gpt-ad'
 import AmpGptStickyAd from '../../../components/amp/amp-ads/amp-gpt-sticky-ad'
 import { getAmpGptDataSlotSection } from '../../../utils/ad'
 import JsonLdsScript from '../../../components/story/shared/json-lds-script'
+import { logGqlError } from '../../../utils/log/shared'
 
 export const config = { amp: true }
 
@@ -193,14 +189,7 @@ export async function getServerSideProps({ params, req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
   const { slug } = params
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   try {
     const result = await client.query({
@@ -261,34 +250,14 @@ export async function getServerSideProps({ params, req, res }) {
       },
     }
   } catch (err) {
-    const { graphQLErrors, clientErrors, networkError } = err
-    const annotatingError = errors.helpers.wrap(
+    logGqlError(
       err,
-      'UnhandledError',
-      'Error occurs while getting story page data'
+      `Error occurs while getting data in story amp page (slug: ${slug})`,
+      globalLogFields
     )
-    const errorMessage = errors.helpers.printAll(
-      annotatingError,
-      {
-        withStack: true,
-        withPayload: true,
-      },
-      0,
-      0
+    throw new Error(
+      `Error occurs while getting data in story amp page (slug: ${slug})`
     )
-    console.log(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errorMessage,
-        debugPayload: {
-          graphQLErrors,
-          clientErrors,
-          networkError,
-        },
-        ...globalLogFields,
-      })
-    )
-    throw new Error(errorMessage)
   }
 }
 

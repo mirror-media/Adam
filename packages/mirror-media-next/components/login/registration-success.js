@@ -1,10 +1,10 @@
 import styled from 'styled-components'
-import FormWrapper from '../shared/form-wrapper'
+import FormWrapper from './form-wrapper'
 import useRedirect from '../../hooks/use-redirect'
 import { useEffect } from 'react'
 import { SECOND } from '../../constants/time-unit'
 
-const REDIRECTION_DELAY = 3 // 秒，Nuxt 2.0 時期的設定
+const REDIRECTION_DELAY = 5
 
 const Main = styled.main`
   display: flex;
@@ -12,7 +12,7 @@ const Main = styled.main`
   align-items: center;
 `
 
-const PrimayText = styled.p`
+const PrimaryText = styled.p`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
   font-style: normal;
@@ -43,11 +43,11 @@ export default function RegistrationSuccess() {
   return (
     <Main>
       <FormWrapper>
-        <PrimayText>
+        <PrimaryText>
           註冊成功！
           <br />
           歡迎加入鏡週刊
-        </PrimayText>
+        </PrimaryText>
         <SecondaryText>
           將於 {REDIRECTION_DELAY} 秒後自動跳轉至首頁...
         </SecondaryText>

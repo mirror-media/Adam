@@ -1,12 +1,10 @@
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import errors from '@twreporter/errors'
 import styled from 'styled-components'
 
 import client from '../../apollo/apollo-client'
-import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import { fetchSpecials, fetchWeeklys } from '../../apollo/query/magazines'
 import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
+import { getSectionFromPremiumHeaderData } from '../../utils/data-process'
 import { useMembership } from '../../context/membership'
 import { setPageCache } from '../../utils/cache-setting'
 
@@ -16,6 +14,13 @@ import MagazineWeeklys from '../../components/magazine/magazine-weeklys'
 import MagazineFeatures from '../../components/magazine/magazine-featured-weeklys'
 import Layout from '../../components/shared/layout'
 import JoinPremiumMember from '../../components/magazine/ui-join-premium-member'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
+import redirectToLoginWhileUnauthed from '../../utils/redirect-to-login-while-unauthed'
+import useMembershipRequired from '../../hooks/use-membership-required'
 
 const Section = styled.div`
   padding: 48px 0;
@@ -53,25 +58,24 @@ const Title = styled.h2`
   }
 `
 
-export default function Magazine({ sectionsData = [] }) {
-  const router = useRouter()
+/**
+ * @typedef {Object} PageProps
+ * @property {import('../../utils/api').HeadersData} sectionsData
+ */
 
+/**
+ * @param {PageProps} props
+ */
+export default function Magazine({ sectionsData = [] }) {
+  useMembershipRequired()
   const [specials, setSpecials] = useState([])
   const [weeklys, setWeeklys] = useState([])
 
-  const { isLoggedIn, memberInfo, isLogInProcessFinished } = useMembership()
+  const { memberInfo } = useMembership()
   const { memberType } = memberInfo
 
   const isPremiumMember =
     memberType.includes('premium') || memberType.includes('staff')
-
-  // Redirect to '/login' if the user is not logged in
-  useEffect(() => {
-    if (isLogInProcessFinished && !isLoggedIn) {
-      const destination = encodeURIComponent('/magazine')
-      router.push(`/login?destination=${destination}`)
-    }
-  }, [isLogInProcessFinished, isLoggedIn, router])
 
   // Fetch Magazines Data only for Premium Member
   useEffect(() => {
@@ -89,43 +93,21 @@ export default function Magazine({ sectionsData = [] }) {
             }),
           ])
 
-          const handledResponses = responses.map((response) => {
-            if (response.status === 'fulfilled') {
-              return response.value.data
-            } else if (response.status === 'rejected') {
-              const { graphQLErrors, clientErrors, networkError } =
-                response.reason
-              const annotatingError = errors.helpers.wrap(
-                response.reason,
-                'UnhandledError',
-                'Error occurs while getting magazine page data'
-              )
+          const fetchedSpecials = handleGqlResponse(
+            responses[0],
+            (gqlData) => {
+              return gqlData?.data?.magazines || []
+            },
+            'Error occurs while getting special magazine in magazine list page'
+          )
 
-              console.log(
-                JSON.stringify({
-                  severity: 'ERROR',
-                  message: errors.helpers.printAll(
-                    annotatingError,
-                    {
-                      withStack: true,
-                      withPayload: true,
-                    },
-                    0,
-                    0
-                  ),
-                  debugPayload: {
-                    graphQLErrors,
-                    clientErrors,
-                    networkError,
-                  },
-                })
-              )
-              return
-            }
-          })
-
-          const fetchedSpecials = handledResponses[0]?.magazines || []
-          const fetchedWeeklys = handledResponses[1]?.magazines || []
+          const fetchedWeeklys = handleGqlResponse(
+            responses[1],
+            (gqlData) => {
+              return gqlData?.data?.magazines || []
+            },
+            'Error occurs while getting weekly magazine in magazine list page'
+          )
 
           setSpecials(fetchedSpecials)
           setWeeklys(fetchedWeeklys)
@@ -157,11 +139,6 @@ export default function Magazine({ sectionsData = [] }) {
         return 0
       })
     : []
-
-  // Render different content based on the user's login status
-  if (!isLoggedIn) {
-    return null // Render nothing until the redirect happens
-  }
 
   return (
     <Layout
@@ -212,43 +189,30 @@ export default function Magazine({ sectionsData = [] }) {
 }
 
 /**
- * @type {import('next').GetServerSideProps}
+ * @type {import('next').GetServerSideProps<PageProps>}
  */
-export async function getServerSideProps({ req, res }) {
-  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(
+  async ({ req, res }) => {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+    const globalLogFields = getLogTraceObject(req)
 
-  // Fetch header data
-  let sectionsData = []
+    // Fetch header data
+    const responses = await Promise.allSettled([
+      fetchHeaderDataInPremiumPageLayout(),
+    ])
 
-  try {
-    const headerData = await fetchHeaderDataInPremiumPageLayout()
-    sectionsData = headerData.sectionsData
-  } catch (err) {
-    const annotatingAxiosError = errors.helpers.annotateAxiosError(err)
-    console.error(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errors.helpers.printAll(annotatingAxiosError, {
-          withStack: true,
-          withPayload: true,
-        }),
-        ...globalLogFields,
-      })
+    const sectionsData = handleAxiosResponse(
+      responses[0],
+      getSectionFromPremiumHeaderData,
+      'Error occurs while getting premium header data in magazine list page',
+      globalLogFields
     )
-  }
 
-  return {
-    props: {
-      sectionsData,
-    },
+    return {
+      props: {
+        sectionsData,
+      },
+    }
   }
-}
+)

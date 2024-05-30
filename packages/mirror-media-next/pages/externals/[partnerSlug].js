@@ -1,10 +1,9 @@
-import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import client from '../../apollo/apollo-client'
 import ExternalArticles from '../../components/externals/partner-articles'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
@@ -22,6 +21,12 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -169,14 +174,7 @@ export async function getServerSideProps({ params, req, res }) {
   }
   const { partnerSlug } = params
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
@@ -196,71 +194,47 @@ export async function getServerSideProps({ params, req, res }) {
     }),
   ])
 
-  const handledResponses = responses.map((response) => {
-    if (response.status === 'fulfilled') {
-      return response.value
-    } else if (response.status === 'rejected') {
-      const { graphQLErrors, clientErrors, networkError } = response.reason
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting section page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          debugPayload: {
-            graphQLErrors,
-            clientErrors,
-            networkError,
-          },
-          ...globalLogFields,
-        })
-      )
-      return
-    }
-  })
-
-  const headerData =
-    'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : {
-          sectionsData: [],
-          topicsData: [],
-        }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  // handle header data
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    `Error occurs while getting header data in externals partner page (partnerSlug: ${partnerSlug})`,
+    globalLogFields
+  )
 
   /** @type {ListingExternal[]} */
-  const externals = Array.isArray(handledResponses[1])
-    ? handledResponses[1]
-    : []
+  const externals = handleGqlResponse(
+    responses[1],
+    (
+      /** @type {import('../../utils/api/externals').ExternalsQueryResult | undefined} **/ gqlData
+    ) => {
+      return gqlData?.data?.externals || []
+    },
+    `Error occurs while getting external posts in externals partner page (partnerSlug: ${partnerSlug})`,
+    globalLogFields
+  )
 
   /** @type {number} */
-  const externalsCount =
-    'data' in handledResponses[2]
-      ? handledResponses[2]?.data?.externalsCount || 0
-      : 0
+  const externalsCount = handleGqlResponse(
+    responses[2],
+    (
+      /** @type {import('@apollo/client').ApolloQueryResult<{externalsCount: number}> | undefined} */ gqlData
+    ) => {
+      return gqlData?.data?.externalsCount || 0
+    },
+    `Error occurs while getting externalsCount in externals partner page (partnerSlug: ${partnerSlug})`,
+    globalLogFields
+  )
 
   /** @type {Partner} */
-  const partner =
-    'data' in handledResponses[3]
-      ? handledResponses[3]?.data?.partners[0] || {}
-      : {}
+  const partner = handleGqlResponse(
+    responses[3],
+    (gqlData) => {
+      return gqlData?.data?.partners?.[0] ?? {}
+    },
+    `Error occurs while getting partners data in externals partner page (partnerSlug: ${partnerSlug})`,
+    globalLogFields
+  )
 
   if (!Object.keys(partner).length) {
     return { notFound: true }

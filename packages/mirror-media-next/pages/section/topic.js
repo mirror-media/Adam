@@ -1,10 +1,15 @@
-import errors from '@twreporter/errors'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import SectionTopics from '../../components/section/topic/section-topics'
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import { fetchTopicList } from '../../utils/api/section-topic'
@@ -141,77 +146,37 @@ export async function getServerSideProps({ req, res }) {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  let globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
     fetchTopicList(RENDER_PAGE_SIZE * 2, 0),
   ])
 
-  const handledResponses = responses.map((response, index) => {
-    if (response.status === 'fulfilled') {
-      if ('data' in response.value) {
-        // handle gql requests
-        return response.value.data
-      }
-      return response.value
-    } else if (response.status === 'rejected') {
-      const { graphQLErrors, clientErrors, networkError } = response.reason
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting section/topic page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          debugPayload: {
-            graphQLErrors,
-            clientErrors,
-            networkError,
-          },
-          ...globalLogFields,
-        })
-      )
-      if (index === 1) {
-        // fetch key data (topics) failed, redirect to 500
-        throw new Error('fetch topics failed')
-      }
-      return
-    }
-  })
-
-  // handle fetch header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : { sectionsData: [], topicsData: [] }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  // handle header data
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in section/topic page',
+    globalLogFields
+  )
 
   // handle fetch topics
-  if (handledResponses[1]?.topics?.length === 0) {
+  const [topicsCount, topics] = handleGqlResponse(
+    responses[1],
+    (gqlData) => {
+      if (!gqlData) return [0, []]
+
+      const data = gqlData.data
+      const topicsCount = data?.topicsCount || 0
+      const topics = data?.topics || []
+      return [topicsCount, topics]
+    },
+    'Error occurs while getting posts in section/topic page',
+    req
+  )
+
+  if (topics.length === 0) {
     // fetchTopic return empty array -> something wrong -> 404
     console.log(
       JSON.stringify({
@@ -222,10 +187,6 @@ export async function getServerSideProps({ req, res }) {
     )
     return { notFound: true }
   }
-  /** @type {number} */
-  const topicsCount = handledResponses[1]?.topicsCount || 0
-  /** @type {Topic[]} */
-  const topics = handledResponses[1]?.topics || []
 
   const props = {
     topics,

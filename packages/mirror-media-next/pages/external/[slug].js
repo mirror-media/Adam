@@ -1,7 +1,6 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
 import client from '../../apollo/apollo-client'
-import errors from '@twreporter/errors'
-import { GCP_PROJECT_ID, ENV, SITE_URL } from '../../config/index.mjs'
+import { ENV, SITE_URL } from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
 import { fetchExternalBySlug } from '../../apollo/query/externals'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
@@ -11,6 +10,12 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import JsonLdsScripts from '../../components/externals/shared/json-lds-scripts'
+import { getLogTraceObject } from '../../utils'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
@@ -69,14 +74,8 @@ export async function getServerSideProps({ params, req, res }) {
   }
 
   const { slug } = params
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
@@ -86,60 +85,27 @@ export async function getServerSideProps({ params, req, res }) {
     }),
   ])
 
-  const handledResponses = responses.map((response) => {
-    if (response.status === 'fulfilled') {
-      return response.value
-    } else if (response.status === 'rejected') {
-      const { graphQLErrors, clientErrors, networkError } = response.reason
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting section page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          debugPayload: {
-            graphQLErrors,
-            clientErrors,
-            networkError,
-          },
-          ...globalLogFields,
-        })
-      )
-      return
-    }
-  })
-
-  const headerData =
-    'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : {
-          sectionsData: [],
-          topicsData: [],
-        }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  // handle header data
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    `Error occurs while getting header data in external post page (slug: ${slug})`,
+    globalLogFields
+  )
 
   /** @type {External} */
-  const external =
-    'data' in handledResponses[1]
-      ? handledResponses[1]?.data?.externals[0] || {}
-      : {}
+  const external = handleGqlResponse(
+    responses[1],
+    (gqlData) => {
+      if (!gqlData) {
+        return {}
+      } else {
+        return gqlData.data?.externals[0] || {}
+      }
+    },
+    `Error occurs while getting data in external post page (slug: ${slug})`,
+    globalLogFields
+  )
 
   if (!Object.keys(external).length) {
     return { notFound: true }

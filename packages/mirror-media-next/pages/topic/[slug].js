@@ -1,21 +1,26 @@
 // TODO: modify component `<WineWarning>`, no need to props `categories`
 
-import errors from '@twreporter/errors'
-
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import TopicList from '../../components/topic/list/topic-list'
 import TopicGroup from '../../components/topic/group/topic-group'
 import WineWarning from '../../components/shared/wine-warning'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import { parseUrl } from '../../utils/topic'
 import {
   convertDraftToText,
+  getLogTraceObject,
   getResizedUrl,
   sortArrayWithOtherArrayId,
 } from '../../utils/index'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
 import { fetchTopicByTopicSlug } from '../../utils/api/topic'
+import { logGqlError } from '../../utils/log/shared'
 
 const RENDER_PAGE_SIZE = 12
 const WINE_TOPICS_SLUG = [
@@ -115,77 +120,34 @@ export async function getServerSideProps({ query, req, res }) {
   }
   const topicSlug = Array.isArray(query.slug) ? query.slug[0] : query.slug
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
+  const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
     fetchTopicByTopicSlug(topicSlug, RENDER_PAGE_SIZE, 0),
   ])
 
-  const handledResponses = responses.map((response, index) => {
-    if (response.status === 'fulfilled') {
-      if ('data' in response.value) {
-        // handle gql requests
-        return response.value.data
-      }
-      return response.value
-    } else if (response.status === 'rejected') {
-      const { graphQLErrors, clientErrors, networkError } = response.reason
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs while getting topic page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          debugPayload: {
-            graphQLErrors,
-            clientErrors,
-            networkError,
-          },
-          ...globalLogFields,
-        })
-      )
-      if (index === 1) {
-        // fetch key data (topic) failed, redirect to 500
-        throw new Error('fetch topic failed')
-      }
-      return
-    }
-  })
-
   // handle header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : { sectionsData: [], topicsData: [] }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    `Error occurs while getting header data in topic page (topicSlug: ${topicSlug})`,
+    globalLogFields
+  )
 
   // handle fetch topic data
-  if (handledResponses[1]?.topics?.length === 0) {
+  /** @type {Topic[]} */
+  const topics = handleGqlResponse(
+    responses[1],
+    (gqlData) => {
+      return gqlData?.data?.topics || []
+    },
+    `Error occurs while getting topics in topic page (topicSlug: ${topicSlug})`,
+    globalLogFields
+  )
+
+  const topic = topics[0]
+  if (!topic) {
     // fetchTopic return empty array -> wrong authorId -> 404
     console.log(
       JSON.stringify({
@@ -196,8 +158,7 @@ export async function getServerSideProps({ query, req, res }) {
     )
     return { notFound: true }
   }
-  /** @type {Topic} */
-  const topic = handledResponses[1]?.topics?.[0] || {}
+
   /** @type {SlideshowImage[]} */
   let slideshowImages = []
   if (topic.leading === 'slideshow' && topic.slideshow_images) {
@@ -210,6 +171,7 @@ export async function getServerSideProps({ query, req, res }) {
             manualOrderOfSlideshowImages
           )
   }
+
   /**
    * load all group articles at once
    * (potential performance [issue](https://nextjs.org/docs/messages/large-page-data))
@@ -218,6 +180,7 @@ export async function getServerSideProps({ query, req, res }) {
   if (topic.type === 'group' && topic.postsCount > RENDER_PAGE_SIZE) {
     let posts = topic.posts
     while (posts.length < topic.postsCount) {
+      /** @type {typeof posts} */
       let moreTopicPosts
       try {
         const topicData = await fetchTopicByTopicSlug(
@@ -227,32 +190,14 @@ export async function getServerSideProps({ query, req, res }) {
         )
         moreTopicPosts = topicData.data.topics?.[0].posts || []
       } catch (error) {
-        const annotatingError = errors.helpers.wrap(
+        logGqlError(
           error,
-          'GQLError',
-          `Fetch more topic post with topicId ${topicSlug} for group type in getServerSideProps failed`
-        )
-        const { graphQLErrors, clientErrors, networkError } = error
-
-        console.log(
-          JSON.stringify({
-            severity: 'ERROR',
-            message: errors.helpers.printAll(annotatingError, {
-              withStack: true,
-              withPayload: true,
-            }),
-            debugPayload: {
-              graphQLErrors,
-              clientErrors,
-              networkError,
-            },
-            ...globalLogFields,
-          })
+          `Fetch more topic post with topicId ${topicSlug} for group type in topic page failed at server-side`,
+          globalLogFields
         )
         // stop fetching cause there might be infinite loop
         break
       }
-      /** @type {Topic} */
       posts = [...posts, ...moreTopicPosts]
     }
     topic.posts = posts

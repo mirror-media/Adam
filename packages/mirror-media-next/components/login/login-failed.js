@@ -14,5 +14,5 @@ export default function LoginFailed() {
     }
   }
 
-  return <GenericFailed onBack={handleBack} />
+  return <GenericFailed primaryText="請回上一頁重新登入" onBack={handleBack} />
 }

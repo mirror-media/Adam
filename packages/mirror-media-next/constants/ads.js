@@ -113,6 +113,20 @@ const GPT_UNITS = {
         [1, 1],
       ],
     },
+    PC_ADBRO: {
+      adUnit: 'test_mirror_pc_ros_out_ADBRO',
+      adSize: [
+        [728, 90],
+        [1, 1],
+      ],
+    },
+    MB_ADBRO: {
+      adUnit: 'test_mirror_m_ros_out_ADBRO',
+      adSize: [
+        [320, 480],
+        [1, 1],
+      ],
+    },
   },
 
   // page key: 首頁, hp

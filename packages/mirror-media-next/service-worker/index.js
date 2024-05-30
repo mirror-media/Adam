@@ -22,6 +22,8 @@ const ignorePaths = [
   '\u002Fhodo_adject.php',
 ]
 
+const mustNotIgnorePaths = ['\u002F_next\u002Fdata']
+
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js')
 /* eslint-disable-next-line no-undef */
@@ -103,8 +105,19 @@ self.addEventListener('fetch', (event) => {
     return path.test(url.pathname.slice(1))
   })
 
+  const mustNotIgnore = mustNotIgnorePaths.some((path) => {
+    if (typeof path === 'string') {
+      return url.pathname.startsWith(path)
+    }
+
+    return path.test(url.pathname.slice(1))
+  })
+
   // https://github.com/nuxt-community/firebase-module/issues/465
-  if (!expectsHTML || !isSameOrigin || !isHttps || isIgnored) {
+  if (
+    (!expectsHTML || !isSameOrigin || !isHttps || isIgnored) &&
+    !mustNotIgnore
+  ) {
     event.respondWith(fetch(event.request))
 
     return

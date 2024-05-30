@@ -25,9 +25,12 @@ import {
 import { auth } from '../../firebase'
 import { FirebaseError } from 'firebase/app'
 import { setPageCache } from '../../utils/cache-setting'
-import { GCP_PROJECT_ID } from '../../config/index.mjs'
 import LayoutFull from '../../components/shared/layout-full'
 import { FirebaseAuthError } from '../../constants/firebase'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { getLogTraceObject } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
 import redirectToDestinationWhileAuthed from '../../utils/redirect-to-destination-while-authed'
 
 const Container = styled.div`
@@ -39,7 +42,17 @@ const Container = styled.div`
   }
 `
 
-export default function Login() {
+/**
+ * @typedef {Object} PageProps
+ * @property {Object} headerData
+ * @property {import('../../utils/api').HeadersData} headerData.sectionsData
+ * @property {import('../../utils/api').Topics} headerData.topicsData
+ */
+
+/**
+ * @param {PageProps} props
+ */
+export default function Login({ headerData }) {
   const dispatch = useAppDispatch()
   const { accessToken, isLogInProcessFinished, userEmail } = useMembership()
   const loginFormState = useAppSelector(loginState)
@@ -128,29 +141,40 @@ export default function Login() {
   const jsx = getBodyByState()
 
   return (
-    <LayoutFull header={{ type: 'default' }} footer={{ type: 'default' }}>
+    <LayoutFull
+      header={{ type: 'default', data: headerData }}
+      footer={{ type: 'default' }}
+    >
       <Container>{jsx}</Container>
     </LayoutFull>
   )
 }
 
 /**
- * @type {import('next').GetServerSideProps}
+ * @type {import('next').GetServerSideProps<PageProps>}
  */
 export const getServerSideProps = redirectToDestinationWhileAuthed()(
   async ({ req, res }) => {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
-    const traceHeader = req.headers?.['x-cloud-trace-context']
-    let globalLogFields = {}
-    if (traceHeader && !Array.isArray(traceHeader)) {
-      const [trace] = traceHeader.split('/')
-      globalLogFields[
-        'logging.googleapis.com/trace'
-      ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-    }
+
+    const globalLogFields = getLogTraceObject(req)
+
+    const responses = await Promise.allSettled([
+      fetchHeaderDataInDefaultPageLayout(),
+    ])
+
+    // handle header data
+    const [sectionsData, topicsData] = handleAxiosResponse(
+      responses[0],
+      getSectionAndTopicFromDefaultHeaderData,
+      'Error occurs while getting header data in login page',
+      globalLogFields
+    )
 
     return {
-      props: {},
+      props: {
+        headerData: { sectionsData, topicsData },
+      },
     }
   }
 )

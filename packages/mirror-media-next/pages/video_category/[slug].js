@@ -1,11 +1,11 @@
-import errors from '@twreporter/errors'
 import dynamic from 'next/dynamic'
 
-import { GCP_PROJECT_ID, ENV } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 import CategoryVideos from '../../components/video_category/category-videos.js'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants/index.js'
 import styled from 'styled-components'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api/index.js'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
 import { setPageCache } from '../../utils/cache-setting.js'
 import LeadingVideo from '../../components/shared/leading-video.js'
@@ -22,6 +22,11 @@ import {
   GPT_Placeholder_Desktop,
   GPT_Placeholder_MobileAndTablet,
 } from '../../components/ads/gpt/gpt-placeholder.js'
+import { getLogTraceObject } from '../../utils/index.js'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle.js'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -140,15 +145,7 @@ export async function getServerSideProps({ query, req, res }) {
     })
   )
 
-  const traceHeader = req.headers?.['x-cloud-trace-context']
-  let globalLogFields = {}
-  if (traceHeader && !Array.isArray(traceHeader)) {
-    const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
-  }
-
+  const globalLogFields = getLogTraceObject(req)
   const playlistId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING[videoCategorySlug]
 
   if (!playlistId) {
@@ -173,67 +170,50 @@ export async function getServerSideProps({ query, req, res }) {
     fetchVideoCategory(videoCategorySlug),
   ])
 
-  const handledResponses = responses.map((response) => {
-    if (response.status === 'fulfilled') {
-      if ('data' in response.value) {
-        // handle simple axios and gql response
-        return response.value.data
-      }
-      return response.value
-    } else if (response.status === 'rejected') {
-      const annotatingError = errors.helpers.wrap(
-        response.reason,
-        'UnhandledError',
-        'Error occurs white getting video category page data'
-      )
-
-      console.log(
-        JSON.stringify({
-          severity: 'ERROR',
-          message: errors.helpers.printAll(
-            annotatingError,
-            {
-              withStack: true,
-              withPayload: true,
-            },
-            0,
-            0
-          ),
-          ...globalLogFields,
-        })
-      )
-      return
-    }
-  })
-
   // handle header data
-  const headerData =
-    handledResponses[0] && 'sectionsData' in handledResponses[0]
-      ? handledResponses[0]
-      : { sectionsData: [], topicsData: [] }
-  const sectionsData = Array.isArray(headerData.sectionsData)
-    ? headerData.sectionsData
-    : []
-  const topicsData = Array.isArray(headerData.topicsData)
-    ? headerData.topicsData
-    : []
+  const [sectionsData, topicsData] = handleAxiosResponse(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    `Error occurs while getting header data in video category page (videoCategorySlug: ${videoCategorySlug})`,
+    globalLogFields
+  )
 
   // handle fetch videos and get nextPageToken for infinite scroll
-  const videos = handledResponses[1]?.items
-    ? simplifyYoutubePlaylistVideo(
-        handledResponses[1]?.items.filter(
-          /**
-           * @param {import('../section/videohub.js').YoutubeRawPlaylistVideo} item
-           * @returns
-           */
-          (item) => item.status.privacyStatus === 'public'
+  const [videos, ytNextPageToken] = handleAxiosResponse(
+    responses[1],
+    (
+      /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByPlaylistId>>} */ axiosData
+    ) => {
+      if (axiosData) {
+        const data = axiosData.data
+        /** @type {string} */
+        const nextPageToken = data?.nextPageToken || ''
+        const items = data?.items || []
+        const filteredItems = items.filter(
+          (
+            /** @type {import('../section/videohub.js').YoutubeRawPlaylistVideo} */ item
+          ) => item.status.privacyStatus === 'public'
         )
-      )
-    : []
-  const ytNextPageToken = handledResponses[1]?.nextPageToken || ''
+        return [simplifyYoutubePlaylistVideo(filteredItems), nextPageToken]
+      }
+
+      return [[], '']
+    },
+    `Error occurs while getting playlist data in video category page (videoCategorySlug: ${videoCategorySlug})`,
+    globalLogFields
+  )
+
+  const category = handleGqlResponse(
+    responses[2],
+    (gqlData) => {
+      return gqlData?.data?.category || { slug: videoCategorySlug }
+    },
+    `Error occurs while getting category data in video category page (videoCategorySlug: ${videoCategorySlug})`,
+    globalLogFields
+  )
 
   // handle category state, if `inactive` -> redirect to 404
-  if (handledResponses[2]?.category?.state === 'inactive') {
+  if (category?.state === 'inactive') {
     console.log(
       JSON.stringify({
         severity: 'WARNING',
@@ -243,8 +223,6 @@ export async function getServerSideProps({ query, req, res }) {
     )
     return { notFound: true }
   }
-
-  const category = handledResponses[2]?.category || { slug: videoCategorySlug }
 
   const props = {
     videos,

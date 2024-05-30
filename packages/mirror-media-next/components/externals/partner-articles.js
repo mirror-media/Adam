@@ -57,7 +57,11 @@ export default function ExternalArticles({
       renderAmount={renderPageSize}
       fetchCount={Math.ceil(externalsCount / renderPageSize)}
       fetchListInPage={(page) =>
-        fetchExternalsFunction(page, renderPageSize, partnerSlug)
+        fetchExternalsFunction(page, renderPageSize, partnerSlug).then(
+          (gqlData) => {
+            return gqlData?.data?.externals
+          }
+        )
       }
       loader={loader}
     >

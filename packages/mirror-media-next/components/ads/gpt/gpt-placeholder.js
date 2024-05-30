@@ -101,7 +101,7 @@ export default function GPT_Placeholder({
   rwd = DEFAULT_SIZES,
   children,
   // 為了 cls 先暫時移除
-  isHDAdEmpty = false,
+  // isHDAdEmpty = false,
   shouldShowAd = true,
   isLogInProcessFinished = false,
 }) {
