@@ -19,7 +19,7 @@ import {
   handleAxiosResponse,
   handleGqlResponse,
 } from '../../utils/response-handle'
-import redirectToLoginWhileUnauthed from '../../utils/redirect-to-login-while-unauthed'
+import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 import useMembershipRequired from '../../hooks/use-membership-required'
 
 const Section = styled.div`

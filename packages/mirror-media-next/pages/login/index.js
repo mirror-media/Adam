@@ -31,7 +31,7 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils'
 import { handleAxiosResponse } from '../../utils/response-handle'
-import redirectToDestinationWhileAuthed from '../../utils/redirect-to-destination-while-authed'
+import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
 
 const Container = styled.div`
   flex-grow: 1;

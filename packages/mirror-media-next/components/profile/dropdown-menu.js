@@ -18,6 +18,11 @@ const DropdownMenuWrapper = styled.div`
  */
 const SelectBox = styled.div`
   position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  line-height: 150%;
+  height: 48px;
   border: 1px solid
     ${
       /** @param {SelectBoxProps} props */
@@ -57,7 +62,7 @@ const SelectBox = styled.div`
   ::before {
     content: '';
     position: absolute;
-    bottom: 4px;
+    bottom: 0px;
     left: 12px;
     right: 12px;
     height: 1px;
@@ -83,6 +88,7 @@ const Ul = styled.ul`
   };
   position: absolute;
   background-color: #fff;
+  font-size: 18px;
   width: 100%;
   z-index: 100;
   border: 1px solid rgba(0, 0, 0, 0.87);
@@ -90,7 +96,7 @@ const Ul = styled.ul`
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   overflow: hidden;
-  max-height: 160px; // limit the visible items
+  max-height: 172px; // limit the visible items
   overflow-y: auto;
 `
 const Li = styled.li`

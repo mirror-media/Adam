@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { setPageCache } from '../utils/cache-setting'
-import { ACTION_CODE_SETTING } from '../config/index.mjs'
-import { InputState } from '../constants/form'
-import LayoutFull from '../components/shared/layout-full'
-import FormWrapper from '../components/login/form-wrapper'
-import GenericTextInput from '../components/shared/inputs/generic-text-input'
-import PrimaryButton from '../components/shared/buttons/primary-button'
-import TextButton from '../components/login/text-button'
-import { getLogTraceObject, isValidEmail } from '../utils'
-import { handleAxiosResponse } from '../utils/response-handle'
-import redirectToDestinationWhileAuthed from '../utils/redirect-to-destination-while-authed'
-import { auth } from '../firebase'
+import { setPageCache } from '../../utils/cache-setting'
+import { ACTION_CODE_SETTING } from '../../config/index.mjs'
+import { InputState } from '../../constants/form'
+import LayoutFull from '../../components/shared/layout-full'
+import FormWrapper from '../../components/login/form-wrapper'
+import GenericTextInput from '../../components/shared/inputs/generic-text-input'
+import PrimaryButton from '../../components/shared/buttons/primary-button'
+import TextButton from '../../components/login/text-button'
+import { getLogTraceObject, isValidEmail } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
+import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
+import { auth } from '../../firebase'
 import { FirebaseError } from 'firebase/app'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { generateErrorReportInfo } from '../utils/log/error-log'
-import { sendErrorLog } from '../utils/log/send-log'
-import { SECOND } from '../constants/time-unit'
-import Hints, { HINT_STATE } from '../components/recover-password/hints'
-import { FirebaseAuthError } from '../constants/firebase'
-import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
+import { generateErrorReportInfo } from '../../utils/log/error-log'
+import { sendErrorLog } from '../../utils/log/send-log'
+import { SECOND } from '../../constants/time-unit'
+import Hints, { HINT_STATE } from '../../components/recover-password/hints'
+import { FirebaseAuthError } from '../../constants/firebase'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */
@@ -32,8 +32,8 @@ const { DEFAULT, NOT_REGISRATED, ERROR, IN_PROGRESS, SUCCESS } = HINT_STATE
  * @typedef {Object} PageProps
  * @property {string} emailData
  * @property {Object} headerData
- * @property {import('../utils/api').HeadersData} headerData.sectionsData
- * @property {import('../utils/api').Topics} headerData.topicsData
+ * @property {import('../../utils/api').HeadersData} headerData.sectionsData
+ * @property {import('../../utils/api').Topics} headerData.topicsData
  */
 
 const Container = styled.div`

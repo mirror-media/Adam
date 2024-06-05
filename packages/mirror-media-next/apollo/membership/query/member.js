@@ -15,4 +15,22 @@ const fetchSubscription = gql`
   }
 `
 
-export { fetchAllMember, fetchSubscription }
+const fetchMemberProfile = gql`
+  query fetchMemberProfile($firebaseId: String!) {
+    member(where: { firebaseId: $firebaseId }) {
+      id
+      firebaseId
+      email
+      name
+      gender
+      birthday
+      phone
+      country
+      city
+      district
+      address
+    }
+  }
+`
+
+export { fetchAllMember, fetchSubscription, fetchMemberProfile }
