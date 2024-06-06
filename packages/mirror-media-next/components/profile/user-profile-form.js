@@ -292,28 +292,31 @@ export default function UserProfileForm({ onSaved, signInProvider }) {
          * @type {Member | undefined}
          */
         const profile = response?.data?.member
-        const {
-          id,
-          name,
-          gender,
-          birthday,
-          phone,
-          country,
-          city,
-          district,
-          address,
-        } = profile
-        idRef.current = id
-        setUserName(name)
-        setUserGender(genderMap[gender])
-        setUserYear(formatBirthday(birthday).year)
-        setUserMonth(formatBirthday(birthday).month)
-        setUserDay(formatBirthday(birthday).day)
-        setUserPhone(phone)
-        setUserCountry(country)
-        handleCitySelect(city)
-        setUserDistrict(district)
-        setUserAddress(address)
+        if (profile) {
+          const {
+            id,
+            name,
+            gender,
+            birthday,
+            phone,
+            country,
+            city,
+            district,
+            address,
+          } = profile
+
+          idRef.current = id
+          setUserName(name)
+          setUserGender(genderMap[gender])
+          setUserYear(formatBirthday(birthday).year)
+          setUserMonth(formatBirthday(birthday).month)
+          setUserDay(formatBirthday(birthday).day)
+          setUserPhone(phone)
+          setUserCountry(country)
+          handleCitySelect(city)
+          setUserDistrict(district)
+          setUserAddress(address)
+        }
       } catch (error) {
         const errorReport = generateErrorReportInfo(error, {
           userEmail: userEmail,
@@ -354,7 +357,9 @@ export default function UserProfileForm({ onSaved, signInProvider }) {
     const cityData = taiwanDisTrictOptions.find(function (el) {
       return el.name === city
     })
-    setDistrictData(cityData.districts)
+    if (cityData) {
+      setDistrictData(cityData.districts)
+    }
   }
 
   const handleUpdatePasswordClick = () => {
