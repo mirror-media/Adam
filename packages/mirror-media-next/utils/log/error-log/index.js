@@ -50,7 +50,11 @@ const generateErrorReportInfo = (
   } = payload
   const userAgent = window.navigator.userAgent
   const errorLog = {
-    error,
+    error: {
+      name: error.name,
+      message: error.message,
+      stack: error.stack,
+    },
     datetime: transformTimeDataIntoSlashFormat(new Date().toISOString(), true),
   }
   const clientInfo = {

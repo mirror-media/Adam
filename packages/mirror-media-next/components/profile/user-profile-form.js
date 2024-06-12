@@ -1,11 +1,20 @@
 import styled from 'styled-components'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import countryOptions from 'constants/lib/countries.json'
 import taiwanDisTrictOptions from 'constants/lib/taiwan-districts.json'
 import DropdownMenu from './dropdown-menu'
 import PrimaryButton from '../shared/buttons/primary-button'
 import DefaultButton from '../shared/buttons/default-button'
 import { useRouter } from 'next/router'
+import client from '../../apollo/apollo-client'
+import { updateMember } from '../../apollo/membership/mutation/member'
+import { useMembership } from '../../context/membership'
+import { fetchMemberProfile } from '../../apollo/membership/query/member'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+import { generateErrorReportInfo } from '../../utils/log/error-log'
+import { sendErrorLog } from '../../utils/log/send-log'
+import { MODE } from '../../pages/profile'
 
 const Form = styled.form`
   display: flex;
@@ -29,6 +38,7 @@ const EmailWrapper = styled.div`
   }
 
   p {
+    min-height: 27px;
     font-size: 18px;
     font-weight: 400;
     line-height: 27px;
@@ -79,12 +89,16 @@ const FormGroup = styled.div`
   width: 100%;
 
   input {
+    height: 48px;
+    font-size: 18px;
+    line-height: 150%;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 12px;
     ::placeholder {
       color: rgba(0, 0, 0, 0.3);
     }
+    outline: none;
     &:active,
     &:hover {
       border: 1px solid rgba(0, 0, 0, 0.87);
@@ -112,12 +126,16 @@ const ItemsWrapper = styled.div`
 
   input {
     width: 100%;
+    font-size: 18px;
+    line-height: 150%;
+    height: 48px;
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 12px;
     ::placeholder {
       color: rgba(0, 0, 0, 0.3);
     }
+    outline: none;
     &:active,
     &:hover {
       border: 1px solid rgba(0, 0, 0, 0.87);
@@ -189,17 +207,130 @@ const monthOptions = [
 ]
 
 /**
- * @returns {JSX.Element}
+ * @param {string} timestamp
+ * @returns {{year: string, month: string, day: string}}
+ */
+const formatBirthday = (timestamp) => {
+  if (!timestamp) return { year: '', month: '', day: '' }
+
+  const dateObj = new Date(timestamp)
+  const year = dateObj.getFullYear().toString()
+  const month = (dateObj.getMonth() + 1).toString()
+  const day = dateObj.getDate().toString()
+
+  return { year, month, day }
+}
+
+/**
+ * @param {string} year
+ * @param {string} month
+ * @param {string} day
+ * @returns {string}
+ */
+const dateFormatter = (year, month, day) => {
+  dayjs.extend(utc)
+  const dateString = `${year}-${month}-${day}`
+  const utcDate = dayjs(dateString).utc().format()
+  return utcDate
+}
+
+/**
+ * @type {{ F: string, M: string, 'NA': string }}
+ */
+const genderMap = {
+  F: '女',
+  M: '男',
+  NA: '不透露',
+}
+
+const getGenderKey = (/** @type {String} */ value) => {
+  return Object.keys(genderMap).find((key) => genderMap[key] === value)
+}
+
+/**
+ * @typedef {import('../../type/profile.js').Member} Member
  */
 
-export default function UserProfileForm() {
-  const [selectedGender, setSelectedGender] = useState('')
-  const [selectedMonth, setSelectedMonth] = useState('')
-  const [selectedCountry, setSelectedCountry] = useState('')
-  const [selectedCity, setSelectedCity] = useState('')
+/**
+ * @param {Object} props
+ * @param {(value: string) => void} props.onSaved
+ * @param {string} props.signInProvider
+ * @returns {JSX.Element}
+ */
+export default function UserProfileForm({ onSaved, signInProvider }) {
+  const [userName, setUserName] = useState('')
+  const [userGender, setUserGender] = useState('')
+  const [userYear, setUserYear] = useState('')
+  const [userMonth, setUserMonth] = useState('')
+  const [userDay, setUserDay] = useState('')
+  const [userPhone, setUserPhone] = useState('')
+  const [userCountry, setUserCountry] = useState('')
+  const [userCity, setUserCity] = useState('')
+  const [userDistrict, setUserDistrict] = useState('')
+  const [userAddress, setUserAddress] = useState('')
   const [districtData, setDistrictData] = useState([])
-  const [selectedDistrict, setSelectedDistrict] = useState('')
+  const idRef = useRef('')
+
   const router = useRouter()
+  const { accessToken, firebaseId, userEmail, memberInfo } = useMembership()
+  const { memberType } = memberInfo
+
+  useEffect(() => {
+    const getMemberProfile = async () => {
+      try {
+        const response = await client.query({
+          query: fetchMemberProfile,
+          variables: { firebaseId: firebaseId },
+          context: {
+            uri: '/member/graphql',
+            header: {
+              authorization: accessToken,
+            },
+          },
+        })
+        /**
+         * @type {Member | undefined}
+         */
+        const profile = response?.data?.member
+        if (profile) {
+          const {
+            id,
+            name,
+            gender,
+            birthday,
+            phone,
+            country,
+            city,
+            district,
+            address,
+          } = profile
+
+          idRef.current = id
+          setUserName(name)
+          setUserGender(genderMap[gender])
+          setUserYear(formatBirthday(birthday).year)
+          setUserMonth(formatBirthday(birthday).month)
+          setUserDay(formatBirthday(birthday).day)
+          setUserPhone(phone)
+          setUserCountry(country)
+          handleCitySelect(city)
+          setUserDistrict(district)
+          setUserAddress(address)
+        }
+      } catch (error) {
+        const errorReport = generateErrorReportInfo(error, {
+          userEmail: userEmail,
+          firebaseId: firebaseId,
+          memberType: memberType,
+        })
+        sendErrorLog(errorReport)
+        router.push('/500')
+      }
+    }
+    if (firebaseId && accessToken) {
+      getMemberProfile()
+    }
+  }, [firebaseId, accessToken, memberType, userEmail, router])
 
   const cityNames = useMemo(() => {
     return taiwanDisTrictOptions.map((data) => {
@@ -207,24 +338,66 @@ export default function UserProfileForm() {
     })
   }, [])
 
+  /**
+   * @param {string} country
+   */
   const handleCountrySelect = (country) => {
-    setSelectedCountry(country)
+    setUserCountry(country)
     if (country !== '台灣') {
-      setSelectedCity('')
-      setSelectedDistrict('')
+      setUserCity('')
+      setUserDistrict('')
     }
   }
 
+  /**
+   * @param {string} city
+   */
   const handleCitySelect = (city) => {
-    setSelectedCity(city)
+    setUserCity(city)
     const cityData = taiwanDisTrictOptions.find(function (el) {
       return el.name === city
     })
-    setDistrictData(cityData.districts)
+    if (cityData) {
+      setDistrictData(cityData.districts)
+    }
   }
 
   const handleUpdatePasswordClick = () => {
-    router.push('/updatePassword')
+    router.push('/update-password')
+  }
+
+  const handleUpdateProfile = async () => {
+    try {
+      await client.mutate({
+        mutation: updateMember,
+        context: {
+          uri: '/member/graphql',
+          headers: {
+            authorization: accessToken ? `Bearer ${accessToken}` : '',
+          },
+        },
+        variables: {
+          id: idRef.current,
+          name: userName,
+          gender: getGenderKey(userGender),
+          birthday: dateFormatter(userYear, userMonth, userDay),
+          phone: userPhone,
+          country: userCountry,
+          city: userCity,
+          district: userDistrict,
+          address: userAddress,
+        },
+      })
+      onSaved(MODE.SUCCESS)
+    } catch (error) {
+      const errorReport = generateErrorReportInfo(error, {
+        userEmail: userEmail,
+        firebaseId: firebaseId,
+        memberType: memberType,
+      })
+      sendErrorLog(errorReport)
+      onSaved(MODE.FAIL)
+    }
   }
 
   return (
@@ -232,22 +405,29 @@ export default function UserProfileForm() {
       <Form>
         <EmailWrapper>
           <h2>Email</h2>
-          <p>test email</p>
+          <p>{userEmail}</p>
         </EmailWrapper>
 
-        <PasswordWrapper>
-          <h2>密碼</h2>
-          <PasswordButtonWrapper>
-            <DefaultButton onClick={handleUpdatePasswordClick}>
-              變更密碼
-            </DefaultButton>
-          </PasswordButtonWrapper>
-        </PasswordWrapper>
+        {signInProvider == 'password' && (
+          <PasswordWrapper>
+            <h2>密碼</h2>
+            <PasswordButtonWrapper>
+              <DefaultButton onClick={handleUpdatePasswordClick}>
+                變更密碼
+              </DefaultButton>
+            </PasswordButtonWrapper>
+          </PasswordWrapper>
+        )}
 
         <FlexRowContainer>
           <FormGroup>
             <LargeLabel htmlFor="name">姓名</LargeLabel>
-            <input id="name" placeholder="請輸入姓名" />
+            <input
+              id="name"
+              placeholder="請輸入姓名"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+            />
           </FormGroup>
           <FormGroup>
             <LargeLabel>性別</LargeLabel>
@@ -255,8 +435,8 @@ export default function UserProfileForm() {
               keyField="id"
               value="name"
               options={genderOptions}
-              selectedOption={selectedGender}
-              onSelect={setSelectedGender}
+              selectedOption={userGender}
+              onSelect={setUserGender}
               placeholder="請選擇"
             />
           </FormGroup>
@@ -268,7 +448,12 @@ export default function UserProfileForm() {
           <FlexRowBox>
             <ItemsWrapper>
               <SmallLabel htmlFor="year">西元年</SmallLabel>
-              <input id="year" placeholder="西元年" />
+              <input
+                id="year"
+                placeholder="西元年"
+                value={userYear}
+                onChange={(e) => setUserYear(e.target.value)}
+              />
             </ItemsWrapper>
             <ItemsWrapper>
               <SmallLabel>月份</SmallLabel>
@@ -276,21 +461,32 @@ export default function UserProfileForm() {
                 options={monthOptions}
                 keyField="id"
                 value="name"
-                selectedOption={selectedMonth}
-                onSelect={setSelectedMonth}
+                selectedOption={userMonth}
+                onSelect={setUserMonth}
                 placeholder="月份"
               />
             </ItemsWrapper>
             <ItemsWrapper>
-              <SmallLabel htmlFor="date">日期</SmallLabel>
-              <input id="date" placeholder="日期" />
+              <SmallLabel htmlFor="day">日期</SmallLabel>
+              <input
+                id="day"
+                placeholder="日期"
+                value={userDay}
+                onChange={(e) => setUserDay(e.target.value)}
+              />
             </ItemsWrapper>
           </FlexRowBox>
         </FormDetails>
 
         <FormGroup>
           <LargeLabel htmlFor="phone">電話</LargeLabel>
-          <input id="phone" placeholder="請輸入電話" />
+          <input
+            id="phone"
+            type="tel"
+            placeholder="請輸入電話"
+            value={userPhone}
+            onChange={(e) => setUserPhone(e.target.value)}
+          />
         </FormGroup>
         <FormDetails>
           <h2>地址</h2>
@@ -301,7 +497,7 @@ export default function UserProfileForm() {
                 options={countryOptions}
                 keyField="English"
                 value="Taiwan"
-                selectedOption={selectedCountry}
+                selectedOption={userCountry}
                 onSelect={handleCountrySelect}
               />
             </ItemsWrapper>
@@ -312,9 +508,9 @@ export default function UserProfileForm() {
                   options={cityNames}
                   keyField="name"
                   value="name"
-                  selectedOption={selectedCity}
+                  selectedOption={userCity}
                   onSelect={handleCitySelect}
-                  disabled={selectedCountry !== '臺灣'}
+                  disabled={userCountry !== '臺灣'}
                 />
               </ItemsWrapper>
               <ItemsWrapper>
@@ -323,9 +519,9 @@ export default function UserProfileForm() {
                   options={districtData}
                   keyField="zip"
                   value="name"
-                  selectedOption={selectedDistrict}
-                  onSelect={setSelectedDistrict}
-                  disabled={selectedCountry !== '臺灣' || selectedCity == ''}
+                  selectedOption={userDistrict}
+                  onSelect={setUserDistrict}
+                  disabled={userCountry !== '臺灣' || userCity == ''}
                 />
               </ItemsWrapper>
             </FlexRowBox>
@@ -335,12 +531,20 @@ export default function UserProfileForm() {
               <input
                 id="address"
                 placeholder="請輸入街道、門號、巷弄、樓層等資訊"
+                value={userAddress}
+                onChange={(e) => setUserAddress(e.target.value)}
               />
             </ItemsWrapper>
           </AddressWrapper>
         </FormDetails>
         <ButtonWrapper>
-          <PrimaryButton isLoading={false}>儲存</PrimaryButton>
+          <PrimaryButton
+            isLoading={false}
+            onClick={handleUpdateProfile}
+            disabled={!accessToken}
+          >
+            儲存
+          </PrimaryButton>
         </ButtonWrapper>
       </Form>
     </>

@@ -75,7 +75,12 @@ export default function BodyPasswordReset() {
       })
       sendErrorLog(errorReport)
 
-      router.replace('/password-change-fail')
+      router.replace({
+        pathname: '/password-change-fail',
+        query: {
+          from: router.pathname,
+        },
+      })
     } finally {
       setIsProcessing(false)
     }
@@ -97,7 +102,12 @@ export default function BodyPasswordReset() {
         })
         sendErrorLog(errorReport)
 
-        router.replace('/password-change-fail')
+        router.replace({
+          pathname: '/password-change-fail',
+          query: {
+            from: router.pathname,
+          },
+        })
       }
     }
 

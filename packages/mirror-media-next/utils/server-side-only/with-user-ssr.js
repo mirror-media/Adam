@@ -1,10 +1,10 @@
-import { getAdminAuth } from '../firebase/admin'
-import { URL, URLSearchParams } from 'node:url'
+import { getAdminAuth } from '../../firebase/admin'
 
 /**
  * @typedef {import('querystring').ParsedUrlQuery} ParsedUrlQuery
  * @typedef {import('next').Redirect} Redirect
  * @typedef {import('next').PreviewData} PreviewData
+ * @typedef {import('firebase-admin/auth').DecodedIdToken} DecodedIdToken
  */
 
 /**
@@ -25,7 +25,7 @@ import { URL, URLSearchParams } from 'node:url'
 /**
  * @template {ParsedUrlQuery} [Q=ParsedUrlQuery]
  * @template {PreviewData} [D=PreviewData]
- * @typedef {import('next').GetServerSidePropsContext<Q, D>} SSRPropsContext
+ * @typedef {import('next').GetServerSidePropsContext<Q, D> & { user?: DecodedIdToken}} SSRPropsContext
  */
 
 /**
@@ -38,7 +38,7 @@ import { URL, URLSearchParams } from 'node:url'
  */
 
 /**
- * @callback RedirectToLoginWhileUnauthed
+ * @callback WithUserSSR
  * @returns {
     <P extends Dictionary=Dictionary,
      Q extends ParsedUrlQuery=ParsedUrlQuery,
@@ -49,11 +49,11 @@ import { URL, URLSearchParams } from 'node:url'
  */
 
 /**
- * should be used on SSR page which redirects user to `login` if not authed
+ * should be used on SSR page which requires firebase user data
  *
- * @type {RedirectToLoginWhileUnauthed}
+ * @type {WithUserSSR}
  */
-const redirectToLoginWhileUnauthed =
+const withUserSSR =
   () =>
   /**
    * @template {Dictionary} P
@@ -64,42 +64,14 @@ const redirectToLoginWhileUnauthed =
     /** @type {import('next').GetServerSideProps<P, Q, D>} */ getServerSidePropsFunc
   ) =>
   async (/** @type {SSRPropsContext<Q, D>} */ ctx) => {
-    const { req, query, resolvedUrl } = ctx
+    const { req } = ctx
     const authToken = req.headers.authorization?.split(' ')[1]
 
+    /** @type {DecodedIdToken | undefined} */
+    let user
     try {
-      await getAdminAuth().verifyIdToken(authToken, true)
-
-      /**
-       * user with valid id token
-       */
-      let props = /** @type {P | Promise<P>} */ ({})
-      if (getServerSidePropsFunc) {
-        const composedProps = await getServerSidePropsFunc(ctx)
-
-        if (composedProps) {
-          if ('props' in composedProps) {
-            props = composedProps.props
-
-            return {
-              ...composedProps,
-              props,
-            }
-          }
-          if ('notFound' in composedProps || 'redirect' in composedProps) {
-            return { ...composedProps }
-          }
-        }
-      }
-
-      return {
-        props,
-      }
+      user = await getAdminAuth().verifyIdToken(authToken, true)
     } catch (err) {
-      /**
-       * user without valid id token or other errors
-       */
-
       if (!('codePrefix' in err) || err.codePrefix !== 'auth') {
         // error which is not FirebaseAuthError
         console.error(
@@ -109,22 +81,31 @@ const redirectToLoginWhileUnauthed =
           })
         )
       }
+    }
 
-      const searchParamsObject = new URLSearchParams(query)
-      searchParamsObject.set(
-        'destination',
-        new URL(resolvedUrl, 'https://www.google.com').pathname
-      )
-      const searchParams = searchParamsObject.toString()
-      const destination = `/login?${searchParams}`
+    let props = /** @type {P | Promise<P>} */ ({})
+    if (getServerSidePropsFunc) {
+      ctx.user = user
+      const composedProps = await getServerSidePropsFunc(ctx)
 
-      return {
-        redirect: {
-          statusCode: 307,
-          destination,
-        },
+      if (composedProps) {
+        if ('props' in composedProps) {
+          props = composedProps.props
+
+          return {
+            ...composedProps,
+            props,
+          }
+        }
+        if ('notFound' in composedProps || 'redirect' in composedProps) {
+          return { ...composedProps }
+        }
       }
+    }
+
+    return {
+      props,
     }
   }
 
-export default redirectToLoginWhileUnauthed
+export default withUserSSR

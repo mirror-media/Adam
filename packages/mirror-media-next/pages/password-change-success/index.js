@@ -1,16 +1,16 @@
 import styled from 'styled-components'
 import { useEffect } from 'react'
-import { SECOND } from '../constants/time-unit'
-import LayoutFull from '../components/shared/layout-full'
-import FormWrapper from '../components/login/form-wrapper'
+import { SECOND } from '../../constants/time-unit'
+import LayoutFull from '../../components/shared/layout-full'
+import FormWrapper from '../../components/login/form-wrapper'
 import { useRouter } from 'next/router'
-import { logout } from '../context/membership'
-import { setPageCache } from '../utils/cache-setting'
-import { ENV } from '../config/index.mjs'
-import { getLogTraceObject } from '../utils'
-import { handleAxiosResponse } from '../utils/response-handle'
-import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
+import { logout } from '../../context/membership'
+import { setPageCache } from '../../utils/cache-setting'
+import { ENV } from '../../config/index.mjs'
+import { getLogTraceObject } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const REDIRECTION_DELAY = 5 // 秒
 
@@ -48,8 +48,8 @@ const SecondaryText = styled.p`
 /**
  * @typedef {Object} PageProps
  * @property {Object} headerData
- * @property {import('../utils/api').HeadersData} headerData.sectionsData
- * @property {import('../utils/api').Topics} headerData.topicsData
+ * @property {import('../../utils/api').HeadersData} headerData.sectionsData
+ * @property {import('../../utils/api').Topics} headerData.topicsData
  */
 
 /**

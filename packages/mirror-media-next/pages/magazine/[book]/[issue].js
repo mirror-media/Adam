@@ -8,7 +8,7 @@ import { fetchWeeklys } from '../../../apollo/query/magazines'
 import Layout from '../../../components/shared/layout'
 import { getLogTraceObject } from '../../../utils'
 import { handleGqlResponse } from '../../../utils/response-handle'
-import redirectToLoginWhileUnauthed from '../../../utils/redirect-to-login-while-unauthed'
+import redirectToLoginWhileUnauthed from '../../../utils/server-side-only/redirect-to-login-while-unauthed'
 
 const Page = styled.div`
   padding: 0;

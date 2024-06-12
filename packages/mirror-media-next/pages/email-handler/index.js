@@ -4,14 +4,14 @@
  */
 
 import styled from 'styled-components'
-import { setPageCache } from '../utils/cache-setting'
-import LayoutFull from '../components/shared/layout-full'
-import BodyPasswordReset from '../components/email-handler/body-password-reset'
-import BodyEmailVerification from '../components/email-handler/body-email-verification'
-import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
-import { getLogTraceObject, getSearchParamFromApiKeyUrl } from '../utils'
-import { handleAxiosResponse } from '../utils/response-handle'
+import { setPageCache } from '../../utils/cache-setting'
+import LayoutFull from '../../components/shared/layout-full'
+import BodyPasswordReset from '../../components/email-handler/body-password-reset'
+import BodyEmailVerification from '../../components/email-handler/body-email-verification'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { getLogTraceObject, getSearchParamFromApiKeyUrl } from '../../utils'
+import { handleAxiosResponse } from '../../utils/response-handle'
 
 const RESET_PASSWORD = 'resetPassword'
 const RECOVER_EMAIL = 'recoverEmail'
@@ -35,8 +35,8 @@ const Container = styled.div`
  * @typedef {Object} PageProps
  * @property {RESET_PASSWORD | VERIFY_EMAIL}  mode
  * @property {Object} headerData
- * @property {import('../utils/api').HeadersData} headerData.sectionsData
- * @property {import('../utils/api').Topics} headerData.topicsData
+ * @property {import('../../utils/api').HeadersData} headerData.sectionsData
+ * @property {import('../../utils/api').Topics} headerData.topicsData
  */
 
 /**
