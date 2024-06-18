@@ -7,6 +7,7 @@ import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
 import gtag from '../utils/programmable-search/gtag'
 import TagManager from 'react-gtm-module'
+import ComScoreScript from '../components/comscore-script'
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
@@ -29,6 +30,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <GlobalStyles />
+      <ComScoreScript />
       <ThemeProvider theme={theme}>
         <RedirectUrlContext.Provider value={redirectUrl || URL_MIRROR_MEDIA}>
           {getLayout(<Component {...pageProps} />, pageProps)}
