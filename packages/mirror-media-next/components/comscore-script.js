@@ -51,19 +51,13 @@ export default function ComScoreScript() {
       <script
         id="comScore"
         dangerouslySetInnerHTML={{
-          __html: ` var _comscore = _comscore || [];
-          _comscore.push({ c1: "2", c2: "24318560" });
-          (function() {
-           var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
-           s.src = "https://sb.scorecardresearch.com/cs/24318560/beacon.js";
-           el.parentNode.insertBefore(s, el);
-          })();`,
+          __html: `var _comscore = _comscore || []; _comscore.push({ c1: "2", c2: "24318560" , options: { enableFirstPartyCookie: "true" } }); (function() { var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true; s.src = "https://sb.scorecardresearch.com/cs/24318560/beacon.js"; el.parentNode.insertBefore(s, el); })(); `,
         }}
       />
       <noscript
         data-hid="comScoreNoScript"
         dangerouslySetInnerHTML={{
-          __html: `<img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=24318560&amp;cv=3.6.0&amp;cj=1" />`,
+          __html: `<img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=24318560&amp;cv=3.9.1&amp;cj=1" />`,
         }}
       ></noscript>
     </>
