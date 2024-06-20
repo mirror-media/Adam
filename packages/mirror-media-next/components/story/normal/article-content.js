@@ -66,10 +66,16 @@ export default function ArticleContent({
 
   const firstImageAdComponent = useMemo(() => {
     return shouldShowAd && windowDimensions.width > 1200 ? (
-      <StyledGPTAd pageKey="global" adKey="PC_ADBRO" />
+      <div id="div-gpt-ad-1710755205915-0" />
     ) : (
-      <StyledGPTAd pageKey="global" adKey="MB_ADBRO" />
+      <div id="div-gpt-ad-1710755093650-0" />
     )
+
+    // return shouldShowAd && windowDimensions.width > 1200 ? (
+    //   <StyledGPTAd pageKey="global" adKey="PC_ADBRO" />
+    // ) : (
+    //   <StyledGPTAd pageKey="global" adKey="MB_ADBRO" />
+    // )
   }, [windowDimensions, shouldShowAd])
 
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
@@ -85,12 +91,7 @@ export default function ArticleContent({
         wrapper={(children) => <ContentContainer>{children}</ContentContainer>}
         firstImageAdComponent={firstImageAdComponent}
       />
-      {/* 
-      {shouldShowAd && windowDimensions.width > 1200 ? (
-        <div id="div-gpt-ad-1710755205915-0" />
-      ) : (
-        <div id="div-gpt-ad-1710755093650-0" />
-      )} */}
+
       {unstyledBlocksCount > 1 && (
         <>
           {shouldShowAd && (
