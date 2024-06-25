@@ -1,6 +1,9 @@
 import Head from 'next/head'
 import { SITE_URL } from '../../../config/index.mjs'
 import { getActiveOrderCategory, getActiveOrderSection } from '../../../utils'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { useEffect, useMemo, useState } from 'react'
+import DevGptAd from '../dev-gpt-ad'
 // import Script from 'next/script'
 /**
  * @typedef {Object} Section
@@ -169,22 +172,7 @@ export default function StoryHead({ postData }) {
           />
         )}
       </Head>
-      {/*
-      <Script
-        id="test-google-tag-ad"
-        dangerouslySetInnerHTML={{
-          __html: `
-          window.googletag = window.googletag || {cmd: []};
-          googletag.cmd.push(function() {
-            googletag.defineOutOfPageSlot('/40175602/test_mirror_m_ros_out_ADBRO', 'div-gpt-ad-1710755205915-0').addService(googletag.pubads());
-            googletag.defineOutOfPageSlot('/40175602/test_mirror_pc_ros_out_ADBRO', 'div-gpt-ad-1710755093650-0').addService(googletag.pubads());
-            googletag.pubads().enableSingleRequest();
-            googletag.enableServices();
-          });
-        `,
-        }}
-      />
-      */}
+      <DevGptAd />
     </>
   )
 }

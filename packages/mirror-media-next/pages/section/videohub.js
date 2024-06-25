@@ -122,7 +122,7 @@ export default function SectionVideohub({
   const hasHVCVideo = Object.keys(highestViewCountVideo).length > 0
   const hasLatestVideo = latestVideos.length > 0
 
-  const { shouldShowAd } = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
   return (
     <Layout
@@ -131,7 +131,10 @@ export default function SectionVideohub({
       footer={{ type: 'default' }}
     >
       <Wrapper>
-        <GPT_Placeholder_Desktop>
+        <GPT_Placeholder_Desktop
+          shouldShowAd={shouldShowAd}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
         </GPT_Placeholder_Desktop>
         {hasHVCVideo && (
@@ -144,7 +147,10 @@ export default function SectionVideohub({
             }}
           />
         )}
-        <GPT_Placeholder_MobileAndTablet>
+        <GPT_Placeholder_MobileAndTablet
+          shouldShowAd={shouldShowAd}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
         </GPT_Placeholder_MobileAndTablet>
         {hasLatestVideo && (

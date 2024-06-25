@@ -86,7 +86,7 @@ export default function VideoCategory({
   const remainingVideos = videos.slice(1)
   const categoryName = category.name || ''
 
-  const { shouldShowAd } = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
   return (
     <Layout
@@ -95,7 +95,10 @@ export default function VideoCategory({
       footer={{ type: 'default' }}
     >
       <Wrapper>
-        <GPT_Placeholder_Desktop>
+        <GPT_Placeholder_Desktop
+          shouldShowAd={shouldShowAd}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
         </GPT_Placeholder_Desktop>
         <LeadingVideo
@@ -107,7 +110,10 @@ export default function VideoCategory({
             youtube: 'GTM-leading-video-yt-play',
           }}
         />
-        <GPT_Placeholder_MobileAndTablet>
+        <GPT_Placeholder_MobileAndTablet
+          shouldShowAd={shouldShowAd}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
         </GPT_Placeholder_MobileAndTablet>
         {hasMoreThanOneVideo && (

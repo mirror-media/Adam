@@ -122,7 +122,7 @@ const GPT_PLACEHOLDER_SIZES = {
  * @returns
  */
 export default function Video({ video, latestVideos, headerData }) {
-  const { shouldShowAd } = useDisplayAd()
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
   return (
     <>
@@ -140,14 +140,22 @@ export default function Video({ video, latestVideos, headerData }) {
         footer={{ type: 'default' }}
       >
         <Wrapper>
-          <GPT_Placeholder_Desktop rwd={GPT_PLACEHOLDER_SIZES}>
+          <GPT_Placeholder_Desktop
+            rwd={GPT_PLACEHOLDER_SIZES}
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
             {shouldShowAd && (
               <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />
             )}
           </GPT_Placeholder_Desktop>
           <YoutubeIframe videoId={video.id} gtmClassName="GTM-video-yt-play" />
 
-          <GPT_Placeholder_MobileAndTablet rwd={GPT_PLACEHOLDER_SIZES}>
+          <GPT_Placeholder_MobileAndTablet
+            rwd={GPT_PLACEHOLDER_SIZES}
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
             {shouldShowAd && (
               <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />
             )}

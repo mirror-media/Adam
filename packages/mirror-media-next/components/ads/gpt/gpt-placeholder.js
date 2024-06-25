@@ -43,7 +43,22 @@ const Container = styled.div`
   }
 `
 const ContainerMobileAndTablet = styled(Container)`
-  display: block;
+  min-width: ${
+    /**
+     *
+     * @param {Object} props
+     * @param {Rwd} props.rwd
+     * @param {boolean} [props.shouldTranslate]
+     */
+    ({ rwd }) => rwd.mobile.width
+  };
+  min-height: ${({ rwd, shouldTranslate }) =>
+    shouldTranslate ? rwd.mobile.height : '0px'};
+  ${({ theme }) => theme.breakpoint.md} {
+    min-width: ${({ rwd }) => rwd.tablet.width};
+    min-height: ${({ rwd, shouldTranslate }) =>
+      shouldTranslate ? rwd.tablet.height : '0px'};
+  }
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }
@@ -51,7 +66,11 @@ const ContainerMobileAndTablet = styled(Container)`
 const ContainerDesktop = styled(Container)`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
-    display: block;
+    min-width: ${({ rwd }) => rwd.desktop.width};
+    min-height: ${({ rwd, shouldTranslate }) => {
+      return shouldTranslate ? rwd.desktop.height : '0px'
+    }};
+    margin: ${({ rwd }) => rwd.desktop.margin};
   }
 `
 
@@ -118,16 +137,49 @@ export default function GPT_Placeholder({
  *
  * @param {Object} props
  * @param {Rwd} [props.rwd]
+ * @param {boolean} [props.shouldShowAd]
+ * @param {boolean} [props.isLogInProcessFinished]
  * @param {JSX.Element} props.children
  * @returns
  */
-const GPT_Placeholder_MobileAndTablet = ({ rwd = DEFAULT_SIZES, children }) => {
+const GPT_Placeholder_MobileAndTablet = ({
+  rwd = DEFAULT_SIZES,
+  children,
+  shouldShowAd,
+  isLogInProcessFinished,
+}) => {
   return (
-    <ContainerMobileAndTablet rwd={rwd}>{children}</ContainerMobileAndTablet>
+    <ContainerMobileAndTablet
+      rwd={rwd}
+      shouldTranslate={shouldShowAd || !isLogInProcessFinished}
+    >
+      {children}
+    </ContainerMobileAndTablet>
   )
 }
-const GPT_Placeholder_Desktop = ({ rwd = DEFAULT_SIZES, children }) => {
-  return <ContainerDesktop rwd={rwd}>{children}</ContainerDesktop>
+/**
+ *
+ * @param {Object} props
+ * @param {Rwd} [props.rwd]
+ * @param {boolean} [props.shouldShowAd]
+ * @param {boolean} [props.isLogInProcessFinished]
+ * @param {JSX.Element} props.children
+ * @returns
+ */
+const GPT_Placeholder_Desktop = ({
+  rwd = DEFAULT_SIZES,
+  children,
+  shouldShowAd,
+  isLogInProcessFinished,
+}) => {
+  return (
+    <ContainerDesktop
+      rwd={rwd}
+      shouldTranslate={shouldShowAd || !isLogInProcessFinished}
+    >
+      {children}
+    </ContainerDesktop>
+  )
 }
 
 /**
