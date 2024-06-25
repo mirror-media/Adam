@@ -760,7 +760,9 @@ export default function StoryNormalStyle({
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
           >
-            <StyledGPTAd_PC_R1 pageKey={pageKeyForGptAd} adKey="PC_R1" />
+            {shouldShowAd && (
+              <StyledGPTAd_PC_R1 pageKey={pageKeyForGptAd} adKey="PC_R1" />
+            )}
           </GPT_Placeholder_Aside>
           <AsideArticleList
             listType={'latestNews'}

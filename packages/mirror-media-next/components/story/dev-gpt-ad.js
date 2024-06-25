@@ -33,7 +33,7 @@ export default function DevGptAd() {
         `}
         </Script>
         {/* /40175602/test_mirror_m_ros_out_ADBRO */}
-        <div id="div-gpt-ad-1710755205915-0" />
+        {/* <div id="div-gpt-ad-1710755205915-0" /> */}
       </>
     ) : (
       <>
@@ -48,7 +48,7 @@ export default function DevGptAd() {
         `}
         </Script>
         {/* /40175602/test_mirror_pc_ros_out_ADBRO */}
-        <div id="div-gpt-ad-1710755093650-0" />
+        {/* <div id="div-gpt-ad-1710755093650-0" /> */}
       </>
     )
   }

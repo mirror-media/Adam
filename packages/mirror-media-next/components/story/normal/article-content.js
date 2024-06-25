@@ -65,7 +65,7 @@ export default function ArticleContent({
     getSlicedIndexAndUnstyledBlocksCount(contentMarkedFirstImage)
 
   const firstImageAdComponent = useMemo(() => {
-    return shouldShowAd && windowDimensions.width > 1200 ? (
+    return shouldShowAd && windowDimensions.width < 1200 ? (
       <div id="div-gpt-ad-1710755205915-0" />
     ) : (
       <div id="div-gpt-ad-1710755093650-0" />
