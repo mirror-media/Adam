@@ -4,9 +4,6 @@ import useWindowDimensions from '../hooks/use-window-dimensions'
 import { ENV } from '../config/index.mjs'
 
 export default function DevGptAd() {
-  if (ENV !== 'dev') {
-    return { notFound: true }
-  }
   const { width } = useWindowDimensions()
   const isMobile = width < 1200
   useEffect(() => {
@@ -39,8 +36,8 @@ export default function DevGptAd() {
         {/* /40175602/test_mirror_m_ros_out_ADBRO */}
         <div id="div-gpt-ad-1719287275291-0">
           <script>
-            {googletag.cmd.push(function () {
-              googletag.display('div-gpt-ad-1719287275291-0')
+            {window.googletag.cmd.push(function () {
+              window.googletag.display('div-gpt-ad-1719287275291-0')
             })}
           </script>
         </div>
@@ -60,8 +57,8 @@ export default function DevGptAd() {
         {/* /40175602/test_mirror_pc_ros_out_ADBRO */}
         <div id="div-gpt-ad-1719287528685-0">
           <script>
-            {googletag.cmd.push(function () {
-              googletag.display('div-gpt-ad-1719287528685-0')
+            {window.googletag.cmd.push(function () {
+              window.googletag.display('div-gpt-ad-1719287528685-0')
             })}
           </script>
         </div>
@@ -70,4 +67,15 @@ export default function DevGptAd() {
   }
 
   return testAdJsx
+}
+
+/**
+ * @type {import('next').GetServerSideProps}
+ */
+export async function getServerSideProps() {
+  console.log('getServerSideProps', ENV)
+  if (ENV !== 'dev' && ENV !== 'local') {
+    return { notFound: true }
+  }
+  return { props: {} }
 }

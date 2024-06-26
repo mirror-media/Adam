@@ -69,6 +69,7 @@ export default function ArticleContent({
     return shouldShowAd && windowDimensions.width < 1200 ? (
       <div id="div-gpt-ad-1719287275291-0">
         <Script
+          id="script-div-gpt-ad-1719287275291-0"
           dangerouslySetInnerHTML={{
             __html: `googletag.cmd.push(function () {
               googletag.display('div-gpt-ad-1719287275291-0')
@@ -79,6 +80,7 @@ export default function ArticleContent({
     ) : (
       <div id="div-gpt-ad-1719287528685-0">
         <Script
+          id="script-div-gpt-ad-1719287528685-0"
           dangerouslySetInnerHTML={{
             __html: `googletag.cmd.push(function () {
               googletag.display('div-gpt-ad-1719287528685-0')
