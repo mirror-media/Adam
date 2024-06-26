@@ -1,8 +1,6 @@
 import Head from 'next/head'
 import { SITE_URL } from '../../../config/index.mjs'
 import { getActiveOrderCategory, getActiveOrderSection } from '../../../utils'
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
-import { useEffect, useMemo, useState } from 'react'
 import DevGptAd from '../dev-gpt-ad'
 // import Script from 'next/script'
 /**
