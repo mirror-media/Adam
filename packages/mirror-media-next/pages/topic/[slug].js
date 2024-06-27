@@ -32,6 +32,7 @@ const WINE_TOPICS_SLUG = [
   '63b7907e7d893f1a00f1ddb1',
   'thebalvenie2023',
   'wine2024',
+  'rsroyalsalute2024',
 ]
 /**
  * @typedef {import('../../components/topic/list/topic-list').SlideshowImage} SlideshowImage
