@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { useMemo } from 'react'
+import Script from 'next/script'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -66,9 +67,27 @@ export default function ArticleContent({
 
   const firstImageAdComponent = useMemo(() => {
     return shouldShowAd && windowDimensions.width < 1200 ? (
-      <div id="div-gpt-ad-1710755205915-0" />
+      <div id="div-gpt-ad-1719287275291-0">
+        <Script
+          id="script-div-gpt-ad-1719287275291-0"
+          dangerouslySetInnerHTML={{
+            __html: `googletag.cmd.push(function () {
+              googletag.display('div-gpt-ad-1719287275291-0')
+            })`,
+          }}
+        />
+      </div>
     ) : (
-      <div id="div-gpt-ad-1710755093650-0" />
+      <div id="div-gpt-ad-1719287528685-0">
+        <Script
+          id="script-div-gpt-ad-1719287528685-0"
+          dangerouslySetInnerHTML={{
+            __html: `googletag.cmd.push(function () {
+              googletag.display('div-gpt-ad-1719287528685-0')
+            })`,
+          }}
+        />
+      </div>
     )
 
     // return shouldShowAd && windowDimensions.width > 1200 ? (
