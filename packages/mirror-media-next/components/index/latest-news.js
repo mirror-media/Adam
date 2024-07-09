@@ -18,7 +18,7 @@ import {
 } from '../../utils'
 
 const StyledMicroAd = dynamic(
-  () => import('../ads/micro-ad/micro-ad-with-label'),
+  () => import('../ads/micro-ad/micro-ad-with-label-homepage'),
   {
     ssr: false,
   }
