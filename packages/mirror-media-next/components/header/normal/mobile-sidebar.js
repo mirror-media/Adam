@@ -291,7 +291,7 @@ export default function MobileSidebar({
           <Fragment key={item.order}>
             <Section sectionSlug={item.slug}>
               <a style={{ width: '50%' }} href={item.href}>
-                <h3>{item.name}</h3>
+                <div>{item.name}</div>
               </a>
               <SectionToggle
                 aria-label={`open-section-${item.slug}`}
@@ -318,7 +318,7 @@ export default function MobileSidebar({
         return (
           <Section key={item.order} sectionSlug={renderSectionSlug}>
             <a style={{ width: '100%' }} href={item.href}>
-              <h3>{item.name}</h3>
+              <div>{item.name}</div>
             </a>
           </Section>
         )
