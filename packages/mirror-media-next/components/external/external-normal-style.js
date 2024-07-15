@@ -510,6 +510,35 @@ export default function ExternalNormalStyle({ external }) {
     setISHDAdEmpty(e.isEmpty)
   }, [])
 
+  const handleBriefAndContent = ({ brief, content }) => {
+    const removeHtmlTags = (text) => text.replace(/<\/?[^>]+(>|$)/g, '')
+
+    const paragraphsBrief = brief.split('\n').filter((paragraph) => paragraph)
+    let paragraphsContent = content.split('\n').filter((paragraph) => paragraph)
+    console.log({ b: paragraphsBrief[0], c: paragraphsContent[2] })
+
+    if (paragraphsBrief.length === 0 && paragraphsContent.length > 0) {
+      // 如果 brief 是空的，將 content 的第一段附加到 brief
+      paragraphsBrief.push(paragraphsContent.shift())
+    } else {
+      paragraphsContent = paragraphsContent.filter(
+        (paragraph) =>
+          removeHtmlTags(paragraphsBrief[0]) !== removeHtmlTags(paragraph)
+      )
+    }
+
+    // 將段落組合回原來的文本
+    const newBrief = paragraphsBrief.join('\n')
+    const newContent = paragraphsContent.join('\n')
+
+    return { briefAfterHandle: newBrief, contentAfterHandle: newContent }
+  }
+
+  const { briefAfterHandle, contentAfterHandle } = handleBriefAndContent({
+    brief,
+    content,
+  })
+
   return (
     <>
       <GPT_Placeholder
@@ -548,9 +577,11 @@ export default function ExternalNormalStyle({ external }) {
             />
           </InfoAndHero>
 
-          <ExternalArticleBrief brief={brief} />
+          {briefAfterHandle && (
+            <ExternalArticleBrief brief={briefAfterHandle} />
+          )}
 
-          <ExternalArticleContent content={content} />
+          <ExternalArticleContent content={contentAfterHandle} />
 
           {updatedTimeJsx}
 
