@@ -9,7 +9,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import dynamic from 'next/dynamic'
 import ExternalArticleInfo from '../../components/external/external-article-info'
-import ExternalArticleBrief from '../../components/external/external-article-brief'
+// import ExternalArticleBrief from '../../components/external/external-article-brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
@@ -409,7 +409,7 @@ export default function ExternalNormalStyle({ external }) {
     slug = '',
     title = '',
     thumb = '',
-    brief = '',
+    // brief = '',
     content = '',
     partner = null,
     publishedDate = '',
@@ -548,7 +548,7 @@ export default function ExternalNormalStyle({ external }) {
             />
           </InfoAndHero>
 
-          <ExternalArticleBrief brief={brief} />
+          {/* {brief && <ExternalArticleBrief brief={brief} />} */}
 
           <ExternalArticleContent content={content} />
 
