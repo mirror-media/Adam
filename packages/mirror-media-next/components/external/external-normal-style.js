@@ -536,10 +536,12 @@ export default function ExternalNormalStyle({ external }) {
           </SectionAndDate>
           <Title>{title}</Title>
           <InfoAndHero>
-            <StyledExternalHeroImage
-              images={EXTERNAL_IMAGES_URL}
-              title={title}
-            />
+            {partner?.slug !== 'SETN' && (
+              <StyledExternalHeroImage
+                images={EXTERNAL_IMAGES_URL}
+                title={title}
+              />
+            )}
             <ExternalArticleInfo
               updatedDate={updatedTaipeiTime}
               publishedDate={publishedTaipeiTime}
