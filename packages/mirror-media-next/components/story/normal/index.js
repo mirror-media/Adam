@@ -699,12 +699,13 @@ export default function StoryNormalStyle({
             <span>更新時間｜</span>
             <span className="time">{updatedTaipeiTime} 臺北時間</span>
           </DateUnderContent>
-          <SupportMirrorMediaBanner />
-          <SocialNetworkServiceSmall />
           <RelatedArticleList
             relateds={relatedsWithOrdered}
             hiddenAdvertised={hiddenAdvertised}
           />
+          <SupportMirrorMediaBanner />
+          <SocialNetworkServiceSmall />
+
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3 pageKey={pageKeyForGptAd} adKey="MB_AT3" />
           )}
