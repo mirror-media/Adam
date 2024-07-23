@@ -39,6 +39,9 @@ import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
 import { getActiveOrderSection, getActiveOrderCategory } from '../../../utils'
 import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
+import Image from 'next/image'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { mediaSize } from '../../../styles/media'
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
   ssr: false,
@@ -190,24 +193,20 @@ const Section = styled.div`
     text-align: left;
   }
   &::before {
-    display: none;
-
-    ${({ theme }) => theme.breakpoint.md} {
-      display: block;
-      position: absolute;
-      content: '';
-      background-color: ${
-        /**
-         * @param {{ sectionSlug: String}} props
-         */
-        ({ sectionSlug }) => sectionSlug && sectionColor
-      };
-      left: -4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 4px;
-      height: 20px;
-    }
+    display: block;
+    position: absolute;
+    content: '';
+    background-color: ${
+      /**
+       * @param {{ sectionSlug: String}} props
+       */
+      ({ sectionSlug }) => sectionSlug && sectionColor
+    };
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
   }
 `
 
@@ -240,6 +239,25 @@ const SectionAndDate = styled.div`
   ${({ theme }) => theme.breakpoint.md} {
     justify-content: space-between;
     margin-bottom: 10px;
+  }
+`
+
+const SectionAndLogo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 22px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 20px;
+    justify-content: left;
+  }
+
+  img {
+    margin-right: 8px;
+    ${({ theme }) => theme.breakpoint.md} {
+      margin-right: 12px;
+    }
   }
 `
 
@@ -491,6 +509,8 @@ export default function StoryNormalStyle({
   headerData,
   classNameForGTM = '',
 }) {
+  const { width } = useWindowDimensions()
+  const isMobileWidth = width < mediaSize.md
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
   const {
     title = '',
@@ -664,6 +684,21 @@ export default function StoryNormalStyle({
         <Article>
           <SectionAndDate>
             {/* hide section for advertised article but remain the same architecture*/}
+
+            <Date>{publishedTaipeiTime} 臺北時間</Date>
+          </SectionAndDate>
+          <Title>{title}</Title>
+          {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
+          <SectionAndLogo>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a className="link-to-index" href="/" aria-label="go-to-index-page">
+              <Image
+                width={isMobileWidth ? 20 : 32}
+                height={isMobileWidth ? 20 : 32}
+                alt="mm-logo"
+                src="/images-next/logo-circle@2x.png"
+              ></Image>
+            </a>
             {postData.isAdvertised ? (
               <div />
             ) : (
@@ -671,10 +706,7 @@ export default function StoryNormalStyle({
                 {tagBeforeTitle?.name || ''}
               </Section>
             )}
-            <Date>{publishedTaipeiTime} 臺北時間</Date>
-          </SectionAndDate>
-          <Title>{title}</Title>
-          {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
+          </SectionAndLogo>
           <InfoAndHero>
             <StyledHeroImageAndVideo
               heroImage={heroImage}

@@ -83,7 +83,7 @@ const HeadingLoading = styled(Heading)`
   }
 `
 
-const articleHeightMobile = 256 //px
+const articleHeightMobile = 276 //px
 const articleHeightTablet = 177 //px
 const articleHeightDesktop = 80 //px
 const articleWrapperGap = 21 //px
@@ -91,7 +91,6 @@ const articleWrapperGap = 21 //px
 const ArticleWrapper = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: ${`${articleWrapperGap}px`};
 
   min-height: ${
     /**
@@ -123,6 +122,10 @@ const ArticleWrapper = styled.ul`
         renderAmount * articleHeightDesktop
       }px + ${articleWrapperGap}px * ${renderAmount - 1}) `};
     height: fit-content;
+  }
+
+  li + li {
+    margin-top: ${`${articleWrapperGap}px`};
   }
 `
 
