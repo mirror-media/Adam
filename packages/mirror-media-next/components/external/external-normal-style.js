@@ -39,6 +39,7 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 import { GPT_Placeholder_Aside } from '../ads/gpt/gpt-placeholder'
+import Image from 'next/image'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -119,24 +120,38 @@ const ExternalSection = styled.div`
     text-align: left;
   }
   &::before {
-    display: none;
+    display: block;
+    position: absolute;
+    content: '';
+    background-color: ${
+      /**
+       * @param {Object} props
+       * @param {string | undefined} props.partnerColor
+       */ ({ partnerColor }) => partnerColor || 'none'
+    };
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+  }
+`
 
+const SectionAndLogo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 22px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 20px;
+    justify-content: left;
+  }
+
+  img {
+    margin-right: 8px;
     ${({ theme }) => theme.breakpoint.md} {
-      display: block;
-      position: absolute;
-      content: '';
-      background-color: ${
-        /**
-         * @param {Object} props
-         * @param {string | undefined} props.partnerColor
-         */ ({ partnerColor }) => partnerColor || 'none'
-      };
-
-      left: -4px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 4px;
-      height: 20px;
+      margin-right: 12px;
     }
   }
 `
@@ -529,12 +544,22 @@ export default function ExternalNormalStyle({ external }) {
       <Main>
         <Article>
           <SectionAndDate>
-            <ExternalSection partnerColor={partnerColor}>
-              {externalSectionTitle}
-            </ExternalSection>
             <Date>{publishedTaipeiTime} 臺北時間</Date>
           </SectionAndDate>
           <Title>{title}</Title>
+          <SectionAndLogo>
+            <a className="link-to-index" href="/" aria-label="go-to-index-page">
+              <Image
+                width={26}
+                height={26}
+                alt="mm-logo"
+                src="/images-next/logo-circle@2x.png"
+              ></Image>
+            </a>
+            <ExternalSection partnerColor={partnerColor}>
+              {externalSectionTitle}
+            </ExternalSection>
+          </SectionAndLogo>
           <InfoAndHero>
             {partner?.slug !== 'SETN' && (
               <StyledExternalHeroImage

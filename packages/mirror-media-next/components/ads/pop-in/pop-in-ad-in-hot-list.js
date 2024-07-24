@@ -8,7 +8,7 @@ const StyledPopInAd = styled(PopInAd)`
       flex-direction: column;
       max-width: 276px;
       margin: 0 auto;
-      max-height: 256px;
+      // max-height: 256px;
       padding: 0;
       overflow: hidden;
       border: unset;
@@ -37,7 +37,10 @@ const StyledPopInAd = styled(PopInAd)`
         font-size: 18px;
         line-height: 1.5;
         font-weight: 400;
-        height: unset;
+        height: auto;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
       }
     }
 
@@ -118,6 +121,9 @@ const StyledPopInAd = styled(PopInAd)`
           position: relative;
           margin-bottom: 8px;
           font-weight: 600;
+        }
+        a {
+          -webkit-line-clamp: 2;
         }
       }
     }

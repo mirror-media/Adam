@@ -83,7 +83,7 @@ const HeadingLoading = styled(Heading)`
   }
 `
 
-const articleHeightMobile = 256 //px
+const articleHeightMobile = 276 //px
 const articleHeightTablet = 177 //px
 const articleHeightDesktop = 80 //px
 const articleWrapperGap = 21 //px
@@ -91,7 +91,6 @@ const articleWrapperGap = 21 //px
 const ArticleWrapper = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: ${`${articleWrapperGap}px`};
 
   min-height: ${
     /**
@@ -123,6 +122,10 @@ const ArticleWrapper = styled.ul`
         renderAmount * articleHeightDesktop
       }px + ${articleWrapperGap}px * ${renderAmount - 1}) `};
     height: fit-content;
+  }
+
+  li + li {
+    margin-top: ${`${articleWrapperGap}px`};
   }
 `
 
@@ -198,7 +201,7 @@ const Label = styled.div`
 const Title = styled.p`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   overflow: hidden;
   color: ${({ theme, color }) => theme.color.brandColor[color]};
   font-size: 18px;
@@ -209,7 +212,6 @@ const Title = styled.p`
     font-size: 20px;
     line-height: 32px;
     margin-top: 0;
-    -webkit-line-clamp: 3;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     margin-top: 8px;

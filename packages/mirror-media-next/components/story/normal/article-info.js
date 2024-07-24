@@ -31,9 +31,8 @@ const SocialMedia = styled.div`
   margin-bottom: 20px;
 
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 0 40px;
+    padding-right: 40px;
     margin-bottom: 0px;
-    &::before,
     &::after {
       position: absolute;
       content: '';
@@ -42,9 +41,6 @@ const SocialMedia = styled.div`
       height: 16px;
       transform: translateY(-50%);
       top: 50%;
-    }
-    &::before {
-      left: 20px;
     }
     &::after {
       right: 20px;
@@ -143,15 +139,6 @@ export default function ArticleInfo({
 
       <Credits credits={credits} className="normal-credits"></Credits>
       <SocialMediaAndDonateLink>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a className="link-to-index" href="/" aria-label="go-to-index-page">
-          <Image
-            width={35}
-            height={35}
-            alt="mm-logo"
-            src="/images-next/logo-circle@2x.png"
-          ></Image>
-        </a>
         <SocialMedia>
           <ButtonSocialNetworkShare type="facebook" />
           <ButtonSocialNetworkShare type="line" />

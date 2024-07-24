@@ -1,6 +1,9 @@
 import styled from 'styled-components'
 import HeroImageAndVideo from '../shared/hero-image-and-video'
 import ArticleInfo from './article-info'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { mediaSize } from '../../../styles/media'
+import Image from 'next/image'
 
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
@@ -61,6 +64,11 @@ const Label = styled.div`
   margin: 0 auto;
   width: fit-content;
   font-weight: 400;
+  display: flex;
+  margin: 28px auto;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin: 24px auto;
+  }
   span {
     color: #fff;
     font-size: 18px;
@@ -77,6 +85,9 @@ const Label = styled.div`
     &.section {
       background-color: #000;
     }
+  }
+  img {
+    margin-right: 3px;
   }
 `
 
@@ -95,7 +106,7 @@ const TitleAndInfo = styled.section`
     margin-top: 45px;
 
     ${Label} {
-      order: -3;
+      order: -2;
     }
     ${Title} {
       order: -2;
@@ -137,14 +148,23 @@ export default function TitleAndInfoAndHero({
 }) {
   return (
     <TitleAndInfo>
+      <Title>{title}</Title>
+      {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
       <Label>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a className="link-to-index" href="/" aria-label="go-to-index-page">
+          <Image
+            width={26}
+            height={26}
+            alt="mm-logo"
+            src="/images-next/logo-circle@2x.png"
+          ></Image>
+        </a>
         <span>會員專區</span>
         {sectionLabelFirst ? (
           <span className="section">{sectionLabelFirst}</span>
         ) : null}
       </Label>
-      <Title>{title}</Title>
-      {!!subtitle && <SubTitle>{subtitle}</SubTitle>}
       <HeroImageAndVideo
         heroImage={heroImage}
         heroVideo={heroVideo}
