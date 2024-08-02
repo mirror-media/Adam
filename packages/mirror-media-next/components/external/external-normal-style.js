@@ -40,6 +40,7 @@ import { Z_INDEX } from '../../constants/index'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 import { GPT_Placeholder_Aside } from '../ads/gpt/gpt-placeholder'
 import Image from 'next/image'
+import ExternalArticleBrief from './external-article-brief'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -424,7 +425,7 @@ export default function ExternalNormalStyle({ external }) {
     slug = '',
     title = '',
     thumb = '',
-    // brief = '',
+    brief = '',
     content = '',
     partner = null,
     publishedDate = '',
@@ -575,7 +576,9 @@ export default function ExternalNormalStyle({ external }) {
             />
           </InfoAndHero>
 
-          {/* {brief && <ExternalArticleBrief brief={brief} />} */}
+          {brief && partner?.slug === 'mnews' && (
+            <ExternalArticleBrief brief={brief} />
+          )}
 
           <ExternalArticleContent content={content} />
 
