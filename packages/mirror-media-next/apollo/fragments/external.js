@@ -59,6 +59,8 @@ export const external = gql`
     extend_byline
     partner {
       ...partner
+      showThumb
+      showBrief
     }
     updatedAt
   }
