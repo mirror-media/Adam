@@ -562,7 +562,7 @@ export default function ExternalNormalStyle({ external }) {
             </ExternalSection>
           </SectionAndLogo>
           <InfoAndHero>
-            {partner?.slug !== 'SETN' && (
+            {partner?.showThumb && (
               <StyledExternalHeroImage
                 images={EXTERNAL_IMAGES_URL}
                 title={title}
@@ -576,7 +576,7 @@ export default function ExternalNormalStyle({ external }) {
             />
           </InfoAndHero>
 
-          {brief && partner?.slug === 'mnews' && (
+          {brief && partner?.showBrief && (
             <ExternalArticleBrief brief={brief} />
           )}
 

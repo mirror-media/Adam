@@ -27,10 +27,12 @@ import { gql } from '@apollo/client'
  * @property {string} updatedAt
  * @property {string} createdBy
  * @property {string} updatedBy
+ * @property {boolean} [showThumb] - if external post show thumb
+ * @property {boolean} [showBrief] - if external post show brief
  */
 
 /**
- * @typedef {Pick<GenericPartner, 'id' | 'slug' | 'name' | 'showOnIndex'>} Partner
+ * @typedef {Pick<GenericPartner, 'id' | 'slug' | 'name' | 'showOnIndex'> & Partial<Pick<GenericPartner, 'showThumb' | 'showBrief'>>} Partner
  */
 
 export const partner = gql`
