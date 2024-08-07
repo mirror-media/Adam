@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
@@ -33,6 +33,7 @@ import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 import LiveYoutube from '../components/live-youtube'
 
 import { isDateInsideDatesRange } from '../utils/date'
+import TagManager from 'react-gtm-module'
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -99,6 +100,10 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
   }
 `
 
+const GTMPageView = styled.form`
+  display: none;
+`
+
 /**
  *
  * @param {Object} props
@@ -108,6 +113,7 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
  * @param {LiveYoutubeInfo} props.liveYoutubeInfo
+ * @param {'a' | 'b'} props.ABConst
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -117,7 +123,9 @@ export default function Home({
   latestNewsData = [],
   sectionsData = [],
   liveYoutubeInfo,
+  ABConst,
 }) {
+  console.log('test of ab test, now it is:', ABConst)
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
     const sectionName = getSectionNameGql(item.sections, undefined)
@@ -139,6 +147,37 @@ export default function Home({
     setISHDAdEmpty(e.isEmpty)
   }, [])
 
+  // test for ab-test
+  const sendPageviewEvent = (eventLabel) => {
+    if (window && window.dataLayer) {
+      window.dataLayer.push({
+        event: 'pageview',
+        page: {
+          title: document.title,
+          url: window.location.pathname,
+          eventLabel: eventLabel,
+        },
+      })
+    } else {
+      console.error('GTM dataLayer is not defined')
+    }
+  }
+
+  useEffect(() => {
+    const tagManagerArgs = {
+      dataLayer: {
+        event: 'pageview',
+        page: {
+          title: document.title,
+          url: window.location.pathname,
+          eventLabel: ABConst === 'a' ? 'A' : 'B',
+        },
+      },
+    }
+
+    TagManager.dataLayer(tagManagerArgs)
+  }, [])
+
   return (
     <Layout
       header={{
@@ -149,7 +188,7 @@ export default function Home({
         type: 'default',
       }}
     >
-      <IndexContainer>
+      <IndexContainer className={`GTM-ab-test-${ABConst}`}>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
           isHDAdEmpty={isHDAdEmpty}
@@ -220,6 +259,8 @@ export async function getServerSideProps({ res, req }) {
   let editorChoicesData = []
   let latestNewsData = []
   let eventsData = []
+
+  const ABConst = Math.random() < 0.5 ? 'a' : 'b'
 
   try {
     const postResponse = await axios({
@@ -297,6 +338,7 @@ export async function getServerSideProps({ res, req }) {
         latestNewsData,
         sectionsData,
         liveYoutubeInfo,
+        ABConst,
       },
     }
   } catch (err) {
