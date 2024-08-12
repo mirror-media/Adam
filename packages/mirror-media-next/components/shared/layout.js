@@ -2,6 +2,7 @@ import ShareHeader from '../header/share-header'
 import Footer from './footer'
 import CustomHead from './custom-head'
 import GDPRNotification from '../gdpr'
+import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
 
 /**
  * @typedef {Object} Header
@@ -32,6 +33,7 @@ export default function Layout({ head, header, footer, children }) {
         skipCanonical={head?.skipCanonical}
       />
       <ShareHeader pageLayoutType={header.type} headerData={header.data} />
+      <IdleTimeoutModal />
       {children}
       <GDPRNotification />
       <Footer footerType={footer.type} />

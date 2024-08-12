@@ -89,6 +89,15 @@ const FOOTER_PROMOTION_LINKS = {
   MEDIA_DISCIPLINE_LINK,
 }
 
+const IDLE_MODAL_LINK = [
+  PAPER_MAGAZINE_LINK,
+  MAGAZINE_LINK,
+  AUTH_LINK,
+  // 活動專區？
+  DOWNLOAD_APP_LINK,
+  MEDIA_DISCIPLINE_LINK,
+]
+
 const MIRRORVOICE_LINK = {
   name: 'mirrorvoice',
   title: '鏡好聽',
@@ -246,4 +255,5 @@ export {
   SECTION_IDS,
   FB_APP_ID,
   FB_PAGE_ID,
+  IDLE_MODAL_LINK,
 }
