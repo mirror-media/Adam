@@ -71,7 +71,7 @@ export default function PopularNewsItem({ item }) {
   const firstSection = item.sectionsWithOrdered?.[0] || item.sections?.[0]
   return (
     <LinkWrapper
-      href={`/slug/${item.slug}`}
+      href={`/story/${item.slug}`}
       target="_blank"
       className="article-image"
     >
