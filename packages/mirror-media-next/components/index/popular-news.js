@@ -47,6 +47,28 @@ const List = styled.ul`
   }
 `
 
+const Placeholder = styled.div`
+  height: 610px;
+  width: 100%;
+  border: 3px dashed #054f77;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Warning = styled.div`
+  color: #fff;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  -webkit-text-stroke-width: 1;
+  -webkit-text-stroke-color: #000;
+  font-family: 'Noto Sans TC';
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 150%;
+  padding: 8px 40px;
+  background: #054f77;
+`
+
 /**
  * @param {Object} props
  * @param {Object[]} props.popularData
@@ -56,11 +78,17 @@ export default function PopularNews({ popularData = [] }) {
   return (
     <Wrapper>
       <Title>熱門新聞</Title>
-      <List>
-        {popularData.map((post) => {
-          return <PopularNewsItem key={post.id} itemData={post} />
-        })}
-      </List>
+      {popularData.length ? (
+        <List>
+          {popularData.map((post) => {
+            return <PopularNewsItem key={post.id} itemData={post} />
+          })}
+        </List>
+      ) : (
+        <Placeholder>
+          <Warning>請重新整理頁面</Warning>
+        </Placeholder>
+      )}
     </Wrapper>
   )
 }

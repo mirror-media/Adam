@@ -190,9 +190,7 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-        {!!popularData.length && ABConst === 'b' && (
-          <PopularNews popularData={popularData} />
-        )}
+        {ABConst === 'b' && <PopularNews popularData={popularData} />}
         <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
@@ -286,11 +284,13 @@ export async function getServerSideProps({ res, req }) {
       }),
       fetchHeaderDataInDefaultPageLayout(),
       fetchModEventsInDesc(),
-      axios({
-        method: 'get',
-        url: URL_STATIC_POPULAR_NEWS,
-        timeout: API_TIMEOUT,
-      }),
+      ABConst === 'b'
+        ? axios({
+            method: 'get',
+            url: URL_STATIC_POPULAR_NEWS,
+            timeout: API_TIMEOUT,
+          })
+        : null,
     ])
 
     flashNewsData = handleAxiosResponse(
@@ -337,7 +337,7 @@ export async function getServerSideProps({ res, req }) {
             })
             .slice(0, 6)
         }
-        return axiosData.data || []
+        return []
       },
       'Error occurs while getting popular data in index page',
       globalLogFields

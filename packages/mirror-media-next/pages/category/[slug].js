@@ -218,12 +218,37 @@ export default function Category({
     setISHDAdEmpty(e.isEmpty)
   }, [])
 
+  const postJsonData = posts?.slice(3).map((post, index) => {
+    return {
+      '@type': 'ListItem',
+      position: index + 1 + '',
+      item: {
+        '@type': 'NewsArticle',
+        url: `https://www.mnews.tw/story/${post.slug}`,
+        headline: post.title,
+        image: post.heroImage.resized.w1200,
+        dateCreated: post.publishedDate,
+      },
+    }
+  })
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    numberOfItems: '5',
+    itemListElement: postJsonData,
+  }
+
   return (
     <Layout
       head={{ title: `${categoryName}分類報導` }}
       header={{ type: isPremium ? 'premium' : 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <CategoryContainer isPremium={isPremium}>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}

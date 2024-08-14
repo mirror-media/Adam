@@ -42,7 +42,6 @@ const Wrapper = styled.section`
     }
     ${({ theme }) => theme.breakpoint.xl} {
       margin: 20px auto;
-      text-align: left;
       font-size: 28px;
       line-height: 1.15;
     }

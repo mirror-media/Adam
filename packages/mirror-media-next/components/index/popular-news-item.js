@@ -25,8 +25,8 @@ const ImageContainer = styled.div`
   width: 100dvw;
   height: 62.5dvw;
   ${({ theme }) => theme.breakpoint.md} {
-    width: 276px;
-    height: 184px;
+    width: calc((1024px - 48px * 2) / 3);
+    height: calc((1024px - 48px * 2) / 3 * (184 / 276));
   }
 `
 
