@@ -116,7 +116,7 @@ const typeHome = css`
   > a {
     display: inline-block;
     position: relative;
-    min-width: 84px;
+    min-width: 112px;
 
     .latest-list_item_img {
       padding-top: 100%;
@@ -150,7 +150,7 @@ const typeHome = css`
       padding: 0 8px;
       text-align: center;
       color: white;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 20px;
       font-weight: 400;
     }
@@ -159,7 +159,7 @@ const typeHome = css`
     > a {
       text-align: left;
       width: 100%;
-      font-size: 15px;
+      font-size: 16px;
       margin-top: 8px;
       line-height: 1.3;
       font-weight: 400;
@@ -168,7 +168,7 @@ const typeHome = css`
       h3 {
         display: -webkit-box;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 4;
         overflow: hidden;
       }
 

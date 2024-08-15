@@ -73,7 +73,7 @@ export default function PopularNewsItem({ item }) {
     <LinkWrapper
       href={`/story/${item.slug}`}
       target="_blank"
-      className="article-image"
+      className="GTM-idle-window-click-popular-list"
     >
       <Image
         images={item?.heroImage?.resized}

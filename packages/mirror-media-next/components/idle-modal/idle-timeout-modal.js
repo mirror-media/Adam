@@ -34,7 +34,9 @@ const ModalWrapper = styled.div`
   border: 1px #000;
   background: #fff;
   padding: 44px 67px 30px 64px;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   .close {
     position: absolute;
     top: 20px;

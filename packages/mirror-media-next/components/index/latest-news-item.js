@@ -24,9 +24,9 @@ const ItemWrapper = styled.article`
 `
 const ImageContainer = styled.div`
   position: relative;
-  height: 84px;
-  min-width: 84px;
-  max-width: 84px;
+  height: 112px;
+  min-width: 112px;
+  max-width: 112px;
   ${({ theme }) => theme.breakpoint.md} {
     min-width: 244px;
     max-width: 244px;
@@ -53,7 +53,7 @@ const Label = styled.div`
   padding: 0 8px;
   text-align: center;
   color: white;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 20px;
   font-weight: 400;
   background-color: ${
@@ -81,7 +81,7 @@ const Label = styled.div`
 const Title = styled.div`
   text-align: left;
   width: 100%;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.3;
   font-weight: 400;
   color: rgba(0, 0, 0, 0.66);
@@ -89,7 +89,7 @@ const Title = styled.div`
   h3 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
     overflow: hidden;
   }
   ${({ theme }) => theme.breakpoint.md} {
