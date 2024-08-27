@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import gtag from '../utils/programmable-search/gtag'
 import { useEffect, useState } from 'react'
+import { transformTimeData } from '../utils/programmable-search/date'
 
 const ItemWrapper = styled.a`
   display: block;
@@ -75,23 +76,41 @@ const ItemTitle = styled.div`
 const ItemBrief = styled.div`
   font-size: 16px;
   color: #979797;
-  margin-top: 20px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  ${({ date }) => {
+    return `margin-top: ${date ? '8px' : '20px'};`
+  }}
 
   ${({ theme }) => theme.breakpoint.md} {
-    margin-top: 16px;
+    ${({ date }) => {
+      return `margin-top: ${date ? '8px' : '16px'};`
+    }}
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
-    margin-top: 20px;
+    ${({ date }) => {
+      return `margin-top: ${date ? '8px' : '20px'};`
+    }}
     -webkit-line-clamp: 4;
   }
 `
 
+const DateInfo = styled.div`
+  color: #9cb7c6;
+  font-family: 'PingFang TC';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14px;
+  margin-top: 8px;
+`
+
 export default function ArticleListItem({ item, index, searchTerms }) {
+  const publishedTime = item?.pagemap?.metatags?.[0]?.['article:published_time']
+  const date = transformTimeData(publishedTime, 'dot')
   const [articleSection, setArticleSection] = useState({
     name: item?.pagemap?.metatags?.[0]?.['section:name'],
     slug: item?.pagemap?.metatags?.[0]?.['section:slug'],
@@ -146,7 +165,8 @@ export default function ArticleListItem({ item, index, searchTerms }) {
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{item?.title}</ItemTitle>
-        <ItemBrief>
+        {date && <DateInfo>{date}</DateInfo>}
+        <ItemBrief date={date}>
           {item?.pagemap?.metatags?.[0]?.['og:description'] ?? ''}
         </ItemBrief>
       </ItemDetail>

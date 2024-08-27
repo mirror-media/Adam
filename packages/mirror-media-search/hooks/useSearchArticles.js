@@ -22,7 +22,8 @@ export default function useSearchArticles({ items: initialArticles, queries }) {
           url: '/api/search',
           params: {
             exactTerms: searchTerms,
-            start: startIndex,
+            startFrom: startIndex,
+            takeAmount: PROGRAMABLE_SEARCH_NUM,
           },
           timeout: API_TIMEOUT,
         })

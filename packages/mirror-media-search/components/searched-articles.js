@@ -1,12 +1,14 @@
 import styled from 'styled-components'
 import axios from 'axios'
 
-import InfiniteScrollList from './infinite-scroll-list'
 import Image from 'next/legacy/image'
 import LoadingPage from '../public/images/loading_page.gif'
 import ArticleList from './article-list'
 import { API_TIMEOUT } from '../config'
 import gtag from '../utils/programmable-search/gtag'
+
+import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
+import { PROGRAMABLE_SEARCH_PER_PAGE } from '../utils/programmable-search/const'
 
 const Loading = styled.div`
   margin: 20px auto 0;
@@ -20,26 +22,32 @@ const Loading = styled.div`
 `
 
 export default function SearchedArticles({ searchResult }) {
-  const { items: initialArticles, queries } = searchResult
-  const searchTerms = queries.request[0].exactTerms
+  const {
+    items: initialArticles,
+    queries,
+    searchInformation = {},
+  } = searchResult
+  const { totalResults = 0 } = searchInformation
+  const searchTerms = queries?.request[0].exactTerms
   async function fetchPostsFromPage(page) {
     gtag.sendGAEvent(`search-${searchTerms}-loadmore-${page}`)
     try {
+      let startIndex = (page - 1) * PROGRAMABLE_SEARCH_PER_PAGE + 1
       const { data } = await axios({
         method: 'get',
         url: '/api/search',
         params: {
           exactTerms: searchTerms,
-          start: (page - 1) * 10 + 1,
+          startFrom: startIndex,
+          takeAmount: PROGRAMABLE_SEARCH_PER_PAGE,
         },
         timeout: API_TIMEOUT,
       })
-
-      return data.items
+      return data.items ?? []
     } catch (error) {
       console.error(error)
+      return []
     }
-    return
   }
 
   const loader = (
@@ -51,9 +59,10 @@ export default function SearchedArticles({ searchResult }) {
   return (
     <InfiniteScrollList
       initialList={initialArticles}
-      renderAmount={initialArticles.length}
-      fetchCount={10}
+      pageSize={PROGRAMABLE_SEARCH_PER_PAGE}
+      amountOfElements={Math.min(totalResults, 100)}
       fetchListInPage={fetchPostsFromPage}
+      isAutoFetch={true}
       loader={loader}
     >
       {(renderList) => (
