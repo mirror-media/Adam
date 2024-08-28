@@ -11,26 +11,18 @@ import {
   READ_REDIS_HOST,
   WRITE_REDIS_HOST,
 } from '../../config'
-import {
-  PROGRAMABLE_SEARCH_LIMIT_START,
-  PROGRAMABLE_SEARCH_NUM,
-} from '../programmable-search/const'
+import { PROGRAMABLE_SEARCH_NUM } from '../programmable-search/const'
 
 const readRedis = new Redis({ host: READ_REDIS_HOST, password: REDIS_AUTH })
 const writeRedis = new Redis({ host: WRITE_REDIS_HOST, password: REDIS_AUTH })
 
 const searchQuerySchema = object({
   exactTerms: string().required(),
-  start: number()
-    .optional()
-    .integer()
-    .positive()
-    .max(PROGRAMABLE_SEARCH_LIMIT_START),
-  take: number()
+  startFrom: number().optional().integer().positive().max(100).min(1),
+  takeAmount: number()
     .optional()
     .integer()
     .default(PROGRAMABLE_SEARCH_NUM)
-    .max(PROGRAMABLE_SEARCH_NUM)
     .min(1),
 })
 
@@ -40,36 +32,95 @@ export async function getSearchResult(query) {
       stripUnknown: true,
     })
 
-    const queryParams = {
-      key: PROGRAMABLE_SEARCH_API_KEY,
-      cx: PROGRAMABLE_SEARCH_ENGINE_ID,
-      exactTerms: params.exactTerms,
-      start: params.start,
-      num: params.take,
-      sort: ' ,date:s',
+    const takeAmount = params.takeAmount || PROGRAMABLE_SEARCH_NUM
+    const exactTerms = params.exactTerms || ''
+    let startIndex = params.startFrom || 1
+
+    let adjustedStart =
+      Math.floor((startIndex - 1) / PROGRAMABLE_SEARCH_NUM) *
+        PROGRAMABLE_SEARCH_NUM +
+      1
+
+    const endIndex =
+      Math.ceil((startIndex + takeAmount - 1) / PROGRAMABLE_SEARCH_NUM) *
+      PROGRAMABLE_SEARCH_NUM
+
+    const fetchAmount = endIndex - adjustedStart + 1
+
+    const originAdjustedStart = adjustedStart
+
+    let combinedResponse
+
+    const allItems = []
+
+    while (allItems.length < fetchAmount && adjustedStart <= 100) {
+      const queryParams = {
+        key: PROGRAMABLE_SEARCH_API_KEY,
+        cx: PROGRAMABLE_SEARCH_ENGINE_ID,
+        exactTerms: exactTerms,
+        start: adjustedStart,
+        num: PROGRAMABLE_SEARCH_NUM,
+        sort: ' ,date:s',
+      }
+
+      const prefix = 'PROGRAMABLE_SEARCH-3.1'
+      const redisKey = `${prefix}_${exactTerms}_${adjustedStart}_${PROGRAMABLE_SEARCH_NUM}}`
+      const searchResultCache = await readRedis.get(redisKey)
+
+      if (searchResultCache) {
+        console.log(
+          JSON.stringify({
+            severity: 'DEBUG',
+            message: `Get search result from redis cache with key ${redisKey}`,
+          })
+        )
+        const cachedResponse = JSON.parse(searchResultCache)
+        if (!combinedResponse) {
+          combinedResponse = cachedResponse
+        }
+        if (cachedResponse?.items) {
+          allItems.push(...cachedResponse.items)
+        }
+      } else {
+        let resData = {}
+        try {
+          const response = await axios({
+            method: 'get',
+            url: `${URL_PROGRAMABLE_SEARCH}`,
+            params: queryParams,
+            timeout: API_TIMEOUT,
+          })
+          resData = response?.data
+          writeRedis.set(redisKey, JSON.stringify(resData), 'EX', REDIS_EX)
+          if (!combinedResponse) {
+            combinedResponse = resData
+          }
+          if (resData.items) {
+            allItems.push(...resData.items)
+          }
+        } catch (error) {
+          console.log(
+            JSON.stringify({ severity: 'ERROR', message: error.stack })
+          )
+        }
+
+        if (resData?.queries?.nextPage === undefined) {
+          break
+        }
+      }
+
+      // 更新開始索引，搜尋下一批結果
+      adjustedStart += PROGRAMABLE_SEARCH_NUM
     }
 
-    const prefix = 'PROGRAMABLE_SEARCH'
-    const redisKey = `${prefix}_${queryParams.exactTerms}_${queryParams.start}_${queryParams.num}`
-    const searchResultCache = await readRedis.get(redisKey)
+    const sliceStartIndex = startIndex - originAdjustedStart
+    const sliceEndIndex = sliceStartIndex + takeAmount
+    if (combinedResponse) {
+      combinedResponse.items = allItems?.slice(sliceStartIndex, sliceEndIndex)
+    }
 
-    if (searchResultCache) {
-      console.log(
-        JSON.stringify({
-          severity: 'DEBUG',
-          message: `Get search result from redis cache with key ${redisKey}`,
-        })
-      )
-      return { data: JSON.parse(searchResultCache) }
-    } else {
-      const response = await axios({
-        method: 'get',
-        url: `${URL_PROGRAMABLE_SEARCH}`,
-        params: queryParams,
-        timeout: API_TIMEOUT,
-      })
-      writeRedis.set(redisKey, JSON.stringify(response.data), 'EX', REDIS_EX)
-      return response
+    return {
+      data: combinedResponse,
     }
   } catch (error) {
     console.log(JSON.stringify({ severity: 'ERROR', message: error.stack }))

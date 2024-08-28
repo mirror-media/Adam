@@ -14,6 +14,7 @@ import {
 } from '../../../config'
 import { getSearchResult } from '../../../utils/api/programmable-search'
 import SearchedArticles from '../../../components/searched-articles'
+import { PROGRAMABLE_SEARCH_PER_PAGE } from '../../../utils/programmable-search/const'
 
 const SearchContainer = styled.main`
   width: 320px;
@@ -134,16 +135,31 @@ export async function getServerSideProps({ params }) {
       }),
       getSearchResult({
         exactTerms: searchTerms,
-        start: 1,
+        startFrom: 1,
+        takeAmount: PROGRAMABLE_SEARCH_PER_PAGE * 3,
       }),
     ])
 
     const sectionsData = responses[0].value?.data?.headers || []
     const topicsData = responses[1].value?.data?.topics || []
+    const searchResult = responses[2].value?.data
+    const sortedResult = {
+      ...searchResult,
+      items:
+        searchResult?.items?.sort((a, b) => {
+          const dateA = new Date(
+            a?.pagemap?.metatags?.[0]?.['article:published_time']
+          )
+          const dateB = new Date(
+            b?.pagemap?.metatags?.[0]?.['article:published_time']
+          )
+          return dateB - dateA
+        }) || [],
+    }
 
     const props = {
       headerData: { sectionsData, topicsData },
-      searchResult: responses[2].value?.data || {},
+      searchResult: sortedResult,
       redirectUrl: URL_MIRROR_MEDIA_V3,
     }
 

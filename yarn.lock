@@ -2813,6 +2813,13 @@
   resolved "https://registry.yarnpkg.com/@readr-media/react-image/-/react-image-1.5.1.tgz#d04b809416be6a1432a0a3154f2641292d7b6b8d"
   integrity sha512-BExGQWO158vtfox2mkwjT8khZp00KOwAObnZsQVzO4JNO4RlTog/5u7ccw7WuBd1OR07rlh/jKm4ts+qt78saw==
 
+"@readr-media/react-infinite-scroll-list@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-infinite-scroll-list/-/react-infinite-scroll-list-1.2.0.tgz#d2a82ac1695bce5146c0f0dd7dbbca25d9d4622f"
+  integrity sha512-PSTjUQFinUOYdlKYAc88Bl2ELpD/sPaWjqTVdaT1YmBfsrhA5tzlXRqr+WJm6IayhvnLbg2rLyEHwjXBaMyOhA==
+  dependencies:
+    ts-xor "^1.3.0"
+
 "@readr-media/share-button@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@readr-media/share-button/-/share-button-1.0.3.tgz#a680ecc3546f2b7b4cee66885020d0204483834d"
@@ -4153,6 +4160,11 @@ date-fns@^2.29.1:
   version "2.29.3"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.29.3.tgz#27402d2fc67eb442b511b70bbdf98e6411cd68a8"
   integrity sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==
+
+dayjs@^1.11.13:
+  version "1.11.13"
+  resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.13.tgz#92430b0139055c3ebb60150aa13e860a4b5a366c"
+  integrity sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==
 
 dayjs@^1.11.7:
   version "1.11.7"
@@ -8171,6 +8183,11 @@ ts-invariant@^0.10.3:
   integrity sha512-uivwYcQaxAucv1CzRp2n/QdYPo4ILf9VXgH19zEIjFx2EJufV16P0JtJVpYHy89DItG6Kwj2oIUjrcK5au+4tQ==
   dependencies:
     tslib "^2.1.0"
+
+ts-xor@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/ts-xor/-/ts-xor-1.3.0.tgz#3e59f24f0321f9f10f350e0cee3b534b89a2c70b"
+  integrity sha512-RLXVjliCzc1gfKQFLRpfeD0rrWmjnSTgj7+RFhoq3KRkUYa8LE/TIidYOzM5h+IdFBDSjjSgk9Lto9sdMfDFEA==
 
 tsconfig-paths@^3.14.1:
   version "3.14.1"
