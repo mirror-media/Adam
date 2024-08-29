@@ -21,6 +21,7 @@ import {
 } from '../../utils/response-handle'
 import { fetchTopicByTopicSlug } from '../../utils/api/topic'
 import { logGqlError } from '../../utils/log/shared'
+import SlotAndBanner from '../../components/slot/slot-and-banner'
 
 const RENDER_PAGE_SIZE = 12
 const WINE_TOPICS_SLUG = [
@@ -106,6 +107,7 @@ export default function Topic({ topic, slideshowImages, headerData }) {
           <WineWarning categories={[{ slug: 'wine' }]}></WineWarning>
         </>
       )}
+      <SlotAndBanner />
     </Layout>
   )
 }
