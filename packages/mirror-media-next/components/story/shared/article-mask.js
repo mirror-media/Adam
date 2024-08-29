@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { Frequency } from '../../../constants/membership'
 import { useMembership } from '../../../context/membership'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
+import { getLoginHref } from '../../../utils'
+import { useRouter } from 'next/router'
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -91,6 +93,7 @@ const InviteMemberOption = styled.div`
 `
 const InviteMemberCard = ({ postId = '' }) => {
   const { isLoggedIn } = useMembership()
+  const router = useRouter()
   return (
     <InviteMemberCardWrapper>
       <h3>
@@ -132,7 +135,7 @@ const InviteMemberCard = ({ postId = '' }) => {
         {isLoggedIn ? null : (
           <>
             已經是會員？
-            <Link href="/login" className="login GTM-login">
+            <Link href={getLoginHref(router)} className="login GTM-login">
               立即登入
             </Link>
           </>
