@@ -72,12 +72,19 @@ const MEDIA_DISCIPLINE_LINK = {
   href: 'https://www.mirrormedia.mg/story/20200710edi030/',
 }
 
+const AI_GUIDANCE = {
+  name: 'guidance',
+  title: '《鏡週刊》AI使用準則',
+  href: 'https://www.mirrormedia.mg/story/20240827edi068',
+}
+
 const PROMOTION_LINKS = [
   MAGAZINE_LINK,
   AUTH_LINK,
   AD_LINK,
   DOWNLOAD_APP_LINK,
   MEDIA_DISCIPLINE_LINK,
+  AI_GUIDANCE,
 ]
 
 const FOOTER_PROMOTION_LINKS = {
@@ -87,6 +94,7 @@ const FOOTER_PROMOTION_LINKS = {
   AD_LINK,
   DOWNLOAD_APP_LINK,
   MEDIA_DISCIPLINE_LINK,
+  AI_GUIDANCE,
 }
 
 const IDLE_MODAL_LINK = [
