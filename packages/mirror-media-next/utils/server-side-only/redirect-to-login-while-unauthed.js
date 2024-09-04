@@ -63,7 +63,7 @@ const redirectToLoginWhileUnauthed =
     /** @type {import('next').GetServerSideProps<P, Q, D>} */ getServerSidePropsFunc
   ) =>
     withUserSSR()(async (/** @type {SSRPropsContext<Q, D>} */ ctx) => {
-      const { query, resolvedUrl, user } = ctx
+      const { resolvedUrl, user } = ctx
 
       if (user) {
         let props = /** @type {P} */ ({})
@@ -89,7 +89,7 @@ const redirectToLoginWhileUnauthed =
           props,
         }
       } else {
-        const destination = getLoginUrl(resolvedUrl, query)
+        const destination = getLoginUrl(resolvedUrl)
 
         return {
           redirect: {
