@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import { transformTimeDataIntoDotFormat } from '../../utils'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -69,6 +70,17 @@ const ItemTitle = styled.div`
   }
 `
 
+const ItemDate = styled.div`
+  color: rgb(156, 183, 198);
+  font-family: 'PingFang TC';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14px;
+  margin-top: 8px;
+  margin-bottom: -8px;
+`
+
 const ItemBrief = styled.div`
   font-size: 16px;
   color: #979797;
@@ -105,6 +117,8 @@ const ItemBrief = styled.div`
  * @returns {React.ReactElement}
  */
 export default function ArticleListItem({ item, section }) {
+  const { publishedDate } = item
+  const formattedPublishedDate = transformTimeDataIntoDotFormat(publishedDate)
   const itemSection =
     section || item.sections.find((section) => section.slug !== 'member')
 
@@ -127,7 +141,8 @@ export default function ArticleListItem({ item, section }) {
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{item.title}</ItemTitle>
-        <ItemBrief>{item.brief?.blocks[0]?.text}</ItemBrief>
+        <ItemDate>{formattedPublishedDate}</ItemDate>
+        <ItemBrief>{item.brief?.blocks?.[0]?.text}</ItemBrief>
       </ItemDetail>
     </ItemWrapper>
   )
