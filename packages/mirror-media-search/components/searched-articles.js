@@ -1,14 +1,13 @@
 import styled from 'styled-components'
-import axios from 'axios'
 
 import Image from 'next/legacy/image'
 import LoadingPage from '../public/images/loading_page.gif'
 import ArticleList from './article-list'
-import { API_TIMEOUT } from '../config'
 import gtag from '../utils/programmable-search/gtag'
 
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
 import { PROGRAMABLE_SEARCH_PER_PAGE } from '../utils/programmable-search/const'
+import { useState } from 'react'
 
 const Loading = styled.div`
   margin: 20px auto 0;
@@ -21,33 +20,41 @@ const Loading = styled.div`
   }
 `
 
+const ListEnd = styled.h5`
+  color: #054f77;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 150%;
+  margin: 28px 0;
+  ${({ theme }) => theme.breakpoint.md} {
+    font-size: 18px;
+    line-height: 200%;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    margin: 36px 0;
+  }
+`
+
 export default function SearchedArticles({ searchResult }) {
-  const {
-    items: initialArticles,
-    queries,
-    searchInformation = {},
-  } = searchResult
-  const { totalResults = 0 } = searchInformation
+  const [isEnd, setIsEnd] = useState(false)
+  const { items, queries } = searchResult
+  const initialArticles = items?.slice(0, PROGRAMABLE_SEARCH_PER_PAGE) || []
   const searchTerms = queries?.request[0].exactTerms
+
   async function fetchPostsFromPage(page) {
     gtag.sendGAEvent(`search-${searchTerms}-loadmore-${page}`)
-    try {
-      let startIndex = (page - 1) * PROGRAMABLE_SEARCH_PER_PAGE + 1
-      const { data } = await axios({
-        method: 'get',
-        url: '/api/search',
-        params: {
-          exactTerms: searchTerms,
-          startFrom: startIndex,
-          takeAmount: PROGRAMABLE_SEARCH_PER_PAGE,
-        },
-        timeout: API_TIMEOUT,
-      })
-      return data.items ?? []
-    } catch (error) {
-      console.error(error)
-      return []
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    if (PROGRAMABLE_SEARCH_PER_PAGE * page >= items.length) {
+      setIsEnd(true)
     }
+
+    return items.slice(
+      PROGRAMABLE_SEARCH_PER_PAGE * (page - 1),
+      PROGRAMABLE_SEARCH_PER_PAGE * page
+    )
   }
 
   const loader = (
@@ -57,17 +64,21 @@ export default function SearchedArticles({ searchResult }) {
   )
 
   return (
-    <InfiniteScrollList
-      initialList={initialArticles}
-      pageSize={PROGRAMABLE_SEARCH_PER_PAGE}
-      amountOfElements={Math.min(totalResults, 100)}
-      fetchListInPage={fetchPostsFromPage}
-      isAutoFetch={true}
-      loader={loader}
-    >
-      {(renderList) => (
-        <ArticleList renderList={renderList} searchTerms={searchTerms} />
-      )}
-    </InfiniteScrollList>
+    <>
+      <InfiniteScrollList
+        initialList={initialArticles}
+        pageSize={PROGRAMABLE_SEARCH_PER_PAGE}
+        fetchListInPage={fetchPostsFromPage}
+        isAutoFetch={true}
+        loader={loader}
+      >
+        {(renderList) => {
+          return (
+            <ArticleList renderList={renderList} searchTerms={searchTerms} />
+          )
+        }}
+      </InfiniteScrollList>
+      {isEnd && <ListEnd>已顯示完近期相關新聞</ListEnd>}
+    </>
   )
 }

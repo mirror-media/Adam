@@ -12,9 +12,9 @@ import {
   URL_STATIC_HEADER_HEADERS,
   URL_STATIC_TOPICS,
 } from '../../../config'
-import { getSearchResult } from '../../../utils/api/programmable-search'
 import SearchedArticles from '../../../components/searched-articles'
 import { PROGRAMABLE_SEARCH_PER_PAGE } from '../../../utils/programmable-search/const'
+import { getSearchResultAllAndSorted } from '../../../utils/api/programmable-search-all-sorted.js'
 
 const SearchContainer = styled.main`
   width: 320px;
@@ -133,33 +133,19 @@ export async function getServerSideProps({ params }) {
         url: URL_STATIC_TOPICS,
         timeout: API_TIMEOUT,
       }),
-      getSearchResult({
+      getSearchResultAllAndSorted({
         exactTerms: searchTerms,
         startFrom: 1,
-        takeAmount: PROGRAMABLE_SEARCH_PER_PAGE * 3,
+        takeAmount: PROGRAMABLE_SEARCH_PER_PAGE,
       }),
     ])
 
     const sectionsData = responses[0].value?.data?.headers || []
     const topicsData = responses[1].value?.data?.topics || []
-    const searchResult = responses[2].value?.data
-    const sortedResult = {
-      ...searchResult,
-      items:
-        searchResult?.items?.sort((a, b) => {
-          const dateA = new Date(
-            a?.pagemap?.metatags?.[0]?.['article:published_time']
-          )
-          const dateB = new Date(
-            b?.pagemap?.metatags?.[0]?.['article:published_time']
-          )
-          return dateB - dateA
-        }) || [],
-    }
 
     const props = {
       headerData: { sectionsData, topicsData },
-      searchResult: sortedResult,
+      searchResult: responses[2].value?.data || {},
       redirectUrl: URL_MIRROR_MEDIA_V3,
     }
 

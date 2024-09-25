@@ -13,12 +13,19 @@ import {
 } from '../../config'
 import { PROGRAMABLE_SEARCH_NUM } from '../programmable-search/const'
 
+const MAX_SEARCH_AMOUNT = 100
+
 const readRedis = new Redis({ host: READ_REDIS_HOST, password: REDIS_AUTH })
 const writeRedis = new Redis({ host: WRITE_REDIS_HOST, password: REDIS_AUTH })
 
 const searchQuerySchema = object({
   exactTerms: string().required(),
-  startFrom: number().optional().integer().positive().max(100).min(1),
+  startFrom: number()
+    .optional()
+    .integer()
+    .positive()
+    .max(MAX_SEARCH_AMOUNT)
+    .min(1),
   takeAmount: number()
     .optional()
     .integer()
@@ -35,68 +42,52 @@ export async function getSearchResult(query) {
     const takeAmount = params.takeAmount || PROGRAMABLE_SEARCH_NUM
     const exactTerms = params.exactTerms || ''
     let startIndex = params.startFrom || 1
-
-    let adjustedStart =
-      Math.floor((startIndex - 1) / PROGRAMABLE_SEARCH_NUM) *
-        PROGRAMABLE_SEARCH_NUM +
-      1
-
-    const endIndex =
-      Math.ceil((startIndex + takeAmount - 1) / PROGRAMABLE_SEARCH_NUM) *
-      PROGRAMABLE_SEARCH_NUM
-
-    const fetchAmount = endIndex - adjustedStart + 1
-
-    const originAdjustedStart = adjustedStart
+    const prefix = 'PROGRAMABLE_SEARCH-3.1'
+    const redisKey = `${prefix}_${exactTerms}`
 
     let combinedResponse
 
-    const allItems = []
+    let hasMoreData = true
+    let start = 0
+    const searchResultCache = await readRedis.get(redisKey)
 
-    while (allItems.length < fetchAmount && adjustedStart <= 100) {
-      const queryParams = {
-        key: PROGRAMABLE_SEARCH_API_KEY,
-        cx: PROGRAMABLE_SEARCH_ENGINE_ID,
-        exactTerms: exactTerms,
-        start: adjustedStart,
-        num: PROGRAMABLE_SEARCH_NUM,
-        sort: ' ,date:s',
-      }
-
-      const prefix = 'PROGRAMABLE_SEARCH-3.1'
-      const redisKey = `${prefix}_${exactTerms}_${adjustedStart}_${PROGRAMABLE_SEARCH_NUM}}`
-      const searchResultCache = await readRedis.get(redisKey)
-
-      if (searchResultCache) {
-        console.log(
-          JSON.stringify({
-            severity: 'DEBUG',
-            message: `Get search result from redis cache with key ${redisKey}`,
-          })
-        )
-        const cachedResponse = JSON.parse(searchResultCache)
-        if (!combinedResponse) {
-          combinedResponse = cachedResponse
+    if (searchResultCache) {
+      console.log(
+        JSON.stringify({
+          severity: 'DEBUG',
+          message: `Get search result from redis cache with key ${redisKey}`,
+        })
+      )
+      const cachedResponse = JSON.parse(searchResultCache)
+      combinedResponse = cachedResponse
+    } else {
+      while (start <= MAX_SEARCH_AMOUNT || hasMoreData) {
+        const queryParams = {
+          key: PROGRAMABLE_SEARCH_API_KEY,
+          cx: PROGRAMABLE_SEARCH_ENGINE_ID,
+          exactTerms: exactTerms,
+          start,
+          num: PROGRAMABLE_SEARCH_NUM,
+          sort: ' ,date:s',
         }
-        if (cachedResponse?.items) {
-          allItems.push(...cachedResponse.items)
-        }
-      } else {
+
         let resData = {}
         try {
           const response = await axios({
             method: 'get',
-            url: `${URL_PROGRAMABLE_SEARCH}`,
+            url: URL_PROGRAMABLE_SEARCH,
             params: queryParams,
             timeout: API_TIMEOUT,
           })
-          resData = response?.data
-          writeRedis.set(redisKey, JSON.stringify(resData), 'EX', REDIS_EX)
+          resData = response.data
+
           if (!combinedResponse) {
             combinedResponse = resData
-          }
-          if (resData.items) {
-            allItems.push(...resData.items)
+          } else if (
+            Array.isArray(combinedResponse.items) &&
+            Array.isArray(resData?.items)
+          ) {
+            combinedResponse.items.push(...resData.items)
           }
         } catch (error) {
           console.log(
@@ -105,18 +96,33 @@ export async function getSearchResult(query) {
         }
 
         if (resData?.queries?.nextPage === undefined) {
-          break
+          hasMoreData = false
         }
+
+        // 更新開始索引，搜尋下一批結果
+        start += PROGRAMABLE_SEARCH_NUM
       }
 
-      // 更新開始索引，搜尋下一批結果
-      adjustedStart += PROGRAMABLE_SEARCH_NUM
+      if (combinedResponse && Array.isArray(combinedResponse.items)) {
+        combinedResponse.items.sort((a, b) => {
+          const dateA = new Date(
+            a?.pagemap?.metatags?.[0]?.['article:published_time']
+          )
+          const dateB = new Date(
+            b?.pagemap?.metatags?.[0]?.['article:published_time']
+          )
+          return dateB - dateA
+        })
+      }
+
+      writeRedis.set(redisKey, JSON.stringify(combinedResponse), 'EX', REDIS_EX)
     }
 
-    const sliceStartIndex = startIndex - originAdjustedStart
-    const sliceEndIndex = sliceStartIndex + takeAmount
     if (combinedResponse) {
-      combinedResponse.items = allItems?.slice(sliceStartIndex, sliceEndIndex)
+      combinedResponse.items = combinedResponse.items.slice(
+        startIndex - 1,
+        startIndex - 1 + takeAmount
+      )
     }
 
     return {
