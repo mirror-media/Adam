@@ -27,6 +27,8 @@ const LoginSuccess = 'login-success'
 const LoginFail = 'login-fail'
 const RegisterSuccess = 'register-success'
 const RegisterFail = 'register-fail'
+const InAppGoogleLoginHint = 'in-app-google-login-hint'
+
 /**
  * @readonly
  */
@@ -36,6 +38,7 @@ const FormState = /** @type {const} */ ({
   LoginFail,
   RegisterSuccess,
   RegisterFail,
+  InAppGoogleLoginHint,
 })
 
 const Google = 'Google'
@@ -56,7 +59,7 @@ const AuthMethod = /** @type {const} */ ({
 
 /**
  * Type for state
- * @typedef {Form | LoginSuccess | LoginFail | RegisterSuccess | RegisterFail} LoginFormState
+ * @typedef {Form | LoginSuccess | LoginFail | RegisterSuccess | RegisterFail | InAppGoogleLoginHint} LoginFormState
  * @typedef {Start | Registration | Login} LoginFormMode
  * @typedef {Google | Facebook | Apple | Email | Default} PrevAuthMethod
  */

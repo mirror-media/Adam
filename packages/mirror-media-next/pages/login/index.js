@@ -32,6 +32,7 @@ import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-proces
 import { getLogTraceObject } from '../../utils'
 import { handleAxiosResponse } from '../../utils/response-handle'
 import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
+import InAppGoogleLoginHint from '../../components/login/in-app-google-login-hint'
 
 const Container = styled.div`
   flex-grow: 1;
@@ -133,6 +134,8 @@ export default function Login({ headerData }) {
         return <RegistrationFailed />
       case FormState.LoginFail:
         return <LoginFailed />
+      case FormState.InAppGoogleLoginHint:
+        return <InAppGoogleLoginHint />
       default:
         return null
     }
