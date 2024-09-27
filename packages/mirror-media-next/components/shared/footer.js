@@ -113,6 +113,7 @@ const CustomerServiceList = styled.ul`
   ${({ theme }) => theme.breakpoint.xl} {
     flex-direction: row;
     gap: 15px;
+    justify-content: center;
   }
 `
 
@@ -136,6 +137,32 @@ const CustomerServiceDescription = styled.span`
   }
   > a {
     text-decoration: underline;
+  }
+`
+
+const YoutubeTos = styled.div`
+  color: #036;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 12px;
+  line-height: 130%;
+  letter-spacing: 0.5px;
+  a {
+    color: #1d9fb8;
+  }
+
+  ${({ theme }) => theme.breakpoint.md} {
+    font-size: 12px;
+    line-height: 150%;
+    transform: translate(-136.5px, 0);
+    width: 593px;
+    .mobileOnly {
+      display: none;
+    }
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    transform: translate(0, 0);
+    width: 100%;
   }
 `
 
@@ -210,6 +237,25 @@ function Footer() {
       </MobilePromotionLists>
       <MediaLists>{socialMediaLinks}</MediaLists>
       <CustomerServiceList>{customerServices}</CustomerServiceList>
+      <YoutubeTos>
+        本網頁使用{' '}
+        <a
+          href="https://developers.google.com/youtube/terms/developer-policies?hl=zh-tw#definition-youtube-api-services"
+          target="_blank"
+        >
+          YouTube API 服務
+        </a>
+        ， 詳見 <br className="mobileOnly" />
+        <a href="https://www.youtube.com/t/terms" target="_blank">
+          YouTube 服務條款
+        </a>
+        、{' '}
+        <a href="https://policies.google.com/privacy" target="_blank">
+          Google 隱私權與條款
+        </a>
+        <br />
+        瀏覽此頁面即代表您同意上述授權條款及細則
+      </YoutubeTos>
     </FooterWrapper>
   )
 }
