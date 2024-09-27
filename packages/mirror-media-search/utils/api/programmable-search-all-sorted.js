@@ -30,7 +30,7 @@ export async function getSearchResultAllAndSorted(query) {
 
     let { exactTerms = '' } = params
 
-    const prefix = 'PROGRAMABLE_SEARCH_ALL'
+    const prefix = 'PROGRAMABLE_SEARCH_ALL-2'
     const redisKey = `${prefix}_${exactTerms}`
     const searchResultCache = await readRedis.get(redisKey)
 
@@ -42,7 +42,7 @@ export async function getSearchResultAllAndSorted(query) {
         })
       )
       const cachedResponse = JSON.parse(searchResultCache)
-      return cachedResponse
+      return { data: cachedResponse }
     }
 
     let combinedResponse
@@ -89,7 +89,7 @@ export async function getSearchResultAllAndSorted(query) {
       start += PROGRAMABLE_SEARCH_NUM
     }
 
-    combinedResponse.items.sort((a, b) => {
+    combinedResponse.items?.sort((a, b) => {
       const dateA = new Date(
         a?.pagemap?.metatags?.[0]?.['article:published_time']
       )

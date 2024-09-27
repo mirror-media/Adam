@@ -7,7 +7,7 @@ import gtag from '../utils/programmable-search/gtag'
 
 import InfiniteScrollList from '@readr-media/react-infinite-scroll-list'
 import { PROGRAMABLE_SEARCH_PER_PAGE } from '../utils/programmable-search/const'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Loading = styled.div`
   margin: 20px auto 0;
@@ -41,6 +41,12 @@ export default function SearchedArticles({ searchResult }) {
   const { items, queries } = searchResult
   const initialArticles = items?.slice(0, PROGRAMABLE_SEARCH_PER_PAGE) || []
   const searchTerms = queries?.request[0].exactTerms
+
+  useEffect(() => {
+    if (PROGRAMABLE_SEARCH_PER_PAGE >= items.length) {
+      setIsEnd(true)
+    }
+  }, [])
 
   async function fetchPostsFromPage(page) {
     gtag.sendGAEvent(`search-${searchTerms}-loadmore-${page}`)
