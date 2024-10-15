@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Redis from 'ioredis'
-import { number, object, string } from 'yup'
+import { object, string } from 'yup'
 import {
   URL_PROGRAMABLE_SEARCH,
   PROGRAMABLE_SEARCH_API_KEY,
@@ -30,7 +30,7 @@ export async function getSearchResultAllAndSorted(query) {
 
     let { exactTerms = '' } = params
 
-    const prefix = 'PROGRAMABLE_SEARCH_ALL-2'
+    const prefix = 'PROGRAMABLE_SEARCH_ALL-3'
     const redisKey = `${prefix}_${exactTerms}`
     const searchResultCache = await readRedis.get(redisKey)
 

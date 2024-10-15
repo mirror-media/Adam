@@ -115,7 +115,6 @@ export default function ArticleListItem({ item, index, searchTerms }) {
     name: item?.pagemap?.metatags?.[0]?.['section:name'],
     slug: item?.pagemap?.metatags?.[0]?.['section:slug'],
   })
-
   useEffect(() => {
     if (item?.link) {
       const urlObject = new URL(item?.link)
@@ -152,7 +151,7 @@ export default function ArticleListItem({ item, index, searchTerms }) {
     <ItemWrapper href={item?.link} target="_blank" onClick={onClickHandler}>
       <ImageContainer>
         <Image
-          images={{ original: item?.pagemap?.cse_image?.[0]?.src }}
+          images={{ original: item?.pagemap?.metatags?.[0]?.['og:image'] }}
           alt={item?.title}
           loadingImage="/images/loading.gif"
           defaultImage="/images/default-og-img.png"
