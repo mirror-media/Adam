@@ -219,6 +219,7 @@ const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
 const Z_INDEX = {
+  coverAd: 1000000000,
   top: 10000,
   coverHeader: 2000,
   header: 1000,
