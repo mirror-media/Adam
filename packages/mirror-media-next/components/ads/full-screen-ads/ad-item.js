@@ -7,7 +7,6 @@ import { useState } from 'react'
  */
 
 const defaultWrapperStyle = css`
-  z-index: ${Z_INDEX.top};
   position: fixed;
   top: 0;
   left: 0;
@@ -32,7 +31,6 @@ const bottomWrapperStyle = css`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: ${Z_INDEX.top};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,7 +44,6 @@ const modifiedWrapperStyle = css`
   position: fixed;
   right: 0;
   bottom: 0;
-  z-index: ${Z_INDEX.top};
 `
 
 const CloseButton = styled.button`
@@ -83,7 +80,7 @@ const CloseButton = styled.button`
 `
 
 const Wrapper = styled.div`
-  z-index: ${Z_INDEX.top};
+  z-index: ${Z_INDEX.coverAd};
   position: fixed;
   top: 0;
   display: flex;
