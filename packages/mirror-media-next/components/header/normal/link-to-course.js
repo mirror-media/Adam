@@ -9,6 +9,7 @@ const Container = styled(Link)`
   display: inline-block;
   flex-shrink: 0;
   align-self: center;
+  margin-left: 8px;
 `
 
 const MobileIcon = styled(Image)`
