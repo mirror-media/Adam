@@ -47,6 +47,7 @@ let URL_STATIC_404_POPULAR_NEWS = ''
 let NEWEBPAY_PAPERMAG_API_URL = ''
 let URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = ''
 let GPT_MODE = ''
+let COURSE_URL = ''
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -115,6 +116,8 @@ switch (ENV) {
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log'
     IS_PRIZE_RIZED = true
 
+    COURSE_URL = 'https://course.mirrormedia.mg'
+
     break
 
   case 'staging':
@@ -171,6 +174,9 @@ switch (ENV) {
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_staging'
     IS_PRIZE_RIZED = true
+
+    COURSE_URL = 'https://course.mirrormedia.mg'
+
     break
 
   case 'dev':
@@ -225,6 +231,9 @@ switch (ENV) {
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_dev'
     IS_PRIZE_RIZED = true
+
+    COURSE_URL = 'https://dev-course.mirrormedia.mg'
+
     break
 
   default:
@@ -326,4 +335,5 @@ export {
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   IS_PRIZE_RIZED,
+  COURSE_URL,
 }

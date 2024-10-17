@@ -22,6 +22,7 @@ import PromotionLinks from './promotion-links'
 import SearchBarDesktop from '../shared/search-bar-desktop'
 import SearchBarInput from '../shared/search-bar-input'
 import SubBrandList from './sub-brand-list'
+import LinkToCourse from './link-to-course'
 
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 
@@ -427,6 +428,7 @@ export default function Header({
             ) : (
               <GPTAdPlaceHolder />
             )}
+            <LinkToCourse />
           </AdPaperMagBtnWrapper>
         </LogoBtnWrapper>
         <ActionWrapper>
