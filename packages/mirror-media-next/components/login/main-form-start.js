@@ -11,7 +11,7 @@ import {
   loginIsFederatedRedirectResultLoading,
   AuthMethod,
 } from '../../slice/login-slice'
-import { isValidEmail } from '../../utils'
+import { isValidEmail, isCompanyEmail } from '../../utils'
 import EmailInput from './email-input'
 import PrimaryButton from '../shared/buttons/primary-button'
 import ButtonLoginWithThirdParty from './button-login-with-third-party'
@@ -80,10 +80,13 @@ export default function MainFormStart() {
   const shouldShowHintOfExitenceOfDifferentAuthMethod = useAppSelector(
     loginShouldShowHintOfExitenceOfDifferentAuthMethod
   )
+  const shouldShowhintOfCompanyEmail = isCompanyEmail(email)
   const hint = `由於您曾以 ${prevAuthMethod} 帳號登入，請點擊上方「使用 ${prevAuthMethod} 帳號繼續」重試。`
+  const hintOfCompanyEmail = `若您想以本公司企業信箱登入，請點擊上方「使用 Google 帳號繼續」重試，以享有 Premium 會員資格。`
   const allowToContinue =
-    isValidEmail(email) && isFederatedRedirectResultLoading === false
-
+    isValidEmail(email) &&
+    isFederatedRedirectResultLoading === false &&
+    !shouldShowhintOfCompanyEmail
   const handleOnClick = async () => {
     if (!allowToContinue || isLoading) return
     setIsLoading(true)
@@ -136,6 +139,11 @@ export default function MainFormStart() {
         ))}
         {shouldShowHintOfExitenceOfDifferentAuthMethod && (
           <CenteredHint $state={InputState.Invalid}>{hint}</CenteredHint>
+        )}
+        {shouldShowhintOfCompanyEmail && (
+          <CenteredHint $state={InputState.Invalid}>
+            {hintOfCompanyEmail}
+          </CenteredHint>
         )}
       </ThirdPartyButtonGroup>
       <Seperator>

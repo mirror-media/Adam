@@ -327,6 +327,22 @@ const isValidPassword = (password) => {
 }
 
 /**
+ * Verify if the email is a company email
+ *
+ * @param {string} email
+ * @returns {boolean}
+ */
+const isCompanyEmail = (email) => {
+  const validSuffixes = [
+    '@mnews.com.tw',
+    '@mnews.tw',
+    '@mirrormedia.mg',
+    '@mirrorfiction.com',
+  ]
+  return validSuffixes.some((suffix) => email.endsWith(suffix))
+}
+
+/**
  * @param {import('next/router').NextRouter} router
  * @returns {import('next/link').LinkProps['href']}
  */
@@ -431,6 +447,7 @@ export {
   getActiveOrderCategory,
   isValidEmail,
   isValidPassword,
+  isCompanyEmail,
   transformTimeData,
   getLoginHref,
   isServer,
