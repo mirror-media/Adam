@@ -119,7 +119,7 @@ export default function SectionVideohub({
   playlistsVideos,
   headerData,
 }) {
-  const hasHVCVideo = Object.keys(highestViewCountVideo).length > 0
+  const hasHVCVideo = Object.keys(highestViewCountVideo ?? []).length > 0
   const hasLatestVideo = latestVideos.length > 0
 
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
@@ -274,7 +274,9 @@ export async function getServerSideProps({ req, res }) {
         },
         null
       )
-      return simplifyYoutubeVideo([highestViewCountRawVideo])[0]
+      return highestViewCountRawVideo
+        ? simplifyYoutubeVideo([highestViewCountRawVideo])[0]
+        : null
     },
     'Error occurs while getting latest 50 videos in section/videohub page',
     globalLogFields
