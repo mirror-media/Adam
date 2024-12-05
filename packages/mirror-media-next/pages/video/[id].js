@@ -109,8 +109,8 @@ const StickyGPTAd = styled(GPTMbStAd)`
 `
 
 const GPT_PLACEHOLDER_SIZES = {
-  mobile: { width: '300px', height: '250px', margin: '8px auto' },
-  tablet: { width: '300px', height: '250px', margin: '24px auto' },
+  mobile: { width: '300px', height: '350px', margin: '8px auto' },
+  tablet: { width: '300px', height: '350px', margin: '24px auto' },
   desktop: { width: '970px', height: '250px', margin: '0px auto 28px' },
 }
 
