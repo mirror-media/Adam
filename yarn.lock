@@ -2374,6 +2374,13 @@
     retry-request "^6.0.0"
     teeny-request "^9.0.0"
 
+"@google-cloud/discoveryengine@^1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/discoveryengine/-/discoveryengine-1.14.0.tgz#436512b15609bee496d92b8c8c478698a09ea3f3"
+  integrity sha512-mwx/+Q3LpmyQbnIxhKNP3i8jgGyLm7NeyXJP11XwdbXOqvsOGrjsb6SOkNL2NzWVZFGtqP9K6jWz/9a0L1ZWYA==
+  dependencies:
+    google-gax "^4.0.3"
+
 "@google-cloud/firestore@^7.1.0":
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-7.6.0.tgz#1e50bcfd465b9b76340279c90781ff6dd037de90"

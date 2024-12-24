@@ -35,12 +35,16 @@ export { simplifyYoutubeSearchedVideo, simplifyYoutubePlaylistVideo }
  * @returns {import("../type/youtube").YoutubeVideo[]}
  */
 export function simplifyYoutubeVideo(videos) {
-  return videos.map((video) => ({
-    id: video.id,
-    title: video.snippet.title,
-    description: video.snippet.description,
-    thumbnail: video.snippet.thumbnails.high.url,
-    publishedAt: video.snippet.publishedAt,
-    channelId: video.snippet.channelId,
-  }))
+  return (
+    videos
+      .filter((video) => video)
+      .map((video) => ({
+        id: video.id,
+        title: video.snippet.title,
+        description: video.snippet.description,
+        thumbnail: video.snippet.thumbnails.high.url,
+        publishedAt: video.snippet.publishedAt,
+        channelId: video.snippet.channelId,
+      })) ?? []
+  )
 }
