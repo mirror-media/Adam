@@ -43,8 +43,9 @@ const YoutubeWrapper = styled.div`
 /**
  * @param {Object} props
  * @param {LiveYoutubeInfo} props.liveYoutubeInfo
+ * @param {'a' | 'b'} props.version
  */
-export default function LiveYoutube({ liveYoutubeInfo }) {
+export default function LiveYoutube({ liveYoutubeInfo, version }) {
   const { name, youtubeId } = liveYoutubeInfo
   if (!youtubeId) {
     return null
@@ -53,7 +54,10 @@ export default function LiveYoutube({ liveYoutubeInfo }) {
     <Wrapper>
       {name && <LiveTitle>{name}</LiveTitle>}
       <YoutubeWrapper>
-        <YoutubeIframe videoId={youtubeId} />
+        <YoutubeIframe
+          videoId={youtubeId}
+          gtmClassName={`GTM-live-yt-${version}`}
+        />
       </YoutubeWrapper>
     </Wrapper>
   )
