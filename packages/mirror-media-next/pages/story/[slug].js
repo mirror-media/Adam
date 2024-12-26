@@ -50,13 +50,9 @@ import Skeleton from '../../public/images-next/skeleton.png'
 
 /**
  * @typedef {import('../../components/story/normal').PostData} PostData
- */
-/**
  * @typedef {import('../../components/story/normal').PostContent} PostContent
- */
-
-/**
  * @typedef {'style-normal' | 'style-photography' | 'style-wide' | 'style-premium'} StoryLayoutType
+ * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
  */
 
 const Loading = styled.div`
@@ -91,9 +87,9 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  *
  * @param {Object} props
  * @param {PostData} props.postData
- * @param {any} props.headerData
+ * @param {HeaderData} props.headerData
  * @param {StoryLayoutType} props.storyLayoutType
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 export default function Story({ postData, headerData, storyLayoutType }) {
   const {
@@ -267,6 +263,8 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             getResizedUrl(postData.og_image?.resized) ||
             getResizedUrl(postData.heroImage?.resized),
           skipCanonical: true,
+          pageType: 'story',
+          pageSlug: slug,
         }}
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}

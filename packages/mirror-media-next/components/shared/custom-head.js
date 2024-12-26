@@ -27,7 +27,7 @@ import { useRouter } from 'next/router'
  * Since '/story' page and '/story/amp' page has special logic on creating canonical link,
  * we decide not handle canonical link on these page.
  * @param {string} routerAsPath
- * @return {null | JSX.Element}
+ * @return {null | React.ReactNode}
  */
 const createCanonicalLink = (routerAsPath) => {
   const url = new URL(routerAsPath, 'https://' + SITE_URL)
@@ -42,6 +42,8 @@ const createCanonicalLink = (routerAsPath) => {
  * @property {string} [description] - head description used to setup description related meta
  * @property {string} [imageUrl] - image url used to setup image related meta
  * @property {boolean} [skipCanonical] - flag to indicates whether the canonical should be added here
+ * @property {'story' | 'external'} [pageType] - pageType for search result navigation in App
+ * @property {string} [pageSlug] - set pageSlug with pageType. This is also for search result navigation in App
  */
 
 /**
@@ -53,6 +55,8 @@ export default function CustomHead({
   title,
   description,
   imageUrl,
+  pageType,
+  pageSlug,
 }) {
   const router = useRouter()
   const canonicalLink = skipCanonical ? (
@@ -167,6 +171,14 @@ export default function CustomHead({
         content={siteInformation.description || ''}
         key="twitter:description"
       />
+      {pageType && (
+        <>
+          {/* These metatags are for search result usage */}
+          <meta name="page-type" content={pageType} />
+          <meta name="page-slug" content={pageSlug} />
+          <meta name="page-image" content={siteInformation?.image?.url} />
+        </>
+      )}
     </Head>
   )
 }
