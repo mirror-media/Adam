@@ -31,6 +31,8 @@ export default function Layout({ head, header, footer, children }) {
         description={head?.description}
         imageUrl={head?.imageUrl}
         skipCanonical={head?.skipCanonical}
+        pageType={head?.pageType}
+        pageSlug={head?.pageSlug}
       />
       <ShareHeader pageLayoutType={header.type} headerData={header.data} />
       <IdleTimeoutModal />

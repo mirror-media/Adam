@@ -19,14 +19,15 @@ import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-proces
 
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
+ * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
  */
 
 /**
  *
  * @param {Object} props
  * @param {External} props.external
- * @param {Object} props.headerData
- * @returns {JSX.Element}
+ * @param {HeaderData} props.headerData
+ * @returns {React.ReactNode}
  */
 export default function External({ external, headerData }) {
   const router = useRouter()
@@ -52,6 +53,8 @@ export default function External({ external, headerData }) {
         head={{
           title: `${external?.title}`,
           imageUrl: external?.thumb,
+          pageType: 'external',
+          pageSlug: `${slug}`,
         }}
         header={{ type: 'default', data: headerData }}
         footer={{ type: 'default' }}
