@@ -11,7 +11,6 @@ import {
 import { DEFAULT_NORMAL_SECTIONS_DATA } from '../../../constants/header'
 
 import SubscribeMagazineButton from './subscribe-papermag-mb-btn'
-import { SEARCH_URL } from '../../../config/index.mjs'
 import EntranceButton from './entrance-button'
 import Logo from './logo'
 import MemberLoginButton from './member-login-button'
@@ -25,6 +24,7 @@ import SubBrandList from './sub-brand-list'
 import LinkToCourse from './link-to-course'
 
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
+import { SEARCH_URL } from '../../../config/index.mjs'
 
 const GPTAd = dynamic(() => import('../../ads/gpt/gpt-ad'), {
   ssr: false,

@@ -310,9 +310,8 @@ export default function MobileSidebar({
             </Categories>
           </Fragment>
         )
-      case 'category':
+      case 'category': {
         const renderSectionSlug = item.sections?.[0]
-
         return (
           <Section key={item.order} sectionSlug={renderSectionSlug}>
             <a style={{ width: '100%' }} href={item.href}>
@@ -320,6 +319,7 @@ export default function MobileSidebar({
             </a>
           </Section>
         )
+      }
       default:
         break
     }

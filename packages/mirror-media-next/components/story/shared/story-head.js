@@ -110,18 +110,24 @@ export default function StoryHead({ postData }) {
         <meta property="dable:item_id" content={slug} key="dable:item_id" />
         <meta property="og:slug" content={slug} key="og:slug" />
         {section?.name && (
-          <meta
-            property="section:name"
-            content={section.name}
-            key="section:name"
-          />
+          <>
+            <meta
+              property="section:name"
+              content={section.name}
+              key="section:name"
+            />
+            <meta name="section-name" content={section.name} />
+          </>
         )}
         {section?.slug && (
-          <meta
-            property="section:slug"
-            content={section.slug}
-            key={'section:slug'}
-          />
+          <>
+            <meta
+              property="section:slug"
+              content={section.slug}
+              key={'section:slug'}
+            />
+            <meta name="section-slug" content={section.slug} />
+          </>
         )}
         {category?.name && (
           <meta

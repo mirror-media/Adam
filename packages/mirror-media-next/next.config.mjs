@@ -58,6 +58,11 @@ const nextConfig = {
         destination: DONATION_PAGE_URL,
         permanent: true,
       },
+      {
+        source: '/search/v3/:searchTerms',
+        destination: `/search/:searchTerms`,
+        permanent: true,
+      },
     ]
   },
   async rewrites() {
