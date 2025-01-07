@@ -33,6 +33,12 @@ import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 import LiveYoutube from '../components/live-youtube'
 
 import { isDateInsideDatesRange } from '../utils/date'
+import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
+import { fetchYoutubePlaylistByPlaylistId } from '../utils/api/video-category'
+import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
+import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
+import TagManager from 'react-gtm-module'
+
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -108,6 +114,8 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
  * @param {LiveYoutubeInfo} props.liveYoutubeInfo
+ * @param {import('../type/youtube').YoutubeVideo[]} props.youtubeCoverstoryVideos
+ * @param {'a' | 'b'} props.ABConst
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -117,6 +125,8 @@ export default function Home({
   latestNewsData = [],
   sectionsData = [],
   liveYoutubeInfo,
+  youtubeCoverstoryVideos,
+  ABConst,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -137,6 +147,20 @@ export default function Home({
 
   const handleObSlotRenderEnded = useCallback((e) => {
     setISHDAdEmpty(e.isEmpty)
+  }, [])
+
+  useEffect(() => {
+    const tagManagerArgs = {
+      dataLayer: {
+        event: 'pageview',
+        page: {
+          title: document.title,
+          url: window.location.pathname,
+          liveYoutubePositionVariable: ABConst === 'b' ? 'B' : 'A',
+        },
+      },
+    }
+    TagManager.dataLayer(tagManagerArgs)
   }, [])
 
   return (
@@ -167,7 +191,14 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-        <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} />
+        {ABConst === 'a' ? (
+          <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} version={ABConst} />
+        ) : (
+          <LiveAndCoverstoryYoutube
+            liveYoutubeInfo={liveYoutubeInfo}
+            youtubeCoverstoryVideos={youtubeCoverstoryVideos}
+          />
+        )}
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
@@ -221,6 +252,10 @@ export async function getServerSideProps({ res, req }) {
   let latestNewsData = []
   let eventsData = []
 
+  const ABConst = Math.random() < 0.5 ? 'a' : 'b'
+
+  const videoPlaylistId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
+
   try {
     const postResponse = await axios({
       method: 'get',
@@ -243,6 +278,7 @@ export async function getServerSideProps({ res, req }) {
       }),
       fetchHeaderDataInDefaultPageLayout(),
       fetchModEventsInDesc(),
+      fetchYoutubePlaylistByPlaylistId(videoPlaylistId),
     ])
 
     flashNewsData = handleAxiosResponse(
@@ -289,6 +325,26 @@ export async function getServerSideProps({ res, req }) {
         }
       : {}
 
+    const youtubeCoverstoryVideos = handleAxiosResponse(
+      responses[3],
+      (
+        /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByPlaylistId>>} */ axiosData
+      ) => {
+        if (axiosData) {
+          const data = axiosData.data
+          const items = data?.items || []
+          const filteredItems = items.filter(
+            (
+              /** @type {import('./section/videohub').YoutubeRawPlaylistVideo} */ item
+            ) => item.status.privacyStatus === 'public'
+          )
+          return simplifyYoutubePlaylistVideo(filteredItems).slice(0, 3)
+        }
+      },
+      `Error occurs while getting playlist data in homepage (videoPlaylistId: ${videoPlaylistId})`,
+      globalLogFields
+    )
+
     return {
       props: {
         topicsData,
@@ -297,6 +353,8 @@ export async function getServerSideProps({ res, req }) {
         latestNewsData,
         sectionsData,
         liveYoutubeInfo,
+        youtubeCoverstoryVideos,
+        ABConst,
       },
     }
   } catch (err) {

@@ -2,6 +2,10 @@ import { GoogleSpreadsheet } from 'google-spreadsheet'
 import { JWT } from 'google-auth-library'
 import Cors from 'cors'
 import { runMiddleware } from '../../utils/api-route'
+import {
+  GOOGLE_SHEETS_PRIVATE_KEY,
+  GOOGLE_SHEETS_CLIENT_EMAIL,
+} from '../../config/index.mjs'
 
 /**
  * @typedef {import("next").NextApiRequest} NextApiRequest
@@ -58,12 +62,6 @@ async function addRowToGoogleSheet(googleSheet) {
     if (!row) {
       throw new Error('without new row data')
     }
-
-    let GOOGLE_SHEETS_PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY
-    const GOOGLE_SHEETS_CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
-
-    // env variable in google cloud will turn \n into \\n, convert it back to \n
-    GOOGLE_SHEETS_PRIVATE_KEY = GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n')
 
     const serviceAccountAuth = new JWT({
       email: GOOGLE_SHEETS_CLIENT_EMAIL,

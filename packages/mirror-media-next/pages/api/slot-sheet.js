@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     credentials: {
       client_email: GOOGLE_SHEETS_CLIENT_EMAIL,
       client_id: GOOGLE_SHEETS_CLIENT_ID,
-      private_key: GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      private_key: GOOGLE_SHEETS_PRIVATE_KEY,
     },
     scopes: [
       'https://www.googleapis.com/auth/drive',

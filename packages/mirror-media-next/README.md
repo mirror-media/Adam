@@ -62,9 +62,27 @@ ref: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#cas
 
 ## Environment Variables (環境變數)
 
-| 變數名稱            | 資料型態   | 初始值  | 變數說明                        |
-| ------------------- | ---------- | ------- | ------------------------------- |
-| PROXY_AMP           | 字串(布林) | 'false' | 是否為 proxy AMP 模式           |
-| PROXY_SERVER_PORT   | 字串(整數) | '3000'  | proxy server port               |
-| PROXIED_SERVER_PORT | 字串(整數) | '3001'  | 被 proxy 的 next.js server port |
+| 變數名稱 | 資料型態 | 初始值 | 變數說明 |
+| ------ | ------ | ------ | ------ |
+| NEXT_PUBLIC_ENV | 字串 | 'local' | 系統環境 (`local`, `dev`, `staging`, `prod`) |
+| NEXT_PUBLIC_IS_PREVIEW_MODE | 字串(布林) | `undefined` | 是否為 preview mode |
+| PROXY_AMP | 字串 | `undefined` | 是否為 proxy AMP 模式 |
+| PROXY_SERVER_PORT | 字串(整數) | `3000` | proxy server port |
+| PROXIED_SERVER_PORT | 字串(整數) | `3001` | 被 proxy 的 next.js server port |
 | FIREBASE_ADMIN_CREDENTIAL | 字串(JSON) | '' | Firebase 專案所屬服務帳號的密鑰資訊，參考：[Initialize the SDK in non-Google environments#To generate a private key file for your service account](https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments) |
+| NEWEBPAY_PAPERMAG_KEY | 字串 | `'newebpay-papermag-key'` | 藍新商店 key |
+| NEWEBPAY_PAPERMAG_IV | 字串 | `'newebpay-papermag-iv'` | 藍新商店 iv |
+| GOOGLE_SHEETS_PRIVATE_KEY | 字串(JSON) | `''` | 呼叫 google sheet API 所使用的 service account token 資訊 |
+| GOOGLE_SHEETS_CLIENT_EMAIL | 字串 | `undefined` | 呼叫 google sheet API 所使用的 service account 名稱 |
+| GOOGLE_SHEETS_CLIENT_ID | 字串 | `undefined` | 呼叫 google sheet API 所使用的 service account ID |
+| GOOGLE_SHEET_SLOT_ID | 字串 | `undefined` | 抽獎資訊所使用的 spreadsheet ID |
+
+## Environment Variables for search only (Search 限定的環境變數)
+| 變數名稱 | 資料型態 | 初始值 | 變數說明 |
+| ------ | ------ | ------ | ------ |
+| URL_SEARCH | 字串 | `''` | SearchLite API 的網址 |
+| REDIS_AUTH | 字串 | `undefined` | Redis 認證密碼 |
+| REDIS_HOST | 字串 | `''` | Redis 位址資訊 |
+| REDIS_DB | 字串（數字） | `0` | Redis DB 資訊 |
+| REDIS_EX | 字串(整數) | `3600` | redis 資料有效期長度 (秒) |
+| REDIS_CONNECTION_TIMEOUT | 字串（整數） | `10000` | redis 連結 timeout 時間（微秒）|
