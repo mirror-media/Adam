@@ -130,6 +130,10 @@ const VideoTitle = styled.p`
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  &:active,
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const Date = styled.p`
@@ -176,7 +180,16 @@ export default function LiveAndCoverstoryYoutube({
                 </VideoWrapper>
                 <Info>
                   {latestVideo.title && (
-                    <VideoTitle>{latestVideo.title}</VideoTitle>
+                    <VideoTitle>
+                      <a
+                        href={`/video/${latestVideo.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="GTM-latest-video-yt-click-b"
+                      >
+                        {latestVideo.title}
+                      </a>
+                    </VideoTitle>
                   )}
                   {latestVideo.publishedAt && (
                     <Date>

@@ -2,8 +2,6 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 import { getMagazineHrefFromSlug } from '../../utils/index'
-
-// @ts-ignore
 import ReadingSvg from '../../public/images-next/magazine-online.svg'
 
 const CardsList = styled.ul`

@@ -5,7 +5,8 @@ export default function handler(req, res) {
 
   if (ENV === 'prod') {
     res.write(`User-agent: *
-     Allow: / `)
+     Allow: / 
+	 Disallow: /external/*`)
   } else {
     res.write(`User-agent: *
      Disallow: /`)

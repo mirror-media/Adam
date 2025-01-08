@@ -2,7 +2,6 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 import { transformTimeDataIntoSlashFormat } from '../../utils/index'
-// @ts-ignore
 import DownloadSvg from '../../public/images-next/magazine-download-icon.svg'
 
 const CardsList = styled.ul`

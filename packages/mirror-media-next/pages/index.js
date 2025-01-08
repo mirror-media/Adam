@@ -34,7 +34,7 @@ import LiveYoutube from '../components/live-youtube'
 
 import { isDateInsideDatesRange } from '../utils/date'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
-import { fetchYoutubePlaylistByPlaylistId } from '../utils/api/video-category'
+import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
 import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
 import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
 import TagManager from 'react-gtm-module'
@@ -254,7 +254,7 @@ export async function getServerSideProps({ res, req }) {
 
   const ABConst = Math.random() < 0.5 ? 'a' : 'b'
 
-  const videoPlaylistId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
+  const channelId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
 
   try {
     const postResponse = await axios({
@@ -278,7 +278,7 @@ export async function getServerSideProps({ res, req }) {
       }),
       fetchHeaderDataInDefaultPageLayout(),
       fetchModEventsInDesc(),
-      fetchYoutubePlaylistByPlaylistId(videoPlaylistId),
+      fetchYoutubePlaylistByChannelId(channelId),
     ])
 
     flashNewsData = handleAxiosResponse(
@@ -328,7 +328,7 @@ export async function getServerSideProps({ res, req }) {
     const youtubeCoverstoryVideos = handleAxiosResponse(
       responses[3],
       (
-        /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByPlaylistId>>} */ axiosData
+        /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByChannelId>>} */ axiosData
       ) => {
         if (axiosData) {
           const data = axiosData.data
@@ -341,7 +341,7 @@ export async function getServerSideProps({ res, req }) {
           return simplifyYoutubePlaylistVideo(filteredItems).slice(0, 3)
         }
       },
-      `Error occurs while getting playlist data in homepage (videoPlaylistId: ${videoPlaylistId})`,
+      `Error occurs while getting playlist data in homepage (channelId: ${channelId})`,
       globalLogFields
     )
 
