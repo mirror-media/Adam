@@ -1,43 +1,8 @@
 import styled from 'styled-components'
 import SubscribePlanBtn from '../subscribe-plan-btn'
-import { useMemo } from 'react'
 
-const Page = styled.section`
-  background-color: rgba(0, 0, 0, 0.05);
+const Body = styled.section`
   padding: 24px 0;
-`
-const Announcement = styled.div`
-  padding: 16px;
-  border-radius: 8px;
-  background: linear-gradient(
-      0deg,
-      rgba(229, 23, 49, 0.05) 0%,
-      rgba(229, 23, 49, 0.05) 100%
-    ),
-    #fff;
-  width: 90%;
-  margin: 0 auto 24px;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 0 auto;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    width: 960px;
-  }
-
-  .announce-title {
-    color: #e51731;
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 8px;
-  }
-
-  .announce-text {
-    color: rgba(0, 0, 0, 0.66);
-    font-size: 14px;
-    font-weight: 400;
-  }
 `
 
 const PlansWrapper = styled.ul`
@@ -111,26 +76,9 @@ const SpecialPrice = styled.p`
   }
 `
 
-function Plan() {
-  const shouldShowAnnouncement = useMemo(() => {
-    const startUtc = new Date(Date.UTC(2024, 2, 19, 16))
-    const endUtc = new Date(Date.UTC(2024, 3, 8, 16))
-    const nowUtc = new Date(Date.now())
-
-    // 2024/3/20 ~ 4/9
-    return nowUtc > startUtc && nowUtc < endUtc
-  }, [])
+export default function PageBody() {
   return (
-    <Page>
-      {!!shouldShowAnnouncement && (
-        <Announcement>
-          <p className="announce-title">[4月份訂戶派送異動公告]</p>
-          <p className="announce-text">預祝清明佳節愉快！</p>
-          <p className="announce-text">
-            因逢清明連續假期，392期(4/3出刊)的雜誌最晚4/8(一)完成配送，造成困擾敬請見諒。
-          </p>
-        </Announcement>
-      )}
+    <Body>
       <PlansWrapper>
         <PlanCard>
           <PlanTitle>一年方案</PlanTitle>
@@ -164,8 +112,6 @@ function Plan() {
           />
         </PlanCard>
       </PlansWrapper>
-    </Page>
+    </Body>
   )
 }
-
-export default Plan

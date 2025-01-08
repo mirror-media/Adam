@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react'
-// @ts-ignore
 import SvgCloseIcon from '../../../public/images-next/close-black.svg'
 import styled from 'styled-components'
 import GPTAd from './gpt-ad'
