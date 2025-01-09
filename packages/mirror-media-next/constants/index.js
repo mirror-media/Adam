@@ -218,12 +218,12 @@ const MIRROR_YOUTUBE_CHANNELS = [
 const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
-const Z_INDEX = {
+const Z_INDEX = /** @type {const}*/ ({
   top: 10000,
   coverHeader: 2000,
   header: 1000,
   coverContent: 100,
-}
+})
 
 const SECTION_IDS = {
   member: '5fe15f1e123c831000ee54c2',

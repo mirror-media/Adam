@@ -1,26 +1,23 @@
 /**
- * Client-only
- * @returns {'ios' | 'android' | 'non-mobile'}
+ * @param {string} userAgent
+ * @returns {'ios' | 'android' | 'other'}
  */
-export function detectMobileOs() {
-  const userAgent = navigator.userAgent
-
+export function detectMobileOs(userAgent) {
   if (/iPad|iPhone|iPod/.test(userAgent)) {
     return 'ios'
   } else if (/android/i.test(userAgent)) {
     // Redirect to the Google Play Store
     return 'android'
   } else {
-    return 'non-mobile'
+    return 'other'
   }
 }
 
 /**
- * Client-only,
+ * @param {string} userAgent
  * @returns boolean
  */
-export function isInAppBrowser() {
-  const userAgent = navigator.userAgent
+export function isInAppBrowser(userAgent) {
   // source1: https://gist.github.com/fostyfost/0591c79f4cd7ca26e5941a53fd4bf1a4
   // source2: https://gist.github.com/monkianer/c163651c86897d744f10
   const rules = [
