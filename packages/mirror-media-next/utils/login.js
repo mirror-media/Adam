@@ -39,5 +39,5 @@ export function isInAppBrowser(userAgent) {
     'Line',
   ]
   const regex = new RegExp(`(${rules.join('|')})`, 'ig')
-  return Boolean(userAgent.match(regex))
+  return regex.test(userAgent)
 }
