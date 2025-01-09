@@ -32,7 +32,8 @@ import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-proces
 import { getLogTraceObject } from '../../utils'
 import { handleAxiosResponse } from '../../utils/response-handle'
 import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
-import InAppGoogleLoginHint from '../../components/login/in-app-google-login-hint'
+import WebviewHint from '../../components/login/webview-hint'
+import { isInAppBrowser } from '../../utils/login'
 
 const Container = styled.div`
   flex-grow: 1;
@@ -45,6 +46,7 @@ const Container = styled.div`
 
 /**
  * @typedef {Object} PageProps
+ * @property {boolean} isWebview
  * @property {Object} headerData
  * @property {import('../../utils/api').HeadersData} headerData.sectionsData
  * @property {import('../../utils/api').Topics} headerData.topicsData
@@ -53,14 +55,14 @@ const Container = styled.div`
 /**
  * @param {PageProps} props
  */
-export default function Login({ headerData }) {
+export default function Login({ headerData, isWebview }) {
   const dispatch = useAppDispatch()
   const { accessToken, isLogInProcessFinished, userEmail } = useMembership()
   const loginFormState = useAppSelector(loginState)
   const { redirect } = useRedirect()
 
   useEffect(() => {
-    if (!isLogInProcessFinished) {
+    if (!isLogInProcessFinished || isWebview) {
       return
     }
 
@@ -120,7 +122,14 @@ export default function Login({ headerData }) {
     }
 
     handleFederatedRedirectResult()
-  }, [isLogInProcessFinished, accessToken, redirect, dispatch, userEmail])
+  }, [
+    isLogInProcessFinished,
+    accessToken,
+    redirect,
+    dispatch,
+    userEmail,
+    isWebview,
+  ])
 
   const getBodyByState = () => {
     switch (loginFormState) {
@@ -134,8 +143,6 @@ export default function Login({ headerData }) {
         return <RegistrationFailed />
       case FormState.LoginFail:
         return <LoginFailed />
-      case FormState.InAppGoogleLoginHint:
-        return <InAppGoogleLoginHint />
       default:
         return null
     }
@@ -148,7 +155,7 @@ export default function Login({ headerData }) {
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
-      <Container>{jsx}</Container>
+      <Container>{isWebview ? <WebviewHint /> : jsx}</Container>
     </LayoutFull>
   )
 }
@@ -174,8 +181,11 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(
       globalLogFields
     )
 
+    const userAgent = req.headers?.['user-agent']
+
     return {
       props: {
+        isWebview: isInAppBrowser(userAgent),
         headerData: { sectionsData, topicsData },
       },
     }
