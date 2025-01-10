@@ -92,6 +92,7 @@ export default function CustomHead({
         content={siteInformation.description}
         key="description"
       />
+      <meta name="article-description" content={siteInformation.description} />
       {/* <OpenGraph properties={siteInformation} /> */}
       <meta name="application-name" content={siteInformation.title} />
       {canonicalLink}

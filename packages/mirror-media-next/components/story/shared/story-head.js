@@ -164,7 +164,6 @@ export default function StoryHead({ postData }) {
             key="article:tag"
           />
         )}
-
         {tagsNameStr !== '' && (
           <meta name="keywords" content={tagsNameStr} key="keywords" />
         )}
