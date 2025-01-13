@@ -1,8 +1,6 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 
 export default function useSearch() {
-  const router = useRouter()
   const [searchTerms, setSearchTerms] = useState('')
 
   const goSearchPage = () => {
@@ -18,12 +16,11 @@ export default function useSearch() {
 
     if (trimedSearchTerms === '') return setSearchTerms('')
 
-    router.push({
-      pathname: '/search/[searchTerms]',
-      query: {
-        searchTerms: trimedSearchTerms,
-      },
-    })
+    /**
+     * Since search page is hosted on different backend service,
+     * we use location API instead of next/router to prevent client-side navigation
+     */
+    window.location.assign(`/search/${trimedSearchTerms}`)
   }
 
   return {
