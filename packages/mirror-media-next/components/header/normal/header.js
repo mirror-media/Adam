@@ -24,7 +24,7 @@ import SubBrandList from './sub-brand-list'
 import LinkToCourse from './link-to-course'
 
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
-import { SEARCH_URL } from '../../../config/index.mjs'
+import useSearch from '../../../hooks/use-search'
 
 const GPTAd = dynamic(() => import('../../ads/gpt/gpt-ad'), {
   ssr: false,
@@ -353,18 +353,18 @@ const formatSections = (sectionsData) => {
  * @param {Object} props
  * @param {SectionsAndCategoriesWithHref} props.sectionsData
  * @param {Topics} props.topicsData
- * @param {JSX.Element} [props.children]
- * @returns {React.ReactElement}
+ * @param {React.ReactNode} [props.children]
+ * @returns {React.ReactNode}
  */
 export default function Header({
   sectionsData = [],
   topicsData = [],
   children = null,
 }) {
+  const { searchTerms, setSearchTerms, goSearchPage } = useSearch()
   const sections = formatSections(sectionsData)
   const topics = topicsData && topicsData.length ? topicsData.slice(0, 9) : []
   const [showSearchField, setShowSearchField] = useState(false)
-  const [searchTerms, setSearchTerms] = useState('')
   const mobileSearchButtonRef = useRef(null)
   const mobileSearchWrapperRef = useRef(null)
 
@@ -389,21 +389,6 @@ export default function Header({
       document.removeEventListener('click', handleSearchFieldOpen, true)
     }
   }, [mobileSearchButtonRef, mobileSearchWrapperRef, setShowSearchField])
-
-  const goSearch = () => {
-    /*
-      1. remove whitespace from both sides of a string
-      2. remove whitespace from both sides of any comma
-      3. replace whitespace bwtween two letters with a comma
-     */
-    const trimedSearchTerms = searchTerms
-      .trim()
-      .replace(/\s*,\s*/g, ',')
-      .replace(/\s+/g, ',')
-
-    if (trimedSearchTerms === '') return setSearchTerms('')
-    location.assign(`${SEARCH_URL}/search/v3/${trimedSearchTerms}`)
-  }
 
   const { shouldShowAd } = useDisplayAd()
 
@@ -436,7 +421,7 @@ export default function Header({
           <SearchBarDesktop
             searchTerms={searchTerms}
             setSearchTerms={setSearchTerms}
-            goSearch={goSearch}
+            goSearch={goSearchPage}
           />
           <SearchButtonMobile ref={mobileSearchButtonRef}>
             <Image
@@ -475,7 +460,7 @@ export default function Header({
               /** @param {React.KeyboardEvent} e */
               (e) => {
                 if (e.key === 'Enter') {
-                  goSearch()
+                  goSearchPage()
                 }
               }
             }

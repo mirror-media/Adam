@@ -9,7 +9,7 @@ import Logo from '../normal/logo'
 import PremiumMobileSidebar from './premium-mobile-sidebar'
 import PremiumNavSections from './premium-nav-sections'
 import PremiumMemberLoginButton from './premium-member-login-button'
-import { SEARCH_URL } from '../../../config/index.mjs'
+import useSearch from '../../../hooks/use-search'
 
 /**
  * @typedef {import('./premium-mobile-sidebar').H2AndH3Block} H2AndH3Block
@@ -173,8 +173,8 @@ export default function PremiumHeader({
   shouldShowSubtitleNavigator = false,
   h2AndH3Block = [],
 }) {
+  const { searchTerms, setSearchTerms, goSearchPage } = useSearch()
   const [showSearchField, setShowSearchField] = useState(false)
-  const [searchTerms, setSearchTerms] = useState('')
   const mobileSearchButtonRef = useRef(null)
   const mobileSearchWrapperRef = useRef(null)
   const getSections = () => {
@@ -210,21 +210,6 @@ export default function PremiumHeader({
     }
   }, [mobileSearchButtonRef, mobileSearchWrapperRef, setShowSearchField])
 
-  const goSearch = () => {
-    /*
-      1. remove whitespace from both sides of a string
-      2. remove whitespace from both sides of any comma
-      3. replace whitespace bwtween two letters with a comma
-     */
-    const trimedSearchTerms = searchTerms
-      .trim()
-      .replace(/\s*,\s*/g, ',')
-      .replace(/\s+/g, ',')
-
-    if (trimedSearchTerms === '') return setSearchTerms('')
-    location.assign(`${SEARCH_URL}/search/v3/${trimedSearchTerms}`)
-  }
-
   const sections = getSections()
 
   return (
@@ -241,7 +226,7 @@ export default function PremiumHeader({
           <SearchBarDesktop
             searchTerms={searchTerms}
             setSearchTerms={setSearchTerms}
-            goSearch={goSearch}
+            goSearch={goSearchPage}
           />
           <SearchButtonMobile
             aria-label="search-button"
@@ -278,7 +263,7 @@ export default function PremiumHeader({
               /** @param {React.KeyboardEvent} e */
               (e) => {
                 if (e.key === 'Enter') {
-                  goSearch()
+                  goSearchPage()
                 }
               }
             }
