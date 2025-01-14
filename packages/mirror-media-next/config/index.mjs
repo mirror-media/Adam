@@ -48,7 +48,6 @@ let NEWEBPAY_PAPERMAG_API_URL = ''
 let URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = ''
 let GPT_MODE = ''
 let COURSE_URL = ''
-let SEARCH_URL = 'search-url/search'
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -96,7 +95,6 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
-    SEARCH_URL = 'https://search.mirrormedia.mg'
 
     GPT_MODE = 'prod'
 
@@ -155,7 +153,6 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
-    SEARCH_URL = 'https://search-staging.mirrormedia.mg'
 
     GPT_MODE = 'prod'
 
@@ -231,7 +228,6 @@ switch (ENV) {
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_dev'
     IS_PRIZE_RIZED = true
-    SEARCH_URL = 'https://search-dev.mirrormedia.mg'
 
     COURSE_URL = 'https://dev-course.mirrormedia.mg'
 
@@ -282,7 +278,6 @@ switch (ENV) {
         installApp: false,
       },
     }
-    SEARCH_URL = 'https://search-dev.mirrormedia.mg'
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_local'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_local'
@@ -335,5 +330,4 @@ export {
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   IS_PRIZE_RIZED,
   COURSE_URL,
-  SEARCH_URL,
 }
