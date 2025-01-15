@@ -20,30 +20,30 @@ const ImageContainer = styled.div`
   }
 `
 
-// const ItemSection = styled.div`
-//   position: absolute;
-//   left: 0;
-//   bottom: 0;
-//   padding: 8px;
-//   color: white;
-//   font-size: 16px;
-//   font-weight: 300;
-//   background-color: ${
-//     /**
-//      * @param {Object} props
-//      * @param {String} props.sectionSlug
-//      */
-//     ({ sectionSlug, theme }) =>
-//       sectionSlug && theme.color.sectionsColor[sectionSlug]
-//         ? theme.color.sectionsColor[sectionSlug]
-//         : theme.color.brandColor.lightBlue
-//   };
-//   ${({ theme }) => theme.breakpoint.md} {
-//     font-size: 18px;
-//     font-weight: 600;
-//     padding: 4px 20px;
-//   }
-// `
+const ItemSection = styled.div`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 8px;
+  color: white;
+  font-size: 16px;
+  font-weight: 300;
+  background-color: ${
+    /**
+     * @param {Object} props
+     * @param {String} props.sectionSlug
+     */
+    ({ sectionSlug, theme }) =>
+      sectionSlug && theme.color.sectionsColor[sectionSlug]
+        ? theme.color.sectionsColor[sectionSlug]
+        : theme.color.brandColor.lightBlue
+  };
+  ${({ theme }) => theme.breakpoint.md} {
+    font-size: 18px;
+    font-weight: 600;
+    padding: 4px 20px;
+  }
+`
 
 const ItemDetail = styled.div`
   margin: 20px 20px 36px 20px;
@@ -130,36 +130,24 @@ export default function ArticleListItem({ item, index }) {
     'ninth',
   ]
   const { derivedStructData, structData } = item
-  const removeBoldTags = (text) => {
-    return text.replace(/<\/?b>/g, '')
-  }
   const renderedItem = {
     title: derivedStructData?.title ?? '',
-    description: removeBoldTags(derivedStructData?.snippets?.[0]?.snippet),
+    description: structData?.['article-description'] ?? '',
     link: derivedStructData?.link ?? '',
     image: structData?.['page-image']?.[0] ?? null,
     publishedTime: transformTimeData(structData?.datePublished?.[0], 'dot'),
+    sectionName: structData?.['section-name'] ?? '',
+    sectionSlug: structData?.['section-slug'] ?? '',
   }
-  // const [articleSection, setArticleSection] = useState({
-  //   name: item?.pagemap?.metatags?.[0]?.['section:name'],
-  //   slug: item?.pagemap?.metatags?.[0]?.['section:slug'],
-  // })
-  // useEffect(() => {
-  //   if (item?.link) {
-  //     const urlObject = new URL(item?.link)
-  //     if (urlObject.pathname.startsWith('/campaigns/')) {
-  //       setArticleSection({
-  //         name: '活動網站',
-  //         slug: 'campaign',
-  //       })
-  //     } else if (urlObject.pathname.startsWith('/projects/')) {
-  //       setArticleSection({
-  //         name: '專題',
-  //         slug: 'project',
-  //       })
-  //     }
-  //   }
-  // }, [item?.link])
+
+  const urlObject = new URL(renderedItem?.link)
+  if (urlObject?.pathname.startsWith('/campaigns/')) {
+    renderedItem.name = '活動網站'
+    renderedItem.slug = 'campaign'
+  } else if (urlObject?.pathname.startsWith('/projects/')) {
+    renderedItem.name = '專題'
+    renderedItem.slug = 'project'
+  }
 
   return (
     <ItemWrapper
@@ -174,11 +162,11 @@ export default function ArticleListItem({ item, index }) {
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"
         />
-        {/* {articleSection.name && (
-          <ItemSection sectionSlug={articleSection.slug}>
-            {articleSection.name}
+        {renderedItem.sectionSlug && (
+          <ItemSection sectionSlug={renderedItem.sectionSlug}>
+            {renderedItem.sectionName}
           </ItemSection>
-        )} */}
+        )}
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{renderedItem.title}</ItemTitle>
