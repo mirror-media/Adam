@@ -41,12 +41,9 @@ const searchQuerySchema = z.object({
  * @property {string[]} [page-type]
  * @property {string[]} [page-slug]
  * @property {string[]} [page-image]
- */
-
-/**
- * @typedef {Object} SnippetData
- * @property {string} snippet - The text snippet containing information or a message.
- * @property {string} snippet_status - The status of the snippet, indicating success or failure.
+ * @property {string[]} [section-slug]
+ * @property {string[]} [section-name]
+ * @property {string[]} [article-description]
  */
 
 /**
@@ -55,7 +52,6 @@ const searchQuerySchema = z.object({
  * @property {string} link
  * @property {string} displayLink
  * @property {string} htmlTitle
- * @property {SnippetData[]} snippets
  */
 
 /**
@@ -140,9 +136,6 @@ export async function getSearchResult(opts) {
           query: query,
           pageSize: 50,
           pageToken: nextPageToken,
-          contentSearchSpec: {
-            snippetSpec: { returnSnippet: true },
-          },
         }
 
         /**
