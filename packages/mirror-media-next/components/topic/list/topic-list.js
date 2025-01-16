@@ -178,7 +178,7 @@ const TopicLink = styled(Link)`
  *  }
  * }} Photo
  * @typedef {import('./topic-list-articles').Article} Article
- * @typedef {import('../../../apollo/fragments/topic').Topic & {
+ * @typedef {import('../../../apollo/query/topics').Topic & {
  *  id: string;
  *  slug: string;
  *  name: string;

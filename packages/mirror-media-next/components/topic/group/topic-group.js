@@ -102,7 +102,7 @@ const StyledGPTAd = styled(GPTAd)`
  * }} Photo
  * @typedef {import('./topic-group-articles').Tag} Tag
  * @typedef {import('./topic-group-articles').Article} Article
- * @typedef {import('../../../apollo/fragments/topic').Topic } Topic
+ * @typedef {import('../../../apollo/query/topics').Topic } Topic
  */
 
 /**

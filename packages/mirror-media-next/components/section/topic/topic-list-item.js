@@ -64,7 +64,7 @@ const ItemBrief = styled.div`
 /**
  * @typedef {import('../../../apollo/fragments/photo').Photo} HeroImage
  *
- * @typedef {import('../../../apollo/fragments/topic').Topic} Topic
+ * @typedef {import('../../../apollo/query/topics').Topic} Topic
  *
  */
 
