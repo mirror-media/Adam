@@ -15,7 +15,7 @@ import {
  * @property {boolean} isMemberOnly
  */
 /**
- * @typedef {import('../../apollo/fragments/topic.js').Topic[]} Topics
+ * @typedef {import('../../apollo/query/topics').Topic[]} Topics
  */
 
 /**
