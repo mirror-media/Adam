@@ -19,7 +19,11 @@ export function fetchTopicByTopicSlug(topicSlug, postsTake, postsSkip) {
         state: { equals: 'published' },
         isFeatured: { equals: true },
       },
-      postsOrderBy: [{ isFeatured: 'desc' }, { publishedDate: 'desc' }],
+      postsOrderBy: [
+        { isFeatured: 'desc' },
+        { publishedDate: 'desc' },
+        { id: 'desc' },
+      ],
       postsTake,
       postsSkip,
     },

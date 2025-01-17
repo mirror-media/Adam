@@ -181,30 +181,24 @@ export async function getServerSideProps({ query, req, res }) {
    * might need to optimize to load more on client side in next phase
    */
   if (topic.type === 'group' && topic.postsCount > RENDER_PAGE_SIZE) {
-    let posts = topic.posts
-    while (posts.length < topic.postsCount) {
-      /** @type {typeof posts} */
-      let moreTopicPosts = []
-      try {
-        const topicData = await fetchTopicByTopicSlug(
-          topicSlug,
-          RENDER_PAGE_SIZE * 2,
-          posts.length
-        )
-        if (!Array.isArray(topicData.data.topics?.[0]?.posts)) break
-        moreTopicPosts = topicData.data.topics[0].posts
-      } catch (error) {
-        logGqlError(
-          error,
-          `Fetch more topic post with topicId ${topicSlug} for group type in topic page failed at server-side`,
-          globalLogFields
-        )
-        // stop fetching cause there might be infinite loop
-        break
-      }
-      posts = [...posts, ...moreTopicPosts]
+    let moreTopicPosts = []
+    try {
+      const topicData = await fetchTopicByTopicSlug(
+        topicSlug,
+        topic.postsCount,
+        0
+      )
+      if (!Array.isArray(topicData.data.topics?.[0]?.posts)) return
+      moreTopicPosts = topicData.data.topics[0].posts
+    } catch (error) {
+      logGqlError(
+        error,
+        `Fetch more topic post with topicId ${topicSlug} for group type in topic page failed at server-side`,
+        globalLogFields
+      )
+      // stop fetching cause there might be infinite loop
     }
-    topic.posts = posts
+    topic.posts = [...moreTopicPosts]
   }
 
   const props = {
