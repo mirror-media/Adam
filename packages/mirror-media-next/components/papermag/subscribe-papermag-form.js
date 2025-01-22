@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import MerchandiseItem from './form-detail/merchandise-item'
 import ApplyDiscount from './form-detail/apply-discount'
@@ -16,6 +16,8 @@ import { checkOrdererValues, checkRecipientValues } from '../../utils/papermag'
 import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
 import { useRouter } from 'next/router'
 import { SECOND } from '../../constants/time-unit'
+import { generateErrorReportInfo } from '../../utils/log/error-log'
+import { sendErrorLog } from '../../utils/log/send-log'
 
 const Form = styled.form`
   display: flex;
@@ -78,6 +80,7 @@ const RightWrapper = styled.div`
  */
 export default function SubscribePaperMagForm({ plan }) {
   const router = useRouter()
+  const formMerchantIDRef = useRef(/** @type {HTMLInputElement} */ (null))
   const [isProcessing, setIsProcessing] = useState(false)
 
   const [count, setCount] = useState(1)
@@ -122,15 +125,10 @@ export default function SubscribePaperMagForm({ plan }) {
   )
 
   //show a warning message if the isAcceptedConditions is true but the receiptOption is null
-  const [showWarning, setShowWarning] = useState(false)
-
-  useEffect(() => {
-    if (isAcceptedConditions && receiptOption === null) {
-      setShowWarning(true)
-    } else {
-      setShowWarning(false)
-    }
-  }, [isAcceptedConditions, receiptOption])
+  const showWarning = useMemo(
+    () => isAcceptedConditions && receiptOption === null,
+    [isAcceptedConditions, receiptOption]
+  )
 
   const [receiptData, setReceiptData] = useState(null) // update the receiptData state
 
@@ -270,28 +268,38 @@ export default function SubscribePaperMagForm({ plan }) {
       },
     }
 
-    const { data } = await axios.post(
-      `${window.location.origin}/api/papermag`,
-      requestBody
-    )
-    if (data?.status !== 'success') {
-      console.error(data.message)
-      router.push(`/papermag/return?order-fail=true`)
+    try {
+      const { data } = await axios.post(
+        `${window.location.origin}/api/papermag`,
+        requestBody
+      )
+      if (data?.status !== 'success') {
+        console.error(data.message)
+        router.push(`/papermag/return?order-fail=true`)
+      }
+
+      setPaymentPayload(data.data)
+    } catch (err) {
+      setIsProcessing(false)
+
+      const errorReport = generateErrorReportInfo(err)
+      sendErrorLog(errorReport)
+
+      return
     }
 
-    setPaymentPayload(data.data)
-
-    let trySubmitTime = 0
     // 為了確保資料先填入 form 中
     let intervalId = window.setInterval(() => {
-      const formDOM = document.forms.newebpay
-      if (formDOM.elements.MerchantID.value) {
-        formDOM.submit()
-        clearInterval(intervalId) // 停止 interval
-      } else {
-        trySubmitTime += 1
+      if (formMerchantIDRef.current) {
+        const merchantId = formMerchantIDRef.current.value
+
+        if (merchantId) {
+          formMerchantIDRef.current.form.submit()
+          setIsProcessing(false)
+          clearInterval(intervalId) // 停止 interval
+        }
       }
-    }, trySubmitTime * SECOND)
+    }, SECOND)
   }
 
   return (
@@ -352,6 +360,7 @@ export default function SubscribePaperMagForm({ plan }) {
         tradeSha={paymentPayload.TradeSha}
         version={paymentPayload.Version}
         newebpayApiUrl={NEWEBPAY_PAPERMAG_API_URL}
+        ref={formMerchantIDRef}
       />
     </>
   )
