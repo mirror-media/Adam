@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { getNumberWithCommas } from '../../../utils'
+import { getPlanInfoByIdAndShouldFreight } from '../../../utils/papermag'
+import { COUPON_DISCOUNT } from '../../../constants/papermag'
 
 const Wrapper = styled.div`
   border-radius: 12px;
@@ -64,7 +66,7 @@ const DiscountMsg = styled.div`
 /**
  * @typedef Props
  * @property {number} count
- * @property {number} plan
+ * @property {import('../../../constants/papermag').PlanEnum} plan
  * @property {boolean} renewCouponApplied
  * @property {boolean} shouldCountFreight
  *
@@ -77,14 +79,13 @@ export default function PurchaseInfo({
   renewCouponApplied,
   shouldCountFreight,
 }) {
-  const freight = shouldCountFreight
-    ? plan === 1
-      ? 1040 * count
-      : 2080 * count
-    : 0
-  const price = plan === 1 ? 2880 * count : 5280 * count
-  const renewDiscount = renewCouponApplied ? 80 * count : 0
-  const total = price + freight - renewDiscount
+  const { price, shippingFee, discount, renewalDiscount } =
+    getPlanInfoByIdAndShouldFreight(plan, shouldCountFreight)
+
+  const freight = shippingFee * count
+  const itemPrice = price * count
+  const renewDiscount = renewCouponApplied ? COUPON_DISCOUNT * count : 0
+  const total = itemPrice + freight - renewDiscount
 
   return (
     <>
@@ -92,7 +93,7 @@ export default function PurchaseInfo({
         <Title>訂單資訊</Title>
         <ItemWrapper>
           <Item>商品總計</Item>
-          <Price>NT$ {getNumberWithCommas(price)}</Price>
+          <Price>NT$ {getNumberWithCommas(itemPrice)}</Price>
         </ItemWrapper>
         <ItemWrapper>
           <Item>運費</Item>
@@ -115,13 +116,13 @@ export default function PurchaseInfo({
         </ItemWrapper>
       </Wrapper>
       <DiscountMsg>
-        <span>符合{plan === 1 ? '一' : '二'}年方案優惠</span>
-        <span>贈送 {plan === 1 ? '5' : '10'} 期</span>
+        <span>符合{discount.year}年方案優惠</span>
+        <span>贈送 {discount.issue} 期</span>
       </DiscountMsg>
       {renewCouponApplied && (
         <DiscountMsg className="renew">
           <span>符合續訂優惠</span>
-          <span>贈送 {plan === 1 ? '1' : '2'} 期</span>
+          <span>贈送 {renewalDiscount.issue} 期</span>
         </DiscountMsg>
       )}
     </>
