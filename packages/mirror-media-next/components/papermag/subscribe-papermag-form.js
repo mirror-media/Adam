@@ -11,7 +11,11 @@ import CheckoutBtn from './form-detail/checkout-btn'
 import Orderer from './form-detail/orderer'
 import Recipient from './form-detail/recipient'
 import NewebpayForm from './form-detail/newebpay-form'
-import { checkOrdererValues, checkRecipientValues } from '../../utils/papermag'
+import {
+  checkOrdererValues,
+  checkRecipientValues,
+  getPlanInfoByIdAndShouldFreight,
+} from '../../utils/papermag'
 
 import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
 import { useRouter } from 'next/router'
@@ -73,7 +77,7 @@ const RightWrapper = styled.div`
 
 /**
  * @typedef Props
- * @property {number} plan
+ * @property {import('../../constants/papermag').PlanEnum} plan
  *
  * @param {Props} props
  * @returns {React.ReactNode}
@@ -151,12 +155,9 @@ export default function SubscribePaperMagForm({ plan }) {
   }
 
   const formateOrderPayload = () => {
-    const merchandiseName = `magazine_${plan === 2 ? 'two' : 'one'}_year${
-      shouldCountFreight ? '_with_shipping_fee' : ''
-    }`
-    const orderDesc = `${
-      plan === 1 ? '一年鏡週刊 52 期' : '二年鏡週刊 104 期'
-    }${shouldCountFreight ? '加掛號運費' : ''}`
+    const { code: merchandiseName, title: orderDesc } =
+      getPlanInfoByIdAndShouldFreight(plan, shouldCountFreight)
+
     const promoteCodeStr = promoteCode ? `MR${promoteCode}` : ''
     const loveCode =
       receiptOption === 'donate' ? Number(receiptData.value.code) : null
