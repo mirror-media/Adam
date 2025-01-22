@@ -59,6 +59,15 @@ const CheckBoxWrapper = styled.div`
   }
 `
 
+/**
+ * @typedef Props
+ * @property {boolean} checked
+ * @property {import('react').ChangeEventHandler<HTMLInputElement>} onChange
+ * @property {string} label
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 const Checkbox = ({ checked, onChange, label }) => {
   return (
     <CheckBoxWrapper>

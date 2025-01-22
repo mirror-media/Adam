@@ -19,6 +19,14 @@ const Notes = styled.p`
   margin: 48px 0 24px;
 `
 
+/**
+ * @typedef Props
+ * @property {boolean} isAcceptedConditions
+ * @property {(value: boolean) => void} setIsAcceptedConditions
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function AcceptingTermsAndConditions({
   isAcceptedConditions,
   setIsAcceptedConditions,

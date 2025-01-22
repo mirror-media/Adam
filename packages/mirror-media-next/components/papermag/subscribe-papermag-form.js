@@ -50,30 +50,63 @@ const RightWrapper = styled.div`
   }
 `
 
+/**
+ * @typedef OrderValues
+ * @property {string} username
+ * @property {string} cellphone
+ * @property {string} phone
+ * @property {string} phoneExt
+ * @property {string} address
+ * @property {string} email
+ */
+
+/**
+ * @typedef RecipientValues
+ * @property {string} username
+ * @property {string} cellphone
+ * @property {string} phone
+ * @property {string} phoneExt
+ * @property {string} address
+ */
+
+/**
+ * @typedef Props
+ * @property {number} plan
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function SubscribePaperMagForm({ plan }) {
   const router = useRouter()
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const [count, setCount] = useState(1)
   const [renewCouponApplied, setRenewCouponApplied] = useState(false)
   const [shouldCountFreight, setShouldCountFreight] = useState(false)
-  const [promoteCode, setPromoteCode] = useState(null)
+  const [promoteCode, setPromoteCode] = useState(
+    /** @type {string | null} */ (null)
+  )
 
-  const [ordererValues, setOrdererValues] = useState({
-    username: '',
-    cellphone: '',
-    phone: '',
-    phoneExt: '',
-    address: '',
-    email: '',
-  })
+  const [ordererValues, setOrdererValues] = useState(
+    /** @type {OrderValues} */ ({
+      username: '',
+      cellphone: '',
+      phone: '',
+      phoneExt: '',
+      address: '',
+      email: '',
+    })
+  )
 
-  const [recipientValues, setRecipientValues] = useState({
-    username: '',
-    cellphone: '',
-    phone: '',
-    phoneExt: '',
-    address: '',
-  })
+  const [recipientValues, setRecipientValues] = useState(
+    /** @type {RecipientValues} */ ({
+      username: '',
+      cellphone: '',
+      phone: '',
+      phoneExt: '',
+      address: '',
+    })
+  )
 
   const [paymentPayload, setPaymentPayload] = useState({
     MerchantID: '',
@@ -84,7 +117,9 @@ export default function SubscribePaperMagForm({ plan }) {
 
   const [sameAsOrderer, setSameAsOrderer] = useState(false)
   const [isAcceptedConditions, setIsAcceptedConditions] = useState(false)
-  const [receiptOption, setReceiptOption] = useState(null)
+  const [receiptOption, setReceiptOption] = useState(
+    /** @type {string} */ (null)
+  )
 
   //show a warning message if the isAcceptedConditions is true but the receiptOption is null
   const [showWarning, setShowWarning] = useState(false)
@@ -179,11 +214,16 @@ export default function SubscribePaperMagForm({ plan }) {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    if (isProcessing) return
+
     // Check form validity again: if invalid, redirect to return fail page
     if (!checkValidation()) {
+      setIsProcessing(false)
       router.push(`/papermag/return?order-fail=true`)
       return
     }
+
+    setIsProcessing(true)
 
     const {
       merchandiseName,
@@ -293,6 +333,7 @@ export default function SubscribePaperMagForm({ plan }) {
           <CheckoutBtn
             isAcceptedConditions={isAcceptedConditions}
             receiptOption={receiptOption}
+            isProcessing={isProcessing}
           />
         </LeftWrapper>
         <RightWrapper>
