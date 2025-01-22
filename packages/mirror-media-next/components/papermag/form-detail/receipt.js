@@ -39,6 +39,36 @@ const Warning = styled.p`
   animation: ${shakeAnimation} 0.3s ease-in-out;
 `
 
+/**
+ * @typedef DonateOption
+ * @property {string} name
+ * @property {number} code
+ */
+
+/**
+ * @typedef CarrierOption
+ * @property {number} id
+ * @property {string} name
+ */
+
+/**
+ * @typedef {DonateOption | CarrierOption | { '抬頭': string, '統一發票': string} | string} ReceiptData
+ *
+ * @typedef Data
+ * @property {string} name
+ * @property {ReceiptData} value
+ */
+
+/**
+ * @typedef Props
+ * @property {string} receiptOption
+ * @property {(value: string) => void} setReceiptOption
+ * @property {boolean} showWarning
+ * @property {(value: Data | {}) => void} onReceiptDataChange
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function Receipt({
   receiptOption,
   setReceiptOption,
@@ -59,6 +89,7 @@ export default function Receipt({
     setShowDetails(true)
   }
 
+  /** @type {DonateOption[]} */
   const donateOptions = [
     {
       name: '財團法人台灣兒童暨家庭扶助基金會',
@@ -82,6 +113,7 @@ export default function Receipt({
     },
   ]
 
+  /** @type {CarrierOption[]} */
   const invoiceWithCarrierOptions = [
     { id: 0, name: '手機條碼' },
     { id: 1, name: '自然人憑證' },
@@ -90,9 +122,11 @@ export default function Receipt({
 
   const [showDetails, setShowDetails] = useState(false)
 
-  const [selectedDonateOption, setSelectedDonateOption] = useState(null)
+  const [selectedDonateOption, setSelectedDonateOption] = useState(
+    /** @type {DonateOption | null}*/ (null)
+  )
   const [selectedInvoiceCarrierOption, setSelectedInvoiceCarrierOption] =
-    useState(null)
+    useState(/** @type {CarrierOption | null} */ (null))
 
   const [barcodeValue, setBarcodeValue] = useState('')
   const [certificateValue, setCertificateValue] = useState('')
@@ -100,31 +134,38 @@ export default function Receipt({
   const [entityNameValue, setEntityNameValue] = useState('')
   const [taxIdNumberValue, setTaxIdNumberValue] = useState('')
 
+  /** @param {DonateOption} option */
   const handleDonateOptionSelect = (option) => {
     setSelectedDonateOption(option)
   }
 
+  /** @param {CarrierOption} option */
   const handleInvoiceCarrierOptionSelect = (option) => {
     setSelectedInvoiceCarrierOption(option)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleBarcodeChange = (event) => {
     setBarcodeValue(event.target.value)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleCertificateChange = (event) => {
     setCertificateValue(event.target.value)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleEntityNameChange = (event) => {
     setEntityNameValue(event.target.value)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleTaxIdNumberChange = (event) => {
     setTaxIdNumberValue(event.target.value)
   }
 
   // Initialize the receipt data object using useMemo
+  /** @type {Data | {}} */
   const receiptData = useMemo(() => {
     let data = {}
 

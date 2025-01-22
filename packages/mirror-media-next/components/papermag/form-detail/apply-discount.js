@@ -150,6 +150,16 @@ const RemoveButton = styled.button`
   transition: all 0.25s ease;
 `
 
+/**
+ * @typedef Props
+ * @property {boolean} renewCouponApplied
+ * @property {(value: boolean) => void} setRenewCouponApplied
+ * @property {string | null} promoteCode
+ * @property {(value: string | null) => void} setPromoteCode
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function ApplyDiscount({
   renewCouponApplied,
   setRenewCouponApplied,

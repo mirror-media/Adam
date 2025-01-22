@@ -83,6 +83,15 @@ const ButtonsWrapper = styled.div`
   align-items: center;
 `
 
+/**
+ * @typedef Props
+ * @property {number} count
+ * @property {(value: number) => void} setCount
+ * @property {number} plan
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function MerchandiseItem({ count, setCount, plan }) {
   const handleIncrement = (e) => {
     e.preventDefault()

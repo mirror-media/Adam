@@ -61,6 +61,16 @@ const DiscountMsg = styled.div`
   }
 `
 
+/**
+ * @typedef Props
+ * @property {number} count
+ * @property {number} plan
+ * @property {boolean} renewCouponApplied
+ * @property {boolean} shouldCountFreight
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function PurchaseInfo({
   count,
   plan,

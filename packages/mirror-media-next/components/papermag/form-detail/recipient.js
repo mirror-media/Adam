@@ -47,6 +47,20 @@ const PhoneExtInputWrapper = styled.div`
   }
 `
 
+/**
+ * @typedef {import('../subscribe-papermag-form').RecipientValues} RecipientValues
+ * @typedef {import('../subscribe-papermag-form').OrderValues} OrderValues
+ *
+ * @typedef Props
+ * @property {RecipientValues} recipientValues
+ * @property {(value: RecipientValues) => void} setRecipientValues
+ * @property {boolean} sameAsOrderer
+ * @property {(value: boolean) => void} setSameAsOrderer
+ * @property {OrderValues} ordererValues
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function Recipient({
   recipientValues,
   setRecipientValues,
@@ -71,6 +85,9 @@ export default function Recipient({
 
   const formValues = sameAsOrderer ? ordererValues : recipientValues
 
+  /**
+   * @param {import('react').ChangeEvent<HTMLInputElement>} e
+   */
   const handleChange = (e) => {
     const { name, value } = e.target
     const newValues = { ...formValues, [name]: value }
