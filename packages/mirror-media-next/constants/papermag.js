@@ -96,4 +96,12 @@ const PLAN_LIST = /** @type {const} */ ([
 
 const COUPON_DISCOUNT = 80
 
-export { PLAN, PLAN_LIST, COUPON_DISCOUNT }
+const RECEIPT_OPTION = /** @type {const} */ ({
+  DONATE: 'donate',
+  WITH_CARRIER: 'invoiceWithCarrier',
+  TRIPPLE: 'tripleInvoice',
+})
+
+/** @typedef {RECEIPT_OPTION[keyof typeof RECEIPT_OPTION]} ReceiptOptionEnum */
+
+export { PLAN, PLAN_LIST, COUPON_DISCOUNT, RECEIPT_OPTION }
