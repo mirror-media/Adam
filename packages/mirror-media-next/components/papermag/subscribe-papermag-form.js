@@ -22,6 +22,7 @@ import { useRouter } from 'next/router'
 import { SECOND } from '../../constants/time-unit'
 import { generateErrorReportInfo } from '../../utils/log/error-log'
 import { sendErrorLog } from '../../utils/log/send-log'
+import { RECEIPT_OPTION } from '../../constants/papermag'
 
 const Form = styled.form`
   display: flex;
@@ -76,6 +77,14 @@ const RightWrapper = styled.div`
  */
 
 /**
+ * @typedef {import('./form-detail/receipt').DonateOption} DonateOption
+ * @typedef {import('./form-detail/receipt').CarrierOption} CarrierOption
+ * @typedef {import('./form-detail/receipt').OtherOption} OtherOption
+ * @typedef {import('./form-detail/receipt').Data} Data
+ * @typedef {import('../../constants/papermag').ReceiptOptionEnum} ReceiptOptionEnum
+ */
+
+/**
  * @typedef Props
  * @property {import('../../constants/papermag').PlanEnum} plan
  *
@@ -125,7 +134,7 @@ export default function SubscribePaperMagForm({ plan }) {
   const [sameAsOrderer, setSameAsOrderer] = useState(false)
   const [isAcceptedConditions, setIsAcceptedConditions] = useState(false)
   const [receiptOption, setReceiptOption] = useState(
-    /** @type {string} */ (null)
+    /** @type {ReceiptOptionEnum} */ (null)
   )
 
   //show a warning message if the isAcceptedConditions is true but the receiptOption is null
@@ -134,7 +143,9 @@ export default function SubscribePaperMagForm({ plan }) {
     [isAcceptedConditions, receiptOption]
   )
 
-  const [receiptData, setReceiptData] = useState(null) // update the receiptData state
+  const [receiptData, setReceiptData] = useState(
+    /** @type {Data | null} */ (null)
+  ) // update the receiptData state
 
   const checkValidation = () => {
     let recipient = recipientValues //收件者資料
@@ -160,12 +171,18 @@ export default function SubscribePaperMagForm({ plan }) {
 
     const promoteCodeStr = promoteCode ? `MR${promoteCode}` : ''
     const loveCode =
-      receiptOption === 'donate' ? Number(receiptData.value.code) : null
-    const receiptType = receiptOption === 'tripleInvoice' ? 'B2B' : 'B2C'
+      receiptOption === RECEIPT_OPTION.DONATE
+        ? Number(/** @type {DonateOption} */ (receiptData.value).code)
+        : null
+    const receiptType = receiptOption === RECEIPT_OPTION.TRIPPLE ? 'B2B' : 'B2C'
     const buyerName =
-      receiptOption === 'tripleInvoice' ? receiptData.value['抬頭'] : ''
+      receiptOption === RECEIPT_OPTION.TRIPPLE
+        ? /** @type {OtherOption}*/ (receiptData.value)['抬頭']
+        : ''
     const buyerUBN =
-      receiptOption === 'tripleInvoice' ? receiptData.value['統一編號'] : ''
+      receiptOption === RECEIPT_OPTION.TRIPPLE
+        ? /** @type {OtherOption}*/ (receiptData.value)['統一編號']
+        : ''
 
     let carrierType = '' //載具類別
     let carrierNum = '' //載具編號
@@ -175,15 +192,15 @@ export default function SubscribePaperMagForm({ plan }) {
       recipient = { ...ordererValues }
     }
 
-    if (receiptOption === 'invoiceWithCarrier') {
+    if (receiptOption === RECEIPT_OPTION.WITH_CARRIER) {
       switch (receiptData.name) {
         case '二聯式發票（含載具）- 手機條碼':
           carrierType = '0'
-          carrierNum = receiptData.value
+          carrierNum = /** @type {string}*/ (receiptData.value)
           break
         case '二聯式發票（含載具）- 自然人憑證':
           carrierType = '1'
-          carrierNum = receiptData.value
+          carrierNum = /** @type {string}*/ (receiptData.value)
           break
         case '二聯式發票（含載具）- 電子發票載具':
           carrierType = '2'
