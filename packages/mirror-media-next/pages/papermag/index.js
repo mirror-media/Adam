@@ -1,14 +1,20 @@
 import styled from 'styled-components'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import {
+  fetchHeaderDataInDefaultPageLayout,
+  fetchAnnoucementsByScope,
+} from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import {
+  handleAxiosResponse,
+  handleGqlResponse,
+} from '../../utils/response-handle'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
 import PlanSection from '../../components/papermag/plan-selection'
 import Notice from '../../components/papermag/notice'
-import { ACCESS_PAPERMAG_FEATURE_TOGGLE } from '../../config/index.mjs'
+import { ANNOUCEMENT_SCOPE } from '../../constants/announcement'
 
 const Page = styled.main`
   min-height: 65vh;
@@ -67,12 +73,19 @@ const AnnouncementContent = styled.p`
 `
 
 /**
- * @param {Object} props
- * @param {import('../../utils/api').HeadersData} props.sectionsData
- * @param {import('../../utils/api').Topics} props.topicsData
+ * @typedef PageProps
+ * @property {import('../../utils/api').HeadersData} sectionsData
+ * @property {import('../../utils/api').Topics} topicsData
+ * @property {import('../../apollo/query/announcements').Announcement[]} announcements
+ */
+
+/**
+ * @param {PageProps} props
  * @returns {React.ReactNode}
  */
-function PaperMag({ sectionsData = [], topicsData = [] }) {
+function PaperMag({ sectionsData = [], topicsData = [], announcements = [] }) {
+  const hasAnnouncement = announcements.length > 0
+
   return (
     <Layout
       head={{ title: `訂閱紙本雜誌` }}
@@ -85,17 +98,18 @@ function PaperMag({ sectionsData = [], topicsData = [] }) {
       <Page>
         <Steps activeStep={1} />
         <MainBody>
-          {/* TODO: Annoucement 的顯示與內容由 CMS list 控制 */}
-          <AnnouncementBlock>
-            <AnnouncementBody>
-              <AnnouncementTitle>[1月份訂戶派送異動公告]</AnnouncementTitle>
-              <AnnouncementContent>
-                {`預祝新春如意！造成困擾敬請見諒。
-                  第434期(原1/22)提前於1/21出刊，1/22完成配送。
-                  第435期(原1/29)提前於1/25出刊，因逢春節期間延至2/3起配送。`}
-              </AnnouncementContent>
-            </AnnouncementBody>
-          </AnnouncementBlock>
+          {hasAnnouncement && (
+            <AnnouncementBlock>
+              {announcements.map(({ id, title, description }) => {
+                return (
+                  <AnnouncementBody key={id}>
+                    <AnnouncementTitle>{title}</AnnouncementTitle>
+                    <AnnouncementContent>{description}</AnnouncementContent>
+                  </AnnouncementBody>
+                )
+              })}
+            </AnnouncementBlock>
+          )}
           <PlanSection />
         </MainBody>
         <Notice />
@@ -107,38 +121,43 @@ function PaperMag({ sectionsData = [], topicsData = [] }) {
 export default PaperMag
 
 /**
- * @type {import('next').GetServerSideProps}
+ * @type {import('next').GetServerSideProps<PageProps>}
  */
 export async function getServerSideProps({ req, res }) {
   setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-  if (ACCESS_PAPERMAG_FEATURE_TOGGLE !== 'on') {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
-
   const globalLogFields = getLogTraceObject(req)
 
-  // Fetch header data
-  const responses = await Promise.allSettled([
+  // fetch header data and announcements
+  const [headerResponse, announcementResponse] = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
+    fetchAnnoucementsByScope([ANNOUCEMENT_SCOPE.PAPER_MAG]),
   ])
 
   const [sectionsData, topicsData] = handleAxiosResponse(
-    responses[0],
+    headerResponse,
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in papermag page',
     globalLogFields
+  )
+
+  const announcements = handleGqlResponse(
+    announcementResponse,
+    (
+      /** @type {import('../../utils/api').AnnouncementQueryResult | undefined} */ gqlData
+    ) => {
+      return (gqlData?.data?.announcements ?? []).filter(
+        (announcement) => announcement.isActive
+      )
+    },
+    'Error occurs while getting announcements in papermag page'
   )
 
   return {
     props: {
       sectionsData,
       topicsData,
+      announcements,
     },
   }
 }

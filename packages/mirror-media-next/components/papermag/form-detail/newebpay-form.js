@@ -18,7 +18,7 @@ const NewebpayFormContainer = styled.div`
  * @param {string} props.tradeSha
  * @param {string} props.version
  * @param {string} props.newebpayApiUrl
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 export default function NewebpayForm({
   merchantId = '',
