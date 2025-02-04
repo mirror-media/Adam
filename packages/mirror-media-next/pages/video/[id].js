@@ -30,6 +30,7 @@ import Head from 'next/head'
 import { getLogTraceObject } from '../../utils'
 import { handleAxiosResponse } from '../../utils/response-handle'
 import { logAxiosError } from '../../utils/log/shared'
+import useFirstScrollDetector from '../../hooks/useFirstScrollDetector'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -123,6 +124,7 @@ const GPT_PLACEHOLDER_SIZES = {
  */
 export default function Video({ video, latestVideos, headerData }) {
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
+  const hasScrolled = useFirstScrollDetector()
 
   return (
     <>
@@ -178,7 +180,7 @@ export default function Video({ video, latestVideos, headerData }) {
             <>
               <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
               <StickyGPTAd pageKey="videohub" />
-              <FullScreenAds />
+              {hasScrolled && <FullScreenAds />}
             </>
           )}
         </Wrapper>

@@ -1,6 +1,18 @@
 import Script from 'next/script'
+import { useEffect } from 'react'
 
 export default function AvividScript() {
+  useEffect(() => {
+    // 找出所有 script 標籤，並檢查 src 是否包含不安全的網址
+    const scripts = document.querySelectorAll('script')
+    scripts.forEach((script) => {
+      if (script.src.includes('aws-sdk-AviviD-min-1')) {
+        console.warn('Blocking unsafe script:', script.src)
+        script.remove()
+      }
+    })
+  }, [])
+
   return (
     <Script
       async
