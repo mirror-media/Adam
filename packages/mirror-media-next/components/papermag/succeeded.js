@@ -170,7 +170,7 @@ const CustomerItem = styled.div`
 /**
  * @param {Object} props
  * @param {Object} props.orderData
- * @return {JSX.Element}
+ * @returns {React.ReactNode}
  */
 
 export default function Succeeded({ orderData }) {

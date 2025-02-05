@@ -110,7 +110,7 @@ const Text = styled.span`
  * @param {Object} props
  * @param {number} props.activeStep - The index of the active step (1-based).
  *                                  // ^-- Hint: Should be a number between 1 and 3.
- * @returns {JSX.Element}
+ * @returns {React.ReactNode}
  */
 function Steps({ activeStep = 1 }) {
   return (

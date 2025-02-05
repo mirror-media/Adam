@@ -1,4 +1,5 @@
 import errors from '@twreporter/errors'
+import client from '../../apollo/apollo-client.js'
 import axiosInstance from '../../axios/index.js'
 import {
   URL_STATIC_HEADER_HEADERS,
@@ -6,6 +7,8 @@ import {
   URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
 } from '../../config/index.mjs'
+import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
+import { fetchAnnoucements } from '../../apollo/query/announcements'
 
 /**
  * @typedef {Object} Category
@@ -129,8 +132,34 @@ const fetchHeaderDataInPremiumPageLayout = async () => {
   }
 }
 
+/**
+ * fetch announcements filtered by input scope array
+ *
+ * @typedef {import('../../apollo/query/announcements').Announcement} Announcement
+ * @typedef {import('@apollo/client').ApolloQueryResult<{ announcements: Announcement[] }>} AnnouncementQueryResult
+ *
+ * @param {import('../../constants/announcement').AnnouncementScopeValue[]} [scope]
+ * @returns {Promise<AnnouncementQueryResult>}
+ */
+const fetchAnnoucementsByScope = (scope) => {
+  if (
+    Array.isArray(scope) &&
+    scope.includes(DEFAULT_ANNOUNCEMENT_SCOPE) === false
+  ) {
+    scope.unshift(DEFAULT_ANNOUNCEMENT_SCOPE)
+  }
+
+  return client.query({
+    query: fetchAnnoucements,
+    variables: {
+      scope,
+    },
+  })
+}
+
 export {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
   fetchPodcastList,
+  fetchAnnoucementsByScope,
 }

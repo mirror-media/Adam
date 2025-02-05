@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { Z_INDEX } from '../constants'
+import useFirstScrollDetector from '../hooks/useFirstScrollDetector'
 
 const Wrapper = styled.div`
   position: relative;
@@ -91,6 +92,7 @@ const Wrapper = styled.div`
 
 export default function GDPRNotification() {
   const [showNotification, setShowNotification] = useState(false)
+  const hasScrolled = useFirstScrollDetector()
 
   useEffect(() => {
     const gdprSeen = localStorage.getItem('mirrormedia-gdprSeen')
@@ -106,24 +108,26 @@ export default function GDPRNotification() {
   }
 
   return (
-    <Wrapper showNotification={showNotification}>
-      {showNotification && (
-        <div className="gdpr-notification">
-          <div className="text">
-            本網站使用相關技術提供更好的閱讀體驗，同時尊重使用者隱私，若您瀏覽此網站，即代表您同意我們使用第三方
-            Cookie。若欲了解更多相關資訊，點這裡瞭解
-            <a
-              href="https://www.mirrormedia.mg/story/privacy/"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              隱私權聲明
-            </a>
-            。
+    hasScrolled && (
+      <Wrapper showNotification={showNotification}>
+        {showNotification && (
+          <div className="gdpr-notification">
+            <div className="text">
+              本網站使用相關技術提供更好的閱讀體驗，同時尊重使用者隱私，若您瀏覽此網站，即代表您同意我們使用第三方
+              Cookie。若欲了解更多相關資訊，點這裡瞭解
+              <a
+                href="https://www.mirrormedia.mg/story/privacy/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                隱私權聲明
+              </a>
+              。
+            </div>
+            <button onClick={handleAgree}>我同意</button>
           </div>
-          <button onClick={handleAgree}>我同意</button>
-        </div>
-      )}
-    </Wrapper>
+        )}
+      </Wrapper>
+    )
   )
 }
