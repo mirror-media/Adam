@@ -37,27 +37,31 @@ const LiveVideoContainer = styled.div`
 `
 
 const Title = styled.h2`
-  color: #054f77;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 23px;
-  margin-bottom: 20px;
+  background-color: rgb(29, 159, 184);
+  color: white;
+  margin-bottom: 24px;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.15;
+  padding: 8px;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
   ${({ theme }) => theme.breakpoint.xl} {
+    background-color: transparent;
     font-size: 28px;
     font-weight: 700;
     line-height: 32.2px;
     letter-spacing: 0.5px;
     margin-bottom: 32px;
+    color: #054f77;
+    padding: 0;
   }
 `
 
 const LiveVideoWrapper = styled.div`
-  max-width: 320px;
-  width: 100%;
+  width: 321px;
   ${({ theme }) => theme.breakpoint.md} {
-    max-width: none;
     width: 504px;
-    height: 282px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     width: 561px;
@@ -66,10 +70,10 @@ const LiveVideoWrapper = styled.div`
 `
 
 const LatestVideoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: none;
   ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
   }
 `
