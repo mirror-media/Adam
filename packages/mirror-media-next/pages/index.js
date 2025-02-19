@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
@@ -30,14 +30,12 @@ import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
-import LiveYoutube from '../components/live-youtube'
 
 import { isDateInsideDatesRange } from '../utils/date'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
 import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
 import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
 import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
-import TagManager from 'react-gtm-module'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -115,7 +113,6 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {Object[] } props.sectionsData
  * @param {LiveYoutubeInfo} props.liveYoutubeInfo
  * @param {import('../type/youtube').YoutubeVideo[]} props.youtubeCoverstoryVideos
- * @param {'a' | 'b'} props.ABConst
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -126,7 +123,6 @@ export default function Home({
   sectionsData = [],
   liveYoutubeInfo,
   youtubeCoverstoryVideos,
-  ABConst,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -147,20 +143,6 @@ export default function Home({
 
   const handleObSlotRenderEnded = useCallback((e) => {
     setISHDAdEmpty(e.isEmpty)
-  }, [])
-
-  useEffect(() => {
-    const tagManagerArgs = {
-      dataLayer: {
-        event: 'pageview',
-        page: {
-          title: document.title,
-          url: window.location.pathname,
-          liveYoutubePositionVariable: ABConst === 'b' ? 'B' : 'A',
-        },
-      },
-    }
-    TagManager.dataLayer(tagManagerArgs)
   }, [])
 
   return (
@@ -191,14 +173,10 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-        {ABConst === 'a' ? (
-          <LiveYoutube liveYoutubeInfo={liveYoutubeInfo} version={ABConst} />
-        ) : (
-          <LiveAndCoverstoryYoutube
-            liveYoutubeInfo={liveYoutubeInfo}
-            youtubeCoverstoryVideos={youtubeCoverstoryVideos}
-          />
-        )}
+        <LiveAndCoverstoryYoutube
+          liveYoutubeInfo={liveYoutubeInfo}
+          youtubeCoverstoryVideos={youtubeCoverstoryVideos}
+        />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
@@ -251,8 +229,6 @@ export async function getServerSideProps({ res, req }) {
   let editorChoicesData = []
   let latestNewsData = []
   let eventsData = []
-
-  const ABConst = Math.random() < 0.5 ? 'a' : 'b'
 
   const channelId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
 
@@ -354,7 +330,6 @@ export async function getServerSideProps({ res, req }) {
         sectionsData,
         liveYoutubeInfo,
         youtubeCoverstoryVideos,
-        ABConst,
       },
     }
   } catch (err) {
