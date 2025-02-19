@@ -41,7 +41,7 @@ import HamburgerButton from './hamburger-button'
  */
 
 /**
- * @typedef {Pick<import('../../../apollo/fragments/topic').Topic, 'id' | 'slug' | 'name'>[]} Topics
+ * @typedef {Pick<import('../../../apollo/query/topics').Topic, 'id' | 'slug' | 'name'>[]} Topics
  */
 
 /**

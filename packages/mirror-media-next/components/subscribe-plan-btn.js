@@ -62,7 +62,7 @@ const StyledSubscribeBtn = styled.button`
  * @param {string} props.hoverColor
  * @param {string} props.hoverText
  * @param {string} props.href
- * @return {JSX.Element}
+ * @returns {React.ReactNode}
  */
 export default function SubscribePlanBtn({
   title,

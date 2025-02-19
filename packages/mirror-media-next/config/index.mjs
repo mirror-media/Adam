@@ -8,13 +8,12 @@ const NEWEBPAY_PAPERMAG_KEY =
   process.env.NEWEBPAY_PAPERMAG_KEY || 'newebpay-papermag-key'
 const NEWEBPAY_PAPERMAG_IV =
   process.env.NEWEBPAY_PAPERMAG_IV || 'newebpay-papermag-iv'
-const ISRAFEL_ORIGIN = process.env.ISRAFEL_ORIGIN || 'israfel-origin'
-const GOOGLE_SHEETS_PRIVATE_KEY = process.env.GOOGLE_SHEETS_PRIVATE_KEY
+const GOOGLE_SHEETS_PRIVATE_KEY = (
+  process.env.GOOGLE_SHEETS_PRIVATE_KEY ?? ''
+).replace(/\\n/g, '\n')
 const GOOGLE_SHEETS_CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
 const GOOGLE_SHEETS_CLIENT_ID = process.env.GOOGLE_SHEETS_CLIENT_ID
 const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
-const PRIVATE_KEY = process.env.PRIVATE_KEY
-const PRIVATE_KEY_ID = process.env.PRIVATE_KEY_ID
 
 // should be applied in preview mode
 const SITE_BASE_PATH = IS_PREVIEW_MODE ? '/preview-server' : ''
@@ -29,7 +28,6 @@ let PREVIEW_SERVER_ORIGIN = ''
 let WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = ''
 let STATIC_FILE_DOMAIN = ''
 let ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
-let ACCESS_PAPERMAG_FEATURE_TOGGLE = 'off'
 let DRAFT_RENDERER_FEATURE_TOGGLE = 'off'
 let LOGIN_PAGE_FEATURE_TOGGLE = 'off'
 let TEST_GPT_AD_FEATURE_TOGGLE = 'off'
@@ -43,7 +41,6 @@ let URL_STATIC_PODCAST_LIST = ''
 let DONATION_PAGE_URL = ''
 let GA_MEASUREMENT_ID = ''
 let GTM_ID = ''
-let SEARCH_URL = 'search-url/search'
 let URL_STATIC_POPULAR_NEWS = ''
 let URL_STATIC_404_POPULAR_NEWS = ''
 let NEWEBPAY_PAPERMAG_API_URL = ''
@@ -90,14 +87,12 @@ switch (ENV) {
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
-    ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'off'
     TEST_GPT_AD_FEATURE_TOGGLE = 'off'
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
-    SEARCH_URL = 'https://search.mirrormedia.mg'
 
     GPT_MODE = 'prod'
 
@@ -149,14 +144,12 @@ switch (ENV) {
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
-    ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'off'
     TEST_GPT_AD_FEATURE_TOGGLE = 'off'
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
-    SEARCH_URL = 'https://search-staging.mirrormedia.mg'
 
     GPT_MODE = 'prod'
 
@@ -208,10 +201,8 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
-    SEARCH_URL = 'https://search-dev.mirrormedia.mg'
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
-    ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'on'
     TEST_GPT_AD_FEATURE_TOGGLE = 'on'
@@ -251,7 +242,6 @@ switch (ENV) {
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
-    ACCESS_PAPERMAG_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'on'
     TEST_GPT_AD_FEATURE_TOGGLE = 'on'
@@ -270,7 +260,6 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
-    SEARCH_URL = 'https://search-dev.mirrormedia.mg'
     GPT_MODE = 'dev'
     FIREBASE_AUTH_DOMAIN = 'mirrormediaapptest.firebaseapp.com'
     ACTION_CODE_SETTING = {
@@ -293,7 +282,6 @@ switch (ENV) {
 import { FIREBASE_CONFIG } from './firebase.mjs'
 
 export {
-  ACCESS_PAPERMAG_FEATURE_TOGGLE,
   ACCESS_SUBSCRIBE_FEATURE_TOGGLE,
   DRAFT_RENDERER_FEATURE_TOGGLE,
   LOGIN_PAGE_FEATURE_TOGGLE,
@@ -319,9 +307,7 @@ export {
   NEWEBPAY_PAPERMAG_API_URL,
   NEWEBPAY_PAPERMAG_IV,
   NEWEBPAY_PAPERMAG_KEY,
-  ISRAFEL_ORIGIN,
   PREVIEW_SERVER_ORIGIN,
-  SEARCH_URL,
   SITE_BASE_PATH,
   SITE_URL,
   URL_STATIC_404_POPULAR_NEWS,
@@ -338,6 +324,4 @@ export {
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   IS_PRIZE_RIZED,
   COURSE_URL,
-  PRIVATE_KEY,
-  PRIVATE_KEY_ID,
 }

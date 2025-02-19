@@ -16,7 +16,6 @@ import { parseBody } from 'next/dist/server/api-utils/node'
 
 import { getMerchandiseAndShippingFeeInfo } from '../../utils/papermag'
 
-import { ACCESS_PAPERMAG_FEATURE_TOGGLE } from '../../config/index.mjs'
 import client from '../../apollo/apollo-client'
 import { fetchAllMemberByOrderNo } from '../../apollo/query/magazine-orders'
 import { transformTimeData, getLogTraceObject } from '../../utils/index'
@@ -38,12 +37,16 @@ const Wrapper = styled.main`
 `
 
 /**
- * @param {Object} props
- * @param {Object[] } props.sectionsData
- * @param {Object[]} props.topicsData
- * @param {string} props.orderStatus
- * @param {Object} props.orderData
- * @return {JSX.Element}
+ * @typedef PageProps
+ * @property {import('../../utils/api').HeadersData} sectionsData
+ * @property {import('../../utils/api').Topics} topicsData
+ * @property {string} orderStatus
+ * @property {Object} orderData
+ */
+
+/**
+ * @param {PageProps} props
+ * @returns {React.ReactNode}
  */
 export default function Return({
   sectionsData = [],
@@ -74,21 +77,12 @@ export default function Return({
 }
 
 /**
- * @type {import('next').GetServerSideProps}
+ * @type {import('next').GetServerSideProps<PageProps>}
  */
 export async function getServerSideProps({ query, req, res }) {
   setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
   const globalLogFields = getLogTraceObject(req)
-
-  if (ACCESS_PAPERMAG_FEATURE_TOGGLE !== 'on') {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
 
   // Fetch header data
   const responses = await Promise.allSettled([

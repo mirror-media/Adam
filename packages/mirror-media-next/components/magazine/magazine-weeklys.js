@@ -5,8 +5,6 @@ import {
   transformTimeDataIntoSlashFormat,
   getMagazineHrefFromSlug,
 } from '../../utils/index'
-
-// @ts-ignore
 import ReadingSvg from '../../public/images-next/magazine-online.svg'
 
 const CardsList = styled.ul`

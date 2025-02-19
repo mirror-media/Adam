@@ -13,13 +13,11 @@ import {
   loginIsFederatedRedirectResultLoading,
   loginActions,
   AuthMethod,
-  FormState,
 } from '../../slice/login-slice'
 import DefaultButton from '../shared/buttons/default-button'
 import IconFacebook from '../../public/images-next/login/facebook.svg'
 import IconGoogle from '../../public/images-next/login/google.svg'
 import IconApple from '../../public/images-next/login/apple.svg'
-import { isInAppBrowser } from '../../utils/login'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */
@@ -81,11 +79,6 @@ export default function ButtonLoginWithThirdParty({ thirdPartyName }) {
   }, [thirdPartyName])
 
   const handleThirdPartyFirebaseLogin = async () => {
-    if (thirdPartyName === AuthMethod.Google && isInAppBrowser()) {
-      dispatch(loginActions.changeState(FormState.InAppGoogleLoginHint))
-      return
-    }
-
     if (isFederatedRedirectResultLoading) return
     dispatch(loginActions.changeIsFederatedRedirectResultLoading(true))
     await signInWithRedirect(auth, provider)

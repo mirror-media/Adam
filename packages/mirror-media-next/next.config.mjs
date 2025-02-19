@@ -58,6 +58,12 @@ const nextConfig = {
         destination: DONATION_PAGE_URL,
         permanent: true,
       },
+      // /search/v3 is deprecated, but set redirect rule for backward compatibility
+      {
+        source: '/search/v3/:searchTerms*',
+        destination: `/search/:searchTerms*`,
+        permanent: true,
+      },
     ]
   },
   async rewrites() {

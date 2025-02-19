@@ -102,7 +102,7 @@ const StyledGPTAd = styled(GPTAd)`
  * }} Photo
  * @typedef {import('./topic-group-articles').Tag} Tag
  * @typedef {import('./topic-group-articles').Article} Article
- * @typedef {import('../../../apollo/fragments/topic').Topic } Topic
+ * @typedef {import('../../../apollo/query/topics').Topic } Topic
  */
 
 /**
@@ -116,7 +116,6 @@ export default function TopicGroup({ topic }) {
   const backgroundUrl = parseUrl(topic.style)
     ? ''
     : topic.og_image?.resized?.original || topic.heroImage?.resized?.original
-
   return (
     <>
       <Container customCss={style} className="topicContainer">
@@ -132,6 +131,7 @@ export default function TopicGroup({ topic }) {
             <TopicGroupArticles
               key={tag.id}
               tag={tag}
+              // @ts-ignore
               posts={posts.filter((post) =>
                 post.tags.some((postTag) => postTag.id === tag.id)
               )}

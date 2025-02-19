@@ -16,8 +16,9 @@ const serverOrigin = IS_PREVIEW_MODE
 /**
  * Because we have two GraphQL endpoint, `/content/graphql` and `/member/graphql`,
  * we need to change endpoint by using `context.uri` in `client.query`.
- * @param {string} uri
- * @param {RequestInit} options
+ *
+ * @typedef {import('@apollo/client').HttpOptions} HttpOptions
+ * @type {HttpOptions['fetch']}
  */
 const customFetch = (uri, options) => {
   let endpoint

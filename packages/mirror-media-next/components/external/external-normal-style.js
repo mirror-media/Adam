@@ -433,6 +433,23 @@ export default function ExternalNormalStyle({ external }) {
     extend_byline = '',
   } = external
 
+  // 正則表達式匹配 <img> 標籤中包含 style 並帶有 width 和 height
+  let updatedContent = content.replace(
+    /<img\b[^>]*style="[^"]*?width:\s*(\d+)px;[^"]*?height:\s*(\d+)px;[^"]*?"[^>]*>/g,
+    (match, width, height) => {
+      // 計算寬高比 (aspect ratio)
+      let aspectRatio = (parseInt(width) / parseInt(height)).toFixed(2) // 保留小數點後兩位
+
+      // 替換 style，設定 width: 100% 和計算出的 aspect-ratio
+      let newTag = match.replace(
+        /style="[^"]*?"/,
+        `style="width: 100%; aspect-ratio: ${aspectRatio} / 1;"`
+      )
+
+      return newTag
+    }
+  )
+
   //Note: Although the `externals` post does not have `section` field, the default value for the external page is "news".
   const EXTERNAL_DEFAULT_SECTION = { name: '時事', slug: 'news' }
 
@@ -580,7 +597,7 @@ export default function ExternalNormalStyle({ external }) {
             <ExternalArticleBrief brief={brief} />
           )}
 
-          <ExternalArticleContent content={content} />
+          <ExternalArticleContent content={updatedContent} />
 
           {updatedTimeJsx}
 
