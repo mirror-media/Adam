@@ -60,7 +60,7 @@ const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
  * @typedef {import('../components/index/latest-news').ArticleRawData[]} ArticlesRawData
  */
 /**
- * @typedef {import('../components/live-youtube').LiveYoutubeInfo} LiveYoutubeInfo
+ * @typedef {import('../components/index/live-and-coverstory-youtube').LiveYoutubeInfo} LiveYoutubeInfo
  */
 
 const IndexContainer = styled.main`
