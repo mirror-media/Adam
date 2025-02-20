@@ -8,7 +8,7 @@ export default function handler(req, res) {
 	 Disallow: /external/
 
 	User-agent: *
-     Allow: /`) 
+     Allow: /`)
   } else {
     res.write(`User-agent: *
      Disallow: /`)

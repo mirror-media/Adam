@@ -10,17 +10,31 @@ import { transformTimeData } from '../../utils'
  */
 
 const Wrapper = styled.div`
-  padding: 24px 0;
-  display: flex;
-  flex-direction: column;
-  row-gap: 40px;
+  padding: ${
+    /**
+     * @param {Object} props
+     * @param {string} props.liveYoutubeId
+     */
+    ({ liveYoutubeId }) => (liveYoutubeId ? '24px 0' : '0')
+  };
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 40px 0;
-    border-top: 2px solid #054f77;
+    padding: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? '40px 0' : '0')
+    };
+    border-top: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? '2px solid #054f77;' : 'none')
+    };
   }
   ${({ theme }) => theme.breakpoint.xl} {
     display: flex;
-    flex-direction: row;
     column-gap: 64px;
     border: none;
     padding: 95px 0 86px;
@@ -38,24 +52,22 @@ const LiveVideoContainer = styled.div`
 
 const Title = styled.h2`
   color: #054f77;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 23px;
   margin-bottom: 20px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.5px;
   ${({ theme }) => theme.breakpoint.xl} {
     font-size: 28px;
-    font-weight: 700;
     line-height: 32.2px;
-    letter-spacing: 0.5px;
     margin-bottom: 32px;
   }
 `
 
 const LiveVideoWrapper = styled.div`
-  max-width: 320px;
-  width: 100%;
+  width: 320px;
+  height: 178px;
   ${({ theme }) => theme.breakpoint.md} {
-    max-width: none;
     width: 504px;
     height: 282px;
   }
@@ -66,45 +78,50 @@ const LiveVideoWrapper = styled.div`
 `
 
 const LatestVideoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: none;
   ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
   }
 `
 
 const LatestVideoList = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 28px;
-  max-width: 288px;
-  ${({ theme }) => theme.breakpoint.md} {
-    max-width: 400px;
-  }
   ${({ theme }) => theme.breakpoint.xl} {
-    row-gap: 12px;
+    display: flex;
+    flex-direction: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? 'column' : 'row')
+    };
+    gap: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? '12px' : '32px')
+    };
   }
 `
 const VideoInfoWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  row-gap: 12px;
   ${({ theme }) => theme.breakpoint.xl} {
+    flex: 1;
+    display: flex;
     flex-direction: row;
-    column-gap: 20px;
+    column-gap: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? '20px' : '12px')
+    };
     align-items: flex-start;
   }
 `
 
 const VideoWrapper = styled.div`
-  width: 288px;
-  height: 160px;
-  ${({ theme }) => theme.breakpoint.md} {
-    width: 400px;
-    height: 222px;
-  }
   ${({ theme }) => theme.breakpoint.xl} {
     width: 180px;
     height: 100px;
@@ -114,10 +131,9 @@ const VideoWrapper = styled.div`
 `
 
 const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-  row-gap: 12px;
   ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
+    flex-direction: column;
     row-gap: 4px;
   }
 `
@@ -128,7 +144,13 @@ const VideoTitle = styled.p`
   line-height: 27px;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: ${
+    /**
+     * @param {Object} props
+     * @param {string} props.liveYoutubeId
+     */
+    ({ liveYoutubeId }) => (liveYoutubeId ? '2' : '3')
+  };
   overflow: hidden;
   &:active,
   &:hover {
@@ -153,7 +175,7 @@ export default function LiveAndCoverstoryYoutube({
   const { name, youtubeId: liveYoutubeId } = liveYoutubeInfo
 
   return (
-    <Wrapper>
+    <Wrapper liveYoutubeId={liveYoutubeId}>
       {liveYoutubeId && (
         <LiveVideoContainer>
           {name && <Title>{name}</Title>}
@@ -167,11 +189,14 @@ export default function LiveAndCoverstoryYoutube({
       )}
       <LatestVideoContainer>
         <Title>最新影音</Title>
-        <LatestVideoList>
+        <LatestVideoList liveYoutubeId={liveYoutubeId}>
           {youtubeCoverstoryVideos.map((latestVideo) => {
             if (!latestVideo) return null
             return (
-              <VideoInfoWrapper key={latestVideo.id}>
+              <VideoInfoWrapper
+                key={latestVideo.id}
+                liveYoutubeId={liveYoutubeId}
+              >
                 <VideoWrapper>
                   <YoutubeIframe
                     videoId={latestVideo.id}
@@ -180,7 +205,7 @@ export default function LiveAndCoverstoryYoutube({
                 </VideoWrapper>
                 <Info>
                   {latestVideo.title && (
-                    <VideoTitle>
+                    <VideoTitle liveYoutubeId={liveYoutubeId}>
                       <a
                         href={`/video/${latestVideo.id}`}
                         target="_blank"
