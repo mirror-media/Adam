@@ -10,10 +10,28 @@ import { transformTimeData } from '../../utils'
  */
 
 const Wrapper = styled.div`
-  padding: 24px 0;
+  padding: ${
+    /**
+     * @param {Object} props
+     * @param {string} props.liveYoutubeId
+     */
+    ({ liveYoutubeId }) => (liveYoutubeId ? '24px 0' : '0')
+  };
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 40px 0;
-    border-top: 2px solid #054f77;
+    padding: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? '40px 0' : '0')
+    };
+    border-top: ${
+      /**
+       * @param {Object} props
+       * @param {string} props.liveYoutubeId
+       */
+      ({ liveYoutubeId }) => (liveYoutubeId ? '2px solid #054f77;' : 'none')
+    };
   }
   ${({ theme }) => theme.breakpoint.xl} {
     display: flex;
@@ -157,7 +175,7 @@ export default function LiveAndCoverstoryYoutube({
   const { name, youtubeId: liveYoutubeId } = liveYoutubeInfo
 
   return (
-    <Wrapper>
+    <Wrapper liveYoutubeId={liveYoutubeId}>
       {liveYoutubeId && (
         <LiveVideoContainer>
           {name && <Title>{name}</Title>}
