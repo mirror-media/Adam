@@ -57,8 +57,8 @@ const searchQuerySchema = z.object({
 /**
  * @typedef {Object} Document
  * @property {string} id
- * @property {StructData} structData
- * @property {DerivedStructData} derivedStructData
+ * @property {StructData} [structData]
+ * @property {DerivedStructData} [derivedStructData]
  */
 
 /**
@@ -170,9 +170,35 @@ export async function getSearchResult(opts) {
     } while (documentCount <= MAX_SEARCH_AMOUNT && nextPageToken)
 
     if (documentCount) {
+      documents.forEach((item) => {
+        if (!Object.hasOwnProperty.call(item, 'structData')) {
+          console.log(
+            JSON.stringify({
+              severity: 'DEBUG',
+              message: `item (id: ${item.id}) doesn't have \`structData\``,
+              debugPayload: {
+                item,
+              },
+            })
+          )
+        }
+
+        if (!Object.hasOwnProperty.call(item, 'derivedStructData')) {
+          console.log(
+            JSON.stringify({
+              severity: 'DEBUG',
+              message: `item (id: ${item.id}) doesn't have \`derivedStructData\``,
+              debugPayload: {
+                item,
+              },
+            })
+          )
+        }
+      })
+
       documents.sort((a, b) => {
-        const dateA = new Date(a.structData.datePublished?.[0] ?? null)
-        const dateB = new Date(b.structData.datePublished?.[0] ?? null)
+        const dateA = new Date(a.structData?.datePublished?.[0] ?? null)
+        const dateB = new Date(b.structData?.datePublished?.[0] ?? null)
         return dateB.valueOf() - dateA.valueOf()
       })
     }
