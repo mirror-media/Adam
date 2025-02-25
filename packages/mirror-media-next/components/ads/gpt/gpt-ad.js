@@ -123,7 +123,8 @@ const GPTAdRoot = ({
           onSlotRenderEnded(event)
         }
       }
-      window.googletag.cmd.push(() => {
+
+      window.googletag?.cmd?.push(() => {
         const pubads = window.googletag.pubads()
 
         adSlot = window.googletag
@@ -146,12 +147,12 @@ const GPTAdRoot = ({
 
       return () => {
         const pubads =
-          'pubads' in window.googletag &&
+          window.googletag.pubads &&
           typeof window.googletag.pubads === 'function'
             ? window.googletag?.pubads()
             : undefined
 
-        window.googletag?.cmd.push(() => {
+        window.googletag?.cmd?.push(() => {
           window.googletag?.destroySlots([adSlot])
           if (onSlotRenderEnded) {
             pubads?.removeEventListener('slotRequested', handleOnSlotRequested)
