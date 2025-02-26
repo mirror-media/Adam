@@ -44,6 +44,16 @@ const PhoneExtInputWrapper = styled.div`
   }
 `
 
+/**
+ * @typedef {import('../subscribe-papermag-form').OrderValues} OrderValues
+ *
+ * @typedef Props
+ * @property {OrderValues} ordererValues
+ * @property {(value: OrderValues) => void} setOrdererValues
+ *
+ * @param {Props} props
+ * @returns
+ */
 export default function Orderer({ ordererValues, setOrdererValues }) {
   const handleChange = (e) => {
     const { name, value } = e.target

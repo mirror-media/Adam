@@ -80,21 +80,36 @@ const Option = styled.li`
   }
 `
 
+/**
+ * @typedef {{name: string}} Option
+ *
+ * @typedef Props
+ * @property {Option[]} options
+ * @property {string} [defaultText]
+ * @property {(value: Option) => void} onSelect
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function CustomDropdown({
   options,
   defaultText = '請選擇',
   onSelect,
 }) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selectedOption, setSelectedOption] = useState(null)
+  const [selectedOption, setSelectedOption] = useState(
+    /** @type {Option | null} */ (null)
+  )
 
-  const containerRef = useRef(null)
+  const containerRef = useRef(/** @type {HTMLDivElement | null}*/ (null))
 
+  /** @type {import('react').MouseEventHandler<HTMLButtonElement>} */
   const toggleDropdown = (e) => {
     e.preventDefault()
     setIsOpen(!isOpen)
   }
 
+  /** @param {Option} option */
   const selectOption = (option) => {
     setSelectedOption(option)
     setIsOpen(false)
@@ -105,8 +120,12 @@ export default function CustomDropdown({
     }
   }
 
+  /** @param {PointerEvent} event */
   const handleOutsideClick = (event) => {
-    if (containerRef.current && !containerRef.current.contains(event.target)) {
+    if (
+      containerRef.current &&
+      !containerRef.current.contains(/** @type {Node} */ (event.target))
+    ) {
       setIsOpen(false)
     }
   }

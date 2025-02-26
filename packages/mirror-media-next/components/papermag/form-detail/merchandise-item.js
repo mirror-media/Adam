@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { getNumberWithCommas } from '../../../utils'
+import { getPlanInfoByIdAndShouldFreight } from '../../../utils/papermag'
 
 const Wrapper = styled.div`
   margin: auto;
@@ -82,7 +83,17 @@ const ButtonsWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `
+/** @typedef {import('../../../constants/papermag').PlanEnum} PlanEnum */
 
+/**
+ * @typedef Props
+ * @property {number} count
+ * @property {(value: number) => void} setCount
+ * @property {PlanEnum} plan
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function MerchandiseItem({ count, setCount, plan }) {
   const handleIncrement = (e) => {
     e.preventDefault()
@@ -97,6 +108,8 @@ export default function MerchandiseItem({ count, setCount, plan }) {
     }
   }
 
+  const { name, price } = getPlanInfoByIdAndShouldFreight(plan, false)
+
   return (
     <Wrapper>
       <Title>訂購項目</Title>
@@ -108,9 +121,7 @@ export default function MerchandiseItem({ count, setCount, plan }) {
             <Td className="price">單價</Td>
           </Tr>
           <Tr style={{ height: '72px' }}>
-            <Td className="item-name">
-              {plan === 1 ? '一年鏡週刊 52 期' : '二年鏡週刊 104 期'}
-            </Td>
+            <Td className="item-name">{name}</Td>
             <Td className="quantity buttons-wrapper">
               <ButtonsWrapper>
                 <CountButton onClick={handleDecrement} disabled={count === 1}>
@@ -122,12 +133,7 @@ export default function MerchandiseItem({ count, setCount, plan }) {
                 </CountButton>
               </ButtonsWrapper>
             </Td>
-            <Td className="price">
-              NT${' '}
-              {plan === 1
-                ? getNumberWithCommas(2880 * count)
-                : getNumberWithCommas(5280 * count)}
-            </Td>
+            <Td className="price">NT$ {getNumberWithCommas(price * count)}</Td>
           </Tr>
         </tbody>
       </Table>

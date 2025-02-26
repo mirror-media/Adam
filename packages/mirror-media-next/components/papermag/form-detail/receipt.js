@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import RadioInput from './radio-input'
 import CustomDropdown from './custom-dropdown'
 import FormInput from './form-input'
+import { RECEIPT_OPTION } from '../../../constants/papermag'
 
 const shakeAnimation = keyframes`
   0%, 100% {
@@ -39,19 +40,61 @@ const Warning = styled.p`
   animation: ${shakeAnimation} 0.3s ease-in-out;
 `
 
+/** @typedef {import('../../../constants/papermag').ReceiptOptionEnum} ReceiptOptionEnum */
+
+/**
+ * @typedef DonateOption
+ * @property {string} name
+ * @property {number} code
+ */
+
+/**
+ * @typedef CarrierOption
+ * @property {number} id
+ * @property {string} name
+ */
+
+/**
+ * @typedef OtherOption
+ * @property {string} 抬頭
+ * @property {string} 統一發票
+ */
+
+/**
+ * @typedef {DonateOption | CarrierOption | OtherOption | string} ReceiptData
+ *
+ * @typedef Data
+ * @property {string} name
+ * @property {ReceiptData} value
+ */
+
+/**
+ * @typedef Props
+ * @property {ReceiptOptionEnum} receiptOption
+ * @property {(value: ReceiptOptionEnum) => void} setReceiptOption
+ * @property {boolean} showWarning
+ * @property {(value: Data | {}) => void} onReceiptDataChange
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function Receipt({
   receiptOption,
   setReceiptOption,
   showWarning,
   onReceiptDataChange,
 }) {
+  /** @param {ReceiptOptionEnum} option */
   const handleRadioChange = (option) => {
-    if (receiptOption === 'donate' || receiptOption === 'tripleInvoice') {
+    if (
+      receiptOption === RECEIPT_OPTION.DONATE ||
+      receiptOption === RECEIPT_OPTION.TRIPPLE
+    ) {
       setSelectedInvoiceCarrierOption(null)
     }
     if (
-      receiptOption === 'invoiceWithCarrier' ||
-      receiptOption === 'tripleInvoice'
+      receiptOption === RECEIPT_OPTION.WITH_CARRIER ||
+      receiptOption === RECEIPT_OPTION.TRIPPLE
     ) {
       setSelectedDonateOption(null)
     }
@@ -59,6 +102,7 @@ export default function Receipt({
     setShowDetails(true)
   }
 
+  /** @type {DonateOption[]} */
   const donateOptions = [
     {
       name: '財團法人台灣兒童暨家庭扶助基金會',
@@ -82,6 +126,7 @@ export default function Receipt({
     },
   ]
 
+  /** @type {CarrierOption[]} */
   const invoiceWithCarrierOptions = [
     { id: 0, name: '手機條碼' },
     { id: 1, name: '自然人憑證' },
@@ -90,9 +135,11 @@ export default function Receipt({
 
   const [showDetails, setShowDetails] = useState(false)
 
-  const [selectedDonateOption, setSelectedDonateOption] = useState(null)
+  const [selectedDonateOption, setSelectedDonateOption] = useState(
+    /** @type {DonateOption | null}*/ (null)
+  )
   const [selectedInvoiceCarrierOption, setSelectedInvoiceCarrierOption] =
-    useState(null)
+    useState(/** @type {CarrierOption | null} */ (null))
 
   const [barcodeValue, setBarcodeValue] = useState('')
   const [certificateValue, setCertificateValue] = useState('')
@@ -100,40 +147,47 @@ export default function Receipt({
   const [entityNameValue, setEntityNameValue] = useState('')
   const [taxIdNumberValue, setTaxIdNumberValue] = useState('')
 
+  /** @param {DonateOption} option */
   const handleDonateOptionSelect = (option) => {
     setSelectedDonateOption(option)
   }
 
+  /** @param {CarrierOption} option */
   const handleInvoiceCarrierOptionSelect = (option) => {
     setSelectedInvoiceCarrierOption(option)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleBarcodeChange = (event) => {
     setBarcodeValue(event.target.value)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleCertificateChange = (event) => {
     setCertificateValue(event.target.value)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleEntityNameChange = (event) => {
     setEntityNameValue(event.target.value)
   }
 
+  /** @param {import('react').ChangeEvent<HTMLInputElement>} event */
   const handleTaxIdNumberChange = (event) => {
     setTaxIdNumberValue(event.target.value)
   }
 
   // Initialize the receipt data object using useMemo
+  /** @type {Data | {}} */
   const receiptData = useMemo(() => {
     let data = {}
 
-    if (receiptOption === 'donate') {
+    if (receiptOption === RECEIPT_OPTION.DONATE) {
       data = {
         name: '捐贈發票',
         value: selectedDonateOption,
       }
-    } else if (receiptOption === 'invoiceWithCarrier') {
+    } else if (receiptOption === RECEIPT_OPTION.WITH_CARRIER) {
       if (selectedInvoiceCarrierOption?.name === '電子發票載具') {
         data = {
           name: '二聯式發票（含載具）- 電子發票載具',
@@ -150,7 +204,7 @@ export default function Receipt({
           value: certificateValue,
         }
       }
-    } else if (receiptOption === 'tripleInvoice') {
+    } else if (receiptOption === RECEIPT_OPTION.TRIPPLE) {
       data = {
         name: '三聯式發票',
         value: {
@@ -181,15 +235,15 @@ export default function Receipt({
       {showWarning && <Warning>尚未選擇發票</Warning>}
       <Note>發票將於付款成功後 7 個工作天內寄達。</Note>
       <RadioInput
-        value="donate"
-        checked={receiptOption === 'donate'}
-        onChange={() => handleRadioChange('donate')}
+        value={RECEIPT_OPTION.DONATE}
+        checked={receiptOption === RECEIPT_OPTION.DONATE}
+        onChange={() => handleRadioChange(RECEIPT_OPTION.DONATE)}
       >
         捐贈
       </RadioInput>
       {showDetails && (
         <div>
-          {receiptOption === 'donate' && (
+          {receiptOption === RECEIPT_OPTION.DONATE && (
             <CustomDropdown
               options={donateOptions}
               onSelect={handleDonateOptionSelect}
@@ -198,15 +252,15 @@ export default function Receipt({
         </div>
       )}
       <RadioInput
-        value="invoiceWithCarrier"
-        checked={receiptOption === 'invoiceWithCarrier'}
-        onChange={() => handleRadioChange('invoiceWithCarrier')}
+        value={RECEIPT_OPTION.WITH_CARRIER}
+        checked={receiptOption === RECEIPT_OPTION.WITH_CARRIER}
+        onChange={() => handleRadioChange(RECEIPT_OPTION.WITH_CARRIER)}
       >
         二聯式發票（含載具）
       </RadioInput>
       {showDetails && (
         <div>
-          {receiptOption === 'invoiceWithCarrier' && (
+          {receiptOption === RECEIPT_OPTION.WITH_CARRIER && (
             <>
               <CustomDropdown
                 options={invoiceWithCarrierOptions}
@@ -243,15 +297,15 @@ export default function Receipt({
         </div>
       )}
       <RadioInput
-        value="tripleInvoice"
-        checked={receiptOption === 'tripleInvoice'}
-        onChange={() => handleRadioChange('tripleInvoice')}
+        value={RECEIPT_OPTION.TRIPPLE}
+        checked={receiptOption === RECEIPT_OPTION.TRIPPLE}
+        onChange={() => handleRadioChange(RECEIPT_OPTION.TRIPPLE)}
       >
         三聯式發票
       </RadioInput>
       {showDetails && (
         <div>
-          {receiptOption === 'tripleInvoice' && (
+          {receiptOption === RECEIPT_OPTION.TRIPPLE && (
             <>
               <FormInput
                 name="entity name"

@@ -55,6 +55,15 @@ const RadioInputContainer = styled.div`
   }
 `
 
+/**
+ * @typedef Props
+ * @property {string | number | string[]} value
+ * @property {boolean} checked
+ * @property {import('react').ChangeEventHandler<HTMLInputElement>} onChange
+ *
+ * @param {import('react').PropsWithChildren<Props>} props
+ * @returns {React.ReactNode}
+ */
 const RadioInput = ({ value, checked, onChange, children }) => {
   return (
     <RadioInputContainer>

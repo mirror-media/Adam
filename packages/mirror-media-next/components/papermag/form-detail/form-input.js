@@ -13,6 +13,12 @@ const shakeAnimation = keyframes`
   }
 `
 
+/**
+ * @typedef InputWrapperProps
+ * @property {boolean} isFocused
+ */
+
+/** @type {import('styled-components').StyledComponent<"div", any, InputWrapperProps, never>} */
 const InputWrapper = styled.div`
   margin-top: 24px;
   input {
@@ -53,13 +59,20 @@ const InputWrapper = styled.div`
       }
     }
 
-    :invalid[focused='true'] ~ span {
-      display: block;
-    }
+    ${
+      /** @param {InputWrapperProps} props */
+      (props) =>
+        props.isFocused &&
+        `
+          :invalid ~ span {
+            display: block;
+          }
 
-    :invalid[focused='true'] {
-      border: 1px solid #e51731;
-      animation: ${shakeAnimation} 0.3s ease-in-out;
+          :invalid {
+            border: 1px solid #e51731;
+            animation: ${shakeAnimation} 0.3s ease-in-out;
+          }
+        `
     }
   }
 
@@ -86,6 +99,16 @@ const InputWrapper = styled.div`
   }
 `
 
+/**
+ * @typedef Props
+ * @property {string} [label]
+ * @property {string} [errorMessage]
+ * @property {boolean} [sameAsOrderer]
+ * @property {import('react').ChangeEventHandler<HTMLInputElement>} onChange
+ *
+ * @param {import('react').HTMLProps<HTMLInputElement> & Props} props
+ * @returns {React.ReactNode}
+ */
 export default function FormInput(props) {
   const [focused, setFocused] = useState(false)
   const { label, errorMessage, onChange, sameAsOrderer, ...inputProps } = props
@@ -106,7 +129,7 @@ export default function FormInput(props) {
   }
 
   return (
-    <InputWrapper>
+    <InputWrapper isFocused={focused}>
       <label>{label}</label>
       {label?.includes('地址') && (
         <p>
@@ -118,8 +141,6 @@ export default function FormInput(props) {
         {...inputProps}
         onChange={onChange}
         onBlur={handleFocus}
-        // eslint-disable-next-line react/no-unknown-property
-        focused={focused.toString()}
         onInvalid={handleInvalid}
       />
       <span>{errorMessage}</span>

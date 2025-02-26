@@ -1,40 +1,22 @@
-const shippingFeePerYear = 1040
-const PLAN_LIST = [
-  {
-    code: 'magazine_one_year',
-    title: '一年鏡週刊 52 期',
-    name: '一年鏡週刊 52 期',
-    hasShippingFee: false,
-    shippingFee: 0,
-  },
-  {
-    code: 'magazine_one_year_with_shipping_fee',
-    title: '一年鏡週刊 52 期加掛號運費',
-    name: '一年鏡週刊 52 期',
-    hasShippingFee: true,
-    shippingFee: shippingFeePerYear,
-  },
-  {
-    code: 'magazine_two_year',
-    title: '兩年鏡週刊 104 期',
-    name: '兩年鏡週刊 104 期',
-    hasShippingFee: false,
-    shippingFee: 0,
-  },
-  {
-    code: 'magazine_two_year_with_shipping_fee',
-    title: '兩年鏡週刊 104 期加掛號運費',
-    name: '兩年鏡週刊 104 期',
-    hasShippingFee: true,
-    shippingFee: shippingFeePerYear * 2,
-  },
-]
+import { PLAN_LIST } from '../constants/papermag'
+
+/** @typedef {import("../constants/papermag").PlanEnum} PlanEnum */
 
 function getMerchandiseAndShippingFeeInfo(merchandiseCode) {
   const plan = PLAN_LIST.find((plan) => plan.code === merchandiseCode)
   return plan
 }
 
+/**
+ * @typedef OrderValues
+ * @property {string} username
+ * @property {string} cellphone
+ * @property {string} address
+ * @property {string} email
+ *
+ * @param {OrderValues} orderItem
+ * @returns {boolean}
+ */
 function checkOrdererValues(orderItem) {
   return !(
     orderItem.username === '' ||
@@ -44,6 +26,15 @@ function checkOrdererValues(orderItem) {
   )
 }
 
+/**
+ * @typedef RecipientValues
+ * @property {string} username
+ * @property {string} cellphone
+ * @property {string} address
+ *
+ * @param {RecipientValues} recipientItem
+ * @returns {boolean}
+ */
 function checkRecipientValues(recipientItem) {
   return !(
     recipientItem.username === '' ||
@@ -52,8 +43,19 @@ function checkRecipientValues(recipientItem) {
   )
 }
 
+/**
+ * @param {PlanEnum} id
+ * @param {boolean} shouldCountFreight
+ */
+function getPlanInfoByIdAndShouldFreight(id, shouldCountFreight) {
+  return PLAN_LIST.find(
+    (plan) => plan.id === id && plan.hasShippingFee === shouldCountFreight
+  )
+}
+
 export {
   getMerchandiseAndShippingFeeInfo,
   checkOrdererValues,
   checkRecipientValues,
+  getPlanInfoByIdAndShouldFreight,
 }
