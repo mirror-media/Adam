@@ -112,12 +112,12 @@ const MIRRORVOICE_LINK = {
   href: 'https://voice.mirrorfiction.com/',
   imageSize: {
     normal: {
-      width: 131.25,
-      height: 30,
+      width: 74,
+      height: 20,
     },
     colorless: {
-      width: 85,
-      height: 19,
+      width: 74,
+      height: 20,
     },
   },
 }
@@ -127,12 +127,12 @@ const MIRRORFICTION_LINK = {
   href: 'https://www.mirrorfiction.com/',
   imageSize: {
     normal: {
-      width: 131.25,
-      height: 30,
+      width: 74,
+      height: 20,
     },
     colorless: {
-      width: 88,
-      height: 19,
+      width: 74,
+      height: 20,
     },
   },
 }
@@ -142,12 +142,12 @@ const MESH_LINK = {
   href: MESH_URL,
   imageSize: {
     normal: {
-      width: 30,
-      height: 30,
+      width: 49,
+      height: 20,
     },
     colorless: {
-      width: 88,
-      height: 19,
+      width: 74,
+      height: 20,
     },
   },
 }

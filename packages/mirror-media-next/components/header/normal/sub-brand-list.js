@@ -8,6 +8,7 @@ const SubBrandListWrapper = styled.ul`
     align-content: center;
     justify-content: center;
     position: relative;
+    align-items: center;
   }
 `
 const ListItem = styled.li`
