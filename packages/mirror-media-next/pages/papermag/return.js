@@ -20,6 +20,7 @@ import client from '../../apollo/apollo-client'
 import { fetchAllMemberByOrderNo } from '../../apollo/query/magazine-orders'
 import { transformTimeData, getLogTraceObject } from '../../utils/index'
 import { handleAxiosResponse } from '../../utils/response-handle'
+import { COUPON_DISCOUNT } from '../../constants/papermag'
 
 const Wrapper = styled.main`
   min-height: 50vh;
@@ -37,11 +38,36 @@ const Wrapper = styled.main`
 `
 
 /**
+ * @typedef PurchasedItem
+ * @property {string} name
+ * @property {number} itemCount
+ * @property {number} shippingCost
+ * @property {number} costWithoutShipping
+ * @property {number} discount
+ * @property {number} total
+ *
+ */
+
+/**
+ * @typedef OrderData
+ * @property {string} orderId
+ * @property {string} date
+ * @property {string} [discountCode]
+ * @property {string} purchaseName
+ * @property {string} purchaseEmail
+ * @property {string} purchaseMobile
+ * @property {string} receiveName
+ * @property {string} receiveMobile
+ * @property {string} receiveAddress
+ * @property {PurchasedItem} orderInfoPurchasedList
+ */
+
+/**
  * @typedef PageProps
  * @property {import('../../utils/api').HeadersData} sectionsData
  * @property {import('../../utils/api').Topics} topicsData
  * @property {string} orderStatus
- * @property {Object} orderData
+ * @property {{} | OrderData} orderData
  */
 
 /**
@@ -149,7 +175,7 @@ export async function getServerSideProps({ query, req, res }) {
       magazineOrderData?.merchandise?.code
     )
 
-    const discount = promoteCode ? 80 * itemCount : 0
+    const discount = promoteCode ? COUPON_DISCOUNT * itemCount : 0
     const shippingCost = shippingFee * itemCount
 
     const orderInfoPurchasedList = {

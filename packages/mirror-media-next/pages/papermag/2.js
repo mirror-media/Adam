@@ -7,6 +7,7 @@ import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
 import SubscribePaperMagForm from '../../components/papermag/subscribe-papermag-form'
+import { PLAN } from '../../constants/papermag'
 
 const Page = styled.main`
   min-height: 65vh;
@@ -41,7 +42,7 @@ function TwoYearsSubscription({ sectionsData = [], topicsData = [] }) {
       <Page>
         <Steps activeStep={2} />
         <Hr />
-        <SubscribePaperMagForm plan={2} />
+        <SubscribePaperMagForm plan={PLAN.TWO_YEAR} />
       </Page>
     </Layout>
   )

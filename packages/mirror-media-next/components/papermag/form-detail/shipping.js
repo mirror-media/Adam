@@ -25,6 +25,14 @@ const Note = styled.p`
   margin-top: 8px;
 `
 
+/**
+ * @typedef Props
+ * @property {boolean} shouldCountFreight
+ * @property {(value: boolean) => void} setShouldCountFreight
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function Shipping({
   shouldCountFreight,
   setShouldCountFreight,
