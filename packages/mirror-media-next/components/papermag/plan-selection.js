@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 import SubscribePlanBtn from '../subscribe-plan-btn'
+import { PLAN } from '../../constants/papermag'
+import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
+import { getNumberWithCommas } from '../../utils'
 
 const Body = styled.section`
   padding: 24px 0;
@@ -76,41 +79,65 @@ const SpecialPrice = styled.p`
   }
 `
 
+/** @param {import('../../constants/papermag').PlanEnum} plan */
+const getPlanHref = (plan) => `/papermag/${plan}`
+
+const ONE_YEAR_ITEM = getPlanInfoByIdAndShouldFreight(PLAN.ONE_YEAR, false)
+const TWO_YEAR_ITEM = getPlanInfoByIdAndShouldFreight(PLAN.TWO_YEAR, false)
+const ITEMS = [
+  {
+    id: PLAN.ONE_YEAR,
+    title: '一年方案',
+    context: `訂購紙本鏡週刊 ${ONE_YEAR_ITEM.issue} 期，加贈 ${ONE_YEAR_ITEM.discount.issue} 期`,
+    basePrice: ONE_YEAR_ITEM.basePrice,
+    price: ONE_YEAR_ITEM.price,
+    button: {
+      title: '訂購一年方案',
+      bgColor: '#1D9FB8',
+      hoverColor: '#054F77',
+      hoverText: '#fff',
+      href: getPlanHref(PLAN.ONE_YEAR),
+    },
+  },
+  {
+    id: PLAN.TWO_YEAR,
+    title: '二年方案',
+    context: `訂購紙本鏡週刊 ${TWO_YEAR_ITEM.issue} 期，加贈 ${TWO_YEAR_ITEM.discount.issue} 期`,
+    basePrice: TWO_YEAR_ITEM.basePrice,
+    price: TWO_YEAR_ITEM.price,
+    button: {
+      title: '訂購二年方案',
+      bgColor: '#054F77',
+      hoverColor: '#9CB7C6',
+      hoverText: '#000',
+      href: getPlanHref(PLAN.TWO_YEAR),
+    },
+  },
+]
+
 export default function PageBody() {
   return (
     <Body>
       <PlansWrapper>
-        <PlanCard>
-          <PlanTitle>一年方案</PlanTitle>
-          <Hr />
-          <PlanContent>訂購紙本鏡週刊 52 期，加贈 5 期</PlanContent>
-          <OriginalPrice>原價 3,900</OriginalPrice>
-          <SpecialPrice>特價 2,880</SpecialPrice>
-          <SubscribePlanBtn
-            title="訂購一年方案"
-            subtitle="續訂另有優惠"
-            bgColor="#1D9FB8"
-            hoverColor="#054F77"
-            hoverText="#fff"
-            href="/papermag/1"
-          />
-        </PlanCard>
-
-        <PlanCard>
-          <PlanTitle>二年方案</PlanTitle>
-          <Hr />
-          <PlanContent>訂購紙本鏡週刊 104 期，加贈 10 期</PlanContent>
-          <OriginalPrice>原價 7,800</OriginalPrice>
-          <SpecialPrice>特價 5,280</SpecialPrice>
-          <SubscribePlanBtn
-            title="訂購二年方案"
-            subtitle="續訂另有優惠"
-            bgColor="#054F77"
-            hoverColor="#9CB7C6"
-            hoverText="#000"
-            href="/papermag/2"
-          />
-        </PlanCard>
+        {ITEMS.map((item) => (
+          <PlanCard key={item.id}>
+            <PlanTitle>{item.title}</PlanTitle>
+            <Hr />
+            <PlanContent>{item.context}</PlanContent>
+            <OriginalPrice>
+              原價 {getNumberWithCommas(item.basePrice)}
+            </OriginalPrice>
+            <SpecialPrice>特價 {getNumberWithCommas(item.price)}</SpecialPrice>
+            <SubscribePlanBtn
+              title={item.button.title}
+              subtitle="續訂另有優惠"
+              bgColor={item.button.bgColor}
+              hoverColor={item.button.hoverColor}
+              hoverText={item.button.hoverText}
+              href={item.button.href}
+            />
+          </PlanCard>
+        ))}
       </PlansWrapper>
     </Body>
   )

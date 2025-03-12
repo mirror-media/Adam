@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 const Wrapper = styled.div`
   border-radius: 8px;
@@ -37,16 +37,20 @@ const InputWrapper = styled.div`
   :focus-within {
     border-color: rgba(0, 0, 0, 0.87);
   }
-  ${({
-    // @ts-ignore
-    renewCouponApplied,
-  }) =>
-    renewCouponApplied &&
-    css`
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      background: #e3e3e3;
-      color: rgba(0, 0, 0, 0.3);
-    `}
+  ${
+    /**
+     * @param {Object} props
+     * @param {boolean} props.renewCouponApplied
+     */
+
+    ({ renewCouponApplied }) =>
+      renewCouponApplied &&
+      `
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: #e3e3e3;
+        color: rgba(0, 0, 0, 0.3);
+      `
+  }
 
   ${({ theme }) => theme.breakpoint.md} {
     max-width: 200px;
@@ -150,6 +154,16 @@ const RemoveButton = styled.button`
   transition: all 0.25s ease;
 `
 
+/**
+ * @typedef Props
+ * @property {boolean} renewCouponApplied
+ * @property {(value: boolean) => void} setRenewCouponApplied
+ * @property {string | null} promoteCode
+ * @property {(value: string | null) => void} setPromoteCode
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function ApplyDiscount({
   renewCouponApplied,
   setRenewCouponApplied,
@@ -182,10 +196,7 @@ export default function ApplyDiscount({
       <h3>續訂戶請輸入訂戶代號</h3>
       <h4>輸入後請點選「確認」以完成續訂計算</h4>
       <InputButtonWrapper>
-        <InputWrapper
-          // @ts-ignore
-          renewCouponApplied={renewCouponApplied}
-        >
+        <InputWrapper renewCouponApplied={renewCouponApplied}>
           <label>MR</label>
           <input
             placeholder="12345678"

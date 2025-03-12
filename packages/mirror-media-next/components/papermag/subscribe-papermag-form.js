@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import styled from 'styled-components'
 import MerchandiseItem from './form-detail/merchandise-item'
 import ApplyDiscount from './form-detail/apply-discount'
@@ -11,11 +11,18 @@ import CheckoutBtn from './form-detail/checkout-btn'
 import Orderer from './form-detail/orderer'
 import Recipient from './form-detail/recipient'
 import NewebpayForm from './form-detail/newebpay-form'
-import { checkOrdererValues, checkRecipientValues } from '../../utils/papermag'
+import {
+  checkOrdererValues,
+  checkRecipientValues,
+  getPlanInfoByIdAndShouldFreight,
+} from '../../utils/papermag'
 
 import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
 import { useRouter } from 'next/router'
 import { SECOND } from '../../constants/time-unit'
+import { generateErrorReportInfo } from '../../utils/log/error-log'
+import { sendErrorLog } from '../../utils/log/send-log'
+import { RECEIPT_OPTION } from '../../constants/papermag'
 
 const Form = styled.form`
   display: flex;
@@ -50,30 +57,72 @@ const RightWrapper = styled.div`
   }
 `
 
+/**
+ * @typedef OrderValues
+ * @property {string} username
+ * @property {string} cellphone
+ * @property {string} phone
+ * @property {string} phoneExt
+ * @property {string} address
+ * @property {string} email
+ */
+
+/**
+ * @typedef RecipientValues
+ * @property {string} username
+ * @property {string} cellphone
+ * @property {string} phone
+ * @property {string} phoneExt
+ * @property {string} address
+ */
+
+/**
+ * @typedef {import('./form-detail/receipt').DonateOption} DonateOption
+ * @typedef {import('./form-detail/receipt').CarrierOption} CarrierOption
+ * @typedef {import('./form-detail/receipt').OtherOption} OtherOption
+ * @typedef {import('./form-detail/receipt').Data} Data
+ * @typedef {import('../../constants/papermag').ReceiptOptionEnum} ReceiptOptionEnum
+ */
+
+/**
+ * @typedef Props
+ * @property {import('../../constants/papermag').PlanEnum} plan
+ *
+ * @param {Props} props
+ * @returns {React.ReactNode}
+ */
 export default function SubscribePaperMagForm({ plan }) {
   const router = useRouter()
+  const formMerchantIDRef = useRef(/** @type {HTMLInputElement} */ (null))
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const [count, setCount] = useState(1)
   const [renewCouponApplied, setRenewCouponApplied] = useState(false)
   const [shouldCountFreight, setShouldCountFreight] = useState(false)
-  const [promoteCode, setPromoteCode] = useState(null)
+  const [promoteCode, setPromoteCode] = useState(
+    /** @type {string | null} */ (null)
+  )
 
-  const [ordererValues, setOrdererValues] = useState({
-    username: '',
-    cellphone: '',
-    phone: '',
-    phoneExt: '',
-    address: '',
-    email: '',
-  })
+  const [ordererValues, setOrdererValues] = useState(
+    /** @type {OrderValues} */ ({
+      username: '',
+      cellphone: '',
+      phone: '',
+      phoneExt: '',
+      address: '',
+      email: '',
+    })
+  )
 
-  const [recipientValues, setRecipientValues] = useState({
-    username: '',
-    cellphone: '',
-    phone: '',
-    phoneExt: '',
-    address: '',
-  })
+  const [recipientValues, setRecipientValues] = useState(
+    /** @type {RecipientValues} */ ({
+      username: '',
+      cellphone: '',
+      phone: '',
+      phoneExt: '',
+      address: '',
+    })
+  )
 
   const [paymentPayload, setPaymentPayload] = useState({
     MerchantID: '',
@@ -84,20 +133,19 @@ export default function SubscribePaperMagForm({ plan }) {
 
   const [sameAsOrderer, setSameAsOrderer] = useState(false)
   const [isAcceptedConditions, setIsAcceptedConditions] = useState(false)
-  const [receiptOption, setReceiptOption] = useState(null)
+  const [receiptOption, setReceiptOption] = useState(
+    /** @type {ReceiptOptionEnum} */ (null)
+  )
 
   //show a warning message if the isAcceptedConditions is true but the receiptOption is null
-  const [showWarning, setShowWarning] = useState(false)
+  const showWarning = useMemo(
+    () => isAcceptedConditions && receiptOption === null,
+    [isAcceptedConditions, receiptOption]
+  )
 
-  useEffect(() => {
-    if (isAcceptedConditions && receiptOption === null) {
-      setShowWarning(true)
-    } else {
-      setShowWarning(false)
-    }
-  }, [isAcceptedConditions, receiptOption])
-
-  const [receiptData, setReceiptData] = useState(null) // update the receiptData state
+  const [receiptData, setReceiptData] = useState(
+    /** @type {Data | null} */ (null)
+  ) // update the receiptData state
 
   const checkValidation = () => {
     let recipient = recipientValues //收件者資料
@@ -118,20 +166,23 @@ export default function SubscribePaperMagForm({ plan }) {
   }
 
   const formateOrderPayload = () => {
-    const merchandiseName = `magazine_${plan === 2 ? 'two' : 'one'}_year${
-      shouldCountFreight ? '_with_shipping_fee' : ''
-    }`
-    const orderDesc = `${
-      plan === 1 ? '一年鏡週刊 52 期' : '二年鏡週刊 104 期'
-    }${shouldCountFreight ? '加掛號運費' : ''}`
+    const { code: merchandiseName, title: orderDesc } =
+      getPlanInfoByIdAndShouldFreight(plan, shouldCountFreight)
+
     const promoteCodeStr = promoteCode ? `MR${promoteCode}` : ''
     const loveCode =
-      receiptOption === 'donate' ? Number(receiptData.value.code) : null
-    const receiptType = receiptOption === 'tripleInvoice' ? 'B2B' : 'B2C'
+      receiptOption === RECEIPT_OPTION.DONATE
+        ? Number(/** @type {DonateOption} */ (receiptData.value).code)
+        : null
+    const receiptType = receiptOption === RECEIPT_OPTION.TRIPPLE ? 'B2B' : 'B2C'
     const buyerName =
-      receiptOption === 'tripleInvoice' ? receiptData.value['抬頭'] : ''
+      receiptOption === RECEIPT_OPTION.TRIPPLE
+        ? /** @type {OtherOption}*/ (receiptData.value)['抬頭']
+        : ''
     const buyerUBN =
-      receiptOption === 'tripleInvoice' ? receiptData.value['統一編號'] : ''
+      receiptOption === RECEIPT_OPTION.TRIPPLE
+        ? /** @type {OtherOption}*/ (receiptData.value)['統一編號']
+        : ''
 
     let carrierType = '' //載具類別
     let carrierNum = '' //載具編號
@@ -141,15 +192,15 @@ export default function SubscribePaperMagForm({ plan }) {
       recipient = { ...ordererValues }
     }
 
-    if (receiptOption === 'invoiceWithCarrier') {
+    if (receiptOption === RECEIPT_OPTION.WITH_CARRIER) {
       switch (receiptData.name) {
         case '二聯式發票（含載具）- 手機條碼':
           carrierType = '0'
-          carrierNum = receiptData.value
+          carrierNum = /** @type {string}*/ (receiptData.value)
           break
         case '二聯式發票（含載具）- 自然人憑證':
           carrierType = '1'
-          carrierNum = receiptData.value
+          carrierNum = /** @type {string}*/ (receiptData.value)
           break
         case '二聯式發票（含載具）- 電子發票載具':
           carrierType = '2'
@@ -179,11 +230,16 @@ export default function SubscribePaperMagForm({ plan }) {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
+    if (isProcessing) return
+
     // Check form validity again: if invalid, redirect to return fail page
     if (!checkValidation()) {
+      setIsProcessing(false)
       router.push(`/papermag/return?order-fail=true`)
       return
     }
+
+    setIsProcessing(true)
 
     const {
       merchandiseName,
@@ -230,28 +286,38 @@ export default function SubscribePaperMagForm({ plan }) {
       },
     }
 
-    const { data } = await axios.post(
-      `${window.location.origin}/api/papermag`,
-      requestBody
-    )
-    if (data?.status !== 'success') {
-      console.error(data.message)
-      router.push(`/papermag/return?order-fail=true`)
+    try {
+      const { data } = await axios.post(
+        `${window.location.origin}/api/papermag`,
+        requestBody
+      )
+      if (data?.status !== 'success') {
+        console.error(data.message)
+        router.push(`/papermag/return?order-fail=true`)
+      }
+
+      setPaymentPayload(data.data)
+    } catch (err) {
+      setIsProcessing(false)
+
+      const errorReport = generateErrorReportInfo(err)
+      sendErrorLog(errorReport)
+
+      return
     }
 
-    setPaymentPayload(data.data)
-
-    let trySubmitTime = 0
     // 為了確保資料先填入 form 中
     let intervalId = window.setInterval(() => {
-      const formDOM = document.forms.newebpay
-      if (formDOM.elements.MerchantID.value) {
-        formDOM.submit()
-        clearInterval(intervalId) // 停止 interval
-      } else {
-        trySubmitTime += 1
+      if (formMerchantIDRef.current) {
+        const merchantId = formMerchantIDRef.current.value
+
+        if (merchantId) {
+          formMerchantIDRef.current.form.submit()
+          setIsProcessing(false)
+          clearInterval(intervalId) // 停止 interval
+        }
       }
-    }, trySubmitTime * SECOND)
+    }, SECOND)
   }
 
   return (
@@ -293,6 +359,7 @@ export default function SubscribePaperMagForm({ plan }) {
           <CheckoutBtn
             isAcceptedConditions={isAcceptedConditions}
             receiptOption={receiptOption}
+            isProcessing={isProcessing}
           />
         </LeftWrapper>
         <RightWrapper>
@@ -311,6 +378,7 @@ export default function SubscribePaperMagForm({ plan }) {
         tradeSha={paymentPayload.TradeSha}
         version={paymentPayload.Version}
         newebpayApiUrl={NEWEBPAY_PAPERMAG_API_URL}
+        ref={formMerchantIDRef}
       />
     </>
   )
