@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 const shakeAnimation = keyframes`
   0%, 100% {
@@ -63,7 +63,7 @@ const InputWrapper = styled.div`
       /** @param {InputWrapperProps} props */
       (props) =>
         props.isFocused &&
-        `
+        css`
           :invalid ~ span {
             display: block;
           }
