@@ -36,6 +36,10 @@ export default class MyDocument extends Document {
     return (
       <Html lang="zh-Hant">
         <Head>
+          <Script
+            async
+            src="https://cdn.jsdelivr.net/npm/@miso.ai/client-sdk@1.11.4/dist/umd/miso.min.js"
+          />
           <link
             rel="apple-touch-icon"
             sizes="180x180"
