@@ -27,6 +27,13 @@ const SlideContainer = styled.div`
     padding-top: 0px;
   }
 `
+
+const Image = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+`
+
 const CaptionBoxPC = styled.div`
   display: none;
   position: relative;
@@ -111,7 +118,7 @@ const CaptionMB = styled.div`
 const Slide = ({ photoData, isTransparent, handleCaptionClick }) => {
   return (
     <SlideContainer>
-      <img
+      <Image
         src={
           photoData?.data.resized?.original ||
           photoData?.data.resized?.w2400 ||
