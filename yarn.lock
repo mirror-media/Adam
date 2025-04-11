@@ -2647,10 +2647,10 @@
     methods "^1.1.2"
     path-to-regexp "^6.3.0"
 
-"@mirrormedia/lilith-draft-renderer@1.3.4-beta.3":
-  version "1.3.4-beta.3"
-  resolved "https://registry.yarnpkg.com/@mirrormedia/lilith-draft-renderer/-/lilith-draft-renderer-1.3.4-beta.3.tgz#4484cef6cbd2ac883b8386fbdd0cf17712deea03"
-  integrity sha512-GG1zTYTIu5s2xFvpTKyB74Nuupa0m4kfWxzNqptIUNGFM8um4He8I0K0bIJTHj7s01TKwiQcGlUXOSgHxb1kig==
+"@mirrormedia/lilith-draft-renderer@1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@mirrormedia/lilith-draft-renderer/-/lilith-draft-renderer-1.4.2.tgz#6dde81d25c085a9fd3d0606b4229bba08ad5e2da"
+  integrity sha512-KT28uatCCQfl9rU+sJ+D2q+9ePA8K6HhpjO0LATQomVQYR0JMbWnCFAa5clCBOO6hNUDflAQKMWOAVVk0vRFlQ==
   dependencies:
     "@readr-media/react-image" "2.1.3"
     body-scroll-lock "3.1.5"
