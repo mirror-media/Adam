@@ -17,7 +17,7 @@
     "@google-cloud/logging": "^11.0.0",
     "@mirrormedia/lilith-draft-renderer": "1.4.2",
     "@mirrormedia/newebpay-node": "^1.0.8",
-    "@miso.ai/client-sdk": "^1.11.4",
+    "@miso.ai/client-sdk": "^1.11.5",
     "@next/font": "^13.1.2",
     "@readr-media/react-image": "2.2.1",
     "@readr-media/react-infinite-scroll-list": "^1.2.0",

@@ -2665,68 +2665,68 @@
     crypto "^1.0.1"
     querystring "^0.2.1"
 
-"@miso.ai/client-sdk-algolia@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-algolia/-/client-sdk-algolia-1.11.4.tgz#cc86b3e479376753ec81531a68d2da8d053eb527"
-  integrity sha512-O+LUaG82GGJT2enOhi9vnRJOoPCgQsd9O5LiX1cyV82wVvX/q99shZcHTpmHlO9qWyWuIqsRWswdlDORjz4yMA==
+"@miso.ai/client-sdk-algolia@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-algolia/-/client-sdk-algolia-1.11.5.tgz#248c566898b41c7155ddba75e0ca708da3f003eb"
+  integrity sha512-9QR8b6U7NZQERsTYhgcUUf57Mf6Dln9FAFGCLm/4memEBSzesA6NPTp80wpMXSa6/YS7LxC2UOY8msaUzRdxLg==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
 
-"@miso.ai/client-sdk-core@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-core/-/client-sdk-core-1.11.4.tgz#fff50efc59cbe7fc9f0c14f9c1fe014f1117291e"
-  integrity sha512-ZInFjFnUXVsu75jEugC8NDk4k4pS0SgwaVMdt8TLFJne67f23n9mpAIM1KQVI/Fx4aAzT22JGfD8fQSGOf69dg==
+"@miso.ai/client-sdk-core@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-core/-/client-sdk-core-1.11.5.tgz#0cb670d9052462053c0f37e3b7935129a571b2fa"
+  integrity sha512-sscvC1kRhDTv0gZbRTdLcBQoGGBJnjXM/mzWqy33f09BW1dnzPeGQZlezl9wSam4KMITOT/ZX/hrGERna0i9OQ==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
 
-"@miso.ai/client-sdk-dev-tool@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-dev-tool/-/client-sdk-dev-tool-1.11.4.tgz#56d6143b2747b242df386a2fae1b32bacfea8822"
-  integrity sha512-TFhIgWvxRoqJ35zpszMldNanI+Eg+PcerDU3ZW66qvvtiKdQKXgQdbup65J0pm9pHvR6cO+jg4d064mD76CBHQ==
+"@miso.ai/client-sdk-dev-tool@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-dev-tool/-/client-sdk-dev-tool-1.11.5.tgz#dca2bb291dc508f0cc60cd65813c22d995b0f7cd"
+  integrity sha512-czsQlBdOd82FwdmWALb/47TgAfOuZvZ7h8CNquCsb01U04/tTsc4JT04TqlkShqoFym/YFD1m7BApSAzU/QY+A==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
     "@miso.ai/doggoganger" "^0.9.1-beta.18"
 
-"@miso.ai/client-sdk-shopify@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-shopify/-/client-sdk-shopify-1.11.4.tgz#9df6d765b2912e5f9beb557f6171c6bddc656d8f"
-  integrity sha512-zy8UX3t8GFMQxhzAIwstXR91K5/Hjxi1RIKOefVEMVNEQ0mzTAhFOLsOZrcUgLHh6q+0QcIboaLCtTc8ZOBZ6g==
+"@miso.ai/client-sdk-shopify@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-shopify/-/client-sdk-shopify-1.11.5.tgz#270fd1a1eba3b03a226ca850e617ad3fc78333e4"
+  integrity sha512-KcqRVsP+MDVH4noarQ+EVOv5uTIkxA3jb5GnDkWWPxHEjBNRJGW2iqB9zGATM4wB+GiiHBOYsZWXZLWz7oo3MQ==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
     shopify-store-utils "^0.9.1"
 
-"@miso.ai/client-sdk-ui-markdown@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-ui-markdown/-/client-sdk-ui-markdown-1.11.4.tgz#889bbef547dace5cb1c82a25daf04a1f04fadb5a"
-  integrity sha512-SjIXLhxNGSYVAjz/s9C0bh4HIecLoJHrG0xLUvdDhfDW2oOK/ccNDIIdOfrYEIdCjNf0YOXtMFEojYDXBUVw9g==
+"@miso.ai/client-sdk-ui-markdown@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-ui-markdown/-/client-sdk-ui-markdown-1.11.5.tgz#d460923d2fbaab867bf96a8269a72cdc8704176e"
+  integrity sha512-E9sGI295w8hh5pFOio8nv5/siLHV6498qV+gxpHAjbJD48rdK+AU5Du/iiKWVz3iLUAi3cPf7/NqRV2bCffPvA==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
-    "@miso.ai/progressive-markdown" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
+    "@miso.ai/progressive-markdown" "1.11.5"
 
-"@miso.ai/client-sdk-ui@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-ui/-/client-sdk-ui-1.11.4.tgz#4e1a4e51313dfa1becab999de87eb6063081a0a1"
-  integrity sha512-9d0BRXYECy7pjIdSJ0ec1h5f2AbMPyNPHy7rgiYiWrYpqAvJ1iswksE5/FdBHpEqwDYWP56ImXGc7EHyxv7X7w==
+"@miso.ai/client-sdk-ui@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk-ui/-/client-sdk-ui-1.11.5.tgz#388cf036f08a49ad2cb1e7082d8649eeb0671415"
+  integrity sha512-KkqgkMQ1zafchBtAQSpxTP5HY2queFMXa9XM6IWw5xNDZFeNn/P1D5UAu2FtseTHbpbkpOhJmO48rKZE/0fzNA==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
 
-"@miso.ai/client-sdk@^1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk/-/client-sdk-1.11.4.tgz#a82b10366368f15e3a479e185e74facda18b2f40"
-  integrity sha512-qXXU3ZtQxOxIo649nPjFoFZ57tmTYgH2fb/92/qWVXg5/sxgpALWSHL2yx0U1xKhx/V/XwjS8bkoynDDTqQH2w==
+"@miso.ai/client-sdk@^1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/client-sdk/-/client-sdk-1.11.5.tgz#631b0f83831aa94957a90ac60b43ea239f17bed6"
+  integrity sha512-kQk8/gmN3ToPhjlLTjgxJmcRIldzOW3eNzANNn52ggdBHI/VSsYbik6lv43G8c7cEAFyAZEobq9kThfH4qqgUQ==
   dependencies:
-    "@miso.ai/client-sdk-algolia" "1.11.4"
-    "@miso.ai/client-sdk-core" "1.11.4"
-    "@miso.ai/client-sdk-dev-tool" "1.11.4"
-    "@miso.ai/client-sdk-shopify" "1.11.4"
-    "@miso.ai/client-sdk-ui" "1.11.4"
-    "@miso.ai/client-sdk-ui-markdown" "1.11.4"
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/client-sdk-algolia" "1.11.5"
+    "@miso.ai/client-sdk-core" "1.11.5"
+    "@miso.ai/client-sdk-dev-tool" "1.11.5"
+    "@miso.ai/client-sdk-shopify" "1.11.5"
+    "@miso.ai/client-sdk-ui" "1.11.5"
+    "@miso.ai/client-sdk-ui-markdown" "1.11.5"
+    "@miso.ai/commons" "1.11.5"
 
-"@miso.ai/commons@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/commons/-/commons-1.11.4.tgz#2ea0123753c0f3f24f3d1db6caabfab1e362d533"
-  integrity sha512-OJZsjK58hFN1K+vJU93p+lLkMNTfrXLAVVVYJP49/HlD2Dzd8BsK1MRDnBfe3nzhZWX0LVIxHKDFVhoNLT+lJQ==
+"@miso.ai/commons@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/commons/-/commons-1.11.5.tgz#10bbf248bd7631605a9b0a543a94e926ca2e0413"
+  integrity sha512-b+ftjgTW7UVAn4hAw107HUJLG4DFaTAh8UBzNn7hFPrpENMs7f2jl/DecVYgoaFIinH981gNioSSkehH0gUulg==
 
 "@miso.ai/doggoganger@^0.9.1-beta.18":
   version "0.9.1-beta.18"
@@ -2742,12 +2742,12 @@
     nodemon "^3.0.1"
     yargs "^17.5.1"
 
-"@miso.ai/progressive-markdown@1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@miso.ai/progressive-markdown/-/progressive-markdown-1.11.4.tgz#15e22c94ba4c4b37b96bf8445bc24e2d5f4398ef"
-  integrity sha512-yIgG7oEyN9gYri9JGR13JITZRv7MDPDLGPQTBVk6jl7/H40ZIpJef56zC3P/hvcg8tJ23ezTYoH75gA0Kp73uA==
+"@miso.ai/progressive-markdown@1.11.5":
+  version "1.11.5"
+  resolved "https://registry.yarnpkg.com/@miso.ai/progressive-markdown/-/progressive-markdown-1.11.5.tgz#a7982ab4eda5fc970cba580b0dc0ffa762c1a199"
+  integrity sha512-6Mu87YXE4CeBt5iMhz6R8oHcguLfUrAXr/gwp8jv12gUNMIWvQnmLAJIahY7VUkdiFPj5adVbBjYhdNC4Vsi4A==
   dependencies:
-    "@miso.ai/commons" "1.11.4"
+    "@miso.ai/commons" "1.11.5"
     hast-util-from-html "^2.0.1"
     hast-util-to-html "^8.0.4"
     rehype-minify-whitespace "^5.0.1"
