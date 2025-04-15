@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
   ENV,
-  MISO_API_KEY,
   // TEST_GPT_AD_FEATURE_TOGGLE,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
@@ -47,6 +46,9 @@ const StoryPremiumStyle = dynamic(() =>
 )
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
+const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
+  ssr: false,
+})
 // import DevGptAd from '../../components/story/dev-gpt-ad'
 
 /**
@@ -114,8 +116,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
    * If successful, the full content will be displayed; if not, the truncated content will still be shown.
    */
 
-  const { isLoggedIn, accessToken, isLogInProcessFinished, firebaseId } =
-    useMembership()
+  const { isLoggedIn, accessToken, isLogInProcessFinished } = useMembership()
   /** @type { [PostContent, React.Dispatch<React.SetStateAction<PostContent>> ]} */
 
   const [postContent, setPostContent] = useState(
@@ -194,26 +195,6 @@ export default function Story({ postData, headerData, storyLayoutType }) {
     storyLayoutType,
   ])
 
-  useEffect(() => {
-    const loadMisoClient = async () => {
-      const { default: MisoClient } = await import('@miso.ai/client-sdk')
-      const client = new MisoClient(MISO_API_KEY)
-      if (isLogInProcessFinished) {
-        if (firebaseId) {
-          client.context.user_id = firebaseId
-        } else {
-          client.context.anonymous_id = 'mm-guest'
-        }
-        client.api.interactions.upload({
-          type: 'story_page_view',
-          product_ids: [slug],
-        })
-      }
-    }
-
-    loadMisoClient()
-  }, [isLogInProcessFinished])
-
   const renderStoryLayout = () => {
     /**
      * Because GA is currently unable to send custom event, we use gtm className to collect custom page-view.
@@ -291,6 +272,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}
       >
+        <MisoPageView productIds={slug} />
         <UserBehaviorLogger
           isMemberArticle={isMember}
           writers={writersInString}
