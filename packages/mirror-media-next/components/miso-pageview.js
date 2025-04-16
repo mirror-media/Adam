@@ -4,7 +4,7 @@
  *
  * @component
  * @param {Object} props - Component props
- * @param {string[] | 'href'} props.productIds - 要上報的商品 ID 陣列，或指定為 'href' 則會使用 `window.location.href`
+ * @param {string[] | 'href'} props.productIds
  *
  * @returns {null} 此元件不會渲染任何可見內容，僅用於觸發 Miso 上報邏輯
  */
@@ -14,9 +14,9 @@ import { useEffect } from 'react'
 
 export default function MisoPageView({ productIds }) {
   const { isLogInProcessFinished, firebaseId } = useMembership()
-  // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-  const misocmd = window.misocmd || (window.misocmd = [])
   useEffect(() => {
+    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+    const misocmd = window.misocmd || (window.misocmd = [])
     misocmd.push(() => {
       // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
       const MisoClient = window.MisoClient
