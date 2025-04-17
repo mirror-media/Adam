@@ -16,6 +16,10 @@ import {
   handleGqlResponse,
 } from '../../utils/response-handle'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import dynamic from 'next/dynamic'
+const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
+  ssr: false,
+})
 
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
@@ -59,6 +63,7 @@ export default function External({ external, headerData }) {
         header={{ type: 'default', data: headerData }}
         footer={{ type: 'default' }}
       >
+        <MisoPageView productIds={`external_${slug}`} />
         <ExternalNormalStyle external={external} />
         <FullScreenAds />
       </Layout>

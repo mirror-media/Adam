@@ -272,7 +272,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}
       >
-        <MisoPageView productIds={slug} />
+        <MisoPageView productIds={`story_${slug}`} />
         <UserBehaviorLogger
           isMemberArticle={isMember}
           writers={writersInString}
