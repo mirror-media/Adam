@@ -338,6 +338,7 @@ const isCompanyEmail = (email) => {
     '@mnews.tw',
     '@mirrormedia.mg',
     '@mirrorfiction.com',
+    '@mirrordaily.news',
   ]
   return validSuffixes.some((suffix) => email.endsWith(suffix))
 }
