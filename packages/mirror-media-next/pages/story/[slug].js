@@ -46,6 +46,9 @@ const StoryPremiumStyle = dynamic(() =>
 )
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
+const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
+  ssr: false,
+})
 // import DevGptAd from '../../components/story/dev-gpt-ad'
 
 /**
@@ -269,6 +272,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}
       >
+        <MisoPageView productIds={`story_${slug}`} />
         <UserBehaviorLogger
           isMemberArticle={isMember}
           writers={writersInString}
