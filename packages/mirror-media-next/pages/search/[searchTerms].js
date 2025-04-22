@@ -88,7 +88,7 @@ const CommaEnd = styled.span`
  * @typedef {Object} SearchProps
  * @property {import('../../components/header/share-header').HeaderData} headerData
  * @property {SearchResult} searchResult
- * @property {'a' | 'b'} testGroup
+ * @property {'A' | 'B'} testGroup
  */
 
 /**
@@ -104,7 +104,7 @@ export default function Search({ searchResult, headerData, testGroup }) {
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
-      {testGroup === 'a' ? (
+      {testGroup === 'A' ? (
         <SearchContainer>
           <SearchTitleWrapper>
             <SearchTitle>
@@ -139,7 +139,10 @@ export default function Search({ searchResult, headerData, testGroup }) {
 }
 
 export async function getServerSideProps({ req, res, params }) {
-  const testGroup = Math.random() < 0.5 ? 'A' : 'B'
+  let testGroup = Math.random() < 0.5 ? 'A' : 'B'
+  if (ENV === 'staging' || ENV === 'prod') {
+    testGroup = 'A'
+  }
   const searchTerms = params.searchTerms ?? ''
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
