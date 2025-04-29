@@ -299,11 +299,9 @@ const SearchWrapper = styled.div`
 `
 
 /**
- * @param {{searchTerms: string}} props
  * @returns {React.ReactElement}
  */
-export default function MisoSearch({ searchTerms }) {
-  console.log(searchTerms)
+export default function MisoSearch() {
   useEffect(() => {
     // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
     const misocmd = window.misocmd || (window.misocmd = [])
@@ -313,17 +311,38 @@ export default function MisoSearch({ searchTerms }) {
       const MisoClient = window.MisoClient
       const client = new MisoClient(MISO_API_KEY)
       const workflow = client.ui.hybridSearch
+      workflow.useApi({
+        source_fl: [
+          'cover_image',
+          'url',
+          'created_at',
+          'updated_at',
+          'published_at',
+          'title',
+          'section_name',
+        ], // 回答的引用文章
+        fl: [
+          'cover_image',
+          'url',
+          'created_at',
+          'updated_at',
+          'published_at',
+          'title',
+          'section_name',
+        ],
+      })
 
       // wait for styles to be loaded
       await client.ui.ready
 
       // render DOM and get element references
       const defaults = MisoClient.ui.defaults.hybridSearch
-      const templates = defaults.templates
+      const templates = defaults.templates.root({ answerBox: true })
       const wireAnswerBox = defaults.wireAnswerBox
+      console.log({ templates })
 
       const rootElement = document.querySelector('#miso-hybrid-search-combo')
-      rootElement.innerHTML = templates.root({ answerBox: true })
+      rootElement.innerHTML = templates
 
       wireAnswerBox(client, rootElement)
 

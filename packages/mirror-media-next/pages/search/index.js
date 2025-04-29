@@ -132,18 +132,18 @@ export default function Search({ searchResult, headerData, testGroup }) {
           )}
         </SearchContainer>
       ) : (
-        <MisoSearch searchTerms={searchTerms} />
+        <MisoSearch />
       )}
     </Layout>
   )
 }
 
-export async function getServerSideProps({ req, res, params }) {
+export async function getServerSideProps({ req, res, query }) {
   let testGroup = Math.random() < 0.5 ? 'A' : 'B'
   if (ENV === 'staging' || ENV === 'prod') {
     testGroup = 'A'
   }
-  const searchTerms = params.searchTerms ?? ''
+  const searchTerms = query.q ?? ''
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
   } else {
