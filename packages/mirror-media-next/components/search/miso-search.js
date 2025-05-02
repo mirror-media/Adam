@@ -268,6 +268,57 @@ const SearchWrapper = styled.div`
     }
   }
 
+  // result 上方
+  .miso-hybrid-search-combo__search-results-info {
+    .miso-hybrid-search-combo__keywords-phrase {
+      display: none;
+    }
+    .miso-hybrid-search-combo__total-phrase {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      ${({ theme }) => theme.breakpoint.xl} {
+        align-items: start;
+        width: 100%;
+      }
+      miso-total {
+        color: #1D9FB8;
+        font-family: "PingFang TC";
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 14px; /* 87.5% */
+        ${({ theme }) => theme.breakpoint.xl} {
+          font-size: 16px;
+        }
+        ::after {
+          content: "篇";
+        }
+        ::before {
+          content: "共有";
+        }
+      }
+      ::before {
+        display: block;
+        content: '這個搜尋結果基於以下文章：';
+        color: black;
+        font-family: "PingFang TC";
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%; /* 27px */
+        margin-bottom: 16px;
+        ${({ theme }) => theme.breakpoint.xl} {
+          font-size: 24px;
+          margin-bottom: 32px;
+        }
+      }
+    }
+  
+    
+    .miso-hybrid-search-combo__total-phrase
+    }
+  }
+
   // result 區域
   .miso-hybrid-search-combo__search-results {
     padding: 0 !important;
