@@ -4,6 +4,77 @@ import styled from 'styled-components'
 
 const SearchWrapper = styled.div`
   // input 框
+  .miso-hybrid-search-combo__question {
+    padding: 12px 20px !important;
+    background: #EAEAEA;
+    display: block;
+    ${({ theme }) => theme.breakpoint.md} {
+      padding: 20px 0 !important; 
+      background: rgba(0, 0, 0, 0);
+    }
+    .miso-hybrid-search-combo__query-container {
+      padding: 0;
+      margin: 0;
+      ${({ theme }) => theme.breakpoint.md} {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      ${({ theme }) => theme.breakpoint.xl} {
+        max-width: 1024px;
+      }
+    }
+    miso-query {
+      border: 0;
+    }
+    .miso-search-box {
+      border: 0;
+    }
+    .miso-search-box__input-group {
+      border-radius: 7px;
+      border: 1px solid #DDD;
+      background: #F5F5F5;
+      box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
+      align-items: center;
+      ${({ theme }) => theme.breakpoint.md} {
+        border-radius: 4px;
+        border: 0.5px solid #DDD;
+        background: #F5F5F5;
+        box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
+        
+      }
+      ::before {
+        content: '';
+        display: block;
+        width: 32px;
+        height: 32px;
+        background: url('/images-next/search-logo.svg');
+        margin-left: 12px;
+      }
+
+      .miso-search-box__input {
+        background: rgba(0, 0, 0, 0);
+        color: #9C9C9C;
+        font-family: "PingFang TC";
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 200%;
+      }
+      .miso-search-box__button {
+        background: rgba(0, 0, 0, 0);
+        display: flex;
+        outline: none !important;
+        ::before {
+          content: '';
+          width: 30px;
+          height: 27px;
+          background: url('/images-next/search-button.svg');
+        }
+        svg {
+          display: none;
+        }
+      }
+    }
+  }
 
   // ask 區塊
   .miso-hybrid-search-combo__answer {
@@ -339,7 +410,6 @@ export default function MisoSearch() {
       const defaults = MisoClient.ui.defaults.hybridSearch
       const templates = defaults.templates.root({ answerBox: true })
       const wireAnswerBox = defaults.wireAnswerBox
-      console.log({ templates })
 
       const rootElement = document.querySelector('#miso-hybrid-search-combo')
       rootElement.innerHTML = templates
