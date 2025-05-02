@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
+import { transformTimeData } from '../../utils'
 
 const SearchWrapper = styled.div`
   // input 框
@@ -297,6 +298,7 @@ const SearchWrapper = styled.div`
       margin: 0 !important;
     }
 
+
     .miso-list__item-body {
       flex-direction: column;
       padding: 0 !important;
@@ -345,6 +347,17 @@ const SearchWrapper = styled.div`
         ${({ theme }) => theme.breakpoint.xl} {
           -webkit-line-clamp: 3;
           padding: 0 8px;
+        }
+      }
+
+      .miso-list__item-time {
+        color:  #9CB7C6;
+        font-size: 14px;
+        line-height: 14px; /* 100% */
+        margin-top: 8px;
+        margin-bottom: 12px;
+        ${({ theme }) => theme.breakpoint.md} {
+          margin-bottom: 8px;
         }
       }
 
@@ -399,10 +412,46 @@ export default function MisoSearch() {
           'updated_at',
           'published_at',
           'title',
-          'section_name',
+          'section',
+        ],
+      })
+      workflow.useLayouts({
+        query: {
+          placeholder: 'Ask anything!',
+        },
+        products: [
+          'list',
+          {
+            templates: {
+              product: renderProduct,
+            },
+          },
         ],
       })
 
+      function renderProduct(layout, state, product) {
+        const html = `
+          <a class="miso-list__item-body" data-role="item" data-miso-product-id="${
+            product.id
+          }" href="${product.url}" target="_blank" rel="noopener">
+            <div class="miso-list__item-cover-image-container">
+              <img class="miso-list__item-cover-image" src="${
+                product.cover_image
+              }">
+            </div>
+            <div class="miso-list__item-info-container">
+              <div class="miso-list__item-title">${product.title}</div>
+              <div class='miso-list__item-time'>${transformTimeData(
+                product['published_at'].toString(),
+                'dot'
+              )}</div>
+              <div class="miso-list__item-snippet">${product.snippet}</div>
+            </div>
+         </a>
+       `
+
+        return html
+      }
       // wait for styles to be loaded
       await client.ui.ready
 
