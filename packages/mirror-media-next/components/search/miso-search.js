@@ -270,6 +270,9 @@ const SearchWrapper = styled.div`
 
   // result 上方
   .miso-hybrid-search-combo__search-results-info {
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center !important;
     .miso-hybrid-search-combo__keywords-phrase {
       display: none;
     }
@@ -313,11 +316,79 @@ const SearchWrapper = styled.div`
         }
       }
     }
-  
-    
-    .miso-hybrid-search-combo__total-phrase
+  }
+
+  miso-facets {
+    display: none;
+  }
+
+  .miso-hybrid-search-combo__search-results-filters__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ${({ theme }) => theme.breakpoint.xl} {
+      justify-content: flex-end;
+      margin-top: -40px;
+    }
+    .miso-hybrid-search-combo__search-results-filters__sort-header {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &::before {
+        content: '排序依';
+        display: block;
+        color: #000;
+        font-family: "PingFang TC";
+        font-size: 14px;
+        line-height: 14px; /* 100% */
+      }
+    }
+    miso-sort {
+      display: flex;
+      z-index: 100;
+      .miso-select {
+        border: 0;
+        width: fit-content;
+
+        .miso-select__button {
+          border: 0;
+          color: #1D9FB8;
+          outline: 0 !important;
+        }
+
+        &.open {
+          .miso-select__button:after {
+            transform: rotate(180deg);
+          }
+          .miso-select__options {
+            display: flex;
+            width: 88px;
+            padding: 12px 9px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            border: 1px solid #9D9D9D;
+            background: #FFF;
+            border-radius: 0;
+            .miso-select__option {
+              transition: 0.5s;
+              ::before {
+                content: none;
+              }
+              &.selected {
+                color: #1D9FB8;
+              }
+              :hover {
+                color: #1D9FB8;
+              }
+            }
+          }
+        }
+      }
     }
   }
+  
 
   // result 區域
   .miso-hybrid-search-combo__search-results {
@@ -447,6 +518,7 @@ export default function MisoSearch() {
       const client = new MisoClient(MISO_API_KEY)
       const workflow = client.ui.hybridSearch
       workflow.useApi({
+        fq: 'product_id:/mirrormedia_.+/',
         source_fl: [
           'cover_image',
           'url',
@@ -479,6 +551,14 @@ export default function MisoSearch() {
           },
         ],
       })
+      workflow.useFilters({
+        sort: {
+          options: [
+            { field: 'relevance', text: '關聯性', default: true },
+            { field: 'published_at', text: '由新到舊' },
+          ],
+        },
+      })
 
       function renderProduct(layout, state, product) {
         const html = `
@@ -508,11 +588,19 @@ export default function MisoSearch() {
 
       // render DOM and get element references
       const defaults = MisoClient.ui.defaults.hybridSearch
-      const templates = defaults.templates.root({ answerBox: true })
+      let templates = defaults.templates.root({ answerBox: true })
+      function insertSortElement(html) {
+        return html.replace(
+          '<miso-facets></miso-facets>',
+          `<div class="miso-hybrid-search-combo__search-results-filters__left"><miso-facets><span class='real-head'>排序依</span></miso-facets></div><div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
+        )
+      }
+      templates = insertSortElement(templates)
       const wireAnswerBox = defaults.wireAnswerBox
 
       const rootElement = document.querySelector('#miso-hybrid-search-combo')
       rootElement.innerHTML = templates
+      console.log({ templates })
 
       wireAnswerBox(client, rootElement)
 
