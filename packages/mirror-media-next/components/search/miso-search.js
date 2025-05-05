@@ -286,8 +286,43 @@ const SearchWrapper = styled.div`
     flex-direction: row-reverse;
     align-items: center;
     justify-content: center !important;
+    flex-direction: column;
     .miso-hybrid-search-combo__keywords-phrase {
-      display: none;
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      margin-bottom: 16px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      ${({ theme }) => theme.breakpoint.xl} {
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      miso-keywords {
+        display: block;
+        color: black;
+        font-family: "PingFang TC";
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%; /* 27px */
+        ${({ theme }) => theme.breakpoint.xl} {
+          font-size: 24px;
+        }
+      }
+      ::before {
+        content: '關於';
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        margin-right: .5rem;
+      }
+      ::after {
+        content: '的搜尋結果';
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        margin-left: .5rem;
+      }
     }
     .miso-hybrid-search-combo__total-phrase {
       font-size: 0; /* 把原字整體隱藏掉 */
@@ -308,26 +343,13 @@ const SearchWrapper = styled.div`
           font-size: 16px;
         }
         ::after {
-          content: "篇";
+          content: " 篇";
         }
         ::before {
-          content: "共有";
+          content: "共有 ";
         }
       }
-      ::before {
-        display: block;
-        content: '這個搜尋結果基於以下文章：';
-        color: black;
-        font-family: "PingFang TC";
-        font-size: 18px;
-        font-weight: 500;
-        line-height: 150%; /* 27px */
-        margin-bottom: 16px;
-        ${({ theme }) => theme.breakpoint.xl} {
-          font-size: 24px;
-          margin-bottom: 32px;
-        }
-      }
+
     }
   }
 
@@ -611,7 +633,6 @@ export default function MisoSearch() {
 
       const rootElement = document.querySelector('#miso-hybrid-search-combo')
       rootElement.innerHTML = templates
-      console.log({ templates })
 
       wireAnswerBox(client, rootElement)
 
