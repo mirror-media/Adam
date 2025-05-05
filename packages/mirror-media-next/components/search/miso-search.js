@@ -204,6 +204,21 @@ const SearchWrapper = styled.div`
 
         .miso-list__item {
           border: 0;
+          display: flex;
+          &:not(:first-child) {
+            &:before {
+              content: '';
+              width: 1px;
+              height: 100%;
+              display: block;
+              background: #000;
+              transform: translate(-8px, 0);
+              ${({ theme }) => theme.breakpoint.md} {
+                transform: translate(-24px, 0);
+              }
+            }
+          }
+
           mark {
             display: none;
           }
@@ -212,13 +227,14 @@ const SearchWrapper = styled.div`
             display: flex;
             flex-direction: row-reverse;
             gap: 8px !important;
+
             ${({ theme }) => theme.breakpoint.md} {
               gap: 10px !important;
             }
 
             .miso-list__item-cover-image-container {
-              width: 88px;
-              height: 60px !important;
+              width: 76px;
+              height: 52px !important;
               margin-top: 32px;
             }
 
@@ -231,15 +247,15 @@ const SearchWrapper = styled.div`
               flex: 1;
               width: 139px;
               margin-right: 4px;
+              justify-content: flex-end;
               ${({ theme }) => theme.breakpoint.md} {
                 margin-right: 2px;
               }
 
               .miso-list__item-date {
-                color: #9CB7C6;
+                color: #61B8C6;
                 font-family: "PingFang TC";
                 font-size: 14px;
-                font-style: normal;
                 font-weight: 400;
                 line-height: 14px;
                 margin-bottom: 8px;
@@ -249,11 +265,8 @@ const SearchWrapper = styled.div`
                 color: #000;
                 font-feature-settings: 'liga' off, 'clig' off;
                 font-family: "PingFang TC";
-                font-size: 18px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: normal;
-                -webkit-line-clamp: 4;
+                font-size: 16px;
+                -webkit-line-clamp: 5;
                 padding: 0;
                 margin: 0;
               }
@@ -316,10 +329,6 @@ const SearchWrapper = styled.div`
         }
       }
     }
-  }
-
-  miso-facets {
-    display: none;
   }
 
   .miso-hybrid-search-combo__search-results-filters__right {
@@ -594,7 +603,7 @@ export default function MisoSearch() {
       function insertSortElement(html) {
         return html.replace(
           '<miso-facets></miso-facets>',
-          `<div class="miso-hybrid-search-combo__search-results-filters__left"><miso-facets><span class='real-head'>排序依</span></miso-facets></div><div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
+          `<div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
         )
       }
       templates = insertSortElement(templates)
