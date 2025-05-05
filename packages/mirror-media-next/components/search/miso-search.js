@@ -497,9 +497,11 @@ const SearchWrapper = styled.div`
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        height: 50px;
         ${({ theme }) => theme.breakpoint.xl} {
           -webkit-line-clamp: 3;
           padding: 0 8px;
+          height: 75px;
         }
       }
 
