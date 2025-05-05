@@ -16,6 +16,8 @@ const SearchWrapper = styled.div`
     .miso-hybrid-search-combo__query-container {
       padding: 0;
       margin: 0;
+      display: flex;
+      flex-direction: column;
       ${({ theme }) => theme.breakpoint.md} {
         max-width: 600px;
         margin: 0 auto;
@@ -26,6 +28,19 @@ const SearchWrapper = styled.div`
     }
     miso-query {
       border: 0;
+    }
+    .query-info {
+      color: #6E6E6E;
+      font-size: 14px;
+      line-height: 150%; /* 21px */
+      text-decoration-line: underline;
+      text-decoration-style: solid;
+      text-decoration-skip-ink: none;
+      text-decoration-thickness: auto;
+      text-underline-offset: auto;
+      text-underline-position: from-font;
+      width: 100%;
+      text-align: end;
     }
     .miso-search-box {
       border: 0;
@@ -179,7 +194,7 @@ const SearchWrapper = styled.div`
     .miso-hybrid-search-combo__sources-container {
       padding: 24px; 22px;
       margin-top: 20px;
-      max-height: inherit;
+      max-height: 200px;
       border-top: 1px solid #000;
       border-bottom: 1px solid #000;
       position: relative;
@@ -242,10 +257,14 @@ const SearchWrapper = styled.div`
               color: #1D9FB8;
             }
 
+            .miso-list__item-title {
+              height: auto;
+            }
+
             .miso-list__item-info-container {
               flex-direction: column-reverse;
               flex: 1;
-              width: 139px;
+              width: 132px;
               margin-right: 4px;
               justify-content: flex-end;
               ${({ theme }) => theme.breakpoint.md} {
@@ -624,13 +643,18 @@ export default function MisoSearch() {
       // render DOM and get element references
       const defaults = MisoClient.ui.defaults.hybridSearch
       let templates = defaults.templates.root({ answerBox: true })
-      function insertSortElement(html) {
-        return html.replace(
+      function insertElement(html) {
+        html = html.replace(
           '<miso-facets></miso-facets>',
           `<div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
         )
+        html = html.replace(
+          '<miso-query></miso-query>',
+          `<miso-query></miso-query><a href="/about-ai-answer" class='query-info'>了解關於我們的 AI Answer</a>`
+        )
+        return html
       }
-      templates = insertSortElement(templates)
+      templates = insertElement(templates)
       const wireAnswerBox = defaults.wireAnswerBox
 
       const rootElement = document.querySelector('#miso-hybrid-search-combo')
