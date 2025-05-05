@@ -478,8 +478,10 @@ const SearchWrapper = styled.div`
         line-height: 14px; /* 100% */
         margin-top: 8px;
         margin-bottom: 12px;
+        padding: 0 20px;
         ${({ theme }) => theme.breakpoint.md} {
           margin-bottom: 8px;
+          padding: 0 8px;
         }
       }
 
