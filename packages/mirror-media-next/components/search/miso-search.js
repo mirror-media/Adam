@@ -29,19 +29,6 @@ const SearchWrapper = styled.div`
     miso-query {
       border: 0;
     }
-    .query-info {
-      color: #6E6E6E;
-      font-size: 14px;
-      line-height: 150%; /* 21px */
-      text-decoration-line: underline;
-      text-decoration-style: solid;
-      text-decoration-skip-ink: none;
-      text-decoration-thickness: auto;
-      text-underline-offset: auto;
-      text-underline-position: from-font;
-      width: 100%;
-      text-align: end;
-    }
     .miso-search-box {
       border: 0;
     }
@@ -647,10 +634,6 @@ export default function MisoSearch() {
         html = html.replace(
           '<miso-facets></miso-facets>',
           `<div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
-        )
-        html = html.replace(
-          '<miso-query></miso-query>',
-          `<miso-query></miso-query><a href="/about-ai-answer" class='query-info'>了解關於我們的 AI Answer</a>`
         )
         return html
       }
