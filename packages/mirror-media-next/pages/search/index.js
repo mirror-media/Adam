@@ -11,7 +11,8 @@ import Layout from '../../components/shared/layout'
 import { getSearchResult } from '../../utils/api/search'
 import dynamic from 'next/dynamic'
 const MisoSearch = dynamic(() => import('../../components/search/miso-search'))
-
+import TagManager from 'react-gtm-module'
+import { useEffect } from 'react'
 const SearchContainer = styled.main`
   width: 320px;
   margin: 0 auto;
@@ -98,6 +99,21 @@ const CommaEnd = styled.span`
 
 export default function Search({ searchResult, headerData, testGroup }) {
   const searchTerms = searchResult?.searchTerms ?? ''
+
+  // mounted 時寫入 GTM 變數層中
+  useEffect(() => {
+    const tagManagerArgs = {
+      dataLayer: {
+        event: 'pageview',
+        page: {
+          title: document.title,
+          url: window.location.pathname,
+          SearchResultPageVariable: testGroup,
+        },
+      },
+    }
+    TagManager.dataLayer(tagManagerArgs)
+  }, [])
 
   return (
     <Layout
