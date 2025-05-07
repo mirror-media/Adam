@@ -41,6 +41,9 @@ import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
 import { GPT_Placeholder_Aside } from '../ads/gpt/gpt-placeholder'
 import Image from 'next/image'
 import ExternalArticleBrief from './external-article-brief'
+import ResponsivePortal from '../story/shared/client-side-portal'
+import useWindowDimensions from '../../hooks/use-window-dimensions'
+import { mediaSize } from '../../styles/media'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -421,6 +424,9 @@ const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
  * @returns {JSX.Element}
  */
 export default function ExternalNormalStyle({ external }) {
+  const { width } = useWindowDimensions()
+  const isMobileWidth = width < mediaSize.md
+
   const {
     slug = '',
     title = '',
@@ -606,7 +612,8 @@ export default function ExternalNormalStyle({ external }) {
           <SubscribeInviteBanner />
 
           <RelatedArticleList relateds={[]} />
-
+          {/* portal target for AsideArticleList on mobile */}
+          <div className="mobile-article-list-portal"></div>
           {shouldShowAd && (
             <StyledGPTAd_MB_AT3
               pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
@@ -696,13 +703,17 @@ export default function ExternalNormalStyle({ external }) {
           )}
 
           <Divider />
-
-          <AsideArticleList
-            listType={'popularNews'}
-            fetchArticle={handleFetchPopularNews}
-            shouldReverseOrder={false}
-            renderAmount={6}
-          />
+          <ResponsivePortal
+            isTransport={isMobileWidth}
+            selector=".mobile-article-list-portal"
+          >
+            <AsideArticleList
+              listType={'popularNews'}
+              fetchArticle={handleFetchPopularNews}
+              shouldReverseOrder={false}
+              renderAmount={6}
+            />
+          </ResponsivePortal>
 
           <AsideFbPagePlugin />
         </Aside>
