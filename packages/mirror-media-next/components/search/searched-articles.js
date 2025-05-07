@@ -39,7 +39,7 @@ const ListEnd = styled.h5`
 
 /**
  * @param {Object} props
- * @param {import('../../pages/search/[searchTerms]').SearchResult} props.searchResult
+ * @param {import('../../pages/search').SearchResult} props.searchResult
  */
 export default function SearchedArticles({ searchResult }) {
   const { items } = searchResult

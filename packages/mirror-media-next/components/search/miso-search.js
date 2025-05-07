@@ -1,9 +1,83 @@
 import { useEffect } from 'react'
 import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
+import { transformTimeData } from '../../utils'
 
 const SearchWrapper = styled.div`
   // input 框
+  .miso-hybrid-search-combo__question {
+    padding: 12px 20px !important;
+    background: #EAEAEA;
+    display: block;
+    ${({ theme }) => theme.breakpoint.md} {
+      padding: 20px 0 !important; 
+      background: rgba(0, 0, 0, 0);
+    }
+    .miso-hybrid-search-combo__query-container {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      ${({ theme }) => theme.breakpoint.md} {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      ${({ theme }) => theme.breakpoint.xl} {
+        max-width: 1024px;
+      }
+    }
+    miso-query {
+      border: 0;
+    }
+    .miso-search-box {
+      border: 0;
+    }
+    .miso-search-box__input-group {
+      border-radius: 7px;
+      border: 1px solid #DDD;
+      background: #F5F5F5;
+      box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
+      align-items: center;
+      ${({ theme }) => theme.breakpoint.md} {
+        border-radius: 4px;
+        border: 0.5px solid #DDD;
+        background: #F5F5F5;
+        box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
+        
+      }
+      ::before {
+        content: '';
+        display: block;
+        width: 32px;
+        height: 32px;
+        background: url('/images-next/search-logo.svg');
+        margin-left: 12px;
+      }
+
+      .miso-search-box__input {
+        background: rgba(0, 0, 0, 0);
+        color: #9C9C9C;
+        font-family: "PingFang TC";
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 200%;
+      }
+      .miso-search-box__button {
+        background: rgba(0, 0, 0, 0);
+        display: flex;
+        outline: none !important;
+        ::before {
+          content: '';
+          width: 30px;
+          height: 27px;
+          background: url('/images-next/search-button.svg');
+        }
+        svg {
+          display: none;
+        }
+      }
+    }
+  }
 
   // ask 區塊
   .miso-hybrid-search-combo__answer {
@@ -107,7 +181,7 @@ const SearchWrapper = styled.div`
     .miso-hybrid-search-combo__sources-container {
       padding: 24px; 22px;
       margin-top: 20px;
-      max-height: inherit;
+      max-height: 200px;
       border-top: 1px solid #000;
       border-bottom: 1px solid #000;
       position: relative;
@@ -132,6 +206,21 @@ const SearchWrapper = styled.div`
 
         .miso-list__item {
           border: 0;
+          display: flex;
+          &:not(:first-child) {
+            &:before {
+              content: '';
+              width: 1px;
+              height: 100%;
+              display: block;
+              background: #000;
+              transform: translate(-8px, 0);
+              ${({ theme }) => theme.breakpoint.md} {
+                transform: translate(-24px, 0);
+              }
+            }
+          }
+
           mark {
             display: none;
           }
@@ -140,13 +229,14 @@ const SearchWrapper = styled.div`
             display: flex;
             flex-direction: row-reverse;
             gap: 8px !important;
+
             ${({ theme }) => theme.breakpoint.md} {
               gap: 10px !important;
             }
 
             .miso-list__item-cover-image-container {
-              width: 88px;
-              height: 60px !important;
+              width: 76px;
+              height: 52px !important;
               margin-top: 32px;
             }
 
@@ -154,20 +244,24 @@ const SearchWrapper = styled.div`
               color: #1D9FB8;
             }
 
+            .miso-list__item-title {
+              height: auto;
+            }
+
             .miso-list__item-info-container {
               flex-direction: column-reverse;
               flex: 1;
-              width: 139px;
+              width: 132px;
               margin-right: 4px;
+              justify-content: flex-end;
               ${({ theme }) => theme.breakpoint.md} {
                 margin-right: 2px;
               }
 
               .miso-list__item-date {
-                color: #9CB7C6;
+                color: #61B8C6;
                 font-family: "PingFang TC";
                 font-size: 14px;
-                font-style: normal;
                 font-weight: 400;
                 line-height: 14px;
                 margin-bottom: 8px;
@@ -177,11 +271,8 @@ const SearchWrapper = styled.div`
                 color: #000;
                 font-feature-settings: 'liga' off, 'clig' off;
                 font-family: "PingFang TC";
-                font-size: 18px;
-                font-style: normal;
-                font-weight: 400;
-                line-height: normal;
-                -webkit-line-clamp: 4;
+                font-size: 16px;
+                -webkit-line-clamp: 5;
                 padding: 0;
                 margin: 0;
               }
@@ -195,6 +286,146 @@ const SearchWrapper = styled.div`
       display: none;
     }
   }
+
+  // result 上方
+  .miso-hybrid-search-combo__search-results-info {
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center !important;
+    flex-direction: column;
+    .miso-hybrid-search-combo__keywords-phrase {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      margin-bottom: 16px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      ${({ theme }) => theme.breakpoint.xl} {
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      miso-keywords {
+        display: block;
+        color: black;
+        font-family: "PingFang TC";
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%; /* 27px */
+        ${({ theme }) => theme.breakpoint.xl} {
+          font-size: 24px;
+        }
+      }
+      ::before {
+        content: '關於';
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        margin-right: .5rem;
+      }
+      ::after {
+        content: '的搜尋結果';
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        margin-left: .5rem;
+      }
+    }
+    .miso-hybrid-search-combo__total-phrase {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      ${({ theme }) => theme.breakpoint.xl} {
+        align-items: start;
+        width: 100%;
+      }
+      miso-total {
+        color: #1D9FB8;
+        font-family: "PingFang TC";
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 14px; /* 87.5% */
+        ${({ theme }) => theme.breakpoint.xl} {
+          font-size: 16px;
+        }
+        ::after {
+          content: " 篇";
+        }
+        ::before {
+          content: "共有 ";
+        }
+      }
+
+    }
+  }
+
+  .miso-hybrid-search-combo__search-results-filters__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    ${({ theme }) => theme.breakpoint.xl} {
+      justify-content: flex-end;
+      margin-top: -40px;
+    }
+    .miso-hybrid-search-combo__search-results-filters__sort-header {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &::before {
+        content: '排序依';
+        display: block;
+        color: #000;
+        font-family: "PingFang TC";
+        font-size: 14px;
+        line-height: 14px; /* 100% */
+      }
+    }
+    miso-sort {
+      display: flex;
+      z-index: 100;
+      .miso-select {
+        border: 0;
+        width: fit-content;
+
+        .miso-select__button {
+          border: 0;
+          color: #1D9FB8;
+          outline: 0 !important;
+        }
+
+        &.open {
+          .miso-select__button:after {
+            transform: rotate(180deg);
+          }
+          .miso-select__options {
+            display: flex;
+            width: 88px;
+            padding: 12px 9px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            border: 1px solid #9D9D9D;
+            background: #FFF;
+            border-radius: 0;
+            .miso-select__option {
+              transition: 0.5s;
+              ::before {
+                content: none;
+              }
+              &.selected {
+                color: #1D9FB8;
+              }
+              :hover {
+                color: #1D9FB8;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
 
   // result 區域
   .miso-hybrid-search-combo__search-results {
@@ -225,6 +456,7 @@ const SearchWrapper = styled.div`
     .miso-list__item {
       margin: 0 !important;
     }
+
 
     .miso-list__item-body {
       flex-direction: column;
@@ -271,8 +503,23 @@ const SearchWrapper = styled.div`
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        height: 50px;
         ${({ theme }) => theme.breakpoint.xl} {
           -webkit-line-clamp: 3;
+          padding: 0 8px;
+          height: 75px;
+        }
+      }
+
+      .miso-list__item-time {
+        color:  #9CB7C6;
+        font-size: 14px;
+        line-height: 14px; /* 100% */
+        margin-top: 8px;
+        margin-bottom: 12px;
+        padding: 0 20px;
+        ${({ theme }) => theme.breakpoint.md} {
+          margin-bottom: 8px;
           padding: 0 8px;
         }
       }
@@ -299,11 +546,9 @@ const SearchWrapper = styled.div`
 `
 
 /**
- * @param {{searchTerms: string}} props
  * @returns {React.ReactElement}
  */
-export default function MisoSearch({ searchTerms }) {
-  console.log(searchTerms)
+export default function MisoSearch() {
   useEffect(() => {
     // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
     const misocmd = window.misocmd || (window.misocmd = [])
@@ -313,17 +558,90 @@ export default function MisoSearch({ searchTerms }) {
       const MisoClient = window.MisoClient
       const client = new MisoClient(MISO_API_KEY)
       const workflow = client.ui.hybridSearch
+      workflow.useApi({
+        fq: 'product_id:/mirrormedia_.+/',
+        source_fl: [
+          'cover_image',
+          'url',
+          'created_at',
+          'updated_at',
+          'published_at',
+          'title',
+          'section_name',
+        ], // 回答的引用文章
+        fl: [
+          'cover_image',
+          'url',
+          'created_at',
+          'updated_at',
+          'published_at',
+          'title',
+          'section',
+        ],
+      })
+      workflow.useLayouts({
+        query: {
+          placeholder: 'Ask anything!',
+        },
+        products: [
+          'list',
+          {
+            templates: {
+              product: renderProduct,
+            },
+          },
+        ],
+      })
+      workflow.useFilters({
+        sort: {
+          options: [
+            { field: 'relevance', text: '關聯性', default: true },
+            { field: 'published_at', text: '由新到舊' },
+          ],
+        },
+      })
 
+      function renderProduct(layout, state, product) {
+        const html = `
+          <a class="miso-list__item-body" data-role="item" data-miso-product-id="${
+            product.id
+          }" href="${product.url}" target="_blank" rel="noopener">
+            <div class="miso-list__item-cover-image-container">
+              <img class="miso-list__item-cover-image" src="${
+                product.cover_image
+              }">
+            </div>
+            <div class="miso-list__item-info-container">
+              <div class="miso-list__item-title">${product.title}</div>
+              <div class='miso-list__item-time'>${transformTimeData(
+                product['published_at'].toString(),
+                'dot'
+              )}</div>
+              <div class="miso-list__item-snippet">${product.snippet}</div>
+            </div>
+         </a>
+       `
+
+        return html
+      }
       // wait for styles to be loaded
       await client.ui.ready
 
       // render DOM and get element references
       const defaults = MisoClient.ui.defaults.hybridSearch
-      const templates = defaults.templates
+      let templates = defaults.templates.root({ answerBox: true })
+      function insertElement(html) {
+        html = html.replace(
+          '<miso-facets></miso-facets>',
+          `<div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
+        )
+        return html
+      }
+      templates = insertElement(templates)
       const wireAnswerBox = defaults.wireAnswerBox
 
       const rootElement = document.querySelector('#miso-hybrid-search-combo')
-      rootElement.innerHTML = templates.root({ answerBox: true })
+      rootElement.innerHTML = templates
 
       wireAnswerBox(client, rootElement)
 
