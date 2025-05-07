@@ -741,7 +741,7 @@ export default function StoryNormalStyle({
             hiddenAdvertised={hiddenAdvertised}
           />
           {/* portal target for AsideArticleList on mobile */}
-          <div className="desktop-article-list-portal"></div>
+          <div className="mobile-article-list-portal"></div>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
 
@@ -817,8 +817,8 @@ export default function StoryNormalStyle({
 
             <Divider />
             <ResponsivePortal
-              isMobile={isMobileWidth}
-              selector=".desktop-article-list-portal"
+              isTransport={isMobileWidth}
+              selector=".mobile-article-list-portal"
             >
               <AsideArticleList
                 listType="popularNews"
