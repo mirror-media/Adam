@@ -51,6 +51,10 @@ const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 
+const ResponsivePortal = dynamic(() => import('../shared/client-side-portal'), {
+  ssr: false,
+})
+
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
@@ -512,6 +516,7 @@ export default function StoryNormalStyle({
   const { width } = useWindowDimensions()
   const isMobileWidth = width < mediaSize.md
   const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
+
   const {
     title = '',
     subtitle = '',
@@ -735,6 +740,8 @@ export default function StoryNormalStyle({
             relateds={relatedsWithOrdered}
             hiddenAdvertised={hiddenAdvertised}
           />
+          {/* portal target for AsideArticleList on mobile */}
+          <div className="desktop-article-list-portal"></div>
           <SupportMirrorMediaBanner />
           <SocialNetworkServiceSmall />
 
@@ -809,13 +816,18 @@ export default function StoryNormalStyle({
             )}
 
             <Divider />
-            <AsideArticleList
-              listType={'popularNews'}
-              fetchArticle={handleFetchPopularNews}
-              shouldReverseOrder={false}
-              renderAmount={6}
-              hiddenAdvertised={hiddenAdvertised}
-            />
+            <ResponsivePortal
+              isMobile={isMobileWidth}
+              selector=".desktop-article-list-portal"
+            >
+              <AsideArticleList
+                listType="popularNews"
+                fetchArticle={handleFetchPopularNews}
+                shouldReverseOrder={false}
+                renderAmount={6}
+                hiddenAdvertised={hiddenAdvertised}
+              />
+            </ResponsivePortal>
             <AsideFbPagePlugin />
           </FixedContainer>
         </Aside>
