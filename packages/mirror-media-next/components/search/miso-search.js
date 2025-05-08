@@ -603,7 +603,7 @@ export default function MisoSearch() {
 
       function renderProduct(layout, state, product) {
         const html = `
-          <a class="miso-list__item-body" data-role="item" data-miso-product-id="${
+          <a class="miso-list__item-body GTM-search-result-article" data-role="item" data-miso-product-id="${
             product.id
           }" href="${product.url}" target="_blank" rel="noopener">
             <div class="miso-list__item-cover-image-container">
