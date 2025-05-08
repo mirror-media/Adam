@@ -611,7 +611,7 @@ export default function MisoSearch() {
       // setup client
       // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
       const MisoClient = window.MisoClient
-      const client = new MisoClient(MISO_API_KEY)
+      const client = new MisoClient(MISO_API_KEY, { timeout: 5000 })
       const workflow = client.ui.hybridSearch
 
       try {
