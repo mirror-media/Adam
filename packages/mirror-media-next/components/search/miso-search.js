@@ -673,12 +673,15 @@ export default function MisoSearch() {
         wireAnswerBox(client, rootElement)
 
         // start query if specified in URL parameters
-        await workflow.autoQuery()
+        setTimeout(() => {
+          workflow.autoQuery()
+        }, 1000)
       } catch (error) {
         console.error(error)
       }
     })
   }, [])
+
   return (
     <SearchWrapper>
       <div
