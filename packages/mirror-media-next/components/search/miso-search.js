@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
 import { transformTimeData } from '../../utils'
+import { theme } from '../../styles/theme'
 
 const SearchWrapper = styled.div`
   // input 框
@@ -489,6 +490,21 @@ const SearchWrapper = styled.div`
         .miso-list__item-cover-image {
           object-fit: cover;
         }
+
+        .miso-list__item-section {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          padding: 8px;
+          color: white;
+          font-size: 16px;
+          font-weight: 300;
+          ${({ theme }) => theme.breakpoint.md} {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 4px 20px;
+          }
+        }
       }
 
       .miso-list__item-title {
@@ -568,7 +584,7 @@ export default function MisoSearch() {
           'published_at',
           'title',
           'section_name',
-        ], // 回答的引用文章
+        ],
         fl: [
           'cover_image',
           'url',
@@ -576,7 +592,7 @@ export default function MisoSearch() {
           'updated_at',
           'published_at',
           'title',
-          'section',
+          'tags',
         ],
       })
       workflow.useLayouts({
@@ -602,6 +618,12 @@ export default function MisoSearch() {
       })
 
       function renderProduct(layout, state, product) {
+        const [sectionName = '', sectionSlug = ''] = product.tags ?? []
+        const backgroundColor =
+          sectionSlug && theme.color.sectionsColor[sectionSlug]
+            ? theme.color.sectionsColor[sectionSlug]
+            : theme.color.brandColor.lightBlue
+
         const html = `
           <a class="miso-list__item-body GTM-search-result-article" data-role="item" data-miso-product-id="${
             product.id
@@ -610,6 +632,11 @@ export default function MisoSearch() {
               <img class="miso-list__item-cover-image" src="${
                 product.cover_image
               }">
+              ${
+                sectionName
+                  ? `<div class="miso-list__item-section" style="background-color: ${backgroundColor}">${sectionName}</div>`
+                  : ''
+              }
             </div>
             <div class="miso-list__item-info-container">
               <div class="miso-list__item-title">${product.title}</div>
