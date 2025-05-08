@@ -169,26 +169,41 @@ export async function getServerSideProps({ req, res, query }) {
 
   let globalLogFields = getLogTraceObject(req)
 
-  const responses = await Promise.allSettled([
-    fetchHeaderDataInDefaultPageLayout(),
-    getSearchResult({ query: searchTerms, take: 100 }),
-  ])
+  let headerResponse
+  let searchResponse
+
+  if (testGroup === 'A') {
+    ;[headerResponse, searchResponse] = await Promise.allSettled([
+      fetchHeaderDataInDefaultPageLayout(),
+      getSearchResult({ query: searchTerms, take: 100 }),
+    ])
+  } else {
+    ;[headerResponse] = await Promise.allSettled([
+      fetchHeaderDataInDefaultPageLayout(),
+    ])
+  }
 
   // handle header data
   const [sectionsData, topicsData] = handleAxiosResponse(
-    responses[0],
+    headerResponse,
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in search page',
     globalLogFields
   )
 
-  const searchData = handleAxiosResponse(
-    responses[1],
-    (/** @type {Awaited<ReturnType<typeof getSearchResult>>} */ data) =>
-      data?.data || [],
-    'Error occurs while getting search data in search page',
-    globalLogFields
-  )
+  const searchData =
+    testGroup === 'A'
+      ? handleAxiosResponse(
+          searchResponse,
+          (/** @type {Awaited<ReturnType<typeof getSearchResult>>} */ data) =>
+            data?.data || [],
+          'Error occurs while getting search data in search page',
+          globalLogFields
+        )
+      : {
+          searchTerms,
+          items: [],
+        }
 
   const props = {
     searchResult: { searchTerms, items: searchData },
