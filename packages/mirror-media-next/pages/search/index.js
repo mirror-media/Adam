@@ -99,6 +99,7 @@ const CommaEnd = styled.span`
 
 export default function Search({ searchResult, headerData, testGroup }) {
   const searchTerms = searchResult?.searchTerms ?? ''
+  console.log('testGroup', testGroup, searchResult)
 
   // mounted 時寫入 GTM 變數層中
   useEffect(() => {
