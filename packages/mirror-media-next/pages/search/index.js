@@ -160,7 +160,7 @@ export async function getServerSideProps({ req, res, query }) {
   if (ENV === 'staging' || ENV === 'prod') {
     testGroup = 'A'
   }
-  // testGroup = 'B'
+  testGroup = 'A'
   const searchTerms = query.q ?? ''
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
