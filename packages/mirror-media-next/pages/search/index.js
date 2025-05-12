@@ -10,7 +10,10 @@ import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-proces
 import Layout from '../../components/shared/layout'
 import { getSearchResult } from '../../utils/api/search'
 import dynamic from 'next/dynamic'
-const MisoSearch = dynamic(() => import('../../components/search/miso-search'))
+const MisoSearch = dynamic(
+  () => import('../../components/search/miso-search'),
+  { ssr: false }
+)
 import TagManager from 'react-gtm-module'
 import { useEffect } from 'react'
 const SearchContainer = styled.main`
