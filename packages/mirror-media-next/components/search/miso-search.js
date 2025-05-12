@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
 import { transformTimeData } from '../../utils'
+import { theme } from '../../styles/theme'
 
 const SearchWrapper = styled.div`
   // input 框
@@ -489,6 +490,21 @@ const SearchWrapper = styled.div`
         .miso-list__item-cover-image {
           object-fit: cover;
         }
+
+        .miso-list__item-section {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          padding: 8px;
+          color: white;
+          font-size: 16px;
+          font-weight: 300;
+          ${({ theme }) => theme.breakpoint.md} {
+            font-size: 18px;
+            font-weight: 600;
+            padding: 4px 20px;
+          }
+        }
       }
 
       .miso-list__item-title {
@@ -549,6 +565,45 @@ const SearchWrapper = styled.div`
  * @returns {React.ReactElement}
  */
 export default function MisoSearch() {
+  function insertElement(html) {
+    html = html.replace(
+      '<miso-facets></miso-facets>',
+      `<div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
+    )
+    return html
+  }
+
+  function renderProduct(layout, state, product) {
+    const [sectionName = '', sectionSlug = ''] = product.tags ?? []
+    const backgroundColor =
+      sectionSlug && theme.color.sectionsColor[sectionSlug]
+        ? theme.color.sectionsColor[sectionSlug]
+        : theme.color.brandColor.lightBlue
+
+    const html = `
+    <a class="miso-list__item-body GTM-search-result-article" data-role="item" data-miso-product-id="${
+      product.id
+    }" href="${product.url}" target="_blank" rel="noopener">
+      <div class="miso-list__item-cover-image-container">
+        <img class="miso-list__item-cover-image" src="${product.cover_image}">
+        ${
+          sectionName
+            ? `<div class="miso-list__item-section" style="background-color: ${backgroundColor}">${sectionName}</div>`
+            : ''
+        }
+      </div>
+      <div class="miso-list__item-info-container">
+        <div class="miso-list__item-title">${product.title}</div>
+        <div class='miso-list__item-time'>${transformTimeData(
+          product['published_at'].toString(),
+          'dot'
+        )}</div>
+        <div class="miso-list__item-snippet">${product.snippet}</div>
+      </div>
+   </a>`
+    return html
+  }
+
   useEffect(() => {
     // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
     const misocmd = window.misocmd || (window.misocmd = [])
@@ -556,99 +611,77 @@ export default function MisoSearch() {
       // setup client
       // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
       const MisoClient = window.MisoClient
-      const client = new MisoClient(MISO_API_KEY)
+      const client = new MisoClient(MISO_API_KEY, { timeout: 5000 })
       const workflow = client.ui.hybridSearch
-      workflow.useApi({
-        fq: 'product_id:/mirrormedia_.+/',
-        source_fl: [
-          'cover_image',
-          'url',
-          'created_at',
-          'updated_at',
-          'published_at',
-          'title',
-          'section_name',
-        ], // 回答的引用文章
-        fl: [
-          'cover_image',
-          'url',
-          'created_at',
-          'updated_at',
-          'published_at',
-          'title',
-          'section',
-        ],
-      })
-      workflow.useLayouts({
-        query: {
-          placeholder: 'Ask anything!',
-        },
-        products: [
-          'list',
-          {
-            templates: {
-              product: renderProduct,
-            },
-          },
-        ],
-      })
-      workflow.useFilters({
-        sort: {
-          options: [
-            { field: 'relevance', text: '關聯性', default: true },
-            { field: 'published_at', text: '由新到舊' },
+
+      try {
+        workflow.useApi({
+          fq: 'product_id:/mirrormedia_.+/',
+          source_fl: [
+            'cover_image',
+            'url',
+            'created_at',
+            'updated_at',
+            'published_at',
+            'title',
+            'section_name',
           ],
-        },
-      })
+          fl: [
+            'cover_image',
+            'url',
+            'created_at',
+            'updated_at',
+            'published_at',
+            'title',
+            'tags',
+          ],
+        })
+        workflow.useLayouts({
+          query: {
+            placeholder: 'Ask anything!',
+          },
+          products: [
+            'list',
+            {
+              templates: {
+                product: renderProduct,
+              },
+            },
+          ],
+        })
+        workflow.useFilters({
+          sort: {
+            options: [
+              { field: 'relevance', text: '關聯性', default: true },
+              { field: 'published_at', text: '由新到舊' },
+            ],
+          },
+        })
 
-      function renderProduct(layout, state, product) {
-        const html = `
-          <a class="miso-list__item-body" data-role="item" data-miso-product-id="${
-            product.id
-          }" href="${product.url}" target="_blank" rel="noopener">
-            <div class="miso-list__item-cover-image-container">
-              <img class="miso-list__item-cover-image" src="${
-                product.cover_image
-              }">
-            </div>
-            <div class="miso-list__item-info-container">
-              <div class="miso-list__item-title">${product.title}</div>
-              <div class='miso-list__item-time'>${transformTimeData(
-                product['published_at'].toString(),
-                'dot'
-              )}</div>
-              <div class="miso-list__item-snippet">${product.snippet}</div>
-            </div>
-         </a>
-       `
+        // wait for styles to be loaded
+        await client.ui.ready
 
-        return html
+        // render DOM and get element references
+        const defaults = MisoClient.ui.defaults.hybridSearch
+        let templates = defaults.templates.root({ answerBox: true })
+        templates = insertElement(templates)
+        const wireAnswerBox = defaults.wireAnswerBox
+
+        const rootElement = document.querySelector('#miso-hybrid-search-combo')
+        rootElement.innerHTML = templates
+
+        wireAnswerBox(client, rootElement)
+
+        // start query if specified in URL parameters
+        setTimeout(() => {
+          workflow.autoQuery()
+        }, 1000)
+      } catch (error) {
+        console.error(error)
       }
-      // wait for styles to be loaded
-      await client.ui.ready
-
-      // render DOM and get element references
-      const defaults = MisoClient.ui.defaults.hybridSearch
-      let templates = defaults.templates.root({ answerBox: true })
-      function insertElement(html) {
-        html = html.replace(
-          '<miso-facets></miso-facets>',
-          `<div class="miso-hybrid-search-combo__search-results-filters__right"><div class="miso-hybrid-search-combo__search-results-filters__sort-header">Sort</div><miso-sort></miso-sort></div>`
-        )
-        return html
-      }
-      templates = insertElement(templates)
-      const wireAnswerBox = defaults.wireAnswerBox
-
-      const rootElement = document.querySelector('#miso-hybrid-search-combo')
-      rootElement.innerHTML = templates
-
-      wireAnswerBox(client, rootElement)
-
-      // start query if specified in URL parameters
-      workflow.autoQuery()
     })
   }, [])
+
   return (
     <SearchWrapper>
       <div

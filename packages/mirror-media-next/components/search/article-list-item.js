@@ -153,7 +153,7 @@ export default function ArticleListItem({ item, index }) {
     <ItemWrapper
       href={renderedItem?.link}
       target="_blank"
-      className={index > 8 ? order[index] : ''}
+      className={`${index > 8 ? order[index] : ''} GTM-search-result-article`}
     >
       <ImageContainer>
         <Image
