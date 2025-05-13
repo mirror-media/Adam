@@ -157,13 +157,13 @@ export default function Search({ searchResult, headerData, testGroup }) {
   )
 }
 
-export async function getServerSideProps({ req, res, query }) {
+export async function getServerSideProps({ req, res, params }) {
   let testGroup = Math.random() < 0.5 ? 'A' : 'B'
   if (ENV === 'staging' || ENV === 'prod') {
     testGroup = 'A'
   }
   testGroup = 'A'
-  const searchTerms = query.q ?? ''
+  const searchTerms = params.keyword ?? ''
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
   } else {
