@@ -9,9 +9,13 @@ import { handleAxiosResponse } from '../../utils/response-handle'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import Layout from '../../components/shared/layout'
 import { getSearchResult } from '../../utils/api/search'
-import dynamic from 'next/dynamic'
-const MisoSearch = dynamic(() => import('../../components/search/miso-search'))
-
+// import dynamic from 'next/dynamic'
+// const MisoSearch = dynamic(
+//   () => import('../../components/search/miso-search'),
+//   { ssr: false }
+// )
+import TagManager from 'react-gtm-module'
+import { useEffect } from 'react'
 const SearchContainer = styled.main`
   width: 320px;
   margin: 0 auto;
@@ -98,42 +102,57 @@ const CommaEnd = styled.span`
 
 export default function Search({ searchResult, headerData, testGroup }) {
   const searchTerms = searchResult?.searchTerms ?? ''
+  console.log('testGroup', testGroup, searchResult)
+
+  // mounted 時寫入 GTM 變數層中
+  useEffect(() => {
+    const tagManagerArgs = {
+      dataLayer: {
+        event: 'pageview',
+        page: {
+          title: document.title,
+          url: window.location.pathname,
+          SearchResultPageVariable: testGroup,
+        },
+      },
+    }
+    TagManager.dataLayer(tagManagerArgs)
+  }, [])
 
   return (
     <Layout
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
-      {testGroup === 'A' ? (
-        <SearchContainer>
-          <SearchTitleWrapper>
-            <SearchTitle>
-              <CommaStart>
-                <Image
-                  src="/images-next/double-comma-start.svg"
-                  alt="double comma start"
-                  width={8}
-                  height={6.6}
-                ></Image>
-              </CommaStart>
-              {searchTerms}
-              <CommaEnd>
-                <Image
-                  src="/images-next/double-comma-end.svg"
-                  alt="double comma end"
-                  width={8}
-                  height={6.6}
-                ></Image>
-              </CommaEnd>
-            </SearchTitle>
-          </SearchTitleWrapper>
-          {searchResult?.items && (
-            <SearchedArticles searchResult={searchResult} />
-          )}
-        </SearchContainer>
-      ) : (
-        <MisoSearch searchTerms={searchTerms} />
-      )}
+      {/* {testGroup === 'A' ? ( */}
+      <SearchContainer>
+        <SearchTitleWrapper>
+          <SearchTitle>
+            <CommaStart>
+              <Image
+                src="/images-next/double-comma-start.svg"
+                alt="double comma start"
+                width={8}
+                height={6.6}
+              ></Image>
+            </CommaStart>
+            {searchTerms}
+            <CommaEnd>
+              <Image
+                src="/images-next/double-comma-end.svg"
+                alt="double comma end"
+                width={8}
+                height={6.6}
+              ></Image>
+            </CommaEnd>
+          </SearchTitle>
+        </SearchTitleWrapper>
+        {searchResult?.items && (
+          <SearchedArticles searchResult={searchResult} />
+        )}
+      </SearchContainer>
+      {/* ) : ( <MisoSearch />
+      )} */}
     </Layout>
   )
 }
@@ -143,7 +162,8 @@ export async function getServerSideProps({ req, res, params }) {
   if (ENV === 'staging' || ENV === 'prod') {
     testGroup = 'A'
   }
-  const searchTerms = params.searchTerms ?? ''
+  testGroup = 'A'
+  const searchTerms = params.keyword ?? ''
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
   } else {
@@ -152,26 +172,41 @@ export async function getServerSideProps({ req, res, params }) {
 
   let globalLogFields = getLogTraceObject(req)
 
-  const responses = await Promise.allSettled([
+  let headerResponse
+  let searchResponse
+
+    // if (testGroup === 'A') {
+  ;[headerResponse, searchResponse] = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
     getSearchResult({ query: searchTerms, take: 100 }),
   ])
+  // } else {
+  //   ;[headerResponse] = await Promise.allSettled([
+  //     fetchHeaderDataInDefaultPageLayout(),
+  //   ])
+  // }
 
   // handle header data
   const [sectionsData, topicsData] = handleAxiosResponse(
-    responses[0],
+    headerResponse,
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in search page',
     globalLogFields
   )
 
-  const searchData = handleAxiosResponse(
-    responses[1],
-    (/** @type {Awaited<ReturnType<typeof getSearchResult>>} */ data) =>
-      data?.data || [],
-    'Error occurs while getting search data in search page',
-    globalLogFields
-  )
+  const searchData =
+    // testGroup === 'A'
+    handleAxiosResponse(
+      searchResponse,
+      (/** @type {Awaited<ReturnType<typeof getSearchResult>>} */ data) =>
+        data?.data || [],
+      'Error occurs while getting search data in search page',
+      globalLogFields
+    )
+  // : {
+  //     searchTerms,
+  //     items: [],
+  //   }
 
   const props = {
     searchResult: { searchTerms, items: searchData },
