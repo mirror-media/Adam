@@ -3,7 +3,7 @@ import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
 import { transformTimeData } from '../../utils'
 import { theme } from '../../styles/theme'
-
+import { useRouter } from 'next/router'
 const SearchWrapper = styled.div`
   // input 框
   .miso-hybrid-search-combo__question {
@@ -567,6 +567,7 @@ const SearchWrapper = styled.div`
  * @returns {React.ReactElement}
  */
 export default function MisoSearch({ searchTerms }) {
+  const router = useRouter()
   function insertElement(html) {
     html = html.replace(
       '<miso-facets></miso-facets>',
@@ -658,6 +659,9 @@ export default function MisoSearch({ searchTerms }) {
               { field: 'published_at', text: '由新到舊' },
             ],
           },
+        })
+        workflow.answer.on('request', ({ payload: { q } }) => {
+          router.push(`/search/${q}`, undefined, { shallow: true })
         })
 
         // wait for styles to be loaded

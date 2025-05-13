@@ -102,7 +102,6 @@ const CommaEnd = styled.span`
 
 export default function Search({ searchResult, headerData, testGroup }) {
   const searchTerms = searchResult?.searchTerms ?? ''
-  console.log('testGroup', testGroup, searchResult)
 
   // mounted 時寫入 GTM 變數層中
   useEffect(() => {
@@ -163,7 +162,7 @@ export async function getServerSideProps({ req, res, params }) {
   if (ENV === 'staging' || ENV === 'prod') {
     testGroup = 'A'
   }
-  // testGroup = 'B'
+  testGroup = 'B'
   const searchTerms = params.keyword ?? ''
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
