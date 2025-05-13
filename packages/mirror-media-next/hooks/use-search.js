@@ -20,7 +20,7 @@ export default function useSearch() {
      * Since search page is hosted on different backend service,
      * we use location API instead of next/router to prevent client-side navigation
      */
-    window.location.assign(`/search?q=${trimedSearchTerms}`)
+    window.location.assign(`/search/${trimedSearchTerms}`)
   }
 
   return {
