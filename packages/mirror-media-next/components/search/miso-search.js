@@ -562,9 +562,11 @@ const SearchWrapper = styled.div`
 `
 
 /**
+ * @param {Object} props
+ * @param {string} props.searchTerms
  * @returns {React.ReactElement}
  */
-export default function MisoSearch() {
+export default function MisoSearch({ searchTerms }) {
   function insertElement(html) {
     html = html.replace(
       '<miso-facets></miso-facets>',
@@ -674,7 +676,7 @@ export default function MisoSearch() {
 
         // start query if specified in URL parameters
         setTimeout(() => {
-          workflow.autoQuery()
+          workflow.query({ q: searchTerms })
         }, 1000)
       } catch (error) {
         console.error(error)
