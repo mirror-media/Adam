@@ -159,7 +159,7 @@ export default function Search({ searchResult, headerData, testGroup }) {
 
 export async function getServerSideProps({ req, res, params }) {
   let testGroup = Math.random() < 0.5 ? 'A' : 'B'
-  if (ENV === 'staging' || ENV === 'prod') {
+  if (ENV === 'prod') {
     testGroup = 'A'
   }
   // testGroup = 'B'
