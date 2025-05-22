@@ -638,7 +638,6 @@ export default function MisoSearch({ searchTerms }) {
             'title',
             'tags',
           ],
-          snippet_max_chars: 60,
         })
         workflow.useLayouts({
           query: {
