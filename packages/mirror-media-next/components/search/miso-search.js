@@ -638,6 +638,7 @@ export default function MisoSearch({ searchTerms }) {
             'title',
             'tags',
           ],
+          snippet_max_chars: 60,
         })
         workflow.useLayouts({
           query: {
@@ -655,8 +656,8 @@ export default function MisoSearch({ searchTerms }) {
         workflow.useFilters({
           sort: {
             options: [
-              { field: 'relevance', text: '關聯性', default: true },
-              { field: 'published_at', text: '由新到舊' },
+              { field: 'relevance', text: '關聯性' },
+              { field: 'published_at', text: '由新到舊', default: true },
             ],
           },
         })
