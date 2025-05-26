@@ -1,9 +1,9 @@
 import { IS_PRIZE_RIZED } from '../config/index.mjs'
 
 const PRIZE_LIST = {
-  yearly: IS_PRIZE_RIZED ? 799 : 499,
-  monthly: IS_PRIZE_RIZED ? 99 : 79,
-  oneTime: 10,
+  yearly: 499,
+  monthly: IS_PRIZE_RIZED ? 79 : 49,
+  oneTime: IS_PRIZE_RIZED ? 10 : 5,
 }
 
 const PREMIUM_FEATURES = [

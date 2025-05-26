@@ -112,7 +112,7 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log'
-    IS_PRIZE_RIZED = false
+    IS_PRIZE_RIZED = true
 
     COURSE_URL = 'https://course.mirrormedia.mg'
 
