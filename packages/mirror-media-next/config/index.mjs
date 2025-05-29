@@ -66,10 +66,10 @@ let IS_PRIZE_RIZED
 
 const now = new Date()
 const currentYear = now.getFullYear()
-// Target time: May 29th, 12:00 PM Taiwan time (UTC+8)
+// Target time: May 29th, 3:00 PM Taiwan time (UTC+8)
 // JavaScript's month is 0-indexed (0 for January, 4 for May).
-// 12:00 PM in Taiwan (UTC+8) is 4:00 AM in UTC.
-const activationDate = new Date(Date.UTC(currentYear, 4, 29, 4, 0, 0)) // Month is 4 for May
+// 3:00 PM in Taiwan (UTC+8) is 7:00 AM in UTC.
+const activationDate = new Date(Date.UTC(currentYear, 4, 29, 7, 0, 0)) // Month is 4 for May, Hour is 7 for 3 PM UTC+8
 
 switch (ENV) {
   case 'prod':
