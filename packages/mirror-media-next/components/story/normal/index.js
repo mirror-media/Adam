@@ -504,6 +504,7 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
  * @param {any} param.headerData
+ * @param {any} param.flashNewsData
  * @param {string} [param.classNameForGTM]
  * @returns {JSX.Element}
  */
@@ -511,6 +512,7 @@ export default function StoryNormalStyle({
   postData,
   postContent,
   headerData,
+  flashNewsData,
   classNameForGTM = '',
 }) {
   const { width } = useWindowDimensions()
@@ -664,10 +666,11 @@ export default function StoryNormalStyle({
   return (
     <>
       <ShareHeader
-        pageLayoutType="default"
+        pageLayoutType="default-with-flash-news"
         headerData={{
           sectionsData: headerData?.sectionsData,
           topicsData: headerData?.topicsData,
+          flashNewsData,
         }}
       />
 

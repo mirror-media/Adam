@@ -5,7 +5,9 @@ import client from '../../apollo/apollo-client'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
+  API_TIMEOUT,
   ENV,
+  URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
@@ -46,6 +48,8 @@ const StoryPremiumStyle = dynamic(() =>
 )
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
+import axios from 'axios'
+import { handleAxiosResponse } from '../../utils/response-handle'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -56,6 +60,11 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
  * @typedef {import('../../components/story/normal').PostContent} PostContent
  * @typedef {'style-normal' | 'style-photography' | 'style-wide' | 'style-premium'} StoryLayoutType
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
+ * @typedef {Object} DataRes
+ * @typedef {import('axios').AxiosResponse<DataRes>} AxiosResponse
+ * @typedef {import('../../utils/api').HeadersData} HeadersData
+ * @typedef {import('../../utils/api').Topics} Topics
+ * @typedef {import('axios').AxiosResponse<HeaderData>} AxiosResponseHeaderData
  */
 
 const Loading = styled.div`
@@ -91,10 +100,16 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  * @param {Object} props
  * @param {PostData} props.postData
  * @param {HeaderData} props.headerData
+ * @param {DataRes} props.flashNewsData
  * @param {StoryLayoutType} props.storyLayoutType
  * @returns {React.ReactNode}
  */
-export default function Story({ postData, headerData, storyLayoutType }) {
+export default function Story({
+  postData,
+  headerData,
+  flashNewsData,
+  storyLayoutType,
+}) {
   const {
     title = '',
     slug = '',
@@ -209,6 +224,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             postData={postData}
             postContent={postContent}
             headerData={headerData}
+            flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
           />
         )
@@ -218,6 +234,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             postData={postData}
             postContent={postContent}
             headerData={headerData}
+            flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
           />
         )
@@ -243,6 +260,7 @@ export default function Story({ postData, headerData, storyLayoutType }) {
             postData={postData}
             postContent={postContent}
             headerData={headerData}
+            flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
           />
         )
@@ -364,11 +382,37 @@ export async function getServerSideProps({ params, req, res }) {
       postData?.isMember
     )
     let headerData = null
+    let flashNewsData = null
     const shouldFetchDefaultHeaderData = storyLayoutType === 'style-normal'
     const shouldFetchPremiumHeaderData = storyLayoutType === 'style-premium'
     if (shouldFetchDefaultHeaderData) {
       try {
-        headerData = await fetchHeaderDataInDefaultPageLayout()
+        const responses = await Promise.allSettled([
+          axios({
+            method: 'get',
+            url: URL_STATIC_POST_FLASH_NEWS,
+            timeout: API_TIMEOUT,
+          }),
+          fetchHeaderDataInDefaultPageLayout(),
+        ])
+        flashNewsData = handleAxiosResponse(
+          responses[0],
+          (/** @type {AxiosResponse} */ axiosData) => {
+            return axiosData?.data?.posts ?? []
+          },
+          'Error occurs while getting flash news in index page',
+          globalLogFields
+        )
+        headerData = handleAxiosResponse(
+          responses[1],
+          (
+            /** @type {{ sectionsData: HeadersData, topicsData: Topics } | null | undefined} */ axiosData
+          ) => {
+            return axiosData ?? { sectionsData: [], topicsData: [] }
+          },
+          'Error occurs while getting sectionsData and topicsData in index page',
+          globalLogFields
+        )
       } catch (err) {
         headerData = { sectionsData: [], topicsData: [] }
         logAxiosError(
@@ -379,7 +423,32 @@ export async function getServerSideProps({ params, req, res }) {
       }
     } else if (shouldFetchPremiumHeaderData) {
       try {
-        headerData = await fetchHeaderDataInPremiumPageLayout()
+        const responses = await Promise.allSettled([
+          axios({
+            method: 'get',
+            url: URL_STATIC_POST_FLASH_NEWS,
+            timeout: API_TIMEOUT,
+          }),
+          fetchHeaderDataInPremiumPageLayout(),
+        ])
+        flashNewsData = handleAxiosResponse(
+          responses[0],
+          (/** @type {AxiosResponse} */ axiosData) => {
+            return axiosData?.data?.posts ?? []
+          },
+          'Error occurs while getting flash news in index page',
+          globalLogFields
+        )
+        headerData = handleAxiosResponse(
+          responses[1],
+          (
+            /** @type {{ sectionsData: HeadersData, } | null | undefined} */ axiosData
+          ) => {
+            return axiosData ?? { sectionsData: [] }
+          },
+          'Error occurs while getting sectionsData and topicsData in index page',
+          globalLogFields
+        )
       } catch (err) {
         headerData = { sectionsData: [] }
         logAxiosError(
@@ -393,6 +462,7 @@ export async function getServerSideProps({ params, req, res }) {
     return {
       props: {
         postData,
+        flashNewsData,
         headerData,
         storyLayoutType,
       },
