@@ -234,7 +234,6 @@ export default function Story({
             postData={postData}
             postContent={postContent}
             headerData={headerData}
-            flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
           />
         )
@@ -423,32 +422,7 @@ export async function getServerSideProps({ params, req, res }) {
       }
     } else if (shouldFetchPremiumHeaderData) {
       try {
-        const responses = await Promise.allSettled([
-          axios({
-            method: 'get',
-            url: URL_STATIC_POST_FLASH_NEWS,
-            timeout: API_TIMEOUT,
-          }),
-          fetchHeaderDataInPremiumPageLayout(),
-        ])
-        flashNewsData = handleAxiosResponse(
-          responses[0],
-          (/** @type {AxiosResponse} */ axiosData) => {
-            return axiosData?.data?.posts ?? []
-          },
-          'Error occurs while getting flash news in index page',
-          globalLogFields
-        )
-        headerData = handleAxiosResponse(
-          responses[1],
-          (
-            /** @type {{ sectionsData: HeadersData, } | null | undefined} */ axiosData
-          ) => {
-            return axiosData ?? { sectionsData: [] }
-          },
-          'Error occurs while getting sectionsData and topicsData in index page',
-          globalLogFields
-        )
+        headerData = await fetchHeaderDataInPremiumPageLayout()
       } catch (err) {
         headerData = { sectionsData: [] }
         logAxiosError(
