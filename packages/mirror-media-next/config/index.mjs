@@ -64,6 +64,13 @@ let GCP_STACKDRIVER_ERROR_LOG_NAME = ''
 
 let IS_PRIZE_RIZED
 
+const now = new Date()
+const currentYear = now.getFullYear()
+// Target time: June 1st, 00:00 AM Taiwan time (UTC+8)
+// JavaScript's month is 0-indexed (0 for January, 4 for May, 5 for June).
+// 00:00 AM on June 1st in Taiwan (UTC+8) is 16:00 (4 PM) on May 31st in UTC.
+const activationDate = new Date(Date.UTC(currentYear, 4, 31, 16, 0, 0)) // Month 4 for May, Day 31, Hour 16 (corresponds to May 31st, 16:00 UTC)
+
 switch (ENV) {
   case 'prod':
     SITE_URL = 'www.mirrormedia.mg'
@@ -112,8 +119,7 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log'
-    IS_PRIZE_RIZED = false
-
+    IS_PRIZE_RIZED = now.getTime() >= activationDate.getTime()
     COURSE_URL = 'https://course.mirrormedia.mg'
 
     break
@@ -169,6 +175,7 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_staging'
+
     IS_PRIZE_RIZED = true
 
     COURSE_URL = 'https://course.mirrormedia.mg'
