@@ -105,6 +105,7 @@ export async function getServerSideProps({ params, req, res }) {
   const external = handleGqlResponse(
     responses[1],
     (gqlData) => {
+      console.log('gqlData', gqlData)
       if (!gqlData) {
         return {}
       } else {
