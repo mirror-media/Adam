@@ -60,8 +60,8 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
  * @typedef {import('../../components/story/normal').PostContent} PostContent
  * @typedef {'style-normal' | 'style-photography' | 'style-wide' | 'style-premium'} StoryLayoutType
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
- * @typedef {Object} DataRes
- * @typedef {import('axios').AxiosResponse<DataRes>} AxiosResponse
+ * @typedef {HeaderData['flashNewsData']} flashNewsData
+ * @typedef {import('axios').AxiosResponse<Record<'posts',flashNewsData>>} AxiosResponse
  * @typedef {import('../../utils/api').HeadersData} HeadersData
  * @typedef {import('../../utils/api').Topics} Topics
  * @typedef {import('axios').AxiosResponse<HeaderData>} AxiosResponseHeaderData
@@ -100,7 +100,7 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  * @param {Object} props
  * @param {PostData} props.postData
  * @param {HeaderData} props.headerData
- * @param {DataRes} props.flashNewsData
+ * @param {flashNewsData} props.flashNewsData
  * @param {StoryLayoutType} props.storyLayoutType
  * @returns {React.ReactNode}
  */
@@ -399,7 +399,7 @@ export async function getServerSideProps({ params, req, res }) {
           (/** @type {AxiosResponse} */ axiosData) => {
             return axiosData?.data?.posts ?? []
           },
-          'Error occurs while getting flash news in index page',
+          'Error occurs while getting flash news in story page',
           globalLogFields
         )
         headerData = handleAxiosResponse(
@@ -409,7 +409,7 @@ export async function getServerSideProps({ params, req, res }) {
           ) => {
             return axiosData ?? { sectionsData: [], topicsData: [] }
           },
-          'Error occurs while getting sectionsData and topicsData in index page',
+          'Error occurs while getting sectionsData and topicsData in story page',
           globalLogFields
         )
       } catch (err) {

@@ -30,8 +30,9 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
- * @typedef {Object} DataRes
- * @typedef {import('axios').AxiosResponse<DataRes>} AxiosResponse
+ * @typedef {import('../../components/header/shared/flash-news').FlashNews} FlashNews
+ * @typedef {Record<'posts',FlashNews[]>} FlashNewsData
+ * @typedef {import('axios').AxiosResponse<FlashNewsData>} FlashNewsAxiosResponse
  */
 
 /**
@@ -136,10 +137,10 @@ export async function getServerSideProps({ params, req, res }) {
 
   const flashNewsData = handleAxiosResponse(
     responses[2],
-    (/** @type {AxiosResponse} */ axiosData) => {
-      return axiosData?.data?.posts ?? []
+    (/** @type {FlashNewsAxiosResponse} */ axiosData) => {
+      return axiosData.data.posts ?? []
     },
-    'Error occurs while getting flash news in index page',
+    'Error occurs while getting flash news in external page',
     globalLogFields
   )
   const props = {

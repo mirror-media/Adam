@@ -499,12 +499,13 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
 `
 
 /**
+ * @typedef {import('../../header/shared/flash-news').FlashNews[]} FlashNewsData
  *
  * @param {Object} param
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
  * @param {any} param.headerData
- * @param {any} param.flashNewsData
+ * @param {FlashNewsData} param.flashNewsData
  * @param {string} [param.classNameForGTM]
  * @returns {JSX.Element}
  */

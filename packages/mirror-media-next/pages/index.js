@@ -189,7 +189,7 @@ export default function Home({
  */
 
 /**
- * @typedef {Object} DataRes
+ *
  * @property {FlashNewsData} [posts]
  * @property {TopicsData} [topics]
  * @property {SectionsData} [sections]
@@ -203,7 +203,7 @@ export default function Home({
  * @property {Array} latest
  */
 
-/** @typedef {import('axios').AxiosResponse<DataRes>} AxiosResponse */
+/** @typedef {import('axios').AxiosResponse<Record<'posts',FlashNewsData>>} AxiosResponse */
 
 //TODO: rename typedef, make it more clear
 /** @typedef {import('axios').AxiosResponse<PostRes>} AxiosPostResponse */
