@@ -1,6 +1,11 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
 import client from '../../apollo/apollo-client'
-import { ENV, SITE_URL } from '../../config/index.mjs'
+import {
+  API_TIMEOUT,
+  ENV,
+  SITE_URL,
+  URL_STATIC_POST_FLASH_NEWS,
+} from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
 import { fetchExternalBySlug } from '../../apollo/query/externals'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
@@ -17,6 +22,7 @@ import {
 } from '../../utils/response-handle'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import dynamic from 'next/dynamic'
+import axios from 'axios'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -24,6 +30,9 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
 /**
  * @typedef {import('../../apollo/fragments/external').External} External
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
+ * @typedef {import('../../components/header/shared/flash-news').FlashNews} FlashNews
+ * @typedef {Record<'posts',FlashNews[]>} FlashNewsData
+ * @typedef {import('axios').AxiosResponse<FlashNewsData>} FlashNewsAxiosResponse
  */
 
 /**
@@ -60,7 +69,10 @@ export default function External({ external, headerData }) {
           pageType: 'external',
           pageSlug: `${slug}`,
         }}
-        header={{ type: 'default', data: headerData }}
+        header={{
+          type: 'default-with-flash-news',
+          data: headerData,
+        }}
         footer={{ type: 'default' }}
       >
         <MisoPageView productIds={`external_${slug}`} />
@@ -82,7 +94,6 @@ export async function getServerSideProps({ params, req, res }) {
   }
 
   const { slug } = params
-
   const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
@@ -90,6 +101,11 @@ export async function getServerSideProps({ params, req, res }) {
     client.query({
       query: fetchExternalBySlug,
       variables: { slug },
+    }),
+    axios({
+      method: 'get',
+      url: URL_STATIC_POST_FLASH_NEWS,
+      timeout: API_TIMEOUT,
     }),
   ])
 
@@ -120,9 +136,17 @@ export async function getServerSideProps({ params, req, res }) {
     return { notFound: true }
   }
 
+  const flashNewsData = handleAxiosResponse(
+    responses[2],
+    (/** @type {FlashNewsAxiosResponse} */ axiosData) => {
+      return axiosData.data.posts ?? []
+    },
+    'Error occurs while getting flash news in external page',
+    globalLogFields
+  )
   const props = {
     external,
-    headerData: { sectionsData, topicsData },
+    headerData: { sectionsData, topicsData, flashNewsData },
   }
 
   return { props }
