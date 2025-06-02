@@ -54,7 +54,7 @@ const AmpBody = styled.body`
  *
  * @param {Object} props
  * @param {PostData} props.postData
- * @returns {JSX.Element}
+ * @returns {React.ReactElement}
  */
 
 function StoryAmpPage({ postData }) {
@@ -96,11 +96,32 @@ function StoryAmpPage({ postData }) {
   const canonicalLink = (
     <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
   )
+  const comscoreScript = (
+    <>
+      <script
+        id="comscore"
+        dangerouslySetInnerHTML={{
+          __html: `var _comscore = _comscore || [];
+                _comscore.push({ c1: "2", c2: "24318560" ,  options: { enableFirstPartyCookie: "true" } });
+                (function() {
+                  var s = document.createElement("script"), el = document.getElementsByTagName("script")[0]; s.async = true;
+                  s.src = "https://sb.scorecardresearch.com/cs/24318560/beacon.js";
+                  el.parentNode.insertBefore(s, el);
+                })();`,
+        }}
+      />
+      <noscript>
+        <img src="https://sb.scorecardresearch.com/p?c1=2&amp;c2=24318560&amp;cv=3.9.1&amp;cj=1" />
+      </noscript>
+    </>
+  )
+
   return (
     <>
       <Head>
         {ampGptStickyAdScript}
         {canonicalLink}
+        {comscoreScript}
       </Head>
       <JsonLdsScript
         postData={postData}
