@@ -54,7 +54,7 @@ const AmpBody = styled.body`
  *
  * @param {Object} props
  * @param {PostData} props.postData
- * @returns {JSX.Element}
+ * @returns {React.ReactElement}
  */
 
 function StoryAmpPage({ postData }) {
@@ -96,6 +96,7 @@ function StoryAmpPage({ postData }) {
   const canonicalLink = (
     <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
   )
+
   return (
     <>
       <Head>
