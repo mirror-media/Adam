@@ -60,7 +60,7 @@ export default function MagazinePlatforms() {
    * @typedef {Object} PlatformItem
    * @property {string} name
    * @property {string} href
-   * @property {string} svgIcon
+   * @property {string} iconImage
    * @property {string} linkA
    * @property {string} linkB
    */
@@ -81,7 +81,7 @@ export default function MagazinePlatforms() {
           <Image
             width={48}
             height={48}
-            src={item.svgIcon}
+            src={item.iconImage}
             alt={`購買動態雜誌平台_${item.name}`}
           />
         </Link>
@@ -90,7 +90,7 @@ export default function MagazinePlatforms() {
         width={48}
         height={48}
         alt={`購買動態雜誌平台_${MAGAZINE_PLATFORM_LINKS[4].name}`}
-        src={MAGAZINE_PLATFORM_LINKS[4].svgIcon}
+        src={MAGAZINE_PLATFORM_LINKS[4].iconImage}
       />
       <KonoLinks>
         <Link
