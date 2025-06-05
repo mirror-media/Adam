@@ -20,7 +20,7 @@ const PlatformsList = styled.div`
   }
 
   img {
-    height: 48px;
+    height: 40px;
     width: auto;
     margin-top: 32px;
 
@@ -44,10 +44,10 @@ const KonoLinks = styled.div`
 
   ${({ theme }) => theme.breakpoint.md} {
     justify-content: flex-end;
-    width: 360px;
+    width: 460px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 860px;
+    width: 900px;
   }
 `
 
@@ -79,8 +79,8 @@ export default function MagazinePlatforms() {
           target="_blank"
         >
           <Image
-            width={item.width || 48}
-            height={item.height || 48}
+            width={48}
+            height={48}
             src={item.iconImage}
             alt={`購買動態雜誌平台_${item.name}`}
           />
