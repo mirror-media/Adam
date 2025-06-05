@@ -79,8 +79,8 @@ export default function MagazinePlatforms() {
           target="_blank"
         >
           <Image
-            width={48}
-            height={48}
+            width={item.width || 48}
+            height={item.height || 48}
             src={item.iconImage}
             alt={`購買動態雜誌平台_${item.name}`}
           />

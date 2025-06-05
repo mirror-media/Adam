@@ -45,7 +45,7 @@ const PAPER_MAGAZINE_LINK = {
 const MAGAZINE_LINK = {
   name: 'magazine',
   title: '訂閱電子雜誌',
-  href: 'https://m.momoshop.com.tw/cateGoods.momo?sortType=5&cn=4003200172',
+  href: 'https://www.momoshop.com.tw/category/DgrpCategory.jsp?d_code=4003200172&p_orderType=5',
 }
 
 const AUTH_LINK = {
