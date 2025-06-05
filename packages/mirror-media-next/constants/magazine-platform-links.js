@@ -8,8 +8,8 @@ const MAGAZINE_PLATFORM_LINKS = [
     name: 'momo',
     href: 'https://www.momoshop.com.tw/category/DgrpCategory.jsp?d_code=4003200172&p_orderType=5',
     iconImage: '/images-next/magazine-platform-logo-momo.png',
-    width: 200,
-    height: 39,
+    width: 100,
+    height: 20,
   },
   {
     name: 'pubu',
