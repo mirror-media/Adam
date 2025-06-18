@@ -29,7 +29,7 @@ import { partner } from './partner'
  */
 
 /**
- * @typedef {Pick<GenericExternal, 'id' | 'slug' | 'title' | 'thumb' | 'brief' | 'partner'>} ListingExternal
+ * @typedef {Pick<GenericExternal, 'id' | 'slug' | 'title' | 'thumb' | 'brief' | 'partner' | 'publishedDate'>} ListingExternal
  */
 
 export const listingExternal = gql`
@@ -40,6 +40,7 @@ export const listingExternal = gql`
     title
     thumb
     brief
+    publishedDate
     partner {
       ...partner
     }
