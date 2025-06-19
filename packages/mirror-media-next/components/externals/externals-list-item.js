@@ -4,6 +4,7 @@ import {
   getExternalPartnerColor,
   getExternalSectionTitle,
 } from '../../utils/external'
+import { transformTimeDataIntoDotFormat } from '../../utils'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -51,6 +52,16 @@ const ItemTitle = styled.div`
   ${({ theme }) => theme.breakpoint.xl} {
     font-size: 18px;
   }
+`
+const ItemDate = styled.div`
+  color: rgb(156, 183, 198);
+  font-family: 'PingFang TC';
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14px;
+  margin-top: 8px;
+  margin-bottom: -8px;
 `
 
 const ItemBrief = styled.div`
@@ -103,12 +114,20 @@ const ItemSection = styled.div`
  * @returns {React.ReactElement}
  */
 export default function ExternalListItem({ item }) {
-  const { thumb = '', slug = '', title = '', brief = '', partner = null } = item
+  const {
+    thumb = '',
+    slug = '',
+    title = '',
+    brief = '',
+    partner = null,
+    publishedDate = '',
+  } = item
 
   const IMAGES_URL = { original: thumb }
 
   const partnerColor = getExternalPartnerColor(partner)
   const partnerSectionTitle = getExternalSectionTitle(partner)
+  const formattedPublishedDate = transformTimeDataIntoDotFormat(publishedDate)
 
   return (
     <ItemWrapper href={`/external/${slug}`} target="_blank">
@@ -128,6 +147,7 @@ export default function ExternalListItem({ item }) {
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{title}</ItemTitle>
+        <ItemDate>{formattedPublishedDate}</ItemDate>
         <ItemBrief>{brief}</ItemBrief>
       </ItemDetail>
     </ItemWrapper>

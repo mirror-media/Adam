@@ -286,6 +286,9 @@ const formatSectionItem = (section) => {
         if (sectionSlug === 'life' && categorySlug === 'warmlife') {
           return '/externals/warmlife'
         }
+        if (categorySlug === 'daily_forum') {
+          return '/externals/dailycolumn'
+        }
         return `/category/${categorySlug}`
       }
     }
