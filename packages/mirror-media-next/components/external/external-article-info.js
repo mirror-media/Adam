@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import styled from 'styled-components'
 
-import Image from 'next/image'
 import ButtonCopyLink from '../../components/story/shared/button-copy-link'
 import DonateLink from '../../components/story/shared/donate-link'
 import ButtonSocialNetworkShare from '../../components/story/shared/button-social-network-share'
