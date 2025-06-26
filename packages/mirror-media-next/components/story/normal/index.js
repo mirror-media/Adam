@@ -548,6 +548,8 @@ export default function StoryNormalStyle({
     hiddenAdvertised = false,
   } = postData
 
+  console.log(relateds, relatedsInInputOrder)
+
   const sectionsWithOrdered = getActiveOrderSection(
     sections,
     sectionsInInputOrder
