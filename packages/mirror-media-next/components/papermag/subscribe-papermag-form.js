@@ -296,7 +296,9 @@ export default function SubscribePaperMagForm({ plan }) {
         router.push(`/papermag/return?order-fail=true`)
       }
 
-      data.VACC = 0
+      console.log({ data })
+
+      // data.VACC = 0
 
       setPaymentPayload(data.data)
     } catch (err) {
