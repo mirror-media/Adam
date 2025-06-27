@@ -1,8 +1,6 @@
 import styled from 'styled-components'
 import HeroImageAndVideo from '../shared/hero-image-and-video'
 import ArticleInfo from './article-info'
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
-import { mediaSize } from '../../../styles/media'
 import Image from 'next/image'
 
 /**

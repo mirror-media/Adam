@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-import Image from 'next/image'
 import ButtonCopyLink from '../shared/button-copy-link'
 import DonateLink from '../shared/donate-link'
 import SubscribeLink from '../shared/subscribe-link'

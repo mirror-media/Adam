@@ -572,6 +572,7 @@ export default function ExternalNormalStyle({ external }) {
           </SectionAndDate>
           <Title>{title}</Title>
           <SectionAndLogo>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a className="link-to-index" href="/" aria-label="go-to-index-page">
               <Image
                 width={26}
