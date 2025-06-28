@@ -296,10 +296,6 @@ export default function SubscribePaperMagForm({ plan }) {
         router.push(`/papermag/return?order-fail=true`)
       }
 
-      console.log({ data })
-
-      // data.VACC = 0
-
       setPaymentPayload(data.data)
     } catch (err) {
       setIsProcessing(false)

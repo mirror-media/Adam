@@ -43,6 +43,7 @@ async function getPaymentDataOfMagazineOrders(gateWayPayload) {
     ENV === 'local'
       ? `http://localhost:3000/papermag/return`
       : `https://${SITE_URL}/papermag/return`
+  data.createNewebpayTradeInfoForMagazineOrder.VACC = 0
 
   return data
 }
