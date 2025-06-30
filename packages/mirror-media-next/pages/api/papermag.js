@@ -54,6 +54,11 @@ export default async function EncryptInfo(req, res) {
     const data = await getPaymentDataOfMagazineOrders(tradeInfo)
     const infoForNewebpay = data.createNewebpayTradeInfoForMagazineOrder
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
+    console.log(
+      infoForNewebpay,
+      infoForNewebpay.ReturnURL,
+      infoForNewebpay.VACC
+    )
     const encryptPostData = await newebpay.getEncryptedFormPostData(
       infoForNewebpay
     )
