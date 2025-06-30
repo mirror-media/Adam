@@ -295,7 +295,6 @@ export default function SubscribePaperMagForm({ plan }) {
         console.error(data.message)
         router.push(`/papermag/return?order-fail=true`)
       }
-      data.data.Version = '2.2'
 
       setPaymentPayload(data.data)
     } catch (err) {
@@ -377,7 +376,7 @@ export default function SubscribePaperMagForm({ plan }) {
         merchantId={paymentPayload.MerchantID}
         tradeInfo={paymentPayload.TradeInfo}
         tradeSha={paymentPayload.TradeSha}
-        version={paymentPayload.Version}
+        version="2.2"
         newebpayApiUrl={NEWEBPAY_PAPERMAG_API_URL}
         ref={formMerchantIDRef}
       />
