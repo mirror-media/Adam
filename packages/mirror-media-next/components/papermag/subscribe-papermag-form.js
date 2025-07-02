@@ -376,7 +376,7 @@ export default function SubscribePaperMagForm({ plan }) {
         merchantId={paymentPayload.MerchantID}
         tradeInfo={paymentPayload.TradeInfo}
         tradeSha={paymentPayload.TradeSha}
-        version="2.2"
+        version={paymentPayload.Version}
         newebpayApiUrl={NEWEBPAY_PAPERMAG_API_URL}
         ref={formMerchantIDRef}
       />

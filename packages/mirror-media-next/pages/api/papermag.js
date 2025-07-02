@@ -43,7 +43,9 @@ async function getPaymentDataOfMagazineOrders(gateWayPayload) {
     ENV === 'local'
       ? `http://localhost:3000/papermag/return`
       : `https://${SITE_URL}/papermag/return`
-  data.createNewebpayTradeInfoForMagazineOrder.VACC = 0
+  data.createNewebpayTradeInfoForMagazineOrder.CREDIT = 1
+  data.createNewebpayTradeInfoForMagazineOrder.LINEPAY = 1
+  data.createNewebpayTradeInfoForMagazineOrder.Version = '2.2'
 
   return data
 }
@@ -53,12 +55,8 @@ export default async function EncryptInfo(req, res) {
   try {
     const data = await getPaymentDataOfMagazineOrders(tradeInfo)
     const infoForNewebpay = data.createNewebpayTradeInfoForMagazineOrder
+    console.log('infoForNewebpay', infoForNewebpay)
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
-    console.log(
-      infoForNewebpay,
-      infoForNewebpay.ReturnURL,
-      infoForNewebpay.VACC
-    )
     const encryptPostData = await newebpay.getEncryptedFormPostData(
       infoForNewebpay
     )
@@ -68,6 +66,7 @@ export default async function EncryptInfo(req, res) {
       data: encryptPostData,
     })
   } catch (e) {
+    console.log(e)
     const annotatingError = errors.helpers.wrap(
       e.message,
       'UnhandledError',
