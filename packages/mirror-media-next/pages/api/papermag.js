@@ -44,7 +44,6 @@ async function getPaymentDataOfMagazineOrders(gateWayPayload) {
       ? `http://localhost:3000/papermag/return`
       : `https://${SITE_URL}/papermag/return`
   data.createNewebpayTradeInfoForMagazineOrder.CREDIT = 1
-  data.createNewebpayTradeInfoForMagazineOrder.LINEPAY = 1
   data.createNewebpayTradeInfoForMagazineOrder.Version = '2.2'
 
   return data
