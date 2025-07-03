@@ -8,6 +8,7 @@ import {
 } from '../../config/index.mjs'
 import client from '../../apollo/apollo-client'
 import { fetchPaymentDataOfPapermag } from '../../apollo/membership/mutation/magazine-order'
+import { PLAN_LIST } from '../../constants/papermag'
 
 // TODO: Add JSDocs
 async function fireGqlRequest(mutation, variables) {
@@ -52,9 +53,27 @@ async function getPaymentDataOfMagazineOrders(gateWayPayload) {
 export default async function EncryptInfo(req, res) {
   const tradeInfo = req.body
   try {
+    // 防止使用者自行修改 Amt 的值
+    // 詳見：https://app.asana.com/1/614399484723017/project/1210077071799813/task/1210384428427743?focus=true
+    if (tradeInfo.data?.Amt) {
+      throw new Error('Amt is not correct input')
+    }
+
     const data = await getPaymentDataOfMagazineOrders(tradeInfo)
     const infoForNewebpay = data.createNewebpayTradeInfoForMagazineOrder
-    console.log('infoForNewebpay', infoForNewebpay)
+
+    const itemCode = tradeInfo.data.merchandise.connect.code
+    const item = PLAN_LIST.find((item) => item.code === itemCode)
+    if (!item) {
+      throw new Error('item is not correct input')
+    }
+    const itemPrice = item.price
+    const totalPrice =
+      itemPrice * tradeInfo.data.itemCount - (tradeInfo.data.loveCode ? 80 : 0)
+    if (totalPrice !== infoForNewebpay.Amt) {
+      throw new Error('Amt is not correct input')
+    }
+
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
     const encryptPostData = await newebpay.getEncryptedFormPostData(
       infoForNewebpay
@@ -65,7 +84,6 @@ export default async function EncryptInfo(req, res) {
       data: encryptPostData,
     })
   } catch (e) {
-    console.log(e)
     const annotatingError = errors.helpers.wrap(
       e.message,
       'UnhandledError',
