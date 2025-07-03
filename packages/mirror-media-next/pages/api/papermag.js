@@ -71,7 +71,9 @@ export default async function EncryptInfo(req, res) {
     const totalPrice =
       itemPrice * tradeInfo.data.itemCount - (tradeInfo.data.loveCode ? 80 : 0)
     if (totalPrice !== infoForNewebpay.Amt) {
-      throw new Error('Amt is not correct input')
+      throw new Error(
+        `Amt is not correct input, Amt is ${infoForNewebpay.Amt}, but should be ${totalPrice}`
+      )
     }
 
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
