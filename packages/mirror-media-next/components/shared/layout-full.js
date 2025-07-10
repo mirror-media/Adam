@@ -44,6 +44,7 @@ export default function LayoutFull({ head, header, footer, children }) {
         description={head?.description}
         imageUrl={head?.imageUrl}
         skipCanonical={head?.skipCanonical}
+        robotsMetaContent={head?.robotsMetaContent}
       />
       <Container>
         <ShareHeader pageLayoutType={header.type} headerData={header.data} />
