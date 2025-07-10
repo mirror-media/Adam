@@ -83,7 +83,7 @@ export default function PurchaseInfo({
     getPlanInfoByIdAndShouldFreight(plan, shouldCountFreight)
 
   const freight = shippingFee * count
-  const itemPrice = price * count
+  const itemPrice = price * count - shippingFee * count
   const renewDiscount = renewCouponApplied ? COUPON_DISCOUNT * count : 0
   const total = itemPrice + freight - renewDiscount
 
