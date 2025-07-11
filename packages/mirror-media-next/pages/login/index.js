@@ -152,6 +152,7 @@ export default function Login({ headerData, isWebview }) {
 
   return (
     <LayoutFull
+      head={{ robotsMetaContent: 'noindex, nofollow' }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
