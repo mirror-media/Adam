@@ -105,9 +105,13 @@ export default function Author({ postsCount, posts, author, headerData }) {
   const handleObSlotRenderEnded = useCallback((e) => {
     setISHDAdEmpty(e.isEmpty)
   }, [])
+
   return (
     <Layout
-      head={{ title: `${authorName}相關報導` }}
+      head={{
+        title: `${authorName}相關報導`,
+        robotsMetaContent: posts.length <= 3 && 'noindex, nofollow',
+      }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
@@ -220,6 +224,18 @@ export async function getServerSideProps({ query, req, res }) {
     `Error occurs while getting post data in author page (authorId: ${authorId})`,
     globalLogFields
   )
+
+  if (posts.length === 0) {
+    // fetchPost return empty array -> 404
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `fetch post of authorId ${authorId} return empty posts, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
 
   const props = {
     postsCount,

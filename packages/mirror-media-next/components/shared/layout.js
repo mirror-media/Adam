@@ -33,6 +33,7 @@ export default function Layout({ head, header, footer, children }) {
         skipCanonical={head?.skipCanonical}
         pageType={head?.pageType}
         pageSlug={head?.pageSlug}
+        robotsMetaContent={head?.robotsMetaContent}
       />
       <ShareHeader pageLayoutType={header.type} headerData={header.data} />
       <IdleTimeoutModal />
