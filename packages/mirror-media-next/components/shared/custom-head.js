@@ -44,6 +44,7 @@ const createCanonicalLink = (routerAsPath) => {
  * @property {boolean} [skipCanonical] - flag to indicates whether the canonical should be added here
  * @property {'story' | 'external'} [pageType] - pageType for search result navigation in App
  * @property {string} [pageSlug] - set pageSlug with pageType. This is also for search result navigation in App
+ * @property {string} [robotsMetaContent] - content for the robots meta tag, e.g. 'noindex, nofollow', controlling search engine indexing and crawling
  */
 
 /**
@@ -57,6 +58,7 @@ export default function CustomHead({
   imageUrl,
   pageType,
   pageSlug,
+  robotsMetaContent,
 }) {
   const router = useRouter()
   const canonicalLink = skipCanonical ? (
@@ -92,6 +94,9 @@ export default function CustomHead({
         content={siteInformation.description}
         key="description"
       />
+      {robotsMetaContent && (
+        <meta name="robots" content={robotsMetaContent} key="robots" />
+      )}
       <meta name="article-description" content={siteInformation.description} />
       {/* <OpenGraph properties={siteInformation} /> */}
       <meta name="application-name" content={siteInformation.title} />
