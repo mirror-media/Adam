@@ -218,6 +218,18 @@ export async function getServerSideProps({ query, req, res }) {
     globalLogFields
   )
 
+  if (posts.length === 0) {
+    // fetchPost return empty array -> 404
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `fetch post of tagSlug ${tagSlug} return empty posts, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
+
   const props = {
     postsCount,
     posts,
