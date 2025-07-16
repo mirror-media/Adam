@@ -14,6 +14,7 @@ const GOOGLE_SHEETS_PRIVATE_KEY = (
 const GOOGLE_SHEETS_CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
 const GOOGLE_SHEETS_CLIENT_ID = process.env.GOOGLE_SHEETS_CLIENT_ID
 const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
+const IS_SPECIAL_EVENT = process.env.NEXT_PUBLIC_SPECIALEVENT === 'true'
 
 // should be applied in preview mode
 const SITE_BASE_PATH = IS_PREVIEW_MODE ? '/preview-server' : ''
@@ -333,4 +334,5 @@ export {
   IS_PRIZE_RIZED,
   COURSE_URL,
   MISO_API_KEY,
+  IS_SPECIAL_EVENT,
 }
