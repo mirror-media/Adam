@@ -170,7 +170,7 @@ export default function Home({
             />
           )}
         </GPT_Placeholder>
-        {/* should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
+        {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
         <RecallCampaigns />
 
         <EditorChoice editorChoice={editorChoice}></EditorChoice>

@@ -16,23 +16,20 @@ import { IS_SPECIAL_EVENT } from '../../config/index.mjs'
  */
 
 const Wrapper = styled.div`
-  position: relative;
   margin: 20px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  ${({ theme }) => theme.breakpoint.sm} {
-    width: 310px;
-  }
+  width: 310px;
   ${({ theme }) => theme.breakpoint.md} {
-    width: 696px;
+    width: 100%;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     width: 912px;
   }
   iframe {
     background-color: #fff;
-    height: 100%;
+    height: 500px;
     width: 100%;
   }
 `
@@ -41,7 +38,6 @@ const Header = styled.h3`
   text-align: center;
   font-family: 'Noto Sans CJK TC';
   font-size: 20px;
-  font-style: normal;
   font-weight: 700;
   line-height: normal;
 `
