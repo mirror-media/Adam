@@ -39,7 +39,6 @@ const Header = styled.h3`
   font-family: 'Noto Sans CJK TC';
   font-size: 20px;
   font-weight: 700;
-  line-height: normal;
 `
 
 const ViewMoreLink = styled.a`
@@ -47,7 +46,6 @@ const ViewMoreLink = styled.a`
   font-family: 'Noto Sans CJK TC';
   font-size: 16px;
   font-weight: 700;
-  line-height: normal;
   text-decoration-line: underline;
   text-underline-position: from-font;
 `
