@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { IS_SPECIAL_EVENT } from '../../config/index.mjs'
+import { ENV, IS_SPECIAL_EVENT } from '../../config/index.mjs'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -28,12 +28,18 @@ const Wrapper = styled.section`
     width: 100%;
   }
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 912px;
+    width: 924px;
   }
   iframe {
     background-color: #fff;
-    height: 500px;
     width: 100%;
+    height: 270px;
+    ${({ theme }) => theme.breakpoint.md} {
+      height: 212px;
+    }
+    ${({ theme }) => theme.breakpoint.xl} {
+      height: 194px;
+    }
   }
 `
 const Header = styled.h3`
@@ -46,13 +52,16 @@ const ViewMoreLink = styled.a`
   text-underline-position: from-font;
 `
 
+const prefix = ['prod', 'staging'].includes(ENV) ? 'www' : 'dev'
+const iframeSrc = `https://${prefix}.mirrormedia.mg/projects/election2025-homepage/index.html`
+
 export default function RecallCampaigns({ className = '' }) {
   if (!IS_SPECIAL_EVENT) return null
 
   return (
     <Wrapper className={className}>
       <Header>2025 鏡週刊立委罷免即時開票</Header>
-      <iframe src="https://www.mirrormedia.mg/projects/election2024-homepage/index.html" />
+      <iframe src={iframeSrc} />
       <ViewMoreLink
         target="_blank"
         rel="noreferrer noopenner"
