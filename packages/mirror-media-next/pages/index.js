@@ -36,6 +36,7 @@ import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
 import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
 import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
 import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
+import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -169,7 +170,9 @@ export default function Home({
             />
           )}
         </GPT_Placeholder>
-        {/* should remove after 2024 taiwan election is finished */}
+        {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
+        <RecallCampaigns />
+
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}

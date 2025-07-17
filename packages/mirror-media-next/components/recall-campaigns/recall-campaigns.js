@@ -1,0 +1,65 @@
+import styled from 'styled-components'
+
+import { IS_SPECIAL_EVENT } from '../../config/index.mjs'
+
+/**
+ * @typedef {import('../../type/theme').Theme} Theme
+ */
+/**
+ * @typedef {Object} RecallCampaignsProps
+ * @property {string} [className]
+ */
+
+/**
+ * @param {RecallCampaignsProps} props
+ * @returns {import('react/jsx-runtime').JSX.Element | null}
+ */
+
+const Wrapper = styled.section`
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 310px;
+  color: #1d9fb8;
+  font-family: 'Noto Sans CJK TC';
+  font-weight: 700;
+  ${({ theme }) => theme.breakpoint.md} {
+    width: 100%;
+  }
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 912px;
+  }
+  iframe {
+    background-color: #fff;
+    height: 500px;
+    width: 100%;
+  }
+`
+const Header = styled.h3`
+  font-size: 20px;
+`
+
+const ViewMoreLink = styled.a`
+  font-size: 16px;
+  text-decoration-line: underline;
+  text-underline-position: from-font;
+`
+
+export default function RecallCampaigns({ className = '' }) {
+  if (!IS_SPECIAL_EVENT) return null
+
+  return (
+    <Wrapper className={className}>
+      <Header>2025 鏡週刊立委罷免即時開票</Header>
+      <iframe src="https://www.mirrormedia.mg/projects/election2024-homepage/index.html" />
+      <ViewMoreLink
+        target="_blank"
+        rel="noreferrer noopenner"
+        href="https://www.google.com/"
+      >
+        查看完整資料
+      </ViewMoreLink>
+    </Wrapper>
+  )
+}
