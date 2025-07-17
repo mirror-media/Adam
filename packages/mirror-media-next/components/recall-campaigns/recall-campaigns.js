@@ -15,12 +15,15 @@ import { IS_SPECIAL_EVENT } from '../../config/index.mjs'
  * @returns {import('react/jsx-runtime').JSX.Element | null}
  */
 
-const Wrapper = styled.div`
+const Wrapper = styled.section`
   margin: 20px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 310px;
+  color: #1d9fb8;
+  font-family: 'Noto Sans CJK TC';
+  font-weight: 700;
   ${({ theme }) => theme.breakpoint.md} {
     width: 100%;
   }
@@ -34,18 +37,11 @@ const Wrapper = styled.div`
   }
 `
 const Header = styled.h3`
-  color: #1d9fb8;
-  text-align: center;
-  font-family: 'Noto Sans CJK TC';
   font-size: 20px;
-  font-weight: 700;
 `
 
 const ViewMoreLink = styled.a`
-  color: #1d9fb8;
-  font-family: 'Noto Sans CJK TC';
   font-size: 16px;
-  font-weight: 700;
   text-decoration-line: underline;
   text-underline-position: from-font;
 `
