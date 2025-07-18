@@ -70,6 +70,13 @@ export default function RecallCampaigns({ className = '' }) {
 
   console.log(newVariable, typeof newVariable, 'newVariable - test')
 
+  const isSpecialEventEnabled = process.env.NEXT_PUBLIC_SPECIALEVENT
+  console.log(
+    isSpecialEventEnabled,
+    typeof isSpecialEventEnabled,
+    'isSpecialEventEnabled - test'
+  )
+
   if (!IS_SPECIAL_EVENT) return null
 
   return (
