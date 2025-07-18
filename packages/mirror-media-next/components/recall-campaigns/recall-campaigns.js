@@ -56,27 +56,12 @@ const prefix = ['prod', 'staging'].includes(ENV) ? 'www' : 'dev'
 const iframeSrc = `https://${prefix}.mirrormedia.mg/projects/election2025-homepage/index.html`
 
 const variable = process.env.NEXT_PUBLIC_SPECIALEVENT
-const newVariable =
-  typeof variable === 'string'
-    ? JSON.parse(variable.toLowerCase())
-    : `${process.env.NEXT_PUBLIC_SPECIALEVENT} not string`
 
 export default function RecallCampaigns({ className = '' }) {
   console.log(
     variable,
     typeof variable,
-    'process.env.NEXT_PUBLIC_SPECIALEVENT - test   '
-  )
-
-  console.log(newVariable, typeof newVariable, 'newVariable - test', {
-    IS_SPECIAL_EVENT,
-  })
-
-  const isSpecialEventEnabled = process.env.NEXT_PUBLIC_SPECIALEVENT
-  console.log(
-    isSpecialEventEnabled,
-    typeof isSpecialEventEnabled,
-    'isSpecialEventEnabled - test'
+    'process.env.NEXT_PUBLIC_SPECIALEVENT - test'
   )
 
   if (!IS_SPECIAL_EVENT) return null
