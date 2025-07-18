@@ -8,6 +8,7 @@ import {
   API_TIMEOUT,
   URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
+  IS_SPECIAL_EVENT,
 } from '../config/index.mjs'
 
 import { fetchModEventsInDesc } from '../utils/api/event'
@@ -103,6 +104,18 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
     display: none;
   }
 `
+const variable = process.env.NEXT_PUBLIC_SPECIALEVENT
+const newVariable =
+  typeof variable === 'string'
+    ? JSON.parse(variable.toLowerCase())
+    : `${process.env.NEXT_PUBLIC_SPECIALEVENT} not string`
+console.log(
+  variable,
+  typeof variable,
+  'process.env.NEXT_PUBLIC_SPECIALEVENT - test in index'
+)
+
+console.log(newVariable, typeof newVariable, 'newVariable - test in index')
 
 /**
  *
@@ -172,6 +185,7 @@ export default function Home({
         </GPT_Placeholder>
         {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
         <RecallCampaigns />
+        {IS_SPECIAL_EVENT && <h2>IS_SPECIAL_EVENT {IS_SPECIAL_EVENT}</h2>}
 
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
