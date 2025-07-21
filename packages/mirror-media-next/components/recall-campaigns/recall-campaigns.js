@@ -54,27 +54,16 @@ const ViewMoreLink = styled.a`
 
 const prefix = ['prod', 'staging'].includes(ENV) ? 'www' : 'dev'
 const iframeSrc = `https://${prefix}.mirrormedia.mg/projects/election2025-homepage/index.html`
-
-const variable = process.env.NEXT_PUBLIC_SPECIALEVENT
+const moreLink = `https://${prefix}.mirrormedia.mg/projects/taiwan-elections/index.html`
 
 export default function RecallCampaigns({ className = '' }) {
-  console.log(
-    variable,
-    typeof variable,
-    'process.env.NEXT_PUBLIC_SPECIALEVENT - test '
-  )
-
   if (!IS_SPECIAL_EVENT) return null
 
   return (
     <Wrapper className={className}>
       <Header>2025 鏡週刊立委罷免即時開票</Header>
       <iframe src={iframeSrc} />
-      <ViewMoreLink
-        target="_blank"
-        rel="noreferrer noopenner"
-        href="https://www.google.com/"
-      >
+      <ViewMoreLink target="_blank" rel="noreferrer noopenner" href={moreLink}>
         查看完整資料
       </ViewMoreLink>
     </Wrapper>

@@ -8,7 +8,6 @@ import {
   API_TIMEOUT,
   URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
-  IS_SPECIAL_EVENT,
 } from '../config/index.mjs'
 
 import { fetchModEventsInDesc } from '../utils/api/event'
@@ -185,7 +184,6 @@ export default function Home({
         </GPT_Placeholder>
         {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
         <RecallCampaigns />
-        {IS_SPECIAL_EVENT && <h2>IS_SPECIAL_EVENT {IS_SPECIAL_EVENT}</h2>}
 
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
