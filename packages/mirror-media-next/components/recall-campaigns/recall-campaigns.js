@@ -61,7 +61,7 @@ export default function RecallCampaigns({ className = '' }) {
   console.log(
     variable,
     typeof variable,
-    'process.env.NEXT_PUBLIC_SPECIALEVENT - test'
+    'process.env.NEXT_PUBLIC_SPECIALEVENT - test '
   )
 
   if (!IS_SPECIAL_EVENT) return null
