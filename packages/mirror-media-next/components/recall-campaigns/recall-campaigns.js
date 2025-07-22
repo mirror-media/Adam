@@ -12,7 +12,7 @@ import { ENV, IS_SPECIAL_EVENT } from '../../config/index.mjs'
 
 /**
  * @param {RecallCampaignsProps} props
- * @returns {import('react/jsx-runtime').JSX.Element | null }
+ * @returns {import('react/jsx-runtime').JSX.Element | null}
  */
 
 const Wrapper = styled.section`
