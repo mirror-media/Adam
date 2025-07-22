@@ -36,7 +36,7 @@ const Wrapper = styled.section`
     height: 300px;
     margin: 16px 0;
     ${({ theme }) => theme.breakpoint.md} {
-      height: 227px;
+      height: 226px;
     }
     ${({ theme }) => theme.breakpoint.xl} {
       height: 214px;
@@ -63,7 +63,10 @@ export default function RecallCampaigns({ className = '' }) {
   return (
     <Wrapper className={className}>
       <Header>2025 鏡週刊立委罷免即時開票</Header>
-      <iframe src={iframeSrc} />
+      <iframe
+        src={iframeSrc}
+        scrolling="no" // Use scrolling="no" to suppress unwanted scrollbars in Chrome and avoid 1–2px layout shift
+      />
       <ViewMoreLink target="_blank" rel="noreferrer noopenner" href={moreLink}>
         查看完整資料
       </ViewMoreLink>
