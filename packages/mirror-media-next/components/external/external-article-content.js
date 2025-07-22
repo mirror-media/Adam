@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+import ExternalEmbedCodeBlock from './external-embed-code-block'
 const { draftEditorCssExternal } = MirrorMedia
 
 const Wrapper = styled.section`
@@ -41,9 +42,16 @@ const Wrapper = styled.section`
  * @returns {JSX.Element}
  */
 export default function ExternalArticleContent({ content = '' }) {
+  const iframeRegex = /(<iframe[\s\S]*?<\/iframe>)/i
+  const parts = content.split(iframeRegex).filter((p) => p.trim())
   return (
     <Wrapper>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      {parts.map((part, index) => {
+        if (iframeRegex.test(part)) {
+          return <ExternalEmbedCodeBlock embedCode={part} key={index} />
+        }
+        return <div dangerouslySetInnerHTML={{ __html: part }} key={index} />
+      })}
     </Wrapper>
   )
 }

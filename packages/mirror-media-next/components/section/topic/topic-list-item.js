@@ -74,9 +74,14 @@ const ItemBrief = styled.div`
  * @returns {React.ReactElement}
  */
 export default function TopicListItem({ item }) {
+  const styleUrl = parseUrl(item.style)
   const images =
     item.og_image?.resized ||
-    (parseUrl(item.style) ? { original: parseUrl(item.style) } : null) ||
+    (parseUrl(item.style)
+      ? {
+          original: styleUrl.startsWith('url(') ? styleUrl.slice(4) : styleUrl,
+        }
+      : null) ||
     item.heroImage?.resized
   return (
     <ItemWrapper href={`/topic/${item.slug}`} target="_blank">
