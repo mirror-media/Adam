@@ -33,12 +33,13 @@ const Wrapper = styled.section`
   iframe {
     background-color: #fff;
     width: 100%;
-    height: 270px;
+    height: 300px;
+    margin: 16px 0;
     ${({ theme }) => theme.breakpoint.md} {
-      height: 212px;
+      height: 226px;
     }
     ${({ theme }) => theme.breakpoint.xl} {
-      height: 194px;
+      height: 214px;
     }
   }
 `
