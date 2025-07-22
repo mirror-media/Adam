@@ -20,7 +20,7 @@ const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 310px;
+  width: 350px;
   color: #1d9fb8;
   font-family: 'Noto Sans CJK TC';
   font-weight: 700;
@@ -36,7 +36,7 @@ const Wrapper = styled.section`
     height: 300px;
     margin: 16px 0;
     ${({ theme }) => theme.breakpoint.md} {
-      height: 226px;
+      height: 227px;
     }
     ${({ theme }) => theme.breakpoint.xl} {
       height: 214px;
