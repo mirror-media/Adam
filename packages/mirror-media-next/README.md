@@ -77,6 +77,8 @@ ref: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#cas
 | GOOGLE_SHEETS_CLIENT_ID | 字串 | `undefined` | 呼叫 google sheet API 所使用的 service account ID |
 | GOOGLE_SHEET_SLOT_ID | 字串 | `undefined` | 抽獎資訊所使用的 spreadsheet ID |
 
+提醒：新增的環境變數若在 dev/prod 環境無法正常讀取， 須到 GCP (Google Cloud Platform) 的編輯觸發條件更新替代變數
+
 ## Environment Variables for search only (Search 限定的環境變數)
 | 變數名稱 | 資料型態 | 初始值 | 變數說明 |
 | ------ | ------ | ------ | ------ |

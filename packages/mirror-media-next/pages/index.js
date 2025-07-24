@@ -33,9 +33,11 @@ import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 
 import { isDateInsideDatesRange } from '../utils/date'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
+import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
 import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
 import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
 import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
+import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -113,6 +115,7 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {Object[] } props.sectionsData
  * @param {LiveYoutubeInfo} props.liveYoutubeInfo
  * @param {import('../type/youtube').YoutubeVideo[]} props.youtubeCoverstoryVideos
+ * @param {boolean} [props.isCampaignsVisible]
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -123,6 +126,7 @@ export default function Home({
   sectionsData = [],
   liveYoutubeInfo,
   youtubeCoverstoryVideos,
+  isCampaignsVisible,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -169,7 +173,9 @@ export default function Home({
             />
           )}
         </GPT_Placeholder>
-        {/* should remove after 2024 taiwan election is finished */}
+        {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
+        {isCampaignsVisible && <RecallCampaigns />}
+
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
@@ -321,6 +327,13 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
+    const campaignsDisplayConfig = await fetch(
+      RECALL_CAMPAIGNS_DISPLAY_JSON_URL
+    ).then((res) => res.json())
+    const envKey =
+      ENV === 'local' ? 'display_iframe_dev' : `display_iframe_${ENV}`
+    const isCampaignsVisible = campaignsDisplayConfig[envKey] === 'TRUE'
+
     return {
       props: {
         topicsData,
@@ -330,6 +343,7 @@ export async function getServerSideProps({ res, req }) {
         sectionsData,
         liveYoutubeInfo,
         youtubeCoverstoryVideos,
+        isCampaignsVisible,
       },
     }
   } catch (err) {
