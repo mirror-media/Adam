@@ -1,6 +1,26 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import styled from 'styled-components'
+import React from 'react'
+
+const EmbedContainer = styled.div`
+  .youtube-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+  }
+  .youtube {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+`
 
 function decodeHtmlEntities(text) {
   // This function should only run on the client.
@@ -12,6 +32,25 @@ function decodeHtmlEntities(text) {
   return textarea.value
 }
 
+function addYoutubeClassToIframe(html) {
+  // 支援 <iframe ...></iframe> 及 <iframe ... />
+  return html.replace(
+    /<iframe([^>]+src=["'][^"']*(youtube\.com|youtu\.be)[^"']*["'][^>]*)(?:><\/iframe>|\s*\/?>)/gi,
+    (match, p1) => {
+      let iframeTag
+      if (/class=/.test(p1)) {
+        iframeTag = `<iframe${p1.replace(
+          /class=(["'])(.*?)\1/,
+          'class=$1$2 youtube$1'
+        )}></iframe>`
+      } else {
+        iframeTag = `<iframe${p1} class="youtube"></iframe>`
+      }
+      return `<div class="youtube-wrapper">${iframeTag}</div>`
+    }
+  )
+}
+
 /**
  * A generic component to render embed code. It correctly handles and executes
  * any <script> tags within the provided code, preserving their original position.
@@ -19,10 +58,11 @@ function decodeHtmlEntities(text) {
  *
  * @param {Object} props
  * @param {string} props.embedCode - The embed code string, which can be any valid HTML.
- * @returns {JSX.Element}
+ * @returns {React.ReactElement}
  */
 export default function ExternalEmbedCodeBlock({ embedCode = '' }) {
   const embedRef = useRef(null)
+  console.log('embedCode', embedCode)
 
   useEffect(() => {
     const node = embedRef.current
@@ -54,6 +94,9 @@ export default function ExternalEmbedCodeBlock({ embedCode = '' }) {
       )
     }
 
+    // 在插入 innerHTML 前處理 YouTube iframe
+    finalHtml = addYoutubeClassToIframe(finalHtml)
+
     // Step 2: Add the final HTML to the DOM.
     // Note: Scripts inserted via innerHTML do not execute by default.
     node.innerHTML = finalHtml
@@ -77,5 +120,5 @@ export default function ExternalEmbedCodeBlock({ embedCode = '' }) {
     })
   }, [embedCode])
 
-  return <div ref={embedRef} />
+  return <EmbedContainer ref={embedRef} />
 }
