@@ -329,10 +329,12 @@ export async function getServerSideProps({ res, req }) {
 
     const campaignsDisplayConfig = await fetch(
       RECALL_CAMPAIGNS_DISPLAY_JSON_URL
-    ).then((res) => res.json())
+    )
+      .then((res) => res.json())
+      .catch((err) => console.error(err))
     const envKey =
       ENV === 'local' ? 'display_iframe_dev' : `display_iframe_${ENV}`
-    const isCampaignsVisible = campaignsDisplayConfig[envKey] === 'TRUE'
+    const isCampaignsVisible = campaignsDisplayConfig?.[envKey] === 'TRUE'
 
     return {
       props: {
