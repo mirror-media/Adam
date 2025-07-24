@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { ENV, IS_SPECIAL_EVENT } from '../../config/index.mjs'
+import { ENV } from '../../config/index.mjs'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -58,8 +58,6 @@ const iframeSrc = `https://${prefix}.mirrormedia.mg/projects/election2025-homepa
 const moreLink = `https://${prefix}.mirrormedia.mg/projects/taiwan-elections/index.html`
 
 export default function RecallCampaigns({ className = '' }) {
-  if (!IS_SPECIAL_EVENT) return null
-
   return (
     <Wrapper className={className}>
       <Header>2025 鏡週刊立委罷免即時開票</Header>
@@ -67,7 +65,7 @@ export default function RecallCampaigns({ className = '' }) {
         src={iframeSrc}
         scrolling="no" // Use scrolling="no" to suppress unwanted scrollbars in Chrome and avoid 1–2px layout shift
       />
-      <ViewMoreLink target="_blank" rel="noreferrer noopenner" href={moreLink}>
+      <ViewMoreLink target="_blank" rel="noreferrer noopener" href={moreLink}>
         查看完整資料
       </ViewMoreLink>
     </Wrapper>
