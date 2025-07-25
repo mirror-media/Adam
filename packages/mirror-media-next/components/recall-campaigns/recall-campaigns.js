@@ -33,7 +33,7 @@ const Wrapper = styled.section`
   iframe {
     background-color: #fff;
     width: 100%;
-    height: 300px;
+    height: 238px;
     margin: 16px 0;
     ${({ theme }) => theme.breakpoint.md} {
       height: 226px;
@@ -65,7 +65,12 @@ export default function RecallCampaigns({ className = '' }) {
         src={iframeSrc}
         scrolling="no" // Use scrolling="no" to suppress unwanted scrollbars in Chrome and avoid 1–2px layout shift
       />
-      <ViewMoreLink target="_blank" rel="noreferrer noopener" href={moreLink}>
+      <ViewMoreLink
+        target="_blank"
+        className="GTM-click_2025_election_page"
+        rel="noreferrer noopener"
+        href={moreLink}
+      >
         查看完整資料
       </ViewMoreLink>
     </Wrapper>
