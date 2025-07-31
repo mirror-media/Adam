@@ -26,6 +26,7 @@ import {
 import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/index/editor-choice'
 import LatestNews from '../components/index/latest-news'
+import PromoVideoList from '../components/index/promo-video-list'
 import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
@@ -35,6 +36,7 @@ import { isDateInsideDatesRange } from '../utils/date'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
 import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
 import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
+import { fetchPromoteVideosList } from '../utils/api/promote-videos'
 import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
 import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
 import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
@@ -116,6 +118,7 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {LiveYoutubeInfo} props.liveYoutubeInfo
  * @param {import('../type/youtube').YoutubeVideo[]} props.youtubeCoverstoryVideos
  * @param {boolean} [props.isCampaignsVisible]
+ * @param {import('../apollo/fragments/promote-video').PromoteVideo[]} props.promoVideos
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -127,6 +130,7 @@ export default function Home({
   liveYoutubeInfo,
   youtubeCoverstoryVideos,
   isCampaignsVisible,
+  promoVideos,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -179,6 +183,8 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
+
+        <PromoVideoList promoVideos={promoVideos} />
         <LiveAndCoverstoryYoutube
           liveYoutubeInfo={liveYoutubeInfo}
           youtubeCoverstoryVideos={youtubeCoverstoryVideos}
@@ -235,6 +241,7 @@ export async function getServerSideProps({ res, req }) {
   let editorChoicesData = []
   let latestNewsData = []
   let eventsData = []
+  let promoVideos = []
 
   const channelId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
 
@@ -259,6 +266,7 @@ export async function getServerSideProps({ res, req }) {
         timeout: API_TIMEOUT,
       }),
       fetchHeaderDataInDefaultPageLayout(),
+      fetchPromoteVideosList(),
       fetchModEventsInDesc(),
       fetchYoutubePlaylistByChannelId(channelId),
     ])
@@ -280,8 +288,18 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
+    promoVideos =
+      handleGqlResponse(
+        responses[2],
+        (gqlData) => {
+          return gqlData?.data?.promoteVideos.slice(1) || []
+        },
+        'Error occurs while getting promote videos data in index page',
+        globalLogFields
+      )
+
     eventsData = handleGqlResponse(
-      responses[2],
+      responses[3],
       (gqlData) => {
         return gqlData?.data?.events || []
       },
@@ -308,7 +326,7 @@ export async function getServerSideProps({ res, req }) {
       : {}
 
     const youtubeCoverstoryVideos = handleAxiosResponse(
-      responses[3],
+      responses[4],
       (
         /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByChannelId>>} */ axiosData
       ) => {
@@ -346,6 +364,7 @@ export async function getServerSideProps({ res, req }) {
         liveYoutubeInfo,
         youtubeCoverstoryVideos,
         isCampaignsVisible,
+        promoVideos,
       },
     }
   } catch (err) {
