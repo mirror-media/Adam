@@ -167,9 +167,6 @@ export default function PromoVideoList({ promoVideos }) {
 
     const resizeObserver = new ResizeObserver(() => {
       updateButtonVisibility()
-
-      // Disconnect after first load
-      resizeObserver.disconnect()
     })
 
     resizeObserver.observe(container)
