@@ -5,6 +5,7 @@ import {
   post,
   postTrimmedContent,
   postFullContent,
+  relatedPost,
 } from '../fragments/post'
 
 const fetchAsidePosts = gql`
@@ -46,11 +47,18 @@ const fetchPostBySlug = gql`
   ${post}
   ${postTrimmedContent}
   ${postFullContent}
+  ${relatedPost}
   query fetchPostBySlug($slug: String) {
     post(where: { slug: $slug }) {
       ...post
       ...postTrimmedContent
       ...postFullContent
+      relatedsOne {
+        ...relatedPost
+      }
+      relatedsTwo {
+        ...relatedPost
+      }
     }
   }
 `

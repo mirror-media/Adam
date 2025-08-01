@@ -213,6 +213,8 @@ export default function StoryPremiumStyle({
     heroImage = null,
     heroVideo = null,
     heroCaption = '',
+    relatedsOne = null,
+    relatedsTwo = null,
     relateds = [],
     relatedsInInputOrder = [],
     slug = '',
@@ -237,6 +239,13 @@ export default function StoryPremiumStyle({
     relatedsInInputOrder && relatedsInInputOrder.length
       ? relatedsInInputOrder
       : relateds
+
+  const finalRelateds = [
+    ...(relatedsOne ? [relatedsOne] : []),
+    ...(relatedsTwo ? [relatedsTwo] : []),
+    ...relatedsWithOrdered,
+  ].slice(0, 10)
+
   const credits = [
     { writers: writersWithOrdered },
     { photographers: photographers },
@@ -359,7 +368,7 @@ export default function StoryPremiumStyle({
       </Main>
 
       <Aside
-        relateds={relatedsWithOrdered}
+        relateds={finalRelateds}
         sectionSlug={section?.slug || 'news'}
         storySlug={slug}
       />

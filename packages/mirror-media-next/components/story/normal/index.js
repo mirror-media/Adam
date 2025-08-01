@@ -543,12 +543,12 @@ export default function StoryNormalStyle({
     extend_byline = '',
     tags = [],
     brief = { blocks: [], entityMap: {} },
+    relatedsOne = null,
+    relatedsTwo = null,
     relateds = [],
     relatedsInInputOrder = [],
     hiddenAdvertised = false,
   } = postData
-
-  console.log(relateds, relatedsInInputOrder)
 
   const sectionsWithOrdered = getActiveOrderSection(
     sections,
@@ -559,6 +559,12 @@ export default function StoryNormalStyle({
     relatedsInInputOrder && relatedsInInputOrder.length
       ? relatedsInInputOrder
       : relateds
+
+  const finalRelateds = [
+    ...(relatedsOne ? [relatedsOne] : []),
+    ...(relatedsTwo ? [relatedsTwo] : []),
+    ...relatedsWithOrdered,
+  ].slice(0, 10)
 
   const writersWithOrdered =
     writersInInputOrder && writersInInputOrder.length
@@ -743,7 +749,7 @@ export default function StoryNormalStyle({
             <span className="time">{updatedTaipeiTime} 臺北時間</span>
           </DateUnderContent>
           <RelatedArticleList
-            relateds={relatedsWithOrdered}
+            relateds={finalRelateds}
             hiddenAdvertised={hiddenAdvertised}
           />
           {/* portal target for AsideArticleList on mobile */}

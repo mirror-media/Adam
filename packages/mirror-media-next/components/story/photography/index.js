@@ -163,6 +163,8 @@ export default function StoryPhotographyStyle({
     vocals = [],
     extend_byline = '',
     relateds = [],
+    relatedsOne = null,
+    relatedsTwo = null,
     relatedsInInputOrder = [],
 
     brief = null,
@@ -184,6 +186,12 @@ export default function StoryPhotographyStyle({
     relatedsInInputOrder && relatedsInInputOrder.length
       ? relatedsInInputOrder
       : relateds
+
+  const finalRelateds = [
+    ...(relatedsOne ? [relatedsOne] : []),
+    ...(relatedsTwo ? [relatedsTwo] : []),
+    ...relatedsWithOrdered,
+  ].slice(0, 10)
 
   // Get images array from content.entityMap
   const photosArray = Object.values(postContent.data.entityMap).filter(
@@ -293,7 +301,7 @@ export default function StoryPhotographyStyle({
           </section>
           <Credits credits={credits}></Credits>
         </ContentContainer>
-        <RelatedPosts relateds={relatedsWithOrdered} />
+        <RelatedPosts relateds={finalRelateds} />
         <Footer footerType="default" />
       </Page>
     </Main>
