@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import YouTube from 'react-youtube'
 
 import { extractYouTubeId } from '../../utils/youtube'
-import useWindowDimensions from '../../hooks/use-window-dimensions'
 
 const Section = styled.section`
   position: relative;
@@ -25,14 +24,14 @@ const Section = styled.section`
   }
 `
 
-const Title = styled.section`
+const Title = styled.h3`
   color: #054f77;
   text-align: center;
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: 700;
 
-  ${({ theme }) => theme.breakpoint.md} {
+  ${({ theme }) => theme.breakpoint.xl} {
     font-size: 28px;
   }
 `
@@ -147,7 +146,6 @@ export default function PromoVideoList({ promoVideos }) {
   const [showLeftButton, setShowLeftButton] = useState(false)
   const [showRightButton, setShowRightButton] = useState(false)
   const [centerItems, setCenterItems] = useState(false)
-  const { width } = useWindowDimensions()
 
   const updateButtonVisibility = useCallback(() => {
     const container = containerRef.current
@@ -174,6 +172,7 @@ export default function PromoVideoList({ promoVideos }) {
     return () => resizeObserver.disconnect()
   }, [updateButtonVisibility])
 
+  // Handle scroll events
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
@@ -184,13 +183,13 @@ export default function PromoVideoList({ promoVideos }) {
     return () => {
       container.removeEventListener('scroll', updateButtonVisibility)
     }
-  }, [promoVideos, width, updateButtonVisibility])
+  }, [updateButtonVisibility])
 
   /**
    * Scroll to the start of the list
    * @param {React.MouseEvent<HTMLElement>} e
    */
-  const handleClickPrev = (e) => {
+  const handleScrollToStart = (e) => {
     e.preventDefault()
     const container = containerRef.current
     if (!container) return
@@ -204,7 +203,7 @@ export default function PromoVideoList({ promoVideos }) {
    * Scroll to the start of the list
    * @param {React.MouseEvent<HTMLElement>} e
    */
-  const handleClickNext = (e) => {
+  const handleScrollToEnd = (e) => {
     e.preventDefault()
     const container = containerRef.current
     if (!container) return
@@ -214,13 +213,17 @@ export default function PromoVideoList({ promoVideos }) {
     })
   }
 
+  if (!promoVideos?.length) return null
+
   return (
     <Section>
       <Title>最新影音</Title>
       <Wrapper>
-        <Ol ref={containerRef} className={centerItems && 'centered'}>
+        <Ol ref={containerRef} className={centerItems ? 'centered' : ''}>
           {promoVideos.map((video) => {
             const youtubeId = extractYouTubeId(video.videoLink)
+
+            if (!youtubeId) return null
             return (
               <Li key={`${youtubeId}-${video.id}`}>
                 <YouTube
@@ -236,14 +239,14 @@ export default function PromoVideoList({ promoVideos }) {
         {showLeftButton && (
           <ArrowButtonLeft
             type="button"
-            onClick={handleClickPrev}
+            onClick={handleScrollToStart}
             aria-label="Scroll to first video"
           />
         )}
         {showRightButton && (
           <ArrowButtonRight
             type="button"
-            onClick={handleClickNext}
+            onClick={handleScrollToEnd}
             aria-label="Scroll to last video"
           />
         )}
