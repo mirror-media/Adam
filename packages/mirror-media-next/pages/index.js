@@ -10,7 +10,6 @@ import {
   URL_STATIC_POST_EXTERNAL,
 } from '../config/index.mjs'
 
-import { fetchModEventsInDesc } from '../utils/api/event'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
 import {
@@ -32,13 +31,9 @@ import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 
-import { isDateInsideDatesRange } from '../utils/date'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
 import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
-import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
 import { fetchPromoteVideosList } from '../utils/api/promote-videos'
-import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
-import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
 import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
@@ -62,9 +57,6 @@ const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
  */
 /**
  * @typedef {import('../components/index/latest-news').ArticleRawData[]} ArticlesRawData
- */
-/**
- * @typedef {import('../components/index/live-and-coverstory-youtube').LiveYoutubeInfo} LiveYoutubeInfo
  */
 
 const IndexContainer = styled.main`
@@ -115,8 +107,6 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {EditorChoicesRawData} [props.editorChoicesData=[]]
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
- * @param {LiveYoutubeInfo} props.liveYoutubeInfo
- * @param {import('../type/youtube').YoutubeVideo[]} props.youtubeCoverstoryVideos
  * @param {boolean} [props.isCampaignsVisible]
  * @param {import('../apollo/fragments/promote-video').PromoteVideo[]} props.promoVideos
  * @returns {React.ReactElement}
@@ -127,8 +117,6 @@ export default function Home({
   editorChoicesData = [],
   latestNewsData = [],
   sectionsData = [],
-  liveYoutubeInfo,
-  youtubeCoverstoryVideos,
   isCampaignsVisible,
   promoVideos,
 }) {
@@ -185,10 +173,6 @@ export default function Home({
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
 
         <PromoVideoList promoVideos={promoVideos} />
-        <LiveAndCoverstoryYoutube
-          liveYoutubeInfo={liveYoutubeInfo}
-          youtubeCoverstoryVideos={youtubeCoverstoryVideos}
-        />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
@@ -240,7 +224,6 @@ export async function getServerSideProps({ res, req }) {
   let flashNewsData = []
   let editorChoicesData = []
   let latestNewsData = []
-  let eventsData = []
   let promoVideos = []
 
   const channelId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
@@ -267,8 +250,6 @@ export async function getServerSideProps({ res, req }) {
       }),
       fetchHeaderDataInDefaultPageLayout(),
       fetchPromoteVideosList(),
-      fetchModEventsInDesc(),
-      fetchYoutubePlaylistByChannelId(channelId),
     ])
 
     flashNewsData = handleAxiosResponse(
@@ -298,53 +279,6 @@ export async function getServerSideProps({ res, req }) {
         globalLogFields
       )
 
-    eventsData = handleGqlResponse(
-      responses[3],
-      (gqlData) => {
-        return gqlData?.data?.events || []
-      },
-      'Error occurs while getting event data in index page',
-      globalLogFields
-    )
-
-    const eventData =
-      eventsData.find((event) =>
-        // since the events are ordered in `publishedDate` with desc order,
-        // find the first event whose period is on-going.
-        isDateInsideDatesRange(new Date(), {
-          startDate: event.startDate,
-          endDate: event.endDate,
-        })
-      ) || {}
-    // live youtube video link should be like https://www.youtube.com/watch?v={youtubeVideoId}
-    // ignore other deprecated format
-    const liveYoutubeInfo = eventData.link?.includes('v=')
-      ? {
-          youtubeId: eventData.link.split('v=')[1],
-          name: eventData.name,
-        }
-      : {}
-
-    const youtubeCoverstoryVideos = handleAxiosResponse(
-      responses[4],
-      (
-        /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByChannelId>>} */ axiosData
-      ) => {
-        if (axiosData) {
-          const data = axiosData.data
-          const items = data?.items || []
-          const filteredItems = items.filter(
-            (
-              /** @type {import('./section/videohub').YoutubeRawPlaylistVideo} */ item
-            ) => item.status.privacyStatus === 'public'
-          )
-          return simplifyYoutubePlaylistVideo(filteredItems).slice(0, 3)
-        }
-      },
-      `Error occurs while getting playlist data in homepage (channelId: ${channelId})`,
-      globalLogFields
-    )
-
     const campaignsDisplayConfig = await fetch(
       RECALL_CAMPAIGNS_DISPLAY_JSON_URL
     )
@@ -361,8 +295,8 @@ export async function getServerSideProps({ res, req }) {
         editorChoicesData,
         latestNewsData,
         sectionsData,
-        liveYoutubeInfo,
-        youtubeCoverstoryVideos,
+        // liveYoutubeInfo,
+        // youtubeCoverstoryVideos,
         isCampaignsVisible,
         promoVideos,
       },
