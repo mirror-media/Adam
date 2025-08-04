@@ -187,6 +187,8 @@ export const topicPost = gql`
  * @property {Draft} trimmedContent - post trimmed content
  * @property {Related[] } relateds related articles selected by cms users
  * @property {Related[] } relatedsInInputOrder related articles with adjusted order
+ * @property {Related | null} relatedsOne - first set of related articles
+ * @property {Related | null} relatedsTwo - second set of related articles
  * @property {boolean} isFeatured
  * @property {import('./tag').Tag[]} tags
  * @property {string} redirect - post redirect slug or external url
@@ -197,6 +199,30 @@ export const topicPost = gql`
  * @property {Topic | null} topics - which topic is belong to
  */
 
+export const postTrimmedContent = gql`
+  fragment postTrimmedContent on Post {
+    trimmedContent
+  }
+`
+
+export const postFullContent = gql`
+  fragment postFullContent on Post {
+    content
+  }
+`
+
+export const relatedPost = gql`
+  ${heroImage}
+  fragment relatedPost on Post {
+    id
+    slug
+    title
+    heroImage {
+      ...heroImage
+    }
+  }
+`
+
 export const post = gql`
   ${section}
   ${categoryWithSection}
@@ -204,6 +230,7 @@ export const post = gql`
   ${tag}
   ${heroImage}
   ${heroVideo}
+  ${relatedPost}
   fragment post on Post {
     id
     slug
@@ -262,20 +289,10 @@ export const post = gql`
     heroCaption
     brief
     relateds {
-      id
-      slug
-      title
-      heroImage {
-        ...heroImage
-      }
+      ...relatedPost
     }
     relatedsInInputOrder {
-      id
-      slug
-      title
-      heroImage {
-        ...heroImage
-      }
+      ...relatedPost
     }
     redirect
     og_image {
@@ -289,16 +306,5 @@ export const post = gql`
     topics {
       slug
     }
-  }
-`
-
-export const postTrimmedContent = gql`
-  fragment postTrimmedContent on Post {
-    trimmedContent
-  }
-`
-export const postFullContent = gql`
-  fragment postFullContent on Post {
-    content
   }
 `

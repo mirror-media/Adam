@@ -329,6 +329,7 @@ export async function getServerSideProps({ params, req, res }) {
       query: fetchPostBySlug,
       variables: { slug },
     })
+
     /**
      * @type {PostData}
      */

@@ -149,8 +149,9 @@ export default function StoryWideStyle({
     engineers = [],
     vocals = [],
     extend_byline = '',
-
     relateds = [],
+    relatedsOne = null,
+    relatedsTwo = null,
     relatedsInInputOrder = [],
     slug = '',
     brief = null,
@@ -167,6 +168,12 @@ export default function StoryWideStyle({
     relatedsInInputOrder && relatedsInInputOrder.length
       ? relatedsInInputOrder
       : relateds
+
+  const finalRelateds = [
+    ...(relatedsOne ? [relatedsOne] : []),
+    ...(relatedsTwo ? [relatedsTwo] : []),
+    ...relatedsWithOrdered,
+  ].slice(0, 10)
 
   const writersWithOrdered =
     writersInInputOrder && writersInInputOrder.length
@@ -260,7 +267,7 @@ export default function StoryWideStyle({
             {supportBanner}
           </ContentWrapper>
           <Aside
-            relateds={relatedsWithOrdered}
+            relateds={finalRelateds}
             sectionSlug={section?.slug || 'news'}
             storySlug={slug}
           ></Aside>
