@@ -133,7 +133,9 @@ const opts = {
 }
 
 /**
- * @typedef {import('../../apollo/fragments/promote-video').PromoteVideo} PromoteVideo
+ * @typedef {Object} PromoteVideo
+ * @property {string} id
+ * @property {string} videoLink
  */
 
 /**

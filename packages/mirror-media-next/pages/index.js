@@ -31,7 +31,6 @@ import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 
-import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
 import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
 import { fetchPromoteVideosList } from '../utils/api/promote-videos'
 import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
@@ -108,7 +107,7 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
  * @param {boolean} [props.isCampaignsVisible]
- * @param {import('../apollo/fragments/promote-video').PromoteVideo[]} props.promoVideos
+ * @param { { id: string, videoLink: string }[] } props.promoVideos
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -266,15 +265,14 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
-    promoVideos =
-      handleGqlResponse(
-        responses[2],
-        (resData) => {
-          return resData?.data?.promoteVideos || []
-        },
-        'Error occurs while getting promote videos data in index page',
-        globalLogFields
-      )
+    promoVideos = handleGqlResponse(
+      responses[2],
+      (resData) => {
+        return resData?.data?.promoteVideos || []
+      },
+      'Error occurs while getting promote videos data in index page',
+      globalLogFields
+    )
 
     const campaignsDisplayConfig = await fetch(
       RECALL_CAMPAIGNS_DISPLAY_JSON_URL
