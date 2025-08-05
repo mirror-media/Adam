@@ -1,8 +1,6 @@
 import { gql } from '@apollo/client'
-import { promoteVideo } from '../fragments/promote-video.js'
 
 const fetchPromoteVideos = gql`
-  ${promoteVideo}
   query ($take: Int, $orderBy: [PromoteVideoOrderByInput!]) {
     promoteVideos(
       where: {
@@ -15,7 +13,8 @@ const fetchPromoteVideos = gql`
       take: $take
       orderBy: $orderBy
     ) {
-      ...promoteVideo
+      id
+      videoLink
     }
   }
 `

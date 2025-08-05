@@ -25,7 +25,7 @@ const Section = styled.section`
 `
 
 const Title = styled.h3`
-  color: #054f77;
+  color: ${({ theme }) => theme.color.brandColor.darkBlue};
   text-align: center;
   margin-bottom: 20px;
   font-size: 20px;
