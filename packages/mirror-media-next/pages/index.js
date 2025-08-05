@@ -171,7 +171,6 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-
         <PromoVideoList promoVideos={promoVideos} />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
@@ -226,8 +225,6 @@ export async function getServerSideProps({ res, req }) {
   let latestNewsData = []
   let promoVideos = []
 
-  const channelId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
-
   try {
     const postResponse = await axios({
       method: 'get',
@@ -272,8 +269,8 @@ export async function getServerSideProps({ res, req }) {
     promoVideos =
       handleGqlResponse(
         responses[2],
-        (gqlData) => {
-          return gqlData?.data?.promoteVideos.slice(1) || []
+        (resData) => {
+          return resData?.data?.promoteVideos || []
         },
         'Error occurs while getting promote videos data in index page',
         globalLogFields
@@ -295,8 +292,6 @@ export async function getServerSideProps({ res, req }) {
         editorChoicesData,
         latestNewsData,
         sectionsData,
-        // liveYoutubeInfo,
-        // youtubeCoverstoryVideos,
         isCampaignsVisible,
         promoVideos,
       },
