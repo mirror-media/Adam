@@ -2,6 +2,7 @@ import errors from '@twreporter/errors'
 import client from '../../apollo/apollo-client.js'
 import axiosInstance from '../../axios/index.js'
 import {
+  URL_STATIC_COLUMN_SECTION_POSTS,
   URL_STATIC_HEADER_HEADERS,
   URL_STATIC_PODCAST_LIST,
   URL_STATIC_PREMIUM_SECTIONS,
@@ -47,6 +48,26 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
  * @property {boolean} isMemberOnly
  * @property {string[]} sections
  *
+ */
+
+/**
+ * @typedef {Object} postsInColumnSection
+ * @property {'external' | 'post'} type
+ * @property {string} id
+ * @property {string} title
+ * @property {string} publishedDate
+ * @property {string} thumb
+ * @property {string} content
+ * @property {string} brief
+ */
+
+/**
+ * @typedef {Object} ColumnSectionResponse
+ * @property {Object} section
+ * @property {postsInColumnSection[]} section.items
+ * @property {Object} counts
+ * @property {number} counts.posts
+ * @property {number} counts.externals
  */
 
 /**
@@ -157,9 +178,15 @@ const fetchAnnoucementsByScope = (scope) => {
   })
 }
 
+/** @type {() => Promise<import('axios').AxiosResponse<ColumnSectionResponse>>} */
+const fetchColumnSectionPosts = createAxiosRequest(
+  URL_STATIC_COLUMN_SECTION_POSTS
+)
+
 export {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
   fetchPodcastList,
   fetchAnnoucementsByScope,
+  fetchColumnSectionPosts,
 }
