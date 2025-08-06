@@ -119,6 +119,12 @@ const ArrowButtonRight = styled(ArrowButtonBase)`
   }
 `
 
+/**
+ * Number of items to scroll per click
+ * @type {number}
+ */
+const SCROLL_STEP_COUNT = 2
+
 /** @type {import('react-youtube').YouTubeProps['opts'] & { playerVars: { mute?: 0 | 1 }}} */
 const opts = {
   width: 320,
@@ -188,31 +194,62 @@ export default function PromoVideoList({ promoVideos }) {
   }, [updateScrollUIState])
 
   /**
-   * Scroll to the start of the list
-   * @param {React.MouseEvent<HTMLElement>} e
+   * Scroll to the next or previous item edge within the container.
+   * @param {'left' | 'right'} direction - The scroll direction.
    */
-  const handleScrollToStart = (e) => {
-    e.preventDefault()
+  const scrollToItem = (direction) => {
     const container = containerRef.current
     if (!container) return
+
+    const containerPaddingLeft =
+      parseFloat(getComputedStyle(container).paddingLeft) || 0
+
+    const items = Array.from(container.children).map(
+      (el) => /** @type {HTMLElement} */ (el)
+    )
+    const itemLeftPositions = items.map(
+      (el) => el.offsetLeft - containerPaddingLeft
+    )
+
+    // Determine current index based on closest position
+    const currentScrollLeft = container.scrollLeft
+    const currentIndex = itemLeftPositions.reduce(
+      (closestIdx, leftPosition, idx) => {
+        return Math.abs(leftPosition - currentScrollLeft) <
+          Math.abs(itemLeftPositions[closestIdx] - currentScrollLeft)
+          ? idx
+          : closestIdx
+      },
+      0
+    )
+
+    const step = SCROLL_STEP_COUNT
+    const delta = direction === 'right' ? step : -step
+    const targetIndex = Math.min(
+      Math.max(currentIndex + delta, 0),
+      itemLeftPositions.length - 1
+    )
+
     container.scrollTo({
-      left: 0,
+      left: itemLeftPositions[targetIndex],
       behavior: 'smooth',
     })
   }
 
   /**
-   * Scroll to the start of the list
    * @param {React.MouseEvent<HTMLElement>} e
    */
-  const handleScrollToEnd = (e) => {
+  const handleScrollToLeft = (e) => {
     e.preventDefault()
-    const container = containerRef.current
-    if (!container) return
-    container.scrollTo({
-      left: container.scrollWidth - container.clientWidth,
-      behavior: 'smooth',
-    })
+    scrollToItem('left')
+  }
+
+  /**
+   * @param {React.MouseEvent<HTMLElement>} e
+   */
+  const handleScrollToRight = (e) => {
+    e.preventDefault()
+    scrollToItem('right')
   }
 
   if (!promoVideos?.length) return null
@@ -241,14 +278,14 @@ export default function PromoVideoList({ promoVideos }) {
         {showLeftButton && (
           <ArrowButtonLeft
             type="button"
-            onClick={handleScrollToStart}
+            onClick={handleScrollToLeft}
             aria-label="Scroll to first video"
           />
         )}
         {showRightButton && (
           <ArrowButtonRight
             type="button"
-            onClick={handleScrollToEnd}
+            onClick={handleScrollToRight}
             aria-label="Scroll to last video"
           />
         )}
