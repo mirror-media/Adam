@@ -263,7 +263,7 @@ export async function getServerSideProps({ req, res }) {
           slug: item.slug || '',
           title: item.title || '',
           publishedDate: item.publishedDate || '',
-          type: item.type || 'post',
+          type: item.type || 'story',
           brief: { blocks: [{ text: briefText }] },
           categories: [],
           sections: [],
@@ -285,7 +285,7 @@ export async function getServerSideProps({ req, res }) {
 
   const filterPostIds = posts
     .map((post) => {
-      if (post.type === 'post') {
+      if (post.type === 'story') {
         return post.id
       }
       return null

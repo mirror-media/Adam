@@ -46,13 +46,24 @@ export default function SectionArticles({
 }) {
   const fetchPageSize = renderPageSize * 2
 
+  // 只取前 24 篇文章作為初始列表，確保無限滾動能正常觸發
+  const initialPostsCount = renderPageSize * 2
+  // const initialPosts = posts.slice(0, initialPostsCount)
+
   async function fetchPostsFromPage(page) {
     if (!section?.slug) {
       return
     }
     try {
+      // 第一頁：返回剩餘的 JSON 文章
+      if (page === 1) {
+        const remainingPosts = posts.slice(initialPostsCount)
+        return remainingPosts
+      }
+
+      // 第二頁開始：從 GraphQL 獲取新文章
       const take = fetchPageSize
-      const skip = (page - 1) * take
+      const skip = (page - 2) * take // 減去第一頁的偏移量
       const response = await fetchPostsBySectionSlug(
         section.slug,
         take,
@@ -72,8 +83,15 @@ export default function SectionArticles({
       return
     }
     try {
+      // 第一頁：返回剩餘的 JSON 文章
+      if (page === 1) {
+        const remainingPosts = posts.slice(initialPostsCount)
+        return remainingPosts
+      }
+
+      // 第二頁開始：從 GraphQL 獲取新文章
       const take = fetchPageSize
-      const skip = (page - 1) * take
+      const skip = (page - 2) * take // 減去第一頁的偏移量
       const response = await fetchPremiumPostsBySectionSlug(
         section.slug,
         take,
