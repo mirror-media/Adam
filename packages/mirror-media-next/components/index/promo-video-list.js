@@ -194,8 +194,9 @@ export default function PromoVideoList({ promoVideos }) {
   }, [updateScrollUIState])
 
   /**
-   * Scroll to the next or previous item edge within the container.
-   * @param {'left' | 'right'} direction - The scroll direction.
+   * Scrolls horizontally to the next or previous item's left edge based on the given direction.
+   * Calculates the nearest current item index and moves by SCROLL_STEP_COUNT steps.
+   * @param {'left' | 'right'} direction - Direction to scroll toward.
    */
   const scrollToItem = (direction) => {
     const container = containerRef.current
@@ -211,12 +212,13 @@ export default function PromoVideoList({ promoVideos }) {
       (el) => el.offsetLeft - containerPaddingLeft
     )
 
+    const currentScrollPosition = container.scrollLeft
+
     // Determine current index based on closest position
-    const currentScrollLeft = container.scrollLeft
     const currentIndex = itemLeftPositions.reduce(
       (closestIdx, leftPosition, idx) => {
-        return Math.abs(leftPosition - currentScrollLeft) <
-          Math.abs(itemLeftPositions[closestIdx] - currentScrollLeft)
+        return Math.abs(leftPosition - currentScrollPosition) <
+          Math.abs(itemLeftPositions[closestIdx] - currentScrollPosition)
           ? idx
           : closestIdx
       },
@@ -237,19 +239,12 @@ export default function PromoVideoList({ promoVideos }) {
   }
 
   /**
-   * @param {React.MouseEvent<HTMLElement>} e
+   * @param {'left' | 'right'} direction
+   * @returns {(e: React.MouseEvent<HTMLElement>) => void}
    */
-  const handleScrollToLeft = (e) => {
+  const handleScrollTo = (direction) => (e) => {
     e.preventDefault()
-    scrollToItem('left')
-  }
-
-  /**
-   * @param {React.MouseEvent<HTMLElement>} e
-   */
-  const handleScrollToRight = (e) => {
-    e.preventDefault()
-    scrollToItem('right')
+    scrollToItem(direction)
   }
 
   if (!promoVideos?.length) return null
@@ -278,14 +273,14 @@ export default function PromoVideoList({ promoVideos }) {
         {showLeftButton && (
           <ArrowButtonLeft
             type="button"
-            onClick={handleScrollToLeft}
+            onClick={handleScrollTo('left')}
             aria-label="Scroll to first video"
           />
         )}
         {showRightButton && (
           <ArrowButtonRight
             type="button"
-            onClick={handleScrollToRight}
+            onClick={handleScrollTo('right')}
             aria-label="Scroll to last video"
           />
         )}
