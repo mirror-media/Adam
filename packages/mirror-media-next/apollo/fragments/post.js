@@ -12,6 +12,7 @@ import { heroVideo } from './video'
  * @property {string} slug
  * @property {string} title
  * @property {string} publishedDate
+ * @property {'external' | 'post'} [type]
  * @property {import('../../type/draft-js').Draft} brief
  * @property {import('./category').Category[]} categories
  * @property {import('./section').Section[] } sections

@@ -123,7 +123,14 @@ export default function ArticleListItem({ item, section }) {
     section || item.sections.find((section) => section.slug !== 'member')
 
   return (
-    <ItemWrapper href={`/story/${item.slug}`} target="_blank">
+    <ItemWrapper
+      href={
+        item.type === 'external'
+          ? `/external/${item.slug}`
+          : `/story/${item.slug}`
+      }
+      target="_blank"
+    >
       <ImageContainer>
         <Image
           images={item.heroImage?.resized}

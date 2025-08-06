@@ -32,6 +32,8 @@ const Loading = styled.div`
  * @param {Section} props.section
  * @param {number} props.renderPageSize
  * @param {boolean} [props.isPremium]
+ * @param {string[]} [props.filterPostIds]
+ * @param {number} [props.postsCountInJson]
  * @returns {React.ReactElement}
  */
 export default function SectionArticles({
@@ -40,6 +42,7 @@ export default function SectionArticles({
   section,
   renderPageSize,
   isPremium = false,
+  filterPostIds = [],
 }) {
   const fetchPageSize = renderPageSize * 2
 
@@ -50,7 +53,12 @@ export default function SectionArticles({
     try {
       const take = fetchPageSize
       const skip = (page - 1) * take
-      const response = await fetchPostsBySectionSlug(section.slug, take, skip)
+      const response = await fetchPostsBySectionSlug(
+        section.slug,
+        take,
+        skip,
+        filterPostIds.length > 0 ? { id: { notIn: filterPostIds } } : {}
+      )
       return response.data.posts
     } catch (error) {
       // [to-do]: use beacon api to log error on gcs
@@ -69,7 +77,8 @@ export default function SectionArticles({
       const response = await fetchPremiumPostsBySectionSlug(
         section.slug,
         take,
-        skip
+        skip,
+        filterPostIds.length > 0 ? { id: { notIn: filterPostIds } } : {}
       )
       return response.data.posts
     } catch (error) {

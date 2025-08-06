@@ -52,22 +52,27 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
 
 /**
  * @typedef {Object} postsInColumnSection
- * @property {'external' | 'post'} type
+ * @property {'external' | 'post' | 'story'} type
  * @property {string} id
  * @property {string} title
+ * @property {string} slug
  * @property {string} publishedDate
- * @property {string} thumb
- * @property {string} content
- * @property {string} brief
+ * @property {string | null} [heroImage]
+ * @property {string | null} [og_image]
+ * @property {Array} [apiData]
+ * @property {Array<Object>} [apiDataBrief]
+ * @property {string} [thumb]
+ * @property {string} [content]
+ * @property {string} [brief]
  */
 
 /**
  * @typedef {Object} ColumnSectionResponse
  * @property {Object} section
  * @property {postsInColumnSection[]} section.items
- * @property {Object} counts
- * @property {number} counts.posts
- * @property {number} counts.externals
+ * @property {Object} section.counts
+ * @property {number} section.counts.posts
+ * @property {number} section.counts.externals
  */
 
 /**

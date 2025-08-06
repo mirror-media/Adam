@@ -115,9 +115,17 @@ const RENDER_PAGE_SIZE = 12
  * @param {Section} props.section
  * @param {number} props.postsCount
  * @param {Object} props.headerData
+ * @param {string[]} props.filterPostIds
+ * @param {number} props.postsCountInJson
  * @returns {React.ReactElement}
  */
-export default function Section({ postsCount, posts, section, headerData }) {
+export default function Section({
+  postsCount,
+  posts,
+  section,
+  headerData,
+  filterPostIds,
+}) {
   const sectionName = section.name || ''
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
@@ -157,6 +165,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
           posts={posts}
           section={section}
           renderPageSize={RENDER_PAGE_SIZE}
+          filterPostIds={filterPostIds}
         />
         {shouldShowAd && (
           <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
@@ -192,7 +201,6 @@ export async function getServerSideProps({ req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    // fetchPostsBySectionSlug(sectionSlug, RENDER_PAGE_SIZE * 2, 0),
     fetchColumnSectionPosts(),
     fetchSectionBySectionSlug(sectionSlug),
   ])
@@ -213,30 +221,58 @@ export async function getServerSideProps({ req, res }) {
   const dataHandler = getPostsAndPostscountFromGqlData
 
   /** @type {[ number, Article[]]} */
-  let [postsCount, posts] = handleAxiosResponse(
+  let [postsCountInJson, posts] = handleAxiosResponse(
     responses[1],
     /** @param {import('axios').AxiosResponse<ColumnSectionResponse> | undefined} data */
     (data) => {
       const items = data?.data?.section?.items || []
-      const counts = data?.data?.counts || {
+      const counts = data?.data?.section?.counts || {
         posts: 0,
         externals: 0,
       }
       const formattedItems = items.map((item) => {
+        // 處理 brief
+        let briefText = ''
+        if (item.type === 'story' && item.apiDataBrief) {
+          if (
+            Array.isArray(item.apiDataBrief) &&
+            item.apiDataBrief.length > 0
+          ) {
+            const firstBlock = item.apiDataBrief[0]
+            if (firstBlock.content && Array.isArray(firstBlock.content)) {
+              briefText = firstBlock.content.join(' ')
+            }
+          }
+        } else if (item.brief) {
+          briefText = item.brief
+        }
+
+        let imageUrl = ''
+        if (item.type === 'story') {
+          if (item.heroImage) {
+            imageUrl = item.heroImage
+          } else if (item.og_image) {
+            imageUrl = item.og_image
+          }
+        } else if (item.thumb) {
+          imageUrl = item.thumb
+        }
+
         return /** @type {Article} */ ({
-          id: item.id,
-          slug: item.id,
-          title: item.title,
-          publishedDate: item.publishedDate,
-          brief: { blocks: [{ text: item.brief }] },
+          id: item.id || '',
+          slug: item.slug || '',
+          title: item.title || '',
+          publishedDate: item.publishedDate || '',
+          type: item.type || 'post',
+          brief: { blocks: [{ text: briefText }] },
           categories: [],
           sections: [],
           heroImage: {
             resized: {
-              original: item.thumb,
+              original: imageUrl,
             },
             resizedWebp: {
-              original: item.thumb,
+              original: imageUrl,
             },
           },
         })
@@ -247,25 +283,35 @@ export async function getServerSideProps({ req, res }) {
     globalLogFields
   )
 
-  if (posts.length === 0) {
-    // Try fallback with GraphQL
-    const fallbackResponse = await fetchPostsBySectionSlug(
-      sectionSlug,
-      RENDER_PAGE_SIZE * 2,
-      0
-    )
-    const fallbackResult = handleGqlResponse(
-      { status: 'fulfilled', value: fallbackResponse },
-      dataHandler,
-      `Error occurs while getting posts in section page (sectionSlug: ${sectionSlug})`,
-      globalLogFields
-    )
-    if (fallbackResult && fallbackResult.length > 0) {
-      ;[postsCount, posts] = fallbackResult
-    }
-    // fetchPost return empty array -> wrong authorId -> 404
-  }
+  const filterPostIds = posts
+    .map((post) => {
+      if (post.type === 'post') {
+        return post.id
+      }
+      return null
+    })
+    .filter((id) => id)
 
+  const gqlPostsResult = handleGqlResponse(
+    await Promise.allSettled([
+      fetchPostsBySectionSlug(
+        sectionSlug,
+        posts.length ? 0 : RENDER_PAGE_SIZE * 2,
+        0,
+        { id: { notIn: filterPostIds } }
+      ),
+    ]).then((results) => results[0]),
+    dataHandler,
+    `Error occurs while getting posts in section page (sectionSlug: ${sectionSlug})`,
+    globalLogFields
+  )
+  const gqlPostsCount = gqlPostsResult[0] ?? 0
+  posts.push(...gqlPostsResult[1])
+
+  // 總文章數應該是 JSON 文章數 + GraphQL 文章數
+  const postsCount = postsCountInJson + gqlPostsCount
+
+  // fetchPost return empty array -> wrong authorId -> 404
   if (posts.length === 0) {
     console.log(
       JSON.stringify({
@@ -305,6 +351,7 @@ export async function getServerSideProps({ req, res }) {
     posts,
     section,
     headerData: { sectionsData, topicsData },
+    filterPostIds,
   }
 
   return { props }
