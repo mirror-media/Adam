@@ -149,7 +149,7 @@ export default function PromoVideoList({ promoVideos }) {
   const [showRightButton, setShowRightButton] = useState(false)
   const [centerItems, setCenterItems] = useState(false)
 
-  const updateButtonVisibility = useCallback(() => {
+  const updateScrollUIState = useCallback(() => {
     const container = containerRef.current
     if (!container) return
 
@@ -166,26 +166,26 @@ export default function PromoVideoList({ promoVideos }) {
     if (!container) return
 
     const resizeObserver = new ResizeObserver(() => {
-      updateButtonVisibility()
+      updateScrollUIState()
     })
 
     resizeObserver.observe(container)
 
     return () => resizeObserver.disconnect()
-  }, [updateButtonVisibility])
+  }, [updateScrollUIState])
 
   // Handle scroll events
   useEffect(() => {
     const container = containerRef.current
     if (!container) return
 
-    updateButtonVisibility()
+    updateScrollUIState()
 
-    container.addEventListener('scroll', updateButtonVisibility)
+    container.addEventListener('scroll', updateScrollUIState)
     return () => {
-      container.removeEventListener('scroll', updateButtonVisibility)
+      container.removeEventListener('scroll', updateScrollUIState)
     }
-  }, [updateButtonVisibility])
+  }, [updateScrollUIState])
 
   /**
    * Scroll to the start of the list
