@@ -56,7 +56,7 @@ const Wrapper = styled.section`
 const ItemContainer = styled.div`
   ${({ theme }) => theme.breakpoint.md} {
     display: grid;
-    gap: 12px;
+    gap: 16px;
     grid-template-columns: repeat(auto-fill, 244px);
     justify-content: center;
   }
