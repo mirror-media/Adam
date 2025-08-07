@@ -507,6 +507,7 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
  * @param {any} param.headerData
  * @param {FlashNewsData} param.flashNewsData
  * @param {string} [param.classNameForGTM]
+ * @param {PostData[]} [param.allRelatedStories]
  * @returns {JSX.Element}
  */
 export default function StoryNormalStyle({
@@ -515,6 +516,7 @@ export default function StoryNormalStyle({
   headerData,
   flashNewsData,
   classNameForGTM = '',
+  allRelatedStories = [],
 }) {
   const { width } = useWindowDimensions()
   const isMobileWidth = width < mediaSize.md
@@ -543,10 +545,6 @@ export default function StoryNormalStyle({
     extend_byline = '',
     tags = [],
     brief = { blocks: [], entityMap: {} },
-    relatedsOne = null,
-    relatedsTwo = null,
-    relateds = [],
-    relatedsInInputOrder = [],
     hiddenAdvertised = false,
   } = postData
 
@@ -554,17 +552,6 @@ export default function StoryNormalStyle({
     sections,
     sectionsInInputOrder
   )
-
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
-
-  const finalRelateds = [
-    ...(relatedsOne ? [relatedsOne] : []),
-    ...(relatedsTwo ? [relatedsTwo] : []),
-    ...relatedsWithOrdered,
-  ].slice(0, 10)
 
   const writersWithOrdered =
     writersInInputOrder && writersInInputOrder.length
@@ -749,7 +736,7 @@ export default function StoryNormalStyle({
             <span className="time">{updatedTaipeiTime} 臺北時間</span>
           </DateUnderContent>
           <RelatedArticleList
-            relateds={finalRelateds}
+            relateds={allRelatedStories}
             hiddenAdvertised={hiddenAdvertised}
           />
           {/* portal target for AsideArticleList on mobile */}

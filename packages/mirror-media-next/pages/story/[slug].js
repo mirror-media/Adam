@@ -50,6 +50,7 @@ import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
 import axios from 'axios'
 import { handleAxiosResponse } from '../../utils/response-handle'
+import { getRelatedStories } from '../api/recomemd'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -139,6 +140,68 @@ export default function Story({
       ? { type: 'fullContent', data: content, isLoaded: true }
       : { type: 'trimmedContent', data: trimmedContent, isLoaded: false }
   )
+  const { relatedsInInputOrder, relateds, relatedsOne, relatedsTwo } = postData
+  const relatedsWithOrdered =
+    relatedsInInputOrder && relatedsInInputOrder.length
+      ? relatedsInInputOrder
+      : relateds
+  const [allRelatedStories, setAllRelatedStories] = useState(
+    [
+      ...(relatedsOne ? [relatedsOne] : []),
+      ...(relatedsTwo ? [relatedsTwo] : []),
+      ...relatedsWithOrdered,
+    ].slice(0, 10)
+  )
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      if (allRelatedStories.length < 10) {
+        const filterIds = allRelatedStories.map(
+          (story) => `mirrormedia_story_${story.slug}`
+        )
+        try {
+          const result = await getRelatedStories(
+            postData.id,
+            filterIds,
+            10 - allRelatedStories.length,
+            'story'
+          )
+
+          if (result && result.data && result.data.products) {
+            const formattedStories = result.data.products.map((product) => {
+              const productId = product.product_id
+              const slug = productId.split('_').slice(2).join('_')
+
+              return {
+                id: productId,
+                slug: slug,
+                title: product.title || '',
+                url: product.url || '',
+                heroImage: product.cover_image
+                  ? {
+                      resized: { original: product.cover_image },
+                    }
+                  : null,
+                publishedDate: new Date().toISOString(),
+                brief: { blocks: [{ text: '' }] },
+                categories: [],
+                sections: [],
+                type: 'story',
+              }
+            })
+
+            setAllRelatedStories((prev) => [...prev, ...formattedStories])
+          }
+        } catch (error) {
+          console.error('Failed to fetch MISO related stories:', error)
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { once: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [allRelatedStories.length, postData.id])
+
   useSaveMemberArticleHistoryLocally(slug)
   const writersInString = useMemo(() => {
     return writers
@@ -226,6 +289,7 @@ export default function Story({
             headerData={headerData}
             flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
           />
         )
       case 'style-premium':
