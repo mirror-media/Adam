@@ -16,6 +16,7 @@ import { heroVideo } from './video'
  * @property {import('./category').Category[]} categories
  * @property {import('./section').Section[] } sections
  * @property {import('./photo').Photo | null} heroImage
+ * @property {string} [type]
  */
 
 export const listingPost = gql`

@@ -10,7 +10,6 @@ import {
   URL_STATIC_POST_EXTERNAL,
 } from '../config/index.mjs'
 
-import { fetchModEventsInDesc } from '../utils/api/event'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
 import {
@@ -26,17 +25,14 @@ import {
 import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/index/editor-choice'
 import LatestNews from '../components/index/latest-news'
+import PromoVideoList from '../components/index/promo-video-list'
 import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 
-import { isDateInsideDatesRange } from '../utils/date'
-import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../constants/index'
 import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
-import { fetchYoutubePlaylistByChannelId } from '../utils/api/section-videohub'
-import { simplifyYoutubePlaylistVideo } from '../utils/youtube'
-import LiveAndCoverstoryYoutube from '../components/index/live-and-coverstory-youtube'
+import { fetchPromoteVideosList } from '../utils/api/promote-videos'
 import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
@@ -60,9 +56,6 @@ const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
  */
 /**
  * @typedef {import('../components/index/latest-news').ArticleRawData[]} ArticlesRawData
- */
-/**
- * @typedef {import('../components/index/live-and-coverstory-youtube').LiveYoutubeInfo} LiveYoutubeInfo
  */
 
 const IndexContainer = styled.main`
@@ -113,9 +106,8 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {EditorChoicesRawData} [props.editorChoicesData=[]]
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
- * @param {LiveYoutubeInfo} props.liveYoutubeInfo
- * @param {import('../type/youtube').YoutubeVideo[]} props.youtubeCoverstoryVideos
  * @param {boolean} [props.isCampaignsVisible]
+ * @param { { id: string, videoLink: string }[] } props.promoVideos
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -124,9 +116,8 @@ export default function Home({
   editorChoicesData = [],
   latestNewsData = [],
   sectionsData = [],
-  liveYoutubeInfo,
-  youtubeCoverstoryVideos,
   isCampaignsVisible,
+  promoVideos,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -179,10 +170,7 @@ export default function Home({
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
-        <LiveAndCoverstoryYoutube
-          liveYoutubeInfo={liveYoutubeInfo}
-          youtubeCoverstoryVideos={youtubeCoverstoryVideos}
-        />
+        <PromoVideoList promoVideos={promoVideos} />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
@@ -234,9 +222,7 @@ export async function getServerSideProps({ res, req }) {
   let flashNewsData = []
   let editorChoicesData = []
   let latestNewsData = []
-  let eventsData = []
-
-  const channelId = VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING.video_coverstory
+  let promoVideos = []
 
   try {
     const postResponse = await axios({
@@ -259,8 +245,7 @@ export async function getServerSideProps({ res, req }) {
         timeout: API_TIMEOUT,
       }),
       fetchHeaderDataInDefaultPageLayout(),
-      fetchModEventsInDesc(),
-      fetchYoutubePlaylistByChannelId(channelId),
+      fetchPromoteVideosList(),
     ])
 
     flashNewsData = handleAxiosResponse(
@@ -280,50 +265,12 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
-    eventsData = handleGqlResponse(
+    promoVideos = handleGqlResponse(
       responses[2],
-      (gqlData) => {
-        return gqlData?.data?.events || []
+      (resData) => {
+        return resData?.data?.promoteVideos || []
       },
-      'Error occurs while getting event data in index page',
-      globalLogFields
-    )
-
-    const eventData =
-      eventsData.find((event) =>
-        // since the events are ordered in `publishedDate` with desc order,
-        // find the first event whose period is on-going.
-        isDateInsideDatesRange(new Date(), {
-          startDate: event.startDate,
-          endDate: event.endDate,
-        })
-      ) || {}
-    // live youtube video link should be like https://www.youtube.com/watch?v={youtubeVideoId}
-    // ignore other deprecated format
-    const liveYoutubeInfo = eventData.link?.includes('v=')
-      ? {
-          youtubeId: eventData.link.split('v=')[1],
-          name: eventData.name,
-        }
-      : {}
-
-    const youtubeCoverstoryVideos = handleAxiosResponse(
-      responses[3],
-      (
-        /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByChannelId>>} */ axiosData
-      ) => {
-        if (axiosData) {
-          const data = axiosData.data
-          const items = data?.items || []
-          const filteredItems = items.filter(
-            (
-              /** @type {import('./section/videohub').YoutubeRawPlaylistVideo} */ item
-            ) => item.status.privacyStatus === 'public'
-          )
-          return simplifyYoutubePlaylistVideo(filteredItems).slice(0, 3)
-        }
-      },
-      `Error occurs while getting playlist data in homepage (channelId: ${channelId})`,
+      'Error occurs while getting promote videos data in index page',
       globalLogFields
     )
 
@@ -343,9 +290,8 @@ export async function getServerSideProps({ res, req }) {
         editorChoicesData,
         latestNewsData,
         sectionsData,
-        liveYoutubeInfo,
-        youtubeCoverstoryVideos,
         isCampaignsVisible,
+        promoVideos,
       },
     }
   } catch (err) {
