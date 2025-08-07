@@ -29,6 +29,7 @@ import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
 import ColumnList from '../../components/section/column/column-list'
+import SectionArticles from '../../components/shared/section-articles'
 
 /** @typedef {import('../../utils/api').postsInColumnSection} PostsInColumnSection */
 /** @typedef {import('../../utils/api').ColumnSectionResponse} ColumnSectionResponse */
@@ -159,13 +160,23 @@ export default function Section({
           <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
         )}
 
-        <ColumnList
-          posts={posts}
-          section={section}
-          renderPageSize={RENDER_PAGE_SIZE}
-          filterPostIds={filterPostIds}
-          gqlPostsCount={gqlPostsCount}
-        />
+        {gqlPostsCount === posts.length ? (
+          <ColumnList
+            posts={posts}
+            section={section}
+            renderPageSize={RENDER_PAGE_SIZE}
+            filterPostIds={filterPostIds}
+            gqlPostsCount={gqlPostsCount}
+          />
+        ) : (
+          <SectionArticles
+            posts={posts}
+            section={section}
+            postsCount={posts.length}
+            renderPageSize={RENDER_PAGE_SIZE}
+          />
+        )}
+
         {shouldShowAd && (
           <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
         )}
