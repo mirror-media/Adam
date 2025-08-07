@@ -95,7 +95,7 @@ switch (ENV) {
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
-    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-prod.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
+    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
