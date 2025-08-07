@@ -113,17 +113,17 @@ const RENDER_PAGE_SIZE = 12
  * @param {Object} props
  * @param {Article[]} props.posts
  * @param {Section} props.section
- * @param {number} props.postsCount
  * @param {Object} props.headerData
  * @param {string[]} props.filterPostIds
+ * @param {number} props.gqlPostsCount
  * @returns {React.ReactElement}
  */
 export default function Section({
-  postsCount,
   posts,
   section,
   headerData,
   filterPostIds,
+  gqlPostsCount,
 }) {
   const sectionName = section.name || ''
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
@@ -160,11 +160,11 @@ export default function Section({
         )}
 
         <ColumnList
-          postsCount={postsCount}
           posts={posts}
           section={section}
           renderPageSize={RENDER_PAGE_SIZE}
           filterPostIds={filterPostIds}
+          gqlPostsCount={gqlPostsCount}
         />
         {shouldShowAd && (
           <StickyGPTAd pageKey={getSectionGPTPageKey(section.slug)} />
@@ -220,7 +220,7 @@ export async function getServerSideProps({ req, res }) {
   const dataHandler = getPostsAndPostscountFromGqlData
 
   /** @type {[ number, Article[]]} */
-  let [postsCountInJson, posts] = handleAxiosResponse(
+  const postResult = handleAxiosResponse(
     responses[1],
     /** @param {import('axios').AxiosResponse<ColumnSectionResponse> | undefined} data */
     (data) => {
@@ -262,7 +262,7 @@ export async function getServerSideProps({ req, res }) {
           slug: item.slug || '',
           title: item.title || '',
           publishedDate: item.publishedDate || '',
-          type: item.type === 'external' ? 'external' : 'post',
+          type: item.type,
           brief: { blocks: [{ text: briefText }] },
           categories: [],
           sections: [],
@@ -281,6 +281,7 @@ export async function getServerSideProps({ req, res }) {
     `Error occurs while getting json posts in section page (sectionSlug: ${sectionSlug})`,
     globalLogFields
   )
+  const posts = postResult[1]
 
   const filterPostIds = posts
     .map((post) => {
@@ -306,8 +307,6 @@ export async function getServerSideProps({ req, res }) {
   )
   const gqlPostsCount = gqlPostsResult[0] ?? 0
   posts.push(...gqlPostsResult[1])
-
-  const postsCount = postsCountInJson + gqlPostsCount
 
   // fetchPost return empty array -> wrong authorId -> 404
   if (posts.length === 0) {
@@ -345,11 +344,11 @@ export async function getServerSideProps({ req, res }) {
   }
 
   const props = {
-    postsCount,
     posts,
     section,
     headerData: { sectionsData, topicsData },
     filterPostIds,
+    gqlPostsCount,
   }
 
   return { props }

@@ -25,19 +25,19 @@ const Loading = styled.div`
 /**
  *
  * @param {Object} props
- * @param {Number} props.postsCount
  * @param {Article[]} props.posts
  * @param {Section} props.section
  * @param {number} props.renderPageSize
  * @param {string[]} [props.filterPostIds]
+ * @param {number} props.gqlPostsCount
  * @returns {React.ReactElement}
  */
 export default function ColumnList({
-  postsCount,
   posts,
   section,
   renderPageSize,
   filterPostIds = [],
+  gqlPostsCount = 0,
 }) {
   const fetchPageSize = renderPageSize * 2
 
@@ -72,7 +72,7 @@ export default function ColumnList({
     <InfiniteScrollList
       initialList={posts}
       renderAmount={renderPageSize}
-      fetchCount={Math.ceil(postsCount / fetchPageSize)}
+      fetchCount={Math.ceil(gqlPostsCount / fetchPageSize) + 1}
       fetchListInPage={fetchPostsFromPage}
       loader={loader}
     >
