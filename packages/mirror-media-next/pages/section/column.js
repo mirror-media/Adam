@@ -179,8 +179,7 @@ export default function Section({
  * @type {import('next').GetServerSideProps}
  */
 export async function getServerSideProps({ req, res }) {
-  // Redirect to column/[slug] in staging and prod environments
-  if (ENV === 'staging' || ENV === 'prod') {
+  if (ENV === 'prod') {
     return {
       redirect: {
         destination: '/column/column',
