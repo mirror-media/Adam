@@ -40,7 +40,6 @@ export default function ColumnList({
   gqlPostsCount = 0,
 }) {
   const fetchPageSize = renderPageSize * 2
-  console.log(posts)
 
   async function fetchPostsFromPage(page) {
     if (!section?.slug) {
