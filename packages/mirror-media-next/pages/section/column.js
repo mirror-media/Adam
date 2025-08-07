@@ -161,19 +161,19 @@ export default function Section({
         )}
 
         {gqlPostsCount === posts.length ? (
+          <SectionArticles
+            posts={posts}
+            section={section}
+            postsCount={posts.length}
+            renderPageSize={RENDER_PAGE_SIZE}
+          />
+        ) : (
           <ColumnList
             posts={posts}
             section={section}
             renderPageSize={RENDER_PAGE_SIZE}
             filterPostIds={filterPostIds}
             gqlPostsCount={gqlPostsCount}
-          />
-        ) : (
-          <SectionArticles
-            posts={posts}
-            section={section}
-            postsCount={posts.length}
-            renderPageSize={RENDER_PAGE_SIZE}
           />
         )}
 
