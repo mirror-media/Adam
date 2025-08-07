@@ -247,15 +247,20 @@ export async function getServerSideProps({ req, res }) {
           briefText = item.brief
         }
 
-        let imageUrl = ''
+        let imageObject = {}
         if (item.type === 'story') {
-          if (item.heroImage) {
-            imageUrl = item.heroImage
-          } else if (item.og_image) {
-            imageUrl = item.og_image
+          imageObject = {
+            heroImage: item.heroImage,
+            ogImage: item.og_image,
           }
         } else if (item.thumb) {
-          imageUrl = item.thumb
+          imageObject = {
+            heroImage: {
+              resized: {
+                original: item.thumb,
+              },
+            },
+          }
         }
 
         return /** @type {Article} */ ({
@@ -267,14 +272,7 @@ export async function getServerSideProps({ req, res }) {
           brief: { blocks: [{ text: briefText }] },
           categories: [],
           sections: [],
-          heroImage: {
-            resized: {
-              original: imageUrl,
-            },
-            resizedWebp: {
-              original: imageUrl,
-            },
-          },
+          ...imageObject,
         })
       })
       return [counts.posts + counts.externals || 0, formattedItems]
