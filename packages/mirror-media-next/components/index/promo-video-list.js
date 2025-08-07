@@ -217,10 +217,12 @@ export default function PromoVideoList({ promoVideos }) {
     // Determine current index based on closest position
     const currentIndex = itemLeftPositions.reduce(
       (closestIdx, leftPosition, idx) => {
-        return Math.abs(leftPosition - currentScrollPosition) <
-          Math.abs(itemLeftPositions[closestIdx] - currentScrollPosition)
-          ? idx
-          : closestIdx
+        const currentDiff = Math.abs(leftPosition - currentScrollPosition)
+        const previousDiff = Math.abs(
+          itemLeftPositions[closestIdx] - currentScrollPosition
+        )
+
+        return currentDiff < previousDiff ? idx : closestIdx
       },
       0
     )
