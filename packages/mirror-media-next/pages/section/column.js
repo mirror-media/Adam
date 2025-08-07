@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
-import SectionArticles from '../../components/shared/section-articles'
 import { ENV } from '../../config/index.mjs'
 import {
   fetchColumnSectionPosts,
@@ -29,6 +28,7 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
+import ColumnList from '../../components/section/column/column-list'
 
 /** @typedef {import('../../utils/api').postsInColumnSection} PostsInColumnSection */
 /** @typedef {import('../../utils/api').ColumnSectionResponse} ColumnSectionResponse */
@@ -116,7 +116,6 @@ const RENDER_PAGE_SIZE = 12
  * @param {number} props.postsCount
  * @param {Object} props.headerData
  * @param {string[]} props.filterPostIds
- * @param {number} props.postsCountInJson
  * @returns {React.ReactElement}
  */
 export default function Section({
@@ -160,7 +159,7 @@ export default function Section({
           <SectionTitle sectionName={section.slug}>{sectionName}</SectionTitle>
         )}
 
-        <SectionArticles
+        <ColumnList
           postsCount={postsCount}
           posts={posts}
           section={section}
@@ -263,7 +262,7 @@ export async function getServerSideProps({ req, res }) {
           slug: item.slug || '',
           title: item.title || '',
           publishedDate: item.publishedDate || '',
-          type: item.type || 'story',
+          type: item.type === 'external' ? 'external' : 'post',
           brief: { blocks: [{ text: briefText }] },
           categories: [],
           sections: [],
@@ -308,7 +307,6 @@ export async function getServerSideProps({ req, res }) {
   const gqlPostsCount = gqlPostsResult[0] ?? 0
   posts.push(...gqlPostsResult[1])
 
-  // 總文章數應該是 JSON 文章數 + GraphQL 文章數
   const postsCount = postsCountInJson + gqlPostsCount
 
   // fetchPost return empty array -> wrong authorId -> 404

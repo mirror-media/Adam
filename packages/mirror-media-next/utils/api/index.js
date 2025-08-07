@@ -52,7 +52,7 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
 
 /**
  * @typedef {Object} postsInColumnSection
- * @property {'external' | 'post' | 'story'} type
+ * @property {'external' | 'story'} type
  * @property {string} id
  * @property {string} title
  * @property {string} slug

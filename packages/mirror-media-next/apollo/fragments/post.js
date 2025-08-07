@@ -12,11 +12,11 @@ import { heroVideo } from './video'
  * @property {string} slug
  * @property {string} title
  * @property {string} publishedDate
- * @property {'external' | 'story'} [type]
  * @property {import('../../type/draft-js').Draft} brief
  * @property {import('./category').Category[]} categories
  * @property {import('./section').Section[] } sections
  * @property {import('./photo').Photo | null} heroImage
+ * @property {string} [type]
  */
 
 export const listingPost = gql`
