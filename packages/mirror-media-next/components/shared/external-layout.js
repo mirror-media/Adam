@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 /**
  * @typedef {Object} ExternalLayoutProps
@@ -8,13 +8,15 @@ import styled from 'styled-components'
  */
 
 /**
+ * Full-width layout wrapper for external content sections.
+ *
  * @type {import('styled-components').StyledComponent<'div', any, ExternalLayoutProps>}
  */
 export const ExternalLayout = styled.div(
   /**
-   * @param {ExternalLayoutProps & { theme: { color: { brandColor: Record<string,string> } } }} props
+   * @param {ExternalLayoutProps & { theme: { color: { brandColor: Record<string, string> } } }} props
    */
-  ({ bgColor, theme }) => `
+  ({ bgColor, theme }) => css`
     width: 100vw;
     position: relative;
     left: 50%;

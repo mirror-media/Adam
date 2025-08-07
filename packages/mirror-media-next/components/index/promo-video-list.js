@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import YouTube from 'react-youtube'
 
 import { extractYouTubeId } from '../../utils/youtube'
+import { IndexTitle } from './share/index-title'
 
 const Section = styled.section`
   position: relative;
@@ -18,21 +19,10 @@ const Section = styled.section`
   flex-direction: column;
   background: #eee;
   padding: 32px 20px;
+  gap: 20px;
 
   ${({ theme }) => theme.breakpoint.md} {
     padding: 40px 20px;
-  }
-`
-
-const Title = styled.h3`
-  color: ${({ theme }) => theme.color.brandColor.darkBlue};
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 700;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    font-size: 28px;
   }
 `
 
@@ -253,7 +243,7 @@ export default function PromoVideoList({ promoVideos }) {
 
   return (
     <Section>
-      <Title>最新影音</Title>
+      <IndexTitle>最新影音</IndexTitle>
       <Wrapper>
         <Ol ref={containerRef} className={centerItems ? 'centered' : ''}>
           {promoVideos.map((video) => {

@@ -1,5 +1,7 @@
 import styled from 'styled-components'
+
 import { ExternalLayout } from '../shared/external-layout'
+import { IndexTitle } from './share/index-title'
 
 const ContentWrapper = styled.section`
   width: 100%;
@@ -20,20 +22,6 @@ const ContentWrapper = styled.section`
   ${({ theme }) => theme.breakpoint.xl} {
     max-width: ${({ theme }) => theme.layout.maxWidth.xl};
     gap: 32px;
-  }
-`
-
-const Title = styled.h3`
-  text-align: center;
-  font-size: 20px;
-  font-weight: 500;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    font-weight: 700;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    font-size: 28px;
   }
 `
 
@@ -160,7 +148,7 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
   return (
     <ExternalLayout bgColor="darkBlue">
       <ContentWrapper>
-        <Title>鏡報論壇</Title>
+        <IndexTitle color="white">鏡報論壇</IndexTitle>
         <Wrapper>
           {forumHeadlines.map((item) => {
             if (!item.title) return null
