@@ -161,19 +161,19 @@ export default function Section({
         )}
 
         {gqlPostsCount === posts.length ? (
+          <SectionArticles
+            posts={posts}
+            section={section}
+            postsCount={posts.length}
+            renderPageSize={RENDER_PAGE_SIZE}
+          />
+        ) : (
           <ColumnList
             posts={posts}
             section={section}
             renderPageSize={RENDER_PAGE_SIZE}
             filterPostIds={filterPostIds}
             gqlPostsCount={gqlPostsCount}
-          />
-        ) : (
-          <SectionArticles
-            posts={posts}
-            section={section}
-            postsCount={posts.length}
-            renderPageSize={RENDER_PAGE_SIZE}
           />
         )}
 
@@ -190,15 +190,6 @@ export default function Section({
  * @type {import('next').GetServerSideProps}
  */
 export async function getServerSideProps({ req, res }) {
-  if (ENV === 'prod') {
-    return {
-      redirect: {
-        destination: '/column/column',
-        permanent: false,
-      },
-    }
-  }
-
   if (ENV === 'prod') {
     setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
   } else {
