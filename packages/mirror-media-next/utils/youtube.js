@@ -28,13 +28,11 @@ function simplifyYoutubePlaylistVideo(videos) {
   }))
 }
 
-export { simplifyYoutubeSearchedVideo, simplifyYoutubePlaylistVideo }
-
 /**
  * @param {import("../type/youtube").YoutubeRawVideo[]} videos
  * @returns {import("../type/youtube").YoutubeVideo[]}
  */
-export function simplifyYoutubeVideo(videos) {
+function simplifyYoutubeVideo(videos) {
   return (
     videos
       .filter((video) => video)
@@ -47,4 +45,25 @@ export function simplifyYoutubeVideo(videos) {
         channelId: video.snippet.channelId,
       })) ?? []
   )
+}
+
+/**
+ * Extracts the YouTube video ID from a given URL.
+ * @param {string} url
+ * @returns {string} The extracted video ID, or an empty string if not found.
+ */
+
+const extractYouTubeId = (url) => {
+  const match = url?.match(
+    /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  )
+
+  return match ? match[1] : ''
+}
+
+export {
+  simplifyYoutubeSearchedVideo,
+  simplifyYoutubePlaylistVideo,
+  simplifyYoutubeVideo,
+  extractYouTubeId,
 }

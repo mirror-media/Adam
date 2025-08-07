@@ -6,8 +6,9 @@ import { fetchSection } from '../../apollo/query/sections'
  * @param {string} sectionSlug
  * @param {number} take
  * @param {number} skip
+ * @param {Record<string, any>} [filterRules]
  */
-export function fetchPostsBySectionSlug(sectionSlug, take, skip) {
+export function fetchPostsBySectionSlug(sectionSlug, take, skip, filterRules) {
   return client.query({
     query: fetchPosts,
     variables: {
@@ -17,6 +18,7 @@ export function fetchPostsBySectionSlug(sectionSlug, take, skip) {
       filter: {
         state: { equals: 'published' },
         sections: { some: { slug: { equals: sectionSlug } } },
+        ...filterRules,
       },
     },
   })

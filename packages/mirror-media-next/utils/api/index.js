@@ -2,6 +2,7 @@ import errors from '@twreporter/errors'
 import client from '../../apollo/apollo-client.js'
 import axiosInstance from '../../axios/index.js'
 import {
+  URL_STATIC_COLUMN_SECTION_POSTS,
   URL_STATIC_HEADER_HEADERS,
   URL_STATIC_PODCAST_LIST,
   URL_STATIC_PREMIUM_SECTIONS,
@@ -47,6 +48,31 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
  * @property {boolean} isMemberOnly
  * @property {string[]} sections
  *
+ */
+
+/**
+ * @typedef {Object} postsInColumnSection
+ * @property {'external' | 'story'} type
+ * @property {string} id
+ * @property {string} title
+ * @property {string} slug
+ * @property {string} publishedDate
+ * @property {string | null} [heroImage]
+ * @property {string | null} [og_image]
+ * @property {Array} [apiData]
+ * @property {Array<Object>} [apiDataBrief]
+ * @property {string} [thumb]
+ * @property {string} [content]
+ * @property {string} [brief]
+ */
+
+/**
+ * @typedef {Object} ColumnSectionResponse
+ * @property {Object} section
+ * @property {postsInColumnSection[]} section.items
+ * @property {Object} section.counts
+ * @property {number} section.counts.posts
+ * @property {number} section.counts.externals
  */
 
 /**
@@ -157,9 +183,15 @@ const fetchAnnoucementsByScope = (scope) => {
   })
 }
 
+/** @type {() => Promise<import('axios').AxiosResponse<ColumnSectionResponse>>} */
+const fetchColumnSectionPosts = createAxiosRequest(
+  URL_STATIC_COLUMN_SECTION_POSTS
+)
+
 export {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
   fetchPodcastList,
   fetchAnnoucementsByScope,
+  fetchColumnSectionPosts,
 }
