@@ -48,7 +48,6 @@ const Li = styled.li`
   min-height: 84px;
   display: flex;
   gap: 8px;
-  flex: 1 1 0;
   flex-direction: column;
   justify-content: space-between;
   line-height: 1.5;
@@ -60,6 +59,7 @@ const Li = styled.li`
   ${({ theme }) => theme.breakpoint.xl} {
     min-height: 84px;
     gap: 16px;
+    flex: 1 1 0;
   }
 
   &::before {
