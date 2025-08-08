@@ -1,6 +1,18 @@
 import styled, { css } from 'styled-components'
 
 /**
+ * Shared layout style (can be reused across components)
+ */
+export const ExternalLayoutStyle = css`
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+`
+
+/**
  * @typedef {Object} ExternalLayoutProps
  * @property {string} [bgColor] - Background color.
  *   Accepts a `theme.color.brandColor` key (e.g. 'white', 'darkBlue')
@@ -17,12 +29,7 @@ export const ExternalLayout = styled.div(
    * @param {ExternalLayoutProps & { theme: { color: { brandColor: Record<string, string> } } }} props
    */
   ({ bgColor, theme }) => css`
-    width: 100vw;
-    position: relative;
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
+    ${ExternalLayoutStyle}
 
     background: ${
       theme.color.brandColor[bgColor] || // if bgColor matches a theme key

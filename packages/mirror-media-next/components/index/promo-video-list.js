@@ -4,14 +4,10 @@ import YouTube from 'react-youtube'
 
 import { extractYouTubeId } from '../../utils/youtube'
 import { IndexTitle } from './share/index-title'
+import { ExternalLayoutStyle } from '../shared/external-layout'
 
 const Section = styled.section`
-  position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  ${ExternalLayoutStyle}
 
   display: flex;
   align-items: center;
