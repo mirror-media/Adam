@@ -25,11 +25,10 @@ const ContentWrapper = styled.section`
   }
 `
 
-const Wrapper = styled.ol`
+const Ol = styled.ol`
   display: flex;
   gap: 32px;
   width: 288px;
-  font-family: 'PingFang TC';
   flex-direction: column;
 
   ${({ theme }) => theme.breakpoint.md} {
@@ -149,7 +148,7 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
     <ExternalLayout bgColor="darkBlue">
       <ContentWrapper>
         <IndexTitle color="white">鏡報論壇</IndexTitle>
-        <Wrapper>
+        <Ol>
           {forumHeadlines.map((item) => {
             if (!item.title) return null
 
@@ -168,7 +167,7 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
               </Li>
             )
           })}
-        </Wrapper>
+        </Ol>
       </ContentWrapper>
     </ExternalLayout>
   )
