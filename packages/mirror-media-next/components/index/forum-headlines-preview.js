@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import styled from 'styled-components'
 
 import { ExternalLayout } from '../shared/external-layout'
@@ -81,6 +82,10 @@ const Headline = styled.h5`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 const Timestamp = styled.p`
@@ -148,6 +153,7 @@ function formatUtcToDateTime(utcString) {
  * @typedef {Object} ExternalHeadline
  * @property {string} id
  * @property {string} title
+ * @property {string} slug
  * @property {string} updatedAt - UTC timestamp when the headline was last updated
  * @property {string} publishedDate - UTC timestamp when the headline was published
  */
@@ -176,7 +182,9 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
 
             return (
               <Li key={item.id}>
-                <Headline>{item.title}</Headline>
+                <Link href={`./external/${item.slug}`}>
+                  <Headline>{item.title}</Headline>
+                </Link>
                 <Timestamp>
                   {date} {time}
                 </Timestamp>

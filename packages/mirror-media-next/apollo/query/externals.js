@@ -44,6 +44,7 @@ const fetchLatestPublishedExternals = gql`
     ) {
       id
       title
+      slug
       updatedAt
       publishedDate
     }
