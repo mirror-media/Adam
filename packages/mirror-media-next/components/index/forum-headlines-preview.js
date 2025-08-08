@@ -87,6 +87,36 @@ const Timestamp = styled.p`
   color: #bcbcbc;
   font-size: 14px;
 `
+/**
+ * Check if a given date string is valid
+ * @param {string} str
+ * @returns {boolean}
+ */
+function isValidDateString(str) {
+  return !isNaN(new Date(str).getTime())
+}
+
+/**
+ * Compare updatedAt and publishedDate to decide display time
+ * @param {string} updatedAt
+ * @param {string} publishedDate
+ * @returns {string}
+ */
+function getDisplayTime(publishedDate, updatedAt) {
+  const isPublishedValid = isValidDateString(publishedDate)
+  const isUpdatedValid = isValidDateString(updatedAt)
+
+  if (isPublishedValid && isUpdatedValid) {
+    return new Date(updatedAt).getTime() > new Date(publishedDate).getTime()
+      ? updatedAt
+      : publishedDate
+  }
+
+  if (isUpdatedValid) return updatedAt
+  if (isPublishedValid) return publishedDate
+
+  return ''
+}
 
 /**
  * Convert a UTC timestamp string to Taiwan local date and time strings
@@ -112,20 +142,6 @@ function formatUtcToDateTime(utcString) {
   })
 
   return { date, time }
-}
-
-/**
- * Compare updatedAt and publishedDate to decide display time
- * @param {string} updatedAt - UTC timestamp when last updated
- * @param {string} publishedDate - UTC timestamp when published
- * @returns {string} The more recent timestamp
- */
-
-function getDisplayTime(publishedDate, updatedAt) {
-  const published = new Date(publishedDate)
-  const updated = new Date(updatedAt)
-
-  return updated > published ? updatedAt : publishedDate
 }
 
 /**
