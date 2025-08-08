@@ -4,10 +4,10 @@ import YouTube from 'react-youtube'
 
 import { extractYouTubeId } from '../../utils/youtube'
 import { IndexTitle } from './share/index-title'
-import { ExternalLayoutStyle } from '../shared/external-layout'
+import { FullWidthLayoutStyle } from '../shared/full-width-layout'
 
 const Section = styled.section`
-  ${ExternalLayoutStyle}
+  ${FullWidthLayoutStyle}
 
   display: flex;
   align-items: center;

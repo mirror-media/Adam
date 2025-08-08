@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import styled from 'styled-components'
 
-import { ExternalLayout } from '../shared/external-layout'
+import { FullWidthLayout } from '../shared/full-width-layout'
 import { IndexTitle } from './share/index-title'
 
 const ContentWrapper = styled.section`
@@ -167,9 +167,11 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
   if (!forumHeadlines?.length) return null
 
   return (
-    <ExternalLayout bgColor="darkBlue">
+    <FullWidthLayout bgColor="darkBlue">
       <ContentWrapper>
-        <IndexTitle color="white">鏡報論壇</IndexTitle>
+        <Link href={`./externals/dailycolumn`}>
+          <IndexTitle color="white">鏡報論壇</IndexTitle>
+        </Link>
         <Ol>
           {forumHeadlines.map((item) => {
             if (!item.title) return null
@@ -193,6 +195,6 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
           })}
         </Ol>
       </ContentWrapper>
-    </ExternalLayout>
+    </FullWidthLayout>
   )
 }

@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 /**
  * Shared layout style (can be reused across components)
  */
-export const ExternalLayoutStyle = css`
+export const FullWidthLayoutStyle = css`
   width: 100vw;
   position: relative;
   left: 50%;
@@ -13,7 +13,7 @@ export const ExternalLayoutStyle = css`
 `
 
 /**
- * @typedef {Object} ExternalLayoutProps
+ * @typedef {Object} FullWidthLayoutProps
  * @property {string} [bgColor] - Background color.
  *   Accepts a `theme.color.brandColor` key (e.g. 'white', 'darkBlue')
  *   or any valid CSS color string (e.g. '#ffffff', 'rgba(0,0,0,0.1)')
@@ -22,14 +22,14 @@ export const ExternalLayoutStyle = css`
 /**
  * Full-width layout wrapper for external content sections.
  *
- * @type {import('styled-components').StyledComponent<'div', any, ExternalLayoutProps>}
+ * @type {import('styled-components').StyledComponent<'div', any, FullWidthLayoutProps>}
  */
-export const ExternalLayout = styled.div(
+export const FullWidthLayout = styled.div(
   /**
-   * @param {ExternalLayoutProps & { theme: { color: { brandColor: Record<string, string> } } }} props
+   * @param {FullWidthLayoutProps & { theme: { color: { brandColor: Record<string, string> } } }} props
    */
   ({ bgColor, theme }) => css`
-    ${ExternalLayoutStyle}
+    ${FullWidthLayoutStyle}
 
     background: ${
       theme.color.brandColor[bgColor] || // if bgColor matches a theme key
