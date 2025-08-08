@@ -155,13 +155,14 @@ export default function Story({
 
   useEffect(() => {
     const handleScroll = async () => {
+      console.log('handleScroll')
       if (allRelatedStories.length < 10) {
         const filterIds = allRelatedStories.map(
           (story) => `mirrormedia_story_${story.slug}`
         )
         try {
           const result = await getRelatedStories(
-            postData.id,
+            postData.slug,
             filterIds,
             10 - allRelatedStories.length,
             'story'
@@ -186,7 +187,6 @@ export default function Story({
                 brief: { blocks: [{ text: '' }] },
                 categories: [],
                 sections: [],
-                type: 'story',
               }
             })
 
@@ -200,7 +200,7 @@ export default function Story({
 
     window.addEventListener('scroll', handleScroll, { once: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [allRelatedStories.length, postData.id])
+  }, [])
 
   useSaveMemberArticleHistoryLocally(slug)
   const writersInString = useMemo(() => {
@@ -299,6 +299,7 @@ export default function Story({
             postContent={postContent}
             headerData={headerData}
             classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
           />
         )
       case 'style-wide':
@@ -307,6 +308,7 @@ export default function Story({
             postData={postData}
             postContent={postContent}
             classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
           />
         )
       case 'style-photography':
@@ -315,6 +317,7 @@ export default function Story({
             postData={postData}
             postContent={postContent}
             classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
           />
         )
       default:
@@ -325,6 +328,7 @@ export default function Story({
             headerData={headerData}
             flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
           />
         )
     }

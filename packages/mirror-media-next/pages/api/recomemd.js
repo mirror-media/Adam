@@ -6,14 +6,14 @@ import { MISO_ENDPOINTS } from '../../config/index.mjs'
  */
 
 /**
- * @param {string} storyId
+ * @param {string} storySlug
  * @param {string[]} filterIds
  * @param {number} takeCount
  * @param {string} storyType
  * @returns {Promise<any>}
  */
 export async function getRelatedStories(
-  storyId,
+  storySlug,
   filterIds,
   takeCount = 4,
   storyType
@@ -21,7 +21,7 @@ export async function getRelatedStories(
   const url = buildMisoUrl(MISO_ENDPOINTS.relatedStories)
 
   // NOTE: miso ai use mesh_story prefix to search so ensure the story id is in right format.
-  const formattedStoryId = formatStoryId(storyId, storyType)
+  const formattedStoryId = formatStoryId(storySlug, storyType)
 
   /**
    * miso does not index dev database
@@ -47,10 +47,9 @@ export async function getRelatedStories(
    * ```
    */
 
-  let filterQuery = `product_id:/mirrormedia_${storyType}_.*/`
+  let filterQuery = `product_id:/mirrormedia_${storyType}_.+/`
 
   if (filterIds && filterIds.length > 0) {
-    // 使用 Solr 語法排除特定 ID
     const excludeConditions = filterIds.map((id) => `-product_id:${id}`)
     filterQuery = `${filterQuery} AND (${excludeConditions.join(' AND ')})`
   }

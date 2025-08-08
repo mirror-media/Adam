@@ -11,14 +11,14 @@ const buildMisoUrl = (endpoint) => {
 }
 
 /**
- * @param {string} storyId
+ * @param {string} storySlug
  * @param {string} storyType
  * @returns {string}
  */
-const formatStoryId = (storyId, storyType) => {
-  return storyId.startsWith('mirrormedia')
-    ? storyId
-    : `mirrormedia_${storyType}_${storyId}`
+const formatStoryId = (storySlug, storyType) => {
+  return storySlug.startsWith('mirrormedia')
+    ? storySlug
+    : `mirrormedia_${storyType}_${storySlug}`
 }
 
 /**
