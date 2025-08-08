@@ -17,8 +17,11 @@ const buildMisoUrl = (endpoint) => {
  */
 const formatStoryId = (storySlug, storyType) => {
   return storySlug.startsWith('mirrormedia')
-    ? storySlug
-    : `mirrormedia_${storyType}_${storySlug}`
+    ? storySlug.replace(/[+\-&|!(){}[\]^"~*?:\\/]/g, '\\$&')
+    : `mirrormedia_${storyType}_${storySlug}`.replace(
+        /[+\-&|!(){}[\]^"~*?:\\/]/g,
+        '\\$&'
+      )
 }
 
 /**

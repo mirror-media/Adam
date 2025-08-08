@@ -50,7 +50,10 @@ export async function getRelatedStories(
   let filterQuery = `product_id:/mirrormedia_${storyType}_.+/`
 
   if (filterIds && filterIds.length > 0) {
-    const excludeConditions = filterIds.map((id) => `-product_id:${id}`)
+    const excludeConditions = filterIds.map((id) => {
+      const escapedId = formatStoryId(id, storyType)
+      return `-product_id:${escapedId}`
+    })
     filterQuery = `${filterQuery} AND (${excludeConditions.join(' AND ')})`
   }
 
