@@ -169,9 +169,7 @@ export default function ForumHeadlinesPreview({ forumHeadlines = [] }) {
   return (
     <FullWidthLayout bgColor="darkBlue">
       <ContentWrapper>
-        <Link href={`/externals/dailycolumn`}>
-          <IndexTitle color="white">鏡報論壇</IndexTitle>
-        </Link>
+        <IndexTitle color="white">鏡報論壇</IndexTitle>
         <StyledOl>
           {forumHeadlines.map((item) => {
             if (!item.title) return null
@@ -184,9 +182,13 @@ export default function ForumHeadlinesPreview({ forumHeadlines = [] }) {
 
             return (
               <StyledLi key={item.id}>
-                <Link href={`/external/${item.slug}`}>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`/external/${item.slug}`}
+                >
                   <Headline>{item.title}</Headline>
-                </Link>
+                </a>
                 <Timestamp>
                   {date} {time}
                 </Timestamp>
