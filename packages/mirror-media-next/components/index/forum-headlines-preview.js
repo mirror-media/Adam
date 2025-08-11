@@ -26,7 +26,7 @@ const ContentWrapper = styled.section`
   }
 `
 
-const Ol = styled.ol`
+const StyledOl = styled.ol`
   display: flex;
   gap: 32px;
   width: 288px;
@@ -43,7 +43,7 @@ const Ol = styled.ol`
   }
 `
 
-const Li = styled.li`
+const StyledLi = styled.li`
   position: relative;
   padding-left: 24px;
   min-height: 84px;
@@ -163,16 +163,16 @@ function formatUtcToDateTime(utcString) {
  * @param {ExternalHeadline[]} props.forumHeadlines - Array of latest forum headlines
  */
 
-export default function ForumHeadlinesPreview({ forumHeadlines }) {
+export default function ForumHeadlinesPreview({ forumHeadlines = [] }) {
   if (!forumHeadlines?.length) return null
 
   return (
     <FullWidthLayout bgColor="darkBlue">
       <ContentWrapper>
-        <Link href={`./externals/dailycolumn`}>
+        <Link href={`/externals/dailycolumn`}>
           <IndexTitle color="white">鏡報論壇</IndexTitle>
         </Link>
-        <Ol>
+        <StyledOl>
           {forumHeadlines.map((item) => {
             if (!item.title) return null
 
@@ -183,17 +183,17 @@ export default function ForumHeadlinesPreview({ forumHeadlines }) {
             const { date, time } = formatUtcToDateTime(displayTime)
 
             return (
-              <Li key={item.id}>
-                <Link href={`./external/${item.slug}`}>
+              <StyledLi key={item.id}>
+                <Link href={`/external/${item.slug}`}>
                   <Headline>{item.title}</Headline>
                 </Link>
                 <Timestamp>
                   {date} {time}
                 </Timestamp>
-              </Li>
+              </StyledLi>
             )
           })}
-        </Ol>
+        </StyledOl>
       </ContentWrapper>
     </FullWidthLayout>
   )

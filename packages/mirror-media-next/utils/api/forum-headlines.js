@@ -16,7 +16,10 @@ export async function fetchForumHeadlines() {
     url: URL_STATIC_DAILY_COLUMN_HEADLINES,
     timeout: API_TIMEOUT,
   }).catch((err) => {
-    console.error('Failed to fetch JSON, falling back to GQL:', err)
+    console.error(
+      'Failed to fetch JSON of URL_STATIC_DAILY_COLUMN_HEADLINES, falling back to GQL:',
+      JSON.stringify(err)
+    )
     return null
   })
 

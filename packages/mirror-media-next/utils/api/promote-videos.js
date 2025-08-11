@@ -13,7 +13,10 @@ export async function fetchPromoteVideosList() {
     url: URL_STATIC_PROMOTE_VIDEOS,
     timeout: API_TIMEOUT,
   }).catch((err) => {
-    console.error('Failed to fetch JSON, falling back to GQL:', err)
+    console.error(
+      'Failed to fetch JSON of URL_STATIC_PROMOTE_VIDEOS, falling back to GQL:',
+      JSON.stringify(err)
+    )
     return null
   })
 

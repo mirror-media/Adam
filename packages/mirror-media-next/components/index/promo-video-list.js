@@ -6,7 +6,7 @@ import { extractYouTubeId } from '../../utils/youtube'
 import { IndexTitle } from './share/index-title'
 import { FullWidthLayoutStyle } from '../shared/full-width-layout'
 
-const Section = styled.section`
+const StyledSection = styled.section`
   ${FullWidthLayoutStyle}
 
   display: flex;
@@ -29,7 +29,7 @@ const Wrapper = styled.div`
   scrollbar-width: none;
 `
 
-const Ol = styled.ol`
+const StyledOl = styled.ol`
   display: flex;
   justify-content: flex-start;
   gap: 20px;
@@ -46,7 +46,7 @@ const Ol = styled.ol`
   }
 `
 
-const Li = styled.li`
+const StyledLi = styled.li`
   flex: 0 0 auto;
   width: 320px;
 `
@@ -134,7 +134,7 @@ const opts = {
  * @param {{ promoVideos: PromoteVideo[] }} props
  */
 
-export default function PromoVideoList({ promoVideos }) {
+export default function PromoVideoList({ promoVideos = [] }) {
   /** @type {React.RefObject<HTMLOListElement | null>} */
   const containerRef = useRef(null)
   const [showLeftButton, setShowLeftButton] = useState(false)
@@ -238,26 +238,26 @@ export default function PromoVideoList({ promoVideos }) {
   if (!promoVideos?.length) return null
 
   return (
-    <Section>
+    <StyledSection>
       <IndexTitle>最新影音</IndexTitle>
       <Wrapper>
-        <Ol ref={containerRef} className={centerItems ? 'centered' : ''}>
+        <StyledOl ref={containerRef} className={centerItems ? 'centered' : ''}>
           {promoVideos.map((video) => {
             const youtubeId = extractYouTubeId(video.videoLink)
 
             if (!youtubeId) return null
             return (
-              <Li key={`${youtubeId}-${video.id}`}>
+              <StyledLi key={`${youtubeId}-${video.id}`}>
                 <YouTube
                   videoId={youtubeId}
                   id={youtubeId}
                   title="Embedded youtube"
                   opts={opts}
                 />
-              </Li>
+              </StyledLi>
             )
           })}
-        </Ol>
+        </StyledOl>
         {showLeftButton && (
           <ArrowButtonLeft
             type="button"
@@ -273,6 +273,6 @@ export default function PromoVideoList({ promoVideos }) {
           />
         )}
       </Wrapper>
-    </Section>
+    </StyledSection>
   )
 }
