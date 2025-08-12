@@ -140,7 +140,7 @@ export const topicPost = gql`
  */
 
 /**
- * @typedef {Pick<import('./topic').Topic, "slug">} Topic
+ * @typedef {Pick<import('../query/topics').Topic, "slug">} Topic
  */
 
 /**
@@ -198,7 +198,8 @@ export const topicPost = gql`
  * @property {string} og_description - og description of the post
  * @property {boolean} hiddenAdvertised - decide whether to display advertisements
  * @property {boolean} isAdvertised - the field called '廣告文案' in cms
- * @property {Topic | null} topics - which topic is belong to
+ * @property {import('../query/topics').Topic | null} topics - which topic is belong to
+ * @property {Array<Object>} [allRelatedStories] - all related stories including MISO recommendations
  */
 
 export const postTrimmedContent = gql`
