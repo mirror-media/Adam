@@ -155,7 +155,6 @@ export default function Story({
 
   useEffect(() => {
     const handleScroll = async () => {
-      console.log('handleScroll')
       if (allRelatedStories.length < 10) {
         const filterIds = allRelatedStories.map(
           (story) => `mirrormedia_story_${story.slug}`
@@ -193,7 +192,10 @@ export default function Story({
             setAllRelatedStories((prev) => [...prev, ...formattedStories])
           }
         } catch (error) {
-          console.error('Failed to fetch MISO related stories:', error)
+          console.error(
+            'Failed to fetch MISO related stories:',
+            JSON.stringify(error)
+          )
         }
       }
     }

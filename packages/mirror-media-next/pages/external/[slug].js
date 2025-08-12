@@ -23,6 +23,9 @@ import {
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import dynamic from 'next/dynamic'
 import axios from 'axios'
+import { getRelatedStories } from '../../pages/api/recomemd'
+import { useState, useEffect } from 'react'
+
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -46,6 +49,53 @@ export default function External({ external, headerData }) {
   const router = useRouter()
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
+  const [allRelatedStories, setAllRelatedStories] = useState([])
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      try {
+        const result = await getRelatedStories(
+          external.slug,
+          [],
+          10,
+          'external'
+        )
+
+        if (result && result.data && result.data.products) {
+          const formattedStories = result.data.products.map((product) => {
+            const productId = product.product_id
+            const slug = productId.split('_').slice(2).join('_')
+
+            return {
+              id: productId,
+              slug: slug,
+              title: product.title || '',
+              url: product.url || '',
+              heroImage: product.cover_image
+                ? {
+                    resized: { original: product.cover_image },
+                  }
+                : null,
+              publishedDate: new Date().toISOString(),
+              brief: { blocks: [{ text: '' }] },
+              categories: [],
+              sections: [],
+            }
+          })
+
+          setAllRelatedStories((prev) => [...prev, ...formattedStories])
+        }
+      } catch (error) {
+        console.error(
+          'Failed to fetch MISO related external stories:',
+          JSON.stringify(error)
+        )
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { once: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
   return (
     <>
       <Head>
@@ -76,7 +126,10 @@ export default function External({ external, headerData }) {
         footer={{ type: 'default' }}
       >
         <MisoPageView productIds={`external_${slug}`} />
-        <ExternalNormalStyle external={external} />
+        <ExternalNormalStyle
+          external={external}
+          allRelatedStories={allRelatedStories}
+        />
         <FullScreenAds />
       </Layout>
     </>
@@ -121,7 +174,6 @@ export async function getServerSideProps({ params, req, res }) {
   const external = handleGqlResponse(
     responses[1],
     (gqlData) => {
-      console.log('gqlData', gqlData)
       if (!gqlData) {
         return {}
       } else {
