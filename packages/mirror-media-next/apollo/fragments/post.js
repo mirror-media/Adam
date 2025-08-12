@@ -149,6 +149,7 @@ export const topicPost = gql`
  * @property {string} slug - post slug
  * @property {string} title - post title
  * @property {HeroImage} heroImage - hero image of the post
+ * @property {boolean} [isMesoRecommend] - whether this post is a miso recommend post
  */
 
 /**

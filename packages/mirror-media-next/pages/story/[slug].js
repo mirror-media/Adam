@@ -186,6 +186,7 @@ export default function Story({
                 brief: { blocks: [{ text: '' }] },
                 categories: [],
                 sections: [],
+                isMesoRecommend: true,
               }
             })
 
