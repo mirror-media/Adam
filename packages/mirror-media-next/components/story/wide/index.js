@@ -123,12 +123,14 @@ const BriefWrapper = styled.div`
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
  * @param {string} [param.classNameForGTM]
- * @returns {JSX.Element}
+ * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
+ * @returns {React.ReactNode}
  */
 export default function StoryWideStyle({
   postData,
   postContent,
   classNameForGTM = '',
+  allRelatedStories = [],
 }) {
   const {
     id = '',
@@ -149,10 +151,6 @@ export default function StoryWideStyle({
     engineers = [],
     vocals = [],
     extend_byline = '',
-    relateds = [],
-    relatedsOne = null,
-    relatedsTwo = null,
-    relatedsInInputOrder = [],
     slug = '',
     brief = null,
     tags = [],
@@ -163,17 +161,6 @@ export default function StoryWideStyle({
     sectionsInInputOrder
   )
   const [section] = sectionsWithOrdered
-
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
-
-  const finalRelateds = [
-    ...(relatedsOne ? [relatedsOne] : []),
-    ...(relatedsTwo ? [relatedsTwo] : []),
-    ...relatedsWithOrdered,
-  ].slice(0, 10)
 
   const writersWithOrdered =
     writersInInputOrder && writersInInputOrder.length
@@ -267,7 +254,7 @@ export default function StoryWideStyle({
             {supportBanner}
           </ContentWrapper>
           <Aside
-            relateds={finalRelateds}
+            relateds={allRelatedStories}
             sectionSlug={section?.slug || 'news'}
             storySlug={slug}
           ></Aside>

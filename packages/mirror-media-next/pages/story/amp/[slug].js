@@ -29,6 +29,7 @@ import AmpGptStickyAd from '../../../components/amp/amp-ads/amp-gpt-sticky-ad'
 import { getAmpGptDataSlotSection } from '../../../utils/ad'
 import JsonLdsScript from '../../../components/story/shared/json-lds-script'
 import { logGqlError } from '../../../utils/log/shared'
+import { getRelatedStories } from '../../api/recomemd'
 
 export const config = { amp: true }
 
@@ -61,8 +62,6 @@ function StoryAmpPage({ postData }) {
   const {
     title = '',
     slug = '',
-    relateds = [],
-    relatedsInInputOrder = [],
     isMember = false,
     isAdult = false,
     categories = [],
@@ -80,10 +79,9 @@ function StoryAmpPage({ postData }) {
 
   const categoryOfWineSlug = getCategoryOfWineSlug(categories)
 
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
+  // Use allRelatedStories from postData that was fetched in getServerSideProps
+  const allRelatedStories = postData.allRelatedStories || []
+
   const nonAmpUrl = `https://${SITE_URL}/story/${slug}`
   const ampGptStickyAdScript = (
     <script
@@ -160,7 +158,7 @@ function StoryAmpPage({ postData }) {
 
               <AmpMain postData={postData} gptSlotSection={gptSlotSection} />
               <AmpRelated
-                relateds={relatedsWithOrdered}
+                relateds={allRelatedStories}
                 gptSlotSection={gptSlotSection}
               />
               <Taboola title="你可能也喜歡這些文章" />
@@ -245,9 +243,73 @@ export async function getServerSideProps({ params, req, res }) {
     if (redirect) {
       return handleStoryPageRedirect(redirect)
     }
+
+    // Fetch related stories
+    const relatedsWithOrdered =
+      postData.relatedsInInputOrder && postData.relatedsInInputOrder.length
+        ? postData.relatedsInInputOrder
+        : postData.relateds
+
+    const initialStories = [
+      ...(postData.relatedsOne ? [postData.relatedsOne] : []),
+      ...(postData.relatedsTwo ? [postData.relatedsTwo] : []),
+      ...relatedsWithOrdered,
+    ].slice(0, 10)
+
+    let allRelatedStories = [...initialStories]
+
+    if (initialStories.length < 10) {
+      const filterIds = initialStories.map(
+        (story) => `mirrormedia_story_${story.slug}`
+      )
+      try {
+        const result = await getRelatedStories(
+          postData.slug,
+          filterIds,
+          10 - initialStories.length,
+          'story'
+        )
+
+        if (result && result.data && result.data.products) {
+          const formattedStories = result.data.products.map((product) => {
+            const productId = product.product_id
+            const slug = productId.split('_').slice(2).join('_')
+
+            return {
+              id: productId,
+              slug: slug,
+              title: product.title || '',
+              url: product.url || '',
+              heroImage: product.cover_image
+                ? {
+                    resized: { original: product.cover_image },
+                  }
+                : null,
+              publishedDate: new Date().toISOString(),
+              brief: { blocks: [{ text: '' }] },
+              categories: [],
+              sections: [],
+              isMesoRecommend: true,
+            }
+          })
+          allRelatedStories = [...initialStories, ...formattedStories]
+        }
+      } catch (error) {
+        console.error(
+          'Failed to fetch MISO related stories:',
+          JSON.stringify(error)
+        )
+        // Keep initialStories if API call fails
+        allRelatedStories = initialStories
+      }
+    }
+
     return {
       props: {
-        postData,
+        postData: {
+          ...postData,
+          allRelatedStories,
+        },
       },
     }
   } catch (err) {

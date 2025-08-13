@@ -421,9 +421,10 @@ const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
  *
  * @param {Object} props
  * @param {External} props.external
+ * @param {import('../../components/story/normal/related-article-list').Relateds} props.allRelatedStories
  * @returns {JSX.Element}
  */
-export default function ExternalNormalStyle({ external }) {
+export default function ExternalNormalStyle({ external, allRelatedStories }) {
   const { width } = useWindowDimensions()
   const isMobileWidth = width < mediaSize.md
 
@@ -612,7 +613,7 @@ export default function ExternalNormalStyle({ external }) {
           <SocialNetworkServiceSmall />
           <SubscribeInviteBanner />
 
-          <RelatedArticleList relateds={[]} />
+          <RelatedArticleList relateds={allRelatedStories} />
           {/* portal target for AsideArticleList on mobile */}
           <div className="mobile-article-list-portal"></div>
           {shouldShowAd && (

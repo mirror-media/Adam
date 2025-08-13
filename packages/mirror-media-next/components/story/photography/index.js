@@ -142,6 +142,7 @@ const ArrowButton = styled.button`
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
  * @param {string} [param.classNameForGTM]
+ * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
  * @returns
  */
 
@@ -149,6 +150,7 @@ export default function StoryPhotographyStyle({
   postData,
   postContent,
   classNameForGTM = '',
+  allRelatedStories = [],
 }) {
   const {
     title = '',
@@ -162,11 +164,6 @@ export default function StoryPhotographyStyle({
     engineers = [],
     vocals = [],
     extend_byline = '',
-    relateds = [],
-    relatedsOne = null,
-    relatedsTwo = null,
-    relatedsInInputOrder = [],
-
     brief = null,
   } = postData
 
@@ -181,17 +178,6 @@ export default function StoryPhotographyStyle({
     { vocals: vocals },
     { extend_byline: extend_byline },
   ]
-
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
-
-  const finalRelateds = [
-    ...(relatedsOne ? [relatedsOne] : []),
-    ...(relatedsTwo ? [relatedsTwo] : []),
-    ...relatedsWithOrdered,
-  ].slice(0, 10)
 
   // Get images array from content.entityMap
   const photosArray = Object.values(postContent.data.entityMap).filter(
@@ -301,7 +287,7 @@ export default function StoryPhotographyStyle({
           </section>
           <Credits credits={credits}></Credits>
         </ContentContainer>
-        <RelatedPosts relateds={finalRelateds} />
+        <RelatedPosts relateds={allRelatedStories} />
         <Footer footerType="default" />
       </Page>
     </Main>

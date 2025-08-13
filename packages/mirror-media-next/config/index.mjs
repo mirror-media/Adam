@@ -14,6 +14,10 @@ const GOOGLE_SHEETS_PRIVATE_KEY = (
 const GOOGLE_SHEETS_CLIENT_EMAIL = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
 const GOOGLE_SHEETS_CLIENT_ID = process.env.GOOGLE_SHEETS_CLIENT_ID
 const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
+const MISO_API_BASE_URL = 'https://api.askmiso.com'
+const MISO_ENDPOINTS = {
+  relatedStories: `${MISO_API_BASE_URL}/v1/recommendation/product_to_products`,
+}
 
 // should be applied in preview mode
 const SITE_BASE_PATH = IS_PREVIEW_MODE ? '/preview-server' : ''
@@ -345,4 +349,6 @@ export {
   COURSE_URL,
   MISO_API_KEY,
   URL_STATIC_COLUMN_SECTION_POSTS,
+  MISO_API_BASE_URL,
+  MISO_ENDPOINTS,
 }
