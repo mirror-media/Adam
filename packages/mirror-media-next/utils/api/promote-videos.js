@@ -20,14 +20,14 @@ export async function fetchPromoteVideosList() {
       'Failed to fetch JSON of URL_STATIC_PROMOTE_VIDEOS, falling back to GQL:',
       JSON.stringify(err)
     )
-
-    // Fallback option: use GQL API
-    return client.query({
-      query: fetchPromoteVideos,
-      variables: {
-        take: 6,
-        orderBy: [{ order: 'asc' }],
-      },
-    })
   }
+
+  // Fallback option: use GQL API
+  return client.query({
+    query: fetchPromoteVideos,
+    variables: {
+      take: 6,
+      orderBy: [{ order: 'asc' }],
+    },
+  })
 }
