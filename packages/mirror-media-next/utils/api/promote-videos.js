@@ -6,6 +6,7 @@ import { API_TIMEOUT, URL_STATIC_PROMOTE_VIDEOS } from '../../config/index.mjs'
 
 /**
  * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
+ * @returns {Promise<import('axios').AxiosResponse<any> | import('@apollo/client').ApolloQueryResult<any>>}
  */
 export async function fetchPromoteVideosList() {
   try {

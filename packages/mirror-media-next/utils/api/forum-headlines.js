@@ -9,6 +9,7 @@ import { fetchLatestPublishedExternals } from '../../apollo/query/externals'
 
 /**
  * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
+ * @returns {Promise<import('axios').AxiosResponse<any> | import('@apollo/client').ApolloQueryResult<any>>}
  */
 export async function fetchForumHeadlines() {
   try {

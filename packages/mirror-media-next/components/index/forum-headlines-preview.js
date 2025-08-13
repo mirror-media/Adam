@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import styled from 'styled-components'
 
 import { FullWidthLayout } from '../shared/full-width-layout'
@@ -92,36 +91,6 @@ const Timestamp = styled.p`
   color: #bcbcbc;
   font-size: 14px;
 `
-/**
- * Check if a given date string is valid
- * @param {string} str
- * @returns {boolean}
- */
-function isValidDateString(str) {
-  return !isNaN(new Date(str).getTime())
-}
-
-/**
- * Compare updatedAt and publishedDate to decide display time
- * @param {string} updatedAt
- * @param {string} publishedDate
- * @returns {string}
- */
-function getDisplayTime(publishedDate, updatedAt) {
-  const isPublishedValid = isValidDateString(publishedDate)
-  const isUpdatedValid = isValidDateString(updatedAt)
-
-  if (isPublishedValid && isUpdatedValid) {
-    return new Date(updatedAt).getTime() > new Date(publishedDate).getTime()
-      ? updatedAt
-      : publishedDate
-  }
-
-  if (isUpdatedValid) return updatedAt
-  if (isPublishedValid) return publishedDate
-
-  return ''
-}
 
 /**
  * Convert a UTC timestamp string to Taiwan local date and time strings
@@ -129,6 +98,7 @@ function getDisplayTime(publishedDate, updatedAt) {
  * @returns {{ date: string, time: string }} Object containing date and time strings
  */
 function formatUtcToDateTime(utcString) {
+  if (Number.isNaN(Date.parse(utcString))) return { date: '', time: '' }
   const dateObj = new Date(utcString)
 
   const date = dateObj.toLocaleDateString('zh-TW', {
@@ -154,7 +124,7 @@ function formatUtcToDateTime(utcString) {
  * @property {string} id
  * @property {string} title
  * @property {string} slug
- * @property {string} updatedAt - UTC timestamp when the headline was last updated
+ * @property {string} updatedAt - UTC timestamp when the headline was last updated (currently unused)
  * @property {string} publishedDate - UTC timestamp when the headline was published
  */
 
@@ -174,11 +144,7 @@ export default function ForumHeadlinesPreview({ forumHeadlines = [] }) {
           {forumHeadlines.map((item) => {
             if (!item.title) return null
 
-            const displayTime = getDisplayTime(
-              item.publishedDate,
-              item.updatedAt
-            )
-            const { date, time } = formatUtcToDateTime(displayTime)
+            const { date, time } = formatUtcToDateTime(item.publishedDate)
 
             return (
               <StyledLi key={item.id}>
