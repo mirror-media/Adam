@@ -180,6 +180,32 @@ const logGqlError = (gqlErrors, errorMessage, traceObject) => {
   }
 }
 
+/**
+ * @param {unknown} genericError
+ * @param {string} errorMessage
+ * @param {Record<string, any>} [traceObject]
+ */
+const logGenericError = (genericError, errorMessage, traceObject) => {
+  const annotatingError = errors.helpers.wrap(
+    /** @type {Error} */ (genericError),
+    'UnhandledError',
+    errorMessage
+  )
+  console.error(
+    JSON.stringify({
+      severity: 'ERROR',
+      message: errors.helpers.printAll(
+        annotatingError,
+        { withStack: true, withPayload: true },
+        0,
+        0
+      ),
+      debugPayload: { genericError },
+      ...(traceObject ?? {}),
+    })
+  )
+}
+
 export {
   getBrowserInfo,
   getDeviceInfo,
@@ -188,4 +214,5 @@ export {
   getFormattedPageType,
   logAxiosError,
   logGqlError,
+  logGenericError,
 }

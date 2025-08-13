@@ -20,7 +20,7 @@ import {
 } from '../utils'
 import {
   handleAxiosResponse,
-  handleGqlResponse,
+  handleSettledResponse,
 } from '../utils/response-handle'
 import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/index/editor-choice'
@@ -272,7 +272,7 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
-    promoVideos = handleGqlResponse(
+    promoVideos = handleSettledResponse(
       responses[2],
       (resData) => {
         return resData?.data?.promoteVideos || []
@@ -281,7 +281,7 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
-    forumHeadlines = handleGqlResponse(
+    forumHeadlines = handleSettledResponse(
       responses[3],
       (resData) => {
         return resData?.data?.externals || []

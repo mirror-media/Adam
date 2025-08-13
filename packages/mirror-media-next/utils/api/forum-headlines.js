@@ -11,19 +11,19 @@ import { fetchLatestPublishedExternals } from '../../apollo/query/externals'
  * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
  */
 export async function fetchForumHeadlines() {
-  const jsonData = await axios({
-    method: 'get',
-    url: URL_STATIC_DAILY_COLUMN_HEADLINES,
-    timeout: API_TIMEOUT,
-  }).catch((err) => {
+  try {
+    const jsonRes = await axios({
+      method: 'get',
+      url: URL_STATIC_DAILY_COLUMN_HEADLINES,
+      timeout: API_TIMEOUT,
+    })
+    return jsonRes
+  } catch (err) {
     console.error(
       'Failed to fetch JSON of URL_STATIC_DAILY_COLUMN_HEADLINES, falling back to GQL:',
       JSON.stringify(err)
     )
-    return null
-  })
-
-  if (jsonData) return jsonData
+  }
 
   // Fallback option: use GQL API
   return client.query({
