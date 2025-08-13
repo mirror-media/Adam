@@ -11,7 +11,7 @@ import BodyEmailVerification from '../../components/email-handler/body-email-ver
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject, getSearchParamFromApiKeyUrl } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 
 const RESET_PASSWORD = 'resetPassword'
 const RECOVER_EMAIL = 'recoverEmail'
@@ -91,7 +91,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in email-handler',

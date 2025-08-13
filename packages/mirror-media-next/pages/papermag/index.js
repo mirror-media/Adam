@@ -5,10 +5,7 @@ import {
 } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
@@ -134,14 +131,14 @@ export async function getServerSideProps({ req, res }) {
     fetchAnnoucementsByScope([ANNOUCEMENT_SCOPE.PAPER_MAG]),
   ])
 
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     headerResponse,
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in papermag page',
     globalLogFields
   )
 
-  const announcements = handleGqlResponse(
+  const announcements = processSettledResult(
     announcementResponse,
     (
       /** @type {import('../../utils/api').AnnouncementQueryResult | undefined} */ gqlData

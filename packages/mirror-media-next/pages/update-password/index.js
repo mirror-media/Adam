@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { setPageCache } from '../../utils/cache-setting'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import useMembershipRequired from '../../hooks/use-membership-required'
@@ -87,7 +87,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(
     ])
 
     // handle header data
-    const [sectionsData, topicsData] = handleAxiosResponse(
+    const [sectionsData, topicsData] = processSettledResult(
       responses[0],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in update password page',

@@ -16,10 +16,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import JsonLdsScripts from '../../components/externals/shared/json-lds-scripts'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import dynamic from 'next/dynamic'
 import axios from 'axios'
@@ -110,7 +107,7 @@ export async function getServerSideProps({ params, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in external post page (slug: ${slug})`,
@@ -118,7 +115,7 @@ export async function getServerSideProps({ params, req, res }) {
   )
 
   /** @type {External} */
-  const external = handleGqlResponse(
+  const external = processSettledResult(
     responses[1],
     (gqlData) => {
       console.log('gqlData', gqlData)
@@ -136,7 +133,7 @@ export async function getServerSideProps({ params, req, res }) {
     return { notFound: true }
   }
 
-  const flashNewsData = handleAxiosResponse(
+  const flashNewsData = processSettledResult(
     responses[2],
     (/** @type {FlashNewsAxiosResponse} */ axiosData) => {
       return axiosData.data.posts ?? []

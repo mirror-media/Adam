@@ -6,10 +6,7 @@ import { ENV } from '../../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import { fetchTopicList } from '../../utils/api/section-topic'
@@ -154,7 +151,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in section/topic page',
@@ -162,7 +159,7 @@ export async function getServerSideProps({ req, res }) {
   )
 
   // handle fetch topics
-  const [topicsCount, topics] = handleGqlResponse(
+  const [topicsCount, topics] = processSettledResult(
     responses[1],
     (gqlData) => {
       if (!gqlData) return [0, []]

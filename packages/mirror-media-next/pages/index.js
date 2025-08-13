@@ -18,10 +18,7 @@ import {
   getArticleHref,
   getLogTraceObject,
 } from '../utils'
-import {
-  handleAxiosResponse,
-  handleSettledResponse,
-} from '../utils/response-handle'
+import { processSettledResult } from '../utils/response-processor'
 import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/index/editor-choice'
 import LatestNews from '../components/index/latest-news'
@@ -255,7 +252,7 @@ export async function getServerSideProps({ res, req }) {
       fetchForumHeadlines(),
     ])
 
-    flashNewsData = handleAxiosResponse(
+    flashNewsData = processSettledResult(
       responses[0],
       (/** @type {AxiosResponse} */ axiosData) => {
         return axiosData?.data?.posts ?? []
@@ -265,14 +262,14 @@ export async function getServerSideProps({ res, req }) {
     )
 
     // handle header data
-    ;[sectionsData, topicsData] = handleAxiosResponse(
+    ;[sectionsData, topicsData] = processSettledResult(
       responses[1],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in index page',
       globalLogFields
     )
 
-    promoVideos = handleSettledResponse(
+    promoVideos = processSettledResult(
       responses[2],
       (resData) => {
         return resData?.data?.promoteVideos || []
@@ -281,7 +278,7 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
-    forumHeadlines = handleSettledResponse(
+    forumHeadlines = processSettledResult(
       responses[3],
       (resData) => {
         return resData?.data?.externals || []
