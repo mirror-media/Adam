@@ -67,7 +67,7 @@ export default function RecallCampaigns({ className = '' }) {
       />
       <ViewMoreLink
         target="_blank"
-        className="GTM-click_2025_election_page"
+        className="GTM-202508_click_election_page"
         rel="noreferrer noopener"
         href={moreLink}
       >

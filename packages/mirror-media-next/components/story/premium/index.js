@@ -180,13 +180,15 @@ function getSectionLabelFirst(sections) {
  * @param {PostContent} props.postContent
  * @param {any} props.headerData
  * @param {string} [props.classNameForGTM]
- * @returns {JSX.Element}
+ * @param {import('../../../apollo/fragments/post').Related[]} [props.allRelatedStories]
+ * @returns {React.ReactNode}
  */
 export default function StoryPremiumStyle({
   postData,
   postContent,
   headerData,
   classNameForGTM = '',
+  allRelatedStories = [],
 }) {
   const { isLoggedIn, memberInfo } = useMembership()
   const { memberType } = memberInfo
@@ -213,10 +215,6 @@ export default function StoryPremiumStyle({
     heroImage = null,
     heroVideo = null,
     heroCaption = '',
-    relatedsOne = null,
-    relatedsTwo = null,
-    relateds = [],
-    relatedsInInputOrder = [],
     slug = '',
     hiddenAdvertised = false,
   } = postData
@@ -235,16 +233,6 @@ export default function StoryPremiumStyle({
     writersInInputOrder && writersInInputOrder.length
       ? writersInInputOrder
       : writers
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
-
-  const finalRelateds = [
-    ...(relatedsOne ? [relatedsOne] : []),
-    ...(relatedsTwo ? [relatedsTwo] : []),
-    ...relatedsWithOrdered,
-  ].slice(0, 10)
 
   const credits = [
     { writers: writersWithOrdered },
@@ -368,7 +356,7 @@ export default function StoryPremiumStyle({
       </Main>
 
       <Aside
-        relateds={finalRelateds}
+        relateds={allRelatedStories}
         sectionSlug={section?.slug || 'news'}
         storySlug={slug}
       />

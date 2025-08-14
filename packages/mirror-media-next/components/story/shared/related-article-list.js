@@ -139,7 +139,11 @@ export default function RelatedArticleList({ relateds }) {
             <Link
               href={`/story/${related.slug}`}
               target="_blank"
-              className="article-image GTM-story-related-list"
+              className={`article-image GTM-story-related-list ${
+                related.isMesoRecommend
+                  ? 'GTM-story-related-miso'
+                  : 'GTM-story-related-editor'
+              }`}
             >
               <Image
                 images={related.heroImage?.resized}
@@ -157,7 +161,13 @@ export default function RelatedArticleList({ relateds }) {
               />
             </Link>
 
-            <figcaption className="article-title GTM-story-related-list">
+            <figcaption
+              className={`article-title GTM-story-related-list ${
+                related.isMesoRecommend
+                  ? 'GTM-story-related-miso'
+                  : 'GTM-story-related-editor'
+              }`}
+            >
               <Link href={`/story/${related.slug}`} target="_blank">
                 {related.title}
               </Link>
