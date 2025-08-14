@@ -46,9 +46,27 @@ const StyledOl = styled.ol`
   }
 `
 
-const StyledLi = styled.li`
+const ytWrapperClass = 'yt-wrapper'
+const ytIframeClass = 'yt-iframe'
+
+const Li = styled.li`
   flex: 0 0 auto;
-  width: 320px;
+  width: 360px;
+
+  .${ytWrapperClass} {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .${ytWrapperClass} > iframe.${ytIframeClass} {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
 `
 
 const ArrowButtonBase = styled.button`
@@ -113,8 +131,6 @@ const SCROLL_STEP_COUNT = 2
 
 /** @type {import('react-youtube').YouTubeProps['opts'] & { playerVars: { mute?: 0 | 1 }}} */
 const opts = {
-  width: 320,
-  height: 180,
   playerVars: {
     // https://developers.google.com/youtube/player_parameters
     autoplay: 0,
@@ -252,6 +268,8 @@ export default function PromoVideoList({ promoVideos = [] }) {
                   videoId={youtubeId}
                   id={youtubeId}
                   title="Embedded youtube"
+                  className={ytWrapperClass}
+                  iframeClassName={ytIframeClass}
                   opts={opts}
                 />
               </StyledLi>
