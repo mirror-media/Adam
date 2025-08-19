@@ -421,9 +421,10 @@ const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
  *
  * @param {Object} props
  * @param {External} props.external
+ * @param {import('../../components/story/normal/related-article-list').Relateds} props.allRelatedStories
  * @returns {JSX.Element}
  */
-export default function ExternalNormalStyle({ external }) {
+export default function ExternalNormalStyle({ external, allRelatedStories }) {
   const { width } = useWindowDimensions()
   const isMobileWidth = width < mediaSize.md
 
@@ -437,6 +438,7 @@ export default function ExternalNormalStyle({ external }) {
     publishedDate = '',
     updatedAt = '',
     extend_byline = '',
+    thumbCaption = '',
   } = external
 
   // 正則表達式匹配 <img> 標籤中包含 style 並帶有 width 和 height
@@ -590,6 +592,7 @@ export default function ExternalNormalStyle({ external }) {
               <StyledExternalHeroImage
                 images={EXTERNAL_IMAGES_URL}
                 title={title}
+                thumbCaption={thumbCaption}
               />
             )}
             <ExternalArticleInfo
@@ -612,7 +615,7 @@ export default function ExternalNormalStyle({ external }) {
           <SocialNetworkServiceSmall />
           <SubscribeInviteBanner />
 
-          <RelatedArticleList relateds={[]} />
+          <RelatedArticleList relateds={allRelatedStories} />
           {/* portal target for AsideArticleList on mobile */}
           <div className="mobile-article-list-portal"></div>
           {shouldShowAd && (
