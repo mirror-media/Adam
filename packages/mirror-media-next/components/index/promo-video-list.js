@@ -49,7 +49,7 @@ const StyledOl = styled.ol`
 const ytWrapperClass = 'yt-wrapper'
 const ytIframeClass = 'yt-iframe'
 
-const Li = styled.li`
+const StyledLi = styled.li`
   flex: 0 0 auto;
   width: 360px;
 
