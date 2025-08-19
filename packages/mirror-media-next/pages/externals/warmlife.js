@@ -19,10 +19,7 @@ import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -178,7 +175,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in externals warmlife page',
@@ -186,7 +183,7 @@ export async function getServerSideProps({ req, res }) {
   )
 
   // handle fetch warmlife post data
-  const warmLifeData = handleGqlResponse(
+  const warmLifeData = processSettledResult(
     responses[1],
     (
       /** @type {import('../../utils/api/externals').ExternalsQueryResult | undefined} */ gqlData
@@ -199,7 +196,7 @@ export async function getServerSideProps({ req, res }) {
     return { notFound: true }
   }
 
-  const warmLifeDataCount = handleGqlResponse(
+  const warmLifeDataCount = processSettledResult(
     responses[2],
     (
       /** @type {import('@apollo/client').ApolloQueryResult<{externalsCount: number}> | undefined} */ gqlData

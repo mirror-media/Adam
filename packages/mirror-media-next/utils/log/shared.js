@@ -97,7 +97,7 @@ function getFormattedPageType(pathname = '', isMemberArticle = false) {
  * @param {string} errorMessage
  * @param {Record<string, any> | undefined} traceObject
  */
-const logAxiosError = (axiosErrors, errorMessage, traceObject) => {
+function logAxiosError(axiosErrors, errorMessage, traceObject) {
   const annotatingError = errors.helpers.wrap(
     axiosErrors,
     'UnhandledError',
@@ -129,55 +129,67 @@ const logAxiosError = (axiosErrors, errorMessage, traceObject) => {
  * @param {string} errorMessage
  * @param {Record<string, any> | undefined} traceObject
  */
-const logGqlError = (gqlErrors, errorMessage, traceObject) => {
+function logGqlError(gqlErrors, errorMessage, traceObject) {
+  if (!(gqlErrors instanceof ApolloError)) {
+    return logGenericError(gqlErrors, errorMessage, {
+      ...(traceObject ?? {}),
+      via: 'logGqlError(non-apollo)',
+    })
+  }
+
   const annotatingError = errors.helpers.wrap(
     gqlErrors,
     'UnhandledError',
     errorMessage
   )
 
-  if (gqlErrors instanceof ApolloError) {
-    const { graphQLErrors, clientErrors, networkError } = gqlErrors
-    console.error(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errors.helpers.printAll(
-          annotatingError,
-          {
-            withStack: true,
-            withPayload: true,
-          },
-          0,
-          0
-        ),
-        debugPayload: {
-          graphQLErrors,
-          clientErrors,
-          networkError,
+  const { graphQLErrors, clientErrors, networkError } = gqlErrors
+  console.error(
+    JSON.stringify({
+      severity: 'ERROR',
+      message: errors.helpers.printAll(
+        annotatingError,
+        {
+          withStack: true,
+          withPayload: true,
         },
-        ...(traceObject ?? {}),
-      })
-    )
-  } else {
-    console.error(
-      JSON.stringify({
-        severity: 'ERROR',
-        message: errors.helpers.printAll(
-          annotatingError,
-          {
-            withStack: true,
-            withPayload: true,
-          },
-          0,
-          0
-        ),
-        debugPayload: {
-          gqlErrors,
-        },
-        ...(traceObject ?? {}),
-      })
-    )
-  }
+        0,
+        0
+      ),
+      debugPayload: {
+        graphQLErrors,
+        clientErrors,
+        networkError,
+      },
+      ...(traceObject ?? {}),
+    })
+  )
+}
+
+/**
+ * @param {unknown} genericError
+ * @param {string} errorMessage
+ * @param {Record<string, any>} [traceObject]
+ */
+function logGenericError(genericError, errorMessage, traceObject) {
+  const annotatingError = errors.helpers.wrap(
+    /** @type {Error} */ (genericError),
+    'UnhandledError',
+    errorMessage
+  )
+  console.error(
+    JSON.stringify({
+      severity: 'ERROR',
+      message: errors.helpers.printAll(
+        annotatingError,
+        { withStack: true, withPayload: true },
+        0,
+        0
+      ),
+      debugPayload: { genericError },
+      ...(traceObject ?? {}),
+    })
+  )
 }
 
 export {
@@ -188,4 +200,5 @@ export {
   getFormattedPageType,
   logAxiosError,
   logGqlError,
+  logGenericError,
 }

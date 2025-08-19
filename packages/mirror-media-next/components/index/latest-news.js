@@ -16,6 +16,7 @@ import {
   getSectionSlugGql,
   getArticleHref,
 } from '../../utils'
+import { IndexTitle } from './share/index-title'
 
 const StyledMicroAd = dynamic(
   () => import('../ads/micro-ad/micro-ad-with-label-homepage'),
@@ -31,19 +32,12 @@ const Wrapper = styled.section`
   text-align: center;
 
   .title {
-    color: ${({ theme }) => theme.color.brandColor.darkBlue};
-    font-size: 20px;
-    line-height: 1.4;
-    font-weight: 500;
     margin: 12px auto;
     ${({ theme }) => theme.breakpoint.md} {
       margin: 24px auto;
-      font-weight: 700;
     }
     ${({ theme }) => theme.breakpoint.xl} {
       margin: 20px auto;
-      font-size: 28px;
-      line-height: 1.15;
     }
   }
 
@@ -56,7 +50,7 @@ const Wrapper = styled.section`
 const ItemContainer = styled.div`
   ${({ theme }) => theme.breakpoint.md} {
     display: grid;
-    gap: 12px;
+    gap: 16px;
     grid-template-columns: repeat(auto-fill, 244px);
     justify-content: center;
   }
@@ -169,7 +163,7 @@ export default function LatestNews(props) {
 
   return (
     <Wrapper>
-      <div className="title">最新文章</div>
+      <IndexTitle className="title">最新文章</IndexTitle>
       <InfiniteScrollList
         initialList={transformRawDataContent([...props.latestNewsData])}
         renderAmount={RENDER_PAGE_SIZE}

@@ -29,10 +29,7 @@ import {
   GPT_Placeholder_MobileAndTablet,
 } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -203,7 +200,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in section/videohub page',
@@ -215,7 +212,7 @@ export async function getServerSideProps({ req, res }) {
    * 1. get fetch statistics for 50 videos to get the most viewed video (熱門影片)
    * 2. slice the first 4 videos for the front-end to render (最新影片)
    */
-  const [latestVideos, latest50VideoIds] = handleAxiosResponse(
+  const [latestVideos, latest50VideoIds] = processSettledResult(
     responses[1],
     (
       /** @type {Awaited<ReturnType<typeof fetchYoutubeLatestVideos>>} */ axiosData
@@ -235,7 +232,7 @@ export async function getServerSideProps({ req, res }) {
     globalLogFields
   )
 
-  const categories = handleGqlResponse(
+  const categories = processSettledResult(
     responses[2],
     (gqlData) => {
       if (!gqlData) return []
@@ -257,7 +254,7 @@ export async function getServerSideProps({ req, res }) {
     ),
   ])
 
-  const highestViewCountVideo = handleAxiosResponse(
+  const highestViewCountVideo = processSettledResult(
     playlistResponses[0],
     (
       /** @type {Awaited<ReturnType<typeof fetchYoutubeVideosWithStatistics>>} */ axiosData
@@ -287,7 +284,7 @@ export async function getServerSideProps({ req, res }) {
     let items
 
     if (response) {
-      items = handleAxiosResponse(
+      items = processSettledResult(
         response,
         (
           /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByChannelId>>} */ axiosData

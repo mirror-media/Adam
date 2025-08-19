@@ -1,34 +1,37 @@
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
-import { fetchPromoteVideos } from '../../apollo/query/promote-videos'
-import { API_TIMEOUT, URL_STATIC_PROMOTE_VIDEOS } from '../../config/index.mjs'
+import {
+  API_TIMEOUT,
+  URL_STATIC_DAILY_COLUMN_HEADLINES,
+} from '../../config/index.mjs'
+import { fetchLatestPublishedExternals } from '../../apollo/query/externals'
 
 /**
  * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
  * @returns {Promise<import('axios').AxiosResponse<any> | import('@apollo/client').ApolloQueryResult<any>>}
  */
-export async function fetchPromoteVideosList() {
+export async function fetchForumHeadlines() {
   try {
     const jsonRes = await axios({
       method: 'get',
-      url: URL_STATIC_PROMOTE_VIDEOS,
+      url: URL_STATIC_DAILY_COLUMN_HEADLINES,
       timeout: API_TIMEOUT,
     })
     return jsonRes
   } catch (err) {
     console.error(
-      'Failed to fetch JSON of URL_STATIC_PROMOTE_VIDEOS, falling back to GQL:',
+      'Failed to fetch JSON of URL_STATIC_DAILY_COLUMN_HEADLINES, falling back to GQL:',
       JSON.stringify(err)
     )
   }
 
   // Fallback option: use GQL API
   return client.query({
-    query: fetchPromoteVideos,
+    query: fetchLatestPublishedExternals,
     variables: {
-      take: 6,
-      orderBy: [{ order: 'asc' }],
+      take: 3,
+      partnerSlug: 'dailycolumn',
     },
   })
 }
