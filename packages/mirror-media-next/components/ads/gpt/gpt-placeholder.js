@@ -112,15 +112,12 @@ const DEFAULT_SIZES = {
  * @param {Rwd} [props.rwd]
  * @param {JSX.Element} props.children
  * @param {boolean} [props.shouldShowAd]
- * @param {boolean} [props.isHDAdEmpty]
  * @param {boolean} [props.isLogInProcessFinished]
  * @returns {JSX.Element}
  */
 export default function GPT_Placeholder({
   rwd = DEFAULT_SIZES,
   children,
-  // 為了 cls 先暫時移除
-  // isHDAdEmpty = false,
   shouldShowAd = true,
   isLogInProcessFinished = false,
 }) {

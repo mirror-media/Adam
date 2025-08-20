@@ -23,7 +23,7 @@ import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
+
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
@@ -257,12 +257,6 @@ export default function StoryPremiumStyle({
     }
   }
 
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
-
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
   return (
@@ -277,15 +271,10 @@ export default function StoryPremiumStyle({
 
       <GPT_Placeholder
         shouldShowAd={shouldShowAd}
-        isHDAdEmpty={isHDAdEmpty}
         isLogInProcessFinished={isLogInProcessFinished}
       >
         {shouldShowAd && (
-          <StyledGPTAd_HD
-            pageKey={pageKeyForGptAd}
-            adKey="HD"
-            onSlotRenderEnded={handleObSlotRenderEnded}
-          />
+          <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />
         )}
       </GPT_Placeholder>
       <Main className={classNameForGTM}>

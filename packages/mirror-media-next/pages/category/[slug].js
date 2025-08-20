@@ -31,7 +31,6 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
 import { logGqlError } from '../../utils/log/shared'
 
 /**
@@ -209,12 +208,6 @@ export default function Category({
   const sectionSlug = category?.sections?.[0]?.slug ?? ''
   const GptPageKey = getSectionGPTPageKey(isPremium ? 'member' : sectionSlug)
 
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
-
   const postJsonData = posts?.slice(3).map((post, index) => {
     return {
       '@type': 'ListItem',
@@ -249,16 +242,9 @@ export default function Category({
       <CategoryContainer isPremium={isPremium}>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
-          {shouldShowAd && (
-            <StyledGPTAd
-              pageKey={GptPageKey}
-              adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
-            />
-          )}
+          {shouldShowAd && <StyledGPTAd pageKey={GptPageKey} adKey="HD" />}
         </GPT_Placeholder>
 
         {isPremium ? (

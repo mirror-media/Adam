@@ -1,4 +1,3 @@
-import React, { useCallback, useState } from 'react'
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
@@ -135,11 +134,6 @@ export default function Home({
   })
 
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
 
   return (
     <Layout
@@ -154,16 +148,9 @@ export default function Home({
       <IndexContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
-          {shouldShowAd && (
-            <StyledGPTAd_HD
-              pageKey="home"
-              adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
-            />
-          )}
+          {shouldShowAd && <StyledGPTAd_HD pageKey="home" adKey="HD" />}
         </GPT_Placeholder>
         {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
         {isCampaignsVisible && <RecallCampaigns />}

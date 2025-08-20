@@ -22,7 +22,6 @@ import { getSectionGPTPageKey } from '../../utils/ad'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -112,12 +111,6 @@ export default function Section({ postsCount, posts, section, headerData }) {
   const sectionName = section.name || ''
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
-
   return (
     <Layout
       head={{ title: `${sectionName}分類報導` }}
@@ -127,14 +120,12 @@ export default function Section({ postsCount, posts, section, headerData }) {
       <SectionContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={getSectionGPTPageKey(section.slug)}
               adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
             />
           )}
         </GPT_Placeholder>

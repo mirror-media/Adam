@@ -20,7 +20,6 @@ import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
@@ -113,11 +112,6 @@ export default function ExternalPartner({
   headerData,
 }) {
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
 
   return (
     <Layout
@@ -128,14 +122,12 @@ export default function ExternalPartner({
       <PartnerContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && (
             <StyledGPTAd
               pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
               adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
             />
           )}
         </GPT_Placeholder>

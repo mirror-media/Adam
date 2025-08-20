@@ -19,7 +19,6 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 })
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 
@@ -112,10 +111,6 @@ const RENDER_PAGE_SIZE = 12
 export default function Tag({ postsCount, posts, tag, headerData }) {
   const tagName = tag?.name || ''
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
 
   return (
     <Layout
@@ -126,16 +121,9 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
       <TagContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
-          {shouldShowAd && (
-            <StyledGPTAd
-              pageKey="other"
-              adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
-            />
-          )}
+          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
         </GPT_Placeholder>
 
         {tagName && (

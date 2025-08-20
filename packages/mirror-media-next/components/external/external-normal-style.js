@@ -2,7 +2,7 @@
 //TODO: refactor jsx structure, make it more readable.
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import styled from 'styled-components'
 import Link from 'next/link'
@@ -545,24 +545,16 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
 
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
-
   return (
     <>
       <GPT_Placeholder
         shouldShowAd={shouldShowAd}
-        isHDAdEmpty={isHDAdEmpty}
         isLogInProcessFinished={isLogInProcessFinished}
       >
         {shouldShowAd && (
           <StyledGPTAd_HD
             pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
             adKey="HD"
-            onSlotRenderEnded={handleObSlotRenderEnded}
           />
         )}
       </GPT_Placeholder>
