@@ -110,10 +110,10 @@ const DEFAULT_SIZES = {
  *
  * @param {Object} props
  * @param {Rwd} [props.rwd]
- * @param {JSX.Element} props.children
+ * @param {import('react').JSX.Element} props.children
  * @param {boolean} [props.shouldShowAd]
  * @param {boolean} [props.isLogInProcessFinished]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function GPT_Placeholder({
   rwd = DEFAULT_SIZES,
@@ -136,7 +136,7 @@ export default function GPT_Placeholder({
  * @param {Rwd} [props.rwd]
  * @param {boolean} [props.shouldShowAd]
  * @param {boolean} [props.isLogInProcessFinished]
- * @param {JSX.Element} props.children
+ * @param {import('react').JSX.Element} props.children
  * @returns
  */
 const GPT_Placeholder_MobileAndTablet = ({
@@ -160,7 +160,7 @@ const GPT_Placeholder_MobileAndTablet = ({
  * @param {Rwd} [props.rwd]
  * @param {boolean} [props.shouldShowAd]
  * @param {boolean} [props.isLogInProcessFinished]
- * @param {JSX.Element} props.children
+ * @param {import('react').JSX.Element} props.children
  * @returns
  */
 const GPT_Placeholder_Desktop = ({
@@ -182,7 +182,7 @@ const GPT_Placeholder_Desktop = ({
 /**
  *
  * @param {Object} props
- * @param {JSX.Element} props.children
+ * @param {import('react').JSX.Element} props.children
  * @param {boolean} [props.shouldShowAd]
  * @param {boolean} [props.isLogInProcessFinished]
  * @returns

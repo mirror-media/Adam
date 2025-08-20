@@ -422,7 +422,7 @@ const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
  * @param {Object} props
  * @param {External} props.external
  * @param {import('../../components/story/normal/related-article-list').Relateds} props.allRelatedStories
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ExternalNormalStyle({ external, allRelatedStories }) {
   const { width } = useWindowDimensions()

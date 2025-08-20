@@ -128,7 +128,7 @@ const snsItem = SNS_ITEM_LIST.map((item) => (
  * @param {boolean} [props.shouldShowLargePagePlugin] - Rather should show large facebook page plugin. It will change the appearance of plugin.
  * @param {'row' | 'column'} [props.flexDirection] - value of css property `flex-direction`. It will change direction of arrangement of this component.
  * @param {string} [props.className] - Attribute for updating style by styled-component
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function SocialNetworkService({
   shouldShowLargePagePlugin = false,

@@ -50,7 +50,7 @@ const HeroCaption = styled.figcaption`
  * @param {HeroVideo | null} props.heroVideo - The hero video data.
  * @param {string} props.heroCaption - The caption for the hero image or video.
  * @param {string} [props.title] - The title of the article. Optional, only render if `props.style` is wide
- * @returns {JSX.Element | null}
+ * @returns {import('react').JSX.Element | null}
  */
 export default function AmpHero({
   heroVideo = null,

@@ -123,8 +123,8 @@ const membershipReducer = (membership, action) => {
  *    - After firebase sign-out, it is needed to dispatch a "LOGOUT" action to clear access token.
  *
  * @param {Object} props
- * @param {JSX.Element} props.children
- * @returns {JSX.Element}
+ * @param {import('react').JSX.Element} props.children
+ * @returns {import('react').JSX.Element}
  */
 const MembershipProvider = ({ children }) => {
   const [membership, dispatch] = useReducer(

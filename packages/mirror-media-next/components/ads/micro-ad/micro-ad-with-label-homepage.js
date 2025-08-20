@@ -466,7 +466,7 @@ const StyledMicroAd = styled(MicroAd)`
  * @param {Object} props
  * @param {string} props.unitId
  * @param {MicroAdType} props.microAdType
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function MicroAdWithLabel({ unitId, microAdType }) {
   return <StyledMicroAd unitId={unitId} type={microAdType} />

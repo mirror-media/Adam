@@ -44,7 +44,7 @@ const TestBtnWrapper = styled.div`
  * @param {Object} props
  * @param {Object[] } props.sectionsData
  * @param {Object[]} props.topicsData
- * @return {JSX.Element}
+ * @return {import('react').JSX.Element}
  */
 function Subscribe({ sectionsData = [], topicsData = [] }) {
   const [memberType, setMemberType] = useState('nonMember') // Default to non-member plan

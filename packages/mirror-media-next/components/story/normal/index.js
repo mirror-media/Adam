@@ -508,7 +508,7 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
  * @param {FlashNewsData} param.flashNewsData
  * @param {string} [param.classNameForGTM]
  * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function StoryNormalStyle({
   postData,

@@ -116,8 +116,8 @@ const Wrapper = styled.div`
  * @param {Object} props
  * @param {boolean} [props.isAdFirstClosedBtnVisible]
  * @param {FullScreenAdStyle } props.fullScreenAdStyle
- * @param {JSX.Element} props.children
- * @returns {JSX.Element}
+ * @param {import('react').JSX.Element} props.children
+ * @returns {import('react').JSX.Element}
  */
 export default function FullScreenAdItem({
   fullScreenAdStyle = 'unset',

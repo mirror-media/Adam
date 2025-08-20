@@ -5,7 +5,7 @@ import { GPT_AD_NETWORK } from '../../../constants/ads'
 /**
  * @param {Object} props - The component props.
  * @param {string} [props.className] - The class name for the component.
- * @return {JSX.Element} The rendered AMP GPT ad component.
+ * @return {import('react').JSX.Element} The rendered AMP GPT ad component.
  */
 export default function AmpGptStickyAd() {
   return (

@@ -9,7 +9,7 @@ const PopInWrapper = styled.div`
 /**
  * Renders a Popin component.
  *
- * @return {JSX.Element} The rendered Popin component.
+ * @return {import('react').JSX.Element} The rendered Popin component.
  */
 
 export default function AmpPopIn() {
