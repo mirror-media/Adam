@@ -9,10 +9,7 @@ import {
   getPostsAndPostscountFromGqlData,
 } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
 import { Z_INDEX } from '../../constants/index'
@@ -181,7 +178,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in section page (sectionSlug: ${sectionSlug})`,
@@ -196,7 +193,7 @@ export async function getServerSideProps({ query, req, res }) {
   const dataHandler = getPostsAndPostscountFromGqlData
 
   /** @type {[number, Article[]]} */
-  const [postsCount, posts] = handleGqlResponse(
+  const [postsCount, posts] = processSettledResult(
     responses[1],
     dataHandler,
     `Error occurs while getting posts in section page (sectionSlug: ${sectionSlug})`,
@@ -217,7 +214,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   // handle fetch section data
   /** @type {Section} */
-  const section = handleGqlResponse(
+  const section = processSettledResult(
     responses[2],
     (gqlData) => {
       return gqlData?.data?.section || { slug: sectionSlug }

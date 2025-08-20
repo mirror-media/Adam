@@ -16,7 +16,7 @@ import { transformHtmlIntoAmpHtml } from '../../../utils/amp-html'
 import Script from 'next/script'
 import JsonLdsScripts from '../../../components/externals/shared/json-lds-scripts'
 import { getLogTraceObject } from '../../../utils'
-import { handleGqlResponse } from '../../../utils/response-handle'
+import { processSettledResult } from '../../../utils/response-processor'
 
 export const config = { amp: true }
 
@@ -142,7 +142,7 @@ export async function getServerSideProps({ params, req, res, resolvedUrl }) {
   ])
 
   /** @type {External} */
-  const external = handleGqlResponse(
+  const external = processSettledResult(
     responses[0],
     (gqlData) => {
       if (!gqlData) {

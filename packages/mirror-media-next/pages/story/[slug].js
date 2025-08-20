@@ -49,7 +49,7 @@ const StoryPremiumStyle = dynamic(() =>
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
 import axios from 'axios'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getRelatedStories } from '../api/recomemd'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
@@ -466,7 +466,7 @@ export async function getServerSideProps({ params, req, res }) {
           }),
           fetchHeaderDataInDefaultPageLayout(),
         ])
-        flashNewsData = handleAxiosResponse(
+        flashNewsData = processSettledResult(
           responses[0],
           (/** @type {AxiosResponse} */ axiosData) => {
             return axiosData?.data?.posts ?? []
@@ -474,7 +474,7 @@ export async function getServerSideProps({ params, req, res }) {
           'Error occurs while getting flash news in story page',
           globalLogFields
         )
-        headerData = handleAxiosResponse(
+        headerData = processSettledResult(
           responses[1],
           (
             /** @type {{ sectionsData: HeadersData, topicsData: Topics } | null | undefined} */ axiosData

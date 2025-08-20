@@ -8,7 +8,7 @@ import { setPageCache } from '../../utils/cache-setting'
 import useMembershipRequired from '../../hooks/use-membership-required'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import SaveSuccess from '../../components/profile/save-success'
 import SaveFailed from '../../components/profile/save-failed'
@@ -138,7 +138,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(
     ])
 
     // handle header data
-    const [sectionsData, topicsData] = handleAxiosResponse(
+    const [sectionsData, topicsData] = processSettledResult(
       responses[0],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in profile page',

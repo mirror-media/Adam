@@ -7,7 +7,7 @@ import { setPageCache } from '../../../utils/cache-setting'
 import { fetchWeeklys } from '../../../apollo/query/magazines'
 import Layout from '../../../components/shared/layout'
 import { getLogTraceObject } from '../../../utils'
-import { handleGqlResponse } from '../../../utils/response-handle'
+import { processSettledResult } from '../../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../../utils/server-side-only/redirect-to-login-while-unauthed'
 
 const Page = styled.div`
@@ -72,7 +72,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(
       }),
     ])
 
-    const weeklys = handleGqlResponse(
+    const weeklys = processSettledResult(
       responses[0],
       (
         /** @type {import('@apollo/client').ApolloQueryResult<any> | undefined} */ gqlData

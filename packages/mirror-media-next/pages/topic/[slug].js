@@ -15,10 +15,7 @@ import {
   getResizedUrl,
   sortArrayWithOtherArrayId,
 } from '../../utils/index'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { fetchTopicByTopicSlug } from '../../utils/api/topic'
 import { logGqlError } from '../../utils/log/shared'
 import SlotAndBanner from '../../components/slot/slot-and-banner'
@@ -131,7 +128,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in topic page (topicSlug: ${topicSlug})`,
@@ -140,7 +137,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   // handle fetch topic data
   /** @type {Topic[]} */
-  const topics = handleGqlResponse(
+  const topics = processSettledResult(
     responses[1],
     (gqlData) => {
       return gqlData?.data?.topics || []

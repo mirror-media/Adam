@@ -23,10 +23,7 @@ import {
   GPT_Placeholder_MobileAndTablet,
 } from '../../components/ads/gpt/gpt-placeholder.js'
 import { getLogTraceObject } from '../../utils/index.js'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle.js'
+import { processSettledResult } from '../../utils/response-processor.js'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -177,7 +174,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in video category page (videoCategorySlug: ${videoCategorySlug})`,
@@ -185,7 +182,7 @@ export async function getServerSideProps({ query, req, res }) {
   )
 
   // handle fetch videos and get nextPageToken for infinite scroll
-  const [videos, ytNextPageToken] = handleAxiosResponse(
+  const [videos, ytNextPageToken] = processSettledResult(
     responses[1],
     (
       /** @type {Awaited<ReturnType<typeof fetchYoutubePlaylistByPlaylistId>>} */ axiosData
@@ -209,7 +206,7 @@ export async function getServerSideProps({ query, req, res }) {
     globalLogFields
   )
 
-  const category = handleGqlResponse(
+  const category = processSettledResult(
     responses[2],
     (gqlData) => {
       return gqlData?.data?.category || { slug: videoCategorySlug }

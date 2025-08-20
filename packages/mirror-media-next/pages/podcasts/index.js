@@ -12,7 +12,7 @@ import {
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 
 /**
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
@@ -189,7 +189,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in podcasts page',
@@ -198,7 +198,7 @@ export async function getServerSideProps({ req, res }) {
 
   // Extracting podcast list data
   /** @type {PodcastData[]} */
-  const podcastListData = handleAxiosResponse(
+  const podcastListData = processSettledResult(
     responses[1],
     (
       /** @type {Awaited<ReturnType<typeof fetchPodcastList>> | undefined} */ axiosData

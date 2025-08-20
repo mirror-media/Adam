@@ -4,10 +4,7 @@ import dynamic from 'next/dynamic'
 import SectionArticles from '../../components/shared/section-articles'
 import { ENV } from '../../config/index.mjs'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import {
   getSectionFromPremiumHeaderData,
@@ -196,7 +193,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   // handle header data
-  const sectionsData = handleAxiosResponse(
+  const sectionsData = processSettledResult(
     responses[0],
     getSectionFromPremiumHeaderData,
     `Error occurs while getting premium header data in premiumsection page (sectionSlug: ${sectionSlug})`,
@@ -211,7 +208,7 @@ export async function getServerSideProps({ query, req, res }) {
   const dataHandler = getPostsAndPostscountFromGqlData
 
   /** @type {[number, Article[]]} */
-  const [postsCount, posts] = handleGqlResponse(
+  const [postsCount, posts] = processSettledResult(
     responses[1],
     dataHandler,
     `Error occurs while getting posts in premiumsection page (sectionSlug: ${sectionSlug})`,
@@ -231,7 +228,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   // handle fetch section data
   /** @type {Section} */
-  const section = handleGqlResponse(
+  const section = processSettledResult(
     responses[2],
     (gqlData) => {
       return gqlData?.data?.section || { slug: sectionSlug }

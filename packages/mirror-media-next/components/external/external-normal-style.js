@@ -438,6 +438,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
     publishedDate = '',
     updatedAt = '',
     extend_byline = '',
+    thumbCaption = '',
   } = external
 
   // 正則表達式匹配 <img> 標籤中包含 style 並帶有 width 和 height
@@ -591,6 +592,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
               <StyledExternalHeroImage
                 images={EXTERNAL_IMAGES_URL}
                 title={title}
+                thumbCaption={thumbCaption}
               />
             )}
             <ExternalArticleInfo

@@ -32,4 +32,28 @@ const fetchExternalBySlug = gql`
   }
 `
 
-export { fetchExternalCounts, fetchExternalBySlug, fetchExternals }
+const fetchLatestPublishedExternals = gql`
+  query ($take: Int, $partnerSlug: String) {
+    externals(
+      take: $take
+      where: {
+        state: { equals: "published" }
+        partner: { slug: { equals: $partnerSlug } }
+      }
+      orderBy: [{ publishedDate: desc }]
+    ) {
+      id
+      title
+      slug
+      updatedAt
+      publishedDate
+    }
+  }
+`
+
+export {
+  fetchExternalCounts,
+  fetchExternalBySlug,
+  fetchExternals,
+  fetchLatestPublishedExternals,
+}

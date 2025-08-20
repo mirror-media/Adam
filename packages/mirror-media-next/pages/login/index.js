@@ -30,7 +30,7 @@ import { FirebaseAuthError } from '../../constants/firebase'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
 import WebviewHint from '../../components/login/webview-hint'
 import { isInAppBrowser } from '../../utils/login'
@@ -175,7 +175,7 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(
     ])
 
     // handle header data
-    const [sectionsData, topicsData] = handleAxiosResponse(
+    const [sectionsData, topicsData] = processSettledResult(
       responses[0],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in login page',

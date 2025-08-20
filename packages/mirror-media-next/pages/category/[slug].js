@@ -22,10 +22,7 @@ import {
 } from '../../utils/api/category'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getCategoryOfWineSlug, getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getSectionGPTPageKey } from '../../utils/ad'
 import WineWarning from '../../components/shared/wine-warning'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -357,7 +354,7 @@ export async function getServerSideProps({ query, req, res }) {
     ])
 
     // handle header data
-    sectionsData = handleAxiosResponse(
+    sectionsData = processSettledResult(
       responses[0],
       getSectionFromPremiumHeaderData,
       `Error occurs while getting premium header data in category page (categorySlug: ${categorySlug})`,
@@ -371,7 +368,7 @@ export async function getServerSideProps({ query, req, res }) {
      */
     const dataHandler = getPostsAndPostscountFromGqlData
 
-    ;[postsCount, posts] = handleGqlResponse(
+    ;[postsCount, posts] = processSettledResult(
       responses[1],
       dataHandler,
       `Error occurs while getting premium post data in category page (categorySlug: ${categorySlug})`,
@@ -384,7 +381,7 @@ export async function getServerSideProps({ query, req, res }) {
     ])
 
     // handle header data
-    ;[sectionsData, topicsData] = handleAxiosResponse(
+    ;[sectionsData, topicsData] = processSettledResult(
       responses[0],
       getSectionAndTopicFromDefaultHeaderData,
       `Error occurs while getting header data in category page (categorySlug: ${categorySlug})`,
@@ -398,7 +395,7 @@ export async function getServerSideProps({ query, req, res }) {
      */
     const dataHandler = getPostsAndPostscountFromGqlData
 
-    ;[postsCount, posts] = handleGqlResponse(
+    ;[postsCount, posts] = processSettledResult(
       responses[1],
       dataHandler,
       `Error occurs while getting post data in category page (categorySlug: ${categorySlug})`,

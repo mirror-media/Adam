@@ -3,14 +3,11 @@ import styled from 'styled-components'
 import YouTube from 'react-youtube'
 
 import { extractYouTubeId } from '../../utils/youtube'
+import { IndexTitle } from './share/index-title'
+import { FullWidthLayoutStyle } from '../shared/full-width-layout'
 
-const Section = styled.section`
-  position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+const StyledSection = styled.section`
+  ${FullWidthLayoutStyle}
 
   display: flex;
   align-items: center;
@@ -18,21 +15,10 @@ const Section = styled.section`
   flex-direction: column;
   background: #eee;
   padding: 32px 20px;
+  gap: 20px;
 
   ${({ theme }) => theme.breakpoint.md} {
     padding: 40px 20px;
-  }
-`
-
-const Title = styled.h3`
-  color: ${({ theme }) => theme.color.brandColor.darkBlue};
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 700;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    font-size: 28px;
   }
 `
 
@@ -43,7 +29,7 @@ const Wrapper = styled.div`
   scrollbar-width: none;
 `
 
-const Ol = styled.ol`
+const StyledOl = styled.ol`
   display: flex;
   justify-content: flex-start;
   gap: 20px;
@@ -63,7 +49,7 @@ const Ol = styled.ol`
 const ytWrapperClass = 'yt-wrapper'
 const ytIframeClass = 'yt-iframe'
 
-const Li = styled.li`
+const StyledLi = styled.li`
   flex: 0 0 auto;
   width: 360px;
 
@@ -164,7 +150,7 @@ const opts = {
  * @param {{ promoVideos: PromoteVideo[] }} props
  */
 
-export default function PromoVideoList({ promoVideos }) {
+export default function PromoVideoList({ promoVideos = [] }) {
   /** @type {React.RefObject<HTMLOListElement | null>} */
   const containerRef = useRef(null)
   const [showLeftButton, setShowLeftButton] = useState(false)
@@ -268,16 +254,16 @@ export default function PromoVideoList({ promoVideos }) {
   if (!promoVideos?.length) return null
 
   return (
-    <Section>
-      <Title>最新影音</Title>
+    <StyledSection>
+      <IndexTitle>最新影音</IndexTitle>
       <Wrapper>
-        <Ol ref={containerRef} className={centerItems ? 'centered' : ''}>
+        <StyledOl ref={containerRef} className={centerItems ? 'centered' : ''}>
           {promoVideos.map((video) => {
             const youtubeId = extractYouTubeId(video.videoLink)
 
             if (!youtubeId) return null
             return (
-              <Li key={`${youtubeId}-${video.id}`}>
+              <StyledLi key={`${youtubeId}-${video.id}`}>
                 <YouTube
                   videoId={youtubeId}
                   id={youtubeId}
@@ -286,10 +272,10 @@ export default function PromoVideoList({ promoVideos }) {
                   iframeClassName={ytIframeClass}
                   opts={opts}
                 />
-              </Li>
+              </StyledLi>
             )
           })}
-        </Ol>
+        </StyledOl>
         {showLeftButton && (
           <ArrowButtonLeft
             type="button"
@@ -305,6 +291,6 @@ export default function PromoVideoList({ promoVideos }) {
           />
         )}
       </Wrapper>
-    </Section>
+    </StyledSection>
   )
 }

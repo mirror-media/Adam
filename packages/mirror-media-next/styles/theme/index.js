@@ -3,7 +3,10 @@
 
 import { breakpoint } from './media'
 import { color } from './color'
+import { layout } from './layout'
+
 export const theme = {
   breakpoint,
   color,
+  layout,
 }
