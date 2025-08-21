@@ -34,10 +34,10 @@ export async function getRelatedStories(
          --header 'Content-Type: application/json' \
           --data '{
               "product_ids": [
-                  "mirrormedia_external_dailycolumn_14681"
+                  "mirrormedia_story_20250818edi044"
               ],
               "anonymous_id": "test",
-              "fq": "product_id:/mirrormedia_external_.+/",
+              "fq": ""product_id:/mirrormedia_story_.+/ AND (-product_id:mirrormedia_story_20250818edi008 AND -product_id:mirrormedia_story_20250817edi023 AND -product_id:mirrormedia_story_20250818edi038 AND -product_id:mirrormedia_story_20250818edi004 AND -product_id:mirrormedia_story_20250818edi009)",
               "fl": [
                   "title",
                   "url",
