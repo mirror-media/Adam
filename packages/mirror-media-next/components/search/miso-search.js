@@ -619,7 +619,7 @@ export default function MisoSearch({ searchTerms }) {
 
       try {
         workflow.useApi({
-          fq: 'product_id:/mirrormedia_.+/',
+          fq: 'product_id:/mirrormedia_story_.+/',
           source_fl: [
             'cover_image',
             'url',
