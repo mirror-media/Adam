@@ -8,7 +8,7 @@ import Layout from '../../components/shared/layout'
 import BlankCard from '../../components/subscribe/blank-card'
 import PrimaryBlueBtn from '../../components/subscribe/primary-blue-btn'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 
 const PageWrapper = styled.section`
   min-height: 70vh;
@@ -85,7 +85,7 @@ export async function getServerSideProps({ req, res }) {
     fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in marketing page',

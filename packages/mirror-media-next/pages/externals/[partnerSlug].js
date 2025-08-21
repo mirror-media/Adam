@@ -22,10 +22,7 @@ import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -195,7 +192,7 @@ export async function getServerSideProps({ params, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in externals partner page (partnerSlug: ${partnerSlug})`,
@@ -203,7 +200,7 @@ export async function getServerSideProps({ params, req, res }) {
   )
 
   /** @type {ListingExternal[]} */
-  const externals = handleGqlResponse(
+  const externals = processSettledResult(
     responses[1],
     (
       /** @type {import('../../utils/api/externals').ExternalsQueryResult | undefined} **/ gqlData
@@ -215,7 +212,7 @@ export async function getServerSideProps({ params, req, res }) {
   )
 
   /** @type {number} */
-  const externalsCount = handleGqlResponse(
+  const externalsCount = processSettledResult(
     responses[2],
     (
       /** @type {import('@apollo/client').ApolloQueryResult<{externalsCount: number}> | undefined} */ gqlData
@@ -227,7 +224,7 @@ export async function getServerSideProps({ params, req, res }) {
   )
 
   /** @type {Partner} */
-  const partner = handleGqlResponse(
+  const partner = processSettledResult(
     responses[3],
     (gqlData) => {
       return gqlData?.data?.partners?.[0] ?? {}

@@ -54,6 +54,7 @@ let GPT_MODE = ''
 let COURSE_URL = ''
 let URL_STATIC_PROMOTE_VIDEOS = ''
 let URL_STATIC_COLUMN_SECTION_POSTS = ''
+let URL_STATIC_DAILY_COLUMN_HEADLINES = ''
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -99,7 +100,8 @@ switch (ENV) {
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
-    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
+    URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
+    URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
@@ -156,7 +158,8 @@ switch (ENV) {
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
     URL_STATIC_PODCAST_LIST = `https://v3-statics.mirrormedia.mg/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
-    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-staging.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
+    URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
+    URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -215,6 +218,7 @@ switch (ENV) {
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
+    URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -278,6 +282,7 @@ switch (ENV) {
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
+    URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
@@ -343,6 +348,7 @@ export {
   URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
   URL_STATIC_PROMOTE_VIDEOS,
+  URL_STATIC_DAILY_COLUMN_HEADLINES,
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   IS_PRIZE_RIZED,

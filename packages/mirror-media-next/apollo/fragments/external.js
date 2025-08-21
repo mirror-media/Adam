@@ -15,6 +15,7 @@ import { partner } from './partner'
  * @property {string} publishedDate
  * @property {string} extend_byline - author
  * @property {string} thumb - heroImage URL
+ * @property {string} thumbCaption - heroImage caption
  * @property {string} brief
  * @property {string} content
  * @property {string} source - original article URL
@@ -25,7 +26,7 @@ import { partner } from './partner'
  */
 
 /**
- * @typedef {Pick<GenericExternal, 'id' | 'slug' | 'partner' |  'title' | 'thumb' | 'brief' | 'content' | 'publishedDate' | 'extend_byline' | 'updatedAt' >} External
+ * @typedef {Pick<GenericExternal, 'id' | 'slug' | 'partner' |  'title' | 'thumb' | 'thumbCaption' | 'brief' | 'content' | 'publishedDate' | 'extend_byline' | 'updatedAt' >} External
  */
 
 /**
@@ -58,6 +59,7 @@ export const external = gql`
     content
     publishedDate
     extend_byline
+    thumbCaption
     partner {
       ...partner
       showThumb

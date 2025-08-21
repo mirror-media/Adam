@@ -18,14 +18,12 @@ import {
   getArticleHref,
   getLogTraceObject,
 } from '../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../utils/response-handle'
+import { processSettledResult } from '../utils/response-processor'
 import { setPageCache } from '../utils/cache-setting'
 import EditorChoice from '../components/index/editor-choice'
 import LatestNews from '../components/index/latest-news'
 import PromoVideoList from '../components/index/promo-video-list'
+import ForumHeadlinesPreview from '../components/index/forum-headlines-preview'
 import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
@@ -33,6 +31,7 @@ import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
 
 import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
 import { fetchPromoteVideosList } from '../utils/api/promote-videos'
+import { fetchForumHeadlines } from '../utils/api/forum-headlines'
 import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
@@ -60,10 +59,10 @@ const GA_UTM_EDITOR_CHOICES = 'utm_source=mmweb&utm_medium=editorchoice'
 
 const IndexContainer = styled.main`
   background-color: rgba(255, 255, 255, 1);
-  max-width: 596px;
+  max-width: ${({ theme }) => theme.layout.maxWidth.md};
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: 1024px;
+    max-width: ${({ theme }) => theme.layout.maxWidth.xl};
   }
   margin: 0 auto;
 `
@@ -108,6 +107,7 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {Object[] } props.sectionsData
  * @param {boolean} [props.isCampaignsVisible]
  * @param { { id: string, videoLink: string }[] } props.promoVideos
+ * @param {import('../components/index/forum-headlines-preview').ExternalHeadline[]} props.forumHeadlines - Array of latest forum headlines
  * @returns {React.ReactElement}
  */
 export default function Home({
@@ -118,6 +118,7 @@ export default function Home({
   sectionsData = [],
   isCampaignsVisible,
   promoVideos,
+  forumHeadlines,
 }) {
   const editorChoice = editorChoicesData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, undefined)
@@ -171,6 +172,7 @@ export default function Home({
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
         {shouldShowAd && <StyledGPTAd_MB_L1 pageKey="home" adKey="MB_L1" />}
         <PromoVideoList promoVideos={promoVideos} />
+        <ForumHeadlinesPreview forumHeadlines={forumHeadlines} />
         <LatestNews latestNewsData={latestNewsData} />
         <FullScreenAds />
       </IndexContainer>
@@ -223,6 +225,7 @@ export async function getServerSideProps({ res, req }) {
   let editorChoicesData = []
   let latestNewsData = []
   let promoVideos = []
+  let forumHeadlines = []
 
   try {
     const postResponse = await axios({
@@ -246,9 +249,10 @@ export async function getServerSideProps({ res, req }) {
       }),
       fetchHeaderDataInDefaultPageLayout(),
       fetchPromoteVideosList(),
+      fetchForumHeadlines(),
     ])
 
-    flashNewsData = handleAxiosResponse(
+    flashNewsData = processSettledResult(
       responses[0],
       (/** @type {AxiosResponse} */ axiosData) => {
         return axiosData?.data?.posts ?? []
@@ -258,19 +262,28 @@ export async function getServerSideProps({ res, req }) {
     )
 
     // handle header data
-    ;[sectionsData, topicsData] = handleAxiosResponse(
+    ;[sectionsData, topicsData] = processSettledResult(
       responses[1],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in index page',
       globalLogFields
     )
 
-    promoVideos = handleGqlResponse(
+    promoVideos = processSettledResult(
       responses[2],
       (resData) => {
         return resData?.data?.promoteVideos || []
       },
       'Error occurs while getting promote videos data in index page',
+      globalLogFields
+    )
+
+    forumHeadlines = processSettledResult(
+      responses[3],
+      (resData) => {
+        return resData?.data?.externals || []
+      },
+      'Error occurs while getting forum headlines data in index page',
       globalLogFields
     )
 
@@ -292,6 +305,7 @@ export async function getServerSideProps({ res, req }) {
         sectionsData,
         isCampaignsVisible,
         promoVideos,
+        forumHeadlines,
       },
     }
   } catch (err) {

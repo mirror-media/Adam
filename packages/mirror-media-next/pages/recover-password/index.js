@@ -9,7 +9,7 @@ import GenericTextInput from '../../components/shared/inputs/generic-text-input'
 import PrimaryButton from '../../components/shared/buttons/primary-button'
 import TextButton from '../../components/login/text-button'
 import { getLogTraceObject, isValidEmail } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
 import { auth } from '../../firebase'
 import { FirebaseError } from 'firebase/app'
@@ -256,7 +256,7 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(
     ])
 
     // handle header data
-    const [sectionsData, topicsData] = handleAxiosResponse(
+    const [sectionsData, topicsData] = processSettledResult(
       responses[0],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in recover password page',

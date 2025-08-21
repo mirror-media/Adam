@@ -21,10 +21,7 @@ import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 
 const TagContainer = styled.main`
   width: 320px;
@@ -181,7 +178,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in tag page (tagSlug: ${tagSlug})`,
@@ -190,7 +187,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   // handle fetch tag data
   /** @type {Tag | undefined} */
-  const tag = handleGqlResponse(
+  const tag = processSettledResult(
     responses[1],
     (gqlData) => {
       return gqlData?.data?.tag
@@ -211,7 +208,7 @@ export async function getServerSideProps({ query, req, res }) {
   }
 
   // handle fetch post data
-  const [postsCount, posts] = handleGqlResponse(
+  const [postsCount, posts] = processSettledResult(
     responses[2],
     getPostsAndPostscountFromGqlData,
     `Error occurs while getting post data in tag page (tagSlug: ${tagSlug})`,

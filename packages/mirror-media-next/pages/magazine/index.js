@@ -15,10 +15,7 @@ import MagazineFeatures from '../../components/magazine/magazine-featured-weekly
 import Layout from '../../components/shared/layout'
 import JoinPremiumMember from '../../components/magazine/ui-join-premium-member'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 import useMembershipRequired from '../../hooks/use-membership-required'
 
@@ -93,7 +90,7 @@ export default function Magazine({ sectionsData = [] }) {
             }),
           ])
 
-          const fetchedSpecials = handleGqlResponse(
+          const fetchedSpecials = processSettledResult(
             responses[0],
             (gqlData) => {
               return gqlData?.data?.magazines || []
@@ -101,7 +98,7 @@ export default function Magazine({ sectionsData = [] }) {
             'Error occurs while getting special magazine in magazine list page'
           )
 
-          const fetchedWeeklys = handleGqlResponse(
+          const fetchedWeeklys = processSettledResult(
             responses[1],
             (gqlData) => {
               return gqlData?.data?.magazines || []
@@ -202,7 +199,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(
       fetchHeaderDataInPremiumPageLayout(),
     ])
 
-    const sectionsData = handleAxiosResponse(
+    const sectionsData = processSettledResult(
       responses[0],
       getSectionFromPremiumHeaderData,
       'Error occurs while getting premium header data in magazine list page',

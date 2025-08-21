@@ -25,10 +25,7 @@ import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
 import { useCallback, useState } from 'react'
 import { getLogTraceObject } from '../../utils'
-import {
-  handleAxiosResponse,
-  handleGqlResponse,
-} from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 
 const AuthorContainer = styled.main`
   width: 320px;
@@ -176,7 +173,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   //handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in author page (authorId: ${authorId})`,
@@ -184,7 +181,7 @@ export async function getServerSideProps({ query, req, res }) {
   )
 
   // handle author data
-  const authorData = handleGqlResponse(
+  const authorData = processSettledResult(
     responses[1],
     (gqlData) => {
       return gqlData?.data
@@ -218,7 +215,7 @@ export async function getServerSideProps({ query, req, res }) {
   const dataHandler = getPostsAndPostscountFromGqlData
 
   /** @type {[number, Article[]]} */
-  const [postsCount, posts] = handleGqlResponse(
+  const [postsCount, posts] = processSettledResult(
     responses[2],
     dataHandler,
     `Error occurs while getting post data in author page (authorId: ${authorId})`,

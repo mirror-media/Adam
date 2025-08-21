@@ -28,7 +28,7 @@ import {
 } from '../../components/ads/gpt/gpt-placeholder'
 import Head from 'next/head'
 import { getLogTraceObject } from '../../utils'
-import { handleAxiosResponse } from '../../utils/response-handle'
+import { processSettledResult } from '../../utils/response-processor'
 import { logAxiosError } from '../../utils/log/shared'
 import useFirstScrollDetector from '../../hooks/useFirstScrollDetector'
 
@@ -216,7 +216,7 @@ export async function getServerSideProps({ query, req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = handleAxiosResponse(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     `Error occurs while getting header data in video page (videoId: ${videoId})`,
@@ -224,7 +224,7 @@ export async function getServerSideProps({ query, req, res }) {
   )
 
   // handle fetch video data
-  const videos = handleAxiosResponse(
+  const videos = processSettledResult(
     responses[1],
     (
       /** @type {Awaited<ReturnType<typeof fetchYoutubeVideoByVideoId>>} */ axiosData

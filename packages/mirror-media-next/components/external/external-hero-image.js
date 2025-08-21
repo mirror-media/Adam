@@ -22,6 +22,38 @@ const HeroImage = styled.figure`
   }
 `
 
+const HeroCaption = styled.figcaption`
+  width: 100%;
+  min-height: 22px;
+  margin-top: 24px;
+  font-size: 14px;
+  line-height: 25px;
+  font-weight: 400;
+  color: #9d9d9d;
+  position: relative;
+  text-align: center;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    top: -12px;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 9px;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+
+    &:before {
+      display: none;
+    }
+  }
+`
+
 /**
  * @typedef {import('../../apollo/fragments/photo').Resized} Resized
  */
@@ -29,6 +61,7 @@ const HeroImage = styled.figure`
  * @param {Object} props
  * @param {Resized | null} props.images
  * @param {string} props.title
+ * @param {string} [props.thumbCaption]
  * @param {string} [props.className]
  * @returns
  */
@@ -36,6 +69,7 @@ export default function ExternalHeroImage({
   images = null,
   title = '',
   className = '',
+  thumbCaption = '',
 }) {
   return (
     <Wrapper className={className}>
@@ -49,6 +83,7 @@ export default function ExternalHeroImage({
           priority={true}
         />
       </HeroImage>
+      {!!thumbCaption && <HeroCaption>{thumbCaption}</HeroCaption>}
     </Wrapper>
   )
 }
