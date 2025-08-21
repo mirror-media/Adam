@@ -189,7 +189,7 @@ export async function getServerSideProps({ params, req, res }) {
   const flashNewsData = processSettledResult(
     responses[2],
     (/** @type {FlashNewsAxiosResponse} */ axiosData) => {
-      return axiosData.data.posts ?? []
+      return axiosData?.data?.posts ?? []
     },
     'Error occurs while getting flash news in external page',
     globalLogFields
