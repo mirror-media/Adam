@@ -19,16 +19,12 @@ const MemberLoginButtonWrapper = styled.div`
   }
 `
 
-const LoginButton = styled.button`
+const LoginButton = styled(Link)`
   font-size: 14px;
   line-height: 150%;
   text-decoration: underline;
   text-underline-offset: 2.5px;
   color: #000;
-
-  &:focus {
-    outline: none;
-  }
 `
 
 const LoggedInWrapper = styled.div`
@@ -132,19 +128,15 @@ function BaseMemberLoginButton({ parentRef, variant }) {
   if (!isLoggedIn) {
     if (variant === 'premium') {
       return (
-        <LoginButton>
-          <Link href={getLoginHref(router)}>
-            <PremiumDesktopSpan>註冊/登入</PremiumDesktopSpan>
-            <PremiumMobileSpan>登入</PremiumMobileSpan>
-          </Link>
+        <LoginButton href={getLoginHref(router)}>
+          <PremiumDesktopSpan>註冊/登入</PremiumDesktopSpan>
+          <PremiumMobileSpan>登入</PremiumMobileSpan>
         </LoginButton>
       )
     } else {
       return (
-        <LoginButton>
-          <Link href={getLoginHref(router)} className="GTM-header-login">
-            <span>登入</span>
-          </Link>
+        <LoginButton href={getLoginHref(router)} className="GTM-header-login">
+          <span>登入</span>
         </LoginButton>
       )
     }
@@ -166,9 +158,9 @@ function BaseMemberLoginButton({ parentRef, variant }) {
       {showSelectOptions && (
         <DropdownMenu>
           {dropdownMenuItem.map((item) => (
-            <DropdownMenuItem key={item.title} as={Link} href={item.href}>
-              {item.title}
-            </DropdownMenuItem>
+            <Link key={item.title} href={item.href} passHref legacyBehavior>
+              <DropdownMenuItem as="a">{item.title}</DropdownMenuItem>
+            </Link>
           ))}
           <DropdownMenuItem as="button" onClick={handleLogOut}>
             登出
