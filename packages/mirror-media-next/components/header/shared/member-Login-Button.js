@@ -37,6 +37,15 @@ const LoggedInWrapper = styled.div`
   align-self: center;
 `
 
+const ImageContainer = styled.div`
+  height: 24px;
+  aspect-ratio: 27 / 32;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    height: 32px;
+  }
+`
+
 const DropdownMenu = styled.div`
   position: absolute;
   left: -40px;
@@ -140,14 +149,16 @@ function BaseMemberLoginButton({ parentRef, variant }) {
 
   return (
     <LoggedInWrapper>
-      <Image
-        src="/images-next/membership-member-icon-logged-in.svg"
-        alt="member-icon-logged-in"
-        width={25.67}
-        height={30.81}
-        className={variant === 'normal' ? 'GTM-header-login' : undefined}
-        onClick={() => setShowSelectOptions((val) => !val)}
-      />
+      <ImageContainer>
+        <Image
+          src="/images-next/membership-member-icon-logged-in.svg"
+          alt="member-icon-logged-in"
+          width={27}
+          height={32}
+          className={variant === 'normal' ? 'GTM-header-login' : undefined}
+          onClick={() => setShowSelectOptions((val) => !val)}
+        />
+      </ImageContainer>
 
       {showSelectOptions && (
         <DropdownMenu>
