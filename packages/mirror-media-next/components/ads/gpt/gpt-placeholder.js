@@ -1,92 +1,27 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 /**
  * @typedef {string} Width
  * @typedef {string} Height
  * @typedef {string} Margin
  *
- *
  * @typedef {Object} Rwd
- * @property {{width: Width, height: Height, margin: Margin}} rwd.mobile
- * @property {{width: Width, height: Height, margin: Margin}} rwd.tablet
- * @property {{width: Width, height: Height, margin: Margin}} rwd.desktop
+ * @property {{width: Width, height: Height, margin: Margin}} mobile
+ * @property {{width: Width, height: Height, margin: Margin}} tablet
+ * @property {{width: Width, height: Height, margin: Margin}} desktop
  */
 
-const Container = styled.div`
-  position: relative;
-  min-width: ${
-    /**
-     *
-     * @param {Object} props
-     * @param {Rwd} props.rwd
-     * @param {boolean} [props.shouldTranslate]
-     */
-    ({ rwd }) => rwd.mobile.width
-  };
-  min-height: ${({ rwd, shouldTranslate }) =>
-    shouldTranslate ? rwd.mobile.height : '0px'};
-  margin: ${({ rwd }) => rwd.mobile.margin};
+// Note: 'mobile+tablet' and 'desktop' were kept for compatibility with
+// commonly used setups and the original pre-refactor configuration.
+// 'mobile' and 'tablet' currently unused, reserved for potential future use
+/** @typedef {'all' | 'mobile' | 'tablet' | 'mobile+tablet' | 'desktop'} DisplayAt */
 
-  ${({ theme }) => theme.breakpoint.md} {
-    min-width: ${({ rwd }) => rwd.tablet.width};
-    min-height: ${({ rwd, shouldTranslate }) =>
-      shouldTranslate ? rwd.tablet.height : '0px'};
-    margin: ${({ rwd }) => rwd.tablet.margin};
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    min-width: ${({ rwd }) => rwd.desktop.width};
-    min-height: ${({ rwd, shouldTranslate }) => {
-      return shouldTranslate ? rwd.desktop.height : '0px'
-    }};
-    margin: ${({ rwd }) => rwd.desktop.margin};
-  }
-`
-const ContainerMobileAndTablet = styled(Container)`
-  min-width: ${
-    /**
-     *
-     * @param {Object} props
-     * @param {Rwd} props.rwd
-     * @param {boolean} [props.shouldTranslate]
-     */
-    ({ rwd }) => rwd.mobile.width
-  };
-  min-height: ${({ rwd, shouldTranslate }) =>
-    shouldTranslate ? rwd.mobile.height : '0px'};
-  ${({ theme }) => theme.breakpoint.md} {
-    min-width: ${({ rwd }) => rwd.tablet.width};
-    min-height: ${({ rwd, shouldTranslate }) =>
-      shouldTranslate ? rwd.tablet.height : '0px'};
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
-`
-const ContainerDesktop = styled(Container)`
-  display: none;
-  ${({ theme }) => theme.breakpoint.xl} {
-    min-width: ${({ rwd }) => rwd.desktop.width};
-    min-height: ${({ rwd, shouldTranslate }) => {
-      return shouldTranslate ? rwd.desktop.height : '0px'
-    }};
-    margin: ${({ rwd }) => rwd.desktop.margin};
-  }
-`
-
-const ContainerAside = styled.div`
-  position: relative;
-  ${({ theme }) => theme.breakpoint.xl} {
-    min-height: ${
-      /**
-       *
-       * @param {Object} props
-       * @param {boolean} [props.shouldTranslate]
-       */
-      ({ shouldTranslate }) => (shouldTranslate ? '600px' : '0px')
-    };
-  }
-`
+/**
+ * @typedef {Object} PlaceholderStyleProps
+ * @property {Rwd} $rwd
+ * @property {DisplayAt} $displayAt
+ * @property {boolean} $visible
+ */
 
 const DEFAULT_SIZES = {
   mobile: {
@@ -107,100 +42,140 @@ const DEFAULT_SIZES = {
 }
 
 /**
- *
+ * Build display CSS by displayAt.
+ * @param {PlaceholderStyleProps & { theme: any }} styleProps
+ */
+const displayByBreakpoint = (styleProps) => {
+  const { $displayAt, $visible, theme } = styleProps
+  if (!$visible) {
+    return css`
+      display: none;
+    `
+  }
+
+  switch ($displayAt) {
+    case 'mobile': // currently unused, reserved for future use
+      return css`
+        display: block;
+        ${theme.breakpoint.md} {
+          display: none;
+        }
+        ${theme.breakpoint.xl} {
+          display: none;
+        }
+      `
+    case 'tablet': // currently unused, reserved for future use
+      return css`
+        display: none;
+        ${theme.breakpoint.md} {
+          display: block;
+        }
+        ${theme.breakpoint.xl} {
+          display: none;
+        }
+      `
+    case 'mobile+tablet': // common usage & legacy settings
+      return css`
+        display: block;
+        ${theme.breakpoint.xl} {
+          display: none;
+        }
+      `
+    case 'desktop': // common usage & legacy settings
+      return css`
+        display: none;
+        ${theme.breakpoint.xl} {
+          display: block;
+        }
+      `
+    default: // covers 'all' and unexpected values
+      return css`
+        display: block;
+      `
+  }
+}
+
+/** @type {import('styled-components').StyledComponent<'div', any, PlaceholderStyleProps>} */
+const Container = styled.div(
+  /**
+   * @param {PlaceholderStyleProps & { theme: any }} styleProps
+   */
+  (styleProps) => css`
+    position: relative;
+    min-width: ${styleProps.$rwd.mobile.width};
+    min-height: ${styleProps.$rwd.mobile.height};
+    margin: ${styleProps.$rwd.mobile.margin};
+
+    ${styleProps.theme.breakpoint.md} {
+      min-width: ${styleProps.$rwd.tablet.width};
+      min-height: ${styleProps.$rwd.tablet.height};
+      margin: ${styleProps.$rwd.tablet.margin};
+    }
+
+    ${styleProps.theme.breakpoint.xl} {
+      min-width: ${styleProps.$rwd.desktop.width};
+      min-height: ${styleProps.$rwd.desktop.height};
+      margin: ${styleProps.$rwd.desktop.margin};
+    }
+
+    ${displayByBreakpoint(styleProps)}
+  `
+)
+
+/** @type {import('styled-components').StyledComponent<'div', any, { $visible: boolean }>} */
+const ContainerAside = styled.div(
+  /**
+   * @param {{ $visible: boolean, theme: any }} styleProps
+   */
+  (styleProps) => css`
+    display: none;
+    position: relative;
+    ${styleProps.theme.breakpoint.xl} {
+      min-height: 600px;
+      display: ${styleProps.$visible ? 'block' : 'none'};
+    }
+  `
+)
+
+/**
  * @param {Object} props
  * @param {Rwd} [props.rwd]
  * @param {import('react').JSX.Element} props.children
- * @param {boolean} [props.shouldShowAd]
- * @param {boolean} [props.isLogInProcessFinished]
+ * @param {DisplayAt} [props.displayAt='all']
+ * @param {boolean} [props.shouldShowAd=true]
+ * @param {boolean} [props.isLogInProcessFinished=false]
  * @returns {import('react').JSX.Element}
  */
-export default function GPT_Placeholder({
+function GPT_Placeholder({
   rwd = DEFAULT_SIZES,
   children,
+  displayAt = 'all',
   shouldShowAd = true,
   isLogInProcessFinished = false,
 }) {
+  const isSlotVisible = shouldShowAd || !isLogInProcessFinished
   return (
-    <Container
-      rwd={rwd}
-      shouldTranslate={shouldShowAd || !isLogInProcessFinished}
-    >
+    <Container $rwd={rwd} $displayAt={displayAt} $visible={isSlotVisible}>
       {children}
     </Container>
   )
 }
-/**
- *
- * @param {Object} props
- * @param {Rwd} [props.rwd]
- * @param {boolean} [props.shouldShowAd]
- * @param {boolean} [props.isLogInProcessFinished]
- * @param {import('react').JSX.Element} props.children
- * @returns
- */
-const GPT_Placeholder_MobileAndTablet = ({
-  rwd = DEFAULT_SIZES,
-  children,
-  shouldShowAd,
-  isLogInProcessFinished,
-}) => {
-  return (
-    <ContainerMobileAndTablet
-      rwd={rwd}
-      shouldTranslate={shouldShowAd || !isLogInProcessFinished}
-    >
-      {children}
-    </ContainerMobileAndTablet>
-  )
-}
-/**
- *
- * @param {Object} props
- * @param {Rwd} [props.rwd]
- * @param {boolean} [props.shouldShowAd]
- * @param {boolean} [props.isLogInProcessFinished]
- * @param {import('react').JSX.Element} props.children
- * @returns
- */
-const GPT_Placeholder_Desktop = ({
-  rwd = DEFAULT_SIZES,
-  children,
-  shouldShowAd,
-  isLogInProcessFinished,
-}) => {
-  return (
-    <ContainerDesktop
-      rwd={rwd}
-      shouldTranslate={shouldShowAd || !isLogInProcessFinished}
-    >
-      {children}
-    </ContainerDesktop>
-  )
-}
 
 /**
- *
+ * Aside Placeholder
  * @param {Object} props
  * @param {import('react').JSX.Element} props.children
- * @param {boolean} [props.shouldShowAd]
- * @param {boolean} [props.isLogInProcessFinished]
- * @returns
+ * @param {boolean} [props.shouldShowAd=true]
+ * @param {boolean} [props.isLogInProcessFinished=false]
+ * @returns {import('react').JSX.Element}
  */
-const GPT_Placeholder_Aside = ({
+function GPT_Placeholder_Aside({
   children,
   shouldShowAd = true,
   isLogInProcessFinished = false,
-}) => {
-  return (
-    <ContainerAside shouldTranslate={shouldShowAd || !isLogInProcessFinished}>
-      {children}
-    </ContainerAside>
-  )
+}) {
+  const isSlotVisible = shouldShowAd || !isLogInProcessFinished
+  return <ContainerAside $visible={isSlotVisible}>{children}</ContainerAside>
 }
 
-export {
-  GPT_Placeholder_MobileAndTablet,
-  GPT_Placeholder_Desktop,
-  GPT_Placeholder_Aside,
-}
+export { GPT_Placeholder, GPT_Placeholder_Aside }
