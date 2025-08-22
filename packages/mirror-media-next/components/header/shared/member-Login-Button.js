@@ -48,7 +48,7 @@ const ImageContainer = styled.div`
 
 const DropdownMenu = styled.div`
   position: absolute;
-  left: -40px;
+  left: -50px;
   top: 40px;
   background: #ffffff;
   border: 1px solid #d8d8d8;
@@ -63,13 +63,16 @@ const DropdownMenu = styled.div`
   font-size: 13px;
   color: #888888;
 `
-const DropdownMenuItem = styled.a`
+
+const DropdownMenuItem = styled.div`
   display: block;
   width: 100%;
   padding: 24px 0;
   text-align: center;
   border-bottom: 1px solid #d8d8d8;
   cursor: pointer;
+  text-decoration: none;
+  background: none;
 `
 
 const PremiumDesktopSpan = styled.span`
@@ -163,11 +166,13 @@ function BaseMemberLoginButton({ parentRef, variant }) {
       {showSelectOptions && (
         <DropdownMenu>
           {dropdownMenuItem.map((item) => (
-            <DropdownMenuItem key={item.title} href={item.href}>
+            <DropdownMenuItem key={item.title} as={Link} href={item.href}>
               {item.title}
             </DropdownMenuItem>
           ))}
-          <DropdownMenuItem onClick={handleLogOut}>登出</DropdownMenuItem>
+          <DropdownMenuItem as="button" onClick={handleLogOut}>
+            登出
+          </DropdownMenuItem>
         </DropdownMenu>
       )}
     </LoggedInWrapper>
