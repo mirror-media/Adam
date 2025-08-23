@@ -36,7 +36,7 @@ const Wrapper = styled.section`
     height: 250px;
     margin: 16px 0;
     ${({ theme }) => theme.breakpoint.xl} {
-      height: 214px;
+      height: 190px;
     }
   }
 `
