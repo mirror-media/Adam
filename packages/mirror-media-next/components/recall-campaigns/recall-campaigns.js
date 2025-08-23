@@ -33,11 +33,8 @@ const Wrapper = styled.section`
   iframe {
     background-color: #fff;
     width: 100%;
-    height: 238px;
+    height: 250px;
     margin: 16px 0;
-    ${({ theme }) => theme.breakpoint.md} {
-      height: 226px;
-    }
     ${({ theme }) => theme.breakpoint.xl} {
       height: 214px;
     }
