@@ -54,7 +54,7 @@ const ViewMoreLink = styled.a`
 `
 
 const prefix = ['prod', 'staging'].includes(ENV) ? 'www' : 'dev'
-const iframeSrc = `https://${prefix}.mirrormedia.mg/projects/election2025-homepage/index.html?source=mirror`
+const iframeSrc = `https://${prefix}.mirrormedia.mg/projects/election2025-homepage/index.html`
 const moreLink = `https://${prefix}.mirrormedia.mg/projects/taiwan-elections/index.html`
 
 export default function RecallCampaigns({ className = '' }) {
