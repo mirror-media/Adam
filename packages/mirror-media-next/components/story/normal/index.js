@@ -22,7 +22,6 @@ import Divider from '../shared/divider'
 import ShareHeader from '../../header/share-header'
 import Footer from '../../shared/footer'
 import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
-import { GPT_Placeholder_Aside } from '../../ads/gpt/gpt-placeholder'
 
 import {
   transformTimeDataIntoDotFormat,
@@ -38,7 +37,10 @@ import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
 import { getActiveOrderSection, getActiveOrderCategory } from '../../../utils'
-import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
+import {
+  GPT_Placeholder,
+  GPT_Placeholder_Aside,
+} from '../../ads/gpt/gpt-placeholder'
 import Image from 'next/image'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'

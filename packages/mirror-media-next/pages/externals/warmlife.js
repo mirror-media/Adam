@@ -16,7 +16,7 @@ import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/exte
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'

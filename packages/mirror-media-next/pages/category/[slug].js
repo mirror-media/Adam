@@ -30,7 +30,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 })
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { logGqlError } from '../../utils/log/shared'
 
 /**

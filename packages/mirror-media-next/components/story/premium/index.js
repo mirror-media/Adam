@@ -22,7 +22,7 @@ import { Z_INDEX } from '../../../constants/index'
 import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,

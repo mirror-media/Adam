@@ -14,7 +14,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

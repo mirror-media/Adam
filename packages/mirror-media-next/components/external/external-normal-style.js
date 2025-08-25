@@ -25,7 +25,6 @@ import {
   getActiveOrderSection,
 } from '../../utils'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../ads/gpt/gpt-placeholder'
 import {
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
@@ -38,7 +37,10 @@ import {
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
-import { GPT_Placeholder_Aside } from '../ads/gpt/gpt-placeholder'
+import {
+  GPT_Placeholder,
+  GPT_Placeholder_Aside,
+} from '../ads/gpt/gpt-placeholder'
 import Image from 'next/image'
 import ExternalArticleBrief from './external-article-brief'
 import ResponsivePortal from '../story/shared/client-side-portal'

@@ -18,7 +18,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 

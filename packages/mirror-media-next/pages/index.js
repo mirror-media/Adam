@@ -26,7 +26,7 @@ import ForumHeadlinesPreview from '../components/index/forum-headlines-preview'
 import Layout from '../components/shared/layout'
 import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
-import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../components/ads/gpt/gpt-placeholder'
 
 import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
 import { fetchPromoteVideosList } from '../utils/api/promote-videos'
