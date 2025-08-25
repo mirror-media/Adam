@@ -128,7 +128,7 @@ const Article = styled.figure`
  *
  * @param {Object} props
  * @param {Relateds} props.relateds
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function RelatedArticleList({ relateds }) {
   const relatedsArticleJsx = relateds.length ? (

@@ -141,7 +141,7 @@ const LinkToMemberStoryPage = styled.a`
  * @param {Object} props
  * @param {PostData} props.postData
  * @param {string} props.gptSlotSection
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AmpMain({ postData, gptSlotSection }) {
   const {

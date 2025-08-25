@@ -40,7 +40,7 @@ const Tag = styled.a`
  * @param {Tags} props.tags
  * @param {string} [props.tagColor]
  * @param {string} [props.className] - Attribute for updating style by styled-component
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Tags({ tags, tagColor = 'darkBlue', className = '' }) {
   const shouldShowTags = tags && tags.length

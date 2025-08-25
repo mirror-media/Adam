@@ -130,7 +130,7 @@ const TitleAndInfo = styled.section`
  * @param {ArticleInfoProps["publishedDate"]} props.publishedDate
  * @param {ArticleInfoProps["updatedAt"]} props.updatedAt
  * @param {ArticleInfoProps["tags"]} props.tags
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function TitleAndInfoAndHero({
   sectionLabelFirst = '',

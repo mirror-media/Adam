@@ -60,7 +60,7 @@ const Wrapper = styled.div`
  * Consider that it's hard for an image to fit the width of all screens while maintaining its ratio. Therefore, display the warning message in separate <span> tags and arrange them using flexbox with 'justify-content: space-between'.
  * @param {Object} props
  * @param {Pick<Category, 'id' | 'name'  | 'slug'>[]} props.categories - certain category information
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function WineWarning({ categories = [] }) {

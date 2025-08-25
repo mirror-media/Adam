@@ -161,7 +161,7 @@ const Video = styled.video`
  * @param {string} props.heroCaption - The caption for the hero image or video.
  * @param {string} [props.title] - The title of the article. Optional, only render if `props.style` is wide
  * @param {string} [props.subtitle] - The subtitle of the article
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function HeroImageAndVideo({
   heroImage = null,

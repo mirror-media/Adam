@@ -44,7 +44,7 @@ const AsideWrapper = styled.aside`
  * @param {Relateds} props.relateds - The related post.
  * @param {string} props.sectionSlug - The slug of section, this props will decide which section of latest news belongs to.
  * @param {string} props.storySlug - The slug of story, the function of fetching latest news will skip the post with this slug.
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Aside({
   relateds = [],

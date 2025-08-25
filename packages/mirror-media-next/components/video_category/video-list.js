@@ -66,7 +66,7 @@ export default function VideoList({ videos }) {
    * Renders a video list component with a maximum of 16 videos displayed at the top,
    * followed by an Pc ad component, and the remaining videos displayed below.
    *
-   * @return {JSX.Element} The JSX code for the PC video list.
+   * @return {import('react').JSX.Element} The JSX code for the PC video list.
    */
   const renderPcVideoList = () => (
     <>
@@ -96,7 +96,7 @@ export default function VideoList({ videos }) {
    * Renders a video list component with a maximum of 6 videos displayed at the top,
    * followed by an Mb ad component, and the remaining videos displayed below.
    *
-   * @return {JSX.Element} The rendered video list component.
+   * @return {import('react').JSX.Element} The rendered video list component.
    */
   const renderMbVideoList = () => (
     <>

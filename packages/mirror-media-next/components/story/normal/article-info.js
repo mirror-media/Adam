@@ -123,7 +123,7 @@ const DonateSubscribeWrapper = styled.div`
  * @param {string} props.publishedDate
  * @param {Credit[]} props.credits
  * @param {Tags} props.tags
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ArticleInfo({
   updatedDate,
