@@ -55,7 +55,7 @@ let COURSE_URL = ''
 let URL_STATIC_PROMOTE_VIDEOS = ''
 let URL_STATIC_COLUMN_SECTION_POSTS = ''
 let URL_STATIC_DAILY_COLUMN_HEADLINES = ''
-let Is_Anniversary_Promo_Active = false
+let IS_ANNIVERSARY_PROMO_ACTIVE = false
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -112,7 +112,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
-    Is_Anniversary_Promo_Active = false
+    IS_ANNIVERSARY_PROMO_ACTIVE = false
 
     GPT_MODE = 'prod'
 
@@ -172,7 +172,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
-    Is_Anniversary_Promo_Active = false
+    IS_ANNIVERSARY_PROMO_ACTIVE = false
 
     GPT_MODE = 'prod'
 
@@ -228,7 +228,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
-    Is_Anniversary_Promo_Active = true
+    IS_ANNIVERSARY_PROMO_ACTIVE = true
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
@@ -273,7 +273,7 @@ switch (ENV) {
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'on'
     TEST_GPT_AD_FEATURE_TOGGLE = 'on'
-    Is_Anniversary_Promo_Active = true
+    IS_ANNIVERSARY_PROMO_ACTIVE = true
 
     URL_STATIC_PREMIUM_SECTIONS = `http://localhost:8080/json/header_member.json`
     URL_STATIC_NORMAL_SECTIONS = `http://localhost:8080/json/header_sections.json`
@@ -362,5 +362,5 @@ export {
   URL_STATIC_COLUMN_SECTION_POSTS,
   MISO_API_BASE_URL,
   MISO_ENDPOINTS,
-  Is_Anniversary_Promo_Active,
+  IS_ANNIVERSARY_PROMO_ACTIVE,
 }
