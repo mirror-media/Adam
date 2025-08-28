@@ -113,7 +113,7 @@ const CaptionMB = styled.div`
  * @param {boolean} props.isTransparent
  * @param {EntityMap} props.photoData
  * @param {()=>void} props.handleCaptionClick
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 const Slide = ({ photoData, isTransparent, handleCaptionClick }) => {
   return (

@@ -65,7 +65,7 @@ const Title = styled.h3`
  *
  * @param {Object} props
  * @param {ArticleDataContainSectionsWithOrdered} props.item
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function PopularNewsItem({ item }) {
   const firstSection = item.sectionsWithOrdered?.[0] || item.sections?.[0]

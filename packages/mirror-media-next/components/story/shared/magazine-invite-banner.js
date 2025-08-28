@@ -39,7 +39,7 @@ const Wrapper = styled.div`
  *
  * @param {Object} props
  * @param {string} [props.className] - Attribute for updating style by styled-component
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function MagazineInviteBanner({ className }) {
   return (

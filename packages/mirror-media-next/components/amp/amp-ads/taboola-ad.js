@@ -13,7 +13,7 @@ const Title = styled.h2`
  *
  * @param {Object} props - The component props.
  * @param {string} props.title - The title to display.
- * @return {JSX.Element} The rendered Taboola component.
+ * @return {import('react').JSX.Element} The rendered Taboola component.
  */
 
 export default function Taboola({ title }) {

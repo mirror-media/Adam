@@ -125,7 +125,7 @@ const BriefWrapper = styled.div`
  * @param {string} props.heroCaption
  * @param {Array<{ key: string, text: string }>} props.brief
  * @param {HeroImage | null} props.heroImage
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function HeroSection({

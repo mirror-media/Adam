@@ -17,7 +17,7 @@ const StyledTags = styled(Tags)`
  *
  * @param {Object} props
  * @param {Tags} props.tags
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function MoreInfoAndTag({ tags }) {
   return (

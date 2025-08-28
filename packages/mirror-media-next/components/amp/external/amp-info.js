@@ -41,7 +41,7 @@ const DateRow = styled.p`
  * @property {string} title - post title
  * @property {string} publishedDate - post published date
  * @property {string} updatedAt - post updated date
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AmpInfo({
   title = '',
