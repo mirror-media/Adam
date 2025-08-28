@@ -1,10 +1,12 @@
 import styled from 'styled-components'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 import { Frequency } from '../../../constants/membership'
 import { useMembership } from '../../../context/membership'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 import { getLoginHref } from '../../../utils'
-import { useRouter } from 'next/router'
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -172,8 +174,12 @@ export default function ArticleMask({ postId = '' }) {
    * @see https://developers.google.com/search/docs/appearance/structured-data/paywalled-content
    */
   return (
-    <Wrapper className="paywall">
-      <InviteMemberCard postId={postId}></InviteMemberCard>
-    </Wrapper>
+    <>
+      {!IS_ANNIVERSARY_PROMO_ACTIVE && (
+        <Wrapper className="paywall">
+          <InviteMemberCard postId={postId}></InviteMemberCard>
+        </Wrapper>
+      )}
+    </>
   )
 }
