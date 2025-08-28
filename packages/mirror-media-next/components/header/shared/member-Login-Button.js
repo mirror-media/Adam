@@ -12,19 +12,23 @@ import { logout, useMembership } from '../../../context/membership'
 
 const MemberLoginButtonWrapper = styled.div`
   cursor: pointer;
-  margin-left: 24px;
+  display: flex;
+  justify-content: end;
+  width: 40px;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    margin-left: 16px;
+    width: 36px;
   }
 `
 
 const LoginButton = styled(Link)`
   font-size: 14px;
   line-height: 150%;
-  text-decoration: underline;
-  text-underline-offset: 2.5px;
   color: #000;
+  & span {
+    text-decoration: underline;
+    text-underline-offset: 2.5px;
+  }
 `
 
 const LoggedInWrapper = styled.div`
@@ -34,7 +38,7 @@ const LoggedInWrapper = styled.div`
 `
 
 const ImageContainer = styled.div`
-  height: 24px;
+  height: 20px;
   aspect-ratio: 27 / 32;
 
   ${({ theme }) => theme.breakpoint.xl} {
@@ -79,11 +83,7 @@ const PremiumDesktopSpan = styled.span`
 `
 
 const PremiumMobileSpan = styled.span`
-  font-size: 14px;
   display: inline-block;
-  transform: scale(calc(10 / 12));
-  text-decoration-line: underline;
-  text-underline-offset: 2.5px;
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }
