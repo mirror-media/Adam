@@ -155,6 +155,9 @@ function GPT_Placeholder({
 }) {
   const isSlotVisible = shouldShowAd || !isLogInProcessFinished
   return (
+    // Using $ as a prefix makes this prop transient (available since styled-components v5.1)
+    // $rwd will be used in styled-components but not passed to DOM
+    // https://styled-components.com/docs/api#transient-props
     <Container $rwd={rwd} $displayAt={displayAt} $visible={isSlotVisible}>
       {children}
     </Container>
