@@ -178,7 +178,7 @@ const StyledFigcaption = styled.figcaption`
  * @param {Object} props
  * @param {Relateds} props.relateds
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function RelatedArticleList({
   relateds,

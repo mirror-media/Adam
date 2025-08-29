@@ -121,7 +121,7 @@ const Li = styled.li`
  * @param {string} props.selectedOption
  * @param {boolean} [props.disabled=false]
  * @param {string} [props.placeholder]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function DropdownMenu({

@@ -112,8 +112,8 @@ const getPremiumHeaderWithSubtitleNavigator = (headerData) => {
  * @param {Object} props
  * @param {HeaderType} props.pageLayoutType
  * @param {HeaderData} [props.headerData]
- * @param {JSX.Element | null} [props.children]
- * @returns {JSX.Element}
+ * @param {import('react').JSX.Element | null} [props.children]
+ * @returns {import('react').JSX.Element}
  */
 export default function ShareHeader({
   pageLayoutType = 'default',

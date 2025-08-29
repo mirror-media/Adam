@@ -24,10 +24,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import {
-  GPT_Placeholder_Desktop,
-  GPT_Placeholder_MobileAndTablet,
-} from '../../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
@@ -128,12 +125,13 @@ export default function SectionVideohub({
       footer={{ type: 'default' }}
     >
       <Wrapper>
-        <GPT_Placeholder_Desktop
+        <GPT_Placeholder
+          displayAt="desktop"
           shouldShowAd={shouldShowAd}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
-        </GPT_Placeholder_Desktop>
+        </GPT_Placeholder>
         {hasHVCVideo && (
           <LeadingVideo
             video={highestViewCountVideo}
@@ -144,12 +142,13 @@ export default function SectionVideohub({
             }}
           />
         )}
-        <GPT_Placeholder_MobileAndTablet
+        <GPT_Placeholder
+          displayAt="mobile+tablet"
           shouldShowAd={shouldShowAd}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
-        </GPT_Placeholder_MobileAndTablet>
+        </GPT_Placeholder>
         {hasLatestVideo && (
           <VideoList
             videos={latestVideos}

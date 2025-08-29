@@ -12,7 +12,7 @@ const Page = styled.main`
 
 /**
 
- * @return {JSX.Element}
+ * @return {import('react').JSX.Element}
  */
 function SubscribeInfo() {
   return <Page>subscribe info page</Page>

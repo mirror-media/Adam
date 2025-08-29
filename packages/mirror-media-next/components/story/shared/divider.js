@@ -14,7 +14,7 @@ const DivideLine = styled.hr`
 `
 /**
  * For divide two article-list
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Divider() {
   return <DivideLine />

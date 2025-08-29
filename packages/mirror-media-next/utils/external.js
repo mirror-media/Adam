@@ -74,7 +74,7 @@ function getExternalPartnerColor(partner) {
  * The author field in externals can be either a plain string or a string containing HTML formatting. Based on the content of the string, return the corresponding JSX.Element.
  *
  * @param {string} credits
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 function getCreditsHtml(credits = '') {
   if (/<[a-z][\s\S]*>/i.test(credits)) {

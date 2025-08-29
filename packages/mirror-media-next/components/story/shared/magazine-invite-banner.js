@@ -46,7 +46,7 @@ const inviteText = IS_ANNIVERSARY_PROMO_ACTIVE
 /**
  *
  * @param {Object} props
- * @param {string} [props.className] - Attribute for updating style 'by styled-component
+ * @param {string} [props.className] - Attribute for updating style by styled-component
  * @returns {import('react').JSX.Element}
  */
 export default function MagazineInviteBanner({ className }) {

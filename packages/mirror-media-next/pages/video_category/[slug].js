@@ -18,10 +18,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad.js'
-import {
-  GPT_Placeholder_Desktop,
-  GPT_Placeholder_MobileAndTablet,
-} from '../../components/ads/gpt/gpt-placeholder.js'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder.js'
 import { getLogTraceObject } from '../../utils/index.js'
 import { processSettledResult } from '../../utils/response-processor.js'
 
@@ -92,12 +89,13 @@ export default function VideoCategory({
       footer={{ type: 'default' }}
     >
       <Wrapper>
-        <GPT_Placeholder_Desktop
+        <GPT_Placeholder
+          displayAt="desktop"
           shouldShowAd={shouldShowAd}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />}
-        </GPT_Placeholder_Desktop>
+        </GPT_Placeholder>
         <LeadingVideo
           video={firstVideo}
           title={categoryName}
@@ -107,12 +105,13 @@ export default function VideoCategory({
             youtube: 'GTM-leading-video-yt-play',
           }}
         />
-        <GPT_Placeholder_MobileAndTablet
+        <GPT_Placeholder
+          displayAt="mobile+tablet"
           shouldShowAd={shouldShowAd}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />}
-        </GPT_Placeholder_MobileAndTablet>
+        </GPT_Placeholder>
         {hasMoreThanOneVideo && (
           <CategoryVideos
             videoItems={remainingVideos}

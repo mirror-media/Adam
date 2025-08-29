@@ -14,8 +14,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -95,10 +94,6 @@ const RENDER_PAGE_SIZE = 12
  */
 export default function Topics({ topics, topicsCount, headerData }) {
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
 
   return (
     <Layout
@@ -109,16 +104,9 @@ export default function Topics({ topics, topicsCount, headerData }) {
       <TopicsContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
-          {shouldShowAd && (
-            <StyledGPTAd
-              pageKey="other"
-              adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
-            />
-          )}
+          {shouldShowAd && <StyledGPTAd pageKey="other" adKey="HD" />}
         </GPT_Placeholder>
         <TopicsTitle>精選專區</TopicsTitle>
         <SectionTopics

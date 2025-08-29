@@ -68,7 +68,7 @@ const Title = styled.h1`
 
 /**
  * @param {PageProps} props
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Profile({ headerData, signInProvider }) {
   useMembershipRequired()

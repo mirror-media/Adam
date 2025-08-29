@@ -243,7 +243,7 @@ const TitleLoading = styled(Title)`
  * - If rejected, it will return an empty array
  * @param {number} [props.renderAmount]
  * - a number of article we want to render, it will determine the height of `ArticleWrapper` to prevent Cumulative Layout Shift (CLS) problem after article is loaded.
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AsideArticleList({
   listType = 'latestNews',

@@ -134,7 +134,7 @@ const ReadingBtn = styled.button`
  * @typedef {object} Props
  * @property {Magazine[]} features
  * @param {Props} props
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function MagazineFeatures({ features }) {

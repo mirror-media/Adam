@@ -20,7 +20,7 @@ const HeroWrapper = styled.div`
  * @param {Object} props
  * @param {string} props.thumb - The image of the external article.
  * @param {string} [props.title] - The title of the external article.
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AmpHero({ thumb, title = '' }) {
   const imageSrc = thumb || '/images-next/default-og-img.png'

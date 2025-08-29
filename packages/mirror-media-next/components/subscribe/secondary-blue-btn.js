@@ -53,7 +53,7 @@ const StyledBtn = styled.button`
  * @param {string} props.title
  * @param {string} props.href
  * @param {string} [props.className]
- * @return {JSX.Element}
+ * @return {import('react').JSX.Element}
  */
 export default function SecondaryBlueBtn({ title, href, className = '' }) {
   return (

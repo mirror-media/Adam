@@ -110,7 +110,7 @@ const CREDIT_TITLE_NAME_MAP = {
  * @param {Object} props
  * @param {Credit[]} props.credits
  * @param {string} [props.className]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Credits({ credits = [], className = '' }) {
   const shouldShowCredits = credits.some((credit) => {

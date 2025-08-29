@@ -41,7 +41,7 @@ const DonateLinkInBanner = styled(DonateLink)`
  *
  * @param {Object} props
  * @param {string} [props.className]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function DonateBanner({ className }) {
   return (

@@ -267,7 +267,7 @@ const TitleLoading = styled(Title)`
  * @param {number} [props.renderAmount]
  * - a number of article we want to render, it will determine the height of `ArticleWrapper` to prevent Cumulative Layout Shift (CLS) problem after article is loaded.
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AsideArticleList({
   listType = 'latestNews',

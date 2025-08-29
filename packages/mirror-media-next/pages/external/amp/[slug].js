@@ -33,7 +33,7 @@ const AmpBody = styled.body`
  * @param {Object} props
  * @param {External} props.external
  * @param {Object} props.headerData
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function External({ external }) {
   const { slug, title, brief, thumb, partner } = external

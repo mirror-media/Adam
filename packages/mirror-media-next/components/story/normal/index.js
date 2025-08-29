@@ -1,7 +1,7 @@
 //TODO: refactor jsx structure, make it more readable.
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import styled, { css } from 'styled-components'
 import Link from 'next/link'
@@ -22,7 +22,6 @@ import Divider from '../shared/divider'
 import ShareHeader from '../../header/share-header'
 import Footer from '../../shared/footer'
 import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
-import { GPT_Placeholder_Aside } from '../../ads/gpt/gpt-placeholder'
 
 import {
   transformTimeDataIntoDotFormat,
@@ -39,7 +38,10 @@ import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
 import { getSectionGPTPageKey } from '../../../utils/ad'
 import { getActiveOrderSection, getActiveOrderCategory } from '../../../utils'
-import GPT_Placeholder from '../../ads/gpt/gpt-placeholder'
+import {
+  GPT_Placeholder,
+  GPT_Placeholder_Aside,
+} from '../../ads/gpt/gpt-placeholder'
 import Image from 'next/image'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'
@@ -509,7 +511,7 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
  * @param {FlashNewsData} param.flashNewsData
  * @param {string} [param.classNameForGTM]
  * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function StoryNormalStyle({
   postData,
@@ -521,7 +523,6 @@ export default function StoryNormalStyle({
 }) {
   const { width } = useWindowDimensions()
   const isMobileWidth = width < mediaSize.md
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
 
   const {
     title = '',
@@ -656,10 +657,6 @@ export default function StoryNormalStyle({
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
 
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
-
   return (
     <>
       <ShareHeader
@@ -673,15 +670,10 @@ export default function StoryNormalStyle({
 
       <GPT_Placeholder
         shouldShowAd={shouldShowAd}
-        isHDAdEmpty={isHDAdEmpty}
         isLogInProcessFinished={isLogInProcessFinished}
       >
         {shouldShowAd && (
-          <StyledGPTAd_HD
-            pageKey={pageKeyForGptAd}
-            adKey="HD"
-            onSlotRenderEnded={handleObSlotRenderEnded}
-          />
+          <StyledGPTAd_HD pageKey={pageKeyForGptAd} adKey="HD" />
         )}
       </GPT_Placeholder>
 

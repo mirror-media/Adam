@@ -11,7 +11,7 @@ import Slot from '../components/slot/slot-and-banner'
  *
  * @param {Object} props
  * @param {any} props.headerData
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function SlotPage({ headerData = {} }) {
   const { sectionsData = [], topicsData = [] } = headerData

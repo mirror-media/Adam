@@ -103,7 +103,7 @@ const SlotImage = styled.div`
 
 /**
  *
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Slot() {
   const num_icons = 12

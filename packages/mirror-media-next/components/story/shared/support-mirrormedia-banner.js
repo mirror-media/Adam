@@ -91,7 +91,7 @@ const InnerBox = styled.div`
  *
  * @param {Object} props
  * @param {string} [props.className]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function SupportMirrorMediaBanner({ className }) {
   return (

@@ -98,7 +98,7 @@ const AmpContentContainer = styled.section`
  *
  * @param {Object} props
  * @param {External} props.external
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AmpMain({ external }) {
   const {

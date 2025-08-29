@@ -16,8 +16,7 @@ import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/exte
 
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../../components/ads/gpt/gpt-placeholder'
-import { useCallback, useState } from 'react'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
@@ -106,10 +105,6 @@ export default function WarmLife({
   const WARMLIFE_GPT_SECTION_IDS = getPageKeyByPartnerShowOnIndex(
     warmLifeData?.[0]?.partner?.showOnIndex
   )
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
 
   return (
     <Layout
@@ -120,15 +115,10 @@ export default function WarmLife({
       <WarmLifeContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
           {shouldShowAd && (
-            <StyledGPTAd
-              pageKey={WARMLIFE_GPT_SECTION_IDS}
-              adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
-            />
+            <StyledGPTAd pageKey={WARMLIFE_GPT_SECTION_IDS} adKey="HD" />
           )}
         </GPT_Placeholder>
         <WarmLifeTitle>{WARMLIFE_DEFAULT_TITLE}</WarmLifeTitle>

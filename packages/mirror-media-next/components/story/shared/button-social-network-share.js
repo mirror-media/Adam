@@ -19,7 +19,7 @@ const LINE_SHARED_URL = 'https://social-plugins.line.me/lineit/share?url='
  * @param {number} [props.width] - width of image. optional, default is 35
  * @param {number} [props.height] - height of image. optional, default is 35
  * @param {HandleGetShareUrl} [props.handleGetShareUrl] - Function to get url need to be shared. Optional, default is custom hook `useSharedUrl`
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ButtonSocialNetworkShare({
   type,
