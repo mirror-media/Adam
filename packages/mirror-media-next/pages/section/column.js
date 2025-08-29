@@ -209,7 +209,7 @@ export async function getServerSideProps({ req, res }) {
   const dataHandler = getPostsAndPostscountFromGqlData
 
   /** @type {[ number, Article[]]} */
-  const postResult = processSettledResult(
+  const postResult = handleAxiosResponse(
     responses[1],
     /** @param {import('axios').AxiosResponse<ColumnSectionResponse> | undefined} data */
     (data) => {
