@@ -1,10 +1,12 @@
 import styled from 'styled-components'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+
 import { Frequency } from '../../../constants/membership'
 import { useMembership } from '../../../context/membership'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 import { getLoginHref } from '../../../utils'
-import { useRouter } from 'next/router'
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -171,6 +173,9 @@ export default function ArticleMask({ postId = '' }) {
    * To achieve that, we need to assign which one is paywall component by using certain class name in component `json-lds-script`,
    * @see https://developers.google.com/search/docs/appearance/structured-data/paywalled-content
    */
+
+  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
+
   return (
     <Wrapper className="paywall">
       <InviteMemberCard postId={postId}></InviteMemberCard>
