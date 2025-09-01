@@ -173,13 +173,12 @@ export default function ArticleMask({ postId = '' }) {
    * To achieve that, we need to assign which one is paywall component by using certain class name in component `json-lds-script`,
    * @see https://developers.google.com/search/docs/appearance/structured-data/paywalled-content
    */
+
+  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
+
   return (
-    <>
-      {!IS_ANNIVERSARY_PROMO_ACTIVE && (
-        <Wrapper className="paywall">
-          <InviteMemberCard postId={postId}></InviteMemberCard>
-        </Wrapper>
-      )}
-    </>
+    <Wrapper className="paywall">
+      <InviteMemberCard postId={postId}></InviteMemberCard>
+    </Wrapper>
   )
 }
