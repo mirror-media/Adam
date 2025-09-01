@@ -133,6 +133,7 @@ const DesktopPremiumMemberLoginButton = styled(MemberLoginButton)`
     flex-shrink: 0;
     align-items: center;
     text-decoration: none;
+    width: auto;
     > a {
       display: inline-flex;
       padding: 5px 8px;
@@ -146,7 +147,7 @@ const DesktopPremiumMemberLoginButton = styled(MemberLoginButton)`
   }
 `
 const MobilePremiumMemberLoginButton = styled(MemberLoginButton)`
-  display: block;
+  display: flex;
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }
