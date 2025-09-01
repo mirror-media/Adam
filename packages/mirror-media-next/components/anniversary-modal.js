@@ -120,6 +120,19 @@ export default function AnniversaryModal() {
     }
   }, [])
 
+  useEffect(() => {
+    if (isModalOpen) {
+      // 禁止滾動
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isModalOpen])
+
   if (!IS_ANNIVERSARY_PROMO_ACTIVE) return null
 
   const wordings = {
