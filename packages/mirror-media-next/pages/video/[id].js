@@ -22,19 +22,12 @@ import {
 } from '../../utils/api/video'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import Head from 'next/head'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { logAxiosError } from '../../utils/log/shared'
 import useFirstScrollDetector from '../../hooks/useFirstScrollDetector'
-
-const GPT_Placeholder = dynamic(
-  () =>
-    import('../../components/ads/gpt/gpt-placeholder').then(
-      (gptAd) => gptAd.GPT_Placeholder
-    ),
-  { ssr: false }
-)
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
