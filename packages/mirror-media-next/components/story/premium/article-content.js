@@ -34,7 +34,7 @@ const ContentContainer = styled.section`
  * @param {string} [props.className]
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
  * @param {string} [props.pageKeyForGptAd]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function PremiumArticleContent({
   content = { blocks: [], entityMap: {} },

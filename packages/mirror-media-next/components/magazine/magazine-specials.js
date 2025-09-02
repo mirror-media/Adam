@@ -155,7 +155,7 @@ const MagazineLink = ({ urlOriginal, children }) => {
  * @typedef {object} Props
  * @property {Magazine[]} specials
  * @param {Props} props
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function MagazineSpecials({ specials }) {

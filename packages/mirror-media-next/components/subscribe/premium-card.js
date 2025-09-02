@@ -71,7 +71,7 @@ const Hr = styled.hr`
  * @param {Object} props
  * @param {string} [props.planTitle='Premium 會員'] - The title of the subscription plan.
  * @param {boolean} [props.shouldHideMonthlyButton=false] - Whether to hide the monthly subscription button.
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function PremiumCard({
   planTitle = 'Premium 會員',

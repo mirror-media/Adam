@@ -113,7 +113,7 @@ const ExternalCreditTitle = styled.div`
  * @param {string} props.publishedDate
  * @param {string} props.credits
  * @param {Partner | null} props.partner
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ArticleInfo({
   updatedDate,

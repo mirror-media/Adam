@@ -51,7 +51,7 @@ const StyledGPTAd = styled(GPTAd)`
  * @param {Content} props.content
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
  * @param {string | undefined} [props.pageKeyForGptAd]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ArticleContent({
   content = { blocks: [], entityMap: {} },

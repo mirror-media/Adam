@@ -28,7 +28,7 @@ const FooterItem = styled(Link)`
  */
 
 /**
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function AmpFooter() {
   const sharedUrl = useAmpSharedUrl()

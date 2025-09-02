@@ -21,7 +21,7 @@ const Wrapper = styled.div`
  * @param {string} [props.className] - The class name for the component.
  * @param {string} props.section - The section for the ad.
  * @param {string} props.position - The position of the ad within the section.
- * @return {JSX.Element} The rendered AMP GPT ad component.
+ * @return {import('react').JSX.Element} The rendered AMP GPT ad component.
  */
 export default function AmpGptAd({ className, section, position }) {
   return (

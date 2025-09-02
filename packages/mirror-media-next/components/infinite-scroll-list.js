@@ -14,7 +14,7 @@ const Test = styled.div`
  * A callback function to render the list of elements
  * @callback Children
  * @param {Object[]}  renderList - An array of objects to render
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 /**
@@ -23,9 +23,9 @@ const Test = styled.div`
  * @param {number} props.renderAmount - The amount of item we want to render on per scroll
  * @param {Function} props.fetchListInPage - A function to fetch more data, which will execute when scrolled to bottom
  * @param {Children} props.children - The function to render the list of elements
- * @param {JSX.Element} props.loader - The loader element to display when
+ * @param {import('react').JSX.Element} props.loader - The loader element to display when
  * @param {number} props.fetchCount - The number of fetches that need to be sent.
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function InfiniteScrollList({
   initialList = [],

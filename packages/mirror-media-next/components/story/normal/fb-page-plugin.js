@@ -28,7 +28,7 @@ const FB_PAGE_URL = 'https://www.facebook.com/mirrormediamg'
  * @param {Object} props
  * @param {FacebookPagePluginSetting} [props.facebookPagePluginSetting]
  * @param {string} [props.className] - Attribute for updating style by styled-component
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function FbPage({
   facebookPagePluginSetting = {},

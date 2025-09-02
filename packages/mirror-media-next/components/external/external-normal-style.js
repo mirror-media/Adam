@@ -2,7 +2,7 @@
 //TODO: refactor jsx structure, make it more readable.
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import styled from 'styled-components'
 import Link from 'next/link'
@@ -25,11 +25,11 @@ import {
   getActiveOrderSection,
 } from '../../utils'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import GPT_Placeholder from '../ads/gpt/gpt-placeholder'
 import {
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
   API_TIMEOUT,
+  IS_ANNIVERSARY_PROMO_ACTIVE,
 } from '../../config/index.mjs'
 import {
   getExternalSectionTitle,
@@ -38,7 +38,10 @@ import {
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
-import { GPT_Placeholder_Aside } from '../ads/gpt/gpt-placeholder'
+import {
+  GPT_Placeholder,
+  GPT_Placeholder_Aside,
+} from '../ads/gpt/gpt-placeholder'
 import Image from 'next/image'
 import ExternalArticleBrief from './external-article-brief'
 import ResponsivePortal from '../story/shared/client-side-portal'
@@ -422,7 +425,7 @@ const StickyGPTAd_MB_ST = styled(GPTMbStAd)`
  * @param {Object} props
  * @param {External} props.external
  * @param {import('../../components/story/normal/related-article-list').Relateds} props.allRelatedStories
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ExternalNormalStyle({ external, allRelatedStories }) {
   const { width } = useWindowDimensions()
@@ -545,24 +548,16 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
 
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
-
   return (
     <>
       <GPT_Placeholder
         shouldShowAd={shouldShowAd}
-        isHDAdEmpty={isHDAdEmpty}
         isLogInProcessFinished={isLogInProcessFinished}
       >
         {shouldShowAd && (
           <StyledGPTAd_HD
             pageKey={getPageKeyByPartnerShowOnIndex(partner?.showOnIndex)}
             adKey="HD"
-            onSlotRenderEnded={handleObSlotRenderEnded}
           />
         )}
       </GPT_Placeholder>
@@ -649,10 +644,14 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
               <Link href="/papermag" target="_blank">
                 鏡週刊紙本雜誌
               </Link>
-              、
-              <Link href="/subscribe" target="_blank">
-                鏡週刊數位訂閱
-              </Link>
+              {!IS_ANNIVERSARY_PROMO_ACTIVE && (
+                <>
+                  、
+                  <Link href="/subscribe" target="_blank">
+                    鏡週刊數位訂閱
+                  </Link>
+                </>
+              )}
               、
               <Link href="/story/webauthorize/" target="_blank">
                 了解內容授權資訊
@@ -728,10 +727,14 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
           <Link href="/papermag" target="_blank">
             鏡週刊紙本雜誌
           </Link>
-          、
-          <Link href="/subscribe" target="_blank">
-            鏡週刊數位訂閱
-          </Link>
+          {!IS_ANNIVERSARY_PROMO_ACTIVE && (
+            <>
+              、
+              <Link href="/subscribe" target="_blank">
+                鏡週刊數位訂閱
+              </Link>
+            </>
+          )}
           、
           <Link href="/story/webauthorize/" target="_blank">
             了解內容授權資訊

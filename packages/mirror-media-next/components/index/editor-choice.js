@@ -211,7 +211,7 @@ const EditorChoiceContainer = styled.section`
  *
  * @param {EditorChoiceItem['heroImage']} heroImage
  * @param {EditorChoiceItem['title']} title
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 const editorChoiceImageJsx = (heroImage, title) => {
   return (

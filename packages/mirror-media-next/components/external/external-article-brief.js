@@ -26,7 +26,7 @@ const Wrapper = styled.div`
  *
  * @param {Object} props
  * @param {string} props.brief
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ExternalArticleBrief({ brief = '' }) {
   return (

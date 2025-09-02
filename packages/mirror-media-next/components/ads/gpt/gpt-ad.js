@@ -6,6 +6,7 @@ import {
   getAdWidth,
 } from '../../../utils/gpt-ad.js'
 import styled from 'styled-components'
+import { mediaSize } from '../../../styles/media.js'
 
 const Wrapper = styled.div`
   /**
@@ -206,7 +207,7 @@ export default function GptAd({
     if (!width || !isValidAd) {
       return
     }
-    const isDesktopWidth = width >= 1200
+    const isDesktopWidth = width >= mediaSize.xl // 1200 px
     if (isBuildInAdUnit) {
       switch (true) {
         case adKey?.includes('MB'):

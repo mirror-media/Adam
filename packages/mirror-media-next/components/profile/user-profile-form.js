@@ -255,7 +255,7 @@ const getGenderKey = (/** @type {String} */ value) => {
  * @param {Object} props
  * @param {(value: string) => void} props.onSaved
  * @param {string} props.signInProvider
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function UserProfileForm({ onSaved, signInProvider }) {
   const [userName, setUserName] = useState('')

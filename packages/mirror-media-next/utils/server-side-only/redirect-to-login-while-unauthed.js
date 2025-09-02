@@ -37,7 +37,14 @@ import { getLoginUrl } from './index'
  */
 
 /**
+ * @typedef {Object} RedirectOptions
+ * @property {boolean} [skipRedirect=false] - If true, unauthenticated users will not be redirected to login.
+ *                                            This is useful for special conditions such as IS_ANNIVERSARY_PROMO_ACTIVE.
+ */
+
+/**
  * @callback RedirectToLoginWhileUnauthed
+ * @param {RedirectOptions} [options] - Options to control redirect behavior.
  * @returns {
     <P extends Dictionary=Dictionary,
      Q extends ParsedUrlQuery=ParsedUrlQuery,
@@ -53,7 +60,7 @@ import { getLoginUrl } from './index'
  * @type {RedirectToLoginWhileUnauthed}
  */
 const redirectToLoginWhileUnauthed =
-  () =>
+  (options = {}) =>
   /**
    * @template {Dictionary} P
    * @template {ParsedUrlQuery} Q
@@ -89,6 +96,10 @@ const redirectToLoginWhileUnauthed =
           props,
         }
       } else {
+        if (options.skipRedirect) {
+          return { props: /** @type {P} */ ({}) }
+        }
+
         const destination = getLoginUrl(resolvedUrl)
 
         return {

@@ -1,5 +1,8 @@
 import Link from 'next/link'
 import styled from 'styled-components'
+
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
+
 const Wrapper = styled.div`
   width: 100%;
   background-color: #ffffff;
@@ -35,16 +38,21 @@ const Wrapper = styled.div`
     }
   }
 `
+
+const inviteText = IS_ANNIVERSARY_PROMO_ACTIVE
+  ? '活動期間，動態雜誌免費線上閱讀'
+  : '月費、年費會員免費線上閱讀動態雜誌'
+
 /**
  *
  * @param {Object} props
  * @param {string} [props.className] - Attribute for updating style by styled-component
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function MagazineInviteBanner({ className }) {
   return (
     <Wrapper className={className}>
-      <p>月費、年費會員免費線上閱讀動態雜誌</p>
+      <p>{inviteText}</p>
       <Link href="/magazine" className="GTM-story-magazine-box" target="_blank">
         線上閱讀
       </Link>

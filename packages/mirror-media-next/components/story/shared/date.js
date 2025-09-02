@@ -26,7 +26,7 @@ const DateText = styled.p`
  * @param {string} props.timeData  - The time data to be formatted.
  * @param {'publishedDate' | 'updatedDate'} [props.timeType = 'publishedDate'] - The type of time data ('publishedDate' or 'updatedDate').
  * @param {string} [props.className] - Attribute for updating style by styled-component
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function Date({
   timeData = '',

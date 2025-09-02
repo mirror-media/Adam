@@ -178,7 +178,7 @@ const ReadingBtn = styled.button`
  * @typedef {object} Props
  * @property {Magazine[]} weeklys
  * @param {Props} props
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function MagazineWeeklys({ weeklys }) {
