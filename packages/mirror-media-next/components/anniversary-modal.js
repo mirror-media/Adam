@@ -114,6 +114,8 @@ export default function AnniversaryModal() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
+    if (!IS_ANNIVERSARY_PROMO_ACTIVE) return
+
     const hasSeenModal = getCookie('anniversary_modal_seen')
     if (!hasSeenModal) {
       setIsModalOpen(true)
@@ -121,8 +123,9 @@ export default function AnniversaryModal() {
   }, [])
 
   useEffect(() => {
+    if (!IS_ANNIVERSARY_PROMO_ACTIVE) return
+
     if (isModalOpen) {
-      // 禁止滾動
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'unset'
