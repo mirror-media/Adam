@@ -13,7 +13,7 @@ const StepsWrapper = styled.ol`
 /**
  * Step component displays a single step in a set of steps.
  * @param {StepProps} props
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 const Step = styled.li`
   line-height: 150%;

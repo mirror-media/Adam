@@ -82,7 +82,7 @@ const ButtonWrapper = styled.div`
  *
  * @param {Object} props
  * @param {boolean} props.isAdult
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function AdultOnlyWarning({ isAdult = false }) {

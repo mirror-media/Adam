@@ -2,6 +2,8 @@
 
 import styled from 'styled-components'
 import Link from 'next/link'
+
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
 const Wrapper = styled.div`
   margin-top: 16px;
   padding: 32px;
@@ -23,6 +25,8 @@ const Wrapper = styled.div`
 `
 
 export default function SubscribeInviteBanner() {
+  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
+
   const getHref = (isLoggedIn) => {
     if (isLoggedIn) {
       return '/subscribe'

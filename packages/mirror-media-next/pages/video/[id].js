@@ -22,10 +22,7 @@ import {
 } from '../../utils/api/video'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import {
-  GPT_Placeholder_Desktop,
-  GPT_Placeholder_MobileAndTablet,
-} from '../../components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import Head from 'next/head'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
@@ -142,7 +139,8 @@ export default function Video({ video, latestVideos, headerData }) {
         footer={{ type: 'default' }}
       >
         <Wrapper>
-          <GPT_Placeholder_Desktop
+          <GPT_Placeholder
+            displayAt="desktop"
             rwd={GPT_PLACEHOLDER_SIZES}
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -150,10 +148,11 @@ export default function Video({ video, latestVideos, headerData }) {
             {shouldShowAd && (
               <StyledGPTAd_HD pageKey="videohub" adKey="PC_HD" />
             )}
-          </GPT_Placeholder_Desktop>
+          </GPT_Placeholder>
           <YoutubeIframe videoId={video.id} gtmClassName="GTM-video-yt-play" />
 
-          <GPT_Placeholder_MobileAndTablet
+          <GPT_Placeholder
+            displayAt="mobile+tablet"
             rwd={GPT_PLACEHOLDER_SIZES}
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -161,7 +160,7 @@ export default function Video({ video, latestVideos, headerData }) {
             {shouldShowAd && (
               <StyledGPTAd_HD pageKey="videohub" adKey="MB_HD" />
             )}
-          </GPT_Placeholder_MobileAndTablet>
+          </GPT_Placeholder>
 
           <ContentWrapper>
             <YoutubeArticle video={video} />

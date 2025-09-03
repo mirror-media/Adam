@@ -30,7 +30,7 @@ const SecondaryText = styled.p`
 /**
  * @param {Object} props
  * @param {() => void} props.onReset
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function SaveSuccess({ onReset }) {
   useEffect(() => {

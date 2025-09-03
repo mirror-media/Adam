@@ -3,7 +3,10 @@ import styled from 'styled-components'
 import axios from 'axios'
 import Link from 'next/link'
 import CustomImage from '@readr-media/react-image'
-import { URL_STATIC_404_POPULAR_NEWS } from '../config/index.mjs'
+import {
+  IS_ANNIVERSARY_PROMO_ACTIVE,
+  URL_STATIC_404_POPULAR_NEWS,
+} from '../config/index.mjs'
 import { API_TIMEOUT } from '../config/index.mjs'
 import Layout from '../components/shared/layout'
 import ShareHeader from '../components/header/share-header'
@@ -280,9 +283,11 @@ export default function Custom404() {
             <Text>抱歉！找不到這個網址</Text>
           </MsgContainer>
           <Title>熱門文章</Title>
-          <Link href="/subscribe" target="_blank" rel="noreferrer noopener">
-            <JoinMemberBtn>加入會員</JoinMemberBtn>
-          </Link>
+          {!IS_ANNIVERSARY_PROMO_ACTIVE && (
+            <Link href="/subscribe" target="_blank" rel="noreferrer noopener">
+              <JoinMemberBtn>加入會員</JoinMemberBtn>
+            </Link>
+          )}
           <PostsContainer>{popularNewsJsx}</PostsContainer>
         </PageWrapper>
       </>

@@ -1,15 +1,16 @@
-import React, { useCallback, useState } from 'react'
+// External libraries
 import styled from 'styled-components'
 import axios from 'axios'
 import errors from '@twreporter/errors'
 import dynamic from 'next/dynamic'
+
+// Config and utilities (including hooks)
 import {
   ENV,
   API_TIMEOUT,
   URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_POST_EXTERNAL,
 } from '../config/index.mjs'
-
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
 import {
@@ -20,19 +21,18 @@ import {
 } from '../utils'
 import { processSettledResult } from '../utils/response-processor'
 import { setPageCache } from '../utils/cache-setting'
+import { fetchPromoteVideosList } from '../utils/api/promote-videos'
+import { fetchForumHeadlines } from '../utils/api/forum-headlines'
+import { useDisplayAd } from '../hooks/useDisplayAd'
+
+// Components
 import EditorChoice from '../components/index/editor-choice'
 import LatestNews from '../components/index/latest-news'
 import PromoVideoList from '../components/index/promo-video-list'
 import ForumHeadlinesPreview from '../components/index/forum-headlines-preview'
 import Layout from '../components/shared/layout'
-import { useDisplayAd } from '../hooks/useDisplayAd'
 import FullScreenAds from '../components/ads/full-screen-ads'
-import GPT_Placeholder from '../components/ads/gpt/gpt-placeholder'
-
-import { RECALL_CAMPAIGNS_DISPLAY_JSON_URL } from '../constants/url'
-import { fetchPromoteVideosList } from '../utils/api/promote-videos'
-import { fetchForumHeadlines } from '../utils/api/forum-headlines'
-import RecallCampaigns from '../components/recall-campaigns/recall-campaigns'
+import { GPT_Placeholder } from '../components/ads/gpt/gpt-placeholder'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -105,7 +105,6 @@ const StyledGPTAd_MB_L1 = styled(GPTAd)`
  * @param {EditorChoicesRawData} [props.editorChoicesData=[]]
  * @param {ArticlesRawData} [props.latestNewsData=[]]
  * @param {Object[] } props.sectionsData
- * @param {boolean} [props.isCampaignsVisible]
  * @param { { id: string, videoLink: string }[] } props.promoVideos
  * @param {import('../components/index/forum-headlines-preview').ExternalHeadline[]} props.forumHeadlines - Array of latest forum headlines
  * @returns {React.ReactElement}
@@ -116,7 +115,6 @@ export default function Home({
   editorChoicesData = [],
   latestNewsData = [],
   sectionsData = [],
-  isCampaignsVisible,
   promoVideos,
   forumHeadlines,
 }) {
@@ -135,11 +133,6 @@ export default function Home({
   })
 
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
-  const [isHDAdEmpty, setISHDAdEmpty] = useState(true)
-
-  const handleObSlotRenderEnded = useCallback((e) => {
-    setISHDAdEmpty(e.isEmpty)
-  }, [])
 
   return (
     <Layout
@@ -154,19 +147,10 @@ export default function Home({
       <IndexContainer>
         <GPT_Placeholder
           shouldShowAd={shouldShowAd}
-          isHDAdEmpty={isHDAdEmpty}
           isLogInProcessFinished={isLogInProcessFinished}
         >
-          {shouldShowAd && (
-            <StyledGPTAd_HD
-              pageKey="home"
-              adKey="HD"
-              onSlotRenderEnded={handleObSlotRenderEnded}
-            />
-          )}
+          {shouldShowAd && <StyledGPTAd_HD pageKey="home" adKey="HD" />}
         </GPT_Placeholder>
-        {/* TODO:should remove after 2025 Taiwanese mass electoral recall campaigns is finished */}
-        {isCampaignsVisible && <RecallCampaigns />}
 
         <EditorChoice editorChoice={editorChoice}></EditorChoice>
         {shouldShowAd && <StyledGPTAd_PC_B1 pageKey="home" adKey="PC_B1" />}
@@ -287,15 +271,6 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
 
-    const campaignsDisplayConfig = await fetch(
-      RECALL_CAMPAIGNS_DISPLAY_JSON_URL
-    )
-      .then((res) => res.json())
-      .catch((err) => console.error(err))
-    const envKey =
-      ENV === 'local' ? 'display_iframe_dev' : `display_iframe_${ENV}`
-    const isCampaignsVisible = campaignsDisplayConfig?.[envKey] === 'TRUE'
-
     return {
       props: {
         topicsData,
@@ -303,7 +278,6 @@ export async function getServerSideProps({ res, req }) {
         editorChoicesData,
         latestNewsData,
         sectionsData,
-        isCampaignsVisible,
         promoVideos,
         forumHeadlines,
       },

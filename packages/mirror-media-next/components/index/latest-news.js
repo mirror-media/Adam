@@ -118,7 +118,7 @@ const transformRawDataContent = function (articleRawData) {
 /**
  * @param {Object} props
  * @param {ArticleRawData[]} [props.latestNewsData = []]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function LatestNews(props) {
   /**

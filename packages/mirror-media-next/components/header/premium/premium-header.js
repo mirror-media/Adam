@@ -8,8 +8,8 @@ import SearchBarInput from '../shared/search-bar-input'
 import Logo from '../normal/logo'
 import PremiumMobileSidebar from './premium-mobile-sidebar'
 import PremiumNavSections from './premium-nav-sections'
-import PremiumMemberLoginButton from './premium-member-login-button'
 import useSearch from '../../../hooks/use-search'
+import MemberLoginButton from '../shared/member-Login-Button'
 
 /**
  * @typedef {import('./premium-mobile-sidebar').H2AndH3Block} H2AndH3Block
@@ -126,13 +126,14 @@ const SearchInputWrapper = styled.div`
   }
 `
 
-const DesktopPremiumMemberLoginButton = styled(PremiumMemberLoginButton)`
+const DesktopPremiumMemberLoginButton = styled(MemberLoginButton)`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
     display: inline-flex;
     flex-shrink: 0;
     align-items: center;
     text-decoration: none;
+    width: auto;
     > a {
       display: inline-flex;
       padding: 5px 8px;
@@ -145,9 +146,8 @@ const DesktopPremiumMemberLoginButton = styled(PremiumMemberLoginButton)`
     }
   }
 `
-const MobilePremiumMemberLoginButton = styled(PremiumMemberLoginButton)`
-  display: block;
-  margin-left: 15px;
+const MobilePremiumMemberLoginButton = styled(MemberLoginButton)`
+  display: flex;
   ${({ theme }) => theme.breakpoint.xl} {
     display: none;
   }
@@ -238,7 +238,7 @@ export default function PremiumHeader({
               alt="search-button"
             />
           </SearchButtonMobile>
-          <MobilePremiumMemberLoginButton />
+          <MobilePremiumMemberLoginButton variant="premium" />
           <PremiumMobileSidebar
             sections={sections}
             shouldShowSubtitleNavigator={shouldShowSubtitleNavigator}
@@ -270,7 +270,7 @@ export default function PremiumHeader({
           />
         </SearchInputWrapper>
         <PremiumNavSections sections={sections}>
-          <DesktopPremiumMemberLoginButton />
+          <DesktopPremiumMemberLoginButton variant="premium" />
         </PremiumNavSections>
       </HeaderBottom>
     </HeaderWrapper>

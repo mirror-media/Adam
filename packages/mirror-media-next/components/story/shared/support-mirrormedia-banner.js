@@ -1,7 +1,9 @@
 import styled from 'styled-components'
+
 import DonateLink from './donate-link'
 import SubscribeLink from './subscribe-link'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
 
 const Container = styled.div`
   margin: 32px 0;
@@ -42,7 +44,7 @@ const InnerWrapper = styled.div`
   grid-gap: 8px;
 
   ${({ theme }) => theme.breakpoint.md} {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: ${IS_ANNIVERSARY_PROMO_ACTIVE ? '1fr' : '1fr 1fr'};
   }
 `
 
@@ -89,7 +91,7 @@ const InnerBox = styled.div`
  *
  * @param {Object} props
  * @param {string} [props.className]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function SupportMirrorMediaBanner({ className }) {
   return (
@@ -104,14 +106,16 @@ export default function SupportMirrorMediaBanner({ className }) {
           </p>
           <DonateLink className="banner-button GTM-donate-link-bottom" />
         </InnerBox>
-        <InnerBox>
-          <p className="desc">
-            每月 ${PRIZE_LIST.monthly} 元全站看到飽
-            <br />
-            暢享無廣告閱讀體驗
-          </p>
-          <SubscribeLink className="banner-button GTM-subscribe-link-bottom" />
-        </InnerBox>
+        {!IS_ANNIVERSARY_PROMO_ACTIVE && (
+          <InnerBox>
+            <p className="desc">
+              每月 ${PRIZE_LIST.monthly} 元全站看到飽
+              <br />
+              暢享無廣告閱讀體驗
+            </p>
+            <SubscribeLink className="banner-button GTM-subscribe-link-bottom" />
+          </InnerBox>
+        )}
       </InnerWrapper>
     </Container>
   )

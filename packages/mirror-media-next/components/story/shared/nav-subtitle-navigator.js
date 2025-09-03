@@ -190,9 +190,9 @@ const Nav = styled.nav`
  * - Style of component. Because this component will be used at different place and have different style.
  * - If value is `side-index`, it should be used at the side of the article.
  * - If value is `side-bar`, it should be used at the side-bar of header (side-bar can be opened by clicking header's hamburger).
- * @param {JSX.Element} [props.children] - Component that should be placed above the index of h2 and h3.
+ * @param {import('react').JSX.Element} [props.children] - Component that should be placed above the index of h2 and h3.
  * @param {HandleCloseSideBar} [props.handleCloseSideBar] - If `params.componentStyle` is `side-bar`, it should close the side bar when click side index.
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function NavSubtitleNavigator({
   h2AndH3Block = [],

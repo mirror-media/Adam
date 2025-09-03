@@ -18,6 +18,7 @@ import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 import useMembershipRequired from '../../hooks/use-membership-required'
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../config/index.mjs'
 
 const Section = styled.div`
   padding: 48px 0;
@@ -64,7 +65,7 @@ const Title = styled.h2`
  * @param {PageProps} props
  */
 export default function Magazine({ sectionsData = [] }) {
-  useMembershipRequired()
+  useMembershipRequired(undefined, { skipCheck: IS_ANNIVERSARY_PROMO_ACTIVE })
   const [specials, setSpecials] = useState([])
   const [weeklys, setWeeklys] = useState([])
 
@@ -74,10 +75,12 @@ export default function Magazine({ sectionsData = [] }) {
   const isPremiumMember =
     memberType.includes('premium') || memberType.includes('staff')
 
+  const canViewPremiumContent = IS_ANNIVERSARY_PROMO_ACTIVE || isPremiumMember
+
   // Fetch Magazines Data only for Premium Member
   useEffect(() => {
     const fetchMagazines = async () => {
-      if (isPremiumMember) {
+      if (canViewPremiumContent) {
         try {
           // Simulate an unsuccessful fetch by throwing an error
           // throw new Error('Failed to fetch magazines')
@@ -115,7 +118,7 @@ export default function Magazine({ sectionsData = [] }) {
     }
 
     fetchMagazines()
-  }, [isPremiumMember])
+  }, [canViewPremiumContent])
 
   // Sort the weekly magazines
   const sortedMagazines = weeklys?.length
@@ -146,7 +149,7 @@ export default function Magazine({ sectionsData = [] }) {
       }}
       footer={{ type: 'default' }}
     >
-      {isPremiumMember ? (
+      {canViewPremiumContent ? (
         <Page>
           {weeklys.length > 0 && (
             <>
@@ -188,28 +191,28 @@ export default function Magazine({ sectionsData = [] }) {
 /**
  * @type {import('next').GetServerSideProps<PageProps>}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ req, res }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed({
+  skipRedirect: IS_ANNIVERSARY_PROMO_ACTIVE,
+})(async ({ req, res }) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    // Fetch header data
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInPremiumPageLayout(),
-    ])
+  // Fetch header data
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInPremiumPageLayout(),
+  ])
 
-    const sectionsData = processSettledResult(
-      responses[0],
-      getSectionFromPremiumHeaderData,
-      'Error occurs while getting premium header data in magazine list page',
-      globalLogFields
-    )
+  const sectionsData = processSettledResult(
+    responses[0],
+    getSectionFromPremiumHeaderData,
+    'Error occurs while getting premium header data in magazine list page',
+    globalLogFields
+  )
 
-    return {
-      props: {
-        sectionsData,
-      },
-    }
+  return {
+    props: {
+      sectionsData,
+    },
   }
-)
+})

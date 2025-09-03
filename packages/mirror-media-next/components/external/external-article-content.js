@@ -39,7 +39,7 @@ const Wrapper = styled.section`
  *
  * @param {Object} props
  * @param {string} props.content
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 export default function ExternalArticleContent({ content = '' }) {
   const iframeRegex = /(<iframe[\s\S]*?<\/iframe>)/i

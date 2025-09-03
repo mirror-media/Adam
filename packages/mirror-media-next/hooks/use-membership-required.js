@@ -14,8 +14,9 @@ import { getLoginHref } from '../utils'
  * It is useful when membership state changed but page didn't reloaded.
  *
  * @param {MembershipValidator} [validator]
+ * @param {{ skipCheck?: boolean }} [options]
  */
-export default function useMembershipRequired(validator) {
+export default function useMembershipRequired(validator, { skipCheck } = {}) {
   const router = useRouter()
   const { isLoggedIn, memberInfo, isLogInProcessFinished } = useMembership()
 
@@ -25,9 +26,11 @@ export default function useMembershipRequired(validator) {
   )
 
   useEffect(() => {
+    if (skipCheck) return
+
     if (isLogInProcessFinished && (!isLoggedIn || !isValidMember)) {
       const redirectionTarget = getLoginHref(router)
       router.push(redirectionTarget)
     }
-  }, [router, isLogInProcessFinished, isLoggedIn, isValidMember])
+  }, [router, isLogInProcessFinished, isLoggedIn, isValidMember, skipCheck])
 }

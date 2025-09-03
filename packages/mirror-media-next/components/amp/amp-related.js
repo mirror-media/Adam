@@ -43,7 +43,7 @@ const StyledAmpGptAd = styled(AmpGptAd)`
  * @param {Object} props
  * @param {Relateds} props.relateds
  * @param {string} props.gptSlotSection
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 
 export default function AmpRelated({ relateds, gptSlotSection }) {

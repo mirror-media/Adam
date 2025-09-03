@@ -14,8 +14,8 @@ const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
 
 /**
  * @callback WrapperFunction
- * @param {JSX.Element} children - The React element to wrap.
- * @returns {JSX.Element} The wrapped React element.
+ * @param {import('react').JSX.Element} children - The React element to wrap.
+ * @returns {import('react').JSX.Element} The wrapped React element.
  */
 
 /**
@@ -31,7 +31,7 @@ const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
  * - The function to wrap all blocks, you can use it to put all blocks in a jsx element.
  * - Optional, default value is `(children) => <>{children}</>`.
  * @param {ReactNode} [props.firstImageAdComponent]
- * @returns  {JSX.Element}
+ * @returns  {import('react').JSX.Element}
  */
 export default function DraftRenderBlock({
   rawContentBlock = { blocks: [], entityMap: {} },
@@ -59,7 +59,7 @@ export default function DraftRenderBlock({
  * @param {RawContentBlock} rawContentBlock
  * @param {ContentLayout} contentLayout
  * @param {ReactNode} [firstImageAdComponent]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 function NormalSSRRenderBlock(
   rawContentBlock,
@@ -88,7 +88,7 @@ function NormalSSRRenderBlock(
  * @param {RawContentBlock} rawContentBlock
  * @param {ContentLayout} contentLayout
  * @param {ReactNode} [firstImageAdComponent]
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 function NormalRenderBlock(
   rawContentBlock,
@@ -124,7 +124,7 @@ function NormalRenderBlock(
  * Because the limitation mentioned above, it is needed to use `DraftRenderer` in server-side, which may cause issue of memory leak.
  * @param {RawContentBlock} rawContentBlock
  * @param {ContentLayout} contentLayout
- * @returns {JSX.Element}
+ * @returns {import('react').JSX.Element}
  */
 function AmpRenderBlock(rawContentBlock, contentLayout) {
   const shouldRenderDraft = hasContentInRawContentBlock(rawContentBlock)
