@@ -259,12 +259,17 @@ const SectionAndLogo = styled.div`
     margin-top: 20px;
     justify-content: left;
   }
+`
 
-  img {
-    margin-right: 8px;
-    ${({ theme }) => theme.breakpoint.md} {
-      margin-right: 12px;
-    }
+const LogoBox = styled.div`
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
   }
 `
 
@@ -689,12 +694,14 @@ export default function StoryNormalStyle({
           <SectionAndLogo>
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a className="link-to-index" href="/" aria-label="go-to-index-page">
-              <Image
-                width={isMobileWidth ? 20 : 32}
-                height={isMobileWidth ? 20 : 32}
-                alt="mm-logo"
-                src="/images-next/logo-circle@2x.png"
-              ></Image>
+              <LogoBox>
+                <Image
+                  width={32}
+                  height={32}
+                  alt="mm-logo"
+                  src="/images-next/logo-circle@2x.png"
+                />
+              </LogoBox>
             </a>
             {postData.isAdvertised ? (
               <div />
