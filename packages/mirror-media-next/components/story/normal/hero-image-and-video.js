@@ -32,7 +32,9 @@ const HeroImage = styled('figure')(
     position: relative;
     width: 100%;
     aspect-ratio: ${
-      $imgWidth && $imgHeight ? `${$imgWidth} / ${$imgHeight}` : '16 / 9'
+      Number($imgWidth) > 0 && Number($imgHeight) > 0
+        ? `${Number($imgWidth)} / ${Number($imgHeight)}`
+        : '16 / 9'
     };
     overflow: hidden;
 
