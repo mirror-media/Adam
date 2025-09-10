@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Image from 'next/image'
 import defaultImage from '../../../public/images-next/default-og-img.png'
 /**
- * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
+ * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp' | "imageFile">} HeroImage
  */
 
 /**
@@ -17,17 +17,43 @@ const Wrapper = styled.figure`
   }
 `
 
-const HeroImage = styled.figure`
-  position: relative;
-  width: 100%;
-  .readr-media-react-image {
-    object-position: center center;
-  }
+/**
+ * @typedef {Object} HeroImageProps
+ * @property {number} [$imgWidth] - Original image width
+ * @property {number} [$imgHeight] - Original image height
+ */
 
-  ${({ theme }) => theme.breakpoint.md} {
-    width: 640px;
-  }
-`
+/** @type {import('styled-components').StyledComponent<'figure', any, HeroImageProps , never>} */
+const HeroImage = styled('figure')(
+  /**
+   * @param {HeroImageProps & { theme: import('../../../styles/theme/media').Theme }} props
+   */
+  ({ $imgWidth, $imgHeight, theme }) => `
+    position: relative;
+    width: 100%;
+    aspect-ratio: ${
+      Number($imgWidth) > 0 && Number($imgHeight) > 0
+        ? `${Number($imgWidth)} / ${Number($imgHeight)}`
+        : '16 / 9'
+    };
+    overflow: hidden;
+
+    .readr-media-react-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+    }
+
+    @media ${theme.breakpoint.md} {
+      width: 640px;
+    }
+  `
+)
+
 const HeroCaption = styled.figcaption`
   width: 100%;
   min-height: 22px;
@@ -93,7 +119,10 @@ export default function HeroImageAndVideo({
       )
     } else if (shouldShowHeroImage) {
       return (
-        <HeroImage>
+        <HeroImage
+          $imgWidth={heroImage?.imageFile?.width}
+          $imgHeight={heroImage?.imageFile?.height}
+        >
           <CustomImage
             images={heroImage.resized}
             imagesWebP={heroImage.resizedWebp}
