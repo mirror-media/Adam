@@ -1,4 +1,4 @@
-import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 const { removeEmptyContentBlock, hasContentInRawContentBlock } = MirrorMedia
 
 /**
