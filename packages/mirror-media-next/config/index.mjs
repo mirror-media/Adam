@@ -56,6 +56,7 @@ let URL_STATIC_PROMOTE_VIDEOS = ''
 let URL_STATIC_COLUMN_SECTION_POSTS = ''
 let URL_STATIC_DAILY_COLUMN_HEADLINES = ''
 let IS_ANNIVERSARY_PROMO_ACTIVE = false
+let IS_ANNIVERSARY_MODAL_ACTIVE = false
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -113,6 +114,7 @@ switch (ENV) {
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
     IS_ANNIVERSARY_PROMO_ACTIVE = false
+    IS_ANNIVERSARY_MODAL_ACTIVE = true
 
     GPT_MODE = 'prod'
 
@@ -173,7 +175,7 @@ switch (ENV) {
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
     IS_ANNIVERSARY_PROMO_ACTIVE = false
-
+    IS_ANNIVERSARY_MODAL_ACTIVE = true
     GPT_MODE = 'prod'
 
     FIREBASE_AUTH_DOMAIN = 'mirrormedia-staging.firebaseapp.com'
@@ -229,7 +231,7 @@ switch (ENV) {
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
     GTM_ID = 'GTM-PBNLSMX'
     IS_ANNIVERSARY_PROMO_ACTIVE = true
-
+    IS_ANNIVERSARY_MODAL_ACTIVE = true
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'on'
@@ -274,7 +276,7 @@ switch (ENV) {
     LOGIN_PAGE_FEATURE_TOGGLE = 'on'
     TEST_GPT_AD_FEATURE_TOGGLE = 'on'
     IS_ANNIVERSARY_PROMO_ACTIVE = true
-
+    IS_ANNIVERSARY_MODAL_ACTIVE = true
     URL_STATIC_PREMIUM_SECTIONS = `http://localhost:8080/json/header_member.json`
     URL_STATIC_NORMAL_SECTIONS = `http://localhost:8080/json/header_sections.json`
     URL_STATIC_TOPICS = `http://localhost:8080/json/header_topics.json`
@@ -363,4 +365,5 @@ export {
   MISO_API_BASE_URL,
   MISO_ENDPOINTS,
   IS_ANNIVERSARY_PROMO_ACTIVE,
+  IS_ANNIVERSARY_MODAL_ACTIVE,
 }

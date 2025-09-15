@@ -1,4 +1,4 @@
-import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../config/index.mjs'
+import { IS_ANNIVERSARY_MODAL_ACTIVE } from '../config/index.mjs'
 import styled from 'styled-components'
 import { Z_INDEX } from '../constants'
 import { useState, useEffect } from 'react'
@@ -114,7 +114,7 @@ export default function AnniversaryModal() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    if (!IS_ANNIVERSARY_PROMO_ACTIVE) return
+    if (!IS_ANNIVERSARY_MODAL_ACTIVE) return
 
     const hasSeenModal = getCookie('anniversary_modal_seen')
     if (!hasSeenModal) {
@@ -123,7 +123,7 @@ export default function AnniversaryModal() {
   }, [])
 
   useEffect(() => {
-    if (!IS_ANNIVERSARY_PROMO_ACTIVE) return
+    if (!IS_ANNIVERSARY_MODAL_ACTIVE) return
 
     if (isModalOpen) {
       document.body.style.overflow = 'hidden'
@@ -136,7 +136,7 @@ export default function AnniversaryModal() {
     }
   }, [isModalOpen])
 
-  if (!IS_ANNIVERSARY_PROMO_ACTIVE) return null
+  if (!IS_ANNIVERSARY_MODAL_ACTIVE) return null
 
   const wordings = {
     title: ['鏡週刊 10 週年慶 🎉', ' 📣 全站文章、獨家新聞全網免費閱讀'],
