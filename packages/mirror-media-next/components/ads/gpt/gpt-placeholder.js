@@ -43,7 +43,7 @@ const DEFAULT_SIZES = {
 
 /**
  * Build display CSS by displayAt.
- * @param {PlaceholderStyleProps & { theme: any }} styleProps
+ * @param {PlaceholderStyleProps & { theme: import('../../../styles/theme/media').Theme }} styleProps
  */
 const displayByBreakpoint = (styleProps) => {
   const { $displayAt, $visible, theme } = styleProps
@@ -98,7 +98,7 @@ const displayByBreakpoint = (styleProps) => {
 /** @type {import('styled-components').StyledComponent<'div', any, PlaceholderStyleProps>} */
 const Container = styled.div(
   /**
-   * @param {PlaceholderStyleProps & { theme: any }} styleProps
+   * @param {PlaceholderStyleProps & { theme: import('../../../styles/theme/media').Theme }} styleProps
    */
   (styleProps) => css`
     position: relative;
@@ -125,7 +125,7 @@ const Container = styled.div(
 /** @type {import('styled-components').StyledComponent<'div', any, { $visible: boolean }>} */
 const ContainerAside = styled.div(
   /**
-   * @param {{ $visible: boolean, theme: any }} styleProps
+   * @param {{ $visible: boolean, theme: import('../../../styles/theme/media').Theme }} styleProps
    */
   (styleProps) => css`
     display: none;
