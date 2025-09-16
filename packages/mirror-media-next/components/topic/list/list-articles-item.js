@@ -59,6 +59,7 @@ const ItemSection = styled.div`
 const ItemDate = styled.div`
   color: ${color.brandColor.darkBlue};
   font-size: 16px;
+  font-weight: 500;
 `
 
 const ItemDetail = styled.div`
