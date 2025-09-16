@@ -5,16 +5,16 @@ const ItemContainer = styled.div`
   display: grid;
   grid-template-columns: 320px;
   justify-content: center;
-  row-gap: 20px;
+  row-gap: 28px;
   margin-top: 40px;
 
   ${({ theme }) => theme.breakpoint.md} {
     grid-template-columns: repeat(3, 220px);
-    gap: 32px 10px;
+    gap: 36px 20px;
   }
   ${({ theme }) => theme.breakpoint.xl} {
     grid-template-columns: repeat(4, 220px);
-    gap: 48px;
+    gap: 36px 48px;
   }
 `
 
