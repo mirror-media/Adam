@@ -136,8 +136,12 @@ export default function ListArticlesItem({ item }) {
   const itemSection = sections.find((section) => section.slug !== 'member')
 
   return (
-    <ItemWrapper href={`/story/${slug}`} target="_blank">
-      <ImageContainer>
+    <ItemWrapper
+      className="itemWrapper"
+      href={`/story/${slug}`}
+      target="_blank"
+    >
+      <ImageContainer className="imageContainer">
         <Image
           images={heroImage?.resized}
           imagesWebP={heroImage?.resizedWebp}
@@ -147,19 +151,19 @@ export default function ListArticlesItem({ item }) {
           rwd={{ mobile: '500px', tablet: '500px', desktop: '500px' }}
         />
         {itemSection && (
-          <ItemSection sectionName={itemSection?.slug}>
+          <ItemSection className="itemSection" sectionName={itemSection?.slug}>
             {itemSection?.name}
           </ItemSection>
         )}
       </ImageContainer>
       {publishedDate && (
-        <ItemDate className="ItemDate">
+        <ItemDate className="itemDate">
           {transformTimeData(publishedDate, 'slashWithTime')}
         </ItemDate>
       )}
-      <ItemDetail>
-        <ItemTitle>{title}</ItemTitle>
-        <ItemBrief>{brief?.blocks[0]?.text}</ItemBrief>
+      <ItemDetail className="itemDetail">
+        <ItemTitle className="itemTitle">{title}</ItemTitle>
+        <ItemBrief className="itemBrief">{brief?.blocks[0]?.text}</ItemBrief>
       </ItemDetail>
     </ItemWrapper>
   )

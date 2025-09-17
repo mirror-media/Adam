@@ -51,7 +51,7 @@ const GroupArticles = styled.div`
   }
   ${({ theme }) => theme.breakpoint.xl} {
     width: 1024px;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 `
 
