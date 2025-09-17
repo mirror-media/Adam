@@ -60,6 +60,7 @@ const ItemDate = styled.div`
   }
 `
 
+// Empty for now, kept for consistency with topic page list-articles structure
 const ItemDetail = styled.div``
 
 const ItemTitle = styled.h3`
@@ -151,7 +152,7 @@ export default function GroupArticlesItem({ item }) {
       </ImageContainer>
       <ItemDetail className="groupListBlockContent">
         {publishedDate && (
-          <ItemDate className="ItemDate">
+          <ItemDate className="itemDate">
             {transformTimeData(publishedDate, 'slashWithTime')}
           </ItemDate>
         )}
