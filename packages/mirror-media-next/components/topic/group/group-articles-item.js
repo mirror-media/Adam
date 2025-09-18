@@ -1,31 +1,38 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 
+import { transformTimeData } from '../../../utils'
+import { color } from '../../../styles/theme/color'
+
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */
 
 const ItemWrapper = styled.a`
   display: flex;
+  gap: 12px;
   position: relative;
   width: 300px;
   margin: 0 auto;
+  padding: 12px 0;
   font-size: 18px;
-  padding-bottom: 16px;
   border-bottom: 1px solid #4a4a4a;
-  column-gap: 12px;
+
+  :first-child {
+    padding-top: 0;
+  }
+
+  :last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
   ${({ theme }) => theme.breakpoint.md} {
     flex-direction: column;
+    gap: 20px;
     width: 320px;
-    padding-bottom: 36px;
-  }
-  ${({ theme }) => theme.breakpoint.xl} {
-    padding-bottom: 40px;
-    margin-bottom: -1px;
-    &:nth-child(3n-1) {
-      width: 384px;
-      padding: 0 32px;
-    }
+    padding: 0;
+    border-bottom: none;
   }
 `
 
@@ -43,27 +50,36 @@ const ImageContainer = styled.div`
   }
 `
 
-const ItemDetail = styled.div`
+const ItemDate = styled.div`
+  color: ${color.brandColor.black};
+  font-size: 14px;
+  font-weight: 500;
+
   ${({ theme }) => theme.breakpoint.md} {
-    margin-top: 20px;
+    font-size: 16px;
   }
 `
+
+// Empty for now, kept for consistency with topic page list-articles structure
+const ItemDetail = styled.div``
 
 const ItemTitle = styled.h3`
   color: #b17f5a;
   display: -webkit-box;
-  -webkit-line-clamp: 5;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-weight: 500;
   font-size: 13px;
   line-height: 18px;
+
   ${({ theme }) => theme.breakpoint.md} {
     font-size: 18px;
     line-height: 26px;
     -webkit-line-clamp: 2;
     height: 52px;
   }
+
   ${({ theme }) => theme.breakpoint.xl} {
     font-size: 18px;
   }
@@ -83,10 +99,6 @@ const ItemBrief = styled.p`
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    margin-top: 20px;
   }
 `
 
@@ -120,25 +132,32 @@ const ItemBrief = styled.p`
  * @returns {React.ReactElement}
  */
 export default function GroupArticlesItem({ item }) {
+  const { slug, heroImage, title, publishedDate, brief } = item
+
   return (
     <ItemWrapper
-      href={`/story/${item.slug}`}
+      href={`/story/${slug}`}
       target="_blank"
       className="groupArticleItem"
     >
       <ImageContainer>
         <Image
-          images={item.heroImage?.resized}
-          imagesWebP={item.heroImage?.resizedWebp}
-          alt={item.title}
+          images={heroImage?.resized}
+          imagesWebP={heroImage?.resizedWebp}
+          alt={title}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"
           rwd={{ mobile: '500px', tablet: '500px', laptop: '500px' }}
         />
       </ImageContainer>
       <ItemDetail className="groupListBlockContent">
-        <ItemTitle>{item.title}</ItemTitle>
-        <ItemBrief>{item.brief?.blocks[0]?.text}</ItemBrief>
+        {publishedDate && (
+          <ItemDate className="itemDate">
+            {transformTimeData(publishedDate, 'slashWithTime')}
+          </ItemDate>
+        )}
+        <ItemTitle>{title}</ItemTitle>
+        <ItemBrief>{brief?.blocks[0]?.text}</ItemBrief>
       </ItemDetail>
     </ItemWrapper>
   )

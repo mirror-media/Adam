@@ -1,11 +1,16 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 
+import { transformTimeData } from '../../../utils'
+import { color } from '../../../styles/theme/color'
+
 /** @typedef {import('../../../type/theme').Theme} Theme */
 
 const ItemWrapper = styled.a`
-  display: block;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   width: 100%;
   margin: 0 auto;
   font-size: 18px;
@@ -34,7 +39,7 @@ const ItemSection = styled.div`
   color: white;
   font-size: 18px;
   font-weight: 600;
-  border-radius: 16px;
+  border-radius: 0 16px 16px 16px;
   background-color: ${
     /**
      * @param {Object} props
@@ -51,15 +56,20 @@ const ItemSection = styled.div`
   }
 `
 
+const ItemDate = styled.div`
+  color: ${color.brandColor.darkBlue};
+  font-size: 16px;
+  font-weight: 500;
+`
+
 const ItemDetail = styled.div`
-  margin: 20px 20px 36px 20px;
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 8px 8px 40px 8px;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `
 
 const ItemTitle = styled.div`
-  color: #054f77;
+  color: ${color.brandColor.darkBlue};
   line-height: 25px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -77,18 +87,12 @@ const ItemTitle = styled.div`
 const ItemBrief = styled.div`
   font-size: 16px;
   color: #979797;
-  margin-top: 20px;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 
-  ${({ theme }) => theme.breakpoint.md} {
-    margin-top: 16px;
-  }
-
   ${({ theme }) => theme.breakpoint.xl} {
-    margin-top: 20px;
     -webkit-line-clamp: 4;
   }
 `
@@ -128,28 +132,38 @@ const ItemBrief = styled.div`
  * @returns {React.ReactElement}
  */
 export default function ListArticlesItem({ item }) {
-  const itemSection = item.sections.find((section) => section.slug !== 'member')
+  const { slug, sections, heroImage, title, publishedDate, brief } = item
+  const itemSection = sections.find((section) => section.slug !== 'member')
 
   return (
-    <ItemWrapper href={`/story/${item.slug}`} target="_blank">
-      <ImageContainer>
+    <ItemWrapper
+      className="itemWrapper"
+      href={`/story/${slug}`}
+      target="_blank"
+    >
+      <ImageContainer className="imageContainer">
         <Image
-          images={item.heroImage?.resized}
-          imagesWebP={item.heroImage?.resizedWebp}
-          alt={item.title}
+          images={heroImage?.resized}
+          imagesWebP={heroImage?.resizedWebp}
+          alt={title}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"
           rwd={{ mobile: '500px', tablet: '500px', desktop: '500px' }}
         />
         {itemSection && (
-          <ItemSection sectionName={itemSection?.slug}>
+          <ItemSection className="itemSection" sectionName={itemSection?.slug}>
             {itemSection?.name}
           </ItemSection>
         )}
       </ImageContainer>
-      <ItemDetail>
-        <ItemTitle>{item.title}</ItemTitle>
-        <ItemBrief>{item.brief?.blocks[0]?.text}</ItemBrief>
+      {publishedDate && (
+        <ItemDate className="itemDate">
+          {transformTimeData(publishedDate, 'slashWithTime')}
+        </ItemDate>
+      )}
+      <ItemDetail className="itemDetail">
+        <ItemTitle className="itemTitle">{title}</ItemTitle>
+        <ItemBrief className="itemBrief">{brief?.blocks[0]?.text}</ItemBrief>
       </ItemDetail>
     </ItemWrapper>
   )
