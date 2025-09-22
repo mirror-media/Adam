@@ -1,14 +1,23 @@
 import styled from 'styled-components'
 import BlankCard from './blank-card'
 import PrimaryBlueBtn from './primary-blue-btn'
+import AnniversaryMessage from './anniversary-message'
 
 const PageWrapper = styled.section`
   min-height: 70vh;
   padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 40px;
 
   ${({ theme }) => theme.breakpoint.md} {
     padding: 48px;
     background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    row-gap: 48px;
   }
 `
 const Title = styled.h2`
@@ -30,6 +39,7 @@ const Text = styled.div`
 export default function PlanForYearlyMember() {
   return (
     <PageWrapper>
+      <AnniversaryMessage />
       <BlankCard>
         <Title>想要變更方案嗎？</Title>
         <Text>
