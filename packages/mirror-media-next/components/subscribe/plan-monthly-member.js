@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import PremiumCard from './premium-card'
 import Notification from './subscribe-notification'
+import AnniversaryMessage from './anniversary-message'
 
 const Page = styled.section`
   background-color: rgba(0, 0, 0, 0.05);
@@ -18,6 +19,13 @@ const Page = styled.section`
 const PlanWrapper = styled.div`
   margin: 0 auto;
   max-width: 468px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 24px;
+  ${({ theme }) => theme.breakpoint.md} {
+    row-gap: 32px;
+  }
 `
 
 export default function PlanForMonthlyMember() {
@@ -25,6 +33,7 @@ export default function PlanForMonthlyMember() {
     <>
       <Page>
         <PlanWrapper>
+          <AnniversaryMessage />
           <PremiumCard
             planTitle="變更為年訂閱方案"
             shouldHideMonthlyButton={true}

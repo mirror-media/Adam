@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import PremiumCard from './premium-card'
 import Notification from './subscribe-notification'
+import AnniversaryMessage from './anniversary-message'
 
 const Page = styled.section`
   background-color: rgba(0, 0, 0, 0.05);
@@ -28,6 +29,17 @@ const SectionTitle = styled.h2`
 
 const PlanWrapper = styled.div`
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 24px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    row-gap: 32px;
+  }
+`
+
+const CardWrapper = styled.div`
   max-width: 468px;
 `
 
@@ -36,8 +48,11 @@ export default function PlanForBasicMember() {
     <>
       <Page>
         <PlanWrapper>
-          <SectionTitle>方案選擇</SectionTitle>
-          <PremiumCard />
+          <AnniversaryMessage />
+          <CardWrapper>
+            <SectionTitle>方案選擇</SectionTitle>
+            <PremiumCard />
+          </CardWrapper>
         </PlanWrapper>
       </Page>
       <Notification />
