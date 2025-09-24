@@ -1,4 +1,4 @@
-import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 const { removeEmptyContentBlock, hasContentInRawContentBlock } = MirrorMedia
 
 /**
@@ -200,6 +200,19 @@ function modifyFirstImageEntity(rawContentBlock) {
   return rawContentBlock
 }
 
+/**
+ * Extract plain text from Draft content blocks for JSON-LD "articleBody".
+ *
+ * @param {import('../type/draft-js').Draft | null} draft
+ * @param {number} [maxLength=5000] - Optional limit for truncation
+ * @returns {string | undefined}
+ */
+function extractArticleBody(draft, maxLength = 5000) {
+  if (!draft || !Array.isArray(draft.blocks)) return undefined
+  const text = draft.blocks?.map((block) => block.text).join('\n')
+  return text.slice(0, maxLength)
+}
+
 export {
   handleStoryPageRedirect,
   copyAndSliceDraftBlock,
@@ -207,4 +220,5 @@ export {
   getSlicedIndexAndUnstyledBlocksCount,
   changeUtcToGmtTimeStamp,
   modifyFirstImageEntity,
+  extractArticleBody,
 }
