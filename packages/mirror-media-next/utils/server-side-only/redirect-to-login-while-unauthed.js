@@ -97,6 +97,17 @@ const redirectToLoginWhileUnauthed =
         }
       } else {
         if (options.skipRedirect) {
+          // Case: user is not logged in, but skipRedirect = true
+          // → Still execute getServerSidePropsFunc so page can render data without auth
+          if (getServerSidePropsFunc) {
+            // directly return the Promise without await.
+            // Because the outer function is already async, Next.js will handle it correctly.
+            // Using await here is unnecessary, unless we need to inspect keys like "props" or "redirect".
+            return /** @type {Promise<GetSSRResult<P>>} */ (
+              getServerSidePropsFunc(ctx)
+            )
+          }
+
           return { props: /** @type {P} */ ({}) }
         }
 
