@@ -9,6 +9,7 @@ import Layout from '../../../components/shared/layout'
 import { getLogTraceObject } from '../../../utils'
 import { processSettledResult } from '../../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../../utils/server-side-only/redirect-to-login-while-unauthed'
+import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
 
 const Page = styled.div`
   padding: 0;
@@ -59,34 +60,34 @@ export default function BookBIssuePublish({ weeklys }) {
 /**
  * @type {import('next').GetServerSideProps}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ params, req, res }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed({
+  skipRedirect: IS_ANNIVERSARY_PROMO_ACTIVE,
+})(async ({ params, req, res }) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
-    const { issue } = params
+  const globalLogFields = getLogTraceObject(req)
+  const { issue } = params
 
-    const responses = await Promise.allSettled([
-      client.query({
-        query: fetchWeeklys,
-      }),
-    ])
+  const responses = await Promise.allSettled([
+    client.query({
+      query: fetchWeeklys,
+    }),
+  ])
 
-    const weeklys = processSettledResult(
-      responses[0],
-      (
-        /** @type {import('@apollo/client').ApolloQueryResult<any> | undefined} */ gqlData
-      ) => {
-        return gqlData?.data?.magazines || []
-      },
-      `Error occurs while getting data in magazine page (issue: ${issue})`,
-      globalLogFields
-    )
+  const weeklys = processSettledResult(
+    responses[0],
+    (
+      /** @type {import('@apollo/client').ApolloQueryResult<any> | undefined} */ gqlData
+    ) => {
+      return gqlData?.data?.magazines || []
+    },
+    `Error occurs while getting data in magazine page (issue: ${issue})`,
+    globalLogFields
+  )
 
-    return {
-      props: {
-        weeklys,
-      },
-    }
+  return {
+    props: {
+      weeklys,
+    },
   }
-)
+})
