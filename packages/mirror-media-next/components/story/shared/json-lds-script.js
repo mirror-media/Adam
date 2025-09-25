@@ -1,8 +1,12 @@
 import { memo } from 'react'
+
 import { SITE_URL } from '../../../config/index.mjs'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../../constants/index'
 import Script from 'next/script'
-import { changeUtcToGmtTimeStamp } from '../../../utils/story'
+import {
+  changeUtcToGmtTimeStamp,
+  extractArticleBody,
+} from '../../../utils/story'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post } PostData
@@ -27,6 +31,9 @@ const generateJsonLdsData = (postData, currentPage) => {
     og_description = '',
     brief = { blocks: [], entityMap: {} },
     isMember = false,
+    tags = [],
+    trimmedContent = null,
+    content = null,
   } = postData
 
   const writersWithOrdered =
@@ -60,10 +67,17 @@ const generateJsonLdsData = (postData, currentPage) => {
     image: imageUrl,
     datePublished: changeUtcToGmtTimeStamp(publishedDate),
     dateModified: changeUtcToGmtTimeStamp(updatedAt),
-    author: {
-      '@type': hasWriter ? 'Person' : 'Organization',
-      name: authorName,
-    },
+    author: hasWriter
+      ? writersWithOrdered.map((writer) => ({
+          '@type': 'Person',
+          name: writer.name,
+          url: `${SITE_URL}/author/${writer.id}/`,
+        }))
+      : {
+          '@type': 'Organization',
+          name: SITE_TITLE,
+          url: SITE_URL,
+        },
     publisher: {
       '@type': 'Organization',
       name: SITE_TITLE,
@@ -77,6 +91,10 @@ const generateJsonLdsData = (postData, currentPage) => {
     thumbnailUrl: imageUrl,
     articleSection: hasSection ? sectionWithOrdered[0].name : undefined,
     isAccessibleForFree: 'True',
+    keywords: tags?.map((tag) => tag.name),
+    articleBody: isMember
+      ? extractArticleBody(trimmedContent)
+      : extractArticleBody(content),
   }
   if (isMember) {
     jsonLdNewsArticle.hasPart = {

@@ -26,6 +26,7 @@ const generateMetaData = (postData) => {
     isAdult = false,
     tags = [],
     publishedDate = '',
+    updatedAt = '',
     isAdvertised = false,
     sections = [],
     sectionsInInputOrder = [],
@@ -75,6 +76,7 @@ const generateMetaData = (postData) => {
     topicSlug,
     authorName,
     publishedDate,
+    updatedAt,
   }
 }
 
@@ -97,6 +99,7 @@ export default function StoryHead({ postData }) {
     topicSlug,
     authorName,
     publishedDate,
+    updatedAt,
   } = generateMetaData(postData)
 
   return (
@@ -157,22 +160,25 @@ export default function StoryHead({ postData }) {
           content={publishedDate}
           key="article:published_time"
         />
+        <meta
+          property="article:modified_time"
+          content={updatedAt}
+          key="article:modified_time"
+        />
         {tagsNameStr !== '' && (
-          <meta
-            property="article:tag"
-            content={tagsNameStr}
-            key="article:tag"
-          />
-        )}
-        {tagsNameStr !== '' && (
-          <meta name="keywords" content={tagsNameStr} key="keywords" />
-        )}
-        {tagsNameStr !== '' && (
-          <meta
-            name="news_keywords"
-            content={tagsNameStr}
-            key="news_keywords"
-          />
+          <>
+            <meta
+              property="article:tag"
+              content={tagsNameStr}
+              key="article:tag"
+            />
+            <meta name="keywords" content={tagsNameStr} key="keywords" />
+            <meta
+              name="news_keywords"
+              content={tagsNameStr}
+              key="news_keywords"
+            />
+          </>
         )}
       </Head>
       <DevGptAd />
