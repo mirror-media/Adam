@@ -112,7 +112,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
-    IS_ANNIVERSARY_PROMO_ACTIVE = false
+    IS_ANNIVERSARY_PROMO_ACTIVE = true
 
     GPT_MODE = 'prod'
 
@@ -172,7 +172,7 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
-    IS_ANNIVERSARY_PROMO_ACTIVE = false
+    IS_ANNIVERSARY_PROMO_ACTIVE = true
 
     GPT_MODE = 'prod'
 
