@@ -53,6 +53,12 @@ Ref: [ECMAScript Modules | Node.js](https://nodejs.org/docs/latest-v13.x/api/esm
 
 該className僅用於協助Google Tag Manager蒐集數據，請勿使用該className切版。
 
+### 在調整 element 的 className 時需注意
+在調整 element 的 `className` 時，請特別留意 story、topic 頁面：  
+這些頁面上的部分 `className` 可能是前人刻意保留，用於 CMS 傳遞的自訂 CSS style，用來覆寫原有樣式。
+
+請勿隨意刪除或更動，避免造成某些特定頁面樣式錯誤。
+
 ### 使用 JSDoc 寫出與 TypeScript 中 `as const` 等效的註解
 ```
 /** @type {const} */ ([something]) 

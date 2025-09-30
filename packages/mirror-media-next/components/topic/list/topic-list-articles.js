@@ -67,10 +67,11 @@ export default function TopicListArticles({
   return (
     <>
       <ListArticlesAboveAd
-        posts={initialPosts}
+        initialPosts={initialPosts}
         topicSlug={topicSlug}
         featuredPostsCount={featuredPostsCount}
         renderPageSize={renderPageSize}
+        shouldShowListArticlesBelowAd={shouldShowListArticlesBelowAd}
       ></ListArticlesAboveAd>
       {shouldShowAd && dfp && <StyledGPTAd adUnit={dfp}></StyledGPTAd>}
       {shouldShowListArticlesBelowAd && (

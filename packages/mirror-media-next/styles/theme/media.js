@@ -7,6 +7,11 @@ const mediaSize = {
   xxl: 1440,
 }
 
+/**
+ * @typedef {Object} Theme
+ * @property {typeof breakpoint} breakpoint - Media query breakpoints
+ */
+
 export const breakpoint = {
   xs: `@media (min-width: ${mediaSize.xs}px)`,
   sm: `@media (min-width: ${mediaSize.sm}px)`,

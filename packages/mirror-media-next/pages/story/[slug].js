@@ -30,7 +30,7 @@ import {
 } from '../../utils'
 import { logAxiosError, logGqlError } from '../../utils/log/shared'
 import { handleStoryPageRedirect } from '../../utils/story'
-import { MirrorMedia } from '@mirrormedia/lilith-draft-renderer'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
