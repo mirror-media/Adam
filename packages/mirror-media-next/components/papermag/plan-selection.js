@@ -3,6 +3,8 @@ import SubscribePlanBtn from '../subscribe-plan-btn'
 import { PLAN } from '../../constants/papermag'
 import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
 import { getNumberWithCommas } from '../../utils'
+import Image from 'next/image'
+import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
 
 const PlansWrapper = styled.section`
   width: 100%;
@@ -22,8 +24,17 @@ const PlansWrapper = styled.section`
   }
 `
 
-const PlanCard = styled.div`
+const PlanBanner = styled(Image)`
   width: 100%;
+  height: 100%;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    grid-column: 1 / 2;
+    grid-row: 1 / 4;
+  }
+`
+
+const PlanCard = styled.div`
   padding: 24px 16px 16px 16px;
   text-align: center;
   border-radius: 20px;
@@ -113,6 +124,7 @@ export default function PageBody() {
   return (
     <>
       <PlansWrapper>
+        <PlanBanner src={PlanBannerImg} alt="文宣" priority />
         {ITEMS.map((item) => (
           <PlanCard key={item.id}>
             <PlanTitle>{item.title}</PlanTitle>
