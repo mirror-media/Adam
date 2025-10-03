@@ -71,6 +71,14 @@ const PlanCTA = styled.div`
     justify-content: space-between;
   }
 `
+const CtaText = styled.p`
+  width: 100%;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: auto;
+  }
+`
+
 const PlanTitle = styled.h2`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
@@ -167,7 +175,9 @@ export default function PageBody() {
             />
           </PlanCard>
         ))}
-        <PlanCTA></PlanCTA>
+        <PlanCTA>
+          <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
+        </PlanCTA>
       </PlansWrapper>
     </>
   )
