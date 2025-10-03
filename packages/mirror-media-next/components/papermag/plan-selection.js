@@ -5,6 +5,7 @@ import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
 import { getNumberWithCommas } from '../../utils'
 import Image from 'next/image'
 import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
+import Link from 'next/link'
 
 const PlansWrapper = styled.section`
   width: 100%;
@@ -78,7 +79,13 @@ const CtaText = styled.p`
     width: auto;
   }
 `
-
+const CtaBtn = styled.div`
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #054f77;
+  background-color: white;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
+`
 const PlanTitle = styled.h2`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
@@ -177,6 +184,9 @@ export default function PageBody() {
         ))}
         <PlanCTA>
           <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
+          <Link href="mailto:service@mirrormedia.mg">
+            <CtaBtn>聯絡我們</CtaBtn>
+          </Link>
         </PlanCTA>
       </PlansWrapper>
     </>
