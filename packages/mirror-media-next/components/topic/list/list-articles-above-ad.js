@@ -60,33 +60,20 @@ const ShowMoreButton = styled.button`
 const Loader = () => {
   return <Image src={LoadingPage} alt="loading page"></Image>
 }
-/**
- * @typedef ListArticlesAboveAdProps
- * @property {import('./list-articles').Article[]} [initialPosts]
- * @property {string} [topicSlug]
- * @property {number} [featuredPostsCount]
- * @property {number} [renderPageSize]
- * @property {boolean} [shouldShowListArticlesBelowAd]
- */
-
 export default function ListArticlesAboveAd({
-  initialPosts = [],
+  posts = [],
   topicSlug = '',
   featuredPostsCount = 0,
   renderPageSize = 12,
-  shouldShowListArticlesBelowAd,
 }) {
-  const [renderPosts, setRenderPosts] = useState(initialPosts)
+  const [renderPosts, setRenderPosts] = useState(posts)
 
   /**
    * Two situation:
    * 1. `featurePostsCount` is greater than `renderPosts.length`, which means there are some featured post is not fetched and render yet.
    * 2.  `featurePostsCount` is equal to or lower than `renderPosts.length`, which means all featured post has rendered.
    */
-  const hasMoreFeaturedPosts = shouldShowListArticlesBelowAd
-    ? false
-    : featuredPostsCount > renderPosts.length
-
+  const hasMoreFeaturedPosts = featuredPostsCount > renderPosts.length
   const [getFeaturedPostsInTopic, { loading, error }] = useLazyQuery(
     fetchTopic,
     {
