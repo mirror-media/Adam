@@ -4,29 +4,27 @@ import { PLAN } from '../../constants/papermag'
 import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
 import { getNumberWithCommas } from '../../utils'
 
-const Body = styled.section`
-  padding: 24px 0;
-`
-
-const PlansWrapper = styled.ul`
-  display: grid;
-  width: 90%;
+const PlansWrapper = styled.section`
+  width: 100%;
   margin: 0 auto;
-  grid-row-gap: 12px;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    padding: 24px 0;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 24px;
-  }
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 960px;
+    width: 975px;
+    padding: 48px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 60px;
+    grid-row-gap: 24px;
   }
 `
 
-const PlanCard = styled.li`
-  padding: 24px 16px;
+const PlanCard = styled.div`
+  width: 100%;
+  padding: 24px 16px 16px 16px;
   text-align: center;
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -34,13 +32,9 @@ const PlanCard = styled.li`
   box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.06),
     0px 2px 12px 0px rgba(0, 0, 0, 0.08);
 
-  ${({ theme }) => theme.breakpoint.md} {
-    padding: 24px 24px;
-  }
-
   ${({ theme }) => theme.breakpoint.xl} {
-    padding: 24px 24px;
-    width: 468px;
+    width: 436px;
+    padding: 16px;
   }
 `
 const PlanTitle = styled.h2`
@@ -117,7 +111,7 @@ const ITEMS = [
 
 export default function PageBody() {
   return (
-    <Body>
+    <>
       <PlansWrapper>
         {ITEMS.map((item) => (
           <PlanCard key={item.id}>
@@ -139,6 +133,6 @@ export default function PageBody() {
           </PlanCard>
         ))}
       </PlansWrapper>
-    </Body>
+    </>
   )
 }
