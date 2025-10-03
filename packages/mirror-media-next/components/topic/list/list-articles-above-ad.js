@@ -108,6 +108,7 @@ export default function ListArticlesAboveAd({
 
       {hasMoreFeaturedPosts && (
         <ShowMoreButton
+          className="showMoreButton"
           disabled={loading}
           isLoading={loading}
           onClick={handleLoadMore}
