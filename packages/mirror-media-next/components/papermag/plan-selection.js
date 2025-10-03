@@ -48,6 +48,29 @@ const PlanCard = styled.div`
     padding: 16px;
   }
 `
+
+const PlanCTA = styled.div`
+  border-radius: 20px;
+  border: 1px solid #054f77;
+  padding: 24px 16px 16px 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #054f77;
+  line-height: 150%;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 436px;
+    padding: 24px 16px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`
 const PlanTitle = styled.h2`
   color: rgba(0, 0, 0, 0.87);
   font-size: 24px;
@@ -144,6 +167,7 @@ export default function PageBody() {
             />
           </PlanCard>
         ))}
+        <PlanCTA></PlanCTA>
       </PlansWrapper>
     </>
   )
