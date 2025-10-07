@@ -16,7 +16,7 @@ const PlansWrapper = styled.section`
   row-gap: 12px;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 975px;
+    width: 1020px;
     padding: 48px 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -30,6 +30,7 @@ const PlanBanner = styled(Image)`
   height: 100%;
 
   ${({ theme }) => theme.breakpoint.xl} {
+    width: 478px;
     grid-column: 1 / 2;
     grid-row: 1 / 4;
   }
@@ -45,7 +46,7 @@ const PlanCard = styled.div`
     0px 2px 12px 0px rgba(0, 0, 0, 0.08);
 
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 436px;
+    width: 468px;
     padding: 16px;
   }
 `
@@ -66,8 +67,8 @@ const PlanCTA = styled.div`
   line-height: 150%;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 436px;
-    padding: 24px 16px;
+    width: 468px;
+    padding: 16px 24px;
     flex-direction: row;
     justify-content: space-between;
   }
