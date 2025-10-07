@@ -3,30 +3,41 @@ import SubscribePlanBtn from '../subscribe-plan-btn'
 import { PLAN } from '../../constants/papermag'
 import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
 import { getNumberWithCommas } from '../../utils'
+import Image from 'next/image'
+import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
+import Link from 'next/link'
 
-const Body = styled.section`
-  padding: 24px 0;
-`
-
-const PlansWrapper = styled.ul`
-  display: grid;
-  width: 90%;
+const PlansWrapper = styled.section`
+  width: 100%;
   margin: 0 auto;
-  grid-row-gap: 12px;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    padding: 24px 0;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 24px;
-  }
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    width: 960px;
+    width: 1020px;
+    padding: 48px 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 60px;
+    grid-row-gap: 24px;
   }
 `
 
-const PlanCard = styled.li`
-  padding: 24px 16px;
+const PlanBanner = styled(Image)`
+  width: 100%;
+  height: 100%;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 478px;
+    grid-column: 1 / 2;
+    grid-row: 1 / 4;
+  }
+`
+
+const PlanCard = styled.div`
+  padding: 24px 16px 16px 16px;
   text-align: center;
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -34,14 +45,47 @@ const PlanCard = styled.li`
   box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.06),
     0px 2px 12px 0px rgba(0, 0, 0, 0.08);
 
-  ${({ theme }) => theme.breakpoint.md} {
-    padding: 24px 24px;
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: 468px;
+    padding: 16px;
   }
+`
+
+const PlanCTA = styled.div`
+  border-radius: 20px;
+  border: 1px solid #054f77;
+  padding: 24px 16px 16px 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #054f77;
+  line-height: 150%;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    padding: 24px 24px;
     width: 468px;
+    padding: 16px 24px;
+    flex-direction: row;
+    justify-content: space-between;
   }
+`
+const CtaText = styled.p`
+  width: 100%;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    width: auto;
+  }
+`
+const CtaBtn = styled.div`
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #054f77;
+  background-color: white;
+  box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
 `
 const PlanTitle = styled.h2`
   color: rgba(0, 0, 0, 0.87);
@@ -117,8 +161,9 @@ const ITEMS = [
 
 export default function PageBody() {
   return (
-    <Body>
+    <>
       <PlansWrapper>
+        <PlanBanner src={PlanBannerImg} alt="文宣" priority />
         {ITEMS.map((item) => (
           <PlanCard key={item.id}>
             <PlanTitle>{item.title}</PlanTitle>
@@ -138,7 +183,13 @@ export default function PageBody() {
             />
           </PlanCard>
         ))}
+        <PlanCTA>
+          <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
+          <Link href="mailto:service@mirrormedia.mg">
+            <CtaBtn>聯絡我們</CtaBtn>
+          </Link>
+        </PlanCTA>
       </PlansWrapper>
-    </Body>
+    </>
   )
 }
