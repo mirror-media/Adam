@@ -18,22 +18,43 @@ const PlansWrapper = styled.section`
   ${({ theme }) => theme.breakpoint.xl} {
     width: 1020px;
     padding: 48px 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 60px;
-    grid-row-gap: 24px;
+  }
+`
+
+const DesktopLayoutWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    display: flex;
+    flex-direction: row;
+    column-gap: 60px;
+    row-gap: 24px;
+    flex-wrap: wrap;
+  }
+`
+
+const LeftColumnWrapper = styled.div`
+  ${({ theme }) => theme.breakpoint.xl} {
+    flex: 0 0 478px;
+  }
+`
+
+const RightColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 12px;
+
+  ${({ theme }) => theme.breakpoint.xl} {
+    flex: 1;
+    row-gap: 24px;
   }
 `
 
 const PlanBanner = styled(Image)`
   width: 100%;
   height: 100%;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    width: 478px;
-    grid-column: 1 / 2;
-    grid-row: 1 / 4;
-  }
 `
 
 const PlanCard = styled.div`
@@ -163,32 +184,40 @@ export default function PageBody() {
   return (
     <>
       <PlansWrapper>
-        <PlanBanner src={PlanBannerImg} alt="文宣" priority />
-        {ITEMS.map((item) => (
-          <PlanCard key={item.id}>
-            <PlanTitle>{item.title}</PlanTitle>
-            <Hr />
-            <PlanContent>{item.context}</PlanContent>
-            <OriginalPrice>
-              原價 {getNumberWithCommas(item.basePrice)}
-            </OriginalPrice>
-            <SpecialPrice>特價 {getNumberWithCommas(item.price)}</SpecialPrice>
-            <SubscribePlanBtn
-              title={item.button.title}
-              subtitle="續訂另有優惠"
-              bgColor={item.button.bgColor}
-              hoverColor={item.button.hoverColor}
-              hoverText={item.button.hoverText}
-              href={item.button.href}
-            />
-          </PlanCard>
-        ))}
-        <PlanCTA>
-          <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
-          <Link href="mailto:service@mirrormedia.mg">
-            <CtaBtn>聯絡我們</CtaBtn>
-          </Link>
-        </PlanCTA>
+        <DesktopLayoutWrapper>
+          <LeftColumnWrapper>
+            <PlanBanner src={PlanBannerImg} alt="文宣" priority />
+          </LeftColumnWrapper>
+          <RightColumnWrapper>
+            {ITEMS.map((item) => (
+              <PlanCard key={item.id}>
+                <PlanTitle>{item.title}</PlanTitle>
+                <Hr />
+                <PlanContent>{item.context}</PlanContent>
+                <OriginalPrice>
+                  原價 {getNumberWithCommas(item.basePrice)}
+                </OriginalPrice>
+                <SpecialPrice>
+                  特價 {getNumberWithCommas(item.price)}
+                </SpecialPrice>
+                <SubscribePlanBtn
+                  title={item.button.title}
+                  subtitle="續訂另有優惠"
+                  bgColor={item.button.bgColor}
+                  hoverColor={item.button.hoverColor}
+                  hoverText={item.button.hoverText}
+                  href={item.button.href}
+                />
+              </PlanCard>
+            ))}
+            <PlanCTA>
+              <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
+              <Link href="mailto:service@mirrormedia.mg">
+                <CtaBtn>聯絡我們</CtaBtn>
+              </Link>
+            </PlanCTA>
+          </RightColumnWrapper>
+        </DesktopLayoutWrapper>
       </PlansWrapper>
     </>
   )
