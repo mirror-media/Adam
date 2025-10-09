@@ -212,7 +212,11 @@ export default function PageBody() {
             ))}
             <PlanCTA>
               <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
-              <Link href="mailto:service@mirrormedia.mg">
+              <Link
+                href="mailto:service@mirrormedia.mg"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 <CtaBtn>聯絡我們</CtaBtn>
               </Link>
             </PlanCTA>
