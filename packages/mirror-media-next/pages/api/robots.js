@@ -5,7 +5,6 @@ export default function handler(req, res) {
 
   if (ENV === 'prod') {
     res.write(`User-agent: Googlebot
-	 Disallow: /external/
    Disallow: /login
 
 	User-agent: *
