@@ -182,7 +182,7 @@ export default function CustomHead({
           {/* These metatags are for search result usage */}
           <meta name="page-type" content={pageType} />
           <meta name="page-slug" content={pageSlug} />
-          <meta name="page-image" content={siteInformation?.image?.url} />
+          <meta name="image" content={siteInformation?.image?.url} />
         </>
       )}
     </Head>
