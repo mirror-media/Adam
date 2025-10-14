@@ -23,7 +23,6 @@ import DevGptAd from '../dev-gpt-ad'
 const generateMetaData = (postData) => {
   const {
     slug = '',
-    isAdult = false,
     tags = [],
     publishedDate = '',
     updatedAt = '',
@@ -39,7 +38,7 @@ const generateMetaData = (postData) => {
     topics = null,
   } = postData
 
-  const robots = isAdult ? 'noindex' : 'index'
+  const robots = 'index'
   const nonAmpUrl = `https://${SITE_URL}/story/${slug}`
   const ampUrl = `https://${SITE_URL}/story/amp/${slug}`
   const shouldCreateAmpHtmlLink = state === 'published' && !isAdvertised
