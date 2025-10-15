@@ -6,6 +6,8 @@ import { getNumberWithCommas } from '../../utils'
 import Image from 'next/image'
 import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
 import Link from 'next/link'
+import useWindowDimensions from '../../hooks/use-window-dimensions'
+import { mediaSize } from '../../styles/media'
 
 const PlansWrapper = styled.section`
   width: 100%;
@@ -180,7 +182,26 @@ const ITEMS = [
   },
 ]
 
+const desktopCtaBtn = (
+  <Link
+    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg"
+    target="_blank"
+    rel="noreferrer noopener"
+  >
+    <CtaBtn>聯絡我們</CtaBtn>
+  </Link>
+)
+
+const tabletAndMobileCtaBtn = (
+  <Link href="mailto:service@mirrormedia.mg">
+    <CtaBtn>聯絡我們</CtaBtn>
+  </Link>
+)
+
 export default function PageBody() {
+  const { width } = useWindowDimensions()
+  const isDesktopWidth = width >= mediaSize.xl
+
   return (
     <>
       <PlansWrapper>
@@ -212,13 +233,9 @@ export default function PageBody() {
             ))}
             <PlanCTA>
               <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
-              <Link
-                href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg"
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                <CtaBtn>聯絡我們</CtaBtn>
-              </Link>
+              {/* Render Gmail composer for desktop, mailto for mobile and tablet */}
+              {width !== undefined &&
+                (isDesktopWidth ? desktopCtaBtn : tabletAndMobileCtaBtn)}
             </PlanCTA>
           </RightColumnWrapper>
         </DesktopLayoutWrapper>
