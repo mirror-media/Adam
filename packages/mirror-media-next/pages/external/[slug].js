@@ -47,6 +47,7 @@ export default function External({ external, headerData }) {
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
   const [allRelatedStories, setAllRelatedStories] = useState([])
+  const maxImagePreviewSize = 'max-image-preview:large'
 
   useEffect(() => {
     const handleScroll = async () => {
@@ -96,6 +97,7 @@ export default function External({ external, headerData }) {
   return (
     <>
       <Head>
+        <meta name="robots" content={maxImagePreviewSize} key="robots" />
         <meta
           property="dable:item_id"
           content={Array.isArray(slug) ? slug?.[0] : slug}
