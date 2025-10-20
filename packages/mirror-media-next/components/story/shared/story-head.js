@@ -38,7 +38,7 @@ const generateMetaData = (postData) => {
     topics = null,
   } = postData
 
-  const robots = 'index'
+  const robots = 'index, max-image-preview:large'
   const nonAmpUrl = `https://${SITE_URL}/story/${slug}`
   const ampUrl = `https://${SITE_URL}/story/amp/${slug}`
   const shouldCreateAmpHtmlLink = state === 'published' && !isAdvertised
