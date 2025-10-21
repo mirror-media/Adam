@@ -184,7 +184,7 @@ const ITEMS = [
 
 const desktopCtaBtn = (
   <Link
-    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg"
+    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg&su=官網來信：聯絡我們"
     target="_blank"
     rel="noreferrer noopener"
   >
@@ -193,7 +193,7 @@ const desktopCtaBtn = (
 )
 
 const tabletAndMobileCtaBtn = (
-  <Link href="mailto:service@mirrormedia.mg">
+  <Link href="mailto:service@mirrormedia.mg?subject=官網來信：聯絡我們">
     <CtaBtn>聯絡我們</CtaBtn>
   </Link>
 )
