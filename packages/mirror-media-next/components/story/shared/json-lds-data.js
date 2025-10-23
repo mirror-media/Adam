@@ -1,9 +1,6 @@
 import { SITE_URL } from '../../../config/index.mjs'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../../constants/index'
-import {
-  changeUtcToGmtTimeStamp,
-  extractArticleBody,
-} from '../../../utils/story'
+import { toTaipeiISOString, extractArticleBody } from '../../../utils/story'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post } PostData
@@ -62,8 +59,8 @@ export const generateJsonLdsData = (postData, currentPage) => {
     },
     headline: title,
     image: imageUrl,
-    datePublished: changeUtcToGmtTimeStamp(publishedDate),
-    dateModified: changeUtcToGmtTimeStamp(updatedAt),
+    datePublished: toTaipeiISOString(publishedDate),
+    dateModified: toTaipeiISOString(updatedAt),
     author: hasWriter
       ? writersWithOrdered.map((writer) => ({
           '@type': 'Person',
