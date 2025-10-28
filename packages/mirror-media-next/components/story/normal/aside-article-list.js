@@ -13,6 +13,10 @@ import {
 import Image from '@readr-media/react-image'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { needInsertPopInAdAfter, getPopInId } from '../../../utils/ad'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { mediaSize } from '../../../styles/media'
+import nextImage from 'next/image'
+import gnewsGif from '../../../public/images-next/story/gnews-gif.gif'
 
 const PopInAdInHotList = dynamic(
   () => import('../../../components/ads/pop-in/pop-in-ad-in-hot-list'),
@@ -251,6 +255,12 @@ const TitleLoading = styled(Title)`
     height: 24px;
   }
 `
+const GnewsGif = styled(nextImage)`
+  margin: 20px auto;
+  width: 320px;
+  height: 100px;
+`
+
 /**
  *
  * @param {Object} props
@@ -389,6 +399,18 @@ export default function AsideArticleList({
     )
   })
 
+  const { width } = useWindowDimensions()
+  const isDesktop = width >= mediaSize.xl
+  const desktopGnewsGif = isDesktop && (
+    <Link
+      href="https://news.google.com/publications/CAAqKQgKIiNDQklTRkFnTWFoQUtEbTFwY25KdmNtMWxaR2xoTG0xbktBQVAB?ceid=TW:zh-Hant&oc=3&hl=zh-TW&gl=TW"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <GnewsGif src={gnewsGif} alt="Google News GIF" />
+    </Link>
+  )
+
   return (
     <>
       <Wrapper>
@@ -408,6 +430,7 @@ export default function AsideArticleList({
         >
           {newsJsx}
         </ArticleWrapper>
+        {desktopGnewsGif}
       </Wrapper>
     </>
   )
