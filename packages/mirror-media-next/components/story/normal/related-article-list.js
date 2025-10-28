@@ -273,8 +273,8 @@ export default function RelatedArticleList({
     <Wrapper>
       <div className="title">延伸閱讀</div>
       {relatedsArticleJsx}
-      {mobileAndTabletGnewsGif}
       {advertisementJsx}
+      {mobileAndTabletGnewsGif}
     </Wrapper>
   )
 }
