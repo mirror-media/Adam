@@ -2,12 +2,14 @@
 
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import nextImage from 'next/image'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'
 import { MICRO_AD_UNITS } from '../../../constants/ads'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
+import gnewsGif from '../../../public/images-next/story/gnews-gif.gif'
 
 const StyledMicroAd = dynamic(
   () => import('../../../components/ads/micro-ad/micro-ad-with-label'),
@@ -49,6 +51,16 @@ const Wrapper = styled.section`
       display: none;
       margin: 0 auto 16px;
     }
+  }
+`
+
+const GnewsGif = styled(nextImage)`
+  margin: 28px auto;
+  width: 320px;
+  height: 100px;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    margin: 24px auto;
   }
 `
 
@@ -186,7 +198,7 @@ export default function RelatedArticleList({
 }) {
   const { width } = useWindowDimensions()
   const device = width >= mediaSize.xl ? 'PC' : 'MB'
-
+  const isMobileOrTablet = width < mediaSize.xl
   const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
 
   const relatedsArticleJsx = relateds.length ? (
@@ -236,6 +248,16 @@ export default function RelatedArticleList({
     </ArticleWrapper>
   ) : null
 
+  const mobileAndTabletGnewsGif = isMobileOrTablet && (
+    <Link
+      href="https://news.google.com/publications/CAAqKQgKIiNDQklTRkFnTWFoQUtEbTFwY25KdmNtMWxaR2xoTG0xbktBQVAB?ceid=TW:zh-Hant&oc=3&hl=zh-TW&gl=TW"
+      target="_blank"
+      rel="noreferrer noopener"
+    >
+      <GnewsGif src={gnewsGif} alt="Google News GIF" />
+    </Link>
+  )
+
   const advertisementJsx = shouldShowAd ? (
     <AdvertisementWrapper>
       {/* micro ad */}
@@ -251,6 +273,7 @@ export default function RelatedArticleList({
     <Wrapper>
       <div className="title">延伸閱讀</div>
       {relatedsArticleJsx}
+      {mobileAndTabletGnewsGif}
       {advertisementJsx}
     </Wrapper>
   )
