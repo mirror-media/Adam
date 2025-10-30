@@ -1,6 +1,7 @@
 import { SITE_URL } from '../../../config/index.mjs'
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../../constants/index'
-import { toTaipeiISOString, extractArticleBody } from '../../../utils/story'
+import { extractArticleBody } from '../../../utils/story'
+import { toTaipeiISOString } from '../../../utils/index'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post } PostData
