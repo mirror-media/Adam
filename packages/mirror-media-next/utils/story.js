@@ -1,8 +1,6 @@
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 const { removeEmptyContentBlock, hasContentInRawContentBlock } = MirrorMedia
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
+
 /**
  * @typedef {Object} Redirect
  * @property {{ destination: string, permanent: boolean }} redirect
@@ -158,21 +156,6 @@ const getSlicedIndexAndUnstyledBlocksCount = (
 }
 
 /**
-  * Converts a UTC timestamp string to a Taipei time ISO 8601 string.
-  * 
-  * @param {string} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
-  * @returns {string | undefined} The ISO 8601 string in Taipei time
-  (e.g., "2025-10-16T01:11:00+08:00"), or undefined if the input is invalid.
-   */
-const toTaipeiISOString = (utcTimeStamp) => {
-  if (!utcTimeStamp) return
-
-  dayjs.extend(utc)
-  dayjs.extend(timezone)
-  return dayjs(utcTimeStamp).tz('Asia/Taipei').format()
-}
-
-/**
  * Convert the UTC timestamp to GMT timestamp by adding 8 hours.
  *
  * @param {string} utcTimeStamp
@@ -235,7 +218,6 @@ export {
   copyAndSliceDraftBlock,
   getBlocksCount,
   getSlicedIndexAndUnstyledBlocksCount,
-  toTaipeiISOString,
   changeUtcToGmtTimeStamp,
   modifyFirstImageEntity,
   extractArticleBody,
