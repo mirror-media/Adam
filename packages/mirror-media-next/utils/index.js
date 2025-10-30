@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { GCP_PROJECT_ID } from '../config/index.mjs'
+import timezone from 'dayjs/plugin/timezone'
 
 /**
  * @typedef {import('../apollo/fragments/section').Section[]} Sections
@@ -79,6 +80,21 @@ function getSectionNameGql(sections = [], partner) {
     }
   }
   return undefined
+}
+
+/**
+  * Converts a UTC timestamp string to a Taipei time ISO 8601 string.
+  * 
+  * @param {string} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
+  * @returns {string | undefined} The ISO 8601 string in Taipei time
+  (e.g., "2025-10-16T01:11:00+08:00"), or undefined if the input is invalid.
+   */
+const toTaipeiISOString = (utcTimeStamp) => {
+  if (!utcTimeStamp) return
+
+  dayjs.extend(utc)
+  dayjs.extend(timezone)
+  return dayjs(utcTimeStamp).tz('Asia/Taipei').format()
 }
 
 /**
@@ -433,6 +449,7 @@ const getLogTraceObject = (req) => {
 }
 
 export {
+  toTaipeiISOString,
   transformTimeDataIntoDotFormat,
   transformTimeDataIntoSlashFormat,
   getSectionNameGql,
