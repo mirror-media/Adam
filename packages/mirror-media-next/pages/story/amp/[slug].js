@@ -28,6 +28,7 @@ import AmpGptAd from '../../../components/amp/amp-ads/amp-gpt-ad'
 import AmpGptStickyAd from '../../../components/amp/amp-ads/amp-gpt-sticky-ad'
 import { getAmpGptDataSlotSection } from '../../../utils/ad'
 import JsonLdsScript from '../../../components/story/shared/json-lds-script'
+import { generateJsonLdsData } from '../../../components/story/shared/json-lds-data'
 import { logGqlError } from '../../../utils/log/shared'
 import { getRelatedStories } from '../../api/recomemd'
 
@@ -55,10 +56,11 @@ const AmpBody = styled.body`
  *
  * @param {Object} props
  * @param {PostData} props.postData
+ * @param {Object[]} props.jsonLdData
  * @returns {React.ReactElement}
  */
 
-function StoryAmpPage({ postData }) {
+function StoryAmpPage({ postData, jsonLdData }) {
   const {
     title = '',
     slug = '',
@@ -101,10 +103,7 @@ function StoryAmpPage({ postData }) {
         {ampGptStickyAdScript}
         {canonicalLink}
       </Head>
-      <JsonLdsScript
-        postData={postData}
-        currentPage="/story/amp/"
-      ></JsonLdsScript>
+      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
       <Layout
         head={{
           title: `${title}`,
@@ -304,12 +303,15 @@ export async function getServerSideProps({ params, req, res }) {
       }
     }
 
+    const jsonLdData = generateJsonLdsData(postData, '/story/amp/')
+
     return {
       props: {
         postData: {
           ...postData,
           allRelatedStories,
         },
+        jsonLdData,
       },
     }
   } catch (err) {

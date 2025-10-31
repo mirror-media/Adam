@@ -36,6 +36,7 @@ import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
+import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 const { hasContentInRawContentBlock } = MirrorMedia
 
@@ -103,6 +104,7 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  * @param {HeaderData} props.headerData
  * @param {flashNewsData} props.flashNewsData
  * @param {StoryLayoutType} props.storyLayoutType
+ * @param {Object[]} props.jsonLdData
  * @returns {React.ReactNode}
  */
 export default function Story({
@@ -110,6 +112,7 @@ export default function Story({
   headerData,
   flashNewsData,
   storyLayoutType,
+  jsonLdData,
 }) {
   const {
     title = '',
@@ -343,7 +346,7 @@ export default function Story({
   return (
     <>
       <StoryHead postData={postData} />
-      <JsonLdsScript postData={postData} currentPage="/story/"></JsonLdsScript>
+      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
       <Layout
         head={{
           title: `${title}`,
@@ -505,12 +508,15 @@ export async function getServerSideProps({ params, req, res }) {
       }
     }
 
+    const jsonLdData = generateJsonLdsData(postData, '/story/')
+
     return {
       props: {
         postData,
         flashNewsData,
         headerData,
         storyLayoutType,
+        jsonLdData,
       },
     }
   } catch (err) {
