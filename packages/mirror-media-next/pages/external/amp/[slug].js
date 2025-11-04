@@ -14,7 +14,7 @@ import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import AmpMain from '../../../components/amp/external/amp-main'
 import { transformHtmlIntoAmpHtml } from '../../../utils/amp-html'
 import Script from 'next/script'
-import JsonLdsScripts from '../../../components/externals/shared/json-lds-scripts'
+import JsonLdsScripts from '../../../components/external/shared/json-lds-scripts'
 import { getLogTraceObject } from '../../../utils'
 import { processSettledResult } from '../../../utils/response-processor'
 
