@@ -64,7 +64,6 @@ export default function External({ external, jsonLdData }) {
         {ampGptStickyAdScript}
         {canonicalLink}
       </Head>
-      <JsonLdsScript jsonLdData={jsonLdData} />
       <Layout
         head={{
           title,
@@ -117,6 +116,7 @@ export default function External({ external, jsonLdData }) {
           </AmpBody>
         </>
       </Layout>
+      <JsonLdsScript jsonLdData={jsonLdData} />
     </>
   )
 }
