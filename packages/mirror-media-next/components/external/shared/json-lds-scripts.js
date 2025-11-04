@@ -1,7 +1,7 @@
 import Script from 'next/script'
 import { memo } from 'react'
 import { SITE_URL } from '../../../config/index.mjs'
-import { changeUtcToGmtTimeStamp } from '../../../utils/story'
+import { toTaipeiISOString } from '../../../utils/index'
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants'
 
 /**
@@ -43,8 +43,8 @@ const generateJsonLds = (external, currentPage) => {
     },
     headline: title,
     image: imageUrl,
-    datePublished: changeUtcToGmtTimeStamp(publishedDate),
-    dateModified: changeUtcToGmtTimeStamp(updatedAt),
+    datePublished: toTaipeiISOString(publishedDate),
+    dateModified: toTaipeiISOString(updatedAt),
     author: {
       '@type': 'Organization',
       name: authorName,
