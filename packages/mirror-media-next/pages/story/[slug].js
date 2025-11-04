@@ -346,7 +346,6 @@ export default function Story({
   return (
     <>
       <StoryHead postData={postData} />
-      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
       <Layout
         head={{
           title: `${title}`,
@@ -381,6 +380,7 @@ export default function Story({
         )}
         {/* {TEST_GPT_AD_FEATURE_TOGGLE === 'on' && <DevGptAd />} */}
       </Layout>
+      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
     </>
   )
 }
