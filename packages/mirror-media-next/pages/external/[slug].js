@@ -112,7 +112,6 @@ export default function External({ external, headerData, jsonLdData }) {
         />
         <link rel="amphtml" href={ampUrl} key="amphtml" />
       </Head>
-      <JsonLdsScript jsonLdData={jsonLdData} />
       <Layout
         head={{
           title: `${external?.title}`,
@@ -133,6 +132,7 @@ export default function External({ external, headerData, jsonLdData }) {
         />
         <FullScreenAds />
       </Layout>
+      <JsonLdsScript jsonLdData={jsonLdData} />
     </>
   )
 }
