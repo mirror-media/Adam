@@ -8,13 +8,14 @@ import {
 } from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
 import { fetchExternalBySlug } from '../../apollo/query/externals'
+import generateJsonLdsData from '../../components/external/shared/json-lds-data'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import Layout from '../../components/shared/layout'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import JsonLdsScripts from '../../components/external/shared/json-lds-scripts'
+import JsonLdsScript from '../../components/external/shared/json-lds-script'
 import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
@@ -40,9 +41,10 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
  * @param {Object} props
  * @param {External} props.external
  * @param {HeaderData} props.headerData
+ * @param {Object[]} props.jsonLdData
  * @returns {React.ReactNode}
  */
-export default function External({ external, headerData }) {
+export default function External({ external, headerData, jsonLdData }) {
   const router = useRouter()
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
@@ -110,7 +112,7 @@ export default function External({ external, headerData }) {
         />
         <link rel="amphtml" href={ampUrl} key="amphtml" />
       </Head>
-      <JsonLdsScripts external={external} currentPage="/external/" />
+      <JsonLdsScript jsonLdData={jsonLdData} />
       <Layout
         head={{
           title: `${external?.title}`,
@@ -195,9 +197,13 @@ export async function getServerSideProps({ params, req, res }) {
     'Error occurs while getting flash news in external page',
     globalLogFields
   )
+
+  const jsonLdData = generateJsonLdsData(external, '/external/')
+
   const props = {
     external,
     headerData: { sectionsData, topicsData, flashNewsData },
+    jsonLdData,
   }
 
   return { props }
