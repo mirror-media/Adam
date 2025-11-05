@@ -103,7 +103,6 @@ function StoryAmpPage({ postData, jsonLdData }) {
         {ampGptStickyAdScript}
         {canonicalLink}
       </Head>
-      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
       <Layout
         head={{
           title: `${title}`,
@@ -173,6 +172,7 @@ function StoryAmpPage({ postData, jsonLdData }) {
           </AmpBody>
         </>
       </Layout>
+      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
     </>
   )
 }
