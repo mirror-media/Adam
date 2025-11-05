@@ -14,7 +14,8 @@ import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import AmpMain from '../../../components/amp/external/amp-main'
 import { transformHtmlIntoAmpHtml } from '../../../utils/amp-html'
 import Script from 'next/script'
-import JsonLdsScripts from '../../../components/externals/shared/json-lds-scripts'
+import generateJsonLdsData from '../../../components/external/shared/json-lds-data'
+import JsonLdsScript from '../../../components/external/shared/json-lds-script'
 import { getLogTraceObject } from '../../../utils'
 import { processSettledResult } from '../../../utils/response-processor'
 
@@ -32,10 +33,10 @@ const AmpBody = styled.body`
  *
  * @param {Object} props
  * @param {External} props.external
- * @param {Object} props.headerData
+ * @param {Object[]} props.jsonLdData
  * @returns {import('react').JSX.Element}
  */
-export default function External({ external }) {
+export default function External({ external, jsonLdData }) {
   const { slug, title, brief, thumb, partner } = external
   const ampGptStickyAdScript = (
     <Script
@@ -63,7 +64,6 @@ export default function External({ external }) {
         {ampGptStickyAdScript}
         {canonicalLink}
       </Head>
-      <JsonLdsScripts external={external} currentPage="/external/amp/" />
       <Layout
         head={{
           title,
@@ -116,6 +116,7 @@ export default function External({ external }) {
           </AmpBody>
         </>
       </Layout>
+      <JsonLdsScript jsonLdData={jsonLdData} />
     </>
   )
 }
@@ -174,8 +175,11 @@ export async function getServerSideProps({ params, req, res, resolvedUrl }) {
     return { notFound: true }
   }
 
+  const jsonLdData = generateJsonLdsData(external, '/external/amp/')
+
   const props = {
     external,
+    jsonLdData,
   }
 
   return { props }

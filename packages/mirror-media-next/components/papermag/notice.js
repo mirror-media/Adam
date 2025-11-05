@@ -59,7 +59,9 @@ function Notice() {
             <Li>註1：訂閱已配送期數包含已進入配送作業流程的期數。</Li>
           </Ul>
         </Li>
-        <Li>紙本訂戶專線：(02) 6633-3882，電子信箱：service@mirrormedia.mg</Li>
+        <Li>
+          紙本訂戶專線：(02) 6633-3882，紙本電子信箱：service@mirrormedia.mg
+        </Li>
       </Ul>
     </NoticeWrapper>
   )

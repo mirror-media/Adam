@@ -1,7 +1,5 @@
-import Script from 'next/script'
-import { memo } from 'react'
 import { SITE_URL } from '../../../config/index.mjs'
-import { changeUtcToGmtTimeStamp } from '../../../utils/story'
+import { toTaipeiISOString } from '../../../utils/index'
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants'
 
 /**
@@ -15,7 +13,7 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants'
  * @param {CurrentPage} currentPage
  * @returns {Object[]}
  */
-const generateJsonLds = (external, currentPage) => {
+const generateJsonLdsData = (external, currentPage) => {
   const {
     title,
     slug,
@@ -43,8 +41,8 @@ const generateJsonLds = (external, currentPage) => {
     },
     headline: title,
     image: imageUrl,
-    datePublished: changeUtcToGmtTimeStamp(publishedDate),
-    dateModified: changeUtcToGmtTimeStamp(updatedAt),
+    datePublished: toTaipeiISOString(publishedDate),
+    dateModified: toTaipeiISOString(updatedAt),
     author: {
       '@type': 'Organization',
       name: authorName,
@@ -106,33 +104,4 @@ const generateJsonLds = (external, currentPage) => {
   )
 }
 
-/**
- *
- * @param {Object} props
- * @param {External} props.external
- * @param {CurrentPage} props.currentPage
- * @returns
- */
-const JsonLdsScript = ({ external, currentPage = '/external/' }) => {
-  const jsonLds = generateJsonLds(external, currentPage)
-  return jsonLds.map((jsonLd) => {
-    return currentPage === '/external/amp/' ? (
-      <script
-        id={`json-ld-${jsonLd['@type']}`}
-        key={`json-ld-${jsonLd['@type']}`}
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-    ) : (
-      <Script
-        id={`json-ld-${jsonLd['@type']}`}
-        key={`json-ld-${jsonLd['@type']}`}
-        type="application/ld+json"
-      >
-        {JSON.stringify(jsonLd)}
-      </Script>
-    )
-  })
-}
-
-export default memo(JsonLdsScript)
+export default generateJsonLdsData
