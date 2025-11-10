@@ -71,6 +71,7 @@ function StoryAmpPage({ postData, jsonLdData }) {
     sections = [],
     sectionsInInputOrder = [],
     publishedDate = '',
+    updatedAt = '',
   } = postData
 
   const sectionsWithOrdered = getActiveOrderSection(
@@ -107,12 +108,23 @@ function StoryAmpPage({ postData, jsonLdData }) {
       key="article:published_time"
     />
   )
+
+  const lastMod = (
+    <meta
+      name="lastmod"
+      property="article:modified_time"
+      itemProp="dateModified"
+      content={toTaipeiISOString(updatedAt)}
+      key="article:modified_time"
+    />
+  )
   return (
     <>
       <Head>
         {ampGptStickyAdScript}
         {canonicalLink}
         {pubDate}
+        {lastMod}
       </Head>
       <Layout
         head={{
