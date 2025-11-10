@@ -164,8 +164,10 @@ export default function StoryHead({ postData }) {
           key="article:published_time"
         />
         <meta
+          name="lastmod"
           property="article:modified_time"
-          content={updatedAt}
+          itemProp="dateModified"
+          content={toTaipeiISOString(updatedAt)}
           key="article:modified_time"
         />
         {tagsNameStr !== '' && (
