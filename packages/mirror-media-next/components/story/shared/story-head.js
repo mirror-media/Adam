@@ -3,6 +3,8 @@ import { SITE_URL } from '../../../config/index.mjs'
 import { getActiveOrderCategory, getActiveOrderSection } from '../../../utils'
 import DevGptAd from '../dev-gpt-ad'
 // import Script from 'next/script'
+import { toTaipeiISOString } from '../../../utils/index'
+
 /**
  * @typedef {Object} Section
  * @property {string} slug
@@ -155,13 +157,17 @@ export default function StoryHead({ postData }) {
           key="article:author"
         ></meta>
         <meta
+          name="pubdate"
           property="article:published_time"
-          content={publishedDate}
+          itemProp="datePublished"
+          content={toTaipeiISOString(publishedDate)}
           key="article:published_time"
         />
         <meta
+          name="lastmod"
           property="article:modified_time"
-          content={updatedAt}
+          itemProp="dateModified"
+          content={toTaipeiISOString(updatedAt)}
           key="article:modified_time"
         />
         {tagsNameStr !== '' && (
