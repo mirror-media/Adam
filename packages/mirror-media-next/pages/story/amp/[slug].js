@@ -31,6 +31,7 @@ import JsonLdsScript from '../../../components/story/shared/json-lds-script'
 import { generateJsonLdsData } from '../../../components/story/shared/json-lds-data'
 import { logGqlError } from '../../../utils/log/shared'
 import { getRelatedStories } from '../../api/recomemd'
+import { toTaipeiISOString } from '../../../utils/index'
 
 export const config = { amp: true }
 
@@ -69,6 +70,7 @@ function StoryAmpPage({ postData, jsonLdData }) {
     categories = [],
     sections = [],
     sectionsInInputOrder = [],
+    publishedDate = '',
   } = postData
 
   const sectionsWithOrdered = getActiveOrderSection(
@@ -96,12 +98,21 @@ function StoryAmpPage({ postData, jsonLdData }) {
   const canonicalLink = (
     <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
   )
-
+  const pubDate = (
+    <meta
+      name="pubdate"
+      property="article:published_time"
+      itemProp="datePublished"
+      content={toTaipeiISOString(publishedDate)}
+      key="article:published_time"
+    />
+  )
   return (
     <>
       <Head>
         {ampGptStickyAdScript}
         {canonicalLink}
+        {pubDate}
       </Head>
       <Layout
         head={{
