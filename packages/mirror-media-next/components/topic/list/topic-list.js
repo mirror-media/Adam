@@ -73,8 +73,8 @@ const Topic = styled.div`
     padding-top: 0;
   }
 `
-const TopicTitle = styled.div`
-  background-repeat: no-repeat;
+const TopicTitle = styled.h1`
+  display: none;
 `
 const TopicLeading = styled.div`
   width: 87.5%;
@@ -223,7 +223,7 @@ export default function TopicList({ topic, renderPageSize, slideshowImages }) {
           {topic?.heroUrl && (
             <TopicLink href={topic?.heroUrl} target="_blank" />
           )}
-          <TopicTitle className="topic-title" />
+          <TopicTitle className="topic-title">{topic?.name}</TopicTitle>
           <TopicLeading className="leading">
             {!!slideshowImages.length && (
               <>
