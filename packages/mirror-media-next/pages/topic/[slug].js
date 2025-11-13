@@ -55,6 +55,14 @@ export default function Topic({ topic, slideshowImages, headerData }) {
     />
   )
 
+  const pubDate = (
+    <meta
+      property="pubdate"
+      content={toTaipeiISOString(topic.createdAt)}
+      key="pubdate"
+    />
+  )
+
   const shouldShowWineWarning = WINE_TOPICS_SLUG.some(
     (slug) => slug === topic.slug
   )
@@ -107,7 +115,10 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
-      <Head>{articlePublishedTime}</Head>
+      <Head>
+        {articlePublishedTime}
+        {pubDate}
+      </Head>
       {topicJSX}
       {shouldShowWineWarning && (
         <>
