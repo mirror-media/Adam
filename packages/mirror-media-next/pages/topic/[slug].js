@@ -73,6 +73,16 @@ export default function Topic({ topic, slideshowImages, headerData }) {
     />
   )
 
+  const lastMod = (
+    <meta
+      property="lastmod"
+      content={toTaipeiISOString(
+        topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+      )}
+      key="lastmod"
+    />
+  )
+
   const shouldShowWineWarning = WINE_TOPICS_SLUG.some(
     (slug) => slug === topic.slug
   )
@@ -129,6 +139,7 @@ export default function Topic({ topic, slideshowImages, headerData }) {
         {articlePublishedTime}
         {pubDate}
         {articleModifiedTime}
+        {lastMod}
       </Head>
       {topicJSX}
       {shouldShowWineWarning && (
