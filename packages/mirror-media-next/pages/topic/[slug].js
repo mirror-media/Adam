@@ -136,10 +136,14 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       footer={{ type: 'default' }}
     >
       <Head>
-        {articlePublishedTime}
-        {pubDate}
-        {articleModifiedTime}
-        {lastMod}
+        {topic.createdAt ? articlePublishedTime : null}
+        {topic.createdAt ? pubDate : null}
+        {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+          ? articleModifiedTime
+          : null}
+        {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+          ? lastMod
+          : null}
       </Head>
       {topicJSX}
       {shouldShowWineWarning && (
