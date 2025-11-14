@@ -8,9 +8,11 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
+import Head from 'next/head'
 import { parseUrl } from '../../utils/topic'
 import {
   convertDraftToText,
+  toTaipeiISOString,
   getLogTraceObject,
   getResizedUrl,
   sortArrayWithOtherArrayId,
@@ -45,6 +47,42 @@ const WINE_TOPICS_SLUG = [
  * @returns
  */
 export default function Topic({ topic, slideshowImages, headerData }) {
+  const articlePublishedTime = (
+    <meta
+      property="article:published_time"
+      content={toTaipeiISOString(topic.createdAt)}
+      key="article:published_time"
+    />
+  )
+
+  const pubDate = (
+    <meta
+      property="pubdate"
+      content={toTaipeiISOString(topic.createdAt)}
+      key="pubdate"
+    />
+  )
+
+  const articleModifiedTime = (
+    <meta
+      property="article:modified_time"
+      content={toTaipeiISOString(
+        topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+      )}
+      key="article:modified_time"
+    />
+  )
+
+  const lastMod = (
+    <meta
+      property="lastmod"
+      content={toTaipeiISOString(
+        topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+      )}
+      key="lastmod"
+    />
+  )
+
   const shouldShowWineWarning = WINE_TOPICS_SLUG.some(
     (slug) => slug === topic.slug
   )
@@ -97,6 +135,16 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
+      <Head>
+        {topic.createdAt ? articlePublishedTime : null}
+        {topic.createdAt ? pubDate : null}
+        {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+          ? articleModifiedTime
+          : null}
+        {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+          ? lastMod
+          : null}
+      </Head>
       {topicJSX}
       {shouldShowWineWarning && (
         <>

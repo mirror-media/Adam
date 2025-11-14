@@ -68,7 +68,7 @@ const ItemDetail = styled.div`
   gap: 12px;
 `
 
-const ItemTitle = styled.div`
+const ItemTitle = styled.h2`
   color: ${color.brandColor.darkBlue};
   line-height: 25px;
   display: -webkit-box;
