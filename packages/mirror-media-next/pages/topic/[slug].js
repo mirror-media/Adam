@@ -63,6 +63,16 @@ export default function Topic({ topic, slideshowImages, headerData }) {
     />
   )
 
+  const articleModifiedTime = (
+    <meta
+      property="article:modified_time"
+      content={toTaipeiISOString(
+        topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+      )}
+      key="article:modified_time"
+    />
+  )
+
   const shouldShowWineWarning = WINE_TOPICS_SLUG.some(
     (slug) => slug === topic.slug
   )
@@ -118,6 +128,7 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       <Head>
         {articlePublishedTime}
         {pubDate}
+        {articleModifiedTime}
       </Head>
       {topicJSX}
       {shouldShowWineWarning && (
