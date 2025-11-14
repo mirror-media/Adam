@@ -47,17 +47,11 @@ const WINE_TOPICS_SLUG = [
  * @returns
  */
 export default function Topic({ topic, slideshowImages, headerData }) {
-  const articlePublishedTime = (
-    <meta
-      property="article:published_time"
-      content={toTaipeiISOString(topic.createdAt)}
-      key="article:published_time"
-    />
-  )
-
   const pubDate = (
     <meta
-      property="pubdate"
+      name="pubdate"
+      property="article:published_time"
+      itemProp="datePublished"
       content={toTaipeiISOString(topic.createdAt)}
       key="pubdate"
     />
@@ -136,7 +130,6 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       footer={{ type: 'default' }}
     >
       <Head>
-        {topic.createdAt ? articlePublishedTime : null}
         {topic.createdAt ? pubDate : null}
         {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
           ? articleModifiedTime
