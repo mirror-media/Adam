@@ -81,6 +81,7 @@ export default function ExternalHeroImage({
           alt={title}
           objectFit={'cover'}
           priority={true}
+          fetchPriority="high"
         />
       </HeroImage>
       {!!thumbCaption && <HeroCaption>{thumbCaption}</HeroCaption>}

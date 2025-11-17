@@ -131,6 +131,7 @@ export default function HeroImageAndVideo({
             alt={heroCaption ? heroCaption : title}
             objectFit={'contain'}
             priority={true}
+            fetchPriority="high"
           />
         </HeroImage>
       )
