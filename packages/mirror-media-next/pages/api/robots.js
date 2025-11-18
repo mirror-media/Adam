@@ -5,19 +5,19 @@ export default function handler(req, res) {
 
   if (ENV === 'prod') {
     res.write(`User-agent: Googlebot
-   Disallow: /login
+      Disallow: /login
+      Disallow: /subscribe/*
 
-	User-agent: *
-     Allow: /`)
+      User-agent: *
+        Allow: /
+        
+      Sitemap: https://www.mirrormedia.mg/rss/posts.xml
+      Sitemap: https://www.mirrormedia.mg/rss/posts-news.xml
+      Sitemap: https://www.mirrormedia.mg/rss/externals.xml
+      Sitemap: https://www.mirrormedia.mg/rss/externals-news.xml`)
   } else {
     res.write(`User-agent: *
-     Disallow: /
-     Disallow: /subscribe/*
-
-Sitemap: https://www.mirrormedia.mg/rss/posts.xml
-Sitemap: https://www.mirrormedia.mg/rss/posts-news.xml
-Sitemap: https://www.mirrormedia.mg/rss/externals.xml
-Sitemap: https://www.mirrormedia.mg/rss/externals-news.xml`)
+     Disallow: /`)
   }
 
   res.end()
