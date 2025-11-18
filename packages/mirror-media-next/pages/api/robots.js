@@ -11,7 +11,8 @@ export default function handler(req, res) {
      Allow: /`)
   } else {
     res.write(`User-agent: *
-     Disallow: /`)
+     Disallow: /
+     Disallow: /subscribe/*`)
   }
 
   res.end()
