@@ -12,7 +12,12 @@ export default function handler(req, res) {
   } else {
     res.write(`User-agent: *
      Disallow: /
-     Disallow: /subscribe/*`)
+     Disallow: /subscribe/*
+
+Sitemap: https://www.mirrormedia.mg/rss/posts.xml
+Sitemap: https://www.mirrormedia.mg/rss/posts-news.xml
+Sitemap: https://www.mirrormedia.mg/rss/externals.xml
+Sitemap: https://www.mirrormedia.mg/rss/externals-news.xml`)
   }
 
   res.end()
