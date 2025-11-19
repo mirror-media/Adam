@@ -63,7 +63,7 @@ const ItemDate = styled.div`
 // Empty for now, kept for consistency with topic page list-articles structure
 const ItemDetail = styled.div``
 
-const ItemTitle = styled.h3`
+const ItemTitle = styled.h2`
   color: #b17f5a;
   display: -webkit-box;
   -webkit-line-clamp: 4;

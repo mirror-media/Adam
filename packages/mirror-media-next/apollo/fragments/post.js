@@ -94,6 +94,7 @@ export const topicPost = gql`
     id
     slug
     title
+    updatedAt
     publishedDate
     brief
     categories(where: { state: { equals: "active" } }) {
