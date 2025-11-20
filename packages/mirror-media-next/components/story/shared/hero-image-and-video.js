@@ -201,6 +201,7 @@ export default function HeroImageAndVideo({
           height={style === 'wide' ? '100vh' : '66.67vw'}
           rwd={{ mobile: '100vw', default: '100vw' }}
           priority={true}
+          fetchPriority="high"
         />
       )
     }

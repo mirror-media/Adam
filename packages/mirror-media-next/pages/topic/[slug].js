@@ -8,9 +8,11 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
 import Layout from '../../components/shared/layout'
+import Head from 'next/head'
 import { parseUrl } from '../../utils/topic'
 import {
   convertDraftToText,
+  toTaipeiISOString,
   getLogTraceObject,
   getResizedUrl,
   sortArrayWithOtherArrayId,
@@ -45,6 +47,28 @@ const WINE_TOPICS_SLUG = [
  * @returns
  */
 export default function Topic({ topic, slideshowImages, headerData }) {
+  const pubDate = (
+    <meta
+      name="pubdate"
+      property="article:published_time"
+      itemProp="datePublished"
+      content={toTaipeiISOString(topic.createdAt)}
+      key="pubdate"
+    />
+  )
+
+  const lastMod = (
+    <meta
+      name="lastmod"
+      property="article:modified_time"
+      itemProp="dateModified"
+      content={toTaipeiISOString(
+        topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+      )}
+      key="lastmod"
+    />
+  )
+
   const shouldShowWineWarning = WINE_TOPICS_SLUG.some(
     (slug) => slug === topic.slug
   )
@@ -97,6 +121,12 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
+      <Head>
+        {topic.createdAt ? pubDate : null}
+        {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
+          ? lastMod
+          : null}
+      </Head>
       {topicJSX}
       {shouldShowWineWarning && (
         <>

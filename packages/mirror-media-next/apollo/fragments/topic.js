@@ -15,5 +15,6 @@ export const topic = gql`
       ...heroImage
     }
     style
+    createdAt
   }
 `
