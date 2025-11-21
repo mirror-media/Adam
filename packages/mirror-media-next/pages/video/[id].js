@@ -68,6 +68,7 @@ const StyledGPTAd_HD = styled(GPTAd)`
 
 const StyledGPTAd_E1 = styled(GPTAd)`
   width: 100%;
+  min-height: 250px;
   height: auto;
 
   margin: 20px auto 0px;
@@ -83,6 +84,7 @@ const StyledGPTAd_E1 = styled(GPTAd)`
 
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
+  min-height: 250px;
   height: auto;
   margin: 20px auto 0px;
 
