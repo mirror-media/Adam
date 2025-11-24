@@ -68,8 +68,7 @@ const StyledGPTAd_HD = styled(GPTAd)`
 
 const StyledGPTAd_E1 = styled(GPTAd)`
   width: 100%;
-  height: auto;
-
+  min-height: 250px;
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.md} {
@@ -83,7 +82,7 @@ const StyledGPTAd_E1 = styled(GPTAd)`
 
 const StyledGPTAd_FT = styled(GPTAd)`
   width: 100%;
-  height: auto;
+  min-height: 250px;
   margin: 20px auto 0px;
 
   ${({ theme }) => theme.breakpoint.xl} {
