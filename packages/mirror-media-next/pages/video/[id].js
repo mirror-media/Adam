@@ -176,7 +176,15 @@ export default function Video({ video, latestVideos, headerData }) {
 
           {shouldShowAd && (
             <>
-              <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
+              <GPT_Placeholder
+                displayAt="all"
+                rwd={GPT_PLACEHOLDER_SIZES}
+                shouldShowAd={shouldShowAd}
+                isLogInProcessFinished={isLogInProcessFinished}
+              >
+                <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
+              </GPT_Placeholder>
+
               <StickyGPTAd pageKey="videohub" />
               {hasScrolled && <FullScreenAds />}
             </>
