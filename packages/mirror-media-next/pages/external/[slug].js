@@ -108,6 +108,16 @@ export default function External({ external, headerData, jsonLdData }) {
     />
   )
 
+  const lastMod = (
+    <meta
+      name="lastmod"
+      property="article:modified_time"
+      itemProp="dateModified"
+      content={toTaipeiISOString(external?.updatedAt)}
+      key="article:modified_time"
+    />
+  )
+
   return (
     <>
       <Head>
@@ -124,6 +134,7 @@ export default function External({ external, headerData, jsonLdData }) {
         />
         <link rel="amphtml" href={ampUrl} key="amphtml" />
         {external?.publishedDate && pubDate}
+        {external?.updatedAt && lastMod}
       </Head>
       <Layout
         head={{
