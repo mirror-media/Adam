@@ -23,6 +23,7 @@ import dynamic from 'next/dynamic'
 import axios from 'axios'
 import { getRelatedStories } from '../../pages/api/recomemd'
 import { useState, useEffect } from 'react'
+import { toTaipeiISOString } from '../../utils/index'
 
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
@@ -96,6 +97,27 @@ export default function External({ external, headerData, jsonLdData }) {
     window.addEventListener('scroll', handleScroll, { once: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  const pubDate = (
+    <meta
+      name="pubdate"
+      property="article:published_time"
+      itemProp="datePublished"
+      content={toTaipeiISOString(external?.publishedDate)}
+      key="article:published_time"
+    />
+  )
+
+  const lastMod = (
+    <meta
+      name="lastmod"
+      property="article:modified_time"
+      itemProp="dateModified"
+      content={toTaipeiISOString(external?.updatedAt)}
+      key="article:modified_time"
+    />
+  )
+
   return (
     <>
       <Head>
@@ -111,6 +133,8 @@ export default function External({ external, headerData, jsonLdData }) {
           key="og:slug"
         />
         <link rel="amphtml" href={ampUrl} key="amphtml" />
+        {external?.publishedDate && pubDate}
+        {external?.updatedAt && lastMod}
       </Head>
       <Layout
         head={{

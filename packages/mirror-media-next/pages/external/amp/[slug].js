@@ -18,6 +18,7 @@ import generateJsonLdsData from '../../../components/external/shared/json-lds-da
 import JsonLdsScript from '../../../components/external/shared/json-lds-script'
 import { getLogTraceObject } from '../../../utils'
 import { processSettledResult } from '../../../utils/response-processor'
+import { toTaipeiISOString } from '../../../utils/index'
 
 export const config = { amp: true }
 
@@ -37,7 +38,8 @@ const AmpBody = styled.body`
  * @returns {import('react').JSX.Element}
  */
 export default function External({ external, jsonLdData }) {
-  const { slug, title, brief, thumb, partner } = external
+  const { slug, title, brief, thumb, partner, publishedDate, updatedAt } =
+    external
   const ampGptStickyAdScript = (
     <Script
       async
@@ -50,7 +52,25 @@ export default function External({ external, jsonLdData }) {
   const canonicalLink = (
     <link rel="canonical" href={nonAmpUrl} key="canonical"></link>
   )
+  const pubDate = publishedDate && (
+    <meta
+      name="pubdate"
+      property="article:published_time"
+      itemProp="datePublished"
+      content={toTaipeiISOString(external?.publishedDate)}
+      key="article:published_time"
+    />
+  )
 
+  const lastMod = updatedAt && (
+    <meta
+      name="lastmod"
+      property="article:modified_time"
+      itemProp="dateModified"
+      content={toTaipeiISOString(external?.updatedAt)}
+      key="article:modified_time"
+    />
+  )
   // The property `partner` for external article may lost for some reasons, `showOnIndex` will be set to true to handle this case.
   const showOnIndex =
     partner && Object.prototype.hasOwnProperty.call(partner, 'showOnIndex')
@@ -63,6 +83,8 @@ export default function External({ external, jsonLdData }) {
       <Head>
         {ampGptStickyAdScript}
         {canonicalLink}
+        {pubDate}
+        {lastMod}
       </Head>
       <Layout
         head={{
