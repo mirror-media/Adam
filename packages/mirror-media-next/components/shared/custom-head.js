@@ -9,6 +9,7 @@ import { useRouter } from 'next/router'
  * @property {string} [locale]
  * @property {string} url
  * @property {string} title
+ * @property {string} [ogTitle]
  * @property {string} type
  * @property {string} description
  * @property {string} site_name
@@ -39,6 +40,7 @@ const createCanonicalLink = (routerAsPath) => {
 /**
  * @typedef {Object} HeadProps
  * @property {string} [title] - head title used to setup title other title related meta
+ * @property {string} [ogTitle] - head og:title used to setup og:title meta
  * @property {string} [description] - head description used to setup description related meta
  * @property {string} [imageUrl] - image url used to setup image related meta
  * @property {boolean} [skipCanonical] - flag to indicates whether the canonical should be added here
@@ -54,6 +56,7 @@ const createCanonicalLink = (routerAsPath) => {
 export default function CustomHead({
   skipCanonical = false,
   title,
+  ogTitle,
   description,
   imageUrl,
   pageType,
@@ -69,6 +72,7 @@ export default function CustomHead({
   /** @type {OGProperties} */
   const siteInformation = {
     title: title ? `${title} - ${SITE_TITLE}` : SITE_TITLE,
+    ogTitle: ogTitle,
     description:
       description ??
       '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。',
@@ -105,7 +109,7 @@ export default function CustomHead({
       <meta property="og:locale" content="zh_TW" key="og:locale" />
       <meta
         property="og:title"
-        content={siteInformation.title}
+        content={siteInformation.ogTitle || siteInformation.title}
         key="og:title"
       />
       <meta property="og:url" content={'https://' + siteInformation.url} />
