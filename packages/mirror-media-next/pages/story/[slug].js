@@ -349,9 +349,11 @@ export default function Story({
       <Layout
         head={{
           title: `${title}`,
+          ogTitle: postData.og_title,
           description:
             convertDraftToText(postData.brief) ||
             convertDraftToText(postData.content),
+          ogDescription: postData.og_description,
           imageUrl:
             getResizedUrl(postData.og_image?.resized) ||
             getResizedUrl(postData.heroImage?.resized),

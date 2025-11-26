@@ -163,6 +163,7 @@ export const topicPost = gql`
  * @property {string} slug - post slug
  * @property {string} title - post title
  * @property {string} subtitle - post subtitle
+ * @property {string} og_title - post og:title
  * @property {string} publishedDate - post published date
  * @property {string} updatedAt - post updated date
  * @property {PostState} state - post state, different states will have different post access of viewing
@@ -299,6 +300,7 @@ export const post = gql`
       ...relatedPost
     }
     redirect
+    og_title
     og_image {
       resized {
         w1600
