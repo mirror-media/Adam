@@ -29,6 +29,7 @@ export default function Layout({ head, header, footer, children }) {
     <>
       <CustomHead
         title={head?.title}
+        ogTitle={head?.ogTitle}
         description={head?.description}
         imageUrl={head?.imageUrl}
         skipCanonical={head?.skipCanonical}
