@@ -142,6 +142,7 @@ export default function External({ external, headerData, jsonLdData }) {
           imageUrl: external?.thumb,
           pageType: 'external',
           pageSlug: `${slug}`,
+          description: external?.brief,
         }}
         header={{
           type: 'default-with-flash-news',
