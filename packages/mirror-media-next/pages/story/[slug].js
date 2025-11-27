@@ -355,6 +355,9 @@ export default function Story({
             convertDraftToText(postData.content),
           ogDescription: postData.og_description,
           imageUrl:
+            getResizedUrl(postData.heroImage?.resized) ||
+            getResizedUrl(postData.og_image?.resized),
+          ogImageUrl:
             getResizedUrl(postData.og_image?.resized) ||
             getResizedUrl(postData.heroImage?.resized),
           skipCanonical: true,

@@ -33,6 +33,7 @@ export default function Layout({ head, header, footer, children }) {
         description={head?.description}
         ogDescription={head?.ogDescription}
         imageUrl={head?.imageUrl}
+        ogImageUrl={head?.ogImageUrl}
         skipCanonical={head?.skipCanonical}
         pageType={head?.pageType}
         pageSlug={head?.pageSlug}

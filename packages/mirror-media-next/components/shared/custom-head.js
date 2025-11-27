@@ -19,6 +19,11 @@ import { useRouter } from 'next/router'
  * @property {string} image.url
  * @property {string} image.width
  * @property {string} image.height
+ * @property {Object} [ogImage]
+ * @property {string} ogImage.type
+ * @property {string} ogImage.url
+ * @property {string} ogImage.width
+ * @property {string} ogImage.height
  * @property {string} card
  * @property {string} fbAppId
  * @property {string} fbPageId
@@ -45,6 +50,7 @@ const createCanonicalLink = (routerAsPath) => {
  * @property {string} [description] - head description used to setup description related meta
  * @property {string} [ogDescription] - head og:description used to setup og:description meta
  * @property {string} [imageUrl] - image url used to setup image related meta
+ * @property {string} [ogImageUrl] - head og:image used to setup og:image meta
  * @property {boolean} [skipCanonical] - flag to indicates whether the canonical should be added here
  * @property {'story' | 'external'} [pageType] - pageType for search result navigation in App
  * @property {string} [pageSlug] - set pageSlug with pageType. This is also for search result navigation in App
@@ -61,6 +67,7 @@ export default function CustomHead({
   ogTitle,
   description,
   ogDescription,
+  ogImageUrl,
   imageUrl,
   pageType,
   pageSlug,
@@ -88,6 +95,15 @@ export default function CustomHead({
       height: '630',
       type: 'image/png',
       url: imageUrl ?? `https://${SITE_URL}/images-next/default-og-img.png`,
+    },
+    ogImage: {
+      width: '1200',
+      height: '630',
+      type: 'image/png',
+      url:
+        ogImageUrl ||
+        imageUrl ||
+        `https://${SITE_URL}/images-next/default-og-img.png`,
     },
     card: 'summary_large_image',
     fbAppId: FB_APP_ID,
