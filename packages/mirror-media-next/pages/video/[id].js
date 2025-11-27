@@ -66,31 +66,6 @@ const StyledGPTAd_HD = styled(GPTAd)`
   height: auto;
 `
 
-const StyledGPTAd_E1 = styled(GPTAd)`
-  width: 100%;
-  height: auto;
-
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.md} {
-    margin: 40px auto 0px;
-  }
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    display: none;
-  }
-`
-
-const StyledGPTAd_FT = styled(GPTAd)`
-  width: 100%;
-  height: auto;
-  margin: 20px auto 0px;
-
-  ${({ theme }) => theme.breakpoint.xl} {
-    margin: 28px auto 0px;
-  }
-`
-
 const StickyGPTAd = styled(GPTMbStAd)`
   position: fixed;
   left: 0;
@@ -106,10 +81,16 @@ const StickyGPTAd = styled(GPTMbStAd)`
   }
 `
 
-const GPT_PLACEHOLDER_SIZES = {
+const TOP_GPT_PLACEHOLDER_SIZES = {
   mobile: { width: '300px', height: '350px', margin: '8px auto' },
   tablet: { width: '300px', height: '350px', margin: '24px auto' },
   desktop: { width: '970px', height: '250px', margin: '0px auto 28px' },
+}
+
+const BOTTOM_GPT_PLACEHOLDER_SIZES = {
+  mobile: { width: '300px', height: '250px', margin: '20px auto 0px' },
+  tablet: { width: '300px', height: '250px', margin: '40px auto 0px' },
+  desktop: { width: '970px', height: '250px', margin: '28px auto 0px' },
 }
 
 /**
@@ -141,7 +122,7 @@ export default function Video({ video, latestVideos, headerData }) {
         <Wrapper>
           <GPT_Placeholder
             displayAt="desktop"
-            rwd={GPT_PLACEHOLDER_SIZES}
+            rwd={TOP_GPT_PLACEHOLDER_SIZES}
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
           >
@@ -153,7 +134,7 @@ export default function Video({ video, latestVideos, headerData }) {
 
           <GPT_Placeholder
             displayAt="mobile+tablet"
-            rwd={GPT_PLACEHOLDER_SIZES}
+            rwd={TOP_GPT_PLACEHOLDER_SIZES}
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
           >
@@ -164,7 +145,14 @@ export default function Video({ video, latestVideos, headerData }) {
 
           <ContentWrapper>
             <YoutubeArticle video={video} />
-            {shouldShowAd && <StyledGPTAd_E1 pageKey="videohub" adKey="E1" />}
+            <GPT_Placeholder
+              displayAt="mobile+tablet"
+              rwd={BOTTOM_GPT_PLACEHOLDER_SIZES}
+              shouldShowAd={shouldShowAd}
+              isLogInProcessFinished={isLogInProcessFinished}
+            >
+              {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="E1" />}
+            </GPT_Placeholder>
             {latestVideos.length > 0 && (
               <VideoList
                 videos={latestVideos}
@@ -175,13 +163,17 @@ export default function Video({ video, latestVideos, headerData }) {
 
           <YoutubePolicy />
 
-          {shouldShowAd && (
-            <>
-              <StyledGPTAd_FT pageKey="videohub" adKey="FT" />
-              <StickyGPTAd pageKey="videohub" />
-              {hasScrolled && <FullScreenAds />}
-            </>
-          )}
+          <GPT_Placeholder
+            displayAt="all"
+            rwd={BOTTOM_GPT_PLACEHOLDER_SIZES}
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
+            {shouldShowAd && <StyledGPTAd_HD pageKey="videohub" adKey="FT" />}
+          </GPT_Placeholder>
+
+          <StickyGPTAd pageKey="videohub" />
+          {hasScrolled && <FullScreenAds />}
         </Wrapper>
       </Layout>
     </>
