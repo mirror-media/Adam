@@ -357,6 +357,9 @@ export default function Story({
           imageUrl:
             getResizedUrl(postData.heroImage?.resized) ||
             getResizedUrl(postData.og_image?.resized),
+          ogImageUrl:
+            getResizedUrl(postData.og_image?.resized) ||
+            getResizedUrl(postData.heroImage?.resized),
           skipCanonical: true,
           pageType: 'story',
           pageSlug: slug,
