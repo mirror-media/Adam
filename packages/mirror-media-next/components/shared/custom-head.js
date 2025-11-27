@@ -147,36 +147,36 @@ export default function CustomHead({
         key="og:site_name"
       />
 
-      {siteInformation.image && (
+      {siteInformation.ogImage && (
         <>
           <meta
             property="og:image"
-            content={siteInformation.image.url}
+            content={siteInformation.ogImage.url}
             key="og:image"
           />
           <meta
             property="og:image:secure_url"
-            content={siteInformation.image.url.replace('http://', 'https://')}
+            content={siteInformation.ogImage.url.replace('http://', 'https://')}
             key="og:image:secure_url"
           />
           <meta
             property="og:image:width"
-            content={siteInformation.image.width}
+            content={siteInformation.ogImage.width}
             key="og:image:width"
           />
           <meta
             property="og:image:height"
-            content={siteInformation.image.height}
+            content={siteInformation.ogImage.height}
             key="og:image:height"
           />
           <meta
             property="og:image:type"
-            content={siteInformation.image.type}
+            content={siteInformation.ogImage.type}
             key="og:image:type"
           />
           <meta
             name="twitter:image"
-            content={siteInformation.image.url}
+            content={siteInformation.ogImage.url}
             key="twitter:image"
           />
         </>
