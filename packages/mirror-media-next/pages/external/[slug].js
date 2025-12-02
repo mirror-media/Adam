@@ -140,6 +140,11 @@ export default function External({ external, headerData, jsonLdData }) {
         {external?.publishedDate && pubDate}
         {external?.updatedAt && lastMod}
         <meta name="author" content={authorName} key="author" />
+        <meta
+          property="article:author"
+          content={authorName}
+          key="article:author"
+        />
       </Head>
       <Layout
         head={{
