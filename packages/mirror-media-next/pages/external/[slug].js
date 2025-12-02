@@ -118,6 +118,10 @@ export default function External({ external, headerData, jsonLdData }) {
     />
   )
 
+  const authorName = external?.partner?.name
+    ? external?.partner.name
+    : external?.extend_byline || ''
+
   return (
     <>
       <Head>
@@ -135,6 +139,7 @@ export default function External({ external, headerData, jsonLdData }) {
         <link rel="amphtml" href={ampUrl} key="amphtml" />
         {external?.publishedDate && pubDate}
         {external?.updatedAt && lastMod}
+        <meta name="author" content={authorName} key="author" />
       </Head>
       <Layout
         head={{
