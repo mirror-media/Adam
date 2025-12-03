@@ -149,6 +149,12 @@ export default function External({ external, headerData, jsonLdData }) {
             />
           </>
         )}
+        <meta
+          name="publisher"
+          itemProp="publisher"
+          content="鏡週刊 Mirror Media"
+          key="publisher"
+        />
       </Head>
       <Layout
         head={{
