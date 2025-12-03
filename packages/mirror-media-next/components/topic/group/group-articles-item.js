@@ -72,6 +72,7 @@ const ItemTitle = styled.h2`
   font-weight: 500;
   font-size: 13px;
   line-height: 18px;
+  padding-top: 0 !important;
 
   ${({ theme }) => theme.breakpoint.md} {
     font-size: 18px;
