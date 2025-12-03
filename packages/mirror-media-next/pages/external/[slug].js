@@ -118,6 +118,10 @@ export default function External({ external, headerData, jsonLdData }) {
     />
   )
 
+  const authorName = external?.partner?.name
+    ? external?.partner.name
+    : external?.extend_byline || ''
+
   return (
     <>
       <Head>
@@ -135,6 +139,22 @@ export default function External({ external, headerData, jsonLdData }) {
         <link rel="amphtml" href={ampUrl} key="amphtml" />
         {external?.publishedDate && pubDate}
         {external?.updatedAt && lastMod}
+        {authorName && (
+          <>
+            <meta name="author" content={authorName} key="author" />
+            <meta
+              property="article:author"
+              content={authorName}
+              key="article:author"
+            />
+          </>
+        )}
+        <meta
+          name="publisher"
+          itemProp="publisher"
+          content="鏡週刊 Mirror Media"
+          key="publisher"
+        />
       </Head>
       <Layout
         head={{
