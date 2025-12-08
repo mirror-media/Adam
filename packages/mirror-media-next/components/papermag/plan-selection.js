@@ -232,7 +232,9 @@ export default function PageBody() {
               </PlanCard>
             ))}
             <PlanCTA>
-              <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
+              <CtaText>
+                <span style={{ color: '#FF8C00' }}>樂齡、師生</span>訂閱優惠方案
+              </CtaText>
               {/* Render Gmail composer for desktop, mailto for mobile and tablet */}
               {width !== undefined &&
                 (isDesktopWidth ? desktopCtaBtn : tabletAndMobileCtaBtn)}
