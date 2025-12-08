@@ -119,6 +119,14 @@ const PlanTitle = styled.h2`
     font-size: 32px;
   }
 `
+const PlanNotice = styled.p`
+  color: #ff8c00;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 150%;
+  text-align: center;
+`
+
 const Hr = styled.hr`
   margin: 16px 0;
 `
@@ -213,6 +221,7 @@ export default function PageBody() {
             {ITEMS.map((item) => (
               <PlanCard key={item.id}>
                 <PlanTitle>{item.title}</PlanTitle>
+                <PlanNotice></PlanNotice>
                 <Hr />
                 <PlanContent>{item.context}</PlanContent>
                 <OriginalPrice>
