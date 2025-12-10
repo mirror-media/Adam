@@ -65,6 +65,7 @@ const Title = styled.h2`
  * @param {PageProps} props
  */
 export default function Magazine({ sectionsData = [] }) {
+  // TODO:  周年慶完結後待調整  useMembershipRequired()
   useMembershipRequired(undefined, { skipCheck: IS_ANNIVERSARY_PROMO_ACTIVE })
   const [specials, setSpecials] = useState([])
   const [weeklys, setWeeklys] = useState([])
@@ -80,6 +81,7 @@ export default function Magazine({ sectionsData = [] }) {
   // Fetch Magazines Data only for Premium Member
   useEffect(() => {
     const fetchMagazines = async () => {
+      // TODO:  周年慶完結後待調整    if (isPremiumMember) {
       if (canViewPremiumContent) {
         try {
           // Simulate an unsuccessful fetch by throwing an error
@@ -192,6 +194,7 @@ export default function Magazine({ sectionsData = [] }) {
  * @type {import('next').GetServerSideProps<PageProps>}
  */
 export const getServerSideProps = redirectToLoginWhileUnauthed({
+  // TODO:  周年慶完結後待移除 prop
   skipRedirect: IS_ANNIVERSARY_PROMO_ACTIVE,
 })(async ({ req, res }) => {
   setPageCache(res, { cachePolicy: 'no-store' }, req.url)

@@ -84,7 +84,7 @@ export const generateJsonLdsData = (postData, currentPage) => {
     description,
     url: pageUrl,
     thumbnailUrl: imageUrl,
-    articleSection: hasSection ? sectionWithOrdered[0].name : undefined,
+    articleSection: hasSection ? sectionWithOrdered[0].name : null,
     isAccessibleForFree: 'True',
     keywords: tags?.map((tag) => tag.name),
     articleBody: isMember

@@ -11,6 +11,7 @@ const getCookie = (name) => {
   return null
 }
 
+// TODO: 周年慶完結後這個元件跟 IS_ANNIVERSARY_PROMO_ACTIVE 一起刪除
 const setCookie = (name, value, days = 365) => {
   if (typeof document === 'undefined') return
   const expires = new Date()

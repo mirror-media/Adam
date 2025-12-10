@@ -61,6 +61,7 @@ export default function BookBIssuePublish({ weeklys }) {
  * @type {import('next').GetServerSideProps}
  */
 export const getServerSideProps = redirectToLoginWhileUnauthed({
+  // TODO:  周年慶完結後待移除 prop
   skipRedirect: IS_ANNIVERSARY_PROMO_ACTIVE,
 })(async ({ params, req, res }) => {
   setPageCache(res, { cachePolicy: 'no-store' }, req.url)
