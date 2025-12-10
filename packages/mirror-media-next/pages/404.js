@@ -283,6 +283,7 @@ export default function Custom404() {
             <Text>抱歉！找不到這個網址</Text>
           </MsgContainer>
           <Title>熱門文章</Title>
+          {/* TODO: 周年慶完結後移除 */}
           {!IS_ANNIVERSARY_PROMO_ACTIVE && (
             <Link href="/subscribe" target="_blank" rel="noreferrer noopener">
               <JoinMemberBtn>加入會員</JoinMemberBtn>

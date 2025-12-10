@@ -6,7 +6,10 @@ import { Frequency } from '../../../constants/membership'
 import { useMembership } from '../../../context/membership'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 import { getLoginHref } from '../../../utils'
-import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
+import {
+  ALLOW_NON_PREMIUM_ACCESS,
+  IS_ANNIVERSARY_PROMO_ACTIVE,
+} from '../../../config/index.mjs'
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -174,7 +177,8 @@ export default function ArticleMask({ postId = '' }) {
    * @see https://developers.google.com/search/docs/appearance/structured-data/paywalled-content
    */
 
-  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
+  // TODO: 周年慶完結後要移除 IS_ANNIVERSARY_PROMO_ACTIVE
+  if (IS_ANNIVERSARY_PROMO_ACTIVE || ALLOW_NON_PREMIUM_ACCESS) return null
 
   return (
     <Wrapper className="paywall">
