@@ -5,6 +5,7 @@ import { section } from './section'
 import { contact } from './contact'
 import { tag } from './tag'
 import { heroVideo } from './video'
+import { aiTag } from './ai-tag'
 
 /**
  * @typedef {Object} ListingPost
@@ -133,6 +134,10 @@ export const topicPost = gql`
  */
 
 /**
+ * @typedef {import('./ai-tag').Tag} AiTag - certain AI tag information
+ */
+
+/**
  * @typedef {import('./video').HeroVideo} HeroVideo - certain video information
  */
 
@@ -183,6 +188,7 @@ export const topicPost = gql`
  * @property {Contact[] } vocals - the field called '主播' in cms
  * @property {string} extend_byline - the field called '作者(其他)' in cms
  * @property {Tag[] } tags - tags of the post
+ * @property {Tag[]} tags_algo - algorithmically generated tags
  * @property {HeroVideo | null} heroVideo - hero video of the post
  * @property {HeroImage | null} heroImage - hero image of the post
  * @property {string} heroCaption - caption to explain hero video or image
@@ -195,6 +201,7 @@ export const topicPost = gql`
  * @property {Related | null} relatedsTwo - second set of related articles
  * @property {boolean} isFeatured
  * @property {import('./tag').Tag[]} tags
+ * @property {import('./ai-tag').Tag[]} tags_algo
  * @property {string} redirect - post redirect slug or external url
  * @property {HeroImage | null} og_image - og image of the post
  * @property {string} og_description - og description of the post
@@ -233,6 +240,7 @@ export const post = gql`
   ${categoryWithSection}
   ${contact}
   ${tag}
+  ${aiTag}
   ${heroImage}
   ${heroVideo}
   ${relatedPost}
@@ -284,6 +292,9 @@ export const post = gql`
     extend_byline
     tags {
       ...tag
+    }
+    tags_algo {
+      ...aiTag
     }
     heroVideo {
       ...heroVideo
