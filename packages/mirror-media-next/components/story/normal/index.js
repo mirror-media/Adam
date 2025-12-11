@@ -551,6 +551,7 @@ export default function StoryNormalStyle({
     vocals = [],
     extend_byline = '',
     tags = [],
+    tags_algo = [],
     brief = { blocks: [], entityMap: {} },
     hiddenAdvertised = false,
   } = postData
@@ -723,6 +724,7 @@ export default function StoryNormalStyle({
               publishedDate={publishedTaipeiTime}
               credits={credits}
               tags={tags}
+              tags_algo={tags_algo}
             />
           </InfoAndHero>
           <ArticleBrief sectionSlug={section?.slug} brief={brief} />
