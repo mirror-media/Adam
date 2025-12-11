@@ -212,6 +212,7 @@ export default function StoryPremiumStyle({
     updatedAt = '',
     publishedDate = '',
     tags = [],
+    tags_algo = [],
     heroImage = null,
     heroVideo = null,
     heroCaption = '',
@@ -289,6 +290,7 @@ export default function StoryPremiumStyle({
             publishedDate={publishedDate}
             updatedAt={updatedAt}
             tags={tags}
+            tags_algo={tags_algo}
             subtitle={subtitle}
           />
 
