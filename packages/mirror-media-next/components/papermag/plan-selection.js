@@ -119,6 +119,14 @@ const PlanTitle = styled.h2`
     font-size: 32px;
   }
 `
+const PlanNotice = styled.p`
+  color: #ff8c00;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 150%;
+  text-align: center;
+`
+
 const Hr = styled.hr`
   margin: 16px 0;
 `
@@ -155,6 +163,7 @@ const ITEMS = [
   {
     id: PLAN.ONE_YEAR,
     title: '一年方案',
+    notice: '一冊 2 本',
     context: `訂購紙本鏡週刊 ${ONE_YEAR_ITEM.issue} 期，加贈 ${ONE_YEAR_ITEM.discount.issue} 期`,
     basePrice: ONE_YEAR_ITEM.basePrice,
     price: ONE_YEAR_ITEM.price,
@@ -169,6 +178,7 @@ const ITEMS = [
   {
     id: PLAN.TWO_YEAR,
     title: '二年方案',
+    notice: '一冊 2 本',
     context: `訂購紙本鏡週刊 ${TWO_YEAR_ITEM.issue} 期，加贈 ${TWO_YEAR_ITEM.discount.issue} 期`,
     basePrice: TWO_YEAR_ITEM.basePrice,
     price: TWO_YEAR_ITEM.price,
@@ -213,6 +223,7 @@ export default function PageBody() {
             {ITEMS.map((item) => (
               <PlanCard key={item.id}>
                 <PlanTitle>{item.title}</PlanTitle>
+                <PlanNotice>{item.notice}</PlanNotice>
                 <Hr />
                 <PlanContent>{item.context}</PlanContent>
                 <OriginalPrice>
@@ -232,7 +243,9 @@ export default function PageBody() {
               </PlanCard>
             ))}
             <PlanCTA>
-              <CtaText>師生優惠方案、企業訂閱優惠</CtaText>
+              <CtaText>
+                <span style={{ color: '#FF8C00' }}>樂齡、師生</span>訂閱優惠方案
+              </CtaText>
               {/* Render Gmail composer for desktop, mailto for mobile and tablet */}
               {width !== undefined &&
                 (isDesktopWidth ? desktopCtaBtn : tabletAndMobileCtaBtn)}

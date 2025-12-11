@@ -644,6 +644,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
               <Link href="/papermag" target="_blank">
                 鏡週刊紙本雜誌
               </Link>
+              {/* TODO: 周年慶完結後可取消此判斷式 */}
               {!IS_ANNIVERSARY_PROMO_ACTIVE && (
                 <>
                   、
@@ -727,6 +728,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
           <Link href="/papermag" target="_blank">
             鏡週刊紙本雜誌
           </Link>
+          {/* TODO: 周年慶完結後可取消此判斷式 */}
           {!IS_ANNIVERSARY_PROMO_ACTIVE && (
             <>
               、

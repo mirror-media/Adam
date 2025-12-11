@@ -25,6 +25,7 @@ const Wrapper = styled.div`
 `
 
 export default function SubscribeInviteBanner() {
+  // TODO: 周年慶完結後要移除
   if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
 
   const getHref = (isLoggedIn) => {
