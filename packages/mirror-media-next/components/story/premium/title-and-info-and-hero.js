@@ -130,6 +130,7 @@ const TitleAndInfo = styled.section`
  * @param {ArticleInfoProps["publishedDate"]} props.publishedDate
  * @param {ArticleInfoProps["updatedAt"]} props.updatedAt
  * @param {ArticleInfoProps["tags"]} props.tags
+ * @param {ArticleInfoProps["tags_algo"]} props.tags_algo
  * @returns {import('react').JSX.Element}
  */
 export default function TitleAndInfoAndHero({
@@ -142,6 +143,7 @@ export default function TitleAndInfoAndHero({
   publishedDate = '',
   updatedAt = '',
   tags = [],
+  tags_algo = [],
   subtitle = '',
 }) {
   return (
@@ -174,6 +176,7 @@ export default function TitleAndInfoAndHero({
         publishedDate={publishedDate}
         updatedAt={updatedAt}
         tags={tags}
+        tags_algo={tags_algo}
       />
     </TitleAndInfo>
   )

@@ -551,6 +551,7 @@ export default function StoryNormalStyle({
     vocals = [],
     extend_byline = '',
     tags = [],
+    tags_algo = [],
     brief = { blocks: [], entityMap: {} },
     hiddenAdvertised = false,
   } = postData
@@ -723,6 +724,7 @@ export default function StoryNormalStyle({
               publishedDate={publishedTaipeiTime}
               credits={credits}
               tags={tags}
+              tags_algo={tags_algo}
             />
           </InfoAndHero>
           <ArticleBrief sectionSlug={section?.slug} brief={brief} />
@@ -768,6 +770,7 @@ export default function StoryNormalStyle({
               <Link href="/papermag" target="_blank">
                 鏡週刊紙本雜誌
               </Link>
+              {/* TODO: 周年慶完結後可取消此判斷式 */}
               {!IS_ANNIVERSARY_PROMO_ACTIVE && (
                 <>
                   、
@@ -841,6 +844,7 @@ export default function StoryNormalStyle({
           <Link href="/papermag" target="_blank">
             鏡週刊紙本雜誌
           </Link>
+          {/* TODO: 周年慶完結後可取消此判斷式 */}
           {!IS_ANNIVERSARY_PROMO_ACTIVE && (
             <>
               、

@@ -14,7 +14,9 @@ import { getLoginHref } from '../utils'
  * It is useful when membership state changed but page didn't reloaded.
  *
  * @param {MembershipValidator} [validator]
- * @param {{ skipCheck?: boolean }} [options]
+ * @param {{ skipCheck?: boolean }} [options] - If true, membership validation will be bypassed.
+ *                                              Useful for temporary public-access pages,
+ *                                              experiments, or special campaigns.
  */
 export default function useMembershipRequired(validator, { skipCheck } = {}) {
   const router = useRouter()

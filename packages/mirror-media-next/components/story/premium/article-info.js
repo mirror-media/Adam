@@ -140,6 +140,7 @@ const SocialMedia = styled.div`
  * @property {string} props.publishedDate
  * @property {string} props.updatedAt
  * @property {Tags} props.tags
+ * @property {Tags} props.tags_algo
  * @property {string} [props.className]
  */
 /**
@@ -150,10 +151,12 @@ export default function ArticleInfo({
   publishedDate = '',
   updatedAt = '',
   tags = [],
+  tags_algo = [],
   className = '',
 }) {
   const { memberInfo } = useMembership()
   const { memberType } = memberInfo
+  const displayTags = [...tags, ...tags_algo]
 
   return (
     <Wrapper className={className}>
@@ -162,7 +165,7 @@ export default function ArticleInfo({
         <StyledDate timeType="publishedDate" timeData={publishedDate} />
         <StyledDate timeType="updatedDate" timeData={updatedAt} />
       </DateWrapper>
-      <StyledTags tags={tags}></StyledTags>
+      <StyledTags tags={displayTags}></StyledTags>
       <SocialMedia>
         <ButtonSocialNetworkShare width={28} height={28} type="facebook" />
         <ButtonSocialNetworkShare width={28} height={28} type="line" />

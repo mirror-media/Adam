@@ -39,7 +39,8 @@ import { getLoginUrl } from './index'
 /**
  * @typedef {Object} RedirectOptions
  * @property {boolean} [skipRedirect=false] - If true, unauthenticated users will not be redirected to login.
- *                                            This is useful for special conditions such as IS_ANNIVERSARY_PROMO_ACTIVE.
+ *                                            Useful for temporary access exceptions (e.g., special campaigns or
+ *                                            non-premium access periods).
  */
 
 /**

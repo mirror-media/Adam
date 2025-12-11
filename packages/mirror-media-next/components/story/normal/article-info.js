@@ -107,6 +107,10 @@ const DonateSubscribeWrapper = styled.div`
  */
 
 /**
+ * @typedef {import('../../../apollo/fragments/ai-tag').Tag[]} AiTags
+ */
+
+/**
  * @typedef {Object} Credit
  * @property {Contacts} [writers]
  * @property {Contacts} [photographers]
@@ -123,6 +127,7 @@ const DonateSubscribeWrapper = styled.div`
  * @param {string} props.publishedDate
  * @param {Credit[]} props.credits
  * @param {Tags} props.tags
+ * @param {Tags} props.tags_algo
  * @returns {import('react').JSX.Element}
  */
 export default function ArticleInfo({
@@ -130,7 +135,9 @@ export default function ArticleInfo({
   publishedDate,
   credits,
   tags,
+  tags_algo,
 }) {
+  const displayTags = [...tags, ...tags_algo]
   return (
     <ArticleInfoContainer>
       <Date>發布時間：{publishedDate} 臺北時間</Date>
@@ -148,7 +155,7 @@ export default function ArticleInfo({
           <SubscribeLink className="subscribe-btn GTM-subscribe-link-top" />
         </DonateSubscribeWrapper>
       </SocialMediaAndDonateLink>
-      <StyledTags tags={tags} />
+      <StyledTags tags={displayTags} />
     </ArticleInfoContainer>
   )
 }

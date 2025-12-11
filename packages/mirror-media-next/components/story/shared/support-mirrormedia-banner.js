@@ -47,6 +47,7 @@ const InnerWrapper = styled.div`
     grid-template-columns: ${IS_ANNIVERSARY_PROMO_ACTIVE ? '1fr' : '1fr 1fr'};
   }
 `
+// TODO: 周年慶完結後要恢復 grid-template-columns: '1fr 1fr';
 
 const InnerBox = styled.div`
   display: flex;
@@ -106,6 +107,7 @@ export default function SupportMirrorMediaBanner({ className }) {
           </p>
           <DonateLink className="banner-button GTM-donate-link-bottom" />
         </InnerBox>
+        {/* TODO: 周年慶完結後要移除此判斷式 */}
         {!IS_ANNIVERSARY_PROMO_ACTIVE && (
           <InnerBox>
             <p className="desc">
