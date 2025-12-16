@@ -7,9 +7,10 @@ import { useMembership } from '../../../context/membership'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 import { getLoginHref } from '../../../utils'
 import {
-  ALLOW_NON_PREMIUM_ACCESS,
+  ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE,
   IS_ANNIVERSARY_PROMO_ACTIVE,
 } from '../../../config/index.mjs'
+
 const inviteMemberOptionColor = {
   premium: {
     description: '#61B8C6', //light blue of theme color
@@ -68,6 +69,7 @@ const OptionWrapper = styled.div`
 `
 const InviteMemberOption = styled.div`
   height: fit-content;
+  width: 100%;
   margin-bottom: 32px;
   .description {
     text-align: center;
@@ -107,7 +109,8 @@ const InviteMemberCard = ({ postId = '' }) => {
       <OptionWrapper>
         <InviteMemberOption optionType="premium">
           <p className="description">
-            限時優惠每月${PRIZE_LIST.monthly}元 <br></br>全站看到飽
+            每期 ${PRIZE_LIST.monthly} 元可享獨家新聞 <br />
+            無限暢讀
           </p>
 
           <Link
@@ -118,23 +121,26 @@ const InviteMemberCard = ({ postId = '' }) => {
             加入premium會員
           </Link>
         </InviteMemberOption>
-        <InviteMemberOption optionType="oneTime">
-          <p className="description">
-            ＄{PRIZE_LIST.oneTime}元可享單篇好文14天 <br></br>無限瀏覽
-          </p>
+        {!ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE && (
+          <InviteMemberOption optionType="oneTime">
+            <p className="description">
+              ＄{PRIZE_LIST.oneTime}元可享單篇好文14天 <br />
+              無限瀏覽
+            </p>
 
-          <Link
-            href={
-              postId
-                ? `/subscribe/info?plan=${Frequency.OneTimeHyphen}&one-time-post-id=${postId}`
-                : '/subscribe'
-            }
-            className="link GTM-subscribe-one-time"
-            target="blank"
-          >
-            解鎖單篇報導
-          </Link>
-        </InviteMemberOption>
+            <Link
+              href={
+                postId
+                  ? `/subscribe/info?plan=${Frequency.OneTimeHyphen}&one-time-post-id=${postId}`
+                  : '/subscribe'
+              }
+              className="link GTM-subscribe-one-time"
+              target="blank"
+            >
+              解鎖單篇報導
+            </Link>
+          </InviteMemberOption>
+        )}
       </OptionWrapper>
       <p className="already-member">
         {isLoggedIn ? null : (
@@ -149,22 +155,40 @@ const InviteMemberCard = ({ postId = '' }) => {
     </InviteMemberCardWrapper>
   )
 }
+
 const Wrapper = styled.div`
   width: 100%;
-
   margin: 0 auto;
   position: relative;
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    width: 100%;
-    height: 300px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, white 80%);
+
+  ${
+    /**
+     * Controls the visual gradient mask only.
+     * @param {{ $showMask?: boolean }} props
+     * Disabled when non-premium users are allowed full access.
+     */
+    ({ $showMask = false }) =>
+      $showMask &&
+      `
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      width: 100%;
+      height: 300px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0) 0%,
+        white 80%
+      );
+    }
+  `
   }
 `
+
 /**
- * The Article Mask for story page, displayed when user is not subscribe certain member only article.
+ * ArticleMask acts as a paywall container for story pages.
+ * It may render subscription prompts and optionally apply a visual mask.
  * @param {Object} props
  * @param {string} props.postId
  * @returns
@@ -178,10 +202,13 @@ export default function ArticleMask({ postId = '' }) {
    */
 
   // TODO: 周年慶完結後要移除 IS_ANNIVERSARY_PROMO_ACTIVE
-  if (IS_ANNIVERSARY_PROMO_ACTIVE || ALLOW_NON_PREMIUM_ACCESS) return null
+  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
 
   return (
-    <Wrapper className="paywall">
+    <Wrapper
+      className="paywall"
+      $showMask={!ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE}
+    >
       <InviteMemberCard postId={postId}></InviteMemberCard>
     </Wrapper>
   )

@@ -57,7 +57,7 @@ let URL_STATIC_COLUMN_SECTION_POSTS = ''
 let URL_STATIC_DAILY_COLUMN_HEADLINES = ''
 let IS_ANNIVERSARY_PROMO_ACTIVE = false
 let IS_ANNIVERSARY_MODAL_ACTIVE = false
-let ALLOW_NON_PREMIUM_ACCESS = false
+let ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = false
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -71,15 +71,6 @@ let FIREBASE_AUTH_DOMAIN
 
 let GCP_STACKDRIVER_LOG_NAME = ''
 let GCP_STACKDRIVER_ERROR_LOG_NAME = ''
-
-let IS_PRIZE_RIZED
-
-const now = new Date()
-const currentYear = now.getFullYear()
-// Target time: June 1st, 00:00 AM Taiwan time (UTC+8)
-// JavaScript's month is 0-indexed (0 for January, 4 for May, 5 for June).
-// 00:00 AM on June 1st in Taiwan (UTC+8) is 16:00 (4 PM) on May 31st in UTC.
-const activationDate = new Date(Date.UTC(currentYear, 4, 31, 16, 0, 0)) // Month 4 for May, Day 31, Hour 16 (corresponds to May 31st, 16:00 UTC)
 
 switch (ENV) {
   case 'prod':
@@ -116,7 +107,7 @@ switch (ENV) {
     GTM_ID = 'GTM-NCH86SP'
     IS_ANNIVERSARY_PROMO_ACTIVE = true
     IS_ANNIVERSARY_MODAL_ACTIVE = true
-    ALLOW_NON_PREMIUM_ACCESS = true
+    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = false
 
     GPT_MODE = 'prod'
 
@@ -135,7 +126,6 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log'
-    IS_PRIZE_RIZED = now.getTime() >= activationDate.getTime()
     COURSE_URL = 'https://course.mirrormedia.mg'
 
     break
@@ -178,7 +168,7 @@ switch (ENV) {
     GTM_ID = 'GTM-KVDZ27K'
     IS_ANNIVERSARY_PROMO_ACTIVE = true
     IS_ANNIVERSARY_MODAL_ACTIVE = true
-    ALLOW_NON_PREMIUM_ACCESS = true
+    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = false
     GPT_MODE = 'prod'
 
     FIREBASE_AUTH_DOMAIN = 'mirrormedia-staging.firebaseapp.com'
@@ -196,8 +186,6 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_staging'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_staging'
-
-    IS_PRIZE_RIZED = true
 
     COURSE_URL = 'https://course.mirrormedia.mg'
 
@@ -235,7 +223,7 @@ switch (ENV) {
     GTM_ID = 'GTM-PBNLSMX'
     IS_ANNIVERSARY_PROMO_ACTIVE = false
     IS_ANNIVERSARY_MODAL_ACTIVE = false
-    ALLOW_NON_PREMIUM_ACCESS = false
+    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
     LOGIN_PAGE_FEATURE_TOGGLE = 'on'
@@ -257,7 +245,6 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_dev'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_dev'
-    IS_PRIZE_RIZED = true
 
     COURSE_URL = 'https://dev-course.mirrormedia.mg'
 
@@ -281,7 +268,7 @@ switch (ENV) {
     TEST_GPT_AD_FEATURE_TOGGLE = 'on'
     IS_ANNIVERSARY_PROMO_ACTIVE = false
     IS_ANNIVERSARY_MODAL_ACTIVE = false
-    ALLOW_NON_PREMIUM_ACCESS = false
+    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     URL_STATIC_PREMIUM_SECTIONS = `http://localhost:8080/json/header_member.json`
     URL_STATIC_NORMAL_SECTIONS = `http://localhost:8080/json/header_sections.json`
     URL_STATIC_TOPICS = `http://localhost:8080/json/header_topics.json`
@@ -315,7 +302,6 @@ switch (ENV) {
 
     GCP_STACKDRIVER_LOG_NAME = 'mirror-media-next-user-behavior_local'
     GCP_STACKDRIVER_ERROR_LOG_NAME = 'mirror-media-next-error-log_local'
-    IS_PRIZE_RIZED = true
 }
 
 import { FIREBASE_CONFIG } from './firebase.mjs'
@@ -363,7 +349,6 @@ export {
   URL_STATIC_DAILY_COLUMN_HEADLINES,
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
-  IS_PRIZE_RIZED,
   COURSE_URL,
   MISO_API_KEY,
   URL_STATIC_COLUMN_SECTION_POSTS,
@@ -371,5 +356,5 @@ export {
   MISO_ENDPOINTS,
   IS_ANNIVERSARY_PROMO_ACTIVE,
   IS_ANNIVERSARY_MODAL_ACTIVE, // TODO: 周年慶完結後跟 IS_ANNIVERSARY_PROMO_ACTIVE 一起刪除
-  ALLOW_NON_PREMIUM_ACCESS,
+  ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE,
 }
