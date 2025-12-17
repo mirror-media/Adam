@@ -22,6 +22,7 @@ import ButtonSocialNetworkShare from '../shared/button-social-network-share'
 import Aside from '../shared/aside'
 import { getActiveOrderSection } from '../../../utils'
 import ArticleBrief from '../shared/brief'
+import { ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE } from '../../../config/index.mjs'
 
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
@@ -179,7 +180,13 @@ export default function StoryWideStyle({
 
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
 
-  const shouldShowArticleMask = postContent.type === 'trimmedContent'
+  /**
+   * Determines whether to render the ArticleMask (paywall container).
+   * Rendering this component does not necessarily enable visual masking.
+   */
+  const shouldRenderArticleMask =
+    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE ||
+    postContent.type === 'trimmedContent'
 
   const { memberInfo } = useMembership()
   const { memberType } = memberInfo
@@ -188,7 +195,7 @@ export default function StoryWideStyle({
 
   let supportBanner
 
-  if (!shouldShowArticleMask) {
+  if (!shouldRenderArticleMask) {
     if (isPremiumMember) {
       supportBanner = <SupportSingleArticleBanner />
     } else {
@@ -250,7 +257,7 @@ export default function StoryWideStyle({
             </section>
             <MoreInfoAndTag tags={tags} />
 
-            {shouldShowArticleMask && <ArticleMask postId={id} />}
+            {shouldRenderArticleMask && <ArticleMask postId={id} />}
             {supportBanner}
           </ContentWrapper>
           <Aside
