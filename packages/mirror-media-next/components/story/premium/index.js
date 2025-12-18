@@ -23,7 +23,6 @@ import { SECTION_IDS } from '../../../constants/index'
 import { getCategoryOfWineSlug, getActiveOrderSection } from '../../../utils'
 import GPTMbStAd from '../../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../ads/gpt/gpt-placeholder'
-import { ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE } from '../../../config/index.mjs'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -191,10 +190,7 @@ export default function StoryPremiumStyle({
   classNameForGTM = '',
   allRelatedStories = [],
 }) {
-  const {
-    // isLoggedIn,
-    memberInfo,
-  } = useMembership()
+  const { isLoggedIn, memberInfo } = useMembership()
   const { memberType } = memberInfo
 
   const {
@@ -224,17 +220,8 @@ export default function StoryPremiumStyle({
     hiddenAdvertised = false,
   } = postData
 
-  /**
-   * Determines whether to render the ArticleMask (paywall container).
-   *
-   * Previously, the paywall was rendered only when the user was not logged in || postContent.type === 'trimmedContent'
-   * After the business logic change, this decision is controlled by a global
-   * policy flag (`ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE`) to separate paywall behavior
-   * from authentication state.
-   */
-  const shouldRenderArticleMask =
-    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE ||
-    postContent.type === 'trimmedContent'
+  const shouldShowArticleMask =
+    !isLoggedIn || postContent.type === 'trimmedContent'
 
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
 
@@ -348,7 +335,7 @@ export default function StoryPremiumStyle({
               pageKeyForGptAd={pageKeyForGptAd}
             />
             <CopyrightWarning />
-            {shouldRenderArticleMask && <ArticleMask postId={id} />}
+            {shouldShowArticleMask && <ArticleMask postId={id} />}
             {supportBanner}
             {shouldShowAd && (
               <GPTAdContainer>

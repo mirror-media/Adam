@@ -59,8 +59,7 @@ function Subscribe({ sectionsData = [], topicsData = [] }) {
         <BlankCard>
           <Title>此頁面為個人會員訂閱頁面</Title>
           <Text>
-            由於您為鏡週刊的 VIP 或團體訂購，VIP
-            及團體訂購期間不須付款即享會員專區文章暢讀。
+            由於您為鏡週刊的 VIP ， VIP 期間不須付款即享會員專區文章暢讀。
             若您有意願付費支持，請於期間後再付款。
           </Text>
           <PrimaryBlueBtn title="回會員專區" href="/premiumsection/member" />
