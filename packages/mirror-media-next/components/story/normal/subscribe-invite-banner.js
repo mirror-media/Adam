@@ -18,6 +18,7 @@ const Wrapper = styled.div`
     margin-top: 32px;
   }
   a {
+    margin: 0 4px;
     color: rgba(234, 193, 81, 1);
     font-weight: 600;
     border-bottom: 1px solid rgba(234, 193, 81, 1);
@@ -39,8 +40,8 @@ export default function SubscribeInviteBanner() {
   return (
     <Wrapper>
       <p>
-        鏡週刊訂閱制上線，讓有價的閱聽成就更多優質文章，並獻上無廣告的閱讀環境，讓您盡情享受15類會員專屬內容，誠摯邀請您
-        <Link href={href}>立即加入</Link>。
+        鏡週刊掌握趨勢，領先一步：從國際大事到生活小確幸，我們確保您不錯過任何一個重要瞬間，誠摯邀請您
+        <Link href={href}>立即加入閱讀</Link>。
       </p>
     </Wrapper>
   )

@@ -111,9 +111,9 @@ export default function SupportMirrorMediaBanner({ className }) {
         {!IS_ANNIVERSARY_PROMO_ACTIVE && (
           <InnerBox>
             <p className="desc">
-              每月 ${PRIZE_LIST.monthly} 元全站看到飽
+              每期 ${PRIZE_LIST.monthly} 元動態話題報導
               <br />
-              暢享無廣告閱讀體驗
+              無限閱讀解鎖新鮮事
             </p>
             <SubscribeLink className="banner-button GTM-subscribe-link-bottom" />
           </InnerBox>
