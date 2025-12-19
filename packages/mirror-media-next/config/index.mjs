@@ -166,9 +166,9 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
     GTM_ID = 'GTM-KVDZ27K'
-    IS_ANNIVERSARY_PROMO_ACTIVE = true
-    IS_ANNIVERSARY_MODAL_ACTIVE = true
-    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = false
+    IS_ANNIVERSARY_PROMO_ACTIVE = false
+    IS_ANNIVERSARY_MODAL_ACTIVE = false
+    ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     GPT_MODE = 'prod'
 
     FIREBASE_AUTH_DOMAIN = 'mirrormedia-staging.firebaseapp.com'
