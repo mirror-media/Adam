@@ -58,10 +58,21 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       try {
         const content = await fs.readFile(localPath, 'utf8')
         const data = JSON.parse(content)
+        console.log('[fetchStaticJson] GCS mount hit', localPath)
         return { data }
-      } catch {
+      } catch (err) {
+        console.warn(
+          '[fetchStaticJson] GCS mount miss, fallback to HTTP',
+          localPath,
+          err?.message ?? err
+        )
         // fall through to HTTP
       }
+    } else {
+      console.log(
+        '[fetchStaticJson] No local path mapped, using HTTP',
+        requestUrl
+      )
     }
   }
   const res = await axiosInstance({
