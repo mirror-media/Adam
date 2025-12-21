@@ -11,6 +11,7 @@ import axiosInstance from '../../axios/index.js'
  * Supported URL forms:
  * - https://{bucket}/files/json/...
  * - https://storage.googleapis.com/{bucket}/files/json/...
+ * - https://{cdn-hostname}/files/json/... (CDN)
  *
  * @param {string} requestUrl
  * @returns {string | null}
@@ -19,24 +20,65 @@ function mapUrlToLocalPath(requestUrl) {
   try {
     const mountDir = process.env.GCS_FUSE_MOUNT_DIR
     const bucket = process.env.GCS_FUSE_STATIC_BUCKET
-    if (!mountDir || !bucket) return null
+    if (!mountDir || !bucket) {
+      console.log(
+        '[mapUrlToLocalPath] Missing env vars',
+        'GCS_FUSE_MOUNT_DIR:',
+        mountDir || 'undefined',
+        'GCS_FUSE_STATIC_BUCKET:',
+        bucket || 'undefined'
+      )
+      return null
+    }
 
     const u = new URL(requestUrl)
+    const pathname = u.pathname
+    let localPath = null
+
+    // Handle storage.googleapis.com format: /{bucket}/files/json/...
     if (u.hostname === 'storage.googleapis.com') {
-      // expect pathname starts with /{bucket}/...
-      const parts = u.pathname.split('/').filter(Boolean)
-      if (parts[0] !== bucket) return null
+      const parts = pathname.split('/').filter(Boolean)
+      if (parts[0] !== bucket) {
+        console.log(
+          '[mapUrlToLocalPath] Bucket mismatch',
+          'expected:',
+          bucket,
+          'got:',
+          parts[0],
+          'from URL:',
+          requestUrl
+        )
+        return null
+      }
       const rest = parts.slice(1).join('/')
-      return path.join(mountDir, rest)
+      localPath = path.join(mountDir, rest)
+    } else {
+      // Handle direct bucket domain or CDN: extract pathname directly
+      // Pathname should be like /files/json/... or /json/latest/...
+      // Remove leading '/' and map to mount directory
+      const rest = pathname.replace(/^\/+/, '')
+      if (!rest) {
+        console.log(
+          '[mapUrlToLocalPath] Empty pathname after processing',
+          'from URL:',
+          requestUrl
+        )
+        return null
+      }
+      localPath = path.join(mountDir, rest)
     }
-    // direct bucket domain
-    if (u.hostname === bucket) {
-      // remove leading '/'
-      const rest = u.pathname.replace(/^\/+/, '')
-      return path.join(mountDir, rest)
-    }
-    return null
-  } catch {
+
+    console.log(
+      '[mapUrlToLocalPath] Mapped',
+      'URL:',
+      requestUrl,
+      '->',
+      'localPath:',
+      localPath
+    )
+    return localPath
+  } catch (err) {
+    console.warn('[mapUrlToLocalPath] Error mapping URL:', requestUrl, err)
     return null
   }
 }
@@ -58,12 +100,22 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       try {
         const content = await fs.readFile(localPath, 'utf8')
         const data = JSON.parse(content)
-        console.log('[fetchStaticJson] GCS mount hit', localPath)
+        console.log(
+          '[fetchStaticJson] GCS mount hit',
+          'URL:',
+          requestUrl,
+          'localPath:',
+          localPath
+        )
         return { data }
       } catch (err) {
         console.warn(
           '[fetchStaticJson] GCS mount miss, fallback to HTTP',
+          'URL:',
+          requestUrl,
+          'mapped localPath:',
           localPath,
+          'error:',
           err?.message ?? err
         )
         // fall through to HTTP
@@ -71,6 +123,7 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
     } else {
       console.log(
         '[fetchStaticJson] No local path mapped, using HTTP',
+        'URL:',
         requestUrl
       )
     }
