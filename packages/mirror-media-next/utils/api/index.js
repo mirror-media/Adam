@@ -89,18 +89,22 @@ const createStaticJsonRequest = (requestUrl) => {
         // @ts-expect-error server-only helper (no TS typings)
         const mod = await import('../server-side-only/fetch-static-json.js')
         const res = await mod.fetchStaticJson(requestUrl)
-        console.log('[api] fetchStaticJson hit', requestUrl)
+        // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
+        // fetchStaticJson returns { data: ... } format
         return res
       } catch (err) {
         console.warn(
-          '[api] fetchStaticJson miss',
+          '[api] fetchStaticJson error, fallback to axios',
           requestUrl,
           err?.message ?? err
         )
-        return axiosInstance(requestUrl)
+        // axiosInstance returns AxiosResponse which has .data property
+        const axiosRes = await axiosInstance(requestUrl)
+        return { data: axiosRes?.data }
       }
     }
-    return axiosInstance(requestUrl)
+    const axiosRes = await axiosInstance(requestUrl)
+    return { data: axiosRes?.data }
   }
 }
 
