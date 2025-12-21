@@ -2,9 +2,11 @@
 import client from '../../apollo/apollo-client'
 import {
   API_TIMEOUT,
+  API_TIMEOUT_GRAPHQL,
   ENV,
   SITE_URL,
   URL_STATIC_POST_FLASH_NEWS,
+  STORY_GQL_ENDPOINT,
 } from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
 import { fetchExternalBySlug } from '../../apollo/query/externals'
@@ -24,6 +26,8 @@ import axios from 'axios'
 import { getRelatedStories } from '../../pages/api/recomemd'
 import { useState, useEffect } from 'react'
 import { toTaipeiISOString } from '../../utils/index'
+import { ApolloClient, HttpLink, InMemoryCache, concat } from '@apollo/client'
+import ApolloLinkTimeout from 'apollo-link-timeout'
 
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
@@ -195,9 +199,23 @@ export async function getServerSideProps({ params, req, res }) {
   const { slug } = params
   const globalLogFields = getLogTraceObject(req)
 
+  const externalClient =
+    STORY_GQL_ENDPOINT && typeof window === 'undefined'
+      ? new ApolloClient({
+          link: concat(
+            new ApolloLinkTimeout(API_TIMEOUT_GRAPHQL),
+            new HttpLink({
+              uri: STORY_GQL_ENDPOINT,
+              fetch,
+            })
+          ),
+          cache: new InMemoryCache(),
+        })
+      : client
+
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
-    client.query({
+    externalClient.query({
       query: fetchExternalBySlug,
       variables: { slug },
     }),
