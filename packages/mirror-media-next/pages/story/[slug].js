@@ -6,9 +6,11 @@ import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
   API_TIMEOUT,
+  API_TIMEOUT_GRAPHQL,
   ENV,
   URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
+  STORY_GQL_ENDPOINT,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
@@ -52,6 +54,8 @@ import Skeleton from '../../public/images-next/skeleton.png'
 import axios from 'axios'
 import { processSettledResult } from '../../utils/response-processor'
 import { getRelatedStories } from '../api/recomemd'
+import { ApolloClient, HttpLink, InMemoryCache, concat } from '@apollo/client'
+import ApolloLinkTimeout from 'apollo-link-timeout'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -404,7 +408,21 @@ export async function getServerSideProps({ params, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   try {
-    const result = await client.query({
+    const storyClient =
+      STORY_GQL_ENDPOINT && typeof window === 'undefined'
+        ? new ApolloClient({
+            link: concat(
+              new ApolloLinkTimeout(API_TIMEOUT_GRAPHQL),
+              new HttpLink({
+                uri: STORY_GQL_ENDPOINT,
+                fetch,
+              })
+            ),
+            cache: new InMemoryCache(),
+          })
+        : client
+
+    const result = await storyClient.query({
       query: fetchPostBySlug,
       variables: { slug },
     })
