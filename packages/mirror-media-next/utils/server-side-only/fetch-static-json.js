@@ -93,28 +93,40 @@ function mapUrlToLocalPath(requestUrl) {
  * @returns {Promise<{ data: any }>}
  */
 export async function fetchStaticJson(requestUrl, timeoutMs) {
+  const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
     const localPath = mapUrlToLocalPath(requestUrl)
     if (localPath) {
       try {
+        const readStartTime = performance.now()
         const content = await fs.readFile(localPath, 'utf8')
+        const parseStartTime = performance.now()
         const data = JSON.parse(content)
+        const parseEndTime = performance.now()
+        const readLatency = (parseEndTime - readStartTime).toFixed(2)
+        const totalLatency = (parseEndTime - startTime).toFixed(2)
         console.log(
           '[fetchStaticJson] GCS mount hit',
           'URL:',
           requestUrl,
           'localPath:',
-          localPath
+          localPath,
+          'latency:',
+          `${readLatency}ms`,
+          `(total: ${totalLatency}ms)`
         )
         return { data }
       } catch (err) {
+        const readLatency = (performance.now() - startTime).toFixed(2)
         console.warn(
           '[fetchStaticJson] GCS mount miss, fallback to HTTP',
           'URL:',
           requestUrl,
           'mapped localPath:',
           localPath,
+          'readLatency:',
+          `${readLatency}ms`,
           'error:',
           err?.message ?? err
         )
@@ -128,10 +140,22 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       )
     }
   }
+  const httpStartTime = performance.now()
   const res = await axiosInstance({
     method: 'get',
     url: requestUrl,
     timeout: timeoutMs,
   })
+  const httpEndTime = performance.now()
+  const httpLatency = (httpEndTime - httpStartTime).toFixed(2)
+  const totalLatency = (httpEndTime - startTime).toFixed(2)
+  console.log(
+    '[fetchStaticJson] HTTP fetch',
+    'URL:',
+    requestUrl,
+    'latency:',
+    `${httpLatency}ms`,
+    `(total: ${totalLatency}ms)`
+  )
   return { data: res?.data }
 }
