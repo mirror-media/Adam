@@ -23,7 +23,6 @@ steps:
   # Build image
   - name: gcr.io/cloud-builders/docker
     env:
-      - 'NEXT_PUBLIC_ENV=${BRANCH_NAME}'
       - 'NEXT_PUBLIC_IS_PREVIEW_MODE=$_IS_PREVIEW_MODE'
     args:
       - '-c'
@@ -32,16 +31,20 @@ steps:
 
         cd packages/$_TARGET_PACKAGE
 
-        echo "print environment variables and output to file"
+        # normalize NEXT_PUBLIC_ENV: prod/staging keep as is, others -> dev
+        BRANCH_ENV="${BRANCH_NAME}"
+        if [ "${BRANCH_NAME}" != "prod" ] && [ "${BRANCH_NAME}" != "staging" ]; then
+          BRANCH_ENV="dev"
+        fi
+        export NEXT_PUBLIC_ENV="${BRANCH_ENV}"
 
+        echo "print environment variables and output to file"
         printenv | tee .env.local
 
         docker build -t \
-
         gcr.io/$PROJECT_ID/$_IMAGE_NAME:${BRANCH_NAME}_${SHORT_SHA} \
-
         -t gcr.io/$PROJECT_ID/$_IMAGE_NAME:latest \
-
+        --build-arg NEXT_PUBLIC_ENV="${NEXT_PUBLIC_ENV}" \
         --cache-from gcr.io/$PROJECT_ID/$_IMAGE_NAME:latest .
     entrypoint: bash
 
