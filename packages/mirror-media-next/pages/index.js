@@ -206,29 +206,25 @@ export async function getServerSideProps({ res, req }) {
 
   const fetchStaticJsonSafe = async (url, timeout, label) => {
     try {
-      // @ts-expect-error server-only helper (no TS typings)
       const mod = await import('../utils/server-side-only/fetch-static-json.js')
       const res = await mod.fetchStaticJson(url, timeout)
       return res
     } catch (err) {
-      return null
+      // fetchStaticJson already has axios fallback, but if import fails, fallback to axios
+      return axios({
+        method: 'get',
+        url,
+        timeout,
+      })
     }
   }
 
   try {
-    let postResponse =
-      (await fetchStaticJsonSafe(
-        `${URL_STATIC_POST_EXTERNAL}01.json`,
-        5000,
-        'post_external'
-      )) ?? null
-    if (!postResponse) {
-      postResponse = await axios({
-        method: 'get',
-        url: `${URL_STATIC_POST_EXTERNAL}01.json`,
-        timeout: 5000, //since size of json file is large, we assign timeout as 5000ms to prevent content lost in poor network condition
-      })
-    }
+    const postResponse = await fetchStaticJsonSafe(
+      `${URL_STATIC_POST_EXTERNAL}01.json`,
+      5000,
+      'post_external'
+    )
     editorChoicesData = Array.isArray(postResponse?.data?.choices)
       ? postResponse?.data?.choices
       : []
@@ -237,19 +233,11 @@ export async function getServerSideProps({ res, req }) {
       ? postResponse?.data?.latest
       : []
 
-    const flashNewsPromise = (async () => {
-      const localRes = await fetchStaticJsonSafe(
-        URL_STATIC_POST_FLASH_NEWS,
-        API_TIMEOUT,
-        'flash_news'
-      )
-      if (localRes) return localRes
-      return axios({
-        method: 'get',
-        url: URL_STATIC_POST_FLASH_NEWS,
-        timeout: API_TIMEOUT,
-      })
-    })()
+    const flashNewsPromise = fetchStaticJsonSafe(
+      URL_STATIC_POST_FLASH_NEWS,
+      API_TIMEOUT,
+      'flash_news'
+    )
 
     const responses = await Promise.allSettled([
       flashNewsPromise,

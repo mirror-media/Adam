@@ -92,9 +92,8 @@ const createStaticJsonRequest = (requestUrl) => {
         // fetchStaticJson returns { data: ... } format
         return res
       } catch (err) {
-        // axiosInstance returns AxiosResponse which has .data property
-        const axiosRes = await axiosInstance(requestUrl)
-        return { data: axiosRes?.data }
+        console.warn('[static-json] fallback to axios', err)
+        // Continue to fall through to unified axios fallback below
       }
     }
     const axiosRes = await axiosInstance(requestUrl)
