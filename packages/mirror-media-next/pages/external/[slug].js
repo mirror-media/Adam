@@ -204,14 +204,8 @@ export async function getServerSideProps({ params, req, res }) {
       // @ts-expect-error server-only helper (no TS typings)
       const mod = await import('../../utils/server-side-only/fetch-static-json.js')
       const res = await mod.fetchStaticJson(url, timeout)
-      console.log('[external] fetchStaticJson hit', label ?? url)
       return res
     } catch (err) {
-      console.warn(
-        '[external] fetchStaticJson miss',
-        label ?? url,
-        err?.message ?? err
-      )
       return null
     }
   }

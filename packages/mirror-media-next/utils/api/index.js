@@ -86,18 +86,12 @@ const createStaticJsonRequest = (requestUrl) => {
   return async () => {
     if (typeof window === 'undefined') {
       try {
-        // @ts-expect-error server-only helper (no TS typings)
         const mod = await import('../server-side-only/fetch-static-json.js')
         const res = await mod.fetchStaticJson(requestUrl)
         // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
         // fetchStaticJson returns { data: ... } format
         return res
       } catch (err) {
-        console.warn(
-          '[api] fetchStaticJson error, fallback to axios',
-          requestUrl,
-          err?.message ?? err
-        )
         // axiosInstance returns AxiosResponse which has .data property
         const axiosRes = await axiosInstance(requestUrl)
         return { data: axiosRes?.data }
@@ -129,10 +123,10 @@ const errorLogger = (errorMessage) => {
   throw annotatingAxiosError
 }
 
-/** @type {() => Promise<import('axios').AxiosResponse<{headers: HeadersData}>>} */
+/** @type {() => Promise<{ data: { headers: HeadersData } }>} */
 const fetchNormalSections = createStaticJsonRequest(URL_STATIC_HEADER_HEADERS)
 
-/** @type {() => Promise<import('axios').AxiosResponse<{topics: Topics}>>} */
+/** @type {() => Promise<{ data: { topics: Topics } }>} */
 const fetchTopics = createStaticJsonRequest(URL_STATIC_TOPICS)
 
 const fetchPremiumSections = createStaticJsonRequest(URL_STATIC_PREMIUM_SECTIONS)
@@ -205,7 +199,7 @@ const fetchAnnoucementsByScope = (scope) => {
   })
 }
 
-/** @type {() => Promise<import('axios').AxiosResponse<ColumnSectionResponse>>} */
+/** @type {() => Promise<{ data: ColumnSectionResponse }>} */
 const fetchColumnSectionPosts = createStaticJsonRequest(
   URL_STATIC_COLUMN_SECTION_POSTS
 )

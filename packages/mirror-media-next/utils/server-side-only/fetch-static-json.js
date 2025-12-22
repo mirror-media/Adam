@@ -21,13 +21,6 @@ function mapUrlToLocalPath(requestUrl) {
     const mountDir = process.env.GCS_FUSE_MOUNT_DIR
     const bucket = process.env.GCS_FUSE_STATIC_BUCKET
     if (!mountDir || !bucket) {
-      console.log(
-        '[mapUrlToLocalPath] Missing env vars',
-        'GCS_FUSE_MOUNT_DIR:',
-        mountDir || 'undefined',
-        'GCS_FUSE_STATIC_BUCKET:',
-        bucket || 'undefined'
-      )
       return null
     }
 
@@ -39,15 +32,6 @@ function mapUrlToLocalPath(requestUrl) {
     if (u.hostname === 'storage.googleapis.com') {
       const parts = pathname.split('/').filter(Boolean)
       if (parts[0] !== bucket) {
-        console.log(
-          '[mapUrlToLocalPath] Bucket mismatch',
-          'expected:',
-          bucket,
-          'got:',
-          parts[0],
-          'from URL:',
-          requestUrl
-        )
         return null
       }
       const rest = parts.slice(1).join('/')
@@ -58,27 +42,13 @@ function mapUrlToLocalPath(requestUrl) {
       // Remove leading '/' and map to mount directory
       const rest = pathname.replace(/^\/+/, '')
       if (!rest) {
-        console.log(
-          '[mapUrlToLocalPath] Empty pathname after processing',
-          'from URL:',
-          requestUrl
-        )
         return null
       }
       localPath = path.join(mountDir, rest)
     }
 
-    console.log(
-      '[mapUrlToLocalPath] Mapped',
-      'URL:',
-      requestUrl,
-      '->',
-      'localPath:',
-      localPath
-    )
     return localPath
   } catch (err) {
-    console.warn('[mapUrlToLocalPath] Error mapping URL:', requestUrl, err)
     return null
   }
 }
@@ -93,69 +63,23 @@ function mapUrlToLocalPath(requestUrl) {
  * @returns {Promise<{ data: any }>}
  */
 export async function fetchStaticJson(requestUrl, timeoutMs) {
-  const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
     const localPath = mapUrlToLocalPath(requestUrl)
     if (localPath) {
       try {
-        const readStartTime = performance.now()
         const content = await fs.readFile(localPath, 'utf8')
-        const parseStartTime = performance.now()
         const data = JSON.parse(content)
-        const parseEndTime = performance.now()
-        const readLatency = (parseEndTime - readStartTime).toFixed(2)
-        const totalLatency = (parseEndTime - startTime).toFixed(2)
-        console.log(
-          '[fetchStaticJson] GCS mount hit',
-          'URL:',
-          requestUrl,
-          'localPath:',
-          localPath,
-          'latency:',
-          `${readLatency}ms`,
-          `(total: ${totalLatency}ms)`
-        )
         return { data }
       } catch (err) {
-        const readLatency = (performance.now() - startTime).toFixed(2)
-        console.warn(
-          '[fetchStaticJson] GCS mount miss, fallback to HTTP',
-          'URL:',
-          requestUrl,
-          'mapped localPath:',
-          localPath,
-          'readLatency:',
-          `${readLatency}ms`,
-          'error:',
-          err?.message ?? err
-        )
         // fall through to HTTP
       }
-    } else {
-      console.log(
-        '[fetchStaticJson] No local path mapped, using HTTP',
-        'URL:',
-        requestUrl
-      )
     }
   }
-  const httpStartTime = performance.now()
   const res = await axiosInstance({
     method: 'get',
     url: requestUrl,
     timeout: timeoutMs,
   })
-  const httpEndTime = performance.now()
-  const httpLatency = (httpEndTime - httpStartTime).toFixed(2)
-  const totalLatency = (httpEndTime - startTime).toFixed(2)
-  console.log(
-    '[fetchStaticJson] HTTP fetch',
-    'URL:',
-    requestUrl,
-    'latency:',
-    `${httpLatency}ms`,
-    `(total: ${totalLatency}ms)`
-  )
   return { data: res?.data }
 }
