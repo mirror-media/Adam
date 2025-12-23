@@ -63,23 +63,79 @@ function mapUrlToLocalPath(requestUrl) {
  * @returns {Promise<{ data: any }>}
  */
 export async function fetchStaticJson(requestUrl, timeoutMs) {
+  const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
     const localPath = mapUrlToLocalPath(requestUrl)
     if (localPath) {
       try {
+        const readStartTime = performance.now()
         const content = await fs.readFile(localPath, 'utf8')
+        const parseStartTime = performance.now()
         const data = JSON.parse(content)
+        const parseEndTime = performance.now()
+        
+        const readLatency = (parseEndTime - readStartTime).toFixed(2)
+        const totalLatency = (parseEndTime - startTime).toFixed(2)
+        
+        console.log(
+          JSON.stringify({
+            severity: 'INFO',
+            message: '[fetchStaticJson] GCS mount hit',
+            url: requestUrl,
+            localPath: localPath,
+            readLatency: `${readLatency}ms`,
+            totalLatency: `${totalLatency}ms`,
+            source: 'local',
+          })
+        )
+        
         return { data }
       } catch (err) {
+        const readLatency = (performance.now() - startTime).toFixed(2)
+        console.warn(
+          JSON.stringify({
+            severity: 'WARNING',
+            message: '[fetchStaticJson] GCS mount miss, fallback to HTTP',
+            url: requestUrl,
+            localPath: localPath,
+            readLatency: `${readLatency}ms`,
+            error: err?.message ?? String(err),
+          })
+        )
         // fall through to HTTP
       }
+    } else {
+      console.log(
+        JSON.stringify({
+          severity: 'INFO',
+          message: '[fetchStaticJson] No local path mapped, using HTTP',
+          url: requestUrl,
+        })
+      )
     }
   }
+  
+  const httpStartTime = performance.now()
   const res = await axiosInstance({
     method: 'get',
     url: requestUrl,
     timeout: timeoutMs,
   })
+  const httpEndTime = performance.now()
+  const httpLatency = (httpEndTime - httpStartTime).toFixed(2)
+  const totalLatency = (httpEndTime - startTime).toFixed(2)
+  
+  console.log(
+    JSON.stringify({
+      severity: 'INFO',
+      message: '[fetchStaticJson] HTTP fetch',
+      url: requestUrl,
+      httpLatency: `${httpLatency}ms`,
+      totalLatency: `${totalLatency}ms`,
+      source: 'http',
+    })
+  )
+  
   return { data: res?.data }
 }
