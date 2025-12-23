@@ -25,7 +25,6 @@ const Page = styled.div`
 `
 
 export default function BookBIssuePublish({ weeklys }) {
-  console.log('weeklys:', weeklys)
   const router = useRouter()
   const { book, issue } = router.query
   const issueString = Array.isArray(issue) ? issue.join('') : issue
