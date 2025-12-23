@@ -171,17 +171,17 @@ export default function Magazine({ sectionsData = [] }) {
             </>
           )}
 
-          <Section>
-            <Title>購買線上雜誌</Title>
-            <MagazinePlatforms />
-          </Section>
-
           {specials.length > 0 && (
             <Section>
               <Title>特刊</Title>
               <MagazineSpecials specials={specials} />
             </Section>
           )}
+
+          <Section>
+            <Title>購買線上雜誌</Title>
+            <MagazinePlatforms />
+          </Section>
         </Page>
       ) : (
         <JoinPremiumMember />
