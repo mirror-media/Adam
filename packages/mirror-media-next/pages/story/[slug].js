@@ -1,7 +1,7 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
 import React, { useState, useEffect, useMemo } from 'react'
 
-import client from '../../apollo/apollo-client'
+import client, { getStoryClient } from '../../apollo/apollo-client'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
@@ -54,8 +54,6 @@ import Skeleton from '../../public/images-next/skeleton.png'
 import axios from 'axios'
 import { processSettledResult } from '../../utils/response-processor'
 import { getRelatedStories } from '../api/recomemd'
-import { ApolloClient, HttpLink, InMemoryCache, concat } from '@apollo/client'
-import ApolloLinkTimeout from 'apollo-link-timeout'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -161,56 +159,72 @@ export default function Story({
   )
 
   useEffect(() => {
-    const handleScroll = async () => {
-      if (allRelatedStories.length < 10) {
-        const filterIds = allRelatedStories.map(
-          (story) => `mirrormedia_story_${story.slug}`
-        )
-        try {
-          const result = await getRelatedStories(
-            postData.slug,
-            filterIds,
-            10 - allRelatedStories.length,
-            'story'
+    // Wait for page to be fully rendered before setting up miso API calls
+    const setupScrollHandler = () => {
+      const handleScroll = async () => {
+        if (allRelatedStories.length < 10) {
+          const filterIds = allRelatedStories.map(
+            (story) => `mirrormedia_story_${story.slug}`
           )
+          try {
+            const result = await getRelatedStories(
+              postData.slug,
+              filterIds,
+              10 - allRelatedStories.length,
+              'story'
+            )
 
-          if (result && result.data && result.data.products) {
-            const formattedStories = result.data.products.map((product) => {
-              const productId = product.product_id
-              const slug = productId.split('_').slice(2).join('_')
+            if (result && result.data && result.data.products) {
+              const formattedStories = result.data.products.map((product) => {
+                const productId = product.product_id
+                const slug = productId.split('_').slice(2).join('_')
 
-              return {
-                id: productId,
-                slug: slug,
-                title: product.title || '',
-                url: product.url || '',
-                heroImage: product.cover_image
-                  ? {
-                      resized: { original: product.cover_image },
-                    }
-                  : null,
-                publishedDate: new Date().toISOString(),
-                brief: { blocks: [{ text: '' }] },
-                categories: [],
-                sections: [],
-                isMesoRecommend: true,
-              }
-            })
+                return {
+                  id: productId,
+                  slug: slug,
+                  title: product.title || '',
+                  url: product.url || '',
+                  heroImage: product.cover_image
+                    ? {
+                        resized: { original: product.cover_image },
+                      }
+                    : null,
+                  publishedDate: new Date().toISOString(),
+                  brief: { blocks: [{ text: '' }] },
+                  categories: [],
+                  sections: [],
+                  isMesoRecommend: true,
+                }
+              })
 
-            setAllRelatedStories((prev) => [...prev, ...formattedStories])
+              setAllRelatedStories((prev) => [...prev, ...formattedStories])
+            }
+          } catch (error) {
+            console.error(
+              'Failed to fetch MISO related stories:',
+              JSON.stringify(error)
+            )
           }
-        } catch (error) {
-          console.error(
-            'Failed to fetch MISO related stories:',
-            JSON.stringify(error)
-          )
         }
       }
+
+      window.addEventListener('scroll', handleScroll, { once: true })
+      return () => window.removeEventListener('scroll', handleScroll)
     }
 
-    window.addEventListener('scroll', handleScroll, { once: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, setup immediately
+      setupScrollHandler()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', setupScrollHandler, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', setupScrollHandler)
+    }
+  }, [postData.slug])
 
   useSaveMemberArticleHistoryLocally(slug)
   const writersInString = useMemo(() => {
@@ -408,19 +422,7 @@ export async function getServerSideProps({ params, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   try {
-    const storyClient =
-      STORY_GQL_ENDPOINT && typeof window === 'undefined'
-        ? new ApolloClient({
-            link: concat(
-              new ApolloLinkTimeout(API_TIMEOUT_GRAPHQL),
-              new HttpLink({
-                uri: STORY_GQL_ENDPOINT,
-                fetch,
-              })
-            ),
-            cache: new InMemoryCache(),
-          })
-        : client
+    const storyClient = getStoryClient(STORY_GQL_ENDPOINT) || client
 
     const result = await storyClient.query({
       query: fetchPostBySlug,
@@ -484,12 +486,22 @@ export async function getServerSideProps({ params, req, res }) {
     const shouldFetchPremiumHeaderData = storyLayoutType === 'style-premium'
     if (shouldFetchDefaultHeaderData) {
       try {
+        const fetchStaticJsonSafe = async (url, timeout) => {
+          try {
+            const mod = await import('../../utils/server-side-only/fetch-static-json.js')
+            const res = await mod.fetchStaticJson(url, timeout)
+            return res
+          } catch (err) {
+            return axios({
+              method: 'get',
+              url,
+              timeout,
+            })
+          }
+        }
+
         const responses = await Promise.allSettled([
-          axios({
-            method: 'get',
-            url: URL_STATIC_POST_FLASH_NEWS,
-            timeout: API_TIMEOUT,
-          }),
+          fetchStaticJsonSafe(URL_STATIC_POST_FLASH_NEWS, API_TIMEOUT),
           fetchHeaderDataInDefaultPageLayout(),
         ])
         flashNewsData = processSettledResult(

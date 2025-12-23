@@ -220,10 +220,32 @@ export async function getServerSideProps({ res, req }) {
   }
 
   try {
-    const postResponse = await fetchStaticJsonSafe(
+    // Parallelize all data fetching to reduce TTFB
+    const postResponsePromise = fetchStaticJsonSafe(
       `${URL_STATIC_POST_EXTERNAL}01.json`,
       5000,
       'post_external'
+    )
+    const flashNewsPromise = fetchStaticJsonSafe(
+      URL_STATIC_POST_FLASH_NEWS,
+      API_TIMEOUT,
+      'flash_news'
+    )
+
+    const responses = await Promise.allSettled([
+      postResponsePromise,
+      flashNewsPromise,
+      fetchHeaderDataInDefaultPageLayout(),
+      fetchPromoteVideosList(),
+      fetchForumHeadlines(),
+    ])
+
+    // Process post response
+    const postResponse = processSettledResult(
+      responses[0],
+      (resData) => resData,
+      'Error occurs while getting post external data in index page',
+      globalLogFields
     )
     editorChoicesData = Array.isArray(postResponse?.data?.choices)
       ? postResponse?.data?.choices
@@ -233,21 +255,8 @@ export async function getServerSideProps({ res, req }) {
       ? postResponse?.data?.latest
       : []
 
-    const flashNewsPromise = fetchStaticJsonSafe(
-      URL_STATIC_POST_FLASH_NEWS,
-      API_TIMEOUT,
-      'flash_news'
-    )
-
-    const responses = await Promise.allSettled([
-      flashNewsPromise,
-      fetchHeaderDataInDefaultPageLayout(),
-      fetchPromoteVideosList(),
-      fetchForumHeadlines(),
-    ])
-
     flashNewsData = processSettledResult(
-      responses[0],
+      responses[1],
       (/** @type {AxiosResponse} */ axiosData) => {
         return axiosData?.data?.posts ?? []
       },
@@ -257,14 +266,14 @@ export async function getServerSideProps({ res, req }) {
 
     // handle header data
     ;[sectionsData, topicsData] = processSettledResult(
-      responses[1],
+      responses[2],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in index page',
       globalLogFields
     )
 
     promoVideos = processSettledResult(
-      responses[2],
+      responses[3],
       (resData) => {
         return resData?.data?.promoteVideos || []
       },
@@ -273,7 +282,7 @@ export async function getServerSideProps({ res, req }) {
     )
 
     forumHeadlines = processSettledResult(
-      responses[3],
+      responses[4],
       (resData) => {
         return resData?.data?.externals || []
       },
