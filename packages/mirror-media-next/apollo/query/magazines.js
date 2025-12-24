@@ -19,7 +19,7 @@ const fetchWeeklys = gql`
     magazines(
       where: { type: { equals: "weekly" }, state: { equals: "published" } }
       orderBy: { createdAt: desc }
-      take: 8
+      take: 20
     ) {
       ...magazine
     }
