@@ -1,9 +1,7 @@
-import { IS_PRIZE_RIZED } from '../config/index.mjs'
-
 const PRIZE_LIST = {
-  yearly: IS_PRIZE_RIZED ? 799 : 499,
-  monthly: IS_PRIZE_RIZED ? 99 : 79,
-  oneTime: 10,
+  yearly: 1800,
+  monthly: 35,
+  oneTime: 10, // This price field is currently not in use 2025.12.15
 }
 
 const PREMIUM_FEATURES = [

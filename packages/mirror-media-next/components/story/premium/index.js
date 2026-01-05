@@ -222,6 +222,7 @@ export default function StoryPremiumStyle({
 
   const shouldShowArticleMask =
     !isLoggedIn || postContent.type === 'trimmedContent'
+
   const h2AndH3Block = getContentBlocksH2H3(postContent.data)
 
   const sectionsWithOrdered = getActiveOrderSection(

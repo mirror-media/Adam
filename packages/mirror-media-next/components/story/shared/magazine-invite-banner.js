@@ -42,7 +42,7 @@ const Wrapper = styled.div`
 // TODO: 周年慶完結後要恢復 '月費、年費會員免費線上閱讀動態雜誌'
 const inviteText = IS_ANNIVERSARY_PROMO_ACTIVE
   ? '活動期間，動態雜誌免費線上閱讀'
-  : '月費、年費會員免費線上閱讀動態雜誌'
+  : '獨家深度分析報導'
 
 /**
  *

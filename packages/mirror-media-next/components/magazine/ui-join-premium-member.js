@@ -101,11 +101,11 @@ export default function JoinPremiumMember() {
     <Wrapper>
       <InfoWrapper>
         <Title>動態雜誌</Title>
-        <Subtitle>加入 premium 會員，免費閱覽最新電子版週刊</Subtitle>
+        <Subtitle>加入premium會員，換取一整個世界的即時更新，立即訂閱</Subtitle>
         <Box>
           <p className="textL">準備好升級為鏡週刊 Premium 會員了嗎？</p>
           <p className="textS">
-            每月 ${PRIZE_LIST.monthly} 元，暢享專區零廣告閱讀、優質報導看到飽
+            {`每期 $${PRIZE_LIST.monthly} 元，即時享受所有文章的無限閱讀，零限制探索知識的邊界。`}
           </p>
           <SubscribeLink className="subscribe-btn" />
         </Box>
