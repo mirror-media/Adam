@@ -55,6 +55,7 @@ let COURSE_URL = ''
 let URL_STATIC_PROMOTE_VIDEOS = ''
 let URL_STATIC_COLUMN_SECTION_POSTS = ''
 let URL_STATIC_DAILY_COLUMN_HEADLINES = ''
+let STORY_GQL_ENDPOINT = ''
 let ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
@@ -94,6 +95,9 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    // Only use STORY_GQL_ENDPOINT if explicitly set via env var
+    // Do not fallback to dev endpoint in prod to avoid connecting to dev service
+    STORY_GQL_ENDPOINT = process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT || ''
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
@@ -152,6 +156,9 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    STORY_GQL_ENDPOINT =
+      process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
+      'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -209,6 +216,9 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    STORY_GQL_ENDPOINT =
+      process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
+      'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -272,6 +282,9 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    STORY_GQL_ENDPOINT =
+      process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
+      'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
@@ -337,6 +350,7 @@ export {
   URL_STATIC_TOPICS,
   URL_STATIC_PROMOTE_VIDEOS,
   URL_STATIC_DAILY_COLUMN_HEADLINES,
+  STORY_GQL_ENDPOINT,
   WEEKLY_API_SERVER_ORIGIN,
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   COURSE_URL,
