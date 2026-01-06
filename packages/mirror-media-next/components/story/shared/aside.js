@@ -51,6 +51,18 @@ export default function Aside({
   sectionSlug = '',
   storySlug = '',
 }) {
+  const logPrefix = '[story-aside]'
+  const buildLatestUrl = (baseUrl, filename) => {
+    try {
+      const parsed = new URL(baseUrl)
+      const bucket = parsed.hostname
+      return `https://storage.googleapis.com/${bucket}/json/latest/${filename}`
+    } catch (err) {
+      console.warn('buildLatestUrl error:', err?.message ?? err)
+      return ''
+    }
+  }
+
   /**
    * @returns {Promise<ArticleDataContainSectionsWithOrdered[] | []>}
    */
@@ -59,6 +71,11 @@ export default function Aside({
       /**
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
+      console.log(
+        logPrefix,
+        'fetch latest',
+        `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`
+      )
       const res = await axios({
         method: 'get',
         url: `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`,
@@ -75,8 +92,33 @@ export default function Aside({
           return { sectionsWithOrdered, ...post }
         })
     } catch (err) {
-      console.error(err)
-      return []
+      // fallback to json/latest
+      try {
+        const fallbackUrl = buildLatestUrl(
+          URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+          `section_${sectionSlug}.json`
+        )
+        console.warn(logPrefix, 'latest fallback', fallbackUrl)
+        if (!fallbackUrl) return []
+        const res = await axios({
+          method: 'get',
+          url: fallbackUrl,
+          timeout: API_TIMEOUT,
+        })
+        return res.data?.posts
+          .filter((post) => post.slug !== storySlug)
+          .slice(0, 6)
+          .map((post) => {
+            const sectionsWithOrdered = getActiveOrderSection(
+              post.sections,
+              post.sectionsInInputOrder
+            )
+            return { sectionsWithOrdered, ...post }
+          })
+      } catch (fallbackErr) {
+        console.error(fallbackErr)
+        return []
+      }
     }
   }
 
@@ -88,6 +130,7 @@ export default function Aside({
       /**
        * @type {import('axios').AxiosResponse<AsideArticleData[] | []>}>}
        */
+      console.log(logPrefix, 'fetch popular', URL_STATIC_POPULAR_NEWS)
       const { data } = await axios({
         method: 'get',
         url: URL_STATIC_POPULAR_NEWS,
@@ -106,7 +149,32 @@ export default function Aside({
 
       return popularNews
     } catch (err) {
-      return []
+      // fallback to json/latest
+      try {
+        const fallbackUrl = buildLatestUrl(
+          URL_STATIC_POPULAR_NEWS,
+          'popular.json'
+        )
+        console.warn(logPrefix, 'popular fallback', fallbackUrl)
+        if (!fallbackUrl) return []
+        const { data } = await axios({
+          method: 'get',
+          url: fallbackUrl,
+          timeout: API_TIMEOUT,
+        })
+        return data
+          .map((post) => {
+            const sectionsWithOrdered = getActiveOrderSection(
+              post.sections,
+              post.sectionsInInputOrder
+            )
+            return { sectionsWithOrdered, ...post }
+          })
+          .slice(0, 6)
+      } catch (fallbackErr) {
+        console.error(fallbackErr)
+        return []
+      }
     }
   }
 
