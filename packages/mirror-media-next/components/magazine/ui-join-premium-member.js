@@ -2,7 +2,6 @@ import styled from 'styled-components'
 
 import SubscribeLink from '../../components/story/shared/subscribe-link'
 import { PRIZE_LIST } from '../../constants/subscribe-constants'
-import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../config/index.mjs'
 
 const Wrapper = styled.div`
   display: flex;
@@ -94,9 +93,6 @@ const Box = styled.div`
 `
 
 export default function JoinPremiumMember() {
-  // TODO: 周年慶完結後要移除
-  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
-
   return (
     <Wrapper>
       <InfoWrapper>

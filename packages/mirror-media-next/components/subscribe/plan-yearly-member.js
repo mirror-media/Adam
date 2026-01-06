@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import BlankCard from './blank-card'
 import PrimaryBlueBtn from './primary-blue-btn'
-import AnniversaryMessage from './anniversary-message'
 
 const PageWrapper = styled.section`
   min-height: 70vh;
@@ -39,7 +38,6 @@ const Text = styled.div`
 export default function PlanForYearlyMember() {
   return (
     <PageWrapper>
-      <AnniversaryMessage />
       <BlankCard>
         <Title>想要變更方案嗎？</Title>
         <Text>
