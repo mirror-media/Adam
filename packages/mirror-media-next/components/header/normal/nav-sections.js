@@ -246,8 +246,8 @@ export default function NavSections({ sectionsAndCategories = [] }) {
       </SectionLogo>
       
       <Sections>
-        <SectionLink href={'https://www.mirrormedia.mg/magazine'}>
-          <div>紙本雜誌</div>
+        <SectionLink href={'/magazine'}>
+          <div>動態雜誌</div>
         </SectionLink>
         {sectionsAndCategoriesJsx}</Sections>
     </SectionsWrapper>
