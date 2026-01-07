@@ -99,7 +99,8 @@ switch (ENV) {
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
     // Only use STORY_GQL_ENDPOINT if explicitly set via env var
     // Do not fallback to dev endpoint in prod to avoid connecting to dev service
-    STORY_GQL_ENDPOINT = process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT || ''
+    STORY_GQL_ENDPOINT = process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT || 
+      'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
