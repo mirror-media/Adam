@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import PremiumCard from './premium-card'
 import Notification from './subscribe-notification'
-import AnniversaryMessage from './anniversary-message'
 
 const Page = styled.section`
   background-color: rgba(0, 0, 0, 0.05);
@@ -48,7 +47,6 @@ export default function PlanForBasicMember() {
     <>
       <Page>
         <PlanWrapper>
-          <AnniversaryMessage />
           <CardWrapper>
             <SectionTitle>方案選擇</SectionTitle>
             <PremiumCard />

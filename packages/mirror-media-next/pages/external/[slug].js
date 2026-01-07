@@ -57,49 +57,49 @@ export default function External({ external, headerData, jsonLdData }) {
   useEffect(() => {
     // Wait for page to be fully rendered before setting up miso API calls
     const setupScrollHandler = () => {
-      const handleScroll = async () => {
-        try {
-          const result = await getRelatedStories(
-            external.slug,
-            [],
-            10,
-            'external'
-          )
+    const handleScroll = async () => {
+      try {
+        const result = await getRelatedStories(
+          external.slug,
+          [],
+          10,
+          'external'
+        )
 
-          if (result && result.data && result.data.products) {
-            const formattedStories = result.data.products.map((product) => {
-              const productId = product.product_id
-              const slug = productId.split('_').slice(2).join('_')
+        if (result && result.data && result.data.products) {
+          const formattedStories = result.data.products.map((product) => {
+            const productId = product.product_id
+            const slug = productId.split('_').slice(2).join('_')
 
-              return {
-                id: productId,
-                slug: slug,
-                title: product.title || '',
-                url: product.url || '',
-                heroImage: product.cover_image
-                  ? {
-                      resized: { original: product.cover_image },
-                    }
-                  : null,
-                publishedDate: new Date().toISOString(),
-                brief: { blocks: [{ text: '' }] },
-                categories: [],
-                sections: [],
-              }
-            })
+            return {
+              id: productId,
+              slug: slug,
+              title: product.title || '',
+              url: product.url || '',
+              heroImage: product.cover_image
+                ? {
+                    resized: { original: product.cover_image },
+                  }
+                : null,
+              publishedDate: new Date().toISOString(),
+              brief: { blocks: [{ text: '' }] },
+              categories: [],
+              sections: [],
+            }
+          })
 
-            setAllRelatedStories((prev) => [...prev, ...formattedStories])
-          }
-        } catch (error) {
-          console.error(
-            'Failed to fetch MISO related external stories:',
-            JSON.stringify(error)
-          )
+          setAllRelatedStories((prev) => [...prev, ...formattedStories])
         }
+      } catch (error) {
+        console.error(
+          'Failed to fetch MISO related external stories:',
+          JSON.stringify(error)
+        )
       }
+    }
 
-      window.addEventListener('scroll', handleScroll, { once: true })
-      return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { once: true })
+    return () => window.removeEventListener('scroll', handleScroll)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB

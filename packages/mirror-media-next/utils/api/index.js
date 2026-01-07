@@ -86,7 +86,7 @@ const createStaticJsonRequest = (requestUrl) => {
   return async () => {
     if (typeof window === 'undefined') {
       try {
-        const mod = await import('../server-side-only/fetch-static-json.js')
+      const mod = await import('../server-side-only/fetch-static-json.js')
         const res = await mod.fetchStaticJson(requestUrl)
         // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
         // fetchStaticJson returns { data: ... } format

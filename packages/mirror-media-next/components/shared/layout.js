@@ -3,7 +3,6 @@ import Footer from './footer'
 import CustomHead from './custom-head'
 import GDPRNotification from '../gdpr'
 import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
-import AnniversaryModal from '../anniversary-modal'
 
 /**
  * @typedef {Object} Header
@@ -41,7 +40,6 @@ export default function Layout({ head, header, footer, children }) {
       />
       <ShareHeader pageLayoutType={header.type} headerData={header.data} />
       <IdleTimeoutModal />
-      <AnniversaryModal />
       {children}
       <GDPRNotification />
       <Footer footerType={footer.type} />

@@ -17,22 +17,22 @@ export default function MisoPageView({ productIds }) {
   useEffect(() => {
     // Wait for page to be fully rendered before executing miso code
     const executeMiso = () => {
-      // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-      const misocmd = window.misocmd || (window.misocmd = [])
-      misocmd.push(() => {
-        // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
-        const MisoClient = window.MisoClient
-        const client = new MisoClient(MISO_API_KEY)
-        if (isLogInProcessFinished) {
-          if (firebaseId) {
-            client.context.user_id = firebaseId
-          }
-          client.api.interactions.upload({
-            type: 'product_detail_page_view',
-            product_ids: [`mirrormedia_${productIds}`],
-          })
+    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+    const misocmd = window.misocmd || (window.misocmd = [])
+    misocmd.push(() => {
+      // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
+      const MisoClient = window.MisoClient
+      const client = new MisoClient(MISO_API_KEY)
+      if (isLogInProcessFinished) {
+        if (firebaseId) {
+          client.context.user_id = firebaseId
         }
-      })
+        client.api.interactions.upload({
+          type: 'product_detail_page_view',
+          product_ids: [`mirrormedia_${productIds}`],
+        })
+      }
+    })
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
