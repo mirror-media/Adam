@@ -194,6 +194,11 @@ const CategoryLink = styled('a')`
   }
 `
 
+const MagazineLink = styled(SectionLink)`
+  display: block;
+  min-width: 80px;
+`
+
 /**
  * @param {Object} props
  * @param {SectionsAndCategoriesWithHref} props.sectionsAndCategories
@@ -246,9 +251,9 @@ export default function NavSections({ sectionsAndCategories = [] }) {
       </SectionLogo>
       
       <Sections>
-        <SectionLink href={'/magazine'}>
+        <MagazineLink href={'/magazine'}>
           <div>動態雜誌</div>
-        </SectionLink>
+        </MagazineLink>
         {sectionsAndCategoriesJsx}</Sections>
     </SectionsWrapper>
   )
