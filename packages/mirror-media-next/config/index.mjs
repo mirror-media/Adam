@@ -162,7 +162,7 @@ switch (ENV) {
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
     STORY_GQL_ENDPOINT =
       process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
-      'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
+      'https://go-story-staging-983956931553.asia-east1.run.app/api/graphql'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
