@@ -100,7 +100,7 @@ switch (ENV) {
     // Only use STORY_GQL_ENDPOINT if explicitly set via env var
     // Do not fallback to dev endpoint in prod to avoid connecting to dev service
     STORY_GQL_ENDPOINT = process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT || 
-	'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
+ 	  'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
 
     // GCS FUSE mount configuration
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
