@@ -216,7 +216,7 @@ export default function Category({
         '@type': 'NewsArticle',
         url: `https://www.mnews.tw/story/${post.slug}`,
         headline: post.title,
-        image: post.heroImage.resized.w1200,
+        image: post.heroImage?.resized?.w1200 || '',
         dateCreated: post.publishedDate,
       },
     }

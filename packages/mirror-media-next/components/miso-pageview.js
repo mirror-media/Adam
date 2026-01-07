@@ -15,23 +15,39 @@ import { useEffect } from 'react'
 export default function MisoPageView({ productIds }) {
   const { isLogInProcessFinished, firebaseId } = useMembership()
   useEffect(() => {
-    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-    const misocmd = window.misocmd || (window.misocmd = [])
-    misocmd.push(() => {
-      // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
-      const MisoClient = window.MisoClient
-      const client = new MisoClient(MISO_API_KEY)
-      if (isLogInProcessFinished) {
-        if (firebaseId) {
-          client.context.user_id = firebaseId
+    // Wait for page to be fully rendered before executing miso code
+    const executeMiso = () => {
+      // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+      const misocmd = window.misocmd || (window.misocmd = [])
+      misocmd.push(() => {
+        // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
+        const MisoClient = window.MisoClient
+        const client = new MisoClient(MISO_API_KEY)
+        if (isLogInProcessFinished) {
+          if (firebaseId) {
+            client.context.user_id = firebaseId
+          }
+          client.api.interactions.upload({
+            type: 'product_detail_page_view',
+            product_ids: [`mirrormedia_${productIds}`],
+          })
         }
-        client.api.interactions.upload({
-          type: 'product_detail_page_view',
-          product_ids: [`mirrormedia_${productIds}`],
-        })
-      }
-    })
-  }, [isLogInProcessFinished])
+      })
+    }
+
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, execute immediately
+      executeMiso()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', executeMiso, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', executeMiso)
+    }
+  }, [isLogInProcessFinished, firebaseId, productIds])
 
   return <></>
 }

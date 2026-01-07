@@ -608,9 +608,11 @@ export default function MisoSearch({ searchTerms }) {
   }
 
   useEffect(() => {
-    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-    const misocmd = window.misocmd || (window.misocmd = [])
-    misocmd.push(async () => {
+    // Wait for page to be fully rendered before executing miso code
+    const executeMiso = async () => {
+      // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+      const misocmd = window.misocmd || (window.misocmd = [])
+      misocmd.push(async () => {
       // setup client
       // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
       const MisoClient = window.MisoClient
@@ -687,7 +689,21 @@ export default function MisoSearch({ searchTerms }) {
         console.error(error)
       }
     })
-  }, [])
+    }
+
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, execute immediately
+      executeMiso()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', executeMiso, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', executeMiso)
+    }
+  }, [searchTerms, router])
 
   return (
     <SearchWrapper>

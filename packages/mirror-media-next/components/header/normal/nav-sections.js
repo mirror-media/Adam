@@ -1,5 +1,6 @@
 //TODO: When user at certain section, at category which belongs to certain section, at story which belongs to certain section
 //component <Section> will change color of title to section color defined at /styles/sections-color.
+import React from 'react'
 import styled, { css } from 'styled-components'
 import { Z_INDEX } from '../../../constants'
 import { minWidth } from '../../../styles/media'
@@ -49,7 +50,8 @@ const colorCss = css`
 /**
  * @typedef { (HeadersDataCategoryWithHref | HeadersDataSectionWithHref )[]} SectionsAndCategoriesWithHref
  */
-const SectionsWrapper = styled.nav`
+// @ts-expect-error - styled-components type definition issue
+const SectionsWrapper = styled('nav')`
   font-size: 14px;
   line-height: 1.5;
   // to hide scrollbar
@@ -64,7 +66,8 @@ const SectionsWrapper = styled.nav`
     overflow: visible;
   }
 `
-const Sections = styled.ul`
+// @ts-expect-error - styled-components type definition issue
+const Sections = styled('ul')`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -91,7 +94,8 @@ const Sections = styled.ul`
     overflow: visible;
   }
 `
-const Section = styled.li`
+// @ts-expect-error - styled-components type definition issue
+const Section = styled('li')`
   flex: 0 0 auto;
   :not(:last-child) {
     padding-right: 8px;
@@ -127,7 +131,8 @@ const Section = styled.li`
     }
   }
 `
-const SectionLink = styled.a`
+// @ts-expect-error - styled-components type definition issue
+const SectionLink = styled('a')`
   display: block;
   width: 100%;
   font-weight: 700;
@@ -137,6 +142,7 @@ const SectionLink = styled.a`
   }
 `
 
+// @ts-expect-error - styled-components type definition issue
 const LogoIcon = styled(Logo)`
   width: 68px;
   height: 29px;
@@ -144,7 +150,8 @@ const LogoIcon = styled(Logo)`
     display: none;
   }
 `
-const SectionLogo = styled.div`
+// @ts-expect-error - styled-components type definition issue
+const SectionLogo = styled('div')`
   background-color: #fff;
 
   padding: 4px 0 10px 8px;
@@ -153,7 +160,8 @@ const SectionLogo = styled.div`
   }
 `
 
-const SectionDropDown = styled.div`
+// @ts-expect-error - styled-components type definition issue
+const SectionDropDown = styled('div')`
   position: absolute;
   display: none;
   width: 100%;
@@ -169,7 +177,8 @@ const SectionDropDown = styled.div`
     }
   }
 `
-const CategoryLink = styled.a`
+// @ts-expect-error - styled-components type definition issue
+const CategoryLink = styled('a')`
   display: block;
   &:hover {
     ${
@@ -188,7 +197,6 @@ const CategoryLink = styled.a`
 /**
  * @param {Object} props
  * @param {SectionsAndCategoriesWithHref} props.sectionsAndCategories
- * @returns {React.ReactElement}
  */
 export default function NavSections({ sectionsAndCategories = [] }) {
   const sectionsAndCategoriesJsx = sectionsAndCategories.map((section) => {
@@ -236,7 +244,12 @@ export default function NavSections({ sectionsAndCategories = [] }) {
           <LogoIcon />
         </a>
       </SectionLogo>
-      <Sections>{sectionsAndCategoriesJsx}</Sections>
+      
+      <Sections>
+        <SectionLink href={'/magazine'}>
+          <div>動態雜誌</div>
+        </SectionLink>
+        {sectionsAndCategoriesJsx}</Sections>
     </SectionsWrapper>
   )
 }

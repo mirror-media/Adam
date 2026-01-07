@@ -114,28 +114,6 @@ const DEFAULT_PREMIUM_SECTIONS_DATA = [
  */
 const DEFAULT_NORMAL_SECTIONS_DATA = [
   {
-    order: 1,
-    type: 'section',
-    slug: 'member',
-    name: '會員專區',
-    categories: [
-      { id: '1', slug: 'food', name: '美食焦點', isMemberOnly: true },
-      { id: '2', slug: 'traveltaiwan', name: '旅行台灣', isMemberOnly: true },
-      { id: '7', slug: 'seetheworld', name: '看見世界', isMemberOnly: true },
-      { id: '8', slug: 'kitchenplay', name: '廚房密技', isMemberOnly: true },
-      { id: '19', slug: 'money', name: '理財', isMemberOnly: true },
-      { id: '25', slug: 'celebrity', name: '鏡大咖', isMemberOnly: true },
-      { id: '27', slug: 'column', name: '影劇專欄', isMemberOnly: true },
-      { id: '35', slug: 'wine', name: '好酒情報', isMemberOnly: true },
-      { id: '49', slug: 'somebody', name: '一鏡到底', isMemberOnly: true },
-      { id: '50', slug: 'world', name: '鏡相人間', isMemberOnly: true },
-      { id: '51', slug: 'truth', name: '心內話', isMemberOnly: true },
-      { id: '52', slug: 'mogul', name: '財經人物', isMemberOnly: true },
-      { id: '94', slug: 'timesquare', name: '時代現場', isMemberOnly: true },
-      { id: '112', slug: 'mg', name: '完整全文', isMemberOnly: false },
-    ],
-  },
-  {
     order: 2,
     type: 'category',
     slug: 'news',
