@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import styled from 'styled-components'
 
-import { IS_ANNIVERSARY_PROMO_ACTIVE } from '../../../config/index.mjs'
-
 const Wrapper = styled.div`
   width: 100%;
   background-color: #ffffff;
@@ -39,11 +37,6 @@ const Wrapper = styled.div`
   }
 `
 
-// TODO: 周年慶完結後要恢復 '月費、年費會員免費線上閱讀動態雜誌'
-const inviteText = IS_ANNIVERSARY_PROMO_ACTIVE
-  ? '活動期間，動態雜誌免費線上閱讀'
-  : '獨家深度分析報導'
-
 /**
  *
  * @param {Object} props
@@ -53,7 +46,7 @@ const inviteText = IS_ANNIVERSARY_PROMO_ACTIVE
 export default function MagazineInviteBanner({ className }) {
   return (
     <Wrapper className={className}>
-      <p>{inviteText}</p>
+      <p>獨家深度分析報導</p>
       <Link href="/magazine" className="GTM-story-magazine-box" target="_blank">
         線上閱讀
       </Link>

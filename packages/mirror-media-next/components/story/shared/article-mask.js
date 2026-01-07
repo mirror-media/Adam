@@ -6,10 +6,7 @@ import { Frequency } from '../../../constants/membership'
 import { useMembership } from '../../../context/membership'
 import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 import { getLoginHref } from '../../../utils'
-import {
-  ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE,
-  IS_ANNIVERSARY_PROMO_ACTIVE,
-} from '../../../config/index.mjs'
+import { ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE } from '../../../config/index.mjs'
 
 const inviteMemberOptionColor = {
   premium: {
@@ -200,9 +197,6 @@ export default function ArticleMask({ postId = '' }) {
    * To achieve that, we need to assign which one is paywall component by using certain class name in component `json-lds-script`,
    * @see https://developers.google.com/search/docs/appearance/structured-data/paywalled-content
    */
-
-  // TODO: 周年慶完結後要移除 IS_ANNIVERSARY_PROMO_ACTIVE
-  if (IS_ANNIVERSARY_PROMO_ACTIVE) return null
 
   return (
     <Wrapper
