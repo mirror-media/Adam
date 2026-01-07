@@ -610,9 +610,9 @@ export default function MisoSearch({ searchTerms }) {
   useEffect(() => {
     // Wait for page to be fully rendered before executing miso code
     const executeMiso = async () => {
-      // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-      const misocmd = window.misocmd || (window.misocmd = [])
-      misocmd.push(async () => {
+    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+    const misocmd = window.misocmd || (window.misocmd = [])
+    misocmd.push(async () => {
       // setup client
       // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
       const MisoClient = window.MisoClient

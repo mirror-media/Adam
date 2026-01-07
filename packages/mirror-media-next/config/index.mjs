@@ -57,6 +57,8 @@ let URL_STATIC_COLUMN_SECTION_POSTS = ''
 let URL_STATIC_DAILY_COLUMN_HEADLINES = ''
 let STORY_GQL_ENDPOINT = ''
 let ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
+let GCS_FUSE_MOUNT_DIR = ''
+let GCS_FUSE_STATIC_BUCKET = ''
 
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
@@ -99,6 +101,10 @@ switch (ENV) {
     // Do not fallback to dev endpoint in prod to avoid connecting to dev service
     STORY_GQL_ENDPOINT = process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT || 
 	'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
+
+    // GCS FUSE mount configuration
+    GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
+    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics.mirrormedia.mg'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
@@ -161,6 +167,10 @@ switch (ENV) {
       process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
       'https://go-story-staging-983956931553.asia-east1.run.app/api/graphql'
 
+    // GCS FUSE mount configuration
+    GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
+    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-staging.mirrormedia.mg'
+
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
@@ -220,6 +230,10 @@ switch (ENV) {
     STORY_GQL_ENDPOINT =
       process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
       'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
+
+    // GCS FUSE mount configuration
+    GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
+    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -286,6 +300,10 @@ switch (ENV) {
     STORY_GQL_ENDPOINT =
       process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT ||
       'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
+
+    // GCS FUSE mount configuration (local dev may not have mount, use env var if available)
+    GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
+    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
@@ -360,4 +378,6 @@ export {
   MISO_API_BASE_URL,
   MISO_ENDPOINTS,
   ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE,
+  GCS_FUSE_MOUNT_DIR,
+  GCS_FUSE_STATIC_BUCKET,
 }

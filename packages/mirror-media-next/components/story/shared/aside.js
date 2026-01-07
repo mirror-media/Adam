@@ -117,7 +117,7 @@ export default function Aside({
           })
       } catch (fallbackErr) {
         console.error(fallbackErr)
-        return []
+      return []
       }
     }
   }
@@ -173,7 +173,7 @@ export default function Aside({
           .slice(0, 6)
       } catch (fallbackErr) {
         console.error(fallbackErr)
-        return []
+      return []
       }
     }
   }

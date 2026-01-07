@@ -1,12 +1,14 @@
 import fs from 'fs/promises'
 import path from 'path'
 import axiosInstance from '../../axios/index.js'
+import {
+  GCS_FUSE_MOUNT_DIR,
+  GCS_FUSE_STATIC_BUCKET,
+} from '../../config/index.mjs'
 
 /**
  * Map a HTTPS static URL to a local path under GCS FUSE mount.
- * Requires env:
- * - GCS_FUSE_MOUNT_DIR: e.g. /mnt/statics
- * - GCS_FUSE_STATIC_BUCKET: e.g. v3-statics.mirrormedia.mg
+ * Uses GCS_FUSE_MOUNT_DIR and GCS_FUSE_STATIC_BUCKET from config (set per environment).
  *
  * Supported URL forms:
  * - https://{bucket}/files/json/...
@@ -18,9 +20,7 @@ import axiosInstance from '../../axios/index.js'
  */
 function mapUrlToLocalPath(requestUrl) {
   try {
-    const mountDir = process.env.GCS_FUSE_MOUNT_DIR
-    const bucket = process.env.GCS_FUSE_STATIC_BUCKET
-    if (!mountDir || !bucket) {
+    if (!GCS_FUSE_MOUNT_DIR || !GCS_FUSE_STATIC_BUCKET) {
       return null
     }
 
@@ -31,11 +31,11 @@ function mapUrlToLocalPath(requestUrl) {
     // Handle storage.googleapis.com format: /{bucket}/files/json/...
     if (u.hostname === 'storage.googleapis.com') {
       const parts = pathname.split('/').filter(Boolean)
-      if (parts[0] !== bucket) {
+      if (parts[0] !== GCS_FUSE_STATIC_BUCKET) {
         return null
       }
       const rest = parts.slice(1).join('/')
-      localPath = path.join(mountDir, rest)
+      localPath = path.join(GCS_FUSE_MOUNT_DIR, rest)
     } else {
       // Handle direct bucket domain or CDN: extract pathname directly
       // Pathname should be like /files/json/... or /json/latest/...
@@ -44,7 +44,7 @@ function mapUrlToLocalPath(requestUrl) {
       if (!rest) {
         return null
       }
-      localPath = path.join(mountDir, rest)
+      localPath = path.join(GCS_FUSE_MOUNT_DIR, rest)
     }
 
     return localPath
