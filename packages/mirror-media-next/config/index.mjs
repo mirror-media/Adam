@@ -100,7 +100,7 @@ switch (ENV) {
     // Only use STORY_GQL_ENDPOINT if explicitly set via env var
     // Do not fallback to dev endpoint in prod to avoid connecting to dev service
     STORY_GQL_ENDPOINT = process.env.NEXT_PUBLIC_STORY_GQL_ENDPOINT || 
- 	  'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
+	'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
 
     // GCS FUSE mount configuration
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
@@ -159,7 +159,7 @@ switch (ENV) {
     URL_STATIC_404_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/404_popular.json`
     URL_STATIC_HEADER_HEADERS = `https://${STATIC_FILE_DOMAIN}/files/json/header_headers.json`
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
-    URL_STATIC_PODCAST_LIST = `https://v3-statics.mirrormedia.mg/json/podcast_list.json`
+    URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
