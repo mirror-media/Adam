@@ -193,14 +193,13 @@ export default function HeroImageAndVideo({
         <CustomImage
           images={heroImage.resized}
           imagesWebP={heroImage.resizedWebp}
-          loadingImage={'/images-next/loading@4x.gif'}
           defaultImage={'/images-next/default-og-img.png'}
           alt={heroCaption ? heroCaption : title}
           objectFit={'cover'}
           width={'100%'}
           height={style === 'wide' ? '100vh' : '66.67vw'}
           rwd={{ mobile: '100vw', default: '100vw' }}
-          priority={true}
+          priority
           fetchPriority="high"
         />
       )
