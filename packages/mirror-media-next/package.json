@@ -19,7 +19,7 @@
     "@mirrormedia/newebpay-node": "^1.0.8",
     "@miso.ai/client-sdk": "^1.11.5",
     "@next/font": "^13.1.2",
-    "@readr-media/react-image": "^2.2.5",
+    "@readr-media/react-image": "^2.2.6",
     "@readr-media/react-infinite-scroll-list": "^1.2.0",
     "@readr-media/share-button": "^1.0.3",
     "@reduxjs/toolkit": "^2.1.0",
