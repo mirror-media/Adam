@@ -131,3 +131,10 @@ lib
 
 # vscode
 .vscode
+
+# cursor
+.cursor
+
+# gemini
+.gemini/
+GEMINI.md
