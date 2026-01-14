@@ -126,11 +126,10 @@ export default function HeroImageAndVideo({
           <CustomImage
             images={heroImage.resized}
             imagesWebP={heroImage.resizedWebp}
-            loadingImage={'/images-next/loading@4x.gif'}
             defaultImage={'/images-next/default-og-img.png'}
             alt={heroCaption ? heroCaption : title}
             objectFit={'contain'}
-            priority={true}
+            priority
             fetchPriority="high"
           />
         </HeroImage>
