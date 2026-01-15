@@ -2918,10 +2918,10 @@
   resolved "https://registry.yarnpkg.com/@readr-media/react-image/-/react-image-2.1.3.tgz#97834255b39f42d15b93449637131d28a3aca168"
   integrity sha512-XAuKKSqRNSvH/CJAfbBhVE7Ezkaetc0pM3AEKUPydYJP51N6fp8mWfPR0HUSw/7QLElHSGXVKCvyuOpVIXa5eQ==
 
-"@readr-media/react-image@^2.2.8":
-  version "2.2.8"
-  resolved "https://registry.yarnpkg.com/@readr-media/react-image/-/react-image-2.2.8.tgz#5a42088d4e630cd30ceee07faa176f836928f83c"
-  integrity sha512-pzoaTNIEe+i2PPwzgsMuvL4GoxZk0yxB2dhHYdSCLoNNAzfEs0gUYIMw6iPloKNlEsvhmZuwGEj0blKmonmRww==
+"@readr-media/react-image@^2.2.9":
+  version "2.2.9"
+  resolved "https://registry.yarnpkg.com/@readr-media/react-image/-/react-image-2.2.9.tgz#b7b5c62b15618fa36af4c080f75fdec66d1f2bfe"
+  integrity sha512-KCq8qygw0J0cJOUcPr+VAaRfhGC4X0BnRxzO3FsjyCurbP61cJWqqPRBY9T6caDg0Su+gB5IIMM7kkYqR+EVTg==
 
 "@readr-media/react-infinite-scroll-list@^1.2.0":
   version "1.2.0"
