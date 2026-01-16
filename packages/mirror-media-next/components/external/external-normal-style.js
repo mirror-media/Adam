@@ -441,6 +441,8 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
     updatedAt = '',
     extend_byline = '',
     thumbCaption = '',
+    tags = [],
+    tags_algo = [],
   } = external
 
   // 正則表達式匹配 <img> 標籤中包含 style 並帶有 width 和 height
@@ -478,6 +480,8 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
 
   const externalSectionTitle = getExternalSectionTitle(partner)
   const partnerColor = getExternalPartnerColor(partner)
+
+  const displayTags = [...(tags ?? []), ...(tags_algo ?? [])]
 
   /**
    * @returns {Promise<AsideArticleDataContainSectionsWithOrdered[] |[]>}
@@ -594,6 +598,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
               publishedDate={publishedTaipeiTime}
               credits={extend_byline}
               partner={partner}
+              displayTags={displayTags}
             />
           </InfoAndHero>
 

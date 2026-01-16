@@ -49,7 +49,9 @@ export default function External({ external, headerData, jsonLdData }) {
   const router = useRouter()
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
-  const [allRelatedStories, setAllRelatedStories] = useState([])
+  const [allRelatedStories, setAllRelatedStories] = useState([
+    ...(external.relateds ?? []),
+  ])
   const robots = 'index, max-image-preview:large'
 
   useEffect(() => {
