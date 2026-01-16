@@ -5,6 +5,7 @@ import ButtonCopyLink from '../../components/story/shared/button-copy-link'
 import DonateLink from '../../components/story/shared/donate-link'
 import ButtonSocialNetworkShare from '../../components/story/shared/button-social-network-share'
 import { getCreditsHtml } from '../../utils/external'
+import Tags from '../story/shared/tags'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -103,6 +104,13 @@ const ExternalCreditTitle = styled.div`
   margin-bottom: auto;
 `
 
+const StyledTags = styled(Tags)`
+  margin-top: 20px;
+  ${({ theme }) => theme.breakpoint.md} {
+    margin-top: 24px;
+  }
+`
+
 /**
  * @typedef {import('../../apollo/fragments/partner').Partner} Partner
  */
@@ -113,6 +121,7 @@ const ExternalCreditTitle = styled.div`
  * @param {string} props.publishedDate
  * @param {string} props.credits
  * @param {Partner | null} props.partner
+ * @param {import('../../apollo/fragments/ai-tag.js').Tag[]} props.displayTags
  * @returns {import('react').JSX.Element}
  */
 export default function ArticleInfo({
@@ -120,6 +129,7 @@ export default function ArticleInfo({
   publishedDate,
   credits,
   partner,
+  displayTags,
 }) {
   const creditJsx = credits.length > 0 && (
     <ExternalCredit>
@@ -157,6 +167,7 @@ export default function ArticleInfo({
         </SocialMedia>
         <DonateLink />
       </SocialMediaAndDonateLink>
+      <StyledTags tags={displayTags} />
     </ArticleInfoContainer>
   )
 }
