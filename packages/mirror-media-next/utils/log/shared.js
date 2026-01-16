@@ -1,6 +1,7 @@
 import Bowser from 'bowser'
 import errors from '@twreporter/errors'
 import { ApolloError } from '@apollo/client'
+import { ENV } from '../../config/index.mjs'
 
 function getBrowserInfo(userAgent = '') {
   if (!userAgent) {
@@ -104,6 +105,21 @@ function logAxiosError(axiosErrors, errorMessage, traceObject) {
     errorMessage
   )
 
+  if (ENV === 'local') {
+    console.error(
+      errors.helpers.printAll(
+        annotatingError,
+        {
+          withStack: true,
+          withPayload: true,
+        },
+        0,
+        0
+      )
+    )
+    return
+  }
+
   console.error(
     JSON.stringify({
       severity: 'ERROR',
@@ -143,6 +159,21 @@ function logGqlError(gqlErrors, errorMessage, traceObject) {
     errorMessage
   )
 
+  if (ENV === 'local') {
+    console.error(
+      errors.helpers.printAll(
+        annotatingError,
+        {
+          withStack: true,
+          withPayload: true,
+        },
+        0,
+        0
+      )
+    )
+    return
+  }
+
   const { graphQLErrors, clientErrors, networkError } = gqlErrors
   console.error(
     JSON.stringify({
@@ -177,6 +208,19 @@ function logGenericError(genericError, errorMessage, traceObject) {
     'UnhandledError',
     errorMessage
   )
+
+  if (ENV === 'local') {
+    console.error(
+      errors.helpers.printAll(
+        annotatingError,
+        { withStack: true, withPayload: true },
+        0,
+        0
+      )
+    )
+    return
+  }
+
   console.error(
     JSON.stringify({
       severity: 'ERROR',
