@@ -194,7 +194,7 @@ const ITEMS = [
 
 const desktopCtaBtn = (
   <Link
-    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg&su=官網來信：聯絡我們"
+    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg&su=官網來信：聯絡我們&body=你好,%0D%0A留下您電話及姓名,會與你聯絡優惠方案%20%20謝謝%0D%0A%0D%0A專線：(02)6633-3882"
     target="_blank"
     rel="noreferrer noopener"
   >
@@ -203,7 +203,7 @@ const desktopCtaBtn = (
 )
 
 const tabletAndMobileCtaBtn = (
-  <Link href="mailto:service@mirrormedia.mg?subject=官網來信：聯絡我們">
+  <Link href="mailto:service@mirrormedia.mg?subject=官網來信：聯絡我們&body=你好,%0D%0A留下您電話及姓名,會與你聯絡優惠方案%20%20謝謝%0D%0A%0D%0A專線：(02)6633-3882">
     <CtaBtn>聯絡我們</CtaBtn>
   </Link>
 )
