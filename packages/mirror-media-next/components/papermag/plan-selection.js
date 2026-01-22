@@ -244,7 +244,7 @@ export default function PageBody() {
             ))}
             <PlanCTA>
               <CtaText>
-                <span style={{ color: '#FF8C00' }}>樂齡、師生</span>訂閱優惠方案
+                <span style={{ color: '#A15920' }}>樂齡、師生</span>訂閱優惠方案
               </CtaText>
               {/* Render Gmail composer for desktop, mailto for mobile and tablet */}
               {width !== undefined &&
