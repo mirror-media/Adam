@@ -120,9 +120,9 @@ const PlanTitle = styled.h2`
   }
 `
 const PlanNotice = styled.p`
-  color: #ff8c00;
+  color: #a15920;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 150%;
   text-align: center;
 `
