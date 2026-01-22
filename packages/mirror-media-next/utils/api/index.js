@@ -79,11 +79,26 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
  * @typedef { (HeadersDataSection | HeadersDataCategory)[]} HeadersData
  */
 /**
- * Creates an Axios request function that sends a GET request to the specified URL with a timeout.
+ * Creates a request function that tries local GCS FUSE first, then falls back to HTTP.
  * @param {string} requestUrl - The URL to send the request to.
  */
-const createAxiosRequest = (requestUrl) => {
-  return () => axiosInstance(requestUrl)
+const createStaticJsonRequest = (requestUrl) => {
+  return async () => {
+    if (typeof window === 'undefined') {
+      try {
+      const mod = await import('../server-side-only/fetch-static-json.js')
+        const res = await mod.fetchStaticJson(requestUrl)
+        // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
+        // fetchStaticJson returns { data: ... } format
+        return res
+      } catch (err) {
+        console.warn('[static-json] fallback to axios', err)
+        // Continue to fall through to unified axios fallback below
+      }
+    }
+    const axiosRes = await axiosInstance(requestUrl)
+    return { data: axiosRes?.data }
+  }
 }
 
 const errorLogger = (errorMessage) => {
@@ -107,15 +122,15 @@ const errorLogger = (errorMessage) => {
   throw annotatingAxiosError
 }
 
-/** @type {() => Promise<import('axios').AxiosResponse<{headers: HeadersData}>>} */
-const fetchNormalSections = createAxiosRequest(URL_STATIC_HEADER_HEADERS)
+/** @type {() => Promise<{ data: { headers: HeadersData } }>} */
+const fetchNormalSections = createStaticJsonRequest(URL_STATIC_HEADER_HEADERS)
 
-/** @type {() => Promise<import('axios').AxiosResponse<{topics: Topics}>>} */
-const fetchTopics = createAxiosRequest(URL_STATIC_TOPICS)
+/** @type {() => Promise<{ data: { topics: Topics } }>} */
+const fetchTopics = createStaticJsonRequest(URL_STATIC_TOPICS)
 
-const fetchPremiumSections = createAxiosRequest(URL_STATIC_PREMIUM_SECTIONS)
+const fetchPremiumSections = createStaticJsonRequest(URL_STATIC_PREMIUM_SECTIONS)
 
-const fetchPodcastList = createAxiosRequest(URL_STATIC_PODCAST_LIST)
+const fetchPodcastList = createStaticJsonRequest(URL_STATIC_PODCAST_LIST)
 
 const fetchHeaderDataInDefaultPageLayout = async () => {
   /** @type {HeadersData} */
@@ -183,8 +198,8 @@ const fetchAnnoucementsByScope = (scope) => {
   })
 }
 
-/** @type {() => Promise<import('axios').AxiosResponse<ColumnSectionResponse>>} */
-const fetchColumnSectionPosts = createAxiosRequest(
+/** @type {() => Promise<{ data: ColumnSectionResponse }>} */
+const fetchColumnSectionPosts = createStaticJsonRequest(
   URL_STATIC_COLUMN_SECTION_POSTS
 )
 

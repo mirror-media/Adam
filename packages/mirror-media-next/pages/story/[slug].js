@@ -1,14 +1,16 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
 import React, { useState, useEffect, useMemo } from 'react'
 
-import client from '../../apollo/apollo-client'
+import client, { getStoryClient } from '../../apollo/apollo-client'
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
   API_TIMEOUT,
+  API_TIMEOUT_GRAPHQL,
   ENV,
   URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
+  STORY_GQL_ENDPOINT,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
@@ -157,6 +159,8 @@ export default function Story({
   )
 
   useEffect(() => {
+    // Wait for page to be fully rendered before setting up miso API calls
+    const setupScrollHandler = () => {
     const handleScroll = async () => {
       if (allRelatedStories.length < 10) {
         const filterIds = allRelatedStories.map(
@@ -206,7 +210,21 @@ export default function Story({
 
     window.addEventListener('scroll', handleScroll, { once: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    }
+
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, setup immediately
+      setupScrollHandler()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', setupScrollHandler, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', setupScrollHandler)
+    }
+  }, [postData.slug])
 
   useSaveMemberArticleHistoryLocally(slug)
   const writersInString = useMemo(() => {
@@ -404,7 +422,9 @@ export async function getServerSideProps({ params, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   try {
-    const result = await client.query({
+    const storyClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+
+    const result = await storyClient.query({
       query: fetchPostBySlug,
       variables: { slug },
     })
@@ -466,12 +486,22 @@ export async function getServerSideProps({ params, req, res }) {
     const shouldFetchPremiumHeaderData = storyLayoutType === 'style-premium'
     if (shouldFetchDefaultHeaderData) {
       try {
+        const fetchStaticJsonSafe = async (url, timeout) => {
+          try {
+            const mod = await import('../../utils/server-side-only/fetch-static-json.js')
+            const res = await mod.fetchStaticJson(url, timeout)
+            return res
+          } catch (err) {
+            return axios({
+              method: 'get',
+              url,
+              timeout,
+            })
+          }
+        }
+
         const responses = await Promise.allSettled([
-          axios({
-            method: 'get',
-            url: URL_STATIC_POST_FLASH_NEWS,
-            timeout: API_TIMEOUT,
-          }),
+          fetchStaticJsonSafe(URL_STATIC_POST_FLASH_NEWS, API_TIMEOUT),
           fetchHeaderDataInDefaultPageLayout(),
         ])
         flashNewsData = processSettledResult(

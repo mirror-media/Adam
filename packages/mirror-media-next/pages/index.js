@@ -204,12 +204,49 @@ export async function getServerSideProps({ res, req }) {
   let promoVideos = []
   let forumHeadlines = []
 
+  const fetchStaticJsonSafe = async (url, timeout, label) => {
+    try {
+      const mod = await import('../utils/server-side-only/fetch-static-json.js')
+      const res = await mod.fetchStaticJson(url, timeout)
+      return res
+    } catch (err) {
+      // fetchStaticJson already has axios fallback, but if import fails, fallback to axios
+      return axios({
+        method: 'get',
+        url,
+        timeout,
+      })
+    }
+  }
+
   try {
-    const postResponse = await axios({
-      method: 'get',
-      url: `${URL_STATIC_POST_EXTERNAL}01.json`,
-      timeout: 5000, //since size of json file is large, we assign timeout as 5000ms to prevent content lost in poor network condition
-    })
+    // Parallelize all data fetching to reduce TTFB
+    const postResponsePromise = fetchStaticJsonSafe(
+      `${URL_STATIC_POST_EXTERNAL}01.json`,
+      5000,
+      'post_external'
+    )
+    const flashNewsPromise = fetchStaticJsonSafe(
+      URL_STATIC_POST_FLASH_NEWS,
+      API_TIMEOUT,
+      'flash_news'
+    )
+
+    const responses = await Promise.allSettled([
+      postResponsePromise,
+      flashNewsPromise,
+      fetchHeaderDataInDefaultPageLayout(),
+      fetchPromoteVideosList(),
+      fetchForumHeadlines(),
+    ])
+
+    // Process post response
+    const postResponse = processSettledResult(
+      responses[0],
+      (resData) => resData,
+      'Error occurs while getting post external data in index page',
+      globalLogFields
+    )
     editorChoicesData = Array.isArray(postResponse?.data?.choices)
       ? postResponse?.data?.choices
       : []
@@ -218,19 +255,8 @@ export async function getServerSideProps({ res, req }) {
       ? postResponse?.data?.latest
       : []
 
-    const responses = await Promise.allSettled([
-      axios({
-        method: 'get',
-        url: URL_STATIC_POST_FLASH_NEWS,
-        timeout: API_TIMEOUT,
-      }),
-      fetchHeaderDataInDefaultPageLayout(),
-      fetchPromoteVideosList(),
-      fetchForumHeadlines(),
-    ])
-
     flashNewsData = processSettledResult(
-      responses[0],
+      responses[1],
       (/** @type {AxiosResponse} */ axiosData) => {
         return axiosData?.data?.posts ?? []
       },
@@ -240,14 +266,14 @@ export async function getServerSideProps({ res, req }) {
 
     // handle header data
     ;[sectionsData, topicsData] = processSettledResult(
-      responses[1],
+      responses[2],
       getSectionAndTopicFromDefaultHeaderData,
       'Error occurs while getting header data in index page',
       globalLogFields
     )
 
     promoVideos = processSettledResult(
-      responses[2],
+      responses[3],
       (resData) => {
         return resData?.data?.promoteVideos || []
       },
@@ -256,7 +282,7 @@ export async function getServerSideProps({ res, req }) {
     )
 
     forumHeadlines = processSettledResult(
-      responses[3],
+      responses[4],
       (resData) => {
         return resData?.data?.externals || []
       },

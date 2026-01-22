@@ -1,10 +1,11 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import client from '../../apollo/apollo-client'
+import client, { getStoryClient } from '../../apollo/apollo-client'
 import {
   API_TIMEOUT,
   ENV,
   SITE_URL,
   URL_STATIC_POST_FLASH_NEWS,
+  STORY_GQL_ENDPOINT,
 } from '../../config/index.mjs'
 import { setPageCache } from '../../utils/cache-setting'
 import { fetchExternalBySlug } from '../../apollo/query/externals'
@@ -20,7 +21,6 @@ import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import dynamic from 'next/dynamic'
-import axios from 'axios'
 import { getRelatedStories } from '../../pages/api/recomemd'
 import { useState, useEffect } from 'react'
 import { toTaipeiISOString } from '../../utils/index'
@@ -49,54 +49,72 @@ export default function External({ external, headerData, jsonLdData }) {
   const router = useRouter()
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
-  const [allRelatedStories, setAllRelatedStories] = useState([])
+  const [allRelatedStories, setAllRelatedStories] = useState([
+    ...(external.relateds ?? []),
+  ])
   const robots = 'index, max-image-preview:large'
 
   useEffect(() => {
-    const handleScroll = async () => {
-      try {
-        const result = await getRelatedStories(
-          external.slug,
-          [],
-          10,
-          'external'
-        )
+    // Wait for page to be fully rendered before setting up miso API calls
+    const setupScrollHandler = () => {
+      const handleScroll = async () => {
+        try {
+          const result = await getRelatedStories(
+            external.slug,
+            [],
+            10,
+            'external'
+          )
 
-        if (result && result.data && result.data.products) {
-          const formattedStories = result.data.products.map((product) => {
-            const productId = product.product_id
-            const slug = productId.split('_').slice(2).join('_')
+          if (result && result.data && result.data.products) {
+            const formattedStories = result.data.products.map((product) => {
+              const productId = product.product_id
+              const slug = productId.split('_').slice(2).join('_')
 
-            return {
-              id: productId,
-              slug: slug,
-              title: product.title || '',
-              url: product.url || '',
-              heroImage: product.cover_image
-                ? {
-                    resized: { original: product.cover_image },
-                  }
-                : null,
-              publishedDate: new Date().toISOString(),
-              brief: { blocks: [{ text: '' }] },
-              categories: [],
-              sections: [],
-            }
-          })
+              return {
+                id: productId,
+                slug: slug,
+                title: product.title || '',
+                url: product.url || '',
+                heroImage: product.cover_image
+                  ? {
+                      resized: { original: product.cover_image },
+                    }
+                  : null,
+                publishedDate: new Date().toISOString(),
+                brief: { blocks: [{ text: '' }] },
+                categories: [],
+                sections: [],
+              }
+            })
 
-          setAllRelatedStories((prev) => [...prev, ...formattedStories])
+            setAllRelatedStories((prev) => [...prev, ...formattedStories])
+          }
+        } catch (error) {
+          console.error(
+            'Failed to fetch MISO related external stories:',
+            JSON.stringify(error)
+          )
         }
-      } catch (error) {
-        console.error(
-          'Failed to fetch MISO related external stories:',
-          JSON.stringify(error)
-        )
       }
+
+      window.addEventListener('scroll', handleScroll, { once: true })
+      return () => window.removeEventListener('scroll', handleScroll)
     }
 
-    window.addEventListener('scroll', handleScroll, { once: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, setup immediately
+      setupScrollHandler()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', setupScrollHandler, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', setupScrollHandler)
+    }
+  }, [external.slug])
 
   const pubDate = (
     <meta
@@ -195,17 +213,27 @@ export async function getServerSideProps({ params, req, res }) {
   const { slug } = params
   const globalLogFields = getLogTraceObject(req)
 
+  const fetchStaticJsonSafe = async (url, timeout, label) => {
+    try {
+      const mod = await import(
+        '../../utils/server-side-only/fetch-static-json.js'
+      )
+      const res = await mod.fetchStaticJson(url, timeout)
+      return res
+    } catch (err) {
+      return null
+    }
+  }
+
+  const externalClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
-    client.query({
+    externalClient.query({
       query: fetchExternalBySlug,
       variables: { slug },
     }),
-    axios({
-      method: 'get',
-      url: URL_STATIC_POST_FLASH_NEWS,
-      timeout: API_TIMEOUT,
-    }),
+    fetchStaticJsonSafe(URL_STATIC_POST_FLASH_NEWS, API_TIMEOUT, 'flash_news'),
   ])
 
   // handle header data

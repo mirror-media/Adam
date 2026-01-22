@@ -59,9 +59,11 @@ export default function Aside({
       /**
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
+      const latestUrl = `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`
+      console.warn('[aside-debug] latestUrl:', latestUrl, 'base:', URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION)
       const res = await axios({
         method: 'get',
-        url: `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`,
+        url: latestUrl,
         timeout: API_TIMEOUT,
       })
       return res.data?.posts
@@ -88,6 +90,7 @@ export default function Aside({
       /**
        * @type {import('axios').AxiosResponse<AsideArticleData[] | []>}>}
        */
+      console.warn('[aside-debug] popularUrl:', URL_STATIC_POPULAR_NEWS)
       const { data } = await axios({
         method: 'get',
         url: URL_STATIC_POPULAR_NEWS,

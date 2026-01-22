@@ -138,3 +138,7 @@ lib
 # gemini
 .gemini/
 GEMINI.md
+
+# gemini
+.claude/
+Claude.md

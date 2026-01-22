@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
 import { transformTimeData } from '../../utils'
 import { theme } from '../../styles/theme'
 import { useRouter } from 'next/router'
-const SearchWrapper = styled.div`
+// @ts-expect-error - styled-components type definition issue
+const SearchWrapper = styled('div')`
   // input 框
   .miso-hybrid-search-combo__question {
     padding: 12px 20px !important;
@@ -564,10 +565,13 @@ const SearchWrapper = styled.div`
 /**
  * @param {Object} props
  * @param {string} props.searchTerms
- * @returns {React.ReactElement}
  */
 export default function MisoSearch({ searchTerms }) {
   const router = useRouter()
+  const isInitializedRef = useRef(false)
+  const workflowRef = useRef(null)
+  const timeoutRef = useRef(null)
+  
   function insertElement(html) {
     html = html.replace(
       '<miso-facets></miso-facets>',
@@ -608,6 +612,10 @@ export default function MisoSearch({ searchTerms }) {
   }
 
   useEffect(() => {
+    if (isInitializedRef.current) return
+
+    // Wait for page to be fully rendered before executing miso code
+    const executeMiso = async () => {
     // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
     const misocmd = window.misocmd || (window.misocmd = [])
     misocmd.push(async () => {
@@ -616,6 +624,7 @@ export default function MisoSearch({ searchTerms }) {
       const MisoClient = window.MisoClient
       const client = new MisoClient(MISO_API_KEY, { timeout: 5000 })
       const workflow = client.ui.hybridSearch
+        workflowRef.current = workflow
 
       try {
         workflow.useApi({
@@ -679,15 +688,57 @@ export default function MisoSearch({ searchTerms }) {
 
         wireAnswerBox(client, rootElement)
 
+          isInitializedRef.current = true
+
         // start query if specified in URL parameters
+          if (searchTerms) {
         setTimeout(() => {
           workflow.query({ q: searchTerms })
         }, 1000)
+          }
       } catch (error) {
         console.error(error)
       }
     })
+    }
+
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, execute immediately
+      executeMiso()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', executeMiso, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', executeMiso)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // 當 searchTerms 變化時，只更新查詢（不重新初始化）
+  useEffect(() => {
+    if (!isInitializedRef.current || !workflowRef.current) return
+
+    // 清除之前的 timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    // 延遲執行查詢，避免頻繁觸發
+    timeoutRef.current = setTimeout(() => {
+      if (workflowRef.current && searchTerms) {
+        workflowRef.current.query({ q: searchTerms })
+      }
+    }, 300)
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [searchTerms])
 
   return (
     <SearchWrapper>

@@ -12,7 +12,7 @@ import Steps from '../../components/subscribe-steps'
 import PlanSection from '../../components/papermag/plan-selection'
 import Notice from '../../components/papermag/notice'
 import { ANNOUCEMENT_SCOPE } from '../../constants/announcement'
-
+import LunarNewYearNotice from '../../components/papermag/lunar-new-year-notice.js'
 const Page = styled.main`
   min-height: 65vh;
 `
@@ -107,6 +107,7 @@ function PaperMag({ sectionsData = [], topicsData = [], announcements = [] }) {
               })}
             </AnnouncementBlock>
           )}
+          <LunarNewYearNotice />
           <PlanSection />
         </MainBody>
         <Notice />

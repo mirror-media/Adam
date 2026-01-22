@@ -29,7 +29,6 @@ import {
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
   API_TIMEOUT,
-  IS_ANNIVERSARY_PROMO_ACTIVE,
 } from '../../config/index.mjs'
 import {
   getExternalSectionTitle,
@@ -442,6 +441,8 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
     updatedAt = '',
     extend_byline = '',
     thumbCaption = '',
+    tags = [],
+    tags_algo = [],
   } = external
 
   // 正則表達式匹配 <img> 標籤中包含 style 並帶有 width 和 height
@@ -479,6 +480,8 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
 
   const externalSectionTitle = getExternalSectionTitle(partner)
   const partnerColor = getExternalPartnerColor(partner)
+
+  const displayTags = [...(tags ?? []), ...(tags_algo ?? [])]
 
   /**
    * @returns {Promise<AsideArticleDataContainSectionsWithOrdered[] |[]>}
@@ -595,6 +598,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
               publishedDate={publishedTaipeiTime}
               credits={extend_byline}
               partner={partner}
+              displayTags={displayTags}
             />
           </InfoAndHero>
 
@@ -644,15 +648,10 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
               <Link href="/papermag" target="_blank">
                 鏡週刊紙本雜誌
               </Link>
-              {/* TODO: 周年慶完結後可取消此判斷式 */}
-              {!IS_ANNIVERSARY_PROMO_ACTIVE && (
-                <>
-                  、
-                  <Link href="/subscribe" target="_blank">
-                    鏡週刊數位訂閱
-                  </Link>
-                </>
-              )}
+              、
+              <Link href="/subscribe" target="_blank">
+                鏡週刊數位訂閱
+              </Link>
               、
               <Link href="/story/webauthorize/" target="_blank">
                 了解內容授權資訊
@@ -728,15 +727,9 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
           <Link href="/papermag" target="_blank">
             鏡週刊紙本雜誌
           </Link>
-          {/* TODO: 周年慶完結後可取消此判斷式 */}
-          {!IS_ANNIVERSARY_PROMO_ACTIVE && (
-            <>
-              、
-              <Link href="/subscribe" target="_blank">
-                鏡週刊數位訂閱
-              </Link>
-            </>
-          )}
+          <Link href="/subscribe" target="_blank">
+            鏡週刊數位訂閱
+          </Link>
           、
           <Link href="/story/webauthorize/" target="_blank">
             了解內容授權資訊

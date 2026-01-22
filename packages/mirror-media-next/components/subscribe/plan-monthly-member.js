@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import PremiumCard from './premium-card'
 import Notification from './subscribe-notification'
-import AnniversaryMessage from './anniversary-message'
 
 const Page = styled.section`
   background-color: rgba(0, 0, 0, 0.05);
@@ -33,7 +32,6 @@ export default function PlanForMonthlyMember() {
     <>
       <Page>
         <PlanWrapper>
-          <AnniversaryMessage />
           <PremiumCard
             planTitle="變更為年訂閱方案"
             shouldHideMonthlyButton={true}

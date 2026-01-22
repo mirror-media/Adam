@@ -32,7 +32,6 @@ import {
   URL_STATIC_POPULAR_NEWS,
   API_TIMEOUT,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
-  IS_ANNIVERSARY_PROMO_ACTIVE,
 } from '../../../config/index.mjs'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
@@ -770,15 +769,10 @@ export default function StoryNormalStyle({
               <Link href="/papermag" target="_blank">
                 鏡週刊紙本雜誌
               </Link>
-              {/* TODO: 周年慶完結後可取消此判斷式 */}
-              {!IS_ANNIVERSARY_PROMO_ACTIVE && (
-                <>
-                  、
-                  <Link href="/subscribe" target="_blank">
-                    鏡週刊數位訂閱
-                  </Link>
-                </>
-              )}
+              、
+              <Link href="/subscribe" target="_blank">
+                鏡週刊數位訂閱
+              </Link>
               、
               <Link href="/story/webauthorize/" target="_blank">
                 了解內容授權資訊
@@ -844,15 +838,10 @@ export default function StoryNormalStyle({
           <Link href="/papermag" target="_blank">
             鏡週刊紙本雜誌
           </Link>
-          {/* TODO: 周年慶完結後可取消此判斷式 */}
-          {!IS_ANNIVERSARY_PROMO_ACTIVE && (
-            <>
-              、
-              <Link href="/subscribe" target="_blank">
-                鏡週刊數位訂閱
-              </Link>
-            </>
-          )}
+          、
+          <Link href="/subscribe" target="_blank">
+            鏡週刊數位訂閱
+          </Link>
           、
           <Link href="/story/webauthorize/" target="_blank">
             了解內容授權資訊

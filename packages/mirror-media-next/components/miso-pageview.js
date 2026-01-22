@@ -15,6 +15,8 @@ import { useEffect } from 'react'
 export default function MisoPageView({ productIds }) {
   const { isLogInProcessFinished, firebaseId } = useMembership()
   useEffect(() => {
+    // Wait for page to be fully rendered before executing miso code
+    const executeMiso = () => {
     // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
     const misocmd = window.misocmd || (window.misocmd = [])
     misocmd.push(() => {
@@ -31,7 +33,21 @@ export default function MisoPageView({ productIds }) {
         })
       }
     })
-  }, [isLogInProcessFinished])
+    }
+
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, execute immediately
+      executeMiso()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', executeMiso, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', executeMiso)
+    }
+  }, [isLogInProcessFinished, firebaseId, productIds])
 
   return <></>
 }

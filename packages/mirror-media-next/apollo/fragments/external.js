@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client'
 import { partner } from './partner'
+import { tag } from './tag'
+import { aiTag } from './ai-tag'
+import { relatedPost } from './post'
 
 /**
  * @typedef {import('./partner').Partner} Partner
@@ -23,10 +26,9 @@ import { partner } from './partner'
  * @property {string} updatedAt
  * @property {string} createdBy
  * @property {string} updatedBy
- */
-
-/**
- * @typedef {Pick<GenericExternal, 'id' | 'slug' | 'partner' |  'title' | 'thumb' | 'thumbCaption' | 'brief' | 'content' | 'publishedDate' | 'extend_byline' | 'updatedAt' >} External
+ * @property {import('./post').Related[] } relateds related articles selected by cms users
+ * @property {import('./tag').Tag[] } tags - tags of the post
+ * @property {import('./ai-tag').Tag[]} tags_algo
  */
 
 /**
@@ -48,8 +50,15 @@ export const listingExternal = gql`
   }
 `
 
+/**
+ * @typedef {Pick<GenericExternal, 'id' | 'slug' | 'partner' |  'title' | 'thumb' | 'thumbCaption' | 'brief' | 'content' | 'publishedDate' | 'extend_byline' | 'updatedAt' | 'relateds' |'tags' | 'tags_algo'>} External
+ */
+
 export const external = gql`
   ${partner}
+  ${relatedPost}
+  ${tag}
+  ${aiTag}
   fragment external on External {
     id
     slug
@@ -66,5 +75,14 @@ export const external = gql`
       showBrief
     }
     updatedAt
+    relateds {
+      ...relatedPost
+    }
+    tags {
+      ...tag
+    }
+    tags_algo {
+      ...aiTag
+    }
   }
 `
