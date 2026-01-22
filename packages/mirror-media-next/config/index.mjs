@@ -99,12 +99,14 @@ switch (ENV) {
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
     // Only use STORY_GQL_ENDPOINT if explicitly set via env var
     // Do not fallback to dev endpoint in prod to avoid connecting to dev service
-    STORY_GQL_ENDPOINT = process.env.STORY_GQL_ENDPOINT || 
-	'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
+    STORY_GQL_ENDPOINT =
+      process.env.STORY_GQL_ENDPOINT ||
+      'https://go-story-prod-983956931553.asia-east1.run.app/api/graphql'
 
     // GCS FUSE mount configuration
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
-    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics.mirrormedia.mg'
+    GCS_FUSE_STATIC_BUCKET =
+      process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics.mirrormedia.mg'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://core.newebpay.com/MPG/mpg_gateway'
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'off'
@@ -169,7 +171,8 @@ switch (ENV) {
 
     // GCS FUSE mount configuration
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
-    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-staging.mirrormedia.mg'
+    GCS_FUSE_STATIC_BUCKET =
+      process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-staging.mirrormedia.mg'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -233,7 +236,8 @@ switch (ENV) {
 
     // GCS FUSE mount configuration
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
-    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
+    GCS_FUSE_STATIC_BUCKET =
+      process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -303,7 +307,8 @@ switch (ENV) {
 
     // GCS FUSE mount configuration (local dev may not have mount, use env var if available)
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
-    GCS_FUSE_STATIC_BUCKET = process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
+    GCS_FUSE_STATIC_BUCKET =
+      process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'

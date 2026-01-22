@@ -120,9 +120,9 @@ const PlanTitle = styled.h2`
   }
 `
 const PlanNotice = styled.p`
-  color: #ff8c00;
+  color: #a15920;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 150%;
   text-align: center;
 `
@@ -194,7 +194,7 @@ const ITEMS = [
 
 const desktopCtaBtn = (
   <Link
-    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg&su=官網來信：聯絡我們"
+    href="https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=service@mirrormedia.mg&su=官網來信：聯絡我們&body=你好,%0D%0A留下您電話及姓名,會與你聯絡優惠方案%20%20謝謝%0D%0A%0D%0A紙本訂戶專線：(02)6633-3882"
     target="_blank"
     rel="noreferrer noopener"
   >
@@ -203,7 +203,7 @@ const desktopCtaBtn = (
 )
 
 const tabletAndMobileCtaBtn = (
-  <Link href="mailto:service@mirrormedia.mg?subject=官網來信：聯絡我們">
+  <Link href="mailto:service@mirrormedia.mg?subject=官網來信：聯絡我們&body=你好,%0D%0A留下您電話及姓名,會與你聯絡優惠方案%20%20謝謝%0D%0A%0D%0A紙本訂戶專線：(02)6633-3882">
     <CtaBtn>聯絡我們</CtaBtn>
   </Link>
 )
@@ -244,7 +244,7 @@ export default function PageBody() {
             ))}
             <PlanCTA>
               <CtaText>
-                <span style={{ color: '#FF8C00' }}>樂齡、師生</span>訂閱優惠方案
+                <span style={{ color: '#A15920' }}>樂齡、師生</span>訂閱優惠方案
               </CtaText>
               {/* Render Gmail composer for desktop, mailto for mobile and tablet */}
               {width !== undefined &&
