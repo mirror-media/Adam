@@ -45,13 +45,35 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
  * @param {Object[]} props.jsonLdData
  * @returns {React.ReactNode}
  */
+
+/**
+ * Initializes and normalizes the related stories data.
+ *
+ * This function manually injects two key properties required by the `RelatedArticleList` component:
+ * 1. `__typename: 'Post'`: Since `external.relateds` comes from a generic query, this field might be missing.
+ *    The component uses it to determine the fallback URL path (e.g., `/story/` vs `/external/`).
+ * 2. `url`: We explicitly construct the URL (`/story/${item.slug}`) to ensure the component navigates
+ *    directly to the correct internal story page, bypassing the need for type inference.
+ *
+ * @param {Array} relateds - The raw related articles data from GraphQL
+ * @returns {Array} - The normalized array with required fields
+ */
+const initializeRelatedStories = (relateds) => {
+  return (relateds ?? []).map((item) => ({
+    ...item,
+    __typename: 'Post',
+    url: `/story/${item.slug}`,
+  }))
+}
+
 export default function External({ external, headerData, jsonLdData }) {
   const router = useRouter()
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
-  const [allRelatedStories, setAllRelatedStories] = useState([
-    ...(external.relateds ?? []),
-  ])
+  const [allRelatedStories, setAllRelatedStories] = useState(
+    initializeRelatedStories(external.relateds)
+  )
+
   const robots = 'index, max-image-preview:large'
 
   useEffect(() => {
