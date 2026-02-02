@@ -68,9 +68,10 @@ export default async function EncryptInfo(req, res) {
       throw new Error('item is not correct input')
     }
     const itemPrice = item.price
-    const totalPrice =
-      itemPrice * tradeInfo.data.itemCount -
-      (tradeInfo.data.promoteCode ? 80 : 0)
+    const itemCount = tradeInfo.data.itemCount
+    const hasPromoteCode = !!tradeInfo.data.promoteCode
+    const promoteCodeDiscount = hasPromoteCode ? 80 * itemCount : 0
+    const totalPrice = itemPrice * itemCount - promoteCodeDiscount
     if (totalPrice !== infoForNewebpay.Amt) {
       throw new Error(
         `Amt is not correct input, Amt is ${infoForNewebpay.Amt}, but should be ${totalPrice}`
