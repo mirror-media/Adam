@@ -3,6 +3,7 @@ import { fetchPosts } from '../../apollo/query/posts'
 import { fetchTag } from '../../apollo/query/tags'
 
 /**
+ * Fetch posts by tag slug, including both manual tags and algorithm tags
  * @param {string} tagSlug
  * @param {number} take
  * @param {number} skip
@@ -16,7 +17,10 @@ export function fetchPostsByTagSlug(tagSlug, take, skip) {
       orderBy: { publishedDate: 'desc' },
       filter: {
         state: { equals: 'published' },
-        tags: { some: { slug: { equals: tagSlug } } },
+        OR: [
+          { tags: { some: { slug: { equals: tagSlug } } } },
+          { tags_algo: { some: { slug: { equals: tagSlug } } } },
+        ],
       },
     },
   })
