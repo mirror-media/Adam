@@ -108,13 +108,29 @@ const RENDER_PAGE_SIZE = 12
  * @param {Object} props.headerData
  * @returns {React.ReactElement}
  */
+/**
+ * 由最新前三篇文章標題組成 description，以 [、] 區隔
+ * @param {Article[]} posts
+ * @returns {string}
+ */
+function getTagDescriptionFromLatestPosts(posts) {
+  const latestThree = (posts || []).slice(0, 3)
+  const titles = latestThree.map((post) => post?.title?.trim()).filter(Boolean)
+  return titles.join('、')
+}
+
 export default function Tag({ postsCount, posts, tag, headerData }) {
   const tagName = tag?.name || ''
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
+  const metaDescription = getTagDescriptionFromLatestPosts(posts)
 
   return (
     <Layout
-      head={{ title: `${tagName}相關報導` }}
+      head={{
+        title: `${tagName}相關報導`,
+        description: metaDescription || undefined,
+        ogDescription: metaDescription || undefined,
+      }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
