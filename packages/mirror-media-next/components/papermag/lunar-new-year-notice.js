@@ -1,3 +1,5 @@
+// 勿刪！保留此元件供每年春節使用
+
 import styled from 'styled-components'
 
 const NoticeWrapperWrapper = styled.section`
