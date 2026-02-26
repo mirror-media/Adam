@@ -173,7 +173,7 @@ export default function Video({ video, latestVideos, headerData }) {
           </GPT_Placeholder>
 
           <StickyGPTAd pageKey="videohub" />
-          {hasScrolled && <FullScreenAds />}
+          {hasScrolled && shouldShowAd && <FullScreenAds />}
         </Wrapper>
       </Layout>
     </>
