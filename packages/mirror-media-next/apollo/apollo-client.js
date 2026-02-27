@@ -45,6 +45,9 @@ const client = new ApolloClient({
     watchQuery: {
       fetchPolicy: 'no-cache',
     },
+    query: {
+      fetchPolicy: 'no-cache',
+    },
   },
 })
 
@@ -72,6 +75,9 @@ export function getStoryClient(endpoint) {
       cache: new InMemoryCache(),
       defaultOptions: {
         watchQuery: {
+          fetchPolicy: 'no-cache',
+        },
+        query: {
           fetchPolicy: 'no-cache',
         },
       },
