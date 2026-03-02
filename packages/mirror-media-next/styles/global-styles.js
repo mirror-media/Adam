@@ -591,4 +591,19 @@ video {
   max-width: 100%;
   height: auto;
 }
+
+/* Keep the injected AviviD banner off-screen until our observer marks it ready, so its first visible frame uses transform instead of a layout jump. */
+.avivid_onpage_mobile_bottom {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+/* Re-enable visibility and interaction only after the third-party content has a measurable size. */
+.avivid_onpage_mobile_bottom[data-mm-avivid-ready='true'] {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
 `
