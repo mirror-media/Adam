@@ -18,6 +18,8 @@ export default function AvividScript() {
       }
     })
 
+    // Use a document-level observer to catch late third-party insertion, then attach a per-banner observer until the content wrapper has a measurable size.
+    // This keeps the banner in its hidden CSS state until we can safely reveal it with a transform-based transition instead of a layout jump.
     const nodeObservers = new WeakMap()
     const activeObservers = new Set()
 
