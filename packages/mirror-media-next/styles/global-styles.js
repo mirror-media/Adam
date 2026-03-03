@@ -592,17 +592,17 @@ video {
   height: auto;
 }
 
-/* Keep the injected AviviD banner off-screen until our observer marks it ready, so its first visible frame uses transform instead of a layout jump. */
+/* Keep the injected AviviD banner hidden until its content size stabilizes, without overriding any vendor transform used for positioning. */
 .avivid_onpage_mobile_bottom {
-  transform: translateY(100%);
+  visibility: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
-/* Re-enable visibility and interaction only after the third-party content has a measurable size. */
+/* Re-enable visibility and interaction only after the third-party content has stayed stable for a short window. */
 .avivid_onpage_mobile_bottom[data-mm-avivid-ready='true'] {
-  transform: translateY(0);
+  visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }

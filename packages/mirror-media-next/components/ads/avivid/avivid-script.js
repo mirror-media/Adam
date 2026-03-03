@@ -5,9 +5,11 @@ import { useEffect } from 'react'
 const AVIVID_READY_ATTRIBUTE = 'data-mm-avivid-ready'
 const AVIVID_TARGET_CLASS = 'avivid_onpage_mobile_bottom'
 const AVIVID_CONTENT_CLASS = 'avivid_onpage_content_wrapper'
+const AVIVID_STABLE_DELAY = 180
 
 export default function AvividScript() {
   useEffect(() => {
+    // Find all script tags and check whether src contains the unsafe URL.
     // 找出所有 script 標籤，並檢查 src 是否包含不安全的網址
     // Remove the known unsafe AviviD script if it was injected.
     const scripts = document.querySelectorAll('script')
@@ -18,24 +20,45 @@ export default function AvividScript() {
       }
     })
 
-    // Use a document-level observer to catch late third-party insertion, then attach a per-banner observer until the content wrapper has a measurable size.
-    // This keeps the banner in its hidden CSS state until we can safely reveal it with a transform-based transition instead of a layout jump.
+    // Use a document-level observer to catch late third-party insertion, then attach a per-banner observer until the content wrapper stops changing size briefly.
+    // This keeps the banner hidden until its size is more stable, reducing the chance of showing it midway through a third-party resize sequence.
+    // Track per-node observers and timers so we can stop them as soon as a banner is ready or the page unmounts.
     const nodeObservers = new WeakMap()
+    const nodeReadyTimers = new WeakMap()
     const activeObservers = new Set()
+    const activeTimerIds = new Set()
 
-    const isAvividContentReady = (node) => {
+    // Read the current banner content size and round it so small sub-pixel changes do not keep the banner hidden forever.
+    const getAvividContentSize = (node) => {
       const content = node.querySelector(`.${AVIVID_CONTENT_CLASS}`)
-      if (!content) return false
+      if (!content) return null
 
       const { height, width } = content.getBoundingClientRect()
-      return height > 0 && width > 0
+      if (height <= 0 || width <= 0) return null
+
+      return {
+        height: Math.round(height),
+        width: Math.round(width),
+      }
     }
 
+    // Clear any pending stability timer before scheduling a new one for the same banner.
+    const clearReadyTimer = (node) => {
+      const timerId = nodeReadyTimers.get(node)
+      if (timerId) {
+        clearTimeout(timerId)
+        activeTimerIds.delete(timerId)
+        nodeReadyTimers.delete(node)
+      }
+    }
+
+    // Mark the banner as ready once we decide its size is stable, then stop observing that node.
     const markAvividReady = (node) => {
       if (node.getAttribute(AVIVID_READY_ATTRIBUTE) === 'true') {
         return
       }
 
+      clearReadyTimer(node)
       node.setAttribute(AVIVID_READY_ATTRIBUTE, 'true')
 
       const observer = nodeObservers.get(node)
@@ -46,21 +69,55 @@ export default function AvividScript() {
       }
     }
 
+    // Re-check the banner after a short delay; only reveal it when two consecutive measurements match.
+    const scheduleReadyCheck = (node) => {
+      const snapshot = getAvividContentSize(node)
+      if (!snapshot) return
+
+      clearReadyTimer(node)
+
+      const timerId = window.setTimeout(() => {
+        activeTimerIds.delete(timerId)
+        nodeReadyTimers.delete(node)
+
+        if (!node.isConnected) return
+        const currentSize = getAvividContentSize(node)
+        if (!currentSize) return
+
+        if (
+          currentSize.height === snapshot.height &&
+          currentSize.width === snapshot.width
+        ) {
+          markAvividReady(node)
+          return
+        }
+
+        scheduleReadyCheck(node)
+      }, AVIVID_STABLE_DELAY)
+
+      nodeReadyTimers.set(node, timerId)
+      activeTimerIds.add(timerId)
+    }
+
     const observeAvividNode = (node) => {
       if (!(node instanceof HTMLElement)) return
       if (!node.classList.contains(AVIVID_TARGET_CLASS)) return
       if (nodeObservers.has(node)) return
 
-      // Reveal the banner only after the inner content has measurable dimensions.
-      if (isAvividContentReady(node)) {
-        markAvividReady(node)
+      // Start a stability check if the content already exists, but avoid revealing it until the size stops changing for a short window.
+      if (getAvividContentSize(node)) {
+        scheduleReadyCheck(node)
         return
       }
 
       // Watch third-party mutations because AviviD builds the banner incrementally after GTM executes.
       const innerObserver = new MutationObserver(() => {
-        if (isAvividContentReady(node)) {
-          markAvividReady(node)
+        if (node.getAttribute(AVIVID_READY_ATTRIBUTE) === 'true') {
+          return
+        }
+
+        if (getAvividContentSize(node)) {
+          scheduleReadyCheck(node)
         }
       })
 
@@ -99,6 +156,7 @@ export default function AvividScript() {
     return () => {
       rootObserver.disconnect()
       activeObservers.forEach((observer) => observer.disconnect())
+      activeTimerIds.forEach((timerId) => clearTimeout(timerId))
     }
   }, [])
 
