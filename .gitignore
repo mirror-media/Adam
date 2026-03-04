@@ -139,6 +139,9 @@ lib
 .gemini/
 GEMINI.md
 
-# gemini
+# claude
 .claude/
 Claude.md
+
+# codex
+AGENTS.md

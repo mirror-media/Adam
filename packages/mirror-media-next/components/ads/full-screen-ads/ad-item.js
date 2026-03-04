@@ -104,9 +104,15 @@ const Wrapper = styled.div`
         case 'modified':
           return modifiedWrapperStyle
         case 'unset':
-          return null
+          return css`
+            visibility: hidden;
+            pointer-events: none;
+          `
         default:
-          return null
+          return css`
+            visibility: hidden;
+            pointer-events: none;
+          `
       }
     }
   }

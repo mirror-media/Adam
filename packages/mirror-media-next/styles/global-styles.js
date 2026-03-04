@@ -591,4 +591,19 @@ video {
   max-width: 100%;
   height: auto;
 }
+
+/* Keep the injected AviviD banner hidden until its content size stabilizes, without overriding any vendor transform used for positioning. */
+.avivid_onpage_mobile_bottom {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+}
+
+/* Re-enable visibility and interaction only after the third-party content has stayed stable for a short window. */
+.avivid_onpage_mobile_bottom[data-mm-avivid-ready='true'] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
 `
