@@ -21,6 +21,7 @@ import { processSettledResult } from '../../utils/response-processor'
 import { fetchTopicByTopicSlug } from '../../utils/api/topic'
 import { logGqlError } from '../../utils/log/shared'
 import SlotAndBanner from '../../components/slot/slot-and-banner'
+import { SITE_TITLE } from '../../constants/index'
 
 const RENDER_PAGE_SIZE = 12
 const WINE_TOPICS_SLUG = [
@@ -47,27 +48,44 @@ const WINE_TOPICS_SLUG = [
  * @returns
  */
 export default function Topic({ topic, slideshowImages, headerData }) {
-  const postJsonData = topic?.posts?.slice(0, 5).map((post, index) => {
-    return {
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': 'NewsArticle',
-        url: `https://${SITE_URL}/story/${post.slug}`,
-        headline: post.title,
-        image:
-          post.heroImage?.resized?.w800 ||
-          `https://${SITE_URL}/images-next/default-og-img.png`,
-        dateCreated: toTaipeiISOString(post.publishedDate),
-      },
-    }
-  })
+  const postJsonData =
+    topic?.posts?.slice(0, 5)?.map((post, index) => {
+      const writersWithOrdered = post.writersInInputOrder?.length
+        ? post.writersInInputOrder
+        : post.writers
+      const hasWriter = writersWithOrdered?.length > 0
+
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'NewsArticle',
+          url: `https://${SITE_URL}/story/${post.slug}`,
+          headline: post.title,
+          image:
+            post.heroImage?.resized?.w800 ||
+            `https://${SITE_URL}/images-next/default-og-img.png`,
+          datePublished: toTaipeiISOString(post.publishedDate),
+          author: hasWriter
+            ? writersWithOrdered.map((writer) => ({
+                '@type': 'Person',
+                name: writer.name,
+                url: `https://${SITE_URL}/author/${writer.id}`,
+              }))
+            : {
+                '@type': 'Organization',
+                name: SITE_TITLE,
+                url: `https://${SITE_URL}`,
+              },
+        },
+      }
+    }) || []
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    numberOfItems: `${postJsonData?.length || 0}`,
-    itemListElement: postJsonData || [],
+    numberOfItems: postJsonData.length,
+    itemListElement: postJsonData,
   }
 
   const pubDate = (
