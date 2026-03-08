@@ -1,6 +1,6 @@
 // TODO: modify component `<WineWarning>`, no need to props `categories`
 
-import { ENV } from '../../config/index.mjs'
+import { ENV, SITE_URL } from '../../config/index.mjs'
 import TopicList from '../../components/topic/list/topic-list'
 import TopicGroup from '../../components/topic/group/topic-group'
 import WineWarning from '../../components/shared/wine-warning'
@@ -53,10 +53,12 @@ export default function Topic({ topic, slideshowImages, headerData }) {
       position: index + 1,
       item: {
         '@type': 'NewsArticle',
-        url: `https://www.mnews.tw/story/${post.slug}`,
+        url: `https://${SITE_URL}/story/${post.slug}`,
         headline: post.title,
-        image: post.heroImage?.resized?.w1200 || '',
-        dateCreated: post.publishedDate,
+        image:
+          post.heroImage?.resized?.w800 ||
+          `https://${SITE_URL}/images-next/default-og-img.png`,
+        dateCreated: toTaipeiISOString(post.publishedDate),
       },
     }
   })
