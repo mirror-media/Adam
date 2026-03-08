@@ -47,6 +47,27 @@ const WINE_TOPICS_SLUG = [
  * @returns
  */
 export default function Topic({ topic, slideshowImages, headerData }) {
+  const postJsonData = topic?.posts?.slice(0, 5).map((post, index) => {
+    return {
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'NewsArticle',
+        url: `https://www.mnews.tw/story/${post.slug}`,
+        headline: post.title,
+        image: post.heroImage?.resized?.w1200 || '',
+        dateCreated: post.publishedDate,
+      },
+    }
+  })
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    numberOfItems: `${postJsonData?.length || 0}`,
+    itemListElement: postJsonData || [],
+  }
+
   const pubDate = (
     <meta
       name="pubdate"
@@ -126,6 +147,10 @@ export default function Topic({ topic, slideshowImages, headerData }) {
         {topic.posts[0]?.updatedAt || topic.posts[0]?.publishedDate
           ? lastMod
           : null}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </Head>
       {topicJSX}
       {shouldShowWineWarning && (
