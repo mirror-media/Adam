@@ -82,6 +82,8 @@ export const asideListingPost = gql`
  * @property {Draft} brief - post brief
  * @property {Pick<Category, 'id' | 'name' | 'slug' | 'state'>[]} categories - which categories does this post belong to
  * @property {Pick<Section, 'id' | 'name' | 'slug' | 'state'>[]} sections - which sections does this post belong to
+ * @property {Pick<Contact, 'id' | 'name'>[] | null} writers - post writers
+ * @property {Pick<Contact, 'id' | 'name'>[] | null} writersInInputOrder - writers with adjusted order
  * @property {Pick<HeroImage, 'imageFile' | 'resized' | 'resizedWebp'> | null} heroImage
  * @property {Tag[] } tags - tags of the post
  */
@@ -89,6 +91,7 @@ export const asideListingPost = gql`
 export const topicPost = gql`
   ${section}
   ${category}
+  ${contact}
   ${heroImage}
   ${tag}
   fragment topicPost on Post {
@@ -103,6 +106,12 @@ export const topicPost = gql`
     }
     sections(where: { state: { equals: "active" } }) {
       ...section
+    }
+    writers {
+      ...contact
+    }
+    writersInInputOrder {
+      ...contact
     }
     heroImage {
       ...heroImage
