@@ -38,7 +38,7 @@ export function transformHtmlIntoAmpHtml(html, currentPageUrl) {
 
   const redirectUrl = currentPageUrl.replace('/external/amp/', '/external/')
 
-  const invalidElementArrtibPairs = [
+  const invalidElementAttributePairs = [
     {
       element: 'div',
       attribute: `data-progress-bar-1"`,
@@ -46,10 +46,11 @@ export function transformHtmlIntoAmpHtml(html, currentPageUrl) {
     },
     { element: 'a', attribute: 'spellcheck' },
     { element: 'span', attribute: 'sans-serif' },
+    { element: 'figcaption', attribute: 'contenteditable' },
   ]
 
   // handle some html tag with invalid attribute which will grows when new source is added..
-  for (const invalidElementAttribPair of invalidElementArrtibPairs) {
+  for (const invalidElementAttribPair of invalidElementAttributePairs) {
     const selector =
       invalidElementAttribPair.selector ||
       invalidElementAttribPair.element +
