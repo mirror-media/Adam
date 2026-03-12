@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
   API_TIMEOUT,
-  API_TIMEOUT_GRAPHQL,
   ENV,
   URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
@@ -33,8 +32,10 @@ import {
 import { logAxiosError, logGqlError } from '../../utils/log/shared'
 import { handleStoryPageRedirect } from '../../utils/story'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
+import {
+  fetchHeaderDataInDefaultPageLayout,
+  fetchHeaderDataInPremiumPageLayout,
+} from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
