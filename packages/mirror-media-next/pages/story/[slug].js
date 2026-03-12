@@ -17,7 +17,6 @@ import {
   fetchPostBySlug,
   fetchPostFullContentBySlug,
 } from '../../apollo/query/posts'
-import StoryNormalStyle from '../../components/story/normal'
 import Layout from '../../components/shared/layout'
 import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
 import StoryHead from '../../components/story/shared/story-head'
@@ -44,6 +43,7 @@ import { getRelatedStories } from '../api/recomemd'
 
 const { hasContentInRawContentBlock } = MirrorMedia
 
+const StoryNormalStyle = dynamic(() => import('../../components/story/normal'))
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
 const StoryPhotographyStyle = dynamic(() =>
   import('../../components/story/photography')
