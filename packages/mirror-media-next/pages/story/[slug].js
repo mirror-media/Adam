@@ -39,7 +39,12 @@ import { setPageCache } from '../../utils/cache-setting'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
 import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
-import FullScreenAds from '../../components/ads/full-screen-ads'
+import Image from 'next/image'
+import Skeleton from '../../public/images-next/skeleton.png'
+import axios from 'axios'
+import { processSettledResult } from '../../utils/response-processor'
+import { getRelatedStories } from '../api/recomemd'
+
 const { hasContentInRawContentBlock } = MirrorMedia
 
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
@@ -49,11 +54,10 @@ const StoryPhotographyStyle = dynamic(() =>
 const StoryPremiumStyle = dynamic(() =>
   import('../../components/story/premium')
 )
-import Image from 'next/image'
-import Skeleton from '../../public/images-next/skeleton.png'
-import axios from 'axios'
-import { processSettledResult } from '../../utils/response-processor'
-import { getRelatedStories } from '../api/recomemd'
+const FullScreenAds = dynamic(
+  () => import('../../components/ads/full-screen-ads'),
+  { ssr: false }
+)
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
