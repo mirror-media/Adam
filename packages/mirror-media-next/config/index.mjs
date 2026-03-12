@@ -59,7 +59,7 @@ let STORY_GQL_ENDPOINT = ''
 let ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
 let GCS_FUSE_MOUNT_DIR = ''
 let GCS_FUSE_STATIC_BUCKET = ''
-
+let URL_STATIC_NEWS_CATEGORY_POSTS = ''
 /** @type {import("firebase/auth").ActionCodeSettings} */
 let ACTION_CODE_SETTING
 
@@ -97,6 +97,7 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    URL_STATIC_NEWS_CATEGORY_POSTS = `https://${STATIC_FILE_DOMAIN}/json/latest/latest_content_category_news_public`
     // Only use STORY_GQL_ENDPOINT if explicitly set via env var
     // Do not fallback to dev endpoint in prod to avoid connecting to dev service
     STORY_GQL_ENDPOINT =
@@ -165,6 +166,7 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://${STATIC_FILE_DOMAIN}/json/atest/latest_content_section_column_1`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    URL_STATIC_NEWS_CATEGORY_POSTS = `https://${STATIC_FILE_DOMAIN}/json/latest/latest_content_category_news_public`
     STORY_GQL_ENDPOINT =
       process.env.STORY_GQL_ENDPOINT ||
       'https://go-story-staging-983956931553.asia-east1.run.app/api/graphql'
@@ -230,6 +232,7 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    URL_STATIC_NEWS_CATEGORY_POSTS = `https://${STATIC_FILE_DOMAIN}/json/latest/latest_content_category_news_public`
     STORY_GQL_ENDPOINT =
       process.env.STORY_GQL_ENDPOINT ||
       'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
@@ -301,6 +304,7 @@ switch (ENV) {
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
+    URL_STATIC_NEWS_CATEGORY_POSTS = `https://${STATIC_FILE_DOMAIN}/json/latest/latest_content_category_news_public`
     STORY_GQL_ENDPOINT =
       process.env.STORY_GQL_ENDPOINT ||
       'https://go-story-dev-983956931553.asia-east1.run.app/api/graphql'
@@ -385,4 +389,5 @@ export {
   ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE,
   GCS_FUSE_MOUNT_DIR,
   GCS_FUSE_STATIC_BUCKET,
+  URL_STATIC_NEWS_CATEGORY_POSTS,
 }
