@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import DraftRenderBlock from '../shared/draft-renderer-block'
-import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
-const { getContentTextBlocks } = MirrorMedia
+import { getContentTextBlocks } from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
 import Credits from './potography-credits'
 import HeroSection from './hero-section'
 import Header from './photography-header'

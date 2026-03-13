@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import DraftRenderer from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/draft-renderer'
+import {
+  hasContentInRawContentBlock,
+  removeEmptyContentBlock,
+} from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
 import { DRAFT_RENDERER_FEATURE_TOGGLE } from '../../../config/index.mjs'
-const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
-  MirrorMedia
 
 /**
  * @typedef { 'normal' | 'wide' | 'photography' | 'premium' | 'amp' } ContentLayout
