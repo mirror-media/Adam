@@ -2,8 +2,7 @@
 
 import styled from 'styled-components'
 import DraftRenderBlock from '../shared/draft-renderer-block'
-import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
-const { getContentBlocksH2H3 } = MirrorMedia
+import { getContentBlocksH2H3 } from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
 import { useMembership } from '../../../context/membership'
 
 import Header from './header'

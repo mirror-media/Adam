@@ -28,7 +28,7 @@ import {
 } from '../../utils'
 import { logAxiosError, logGqlError } from '../../utils/log/shared'
 import { handleStoryPageRedirect } from '../../utils/story'
-import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import { hasContentInRawContentBlock } from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
 import {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
@@ -40,8 +40,6 @@ import { generateJsonLdsData } from '../../components/story/shared/json-lds-data
 import axios from 'axios'
 import { processSettledResult } from '../../utils/response-processor'
 import { getRelatedStories } from '../api/recomemd'
-
-const { hasContentInRawContentBlock } = MirrorMedia
 
 const StoryNormalStyle = dynamic(() => import('../../components/story/normal'))
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
