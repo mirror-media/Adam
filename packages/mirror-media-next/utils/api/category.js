@@ -4,6 +4,7 @@ import { fetchPosts } from '../../apollo/query/posts'
 import axios from 'axios'
 import {
   API_TIMEOUT,
+  URL_STATIC_NEWS_CATEGORY_INFO,
   URL_STATIC_NEWS_CATEGORY_POSTS,
 } from '../../config/index.mjs'
 
@@ -20,6 +21,19 @@ export function fetchPostsByCategorySlug(categorySlug, take, skip) {
       },
     },
   })
+}
+
+export async function fetchNewsCategoryInfo() {
+  try {
+    const response = await axios({
+      method: 'get',
+      url: URL_STATIC_NEWS_CATEGORY_INFO,
+      timeout: API_TIMEOUT,
+    })
+    return response
+  } catch (err) {
+    console.error('Error fetching news category info: ', JSON.stringify(err))
+  }
 }
 
 export async function fetchNewsCategoryPostsJSON(page = 1, take = 24) {
@@ -52,7 +66,7 @@ export async function fetchNewsCategoryPostsJSON(page = 1, take = 24) {
     }
   } catch (err) {
     console.error(
-      'Failed to fetch JSON of URL_STATIC_NEWS_CATEGORY_POSTS',
+      'Failed to fetch JSON of URL_STATIC_NEWS_CATEGORY_POSTS: ',
       JSON.stringify(err)
     )
   }
