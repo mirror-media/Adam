@@ -7,7 +7,8 @@ export default function handler(req, res) {
     res.write(`User-agent: Googlebot
       Disallow: /login
       Disallow: /subscribe/*
-
+      Disallow: /search/*
+      
       User-agent: *
         Allow: /
         
