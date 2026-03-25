@@ -304,8 +304,7 @@ export async function getServerSideProps({ query, req, res }) {
     state: 'inactive',
   }
 
-  const isNewsCategory =
-    categorySlug.startsWith('news') || categorySlug.startsWith('news?')
+  const isNewsCategory = categorySlug === 'news'
 
   if (isNewsCategory) {
     try {
