@@ -63,7 +63,7 @@ export default function CategoryArticles({
         : await fetchPostsByCategorySlug(category.slug, take, skip)
 
       if (isNewsCategory) {
-        return response.data.posts.items
+        return response.data.posts.items || []
       }
       return response.data.posts
     } catch (error) {
