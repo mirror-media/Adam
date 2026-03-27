@@ -69,6 +69,7 @@ export async function fetchNewsCategoryPostsJSON(page = 1, take = 24) {
       'Failed to fetch JSON of URL_STATIC_NEWS_CATEGORY_POSTS: ',
       JSON.stringify(err)
     )
+    return { data: { posts: { items: [], counts: 0 } } }
   }
 }
 
