@@ -422,10 +422,10 @@ const hasUtmParamsInAsPath = (asPath) => {
     for (const key of urlObject.searchParams.keys()) {
       if (key.toLowerCase().startsWith('utm_')) return true
     }
+    return false
   } catch {
     return false
   }
-  return false
 }
 
 const isServer = () => {
