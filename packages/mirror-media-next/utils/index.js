@@ -407,6 +407,27 @@ const getLoginHref = (router) => {
   }
 }
 
+/**
+ * True when `asPath` has any `utm_*` query param.
+ * @param {string} [asPath] - Next.js `router.asPath`
+ * @returns {boolean}
+ */
+const hasUtmParamsInAsPath = (asPath) => {
+  if (!asPath || typeof asPath !== 'string') return false
+  try {
+    const urlObject = new URL(
+      asPath,
+      'https://www.google.com' /** sample base; same as getLoginHref */
+    )
+    for (const key of urlObject.searchParams.keys()) {
+      if (key.toLowerCase().startsWith('utm_')) return true
+    }
+  } catch {
+    return false
+  }
+  return false
+}
+
 const isServer = () => {
   return typeof window === 'undefined' ? true : false
 }
@@ -468,6 +489,7 @@ export {
   isCompanyEmail,
   transformTimeData,
   getLoginHref,
+  hasUtmParamsInAsPath,
   isServer,
   getClientSideOnlyError,
   getSearchParamFromApiKeyUrl,
