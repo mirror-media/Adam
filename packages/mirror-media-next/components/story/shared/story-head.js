@@ -1,6 +1,11 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { SITE_URL } from '../../../config/index.mjs'
-import { getActiveOrderCategory, getActiveOrderSection } from '../../../utils'
+import {
+  getActiveOrderCategory,
+  getActiveOrderSection,
+  hasUtmParamsInAsPath,
+} from '../../../utils'
 import DevGptAd from '../dev-gpt-ad'
 // import Script from 'next/script'
 import { toTaipeiISOString } from '../../../utils/index'
@@ -88,9 +93,11 @@ const generateMetaData = (postData) => {
  * @returns
  */
 export default function StoryHead({ postData }) {
+  const router = useRouter()
+  const meta = generateMetaData(postData)
+  const robots = hasUtmParamsInAsPath(router.asPath) ? 'noindex' : meta.robots
   const {
     slug,
-    robots,
     nonAmpUrl,
     ampUrl,
     shouldCreateAmpHtmlLink,
@@ -101,7 +108,7 @@ export default function StoryHead({ postData }) {
     authorName,
     publishedDate,
     updatedAt,
-  } = generateMetaData(postData)
+  } = meta
 
   return (
     <>
