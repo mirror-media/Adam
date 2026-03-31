@@ -7,6 +7,7 @@ import PremiumArticleList from '../shared/premium-article-list'
 import {
   fetchPostsByCategorySlug,
   fetchPremiumPostsByCategorySlug,
+  fetchNewsCategoryPostsJSON,
 } from '../../utils/api/category'
 import LoadingPage from '../../public/images-next/loading_page.gif'
 
@@ -35,6 +36,7 @@ const Loading = styled.div`
  * @param {Category} props.category
  * @param {Number} props.renderPageSize
  * @param {boolean} props.isPremium
+ * @param {boolean} props.isNewsCategory
  * @returns {React.ReactElement}
  */
 export default function CategoryArticles({
@@ -43,6 +45,7 @@ export default function CategoryArticles({
   category,
   renderPageSize,
   isPremium,
+  isNewsCategory,
 }) {
   const fetchPageSize = renderPageSize * 2
 
@@ -55,7 +58,13 @@ export default function CategoryArticles({
       const skip = (page - 1) * take
       const response = isPremium
         ? await fetchPremiumPostsByCategorySlug(category.slug, take, skip)
+        : isNewsCategory
+        ? await fetchNewsCategoryPostsJSON(page, take)
         : await fetchPostsByCategorySlug(category.slug, take, skip)
+
+      if (isNewsCategory) {
+        return response.data.posts.items || []
+      }
       return response.data.posts
     } catch (error) {
       // [to-do]: use beacon api to log error on gcs
