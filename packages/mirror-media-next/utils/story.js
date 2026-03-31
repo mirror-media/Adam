@@ -1,7 +1,5 @@
-import {
-  removeEmptyContentBlock,
-  hasContentInRawContentBlock,
-} from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+const { removeEmptyContentBlock, hasContentInRawContentBlock } = MirrorMedia
 
 /**
  * @typedef {Object} Redirect

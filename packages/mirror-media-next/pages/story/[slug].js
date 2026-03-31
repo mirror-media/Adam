@@ -2,11 +2,14 @@
 import React, { useState, useEffect, useMemo } from 'react'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
+import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
   API_TIMEOUT,
+  API_TIMEOUT_GRAPHQL,
   ENV,
   URL_STATIC_POST_FLASH_NEWS,
+  // TEST_GPT_AD_FEATURE_TOGGLE,
   STORY_GQL_ENDPOINT,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
@@ -17,6 +20,7 @@ import {
   fetchPostBySlug,
   fetchPostFullContentBySlug,
 } from '../../apollo/query/posts'
+import StoryNormalStyle from '../../components/story/normal'
 import Layout from '../../components/shared/layout'
 import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
 import StoryHead from '../../components/story/shared/story-head'
@@ -28,20 +32,16 @@ import {
 } from '../../utils'
 import { logAxiosError, logGqlError } from '../../utils/log/shared'
 import { handleStoryPageRedirect } from '../../utils/story'
-import { hasContentInRawContentBlock } from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
-import {
-  fetchHeaderDataInDefaultPageLayout,
-  fetchHeaderDataInPremiumPageLayout,
-} from '../../utils/api'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
 import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
-import axios from 'axios'
-import { processSettledResult } from '../../utils/response-processor'
-import { getRelatedStories } from '../api/recomemd'
+import FullScreenAds from '../../components/ads/full-screen-ads'
+const { hasContentInRawContentBlock } = MirrorMedia
 
-const StoryNormalStyle = dynamic(() => import('../../components/story/normal'))
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
 const StoryPhotographyStyle = dynamic(() =>
   import('../../components/story/photography')
@@ -49,10 +49,11 @@ const StoryPhotographyStyle = dynamic(() =>
 const StoryPremiumStyle = dynamic(() =>
   import('../../components/story/premium')
 )
-const FullScreenAds = dynamic(
-  () => import('../../components/ads/full-screen-ads'),
-  { ssr: false }
-)
+import Image from 'next/image'
+import Skeleton from '../../public/images-next/skeleton.png'
+import axios from 'axios'
+import { processSettledResult } from '../../utils/response-processor'
+import { getRelatedStories } from '../api/recomemd'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })
@@ -69,6 +70,17 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
  * @typedef {import('../../utils/api').Topics} Topics
  * @typedef {import('axios').AxiosResponse<HeaderData>} AxiosResponseHeaderData
  */
+
+const Loading = styled.div`
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: fixed;
+
+  img {
+    margin: 0 auto;
+  }
+`
 
 /**
  *
@@ -149,55 +161,55 @@ export default function Story({
   useEffect(() => {
     // Wait for page to be fully rendered before setting up miso API calls
     const setupScrollHandler = () => {
-      const handleScroll = async () => {
-        if (allRelatedStories.length < 10) {
-          const filterIds = allRelatedStories.map(
-            (story) => `mirrormedia_story_${story.slug}`
+    const handleScroll = async () => {
+      if (allRelatedStories.length < 10) {
+        const filterIds = allRelatedStories.map(
+          (story) => `mirrormedia_story_${story.slug}`
+        )
+        try {
+          const result = await getRelatedStories(
+            postData.slug,
+            filterIds,
+            10 - allRelatedStories.length,
+            'story'
           )
-          try {
-            const result = await getRelatedStories(
-              postData.slug,
-              filterIds,
-              10 - allRelatedStories.length,
-              'story'
-            )
 
-            if (result && result.data && result.data.products) {
-              const formattedStories = result.data.products.map((product) => {
-                const productId = product.product_id
-                const slug = productId.split('_').slice(2).join('_')
+          if (result && result.data && result.data.products) {
+            const formattedStories = result.data.products.map((product) => {
+              const productId = product.product_id
+              const slug = productId.split('_').slice(2).join('_')
 
-                return {
-                  id: productId,
-                  slug: slug,
-                  title: product.title || '',
-                  url: product.url || '',
-                  heroImage: product.cover_image
-                    ? {
-                        resized: { original: product.cover_image },
-                      }
-                    : null,
-                  publishedDate: new Date().toISOString(),
-                  brief: { blocks: [{ text: '' }] },
-                  categories: [],
-                  sections: [],
-                  isMesoRecommend: true,
-                }
-              })
+              return {
+                id: productId,
+                slug: slug,
+                title: product.title || '',
+                url: product.url || '',
+                heroImage: product.cover_image
+                  ? {
+                      resized: { original: product.cover_image },
+                    }
+                  : null,
+                publishedDate: new Date().toISOString(),
+                brief: { blocks: [{ text: '' }] },
+                categories: [],
+                sections: [],
+                isMesoRecommend: true,
+              }
+            })
 
-              setAllRelatedStories((prev) => [...prev, ...formattedStories])
-            }
-          } catch (error) {
-            console.error(
-              'Failed to fetch MISO related stories:',
-              JSON.stringify(error)
-            )
+            setAllRelatedStories((prev) => [...prev, ...formattedStories])
           }
+        } catch (error) {
+          console.error(
+            'Failed to fetch MISO related stories:',
+            JSON.stringify(error)
+          )
         }
       }
+    }
 
-      window.addEventListener('scroll', handleScroll, { once: true })
-      return () => window.removeEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll, { once: true })
+    return () => window.removeEventListener('scroll', handleScroll)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
@@ -378,6 +390,11 @@ export default function Story({
           isMemberArticle={isMember}
           writers={writersInString}
         />
+        {!storyLayoutJsx && (
+          <Loading>
+            <Image src={Skeleton} alt="loading..."></Image>
+          </Loading>
+        )}
         {storyLayoutJsx}
         <WineWarning categories={categories} />
         <AdultOnlyWarning isAdult={isAdult} />
@@ -471,9 +488,7 @@ export async function getServerSideProps({ params, req, res }) {
       try {
         const fetchStaticJsonSafe = async (url, timeout) => {
           try {
-            const mod = await import(
-              '../../utils/server-side-only/fetch-static-json.js'
-            )
+            const mod = await import('../../utils/server-side-only/fetch-static-json.js')
             const res = await mod.fetchStaticJson(url, timeout)
             return res
           } catch (err) {

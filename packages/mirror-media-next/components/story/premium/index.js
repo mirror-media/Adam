@@ -7,7 +7,7 @@ import CopyrightWarning from '../shared/copyright-warning'
 import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
 import SupportSingleArticleBanner from '../shared/support-single-article-banner'
 import Aside from '../shared/aside'
-import { getContentBlocksH2H3 } from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia/utils'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import NavSubtitleNavigator from '../shared/nav-subtitle-navigator'
 import ButtonCopyLink from '../shared/button-copy-link'
 import ButtonSocialNetworkShare from '../shared/button-social-network-share'
@@ -28,6 +28,7 @@ const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 
+const { getContentBlocksH2H3 } = MirrorMedia
 /**
  * @typedef {import('../../../apollo/fragments/post').Post} PostData
  */
