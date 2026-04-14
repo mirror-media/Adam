@@ -86,7 +86,7 @@ const createStaticJsonRequest = (requestUrl) => {
   return async () => {
     if (typeof window === 'undefined') {
       try {
-      const mod = await import('../server-side-only/fetch-static-json.js')
+        const mod = await import('../server-side-only/fetch-static-json.js')
         const res = await mod.fetchStaticJson(requestUrl)
         // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
         // fetchStaticJson returns { data: ... } format
@@ -128,7 +128,9 @@ const fetchNormalSections = createStaticJsonRequest(URL_STATIC_HEADER_HEADERS)
 /** @type {() => Promise<{ data: { topics: Topics } }>} */
 const fetchTopics = createStaticJsonRequest(URL_STATIC_TOPICS)
 
-const fetchPremiumSections = createStaticJsonRequest(URL_STATIC_PREMIUM_SECTIONS)
+const fetchPremiumSections = createStaticJsonRequest(
+  URL_STATIC_PREMIUM_SECTIONS
+)
 
 const fetchPodcastList = createStaticJsonRequest(URL_STATIC_PODCAST_LIST)
 
