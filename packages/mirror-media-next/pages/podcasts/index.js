@@ -4,10 +4,10 @@ import AudioPlayer from '../../components/podcast/audio-player'
 import Dropdown from '../../components/podcast/author-select-dropdown'
 import PodcastList from '../../components/podcast/podcast-list'
 import Layout from '../../components/shared/layout'
-import { ENV } from '../../config/index.mjs'
+import { ENV, URL_STATIC_PODCAST_LIST } from '../../config/index.mjs'
 import {
+  fetchStaticJsonByUrl,
   fetchHeaderDataInDefaultPageLayout,
-  fetchPodcastList,
 } from '../../utils/api'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { setPageCache } from '../../utils/cache-setting'
@@ -185,7 +185,7 @@ export async function getServerSideProps({ req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchPodcastList(),
+    fetchStaticJsonByUrl(URL_STATIC_PODCAST_LIST),
   ])
 
   // handle header data
@@ -200,9 +200,7 @@ export async function getServerSideProps({ req, res }) {
   /** @type {PodcastData[]} */
   const podcastListData = processSettledResult(
     responses[1],
-    (
-      /** @type {Awaited<ReturnType<typeof fetchPodcastList>> | undefined} */ axiosData
-    ) => {
+    (/** @type {{ data?: PodcastData[] } | undefined} */ axiosData) => {
       return axiosData?.data ?? []
     },
     'Error occurs while getting podcast list in podcasts page',

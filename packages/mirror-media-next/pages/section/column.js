@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
-import { ENV } from '../../config/index.mjs'
+import { ENV, URL_STATIC_COLUMN_SECTION_POSTS } from '../../config/index.mjs'
 import {
-  fetchColumnSectionPosts,
+  fetchStaticJsonByUrl,
   fetchHeaderDataInDefaultPageLayout,
 } from '../../utils/api'
 import {
@@ -189,7 +189,7 @@ export async function getServerSideProps({ req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchColumnSectionPosts(),
+    fetchStaticJsonByUrl(URL_STATIC_COLUMN_SECTION_POSTS),
     fetchSectionBySectionSlug(sectionSlug),
   ])
 

@@ -2,9 +2,7 @@ import errors from '@twreporter/errors'
 import client from '../../apollo/apollo-client.js'
 import axiosInstance from '../../axios/index.js'
 import {
-  URL_STATIC_COLUMN_SECTION_POSTS,
   URL_STATIC_HEADER_HEADERS,
-  URL_STATIC_PODCAST_LIST,
   URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
 } from '../../config/index.mjs'
@@ -79,26 +77,24 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
  * @typedef { (HeadersDataSection | HeadersDataCategory)[]} HeadersData
  */
 /**
- * Creates a request function that tries local GCS FUSE first, then falls back to HTTP.
+ * Fetches static JSON by URL. It tries local GCS FUSE first, then falls back to HTTP.
  * @param {string} requestUrl - The URL to send the request to.
  */
-const createStaticJsonRequest = (requestUrl) => {
-  return async () => {
-    if (typeof window === 'undefined') {
-      try {
-        const mod = await import('../server-side-only/fetch-static-json.js')
-        const res = await mod.fetchStaticJson(requestUrl)
-        // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
-        // fetchStaticJson returns { data: ... } format
-        return res
-      } catch (err) {
-        console.warn('[static-json] fallback to axios', err)
-        // Continue to fall through to unified axios fallback below
-      }
+const fetchStaticJsonByUrl = async (requestUrl) => {
+  if (typeof window === 'undefined') {
+    try {
+      const mod = await import('../server-side-only/fetch-static-json.js')
+      const res = await mod.fetchStaticJson(requestUrl)
+      // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
+      // fetchStaticJson returns { data: ... } format
+      return res
+    } catch (err) {
+      console.warn('[static-json] fallback to axios', err)
+      // Continue to fall through to unified axios fallback below
     }
-    const axiosRes = await axiosInstance(requestUrl)
-    return { data: axiosRes?.data }
   }
+  const axiosRes = await axiosInstance(requestUrl)
+  return { data: axiosRes?.data }
 }
 
 const errorLogger = (errorMessage) => {
@@ -122,18 +118,6 @@ const errorLogger = (errorMessage) => {
   throw annotatingAxiosError
 }
 
-/** @type {() => Promise<{ data: { headers: HeadersData } }>} */
-const fetchNormalSections = createStaticJsonRequest(URL_STATIC_HEADER_HEADERS)
-
-/** @type {() => Promise<{ data: { topics: Topics } }>} */
-const fetchTopics = createStaticJsonRequest(URL_STATIC_TOPICS)
-
-const fetchPremiumSections = createStaticJsonRequest(
-  URL_STATIC_PREMIUM_SECTIONS
-)
-
-const fetchPodcastList = createStaticJsonRequest(URL_STATIC_PODCAST_LIST)
-
 const fetchHeaderDataInDefaultPageLayout = async () => {
   /** @type {HeadersData} */
   let sectionsData = []
@@ -142,8 +126,8 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
 
   try {
     const responses = await Promise.allSettled([
-      fetchNormalSections(),
-      fetchTopics(),
+      fetchStaticJsonByUrl(URL_STATIC_HEADER_HEADERS),
+      fetchStaticJsonByUrl(URL_STATIC_TOPICS),
     ])
 
     const sectionsResponse = responses[0].status === 'fulfilled' && responses[0]
@@ -165,7 +149,7 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
 const fetchHeaderDataInPremiumPageLayout = async () => {
   let sectionsData = []
   try {
-    const response = await fetchPremiumSections()
+    const response = await fetchStaticJsonByUrl(URL_STATIC_PREMIUM_SECTIONS)
     if (response?.data?.sections) {
       sectionsData = response?.data?.sections
     }
@@ -200,15 +184,9 @@ const fetchAnnoucementsByScope = (scope) => {
   })
 }
 
-/** @type {() => Promise<{ data: ColumnSectionResponse }>} */
-const fetchColumnSectionPosts = createStaticJsonRequest(
-  URL_STATIC_COLUMN_SECTION_POSTS
-)
-
 export {
+  fetchStaticJsonByUrl,
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
-  fetchPodcastList,
   fetchAnnoucementsByScope,
-  fetchColumnSectionPosts,
 }
