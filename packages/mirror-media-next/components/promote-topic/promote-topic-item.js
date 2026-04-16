@@ -54,6 +54,7 @@ const Title = styled.p`
  *
  * @typedef {Object} PromoteTopicData
  * @property {string} [id]
+ * @property {number | string | null} [order]
  * @property {string} slug
  * @property {string} name
  * @property {PromoteTopicHeroImage} heroImage
