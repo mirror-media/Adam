@@ -55,14 +55,17 @@ function mapUrlToLocalPath(requestUrl) {
 
 /**
  * Fetch JSON from local GCS FUSE mount first, fallback to HTTP GET via axios.
- * Returns an axios-like response shape: { data: any }
+ * Returns an axios-like response shape: { data }
  * Client-side will always fallback to HTTP.
  *
+ * @typedef {number | import('axios').AxiosRequestConfig} StaticJsonRequestConfig
+ *
+ * @template T
  * @param {string} requestUrl
- * @param {number} [timeoutMs]
- * @returns {Promise<{ data: any }>}
+ * @param {StaticJsonRequestConfig} [requestConfig]
+ * @returns {Promise<{ data: T }>}
  */
-export async function fetchStaticJson(requestUrl, timeoutMs) {
+export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
   const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
@@ -71,17 +74,16 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       try {
         const readStartTime = performance.now()
         const content = await fs.readFile(localPath, 'utf8')
-        const parseStartTime = performance.now()
         const data = JSON.parse(content)
         const parseEndTime = performance.now()
-        
+
         const readLatency = (parseEndTime - readStartTime).toFixed(2)
         const totalLatency = (parseEndTime - startTime).toFixed(2)
-        
+
         console.log(
           JSON.stringify({
             severity: 'INFO',
-            message: '[fetchStaticJson] GCS mount hit',
+            message: '[fetchStaticJsonOnServer] GCS mount hit',
             url: requestUrl,
             localPath: localPath,
             readLatency: `${readLatency}ms`,
@@ -89,14 +91,14 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
             source: 'local',
           })
         )
-        
-        return { data }
+
+        return /** @type {{ data: T }} */ ({ data })
       } catch (err) {
         const readLatency = (performance.now() - startTime).toFixed(2)
         console.warn(
           JSON.stringify({
             severity: 'WARNING',
-            message: '[fetchStaticJson] GCS mount miss, fallback to HTTP',
+            message: '[fetchStaticJsonOnServer] GCS mount miss, fallback to HTTP',
             url: requestUrl,
             localPath: localPath,
             readLatency: `${readLatency}ms`,
@@ -109,33 +111,38 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       console.log(
         JSON.stringify({
           severity: 'INFO',
-          message: '[fetchStaticJson] No local path mapped, using HTTP',
+          message: '[fetchStaticJsonOnServer] No local path mapped, using HTTP',
           url: requestUrl,
         })
       )
     }
   }
-  
+
   const httpStartTime = performance.now()
+  const normalizedRequestConfig =
+    typeof requestConfig === 'number'
+      ? { timeout: requestConfig }
+      : requestConfig ?? {}
+
   const res = await axiosInstance({
+    ...normalizedRequestConfig,
     method: 'get',
     url: requestUrl,
-    timeout: timeoutMs,
   })
   const httpEndTime = performance.now()
   const httpLatency = (httpEndTime - httpStartTime).toFixed(2)
   const totalLatency = (httpEndTime - startTime).toFixed(2)
-  
+
   console.log(
     JSON.stringify({
       severity: 'INFO',
-      message: '[fetchStaticJson] HTTP fetch',
+      message: '[fetchStaticJsonOnServer] HTTP fetch',
       url: requestUrl,
       httpLatency: `${httpLatency}ms`,
       totalLatency: `${totalLatency}ms`,
       source: 'http',
     })
   )
-  
-  return { data: res?.data }
+
+  return /** @type {{ data: T }} */ ({ data: res?.data })
 }
