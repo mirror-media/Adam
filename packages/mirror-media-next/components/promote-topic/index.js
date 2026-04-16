@@ -21,6 +21,9 @@ import PromoteTopicSwiper from './promote-topic-swiper'
  * @property {string | number} [id]
  * @property {string | number | null} [order]
  * @property {RawPromoteTopic | null} [topics]
+ *
+ * @typedef {Object} PromoteTopicsStaticJsonResponse
+ * @property {RawPromoteTopicItem[]} [promoteTopics]
  */
 
 /**
@@ -87,12 +90,13 @@ export default function PromoteTopic() {
 
     const fetchData = async () => {
       try {
-        const res = await fetchStaticJsonByUrl(URL_STATIC_PROMOTE_TOPICS, {
-          signal: abortController.signal,
-        })
-        // fetchStaticJsonByUrl normalizes both server/client paths to { data: ... }.
-        const promoteTopics = res.data?.promoteTopics
-        setTopics(normalizePromoteTopics(promoteTopics))
+        const response =
+          /** @type {{ data: PromoteTopicsStaticJsonResponse }} */ (
+            await fetchStaticJsonByUrl(URL_STATIC_PROMOTE_TOPICS, {
+              signal: abortController.signal,
+            })
+          )
+        setTopics(normalizePromoteTopics(response.data.promoteTopics))
       } catch (err) {
         if (
           abortController.signal.aborted ||

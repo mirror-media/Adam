@@ -55,12 +55,13 @@ function mapUrlToLocalPath(requestUrl) {
 
 /**
  * Fetch JSON from local GCS FUSE mount first, fallback to HTTP GET via axios.
- * Returns an axios-like response shape: { data: any }
+ * Returns an axios-like response shape: { data }
  * Client-side will always fallback to HTTP.
  *
+ * @template T
  * @param {string} requestUrl
  * @param {number} [timeoutMs]
- * @returns {Promise<{ data: any }>}
+ * @returns {Promise<{ data: T }>}
  */
 export async function fetchStaticJson(requestUrl, timeoutMs) {
   const startTime = performance.now()
@@ -71,13 +72,12 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       try {
         const readStartTime = performance.now()
         const content = await fs.readFile(localPath, 'utf8')
-        const parseStartTime = performance.now()
         const data = JSON.parse(content)
         const parseEndTime = performance.now()
-        
+
         const readLatency = (parseEndTime - readStartTime).toFixed(2)
         const totalLatency = (parseEndTime - startTime).toFixed(2)
-        
+
         console.log(
           JSON.stringify({
             severity: 'INFO',
@@ -89,8 +89,8 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
             source: 'local',
           })
         )
-        
-        return { data }
+
+        return /** @type {{ data: T }} */ ({ data })
       } catch (err) {
         const readLatency = (performance.now() - startTime).toFixed(2)
         console.warn(
@@ -115,7 +115,7 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       )
     }
   }
-  
+
   const httpStartTime = performance.now()
   const res = await axiosInstance({
     method: 'get',
@@ -125,7 +125,7 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
   const httpEndTime = performance.now()
   const httpLatency = (httpEndTime - httpStartTime).toFixed(2)
   const totalLatency = (httpEndTime - startTime).toFixed(2)
-  
+
   console.log(
     JSON.stringify({
       severity: 'INFO',
@@ -136,6 +136,6 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
       source: 'http',
     })
   )
-  
-  return { data: res?.data }
+
+  return /** @type {{ data: T }} */ ({ data: res?.data })
 }

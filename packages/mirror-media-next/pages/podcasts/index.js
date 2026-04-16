@@ -81,6 +81,9 @@ const Title = styled.p`
  * @typedef {Object} Props
  * @property {Object} headerData
  * @property {PodcastData[]} podcastListData
+ *
+ * @typedef {Object} PodcastListResponse
+ * @property {PodcastData[]} data
  */
 
 /**
@@ -185,7 +188,9 @@ export async function getServerSideProps({ req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchStaticJsonByUrl(URL_STATIC_PODCAST_LIST),
+    /** @type {Promise<PodcastListResponse>} */ (
+      fetchStaticJsonByUrl(URL_STATIC_PODCAST_LIST)
+    ),
   ])
 
   // handle header data
@@ -200,8 +205,8 @@ export async function getServerSideProps({ req, res }) {
   /** @type {PodcastData[]} */
   const podcastListData = processSettledResult(
     responses[1],
-    (/** @type {{ data?: PodcastData[] } | undefined} */ axiosData) => {
-      return axiosData?.data ?? []
+    (/** @type {PodcastListResponse | undefined} */ response) => {
+      return response?.data ?? []
     },
     'Error occurs while getting podcast list in podcasts page',
     globalLogFields
