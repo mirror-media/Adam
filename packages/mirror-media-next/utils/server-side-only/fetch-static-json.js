@@ -58,12 +58,14 @@ function mapUrlToLocalPath(requestUrl) {
  * Returns an axios-like response shape: { data }
  * Client-side will always fallback to HTTP.
  *
+ * @typedef {number | import('axios').AxiosRequestConfig} StaticJsonRequestConfig
+ *
  * @template T
  * @param {string} requestUrl
- * @param {number} [timeoutMs]
+ * @param {StaticJsonRequestConfig} [requestConfig]
  * @returns {Promise<{ data: T }>}
  */
-export async function fetchStaticJson(requestUrl, timeoutMs) {
+export async function fetchStaticJson(requestUrl, requestConfig) {
   const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
@@ -117,10 +119,15 @@ export async function fetchStaticJson(requestUrl, timeoutMs) {
   }
 
   const httpStartTime = performance.now()
+  const normalizedRequestConfig =
+    typeof requestConfig === 'number'
+      ? { timeout: requestConfig }
+      : requestConfig ?? {}
+
   const res = await axiosInstance({
+    ...normalizedRequestConfig,
     method: 'get',
     url: requestUrl,
-    timeout: timeoutMs,
   })
   const httpEndTime = performance.now()
   const httpLatency = (httpEndTime - httpStartTime).toFixed(2)

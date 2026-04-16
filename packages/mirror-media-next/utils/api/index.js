@@ -101,17 +101,13 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
  */
 const fetchStaticJsonByUrl = async (requestUrl, requestConfig) => {
   if (typeof window === 'undefined') {
-    try {
-      const mod = await import('../server-side-only/fetch-static-json.js')
-      const res = await mod.fetchStaticJson(requestUrl)
-      // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
-      // fetchStaticJson returns { data: ... } format
-      return /** @type {{ data: T }} */ (res)
-    } catch (err) {
-      console.warn('[static-json] fallback to axios', err)
-      // Continue to fall through to unified axios fallback below
-    }
+    const mod = await import('../server-side-only/fetch-static-json.js')
+    const res = await mod.fetchStaticJson(requestUrl, requestConfig)
+    // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
+    // fetchStaticJson returns { data: ... } format
+    return /** @type {{ data: T }} */ (res)
   }
+
   const axiosRes = await axiosInstance(requestUrl, requestConfig)
   return /** @type {{ data: T }} */ ({ data: axiosRes?.data })
 }
