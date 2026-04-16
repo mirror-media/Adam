@@ -102,9 +102,9 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
 const fetchStaticJsonByUrl = async (requestUrl, requestConfig) => {
   if (typeof window === 'undefined') {
     const mod = await import('../server-side-only/fetch-static-json.js')
-    const res = await mod.fetchStaticJson(requestUrl, requestConfig)
-    // Note: fetchStaticJson internally logs whether it's from GCS mount or HTTP
-    // fetchStaticJson returns { data: ... } format
+    const res = await mod.fetchStaticJsonOnServer(requestUrl, requestConfig)
+    // Note: fetchStaticJsonOnServer internally logs whether it's from GCS mount or HTTP
+    // fetchStaticJsonOnServer returns { data: ... } format
     return /** @type {{ data: T }} */ (res)
   }
 

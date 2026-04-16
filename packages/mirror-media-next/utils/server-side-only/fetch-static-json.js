@@ -65,7 +65,7 @@ function mapUrlToLocalPath(requestUrl) {
  * @param {StaticJsonRequestConfig} [requestConfig]
  * @returns {Promise<{ data: T }>}
  */
-export async function fetchStaticJson(requestUrl, requestConfig) {
+export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
   const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
@@ -83,7 +83,7 @@ export async function fetchStaticJson(requestUrl, requestConfig) {
         console.log(
           JSON.stringify({
             severity: 'INFO',
-            message: '[fetchStaticJson] GCS mount hit',
+            message: '[fetchStaticJsonOnServer] GCS mount hit',
             url: requestUrl,
             localPath: localPath,
             readLatency: `${readLatency}ms`,
@@ -98,7 +98,7 @@ export async function fetchStaticJson(requestUrl, requestConfig) {
         console.warn(
           JSON.stringify({
             severity: 'WARNING',
-            message: '[fetchStaticJson] GCS mount miss, fallback to HTTP',
+            message: '[fetchStaticJsonOnServer] GCS mount miss, fallback to HTTP',
             url: requestUrl,
             localPath: localPath,
             readLatency: `${readLatency}ms`,
@@ -111,7 +111,7 @@ export async function fetchStaticJson(requestUrl, requestConfig) {
       console.log(
         JSON.stringify({
           severity: 'INFO',
-          message: '[fetchStaticJson] No local path mapped, using HTTP',
+          message: '[fetchStaticJsonOnServer] No local path mapped, using HTTP',
           url: requestUrl,
         })
       )
@@ -136,7 +136,7 @@ export async function fetchStaticJson(requestUrl, requestConfig) {
   console.log(
     JSON.stringify({
       severity: 'INFO',
-      message: '[fetchStaticJson] HTTP fetch',
+      message: '[fetchStaticJsonOnServer] HTTP fetch',
       url: requestUrl,
       httpLatency: `${httpLatency}ms`,
       totalLatency: `${totalLatency}ms`,
