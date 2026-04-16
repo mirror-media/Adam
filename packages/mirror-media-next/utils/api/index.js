@@ -77,10 +77,13 @@ import { fetchAnnoucements } from '../../apollo/query/announcements'
  * @typedef { (HeadersDataSection | HeadersDataCategory)[]} HeadersData
  */
 /**
- * Fetches static JSON by URL. It tries local GCS FUSE first, then falls back to HTTP.
+ * Fetches static JSON by URL. Tries local GCS FUSE first (server-side), then falls back to HTTP via axios.
+ * Returns `{ data }` where `data` is the parsed JSON body — callers should narrow the type at their own usage site.
  * @param {string} requestUrl - The URL to send the request to.
+ * @param {import('axios').AxiosRequestConfig} [requestConfig]
+ * @returns {Promise<{ data: any }>}
  */
-const fetchStaticJsonByUrl = async (requestUrl) => {
+const fetchStaticJsonByUrl = async (requestUrl, requestConfig) => {
   if (typeof window === 'undefined') {
     try {
       const mod = await import('../server-side-only/fetch-static-json.js')
@@ -93,7 +96,7 @@ const fetchStaticJsonByUrl = async (requestUrl) => {
       // Continue to fall through to unified axios fallback below
     }
   }
-  const axiosRes = await axiosInstance(requestUrl)
+  const axiosRes = await axiosInstance(requestUrl, requestConfig)
   return { data: axiosRes?.data }
 }
 

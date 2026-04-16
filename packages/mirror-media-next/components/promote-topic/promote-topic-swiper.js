@@ -67,6 +67,8 @@ const CloseButton = styled.button`
   justify-content: center;
   width: 32px;
   height: 32px;
+  padding: 0;
+  border: none;
   border-radius: 50%;
   cursor: pointer;
   color: #fff;

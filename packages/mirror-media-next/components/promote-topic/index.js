@@ -76,26 +76,40 @@ function normalizePromoteTopics(promoteTopics) {
   }, /** @type {PromoteTopicData[]} */ ([]))
 }
 
+/**
+ * @returns {React.ReactElement | null}
+ */
 export default function PromoteTopic() {
   const [topics, setTopics] = useState(/** @type {PromoteTopicData[]} */ ([]))
 
   useEffect(() => {
-    let isMounted = true
+    const abortController = new AbortController()
 
     const fetchData = async () => {
       try {
-        const res = await fetchStaticJsonByUrl(URL_STATIC_PROMOTE_TOPICS)
-        if (!isMounted) return
-        setTopics(normalizePromoteTopics(res.data?.promoteTopics))
-      } catch {
-        if (isMounted) setTopics([])
+        const res = await fetchStaticJsonByUrl(URL_STATIC_PROMOTE_TOPICS, {
+          signal: abortController.signal,
+        })
+        // fetchStaticJsonByUrl normalizes both server/client paths to { data: ... }.
+        const promoteTopics = res.data?.promoteTopics
+        setTopics(normalizePromoteTopics(promoteTopics))
+      } catch (err) {
+        if (
+          abortController.signal.aborted ||
+          err?.code === 'ERR_CANCELED' ||
+          err?.name === 'CanceledError'
+        ) {
+          return
+        }
+
+        setTopics([])
       }
     }
 
     fetchData()
 
     return () => {
-      isMounted = false
+      abortController.abort()
     }
   }, [])
 
