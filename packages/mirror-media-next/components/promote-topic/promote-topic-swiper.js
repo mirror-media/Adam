@@ -19,19 +19,40 @@ const Wrapper = styled.div`
   transform: translateY(-50%);
   width: ${CARD_WIDTH}px;
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 10px;
-    box-shadow: 0 2.47px 2.47px rgba(0, 0, 0, 0.25);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .promote-topic-swiper {
+  .swiper {
     position: relative;
     z-index: 1;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #054f77;
+    box-shadow: 0 3px 3px rgba(0, 0, 0, 0.25);
+  }
+
+  .swiper-pagination {
+    position: absolute;
+    z-index: 2;
+    bottom: 10px !important;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 0;
+  }
+
+  .swiper-pagination-bullet {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #d9d9d9;
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  .swiper-pagination-bullet-active {
+    background-color: #0000004d;
+    cursor: default;
   }
 `
 
@@ -46,7 +67,6 @@ const CloseButton = styled.button`
   justify-content: center;
   width: 32px;
   height: 32px;
-  gap: 16px;
   border-radius: 50%;
   cursor: pointer;
   color: #fff;
@@ -85,14 +105,11 @@ export default function PromoteTopicSwiper({ list }) {
         <CloseIcon />
       </CloseButton>
       <Swiper
-        className="promote-topic-swiper"
         modules={[Autoplay, Pagination]}
         pagination={
           shouldLoop
             ? {
                 clickable: true,
-                bulletClass: 'promote-topic-swiper-bullet',
-                bulletActiveClass: 'promote-topic-swiper-bullet-active',
               }
             : false
         }
@@ -101,7 +118,7 @@ export default function PromoteTopicSwiper({ list }) {
         autoplay={
           shouldLoop
             ? {
-                delay: 30000,
+                delay: 10000,
                 disableOnInteraction: false,
               }
             : false
