@@ -606,4 +606,38 @@ video {
   opacity: 1;
   pointer-events: auto;
 }
+
+.promote-topic-swiper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #054f77;
+}
+
+.promote-topic-swiper .swiper-pagination {
+  position: absolute;
+  z-index: 2;
+  bottom: 10px !important;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 0;
+}
+
+.promote-topic-swiper-bullet {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #d9d9d9;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.promote-topic-swiper-bullet-active {
+  background-color: #0000004D;
+  cursor: default;
+}
 `
