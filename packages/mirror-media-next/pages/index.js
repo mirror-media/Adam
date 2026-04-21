@@ -207,10 +207,10 @@ export async function getServerSideProps({ res, req }) {
   const fetchStaticJsonSafe = async (url, timeout, label) => {
     try {
       const mod = await import('../utils/server-side-only/fetch-static-json.js')
-      const res = await mod.fetchStaticJson(url, timeout)
+      const res = await mod.fetchStaticJsonOnServer(url, timeout)
       return res
     } catch (err) {
-      // fetchStaticJson already has axios fallback, but if import fails, fallback to axios
+      // fetchStaticJsonOnServer already has axios fallback, but if import fails, fallback to axios
       return axios({
         method: 'get',
         url,

@@ -222,6 +222,7 @@ const Z_INDEX = /** @type {const}*/ ({
   top: 10000,
   coverHeader: 2000,
   header: 1000,
+  promoteTopic: 500,
   coverContent: 100,
 })
 
