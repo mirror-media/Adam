@@ -13,6 +13,26 @@ export const FullWidthLayoutStyle = css`
 `
 
 /**
+ * Shared style for sections that only need a full-bleed background.
+ */
+export const FullBleedBackgroundStyle = css`
+  position: relative;
+  z-index: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    left: calc(50% - 50vw);
+    right: calc(50% - 50vw);
+    background: inherit;
+    pointer-events: none;
+  }
+`
+
+/**
  * @typedef {Object} FullWidthLayoutProps
  * @property {string} [bgColor] - Background color.
  *   Accepts a `theme.color.brandColor` key (e.g. 'white', 'darkBlue')
