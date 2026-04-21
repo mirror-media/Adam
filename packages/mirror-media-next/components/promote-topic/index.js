@@ -99,10 +99,14 @@ export default function PromoteTopic() {
           )
         setTopics(normalizePromoteTopics(response.data.promoteTopics))
       } catch (err) {
+        const error =
+          /** @type {(Error & { code?: string }) | null | undefined} */
+          (err)
+
         if (
           abortController.signal.aborted ||
-          err?.code === 'ERR_CANCELED' ||
-          err?.name === 'CanceledError'
+          error?.code === 'ERR_CANCELED' ||
+          error?.name === 'CanceledError'
         ) {
           return
         }
