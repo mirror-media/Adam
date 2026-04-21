@@ -112,6 +112,10 @@ export default function CustomHead({
 
   return (
     <Head>
+      {pageType && imageUrl && (
+        // eslint-disable-next-line react/no-unknown-property
+        <link rel="preload" as="image" href={imageUrl} fetchPriority="high" />
+      )}
       <title key="title">{siteInformation.title}</title>
       <meta
         name="description"
