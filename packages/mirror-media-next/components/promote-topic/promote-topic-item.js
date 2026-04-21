@@ -53,7 +53,7 @@ const Title = styled.p`
  * @property {Record<string, string>} [resizedWebp]
  *
  * @typedef {Object} PromoteTopicData
- * @property {string} [id]
+ * @property {string} id
  * @property {number | string | null} [order]
  * @property {string} slug
  * @property {string} name

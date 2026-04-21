@@ -128,7 +128,7 @@ export default function PromoteTopicSwiper({ list }) {
         rewind={shouldLoop}
       >
         {list.map((topic) => (
-          <SwiperSlide key={topic.id || topic.slug}>
+          <SwiperSlide key={topic.id}>
             <PromoteTopicItem topic={topic} />
           </SwiperSlide>
         ))}
