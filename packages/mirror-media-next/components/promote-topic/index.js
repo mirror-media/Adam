@@ -45,6 +45,7 @@ function normalizePromoteTopic(item) {
   const resizedWebp = heroImage?.resizedWebp
   const hasImage = hasAvailableImages(resized)
 
+  // Guard against incomplete CMS data before it reaches UI components.
   if (!topic?.slug || !topic?.name || !hasImage) {
     return null
   }
