@@ -49,7 +49,7 @@ const Title = styled.p`
 
 /**
  * @typedef {Object} PromoteTopicHeroImage
- * @property {Record<string, string>} [resized]
+ * @property {Record<string, string>} resized
  * @property {Record<string, string>} [resizedWebp]
  *
  * @typedef {Object} PromoteTopicData
@@ -70,8 +70,8 @@ export default function PromoteTopicItem({ topic }) {
     <Card href={`/topic/${topic.slug}`} target="_blank" rel="noreferrer">
       <ImageFrame>
         <CustomImage
-          images={topic.heroImage?.resized}
-          imagesWebP={topic.heroImage?.resizedWebp}
+          images={topic.heroImage.resized}
+          imagesWebP={topic.heroImage.resizedWebp}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"
           rwd={{
