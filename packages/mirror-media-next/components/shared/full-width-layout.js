@@ -48,13 +48,16 @@ export const FullWidthLayout = styled.div(
   /**
    * @param {FullWidthLayoutProps & { theme: { color: { brandColor: Record<string, string> } } }} props
    */
-  ({ bgColor, theme }) => css`
-    ${FullWidthLayoutStyle}
+  ({ bgColor, theme }) => {
+    const backgroundColor =
+      (bgColor ? theme.color.brandColor[bgColor] : undefined) ||
+      bgColor ||
+      theme.color.brandColor.white
 
-    background: ${
-      theme.color.brandColor[bgColor] || // if bgColor matches a theme key
-      bgColor || // or if bgColor is a CSS color string
-      theme.color.brandColor.white // default fallback to white
-    };
-  `
+    return css`
+      ${FullWidthLayoutStyle}
+
+      background: ${backgroundColor};
+    `
+  }
 )
