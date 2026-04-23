@@ -45,13 +45,13 @@ const Wrapper = styled.div`
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #d9d9d9;
+    background-color: rgba(0, 0, 0, 0.3);
     cursor: pointer;
     opacity: 1;
   }
 
   .swiper-pagination-bullet-active {
-    background-color: #0000004d;
+    background-color: #d9d9d9;
     cursor: default;
   }
 `

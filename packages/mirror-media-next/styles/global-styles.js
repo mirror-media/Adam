@@ -20,6 +20,8 @@ export const GlobalStyles = createGlobalStyle`
   ${defaultSansSerifFontFamily};
   line-height: 1.5; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Sections
@@ -31,6 +33,8 @@ export const GlobalStyles = createGlobalStyle`
 
 body {
   margin: 0;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /**

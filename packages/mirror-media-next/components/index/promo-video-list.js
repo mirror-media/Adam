@@ -3,39 +3,46 @@ import styled from 'styled-components'
 import YouTube from 'react-youtube'
 
 import { extractYouTubeId } from '../../utils/youtube'
+import { FullBleedBackgroundStyle } from '../shared/full-bleed-background'
 import { IndexTitle } from './share/index-title'
-import { FullWidthLayoutStyle } from '../shared/full-width-layout'
 
 const StyledSection = styled.section`
-  ${FullWidthLayoutStyle}
+  ${FullBleedBackgroundStyle}
 
+  --promo-video-inline-padding: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   background: #eee;
-  padding: 32px 20px;
+  padding: 32px var(--promo-video-inline-padding);
   gap: 20px;
 
   ${({ theme }) => theme.breakpoint.md} {
-    padding: 40px 20px;
+    padding: 40px var(--promo-video-inline-padding);
   }
 `
 
 const Wrapper = styled.div`
   position: relative;
-  width: 100dvw;
-  overflow: auto;
-  scrollbar-width: none;
+  width: 100vw;
+  max-width: none;
+  margin-inline: calc(50% - 50vw);
+
+  @supports (width: 100dvw) {
+    width: 100dvw;
+    margin-inline: calc(50% - 50dvw);
+  }
 `
 
 const StyledOl = styled.ol`
   display: flex;
   justify-content: flex-start;
   gap: 20px;
-  padding: 0 20px;
+  padding: 0 var(--promo-video-inline-padding);
   position: relative;
   overflow-x: auto;
+  scrollbar-width: none;
 
   &::-webkit-scrollbar {
     display: none;
