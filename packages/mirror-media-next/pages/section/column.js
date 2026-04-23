@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
-import { ENV } from '../../config/index.mjs'
+import { ENV, URL_STATIC_COLUMN_SECTION_POSTS } from '../../config/index.mjs'
 import {
-  fetchColumnSectionPosts,
+  fetchStaticJsonByUrl,
   fetchHeaderDataInDefaultPageLayout,
 } from '../../utils/api'
 import {
@@ -104,6 +104,8 @@ const RENDER_PAGE_SIZE = 12
 /**
  * @typedef {import('../../components/shared/section-articles').Article} Article
  * @typedef {import('../../components/shared/section-articles').Section} Section
+ * @typedef {Object} ColumnSectionStaticJsonResponse
+ * @property {import('../../utils/api').ColumnSectionResponse} data
  */
 
 /**
@@ -189,7 +191,9 @@ export async function getServerSideProps({ req, res }) {
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchColumnSectionPosts(),
+    /** @type {Promise<ColumnSectionStaticJsonResponse>} */ (
+      fetchStaticJsonByUrl(URL_STATIC_COLUMN_SECTION_POSTS)
+    ),
     fetchSectionBySectionSlug(sectionSlug),
   ])
 
@@ -211,10 +215,10 @@ export async function getServerSideProps({ req, res }) {
   /** @type {[ number, Article[]]} */
   const postResult = processSettledResult(
     responses[1],
-    /** @param {import('axios').AxiosResponse<ColumnSectionResponse> | undefined} data */
-    (data) => {
-      const items = data?.data?.section?.items || []
-      const counts = data?.data?.section?.counts || {
+    /** @param {ColumnSectionStaticJsonResponse | undefined} response */
+    (response) => {
+      const items = response?.data.section?.items || []
+      const counts = response?.data.section?.counts || {
         posts: 0,
         externals: 0,
       }

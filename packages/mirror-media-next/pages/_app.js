@@ -13,6 +13,7 @@ import { useRouter } from 'next/router'
 import { MembershipProvider } from '../context/membership'
 import { Provider } from 'react-redux'
 import store from '../store'
+import PromoteTopic from '../components/promote-topic'
 /**
  *
  * @param {Object} props
@@ -48,6 +49,7 @@ function MyApp({ Component, pageProps }) {
             In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
               {!isStoryPage && <UserBehaviorLogger />}
               <Component {...pageProps} />
+              <PromoteTopic />
             </ThemeProvider>
           </Provider>
         </ApolloProvider>
