@@ -4,23 +4,22 @@ export default function handler(req, res) {
   res.setHeader('Content-Type', 'text/plain')
 
   if (ENV === 'prod') {
-    res.write(`User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Facebot
-Allow: /
-
-User-agent: Meta-ExternalAgent
-Allow: /
-
-User-agent: Googlebot
+    res.write(`User-agent: Googlebot
       Disallow: /login
       Disallow: /subscribe/*
       Disallow: /search/*
       
       User-agent: *
         Allow: /
-        
+      User-agent: facebookexternalhit
+        Allow: /
+
+      User-agent: Facebot
+        Allow: /
+
+      User-agent: Meta-ExternalAgent
+        Allow: /
+
       Sitemap: https://www.mirrormedia.mg/rss/posts.xml
       Sitemap: https://www.mirrormedia.mg/rss/posts-news.xml
       Sitemap: https://www.mirrormedia.mg/rss/externals.xml
