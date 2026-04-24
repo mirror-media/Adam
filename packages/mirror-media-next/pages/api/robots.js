@@ -8,9 +8,7 @@ export default function handler(req, res) {
       Disallow: /login
       Disallow: /subscribe/*
       Disallow: /search/*
-      
-      User-agent: *
-        Allow: /
+
       User-agent: facebookexternalhit
         Allow: /
 
@@ -19,7 +17,10 @@ export default function handler(req, res) {
 
       User-agent: Meta-ExternalAgent
         Allow: /
-
+      
+      User-agent: *
+        Allow: /
+      
       Sitemap: https://www.mirrormedia.mg/rss/posts.xml
       Sitemap: https://www.mirrormedia.mg/rss/posts-news.xml
       Sitemap: https://www.mirrormedia.mg/rss/externals.xml
