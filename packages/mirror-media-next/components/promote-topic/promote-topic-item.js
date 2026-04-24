@@ -49,7 +49,7 @@ const Title = styled.p`
 
 /**
  * @typedef {Object} PromoteTopicHeroImage
- * @property {Record<string, string>} resized
+ * @property {Record<string, string>} [resized]
  * @property {Record<string, string>} [resizedWebp]
  *
  * @typedef {Object} PromoteTopicData
