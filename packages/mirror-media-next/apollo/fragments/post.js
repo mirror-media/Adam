@@ -212,7 +212,6 @@ export const topicPost = gql`
  * @property {string} extend_byline - the field called '作者(其他)' in cms
  * @property {Tag[] } tags - tags of the post
  * @property {Tag[]} tags_algo - algorithmically generated tags
- * @property {FaqsAlgo | null} [faqs_algo] - algorithmically generated FAQs
  * @property {HeroVideo | null} heroVideo - hero video of the post
  * @property {HeroImage | null} heroImage - hero image of the post
  * @property {string} heroCaption - caption to explain hero video or image
@@ -279,7 +278,6 @@ export const post = gql`
     isAdult
     publishedDate
     updatedAt
-    faqs_algo
     sections(where: { state: { equals: "active" } }) {
       ...section
     }
