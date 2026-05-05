@@ -1,6 +1,4 @@
 import { createContext, useReducer, useContext, useEffect } from 'react'
-import { auth } from '../firebase'
-import { signOut } from '@firebase/auth'
 import { generateErrorReportInfo } from '../utils/log/error-log'
 import { sendErrorLog } from '../utils/log/send-log'
 import {
@@ -133,6 +131,9 @@ const MembershipProvider = ({ children }) => {
   )
 
   useEffect(() => {
+    let isMounted = true
+    let unsubscribeAuthStateChanged = () => {}
+
     /**
      * Use function `getIdToken` to get a Firebase JWT Token
      * Return a token string if success, return null if failed.
@@ -186,6 +187,11 @@ const MembershipProvider = ({ children }) => {
      * @type {Parameters<Auth['onAuthStateChanged']>[0]}
      */
     const handleFirebaseAuthStateChanged = async (user) => {
+      const [{ auth }, { signOut }] = await Promise.all([
+        import('../firebase'),
+        import('firebase/auth'),
+      ])
+
       if (user) {
         const idToken = await getIdToken(user)
 
@@ -249,7 +255,24 @@ const MembershipProvider = ({ children }) => {
       }
     }
 
-    auth.onAuthStateChanged(handleFirebaseAuthStateChanged)
+    const setupAuthStateChanged = async () => {
+      const { auth } = await import('../firebase')
+
+      if (!isMounted) {
+        return
+      }
+
+      unsubscribeAuthStateChanged = auth.onAuthStateChanged(
+        handleFirebaseAuthStateChanged
+      )
+    }
+
+    setupAuthStateChanged()
+
+    return () => {
+      isMounted = false
+      unsubscribeAuthStateChanged()
+    }
   }, [])
   return (
     <MembershipContext.Provider value={membership}>
@@ -274,6 +297,10 @@ const useMembershipDispatch = () => {
 }
 
 const handleFirebaseSignOut = async () => {
+  const [{ auth }, { signOut }] = await Promise.all([
+    import('../firebase'),
+    import('firebase/auth'),
+  ])
   const currentUser = auth.currentUser
 
   try {

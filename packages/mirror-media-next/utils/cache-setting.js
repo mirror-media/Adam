@@ -15,6 +15,8 @@
  * - If `cachePolicy` is not a accept value, value of Cache-Control would be set as 'public, max-age=300'.
  * - If `cachePolicy` is 'max-age' but `cacheSetting.cacheTime` is not a number, value of Cache-Control would be set as 'public, max-age=300' too.
  * @property {number} [cacheTime] - Seconds we want the cache to be set.
+ * @property {number} [sharedCacheTime] - Seconds shared caches should keep the response, emitted as `s-maxage`.
+ * @property {number} [staleWhileRevalidate] - Seconds shared caches may serve stale content while revalidating.
  */
 
 /**
@@ -41,10 +43,30 @@ const setPageCache = (
         typeof cacheSetting?.cacheTime === 'number' &&
         cacheSetting?.cacheTime >= 0
       ) {
-        res.setHeader(
-          'Cache-Control',
-          `public, ${cacheSetting.cachePolicy}=${cacheSetting?.cacheTime}`
-        )
+        const cacheControlDirectives = [
+          'public',
+          `${cacheSetting.cachePolicy}=${cacheSetting?.cacheTime}`,
+        ]
+
+        if (
+          typeof cacheSetting?.sharedCacheTime === 'number' &&
+          cacheSetting.sharedCacheTime >= 0
+        ) {
+          cacheControlDirectives.push(
+            `s-maxage=${cacheSetting.sharedCacheTime}`
+          )
+        }
+
+        if (
+          typeof cacheSetting?.staleWhileRevalidate === 'number' &&
+          cacheSetting.staleWhileRevalidate >= 0
+        ) {
+          cacheControlDirectives.push(
+            `stale-while-revalidate=${cacheSetting.staleWhileRevalidate}`
+          )
+        }
+
+        res.setHeader('Cache-Control', cacheControlDirectives.join(', '))
       } else {
         console.log(
           JSON.stringify({

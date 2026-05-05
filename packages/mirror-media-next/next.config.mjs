@@ -3,7 +3,12 @@ import {
   SITE_BASE_PATH,
   FIREBASE_AUTH_DOMAIN,
 } from './config/index.mjs'
+import bundleAnalyzer from '@next/bundle-analyzer'
 import withPWA from 'next-pwa'
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 /** @type {import('next-pwa').PWAConfig} */
 const pwaConfig = {
@@ -90,4 +95,4 @@ const nextConfig = {
   output: 'standalone',
 }
 
-export default withPWA(pwaConfig)(nextConfig)
+export default withBundleAnalyzer(withPWA(pwaConfig)(nextConfig))

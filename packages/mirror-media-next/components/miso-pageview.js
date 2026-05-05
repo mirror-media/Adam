@@ -10,29 +10,48 @@
  */
 import { useMembership } from '../context/membership'
 import { MISO_API_KEY } from '../config/index.mjs'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import MisoScript from './miso-script'
 
 export default function MisoPageView({ productIds }) {
   const { isLogInProcessFinished, firebaseId } = useMembership()
+  const [isMisoReady, setIsMisoReady] = useState(false)
+
   useEffect(() => {
+    if (!isMisoReady) {
+      return
+    }
+
     // Wait for page to be fully rendered before executing miso code
     const executeMiso = () => {
-    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-    const misocmd = window.misocmd || (window.misocmd = [])
-    misocmd.push(() => {
-      // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
-      const MisoClient = window.MisoClient
-      const client = new MisoClient(MISO_API_KEY)
-      if (isLogInProcessFinished) {
-        if (firebaseId) {
-          client.context.user_id = firebaseId
+      const uploadPageView = () => {
+        // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
+        const MisoClient = window.MisoClient
+        if (!MisoClient) {
+          return
         }
-        client.api.interactions.upload({
-          type: 'product_detail_page_view',
-          product_ids: [`mirrormedia_${productIds}`],
-        })
+
+        const client = new MisoClient(MISO_API_KEY)
+        if (isLogInProcessFinished) {
+          if (firebaseId) {
+            client.context.user_id = firebaseId
+          }
+          client.api.interactions.upload({
+            type: 'product_detail_page_view',
+            product_ids: [`mirrormedia_${productIds}`],
+          })
+        }
       }
-    })
+
+      // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
+      if (window.MisoClient) {
+        uploadPageView()
+        return
+      }
+
+      // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+      const misocmd = window.misocmd || (window.misocmd = [])
+      misocmd.push(uploadPageView)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
@@ -47,7 +66,7 @@ export default function MisoPageView({ productIds }) {
     return () => {
       window.removeEventListener('load', executeMiso)
     }
-  }, [isLogInProcessFinished, firebaseId, productIds])
+  }, [firebaseId, isLogInProcessFinished, isMisoReady, productIds])
 
-  return <></>
+  return <MisoScript onReady={() => setIsMisoReady(true)} />
 }

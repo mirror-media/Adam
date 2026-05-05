@@ -1,6 +1,3 @@
-import { auth } from '../firebase'
-import { signOut } from 'firebase/auth'
-
 /**
  * @typedef {import('../context/membership').Membership['accessToken']} AccessToken
  */
@@ -28,6 +25,10 @@ import { SECOND } from '../constants/time-unit'
  * @param {Parameters<generateErrorReportInfo>[1]} [payload]
  */
 const errorHandler = async (error, payload) => {
+  const [{ auth }, { signOut }] = await Promise.all([
+    import('../firebase'),
+    import('firebase/auth'),
+  ])
   const currentUser = auth.currentUser
   if (
     error?.message === "GraphQL error: Can't find data in Israfel" ||

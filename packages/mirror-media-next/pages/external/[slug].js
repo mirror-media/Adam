@@ -227,7 +227,16 @@ export default function External({ external, headerData, jsonLdData }) {
  */
 export async function getServerSideProps({ params, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 300 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 300,
+        sharedCacheTime: 300,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
@@ -235,7 +244,7 @@ export async function getServerSideProps({ params, req, res }) {
   const { slug } = params
   const globalLogFields = getLogTraceObject(req)
 
-  const fetchStaticJsonSafe = async (url, timeout, label) => {
+  const fetchStaticJsonSafe = async (url, timeout) => {
     try {
       const mod = await import(
         '../../utils/server-side-only/fetch-static-json.js'
