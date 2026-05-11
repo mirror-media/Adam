@@ -1,0 +1,121 @@
+import assert from 'node:assert/strict'
+import {
+  getInitialRelatedStories,
+  serializeStoryPostDataForClient,
+} from './story-page-props.mjs'
+
+const image = {
+  __typename: 'Photo',
+  resized: {
+    original: 'https://example.com/image.jpg',
+    w480: 'https://example.com/image-w480.jpg',
+    w800: '',
+    w1600: 'https://example.com/image-w1600.jpg',
+  },
+  resizedWebp: {
+    original: 'https://example.com/image.webP',
+    w480: '',
+    w800: 'https://example.com/image-w800.webP',
+  },
+}
+
+const postData = {
+  __typename: 'Post',
+  slug: 'story-slug',
+  content: { blocks: [{ text: 'full content' }], entityMap: {} },
+  trimmedContent: { blocks: [{ text: 'trimmed content' }], entityMap: {} },
+  relatedsOne: {
+    __typename: 'Post',
+    id: 'related-1',
+    slug: 'related-one',
+    title: 'Related one',
+    heroImage: image,
+    brief: { blocks: [{ text: 'not needed' }], entityMap: {} },
+  },
+  relatedsTwo: {
+    __typename: 'External',
+    id: 'related-2',
+    slug: 'related-two',
+    title: 'Related two',
+    heroImage: image,
+    categories: [{ name: 'not needed' }],
+  },
+  relateds: [
+    {
+      __typename: 'Post',
+      id: 'related-3',
+      slug: 'related-three',
+      title: 'Related three',
+      heroImage: image,
+      sections: [{ name: 'not needed' }],
+    },
+  ],
+  relatedsInInputOrder: [],
+}
+
+const clientPostData = serializeStoryPostDataForClient(postData)
+
+assert.equal(clientPostData.__typename, undefined)
+assert.equal(clientPostData.trimmedContent, undefined)
+assert.equal(clientPostData.relateds, undefined)
+assert.equal(clientPostData.relatedsOne, undefined)
+assert.equal(clientPostData.relatedsTwo, undefined)
+assert.equal(clientPostData.relatedsInInputOrder, undefined)
+
+const initialRelatedStories = getInitialRelatedStories(postData)
+
+assert.deepEqual(
+  initialRelatedStories.map(({ id, slug, title, type }) => ({
+    id,
+    slug,
+    title,
+    type,
+  })),
+  [
+    {
+      id: 'related-1',
+      slug: 'related-one',
+      title: 'Related one',
+      type: 'story',
+    },
+    {
+      id: 'related-2',
+      slug: 'related-two',
+      title: 'Related two',
+      type: 'external',
+    },
+    {
+      id: 'related-3',
+      slug: 'related-three',
+      title: 'Related three',
+      type: 'story',
+    },
+  ]
+)
+assert.equal(initialRelatedStories[0].brief, undefined)
+assert.equal(initialRelatedStories[0].heroImage.__typename, undefined)
+assert.equal(initialRelatedStories[0].heroImage.resized.w800, undefined)
+assert.equal(
+  initialRelatedStories[0].heroImage.resized.w1600.endsWith('.jpg'),
+  true
+)
+assert.equal(initialRelatedStories[0].heroImage.resizedWebp.w480, undefined)
+
+const assertNoUndefinedValues = (value) => {
+  if (Array.isArray(value)) {
+    value.forEach(assertNoUndefinedValues)
+    return
+  }
+
+  if (!value || typeof value !== 'object') {
+    return
+  }
+
+  Object.entries(value).forEach(([key, child]) => {
+    assert.notEqual(child, undefined, `${key} should not be undefined`)
+    assertNoUndefinedValues(child)
+  })
+}
+
+assertNoUndefinedValues(clientPostData)
+assertNoUndefinedValues(initialRelatedStories)

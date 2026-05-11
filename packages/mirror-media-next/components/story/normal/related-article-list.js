@@ -209,7 +209,7 @@ export default function RelatedArticleList({
             <Link
               href={
                 related.url ??
-                `${related.__typename === 'Post' ? '/story' : '/external'}/${
+                `${related.type === 'external' ? '/external' : '/story'}/${
                   related.slug
                 }`
               }
@@ -238,7 +238,7 @@ export default function RelatedArticleList({
               <Link
                 href={
                   related.url ??
-                  `${related.__typename === 'Post' ? '/story' : '/external'}/${
+                  `${related.type === 'external' ? '/external' : '/story'}/${
                     related.slug
                   }`
                 }

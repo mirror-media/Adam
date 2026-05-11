@@ -35,6 +35,10 @@ import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrorme
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
+import {
+  getInitialRelatedStories,
+  serializeStoryPostDataForClient,
+} from '../../utils/story-page-props.mjs'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
 import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
@@ -102,6 +106,7 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  *
  * @param {Object} props
  * @param {PostData} props.postData
+ * @param {import('../../apollo/fragments/post').Related[]} props.initialRelatedStories
  * @param {HeaderData} props.headerData
  * @param {flashNewsData} props.flashNewsData
  * @param {StoryLayoutType} props.storyLayoutType
@@ -110,6 +115,7 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  */
 export default function Story({
   postData,
+  initialRelatedStories = [],
   headerData,
   flashNewsData,
   storyLayoutType,
@@ -144,17 +150,8 @@ export default function Story({
       ? { type: 'fullContent', data: content, isLoaded: true }
       : { type: 'trimmedContent', data: trimmedContent, isLoaded: false }
   )
-  const { relatedsInInputOrder, relateds, relatedsOne, relatedsTwo } = postData
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
   const [allRelatedStories, setAllRelatedStories] = useState(
-    [
-      ...(relatedsOne ? [relatedsOne] : []),
-      ...(relatedsTwo ? [relatedsTwo] : []),
-      ...relatedsWithOrdered,
-    ].slice(0, 10)
+    initialRelatedStories
   )
 
   useEffect(() => {
@@ -554,10 +551,13 @@ export async function getServerSideProps({ params, req, res }) {
     }
 
     const jsonLdData = generateJsonLdsData(postData, '/story/')
+    const initialRelatedStories = getInitialRelatedStories(postData)
+    const clientPostData = serializeStoryPostDataForClient(postData)
 
     return {
       props: {
-        postData,
+        postData: clientPostData,
+        initialRelatedStories,
         flashNewsData,
         headerData,
         storyLayoutType,
