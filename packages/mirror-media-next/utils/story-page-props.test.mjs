@@ -61,6 +61,12 @@ assert.equal(clientPostData.relateds, undefined)
 assert.equal(clientPostData.relatedsOne, undefined)
 assert.equal(clientPostData.relatedsTwo, undefined)
 assert.equal(clientPostData.relatedsInInputOrder, undefined)
+assert.equal(
+  serializeStoryPostDataForClient({
+    trimmedContent: { blocks: [{ text: 'trimmed content' }], entityMap: {} },
+  }).trimmedContent,
+  undefined
+)
 
 const initialRelatedStories = getInitialRelatedStories(postData)
 

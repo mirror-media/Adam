@@ -121,10 +121,7 @@ export function serializeStoryPostDataForClient(postData) {
   delete clientPostData.relatedsInInputOrder
   delete clientPostData.relatedsOne
   delete clientPostData.relatedsTwo
-
-  if (clientPostData.content) {
-    delete clientPostData.trimmedContent
-  }
+  delete clientPostData.trimmedContent
 
   return clientPostData
 }

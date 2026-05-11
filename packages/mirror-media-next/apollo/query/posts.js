@@ -63,18 +63,4 @@ const fetchPostBySlug = gql`
   }
 `
 
-const fetchPostFullContentBySlug = gql`
-  ${postFullContent}
-  query fetchPostFullContentBySlug($slug: String) {
-    post(where: { slug: $slug }) {
-      ...postFullContent
-    }
-  }
-`
-
-export {
-  fetchPosts,
-  fetchAsidePosts,
-  fetchPostBySlug,
-  fetchPostFullContentBySlug,
-}
+export { fetchPosts, fetchAsidePosts, fetchPostBySlug }
