@@ -13,7 +13,7 @@ import {
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
-import { fetchPostBySlug } from '../../apollo/query/posts'
+import { fetchStoryPostBySlug } from '../../apollo/query/posts'
 import StoryNormalStyle from '../../components/story/normal'
 import Layout from '../../components/shared/layout'
 import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
@@ -326,7 +326,7 @@ export async function getServerSideProps({ params, req, res }) {
     const storyClient = getStoryClient(STORY_GQL_ENDPOINT) || client
 
     const result = await storyClient.query({
-      query: fetchPostBySlug,
+      query: fetchStoryPostBySlug,
       variables: { slug },
     })
 

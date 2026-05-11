@@ -1,8 +1,13 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { dirname, join } from 'node:path'
 import {
   getInitialRelatedStories,
   serializeStoryPostDataForClient,
 } from './story-page-props.mjs'
+
+const currentDir = dirname(fileURLToPath(import.meta.url))
 
 const image = {
   __typename: 'Photo',
@@ -125,3 +130,31 @@ const assertNoUndefinedValues = (value) => {
 
 assertNoUndefinedValues(clientPostData)
 assertNoUndefinedValues(initialRelatedStories)
+
+const postQuerySource = readFileSync(
+  join(currentDir, '../apollo/query/posts.js'),
+  'utf8'
+)
+const postFragmentSource = readFileSync(
+  join(currentDir, '../apollo/fragments/post.js'),
+  'utf8'
+)
+
+assert.match(postQuerySource, /const fetchStoryPostBySlug = gql`/)
+assert.match(postQuerySource, /const fetchAmpPostBySlug = gql`/)
+assert.doesNotMatch(
+  postQuerySource.match(/const fetchStoryPostBySlug = gql`[\s\S]*?`\n/)?.[0] ??
+    '',
+  /postTrimmedContent|trimmedContent/
+)
+assert.match(
+  postQuerySource.match(/const fetchAmpPostBySlug = gql`[\s\S]*?`\n/)?.[0] ??
+    '',
+  /postTrimmedContent/
+)
+assert.match(postFragmentSource, /fragment relatedPost on Post/)
+assert.doesNotMatch(
+  postFragmentSource.match(/export const relatedPost = gql`[\s\S]*?`\n/)?.[0] ??
+    '',
+  /\.\.\.heroImage/
+)

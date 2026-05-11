@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { heroImage } from './photo'
+import { heroImage, relatedPostHeroImage } from './photo'
 import { category, categoryWithSection } from './category'
 import { section } from './section'
 import { contact } from './contact'
@@ -247,13 +247,13 @@ export const postFullContent = gql`
 `
 
 export const relatedPost = gql`
-  ${heroImage}
+  ${relatedPostHeroImage}
   fragment relatedPost on Post {
     id
     slug
     title
     heroImage {
-      ...heroImage
+      ...relatedPostHeroImage
     }
   }
 `

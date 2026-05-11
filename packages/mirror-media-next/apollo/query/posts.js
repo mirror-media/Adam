@@ -43,12 +43,30 @@ const fetchPosts = gql`
   }
 `
 
-const fetchPostBySlug = gql`
+const fetchStoryPostBySlug = gql`
+  ${post}
+  ${postFullContent}
+  ${relatedPost}
+  query fetchStoryPostBySlug($slug: String) {
+    post(where: { slug: $slug }) {
+      ...post
+      ...postFullContent
+      relatedsOne {
+        ...relatedPost
+      }
+      relatedsTwo {
+        ...relatedPost
+      }
+    }
+  }
+`
+
+const fetchAmpPostBySlug = gql`
   ${post}
   ${postTrimmedContent}
   ${postFullContent}
   ${relatedPost}
-  query fetchPostBySlug($slug: String) {
+  query fetchAmpPostBySlug($slug: String) {
     post(where: { slug: $slug }) {
       ...post
       ...postTrimmedContent
@@ -63,4 +81,4 @@ const fetchPostBySlug = gql`
   }
 `
 
-export { fetchPosts, fetchAsidePosts, fetchPostBySlug }
+export { fetchPosts, fetchAsidePosts, fetchStoryPostBySlug, fetchAmpPostBySlug }
