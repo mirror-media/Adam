@@ -54,7 +54,7 @@ const ImageWrapper = styled.div`
   position: fixed;
   bottom: 25%;
   right: 0;
-  z-index: ${Z_INDEX.storyLeftArrow};
+  z-index: ${Z_INDEX.articleRightArrow};
 `
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage

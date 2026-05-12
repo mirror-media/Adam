@@ -221,6 +221,7 @@ const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 const Z_INDEX = /** @type {const}*/ ({
   top: 10000,
   coverHeader: 2000,
+  articleRightArrow: 1500, // 供一般 story 和 external 頁的「點擊看第一則延伸閱讀文章的右箭 icon」使用，須低於廣告的 z-index
   header: 1000,
   coverContent: 100,
 })

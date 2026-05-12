@@ -44,7 +44,7 @@ const ImageWrapper = styled.div`
   position: fixed;
   bottom: 25%;
   right: 0;
-  z-index: ${Z_INDEX.storyLeftArrow};
+  z-index: ${Z_INDEX.articleRightArrow};
 `
 /**
  *
