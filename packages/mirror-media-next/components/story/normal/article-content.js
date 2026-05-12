@@ -10,6 +10,11 @@ import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { useMemo } from 'react'
 import Script from 'next/script'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Z_INDEX } from '../../../constants/index'
+
+const leftArrow = '/images-next/story/left-arrow.svg'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -44,6 +49,22 @@ const StyledGPTAd = styled(GPTAd)`
     (props) => (props.pageKey ? 'block' : 'none')
   };
 `
+const ImageWrapper = styled.div`
+  padding: 16px;
+  position: fixed;
+  bottom: 25%;
+  right: 0;
+  z-index: ${Z_INDEX.storyLeftArrow};
+`
+/**
+ * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
+ */
+
+/**
+ * @typedef {(import('../../../apollo/fragments/post').Related & {
+ *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, __typename: string})[]
+ * } Relateds
+ */
 
 /**
  *
@@ -51,13 +72,16 @@ const StyledGPTAd = styled(GPTAd)`
  * @param {Content} props.content
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
  * @param {string | undefined} [props.pageKeyForGptAd]
+ * @param {Relateds} [props.relateds]
  * @returns {import('react').JSX.Element}
  */
 export default function ArticleContent({
   content = { blocks: [], entityMap: {} },
   hiddenAdvertised = false,
   pageKeyForGptAd = '',
+  relateds = [],
 }) {
+  const hasFirstRelatedArticle = relateds.length ? relateds[0] : null
   const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
   const contentMarkedFirstImage = modifyFirstImageEntity(content)
@@ -100,6 +124,26 @@ export default function ArticleContent({
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
   const MB_contentJsx = (
     <Wrapper>
+      {windowDimensions.width < 768 && hasFirstRelatedArticle && (
+        <Link
+          href={
+            relateds[0].url ??
+            `${relateds[0].__typename === 'Post' ? '/story' : '/external'}/${
+              relateds[0].slug
+            }`
+          }
+          target="_blank"
+        >
+          <ImageWrapper>
+            <Image
+              src={leftArrow}
+              width={24}
+              height={24}
+              alt="點按看下一則延伸閱讀文章"
+            />
+          </ImageWrapper>
+        </Link>
+      )}
       <DraftRenderBlock
         rawContentBlock={copyAndSliceDraftBlock(
           contentMarkedFirstImage,
