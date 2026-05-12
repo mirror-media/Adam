@@ -14,7 +14,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Z_INDEX } from '../../../constants/index'
 
-const leftArrow = '/images-next/story/left-arrow.svg'
+const rightArrow = '/images-next/story/right-arrow.svg'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -136,7 +136,7 @@ export default function ArticleContent({
         >
           <ImageWrapper>
             <Image
-              src={leftArrow}
+              src={rightArrow}
               width={24}
               height={24}
               alt="點按看下一則延伸閱讀文章"
