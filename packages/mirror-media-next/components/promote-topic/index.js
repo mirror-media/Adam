@@ -44,12 +44,11 @@ function normalizePromoteTopic(item) {
   const resized = heroImage?.resized
   const resizedWebp = heroImage?.resizedWebp
 
-  // Guard against incomplete CMS data before it reaches UI components.
+  // Require complete CMS fields and at least one usable image source before reaching UI components.
   if (
     !topic?.slug ||
     !topic?.name ||
-    !resized ||
-    !hasAvailableImages(resized)
+    (!hasAvailableImages(resized) && !hasAvailableImages(resizedWebp))
   ) {
     return null
   }
@@ -60,7 +59,7 @@ function normalizePromoteTopic(item) {
     slug: topic.slug,
     name: topic.name,
     heroImage: {
-      resized,
+      resized: hasAvailableImages(resized) ? resized : undefined,
       resizedWebp: hasAvailableImages(resizedWebp) ? resizedWebp : undefined,
     },
   }
