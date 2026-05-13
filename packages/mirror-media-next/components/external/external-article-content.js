@@ -49,9 +49,7 @@ export default function ExternalArticleContent({
 }) {
   const iframeRegex = /(<iframe[\s\S]*?<\/iframe>)/i
   const parts = content.split(iframeRegex).filter((p) => p.trim())
-  const hasFirstRelatedArticle = allRelatedStories.length
-    ? allRelatedStories[0]
-    : null
+  const hasFirstRelatedArticle = allRelatedStories.length > 0
   return (
     <Wrapper>
       {parts.map((part, index) => {

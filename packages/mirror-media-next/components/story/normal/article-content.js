@@ -70,7 +70,7 @@ export default function ArticleContent({
   pageKeyForGptAd = '',
   relateds = [],
 }) {
-  const hasFirstRelatedArticle = relateds.length ? relateds[0] : null
+  const hasFirstRelatedArticle = relateds.length > 0
   const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
   const contentMarkedFirstImage = modifyFirstImageEntity(content)
