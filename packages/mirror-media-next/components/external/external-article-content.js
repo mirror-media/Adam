@@ -2,11 +2,7 @@ import styled from 'styled-components'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import ExternalEmbedCodeBlock from './external-embed-code-block'
 const { draftEditorCssExternal } = MirrorMedia
-import Link from 'next/link'
-import Image from 'next/image'
-import { Z_INDEX } from '../../constants/index'
-
-const rightArrow = '/images-next/story/right-arrow.svg'
+import ArticleRightArrow from '../../components/shared/article-right-arrow'
 
 const Wrapper = styled.section`
   margin-top: 32px;
@@ -39,13 +35,7 @@ const Wrapper = styled.section`
     overflow: hidden;
   }
 `
-const ImageWrapper = styled.div`
-  padding: 16px;
-  position: fixed;
-  bottom: 25%;
-  right: 0;
-  z-index: ${Z_INDEX.articleRightArrow};
-`
+
 /**
  *
  * @param {Object} props
@@ -74,26 +64,7 @@ export default function ExternalArticleContent({
       })}
 
       {isMobileWidth && hasFirstRelatedArticle && (
-        <Link
-          href={
-            allRelatedStories[0].url ??
-            `${
-              allRelatedStories[0].__typename === 'Post'
-                ? '/story'
-                : '/external'
-            }/${allRelatedStories[0].slug}`
-          }
-          target="_blank"
-        >
-          <ImageWrapper>
-            <Image
-              src={rightArrow}
-              width={24}
-              height={24}
-              alt="點按看下一則延伸閱讀文章"
-            />
-          </ImageWrapper>
-        </Link>
+        <ArticleRightArrow relateds={allRelatedStories} />
       )}
     </Wrapper>
   )

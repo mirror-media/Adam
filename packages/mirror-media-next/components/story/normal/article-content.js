@@ -10,11 +10,7 @@ import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { useMemo } from 'react'
 import Script from 'next/script'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Z_INDEX } from '../../../constants/index'
-
-const rightArrow = '/images-next/story/right-arrow.svg'
+import ArticleRightArrow from '../../../components/shared/article-right-arrow'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -48,13 +44,6 @@ const StyledGPTAd = styled(GPTAd)`
      */
     (props) => (props.pageKey ? 'block' : 'none')
   };
-`
-const ImageWrapper = styled.div`
-  padding: 16px;
-  position: fixed;
-  bottom: 25%;
-  right: 0;
-  z-index: ${Z_INDEX.articleRightArrow};
 `
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
@@ -125,24 +114,7 @@ export default function ArticleContent({
   const MB_contentJsx = (
     <Wrapper>
       {windowDimensions.width < 768 && hasFirstRelatedArticle && (
-        <Link
-          href={
-            relateds[0].url ??
-            `${relateds[0].__typename === 'Post' ? '/story' : '/external'}/${
-              relateds[0].slug
-            }`
-          }
-          target="_blank"
-        >
-          <ImageWrapper>
-            <Image
-              src={rightArrow}
-              width={24}
-              height={24}
-              alt="點按看下一則延伸閱讀文章"
-            />
-          </ImageWrapper>
-        </Link>
+        <ArticleRightArrow relateds={relateds} />
       )}
       <DraftRenderBlock
         rawContentBlock={copyAndSliceDraftBlock(
