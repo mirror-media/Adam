@@ -113,9 +113,7 @@ export default function ArticleContent({
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
   const MB_contentJsx = (
     <Wrapper>
-      {windowDimensions.width < 768 && hasFirstRelatedArticle && (
-        <ArticleRightArrow relateds={relateds} />
-      )}
+      {hasFirstRelatedArticle && <ArticleRightArrow relateds={relateds} />}
       <DraftRenderBlock
         rawContentBlock={copyAndSliceDraftBlock(
           contentMarkedFirstImage,

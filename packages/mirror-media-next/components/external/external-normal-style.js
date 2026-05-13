@@ -609,7 +609,6 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
           <ExternalArticleContent
             content={updatedContent}
             allRelatedStories={allRelatedStories}
-            isMobileWidth={isMobileWidth}
           />
 
           {updatedTimeJsx}

@@ -41,13 +41,11 @@ const Wrapper = styled.section`
  * @param {Object} props
  * @param {string} props.content
  * @param {Array} [props.allRelatedStories]
- * @param {boolean} [props.isMobileWidth]
  * @returns {import('react').JSX.Element}
  */
 export default function ExternalArticleContent({
   content = '',
   allRelatedStories = [],
-  isMobileWidth,
 }) {
   const iframeRegex = /(<iframe[\s\S]*?<\/iframe>)/i
   const parts = content.split(iframeRegex).filter((p) => p.trim())
@@ -63,7 +61,7 @@ export default function ExternalArticleContent({
         return <div dangerouslySetInnerHTML={{ __html: part }} key={index} />
       })}
 
-      {isMobileWidth && hasFirstRelatedArticle && (
+      {hasFirstRelatedArticle && (
         <ArticleRightArrow relateds={allRelatedStories} />
       )}
     </Wrapper>

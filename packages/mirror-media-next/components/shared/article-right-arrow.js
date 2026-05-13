@@ -3,6 +3,13 @@ import Image from 'next/image'
 import styled from 'styled-components'
 import { Z_INDEX } from '../../constants/index'
 
+const Hyperlink = styled(Link)`
+  display: block;
+
+  ${({ theme }) => theme.breakpoint.md} {
+    display: none;
+  }
+`
 const ImageWrapper = styled.div`
   padding: 16px;
   position: fixed;
@@ -10,6 +17,7 @@ const ImageWrapper = styled.div`
   right: 0;
   z-index: ${Z_INDEX.articleRightArrow};
 `
+
 const rightArrow = '/images-next/story/right-arrow.svg'
 
 /**
@@ -30,7 +38,7 @@ const rightArrow = '/images-next/story/right-arrow.svg'
  */
 export default function ArticleRightArrow({ relateds = [] }) {
   return (
-    <Link
+    <Hyperlink
       href={
         relateds[0].url ??
         `${relateds[0].__typename === 'Post' ? '/story' : '/external'}/${
@@ -47,6 +55,6 @@ export default function ArticleRightArrow({ relateds = [] }) {
           alt="點按看下一則延伸閱讀文章"
         />
       </ImageWrapper>
-    </Link>
+    </Hyperlink>
   )
 }
