@@ -40,7 +40,7 @@ export default function ArticleRightArrow({ relateds = [] }) {
   return (
     <Hyperlink
       href={
-        relateds[0].url ??
+        relateds[0].url ||
         `${relateds[0].__typename === 'Post' ? '/story' : '/external'}/${
           relateds[0].slug
         }`
