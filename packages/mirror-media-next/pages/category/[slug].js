@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import CategoryArticles from '../../components/category/category-articles'
-import { ENV } from '../../config/index.mjs'
+import { ENV, SITE_URL } from '../../config/index.mjs'
 import {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
@@ -19,6 +19,8 @@ import {
   fetchCategoryByCategorySlug,
   fetchPostsByCategorySlug,
   fetchPremiumPostsByCategorySlug,
+  fetchNewsCategoryInfo,
+  fetchNewsCategoryPostsJSON,
 } from '../../utils/api/category'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getCategoryOfWineSlug, getLogTraceObject } from '../../utils'
@@ -188,6 +190,7 @@ const RENDER_PAGE_SIZE = 12
  * @param {number} props.postsCount
  * @param {boolean} props.isPremium
  * @param {Object} props.headerData
+ * @param {boolean} props.isNewsCategory
  * @returns {React.ReactElement}
  */
 export default function Category({
@@ -196,6 +199,7 @@ export default function Category({
   category,
   isPremium,
   headerData,
+  isNewsCategory,
 }) {
   const categoryName = category.name || ''
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
@@ -214,7 +218,7 @@ export default function Category({
       position: index + 1 + '',
       item: {
         '@type': 'NewsArticle',
-        url: `https://www.mnews.tw/story/${post.slug}`,
+        url: `https://${SITE_URL}/story/${post.slug}`,
         headline: post.title,
         image: post.heroImage?.resized?.w1200 || '',
         dateCreated: post.publishedDate,
@@ -263,6 +267,7 @@ export default function Category({
           category={category}
           renderPageSize={RENDER_PAGE_SIZE}
           isPremium={isPremium}
+          isNewsCategory={isNewsCategory}
         />
 
         {shouldShowAd && isNotWineCategory ? (
@@ -298,15 +303,27 @@ export async function getServerSideProps({ query, req, res }) {
     isMemberOnly: false,
     state: 'inactive',
   }
-  try {
-    const { data } = await fetchCategoryByCategorySlug(categorySlug)
-    category = data.category || category
-  } catch (error) {
-    logGqlError(
-      error,
-      `Error occurs while getting category data in category page (${categorySlug})`,
-      globalLogFields
-    )
+
+  const isNewsCategory = categorySlug === 'news'
+
+  if (isNewsCategory) {
+    try {
+      const { data } = await fetchNewsCategoryInfo()
+      category = data.category || category
+    } catch (error) {
+      console.error('Error fetching news category:', error)
+    }
+  } else {
+    try {
+      const { data } = await fetchCategoryByCategorySlug(categorySlug)
+      category = data.category || category
+    } catch (error) {
+      logGqlError(
+        error,
+        `Error occurs while getting category data in category page (${categorySlug})`,
+        globalLogFields
+      )
+    }
   }
 
   // handle category state, if `inactive` -> redirect to 404
@@ -360,7 +377,9 @@ export async function getServerSideProps({ query, req, res }) {
       `Error occurs while getting premium post data in category page (categorySlug: ${categorySlug})`,
       globalLogFields
     )
-  } else {
+  }
+
+  if (!isNewsCategory && !isPremium) {
     const responses = await Promise.allSettled([
       fetchHeaderDataInDefaultPageLayout(),
       fetchPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
@@ -389,6 +408,25 @@ export async function getServerSideProps({ query, req, res }) {
     )
   }
 
+  if (isNewsCategory && !isPremium) {
+    const responses = await Promise.allSettled([
+      fetchHeaderDataInDefaultPageLayout(),
+    ])
+
+    // handle header data
+    ;[sectionsData, topicsData] = processSettledResult(
+      responses[0],
+      getSectionAndTopicFromDefaultHeaderData,
+      `Error occurs while getting header data in category page (categorySlug: ${categorySlug})`,
+      globalLogFields
+    )
+
+    // handle fetch post data
+    const { data } = await fetchNewsCategoryPostsJSON()
+    posts = data.posts.items || []
+    postsCount = data.posts.counts || 0
+  }
+
   // handle fetch post data
   if (posts.length === 0) {
     // fetchPost return empty array -> wrong authorId -> 404
@@ -408,6 +446,7 @@ export async function getServerSideProps({ query, req, res }) {
     category,
     isPremium,
     headerData: { sectionsData, topicsData },
+    isNewsCategory,
   }
   return { props }
 }

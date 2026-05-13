@@ -1,7 +1,12 @@
 import styled from 'styled-components'
 
-import { FullWidthLayout } from '../shared/full-width-layout'
+import { FullBleedBackgroundStyle } from '../shared/full-bleed-background'
 import { IndexTitle } from './share/index-title'
+
+const StyledSection = styled.section`
+  ${FullBleedBackgroundStyle}
+  background: ${({ theme }) => theme.color.brandColor.darkBlue};
+`
 
 const ContentWrapper = styled.section`
   width: 100%;
@@ -137,7 +142,7 @@ export default function ForumHeadlinesPreview({ forumHeadlines = [] }) {
   if (!forumHeadlines?.length) return null
 
   return (
-    <FullWidthLayout bgColor="darkBlue">
+    <StyledSection>
       <ContentWrapper>
         <IndexTitle color="white">鏡報論壇</IndexTitle>
         <StyledOl>
@@ -163,6 +168,6 @@ export default function ForumHeadlinesPreview({ forumHeadlines = [] }) {
           })}
         </StyledOl>
       </ContentWrapper>
-    </FullWidthLayout>
+    </StyledSection>
   )
 }

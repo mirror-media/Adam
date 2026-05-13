@@ -223,6 +223,7 @@ const Z_INDEX = /** @type {const}*/ ({
   coverHeader: 2000,
   articleRightArrow: 1500, // 用一般 story 和 external 頁的「點擊看第一則延伸閱讀文章的右箭 icon」，須低於廣告的 z-index
   header: 1000,
+  promoteTopic: 500,
   coverContent: 100,
 })
 
