@@ -18,7 +18,7 @@ const ImageWrapper = styled.div`
   z-index: ${Z_INDEX.articleRightArrow};
 `
 
-const rightArrow = '/images-next/story/right-arrow.svg'
+const rightArrow = '/images-next/right-arrow.svg'
 
 /**
  * @typedef {Pick<import('../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
