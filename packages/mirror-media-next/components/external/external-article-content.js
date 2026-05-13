@@ -40,8 +40,8 @@ const Wrapper = styled.section`
  *
  * @param {Object} props
  * @param {string} props.content
- * @param {Array} props.allRelatedStories
- * @param {boolean} props.isMobileWidth
+ * @param {Array} [props.allRelatedStories]
+ * @param {boolean} [props.isMobileWidth]
  * @returns {import('react').JSX.Element}
  */
 export default function ExternalArticleContent({
