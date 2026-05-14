@@ -3,7 +3,7 @@ import Image from 'next/image'
 import styled from 'styled-components'
 import { Z_INDEX } from '../../constants/index'
 
-const Hyperlink = styled(Link)`
+const StyledLink = styled(Link)`
   display: block;
 
   ${({ theme }) => theme.breakpoint.md} {
@@ -38,7 +38,7 @@ const rightArrow = '/images-next/right-arrow.svg'
  */
 export default function ArticleRightArrow({ relateds = [] }) {
   return (
-    <Hyperlink
+    <StyledLink
       href={
         relateds[0].url ||
         `${relateds[0].__typename === 'Post' ? '/story' : '/external'}/${
@@ -56,6 +56,6 @@ export default function ArticleRightArrow({ relateds = [] }) {
           alt="點按看下一則延伸閱讀文章"
         />
       </ImageWrapper>
-    </Hyperlink>
+    </StyledLink>
   )
 }
