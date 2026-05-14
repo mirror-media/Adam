@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 
 import CategoryArticles from '../../components/category/category-articles'
-import { ENV } from '../../config/index.mjs'
+import { ENV, SITE_URL } from '../../config/index.mjs'
 import {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
@@ -218,7 +218,7 @@ export default function Category({
       position: index + 1 + '',
       item: {
         '@type': 'NewsArticle',
-        url: `https://www.mnews.tw/story/${post.slug}`,
+        url: `https://${SITE_URL}/story/${post.slug}`,
         headline: post.title,
         image: post.heroImage?.resized?.w1200 || '',
         dateCreated: post.publishedDate,
