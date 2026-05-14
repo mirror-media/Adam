@@ -731,6 +731,7 @@ export default function StoryNormalStyle({
             content={postContent.data}
             hiddenAdvertised={hiddenAdvertised}
             pageKeyForGptAd={pageKeyForGptAd}
+            relateds={allRelatedStories}
           />
           <DateUnderContent>
             <span>更新時間｜</span>

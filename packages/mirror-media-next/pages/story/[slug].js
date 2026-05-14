@@ -6,7 +6,6 @@ import styled from 'styled-components'
 import dynamic from 'next/dynamic'
 import {
   API_TIMEOUT,
-  API_TIMEOUT_GRAPHQL,
   ENV,
   URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
@@ -161,55 +160,55 @@ export default function Story({
   useEffect(() => {
     // Wait for page to be fully rendered before setting up miso API calls
     const setupScrollHandler = () => {
-    const handleScroll = async () => {
-      if (allRelatedStories.length < 10) {
-        const filterIds = allRelatedStories.map(
-          (story) => `mirrormedia_story_${story.slug}`
-        )
-        try {
-          const result = await getRelatedStories(
-            postData.slug,
-            filterIds,
-            10 - allRelatedStories.length,
-            'story'
+      const handleScroll = async () => {
+        if (allRelatedStories.length < 10) {
+          const filterIds = allRelatedStories.map(
+            (story) => `mirrormedia_story_${story.slug}`
           )
+          try {
+            const result = await getRelatedStories(
+              postData.slug,
+              filterIds,
+              10 - allRelatedStories.length,
+              'story'
+            )
 
-          if (result && result.data && result.data.products) {
-            const formattedStories = result.data.products.map((product) => {
-              const productId = product.product_id
-              const slug = productId.split('_').slice(2).join('_')
+            if (result && result.data && result.data.products) {
+              const formattedStories = result.data.products.map((product) => {
+                const productId = product.product_id
+                const slug = productId.split('_').slice(2).join('_')
 
-              return {
-                id: productId,
-                slug: slug,
-                title: product.title || '',
-                url: product.url || '',
-                heroImage: product.cover_image
-                  ? {
-                      resized: { original: product.cover_image },
-                    }
-                  : null,
-                publishedDate: new Date().toISOString(),
-                brief: { blocks: [{ text: '' }] },
-                categories: [],
-                sections: [],
-                isMesoRecommend: true,
-              }
-            })
+                return {
+                  id: productId,
+                  slug: slug,
+                  title: product.title || '',
+                  url: product.url || '',
+                  heroImage: product.cover_image
+                    ? {
+                        resized: { original: product.cover_image },
+                      }
+                    : null,
+                  publishedDate: new Date().toISOString(),
+                  brief: { blocks: [{ text: '' }] },
+                  categories: [],
+                  sections: [],
+                  isMesoRecommend: true,
+                }
+              })
 
-            setAllRelatedStories((prev) => [...prev, ...formattedStories])
+              setAllRelatedStories((prev) => [...prev, ...formattedStories])
+            }
+          } catch (error) {
+            console.error(
+              'Failed to fetch MISO related stories:',
+              JSON.stringify(error)
+            )
           }
-        } catch (error) {
-          console.error(
-            'Failed to fetch MISO related stories:',
-            JSON.stringify(error)
-          )
         }
       }
-    }
 
-    window.addEventListener('scroll', handleScroll, { once: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+      window.addEventListener('scroll', handleScroll, { once: true })
+      return () => window.removeEventListener('scroll', handleScroll)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
