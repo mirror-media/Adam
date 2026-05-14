@@ -46,6 +46,7 @@ export default function ArticleRightArrow({ relateds = [] }) {
         }`
       }
       target="_blank"
+      rel="noopener noreferrer"
     >
       <ImageWrapper>
         <Image
