@@ -606,7 +606,10 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
             <ExternalArticleBrief brief={brief} />
           )}
 
-          <ExternalArticleContent content={updatedContent} />
+          <ExternalArticleContent
+            content={updatedContent}
+            allRelatedStories={allRelatedStories}
+          />
 
           {updatedTimeJsx}
 
