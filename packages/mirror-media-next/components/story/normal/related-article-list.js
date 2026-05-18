@@ -208,8 +208,8 @@ export default function RelatedArticleList({
           <Article>
             <Link
               href={
-                related.url ??
-                `${related.type === 'external' ? '/external' : '/story'}/${
+                related.url ||
+                `${related.__typename === 'Post' ? '/story' : '/external'}/${
                   related.slug
                 }`
               }
@@ -237,8 +237,8 @@ export default function RelatedArticleList({
             <StyledFigcaption className="article-title">
               <Link
                 href={
-                  related.url ??
-                  `${related.type === 'external' ? '/external' : '/story'}/${
+                  related.url ||
+                  `${related.__typename === 'Post' ? '/story' : '/external'}/${
                     related.slug
                   }`
                 }

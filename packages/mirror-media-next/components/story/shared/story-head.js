@@ -92,7 +92,8 @@ const generateMetaData = (postData) => {
 export default function StoryHead({ postData }) {
   const router = useRouter()
   const meta = generateMetaData(postData)
-  const robots = hasUtmParamsInAsPath(router.asPath) ? 'noindex' : meta.robots
+  const hasUtm = hasUtmParamsInAsPath(router.asPath)
+  const robots = hasUtm ? 'noindex' : meta.robots
   const {
     slug,
     nonAmpUrl,
@@ -111,7 +112,7 @@ export default function StoryHead({ postData }) {
     <>
       <Head>
         <meta name="robots" content={robots} key="robots" />
-        <link rel="canonical" href={nonAmpUrl} key="canonical" />
+        {!hasUtm && <link rel="canonical" href={nonAmpUrl} key="canonical" />}
         {shouldCreateAmpHtmlLink && (
           <link rel="amphtml" href={ampUrl} key="amphtml" />
         )}

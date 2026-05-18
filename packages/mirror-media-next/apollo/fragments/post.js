@@ -172,20 +172,6 @@ export const topicPost = gql`
  */
 
 /**
- * @typedef {Object} FaqAlgoItem
- * @property {number} score
- * @property {string} answer
- * @property {string} question
- */
-
-/**
- * Algorithm-generated FAQ bundle for a post.
- * @typedef {Object} FaqsAlgo
- * @property {FaqAlgoItem[]} faqs
- * @property {string} generated_at
- */
-
-/**
  * @typedef {Object} Post
  * @property {string} id - unique id of post
  * @property {string} slug - post slug

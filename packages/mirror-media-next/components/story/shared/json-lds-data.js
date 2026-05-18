@@ -27,28 +27,7 @@ export const generateJsonLdsData = (postData, currentPage) => {
     brief = { blocks: [], entityMap: {} },
     tags = [],
     content = null,
-    faqs_algo = null,
   } = postData
-
-  const faqEntities =
-    faqs_algo?.faqs?.filter((item) => item && item.question && item.answer) ??
-    []
-
-  const jsonLdFaqPage =
-    faqEntities.length > 0
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'FAQPage',
-          mainEntity: faqEntities.map((faq) => ({
-            '@type': 'Question',
-            name: faq.question.trim(),
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: faq.answer.trim(),
-            },
-          })),
-        }
-      : undefined
 
   const writersWithOrdered =
     writersInInputOrder && writersInInputOrder.length
@@ -134,12 +113,9 @@ export const generateJsonLdsData = (postData, currentPage) => {
     itemListElement: getBreadcrumbListElement(),
   }
 
-  return [
-    jsonLdNewsArticle,
-    jsonLdPerson,
-    jsonLdBreadcrumbList,
-    jsonLdFaqPage,
-  ].filter((jsonLd) => jsonLd)
+  return [jsonLdNewsArticle, jsonLdPerson, jsonLdBreadcrumbList].filter(
+    (jsonLd) => jsonLd
+  )
 
   function getBreadcrumbListElement() {
     const items = [
