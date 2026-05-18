@@ -1,5 +1,5 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
 import styled from 'styled-components'
@@ -127,20 +127,30 @@ export default function Story({
   const [allRelatedStories, setAllRelatedStories] = useState(
     initialRelatedStories
   )
+  const allRelatedStoriesRef = useRef(allRelatedStories)
 
   useEffect(() => {
-    // Wait for page to be fully rendered before setting up miso API calls
+    allRelatedStoriesRef.current = allRelatedStories
+  }, [allRelatedStories])
+
+  useEffect(() => {
+    let cleanupScrollHandler = () => {}
+    let isMounted = true
+
+    // Wait for page to be fully rendered before setting up miso API calls.
     const setupScrollHandler = () => {
       const handleScroll = async () => {
-        if (allRelatedStories.length < 10) {
-          const filterIds = allRelatedStories.map(
+        const currentRelatedStories = allRelatedStoriesRef.current
+
+        if (currentRelatedStories.length < 10) {
+          const filterIds = currentRelatedStories.map(
             (story) => `mirrormedia_story_${story.slug}`
           )
           try {
             const result = await getRelatedStories(
               postData.slug,
               filterIds,
-              10 - allRelatedStories.length,
+              10 - currentRelatedStories.length,
               'story'
             )
 
@@ -159,7 +169,7 @@ export default function Story({
                         resized: { original: product.cover_image },
                       }
                     : null,
-                  publishedDate: new Date().toISOString(),
+                  publishedDate: '',
                   brief: { blocks: [{ text: '' }] },
                   categories: [],
                   sections: [],
@@ -167,19 +177,19 @@ export default function Story({
                 }
               })
 
-              setAllRelatedStories((prev) => [...prev, ...formattedStories])
+              if (isMounted) {
+                setAllRelatedStories((prev) => [...prev, ...formattedStories])
+              }
             }
           } catch (error) {
-            console.error(
-              'Failed to fetch MISO related stories:',
-              JSON.stringify(error)
-            )
+            console.error('Failed to fetch MISO related stories:', error)
           }
         }
       }
 
       window.addEventListener('scroll', handleScroll, { once: true })
-      return () => window.removeEventListener('scroll', handleScroll)
+      cleanupScrollHandler = () =>
+        window.removeEventListener('scroll', handleScroll)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
@@ -192,7 +202,9 @@ export default function Story({
     }
 
     return () => {
+      isMounted = false
       window.removeEventListener('load', setupScrollHandler)
+      cleanupScrollHandler()
     }
   }, [postData.slug])
 

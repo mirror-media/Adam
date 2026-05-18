@@ -139,6 +139,10 @@ const postFragmentSource = readFileSync(
   join(currentDir, '../apollo/fragments/post.js'),
   'utf8'
 )
+const cacheSettingSource = readFileSync(
+  join(currentDir, './cache-setting.js'),
+  'utf8'
+)
 
 assert.match(postQuerySource, /const fetchStoryPostBySlug = gql`/)
 assert.match(postQuerySource, /const fetchAmpPostBySlug = gql`/)
@@ -157,4 +161,10 @@ assert.doesNotMatch(
   postFragmentSource.match(/export const relatedPost = gql`[\s\S]*?`\n/)?.[0] ??
     '',
   /\.\.\.heroImage/
+)
+
+assert.match(cacheSettingSource, /case 'no-store':\s*case 'no-cache':/)
+assert.doesNotMatch(
+  cacheSettingSource.match(/case 'no-store':[\s\S]*?break/)?.[0] ?? '',
+  /cacheTime/
 )
