@@ -10,6 +10,7 @@ import {
   URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
   STORY_GQL_ENDPOINT,
+  IS_PREVIEW_MODE,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
@@ -421,7 +422,9 @@ export async function getServerSideProps({ params, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   try {
-    const storyClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+    const storyClient = IS_PREVIEW_MODE
+      ? client
+      : getStoryClient(STORY_GQL_ENDPOINT) || client
 
     const result = await storyClient.query({
       query: fetchPostBySlug,
@@ -487,7 +490,9 @@ export async function getServerSideProps({ params, req, res }) {
       try {
         const fetchStaticJsonSafe = async (url, timeout) => {
           try {
-            const mod = await import('../../utils/server-side-only/fetch-static-json.js')
+            const mod = await import(
+              '../../utils/server-side-only/fetch-static-json.js'
+            )
             const res = await mod.fetchStaticJsonOnServer(url, timeout)
             return res
           } catch (err) {
