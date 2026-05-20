@@ -10,6 +10,7 @@ import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { useMemo } from 'react'
 import Script from 'next/script'
+import ArticleRightArrow from '../../../components/shared/article-right-arrow'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -44,6 +45,15 @@ const StyledGPTAd = styled(GPTAd)`
     (props) => (props.pageKey ? 'block' : 'none')
   };
 `
+/**
+ * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
+ */
+
+/**
+ * @typedef {(import('../../../apollo/fragments/post').Related & {
+ *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, __typename: string})[]
+ * } Relateds
+ */
 
 /**
  *
@@ -51,13 +61,16 @@ const StyledGPTAd = styled(GPTAd)`
  * @param {Content} props.content
  * @param {boolean} [props.hiddenAdvertised] - CMS Posts「google廣告違規」
  * @param {string | undefined} [props.pageKeyForGptAd]
+ * @param {Relateds} [props.relateds]
  * @returns {import('react').JSX.Element}
  */
 export default function ArticleContent({
   content = { blocks: [], entityMap: {} },
   hiddenAdvertised = false,
   pageKeyForGptAd = '',
+  relateds = [],
 }) {
+  const hasFirstRelatedArticle = relateds.length > 0
   const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
   const windowDimensions = useWindowDimensions()
   const contentMarkedFirstImage = modifyFirstImageEntity(content)
@@ -100,6 +113,7 @@ export default function ArticleContent({
   //The GPT advertisement for the `mobile` version includes `AT1` & `AT2`
   const MB_contentJsx = (
     <Wrapper>
+      {hasFirstRelatedArticle && <ArticleRightArrow relateds={relateds} />}
       <DraftRenderBlock
         rawContentBlock={copyAndSliceDraftBlock(
           contentMarkedFirstImage,

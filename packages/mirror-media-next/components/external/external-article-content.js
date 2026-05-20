@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import ExternalEmbedCodeBlock from './external-embed-code-block'
 const { draftEditorCssExternal } = MirrorMedia
+import ArticleRightArrow from '../../components/shared/article-right-arrow'
 
 const Wrapper = styled.section`
   margin-top: 32px;
@@ -39,11 +40,16 @@ const Wrapper = styled.section`
  *
  * @param {Object} props
  * @param {string} props.content
+ * @param {Array} [props.allRelatedStories]
  * @returns {import('react').JSX.Element}
  */
-export default function ExternalArticleContent({ content = '' }) {
+export default function ExternalArticleContent({
+  content = '',
+  allRelatedStories = [],
+}) {
   const iframeRegex = /(<iframe[\s\S]*?<\/iframe>)/i
   const parts = content.split(iframeRegex).filter((p) => p.trim())
+  const hasFirstRelatedArticle = allRelatedStories.length > 0
   return (
     <Wrapper>
       {parts.map((part, index) => {
@@ -52,6 +58,10 @@ export default function ExternalArticleContent({ content = '' }) {
         }
         return <div dangerouslySetInnerHTML={{ __html: part }} key={index} />
       })}
+
+      {hasFirstRelatedArticle && (
+        <ArticleRightArrow relateds={allRelatedStories} />
+      )}
     </Wrapper>
   )
 }
