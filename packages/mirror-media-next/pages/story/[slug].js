@@ -169,7 +169,6 @@ export default function Story({
                         resized: { original: product.cover_image },
                       }
                     : null,
-                  publishedDate: '',
                   brief: { blocks: [{ text: '' }] },
                   categories: [],
                   sections: [],

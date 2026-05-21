@@ -316,7 +316,6 @@ export async function getServerSideProps({ params, req, res }) {
                     resized: { original: product.cover_image },
                   }
                 : null,
-              publishedDate: new Date().toISOString(),
               brief: { blocks: [{ text: '' }] },
               categories: [],
               sections: [],

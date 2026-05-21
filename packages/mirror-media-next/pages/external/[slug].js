@@ -103,7 +103,6 @@ export default function External({ external, headerData, jsonLdData }) {
                       resized: { original: product.cover_image },
                     }
                   : null,
-                publishedDate: new Date().toISOString(),
                 brief: { blocks: [{ text: '' }] },
                 categories: [],
                 sections: [],
