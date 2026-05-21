@@ -1,3 +1,5 @@
+import { IS_PREVIEW_MODE } from '../config/index.mjs'
+
 /**
  * @typedef {import('next').GetServerSidePropsContext['res']} Res
  */
@@ -32,6 +34,11 @@ const setPageCache = (
   cacheSetting = { cachePolicy: 'no-store' },
   pageUrl = undefined
 ) => {
+  if (IS_PREVIEW_MODE) {
+    res.setHeader('Cache-Control', 'no-store')
+    return
+  }
+
   switch (cacheSetting.cachePolicy) {
     case 'no-store':
     case 'no-cache':
