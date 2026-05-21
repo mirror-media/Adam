@@ -6,7 +6,7 @@ import {
 import withPWA from 'next-pwa'
 
 const withBundleAnalyzer =
-  process.env.ANALYZE === 'true'
+  process.env.ANALYZE === 'true' && process.env.NEXT_PUBLIC_ENV !== 'prod'
     ? (await import('@next/bundle-analyzer')).default({
         enabled: true,
       })
