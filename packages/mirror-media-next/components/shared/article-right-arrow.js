@@ -34,12 +34,18 @@ const rightArrow = '/images-next/right-arrow.svg'
  *
  * @param {Object} props
  * @param {Relateds} [props.relateds]
- * @returns {import('react').JSX.Element}
+ * @returns {import('react').JSX.Element | null}
  */
 export default function ArticleRightArrow({ relateds = [] }) {
+  const firstRelated = relateds[0]
+
+  if (!firstRelated?.url) {
+    return null
+  }
+
   return (
     <StyledLink
-      href={relateds[0].url}
+      href={firstRelated.url}
       target="_blank"
       rel="noopener noreferrer"
     >

@@ -209,6 +209,7 @@ export default function RelatedArticleList({
             <Link
               href={related.url}
               target="_blank"
+              rel="noopener noreferrer"
               className={`article-image GTM-story-related-list ${
                 related.isMesoRecommend
                   ? 'GTM-story-related-miso'
@@ -238,6 +239,7 @@ export default function RelatedArticleList({
                     : 'GTM-story-related-editor'
                 }`}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {related.title}
               </Link>
