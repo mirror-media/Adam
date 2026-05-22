@@ -51,7 +51,7 @@ const StyledGPTAd = styled(GPTAd)`
 
 /**
  * @typedef {(import('../../../apollo/fragments/post').Related & {
- *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, __typename: string})[]
+ *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, type: 'story' | 'external'})[]
  * } Relateds
  */
 

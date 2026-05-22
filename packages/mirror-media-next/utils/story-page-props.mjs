@@ -78,12 +78,15 @@ function normalizeRelatedStory(related) {
   }
 
   const type = related.__typename === 'External' ? 'external' : 'story'
+  const url =
+    related.url ||
+    `${type === 'story' ? '/story' : '/external'}/${related.slug}`
 
   return compactClientPayload({
     id: related.id,
     slug: related.slug,
     title: related.title,
-    url: related.url,
+    url,
     type,
     heroImage: related.heroImage,
     isMesoRecommend: related.isMesoRecommend,

@@ -31,7 +31,7 @@ const StyledPopInAdRelated = dynamic(
 
 /**
  * @typedef {(import('../../../apollo/fragments/post').Related & {
- *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, __typename: string})[]
+ *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, type: 'story' | 'external'})[]
  * } Relateds
  */
 
@@ -207,12 +207,7 @@ export default function RelatedArticleList({
         <li key={related.id}>
           <Article>
             <Link
-              href={
-                related.url ||
-                `${related.__typename === 'Post' ? '/story' : '/external'}/${
-                  related.slug
-                }`
-              }
+              href={related.url}
               target="_blank"
               className={`article-image GTM-story-related-list ${
                 related.isMesoRecommend
@@ -236,12 +231,7 @@ export default function RelatedArticleList({
 
             <StyledFigcaption className="article-title">
               <Link
-                href={
-                  related.url ||
-                  `${related.__typename === 'Post' ? '/story' : '/external'}/${
-                    related.slug
-                  }`
-                }
+                href={related.url}
                 className={`GTM-story-related-list ${
                   related.isMesoRecommend
                     ? 'GTM-story-related-miso'
