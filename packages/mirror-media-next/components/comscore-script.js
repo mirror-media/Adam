@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import Script from 'next/script'
 
 /**
  * Component for implement comScore script.
@@ -46,10 +47,10 @@ export default function ComScoreScript() {
   }
 
   return (
-    // use react script rather than next/Script to let the script show on the source of the html (view-source:)
     <>
-      <script
+      <Script
         id="comScore"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             var _comscore = _comscore || [];

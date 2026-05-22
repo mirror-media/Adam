@@ -6,7 +6,12 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY ["package.json", "yarn.lock", "./"]
-RUN yarn install --frozen-lockfile --production
+ARG ANALYZE=false
+RUN if [ "$ANALYZE" = "true" ]; then \
+    yarn install --frozen-lockfile; \
+    else \
+    yarn install --frozen-lockfile --production; \
+    fi
 
 # Rebuild the source code only when needed
 FROM node:${NODE_VERSION} AS builder
@@ -16,10 +21,16 @@ COPY . .
 
 # Accept build arguments for Next.js public environment variables
 ARG NEXT_PUBLIC_ENV
+ARG ANALYZE=false
 # Set as environment variables so Next.js can use them during build
 ENV NEXT_PUBLIC_ENV=${NEXT_PUBLIC_ENV}
+ENV ANALYZE=${ANALYZE}
 
 RUN yarn build
+RUN if [ "$ANALYZE" = "true" ] && [ -d .next/analyze ]; then \
+    mkdir -p public/analyze; \
+    cp .next/analyze/*.html public/analyze/; \
+    fi
 
 # Production image, copy all the files and run next
 FROM node:${NODE_VERSION} AS runner

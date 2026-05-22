@@ -16,7 +16,7 @@ import {
 
 import { handleStoryPageRedirect } from '../../../utils/story'
 import { setPageCache } from '../../../utils/cache-setting'
-import { fetchPostBySlug } from '../../../apollo/query/posts'
+import { fetchAmpPostBySlug } from '../../../apollo/query/posts'
 import { ENV, GA_MEASUREMENT_ID, SITE_URL } from '../../../config/index.mjs'
 import styled from 'styled-components'
 import AdultOnlyWarning from '../../../components/story/shared/adult-only-warning'
@@ -205,7 +205,16 @@ function StoryAmpPage({ postData, jsonLdData }) {
  */
 export async function getServerSideProps({ params, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 300 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 300,
+        sharedCacheTime: 300,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
@@ -214,7 +223,7 @@ export async function getServerSideProps({ params, req, res }) {
 
   try {
     const result = await client.query({
-      query: fetchPostBySlug,
+      query: fetchAmpPostBySlug,
       variables: { slug },
     })
     /**
@@ -307,7 +316,6 @@ export async function getServerSideProps({ params, req, res }) {
                     resized: { original: product.cover_image },
                   }
                 : null,
-              publishedDate: new Date().toISOString(),
               brief: { blocks: [{ text: '' }] },
               categories: [],
               sections: [],
