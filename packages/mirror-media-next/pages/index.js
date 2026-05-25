@@ -186,7 +186,16 @@ export default function Home({
  */
 export async function getServerSideProps({ res, req }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 180 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 180,
+        sharedCacheTime: 180,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
@@ -204,7 +213,7 @@ export async function getServerSideProps({ res, req }) {
   let promoVideos = []
   let forumHeadlines = []
 
-  const fetchStaticJsonSafe = async (url, timeout, label) => {
+  const fetchStaticJsonSafe = async (url, timeout) => {
     try {
       const mod = await import('../utils/server-side-only/fetch-static-json.js')
       const res = await mod.fetchStaticJsonOnServer(url, timeout)

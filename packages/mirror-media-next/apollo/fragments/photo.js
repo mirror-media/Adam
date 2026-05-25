@@ -59,6 +59,21 @@ export const heroImage = gql`
   }
 `
 
+export const relatedPostHeroImage = gql`
+  fragment relatedPostHeroImage on Photo {
+    resized {
+      original
+      w480
+      w800
+    }
+    resizedWebp {
+      original
+      w480
+      w800
+    }
+  }
+`
+
 export const slideshowImage = gql`
   fragment slideshowImage on Photo {
     id

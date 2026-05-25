@@ -68,11 +68,6 @@ export default class MyDocument extends Document {
             content="8tUjQvQoBEANJ6nRE9fMnsw2qODvbAgqDjSkLj-Mdw0"
           />
           <link
-            rel="preload"
-            href="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
-            as="script"
-          />
-          <link
             href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap"
             rel="stylesheet"
           />
@@ -82,17 +77,7 @@ export default class MyDocument extends Document {
           <Main />
 
           <NextScript />
-          {/* Script for google publisher ad  */}
-          <Script
-            async
-            strategy="beforeInteractive"
-            src="https://cdn.jsdelivr.net/npm/@miso.ai/client-sdk@1.11.5/dist/umd/miso.min.js"
-          />
-          <Script
-            async
-            strategy="beforeInteractive"
-            src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"
-          />
+          {/* Keep the GPT command queue ready early; load the network script later from ad-enabled pages. */}
           <Script strategy="beforeInteractive" id="gpt-setup">
             {`
         window.googletag = window.googletag || {cmd: []};

@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { MISO_API_KEY } from '../../config/index.mjs'
 import styled from 'styled-components'
 import { transformTimeData } from '../../utils'
 import { theme } from '../../styles/theme'
 import { useRouter } from 'next/router'
+import MisoScript from '../miso-script'
 // @ts-expect-error - styled-components type definition issue
 const SearchWrapper = styled('div')`
   // input 框
@@ -571,7 +572,8 @@ export default function MisoSearch({ searchTerms }) {
   const isInitializedRef = useRef(false)
   const workflowRef = useRef(null)
   const timeoutRef = useRef(null)
-  
+  const [isMisoReady, setIsMisoReady] = useState(false)
+
   function insertElement(html) {
     html = html.replace(
       '<miso-facets></miso-facets>',
@@ -613,93 +615,108 @@ export default function MisoSearch({ searchTerms }) {
 
   useEffect(() => {
     if (isInitializedRef.current) return
+    if (!isMisoReady) return
 
     // Wait for page to be fully rendered before executing miso code
     const executeMiso = async () => {
-    // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
-    const misocmd = window.misocmd || (window.misocmd = [])
-    misocmd.push(async () => {
-      // setup client
-      // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
-      const MisoClient = window.MisoClient
-      const client = new MisoClient(MISO_API_KEY, { timeout: 5000 })
-      const workflow = client.ui.hybridSearch
+      const initializeMisoSearch = async () => {
+        // setup client
+        // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
+        const MisoClient = window.MisoClient
+        if (!MisoClient) {
+          return
+        }
+
+        const client = new MisoClient(MISO_API_KEY, { timeout: 5000 })
+        const workflow = client.ui.hybridSearch
         workflowRef.current = workflow
 
-      try {
-        workflow.useApi({
-          fq: 'product_id:/mirrormedia_story_.+/',
-          source_fl: [
-            'cover_image',
-            'url',
-            'created_at',
-            'updated_at',
-            'published_at',
-            'title',
-            'section_name',
-          ],
-          fl: [
-            'cover_image',
-            'url',
-            'created_at',
-            'updated_at',
-            'published_at',
-            'title',
-            'tags',
-          ],
-          snippet_max_chars: 60,
-        })
-        workflow.useLayouts({
-          query: {
-            placeholder: 'Ask anything!',
-          },
-          products: [
-            'list',
-            {
-              templates: {
-                product: renderProduct,
-              },
-            },
-          ],
-        })
-        workflow.useFilters({
-          sort: {
-            options: [
-              { field: 'relevance', text: '關聯性' },
-              { field: 'published_at', text: '由新到舊', default: true },
+        try {
+          workflow.useApi({
+            fq: 'product_id:/mirrormedia_story_.+/',
+            source_fl: [
+              'cover_image',
+              'url',
+              'created_at',
+              'updated_at',
+              'published_at',
+              'title',
+              'section_name',
             ],
-          },
-        })
-        workflow.answer.on('request', ({ payload: { q } }) => {
-          router.push(`/search/${q}`, undefined, { shallow: true })
-        })
+            fl: [
+              'cover_image',
+              'url',
+              'created_at',
+              'updated_at',
+              'published_at',
+              'title',
+              'tags',
+            ],
+            snippet_max_chars: 60,
+          })
+          workflow.useLayouts({
+            query: {
+              placeholder: 'Ask anything!',
+            },
+            products: [
+              'list',
+              {
+                templates: {
+                  product: renderProduct,
+                },
+              },
+            ],
+          })
+          workflow.useFilters({
+            sort: {
+              options: [
+                { field: 'relevance', text: '關聯性' },
+                { field: 'published_at', text: '由新到舊', default: true },
+              ],
+            },
+          })
+          workflow.answer.on('request', ({ payload: { q } }) => {
+            router.push(`/search/${q}`, undefined, { shallow: true })
+          })
 
-        // wait for styles to be loaded
-        await client.ui.ready
+          // wait for styles to be loaded
+          await client.ui.ready
 
-        // render DOM and get element references
-        const defaults = MisoClient.ui.defaults.hybridSearch
-        let templates = defaults.templates.root({ answerBox: true })
-        templates = insertElement(templates)
-        const wireAnswerBox = defaults.wireAnswerBox
+          // render DOM and get element references
+          const defaults = MisoClient.ui.defaults.hybridSearch
+          let templates = defaults.templates.root({ answerBox: true })
+          templates = insertElement(templates)
+          const wireAnswerBox = defaults.wireAnswerBox
 
-        const rootElement = document.querySelector('#miso-hybrid-search-combo')
-        rootElement.innerHTML = templates
+          const rootElement = document.querySelector(
+            '#miso-hybrid-search-combo'
+          )
+          rootElement.innerHTML = templates
 
-        wireAnswerBox(client, rootElement)
+          wireAnswerBox(client, rootElement)
 
           isInitializedRef.current = true
 
-        // start query if specified in URL parameters
+          // start query if specified in URL parameters
           if (searchTerms) {
-        setTimeout(() => {
-          workflow.query({ q: searchTerms })
-        }, 1000)
+            setTimeout(() => {
+              workflow.query({ q: searchTerms })
+            }, 1000)
           }
-      } catch (error) {
-        console.error(error)
+        } catch (error) {
+          console.error(error)
+        }
       }
-    })
+
+      // @ts-ignore: Property 'MisoClient' does not exist on type 'Window & typeof globalThis'.
+      if (window.MisoClient) {
+        await initializeMisoSearch()
+        return
+      }
+
+      // @ts-ignore: Property 'misocmd' does not exist on type 'Window & typeof globalThis'.
+      const misocmd = window.misocmd || (window.misocmd = [])
+      misocmd.push(initializeMisoSearch)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
@@ -715,7 +732,7 @@ export default function MisoSearch({ searchTerms }) {
       window.removeEventListener('load', executeMiso)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [isMisoReady])
 
   // 當 searchTerms 變化時，只更新查詢（不重新初始化）
   useEffect(() => {
@@ -742,6 +759,7 @@ export default function MisoSearch({ searchTerms }) {
 
   return (
     <SearchWrapper>
+      <MisoScript onReady={() => setIsMisoReady(true)} />
       <div
         id="miso-hybrid-search-combo"
         className="miso-hybrid-search-combo"

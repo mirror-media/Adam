@@ -189,7 +189,16 @@ export default function Topic({ topic, slideshowImages, headerData }) {
  */
 export async function getServerSideProps({ query, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 300 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 300,
+        sharedCacheTime: 300,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }

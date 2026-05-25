@@ -5,6 +5,13 @@ import {
 } from './config/index.mjs'
 import withPWA from 'next-pwa'
 
+const withBundleAnalyzer =
+  process.env.ANALYZE === 'true' && process.env.NEXT_PUBLIC_ENV !== 'prod'
+    ? (await import('@next/bundle-analyzer')).default({
+        enabled: true,
+      })
+    : (config) => config
+
 /** @type {import('next-pwa').PWAConfig} */
 const pwaConfig = {
   dest: 'public',
@@ -90,4 +97,4 @@ const nextConfig = {
   output: 'standalone',
 }
 
-export default withPWA(pwaConfig)(nextConfig)
+export default withBundleAnalyzer(withPWA(pwaConfig)(nextConfig))

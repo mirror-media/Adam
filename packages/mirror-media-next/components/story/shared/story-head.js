@@ -37,7 +37,6 @@ const generateMetaData = (postData) => {
     sections = [],
     sectionsInInputOrder = [],
     state = 'draft',
-    isMember = false,
     categories = [],
     categoriesInInputOrder = [],
     writers = [],
@@ -58,9 +57,7 @@ const generateMetaData = (postData) => {
     categories,
     categoriesInInputOrder
   )
-  const section = isMember
-    ? { name: '會員專區', slug: 'member' }
-    : sectionsWithOrdered?.[0]
+  const section = sectionsWithOrdered?.[0]
   const category = categoriesWithOrdered?.[0]
   const topicSlug = topics?.slug ?? ''
   const writersWithOrdered =

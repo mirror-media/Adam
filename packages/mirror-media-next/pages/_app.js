@@ -4,16 +4,19 @@ import { ThemeProvider } from 'styled-components'
 import { theme } from '../styles/theme'
 import { ApolloProvider } from '@apollo/client'
 import client from '../apollo/apollo-client'
-import TagManager from 'react-gtm-module'
 import { GTM_ID } from '../config/index.mjs'
 import WholeSiteScript from '../components/whole-site-script'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
 import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
 
 import { MembershipProvider } from '../context/membership'
 import { Provider } from 'react-redux'
 import store from '../store'
-import PromoteTopic from '../components/promote-topic'
+
+const PromoteTopic = dynamic(() => import('../components/promote-topic'), {
+  ssr: false,
+})
 /**
  *
  * @param {Object} props
@@ -30,7 +33,9 @@ function MyApp({ Component, pageProps }) {
 
   //Temporarily enable google tag manager only in dev and local environment.
   useEffect(() => {
-    TagManager.initialize({ gtmId: GTM_ID })
+    import('react-gtm-module').then(({ default: TagManager }) => {
+      TagManager.initialize({ gtmId: GTM_ID })
+    })
   }, [])
   return (
     <>
