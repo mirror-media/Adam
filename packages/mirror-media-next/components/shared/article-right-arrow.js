@@ -26,7 +26,7 @@ const rightArrow = '/images-next/right-arrow.svg'
 
 /**
  * @typedef {(import('../../apollo/fragments/post').Related & {
- *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, __typename: string})[]
+ *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, type: 'story' | 'external'})[]
  * } Relateds
  */
 
@@ -34,17 +34,18 @@ const rightArrow = '/images-next/right-arrow.svg'
  *
  * @param {Object} props
  * @param {Relateds} [props.relateds]
- * @returns {import('react').JSX.Element}
+ * @returns {import('react').JSX.Element | null}
  */
 export default function ArticleRightArrow({ relateds = [] }) {
+  const firstRelated = relateds[0]
+
+  if (!firstRelated?.url) {
+    return null
+  }
+
   return (
     <StyledLink
-      href={
-        relateds[0].url ||
-        `${relateds[0].__typename === 'Post' ? '/story' : '/external'}/${
-          relateds[0].slug
-        }`
-      }
+      href={firstRelated.url}
       target="_blank"
       rel="noopener noreferrer"
     >

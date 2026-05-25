@@ -76,11 +76,12 @@ assert.equal(
 const initialRelatedStories = getInitialRelatedStories(postData)
 
 assert.deepEqual(
-  initialRelatedStories.map(({ id, slug, title, type }) => ({
+  initialRelatedStories.map(({ id, slug, title, type, url }) => ({
     id,
     slug,
     title,
     type,
+    url,
   })),
   [
     {
@@ -88,18 +89,21 @@ assert.deepEqual(
       slug: 'related-one',
       title: 'Related one',
       type: 'story',
+      url: '/story/related-one',
     },
     {
       id: 'related-2',
       slug: 'related-two',
       title: 'Related two',
       type: 'external',
+      url: '/external/related-two',
     },
     {
       id: 'related-3',
       slug: 'related-three',
       title: 'Related three',
       type: 'story',
+      url: '/story/related-three',
     },
   ]
 )

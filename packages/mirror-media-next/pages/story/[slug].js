@@ -158,13 +158,14 @@ export default function Story({
             if (result && result.data && result.data.products) {
               const formattedStories = result.data.products.map((product) => {
                 const productId = product.product_id
-                const slug = productId.split('_').slice(2).join('_')
+                const relatedSlug = productId.split('_').slice(2).join('_')
 
                 return {
                   id: productId,
-                  slug: slug,
+                  slug: relatedSlug,
                   title: product.title || '',
-                  url: product.url || '',
+                  url: product.url || `/story/${relatedSlug}`,
+                  type: 'story',
                   heroImage: product.cover_image
                     ? {
                         resized: { original: product.cover_image },
