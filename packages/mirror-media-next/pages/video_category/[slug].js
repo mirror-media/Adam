@@ -131,7 +131,16 @@ export default function VideoCategory({
  */
 export async function getServerSideProps({ query, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 900 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 900,
+        sharedCacheTime: 900,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }

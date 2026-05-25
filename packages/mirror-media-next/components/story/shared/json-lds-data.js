@@ -25,9 +25,7 @@ export const generateJsonLdsData = (postData, currentPage) => {
     updatedAt = '',
     og_description = '',
     brief = { blocks: [], entityMap: {} },
-    isMember = false,
     tags = [],
-    trimmedContent = null,
     content = null,
   } = postData
 
@@ -87,17 +85,9 @@ export const generateJsonLdsData = (postData, currentPage) => {
     articleSection: hasSection ? sectionWithOrdered[0].name : null,
     isAccessibleForFree: 'True',
     keywords: tags?.map((tag) => tag.name),
-    articleBody: isMember
-      ? extractArticleBody(trimmedContent)
-      : extractArticleBody(content),
+    articleBody: extractArticleBody(content),
   }
-  if (isMember) {
-    jsonLdNewsArticle.hasPart = {
-      '@type': 'WebPageElement',
-      isAccessibleForFree: 'False',
-      cssSelector: '.paywall',
-    }
-  }
+
   //second Person
   const jsonLdPerson = hasWriter
     ? {

@@ -10,7 +10,6 @@ const MisoSearch = dynamic(
   () => import('../../components/search/miso-search'),
   { ssr: false }
 )
-import TagManager from 'react-gtm-module'
 import { useEffect } from 'react'
 
 /**
@@ -44,8 +43,10 @@ export default function Search({ searchResult, headerData, testGroup }) {
         },
       },
     }
-    TagManager.dataLayer(tagManagerArgs)
-  }, [])
+    import('react-gtm-module').then(({ default: TagManager }) => {
+      TagManager.dataLayer(tagManagerArgs)
+    })
+  }, [testGroup])
 
   return (
     <Layout
@@ -60,7 +61,16 @@ export default function Search({ searchResult, headerData, testGroup }) {
 export async function getServerSideProps({ req, res, params }) {
   const searchTerms = params.keyword ?? ''
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 600,
+        sharedCacheTime: 600,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }

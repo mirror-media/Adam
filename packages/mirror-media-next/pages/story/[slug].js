@@ -1,5 +1,5 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
 import styled from 'styled-components'
@@ -14,12 +14,7 @@ import {
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
-import { useMembership } from '../../context/membership'
-import useSaveMemberArticleHistoryLocally from '../../hooks/member-article-history/use-save-member-article-history-locally'
-import {
-  fetchPostBySlug,
-  fetchPostFullContentBySlug,
-} from '../../apollo/query/posts'
+import { fetchStoryPostBySlug } from '../../apollo/query/posts'
 import StoryNormalStyle from '../../components/story/normal'
 import Layout from '../../components/shared/layout'
 import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
@@ -34,8 +29,11 @@ import { logAxiosError, logGqlError } from '../../utils/log/shared'
 import { handleStoryPageRedirect } from '../../utils/story'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
+import {
+  getInitialRelatedStories,
+  serializeStoryPostDataForClient,
+} from '../../utils/story-page-props.mjs'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
 import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
@@ -45,9 +43,6 @@ const { hasContentInRawContentBlock } = MirrorMedia
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
 const StoryPhotographyStyle = dynamic(() =>
   import('../../components/story/photography')
-)
-const StoryPremiumStyle = dynamic(() =>
-  import('../../components/story/premium')
 )
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
@@ -62,7 +57,7 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
 /**
  * @typedef {import('../../components/story/normal').PostData} PostData
  * @typedef {import('../../components/story/normal').PostContent} PostContent
- * @typedef {'style-normal' | 'style-photography' | 'style-wide' | 'style-premium'} StoryLayoutType
+ * @typedef {'style-normal' | 'style-photography' | 'style-wide'} StoryLayoutType
  * @typedef {import('../../components/header/share-header').HeaderData} HeaderData
  * @typedef {HeaderData['flashNewsData']} flashNewsData
  * @typedef {import('axios').AxiosResponse<Record<'posts',flashNewsData>>} AxiosResponse
@@ -85,16 +80,13 @@ const Loading = styled.div`
 /**
  *
  * @param {import('../../components/story/normal').PostData['style']} articleStyle
- * @param {import('../../components/story/normal').PostData['isMember']} isMemberOnlyArticle
  * @returns {StoryLayoutType }
  */
-const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
+const getStoryLayoutType = (articleStyle) => {
   if (articleStyle === 'wide') {
     return 'style-wide'
   } else if (articleStyle === 'photography') {
     return 'style-photography'
-  } else if (articleStyle === 'article' && isMemberOnlyArticle === true) {
-    return 'style-premium'
   }
   return 'style-normal'
 }
@@ -103,6 +95,7 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  *
  * @param {Object} props
  * @param {PostData} props.postData
+ * @param {import('../../apollo/fragments/post').Related[]} props.initialRelatedStories
  * @param {HeaderData} props.headerData
  * @param {flashNewsData} props.flashNewsData
  * @param {StoryLayoutType} props.storyLayoutType
@@ -111,6 +104,7 @@ const getStoryLayoutType = (articleStyle, isMemberOnlyArticle) => {
  */
 export default function Story({
   postData,
+  initialRelatedStories = [],
   headerData,
   flashNewsData,
   storyLayoutType,
@@ -121,75 +115,62 @@ export default function Story({
     slug = '',
     isAdult = false,
     categories = [],
-    isMember = false,
     content = null,
-    trimmedContent = null,
     hiddenAdvertised = false,
     writers = [],
   } = postData
-  /**
-   * The logic for rendering the article content:
-   * We use the state `postContent` to manage the content should render in the story page.
-   * In most cases, the story page can retrieve the full content of the article.
-   * However, if the article is exclusive to members, it is required to get full content by using user's access token, but it is impossible to acquire it at server side.
-   * Before the full content is obtained, the truncated content `trimmedContent` will be used as the displayed data.
-   * If it didn't obtain the full content, and the user is logged in, story page will try to get the full content again by using the user's access token as the request payload.
-   * If successful, the full content will be displayed; if not, the truncated content will still be shown.
-   */
-
-  const { isLoggedIn, accessToken, isLogInProcessFinished } = useMembership()
-  /** @type { [PostContent, React.Dispatch<React.SetStateAction<PostContent>> ]} */
-
-  const [postContent, setPostContent] = useState(
-    content
-      ? { type: 'fullContent', data: content, isLoaded: true }
-      : { type: 'trimmedContent', data: trimmedContent, isLoaded: false }
-  )
-  const { relatedsInInputOrder, relateds, relatedsOne, relatedsTwo } = postData
-  const relatedsWithOrdered =
-    relatedsInInputOrder && relatedsInInputOrder.length
-      ? relatedsInInputOrder
-      : relateds
+  /** @type {PostContent} */
+  const postContent = {
+    type: 'fullContent',
+    data: content ?? { blocks: [], entityMap: {} },
+    isLoaded: true,
+  }
   const [allRelatedStories, setAllRelatedStories] = useState(
-    [
-      ...(relatedsOne ? [relatedsOne] : []),
-      ...(relatedsTwo ? [relatedsTwo] : []),
-      ...relatedsWithOrdered,
-    ].slice(0, 10)
+    initialRelatedStories
   )
+  const allRelatedStoriesRef = useRef(allRelatedStories)
 
   useEffect(() => {
-    // Wait for page to be fully rendered before setting up miso API calls
+    allRelatedStoriesRef.current = allRelatedStories
+  }, [allRelatedStories])
+
+  useEffect(() => {
+    let cleanupScrollHandler = () => {}
+    let isMounted = true
+
+    // Wait for page to be fully rendered before setting up miso API calls.
     const setupScrollHandler = () => {
       const handleScroll = async () => {
-        if (allRelatedStories.length < 10) {
-          const filterIds = allRelatedStories.map(
+        const currentRelatedStories = allRelatedStoriesRef.current
+
+        if (currentRelatedStories.length < 10) {
+          const filterIds = currentRelatedStories.map(
             (story) => `mirrormedia_story_${story.slug}`
           )
           try {
             const result = await getRelatedStories(
               postData.slug,
               filterIds,
-              10 - allRelatedStories.length,
+              10 - currentRelatedStories.length,
               'story'
             )
 
             if (result && result.data && result.data.products) {
               const formattedStories = result.data.products.map((product) => {
                 const productId = product.product_id
-                const slug = productId.split('_').slice(2).join('_')
+                const relatedSlug = productId.split('_').slice(2).join('_')
 
                 return {
                   id: productId,
-                  slug: slug,
+                  slug: relatedSlug,
                   title: product.title || '',
-                  url: product.url || '',
+                  url: product.url || `/story/${relatedSlug}`,
+                  type: 'story',
                   heroImage: product.cover_image
                     ? {
                         resized: { original: product.cover_image },
                       }
                     : null,
-                  publishedDate: new Date().toISOString(),
                   brief: { blocks: [{ text: '' }] },
                   categories: [],
                   sections: [],
@@ -197,19 +178,19 @@ export default function Story({
                 }
               })
 
-              setAllRelatedStories((prev) => [...prev, ...formattedStories])
+              if (isMounted) {
+                setAllRelatedStories((prev) => [...prev, ...formattedStories])
+              }
             }
           } catch (error) {
-            console.error(
-              'Failed to fetch MISO related stories:',
-              JSON.stringify(error)
-            )
+            console.error('Failed to fetch MISO related stories:', error)
           }
         }
       }
 
       window.addEventListener('scroll', handleScroll, { once: true })
-      return () => window.removeEventListener('scroll', handleScroll)
+      cleanupScrollHandler = () =>
+        window.removeEventListener('scroll', handleScroll)
     }
 
     // Execute after page is fully loaded to avoid blocking TTFB
@@ -222,11 +203,12 @@ export default function Story({
     }
 
     return () => {
+      isMounted = false
       window.removeEventListener('load', setupScrollHandler)
+      cleanupScrollHandler()
     }
   }, [postData.slug])
 
-  useSaveMemberArticleHistoryLocally(slug)
   const writersInString = useMemo(() => {
     return writers
       .map((writer) => {
@@ -235,75 +217,11 @@ export default function Story({
       .join(',')
   }, [writers])
 
-  useEffect(() => {
-    const fetchPostFullContent = async () => {
-      try {
-        const result = await client.query({
-          query: fetchPostFullContentBySlug,
-          variables: { slug },
-          context: {
-            headers: {
-              authorization: accessToken ? `Bearer ${accessToken}` : '',
-            },
-          },
-        })
-        const fullContent = result?.data?.post?.content ?? null
-        return fullContent
-      } catch (err) {
-        //TODO: send error log to our GCP log viewer
-        console.error(err)
-        return null
-      }
-    }
-    const updatePostContent = async () => {
-      const fullContent = await fetchPostFullContent()
-      setPostContent((preState) => {
-        return {
-          type: fullContent ? 'fullContent' : preState.type,
-          data: fullContent ?? preState.data,
-          isLoaded: true,
-        }
-      })
-    }
-
-    if (!isLogInProcessFinished) {
-      return
-    }
-    if (isLoggedIn && !postContent.isLoaded) {
-      updatePostContent()
-    } else if (
-      storyLayoutType === 'style-wide' ||
-      storyLayoutType === 'style-premium'
-    ) {
-      /**
-       * Why we need to setPostContent, even if state is all based on previous state ?
-       * Because in premium and wide layout, we use component `NavSubtitleNavigator` to select `<h2>` and `<h3>` in story content.
-       * However, if we not setPostContent to trigger re-render, `NavSubtitleNavigator` would select h2 and h3 which is not append to html yet.
-       *
-       * This is a work-around solution and might have better solution.
-       */
-      setPostContent((preState) => {
-        return {
-          ...preState,
-        }
-      })
-    }
-  }, [
-    isLogInProcessFinished,
-    isLoggedIn,
-    accessToken,
-    slug,
-    postContent.isLoaded,
-    storyLayoutType,
-  ])
-
   const renderStoryLayout = () => {
     /**
      * Because GA is currently unable to send custom event, we use gtm className to collect custom page-view.
      */
-    const classNameForGTM = isMember
-      ? 'GTM-premium-page-view'
-      : 'GTM-story-page-view'
+    const classNameForGTM = 'GTM-story-page-view'
     switch (storyLayoutType) {
       case 'style-normal':
         return (
@@ -312,16 +230,6 @@ export default function Story({
             postContent={postContent}
             headerData={headerData}
             flashNewsData={flashNewsData}
-            classNameForGTM={classNameForGTM}
-            allRelatedStories={allRelatedStories}
-          />
-        )
-      case 'style-premium':
-        return (
-          <StoryPremiumStyle
-            postData={postData}
-            postContent={postContent}
-            headerData={headerData}
             classNameForGTM={classNameForGTM}
             allRelatedStories={allRelatedStories}
           />
@@ -386,10 +294,7 @@ export default function Story({
         footer={{ type: 'empty' }}
       >
         <MisoPageView productIds={`story_${slug}`} />
-        <UserBehaviorLogger
-          isMemberArticle={isMember}
-          writers={writersInString}
-        />
+        <UserBehaviorLogger writers={writersInString} />
         {!storyLayoutJsx && (
           <Loading>
             <Image src={Skeleton} alt="loading..."></Image>
@@ -413,7 +318,16 @@ export default function Story({
  */
 export async function getServerSideProps({ params, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 300 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 300,
+        sharedCacheTime: 300,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
@@ -427,7 +341,7 @@ export async function getServerSideProps({ params, req, res }) {
       : getStoryClient(STORY_GQL_ENDPOINT) || client
 
     const result = await storyClient.query({
-      query: fetchPostBySlug,
+      query: fetchStoryPostBySlug,
       variables: { slug },
     })
 
@@ -456,20 +370,16 @@ export async function getServerSideProps({ params, req, res }) {
       }
     }
 
-    // Check if the post data has content in the brief, trimmedContent, or content fields
+    // Check if the post data has content in the brief or content fields
     const shouldCheckHasContent =
       style === 'article' || style === 'wide' || style === 'photography'
 
     if (shouldCheckHasContent) {
       const hasBrief = hasContentInRawContentBlock(postData.brief)
-
-      const hasTrimmedContent = hasContentInRawContentBlock(
-        postData.trimmedContent
-      )
       const hasFullContent = hasContentInRawContentBlock(postData.content)
 
       // If none of the fields have content, return notFound as true
-      if (!hasBrief && !hasTrimmedContent && !hasFullContent) {
+      if (!hasBrief && !hasFullContent) {
         return { notFound: true }
       }
     }
@@ -478,14 +388,10 @@ export async function getServerSideProps({ params, req, res }) {
     if (redirect) {
       return handleStoryPageRedirect(redirect)
     }
-    const storyLayoutType = getStoryLayoutType(
-      postData?.style,
-      postData?.isMember
-    )
+    const storyLayoutType = getStoryLayoutType(postData?.style)
     let headerData = null
     let flashNewsData = null
     const shouldFetchDefaultHeaderData = storyLayoutType === 'style-normal'
-    const shouldFetchPremiumHeaderData = storyLayoutType === 'style-premium'
     if (shouldFetchDefaultHeaderData) {
       try {
         const fetchStaticJsonSafe = async (url, timeout) => {
@@ -534,24 +440,16 @@ export async function getServerSideProps({ params, req, res }) {
           globalLogFields
         )
       }
-    } else if (shouldFetchPremiumHeaderData) {
-      try {
-        headerData = await fetchHeaderDataInPremiumPageLayout()
-      } catch (err) {
-        headerData = { sectionsData: [] }
-        logAxiosError(
-          err,
-          `Error occurs while getting premium header data in story page (slug: ${slug})`,
-          globalLogFields
-        )
-      }
     }
 
     const jsonLdData = generateJsonLdsData(postData, '/story/')
+    const initialRelatedStories = getInitialRelatedStories(postData)
+    const clientPostData = serializeStoryPostDataForClient(postData)
 
     return {
       props: {
-        postData,
+        postData: clientPostData,
+        initialRelatedStories,
         flashNewsData,
         headerData,
         storyLayoutType,

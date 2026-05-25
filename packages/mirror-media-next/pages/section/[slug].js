@@ -154,7 +154,16 @@ export default function Section({ postsCount, posts, section, headerData }) {
  */
 export async function getServerSideProps({ query, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 600 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 600,
+        sharedCacheTime: 600,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }

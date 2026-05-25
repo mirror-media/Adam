@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "concurrently \"node mocks/server\" \"next dev\"",
     "build": "next build",
+    "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
     "lint": "next lint",
     "start-amp-proxy-server": "node amp-proxy-server"
@@ -57,6 +58,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "13.0.7",
     "@types/facebook-js-sdk": "^3.3.6",
     "@types/google-publisher-tag": "^1.20230410.0",
     "concurrently": "^7.4.0",

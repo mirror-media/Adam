@@ -49,11 +49,9 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
 /**
  * Initializes and normalizes the related stories data.
  *
- * This function manually injects two key properties required by the `RelatedArticleList` component:
- * 1. `__typename: 'Post'`: Since `external.relateds` comes from a generic query, this field might be missing.
- *    The component uses it to determine the fallback URL path (e.g., `/story/` vs `/external/`).
- * 2. `url`: We explicitly construct the URL (`/story/${item.slug}`) to ensure the component navigates
- *    directly to the correct internal story page, bypassing the need for type inference.
+ * This function injects the route contract required by downstream related
+ * article components. `external.relateds` points to internal story posts, so
+ * each item should navigate to `/story/${item.slug}`.
  *
  * @param {Array} relateds - The raw related articles data from GraphQL
  * @returns {Array} - The normalized array with required fields
@@ -61,8 +59,8 @@ const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
 const initializeRelatedStories = (relateds) => {
   return (relateds ?? []).map((item) => ({
     ...item,
-    __typename: 'Post',
     url: `/story/${item.slug}`,
+    type: 'story',
   }))
 }
 
@@ -91,19 +89,19 @@ export default function External({ external, headerData, jsonLdData }) {
           if (result && result.data && result.data.products) {
             const formattedStories = result.data.products.map((product) => {
               const productId = product.product_id
-              const slug = productId.split('_').slice(2).join('_')
+              const relatedSlug = productId.split('_').slice(2).join('_')
 
               return {
                 id: productId,
-                slug: slug,
+                slug: relatedSlug,
                 title: product.title || '',
-                url: product.url || '',
+                url: product.url || `/external/${relatedSlug}`,
+                type: 'external',
                 heroImage: product.cover_image
                   ? {
                       resized: { original: product.cover_image },
                     }
                   : null,
-                publishedDate: new Date().toISOString(),
                 brief: { blocks: [{ text: '' }] },
                 categories: [],
                 sections: [],
@@ -227,7 +225,16 @@ export default function External({ external, headerData, jsonLdData }) {
  */
 export async function getServerSideProps({ params, req, res }) {
   if (ENV === 'prod') {
-    setPageCache(res, { cachePolicy: 'max-age', cacheTime: 300 }, req.url)
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 300,
+        sharedCacheTime: 300,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
   } else {
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
@@ -235,7 +242,7 @@ export async function getServerSideProps({ params, req, res }) {
   const { slug } = params
   const globalLogFields = getLogTraceObject(req)
 
-  const fetchStaticJsonSafe = async (url, timeout, label) => {
+  const fetchStaticJsonSafe = async (url, timeout) => {
     try {
       const mod = await import(
         '../../utils/server-side-only/fetch-static-json.js'
