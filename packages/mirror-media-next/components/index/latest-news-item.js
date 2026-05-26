@@ -3,6 +3,7 @@
 import styled from 'styled-components'
 import Link from 'next/link'
 import CustomImage from '@readr-media/react-image'
+import { normalizeImageForRender } from '../../utils/image.mjs'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -147,24 +148,7 @@ const Title = styled.div`
  * @returns {React.ReactElement}
  */
 export default function LatestNewsItem({ itemData }) {
-  /**
-   * If latest news is an external article, `itemData.heroImage` would be a url,
-   * such as 'https://www-somewebsite.com/some-image.jpeg'.
-   * @param {string | Article['heroImage']} heroImage
-   * @returns {{images: Record<string,string> , imagesWebp: Record<string,string> | null}}
-   */
-  const getRenderImages = (heroImage) => {
-    if (typeof heroImage === 'string') {
-      const images = { original: heroImage }
-      const imagesWebp = null
-      return { images, imagesWebp }
-    }
-
-    const images = heroImage?.resized ? heroImage.resized : { original: '' }
-    const imagesWebp = heroImage?.resizedWebp ? heroImage?.resizedWebp : null
-    return { images, imagesWebp }
-  }
-  const { images, imagesWebp } = getRenderImages(itemData.heroImage)
+  const heroImage = normalizeImageForRender(itemData.heroImage)
 
   return (
     <Link
@@ -178,8 +162,8 @@ export default function LatestNewsItem({ itemData }) {
           <CustomImage
             defaultImage="/images-next/default-og-img.png"
             loadingImage="images-next/loading.gif"
-            images={images}
-            imagesWebP={imagesWebp}
+            images={heroImage?.resized}
+            imagesWebP={heroImage?.resizedWebp}
             objectFit="cover"
             rwd={{
               mobile: '488px',
@@ -188,7 +172,7 @@ export default function LatestNewsItem({ itemData }) {
               default: '488px',
             }}
             alt={itemData.title}
-          ></CustomImage>
+          />
         </ImageContainer>
         <Detail>
           {itemData.sectionSlug && (

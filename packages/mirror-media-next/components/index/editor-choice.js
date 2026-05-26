@@ -6,6 +6,7 @@ import { Autoplay, Pagination, Navigation } from 'swiper'
 import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
 import Link from 'next/link'
+import { normalizeImageForRender } from '../../utils/image.mjs'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
@@ -214,10 +215,12 @@ const EditorChoiceContainer = styled.section`
  * @returns {import('react').JSX.Element}
  */
 const editorChoiceImageJsx = (heroImage, title) => {
+  const normalizedHeroImage = normalizeImageForRender(heroImage)
+
   return (
     <CustomImage
-      images={heroImage?.resized}
-      imagesWebP={heroImage?.resizedWebp}
+      images={normalizedHeroImage?.resized}
+      imagesWebP={normalizedHeroImage?.resizedWebp}
       defaultImage="/images-next/default-og-img.png"
       loadingImage="/images-next/loading.gif"
       rwd={{

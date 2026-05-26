@@ -2,6 +2,8 @@ import assert from 'node:assert/strict'
 import {
   buildResizedImagesFromOriginal,
   buildResizedWebPImagesFromOriginal,
+  compactImageForClientPayload,
+  compactListingImagePayload,
   getResizedUrl,
   normalizeImageForRender,
 } from './image.mjs'
@@ -55,4 +57,92 @@ assert.deepEqual(normalizeImageForRender({ resized: { original } }), {
   resizedWebp: buildResizedWebPImagesFromOriginal(original),
 })
 
+assert.deepEqual(normalizeImageForRender(original), {
+  resized: buildResizedImagesFromOriginal(original),
+  resizedWebp: buildResizedWebPImagesFromOriginal(original),
+})
+
 assert.deepEqual(normalizeImageForRender(null), null)
+
+assert.deepEqual(
+  compactImageForClientPayload({
+    __typename: 'Photo',
+    id: 'photo-id',
+    resized: {
+      __typename: 'Resized',
+      original,
+      w480: 'https://example.com/image-w480.jpg',
+      w800: '',
+    },
+    resizedWebp: {
+      __typename: 'ResizedWebp',
+      original: 'https://example.com/image.webP',
+      w480: 'https://example.com/image-w480.webP',
+    },
+  }),
+  {
+    id: 'photo-id',
+    resized: {
+      original,
+    },
+  }
+)
+
+assert.deepEqual(compactImageForClientPayload(original), original)
+
+assert.deepEqual(
+  compactListingImagePayload({
+    __typename: 'ListingResponse',
+    latest: [
+      {
+        __typename: 'Post',
+        slug: 'story-slug',
+        heroImage: {
+          __typename: 'Photo',
+          resized: {
+            __typename: 'Resized',
+            original,
+            w480: 'https://example.com/image-w480.jpg',
+          },
+          resizedWebp: {
+            original: 'https://example.com/image.webP',
+          },
+        },
+        og_image: {
+          resized: {
+            original: 'https://example.com/og.jpg',
+            w1600: 'https://example.com/og-w1600.jpg',
+          },
+          resizedWebp: {
+            original: 'https://example.com/og.webP',
+          },
+        },
+      },
+      {
+        slug: 'external-slug',
+        heroImage: 'https://partner.example.com/image.jpg',
+      },
+    ],
+  }),
+  {
+    latest: [
+      {
+        slug: 'story-slug',
+        heroImage: {
+          resized: {
+            original,
+          },
+        },
+        og_image: {
+          resized: {
+            original: 'https://example.com/og.jpg',
+          },
+        },
+      },
+      {
+        slug: 'external-slug',
+        heroImage: 'https://partner.example.com/image.jpg',
+      },
+    ],
+  }
+)

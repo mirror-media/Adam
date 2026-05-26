@@ -44,6 +44,7 @@ import {
 import Image from 'next/image'
 import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'
+import { compactListingImagePayload } from '../../../utils/image.mjs'
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
   ssr: false,
@@ -584,7 +585,7 @@ export default function StoryNormalStyle({
         }.json`,
         timeout: API_TIMEOUT,
       })
-      return res.data?.posts
+      return compactListingImagePayload(res.data?.posts ?? [])
         .filter((post) => post.slug !== slug)
         .slice(0, 6)
         .map((post) => {
@@ -614,7 +615,7 @@ export default function StoryNormalStyle({
         timeout: API_TIMEOUT,
       })
 
-      const popularNews = data
+      const popularNews = compactListingImagePayload(data ?? [])
         .map((post) => {
           const sectionsWithOrdered = getActiveOrderSection(
             post.sections,

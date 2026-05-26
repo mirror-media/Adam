@@ -7,6 +7,7 @@ import {
   URL_STATIC_NEWS_CATEGORY_INFO,
   URL_STATIC_NEWS_CATEGORY_POSTS,
 } from '../../config/index.mjs'
+import { compactListingImagePayload } from '../image.mjs'
 
 export function fetchPostsByCategorySlug(categorySlug, take, skip) {
   return client.query({
@@ -52,7 +53,9 @@ export async function fetchNewsCategoryPostsJSON(page = 1, take = 24) {
     const jsonIndex = (page - 1) % TAKE_PER_JSON
     const startIndex = jsonIndex * take
     const endIndex = startIndex + take
-    const postItems = response.data.posts.items.slice(startIndex, endIndex)
+    const postItems = compactListingImagePayload(
+      response.data.posts.items.slice(startIndex, endIndex)
+    )
 
     return {
       data: {

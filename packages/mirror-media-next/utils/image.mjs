@@ -1,4 +1,10 @@
 const RESIZED_IMAGE_KEYS = ['w480', 'w800', 'w1200', 'w1600', 'w2400']
+const LISTING_IMAGE_FIELD_KEYS = new Set([
+  'heroImage',
+  'og_image',
+  'ogImage',
+  'coverPhoto',
+])
 
 /**
  * @param {string} url
@@ -167,10 +173,14 @@ function normalizeResizedWebPImages(resizedWebp, fallbackOriginal) {
 }
 
 /**
- * @param {Record<string, any> | null | undefined} image
+ * @param {Record<string, any> | string | null | undefined} image
  * @returns {Record<string, any> | null}
  */
 function normalizeImageForRender(image) {
+  if (typeof image === 'string') {
+    return normalizeImageForRender({ resized: { original: image } })
+  }
+
   if (!image || typeof image !== 'object') {
     return null
   }
@@ -185,6 +195,77 @@ function normalizeImageForRender(image) {
       resized?.original
     ),
   }
+}
+
+/**
+ * @param {Record<string, any> | string | null | undefined} image
+ * @returns {Record<string, any> | string | null | undefined}
+ */
+function compactImageForClientPayload(image) {
+  if (typeof image === 'string' || image === null || image === undefined) {
+    return image
+  }
+
+  if (typeof image !== 'object') {
+    return undefined
+  }
+
+  const compacted = Object.entries(image).reduce((acc, [key, value]) => {
+    if (
+      key === '__typename' ||
+      key === 'resized' ||
+      key === 'resizedWebp' ||
+      value === undefined
+    ) {
+      return acc
+    }
+
+    acc[key] = compactListingImagePayload(value)
+    return acc
+  }, {})
+
+  const original = image.resized?.original || image.resizedWebp?.original
+
+  if (original) {
+    compacted.resized = { original }
+  }
+
+  return Object.keys(compacted).length ? compacted : undefined
+}
+
+/**
+ * Compact static listing payloads to the same image contract used by the
+ * story payload: only original URLs are sent to the browser, and render-time
+ * helpers rebuild generated sizes.
+ *
+ * @param {any} payload
+ * @returns {any}
+ */
+function compactListingImagePayload(payload) {
+  if (Array.isArray(payload)) {
+    return payload.map(compactListingImagePayload)
+  }
+
+  if (!payload || typeof payload !== 'object') {
+    return payload
+  }
+
+  return Object.entries(payload).reduce((acc, [key, value]) => {
+    if (key === '__typename' || value === undefined) {
+      return acc
+    }
+
+    if (LISTING_IMAGE_FIELD_KEYS.has(key)) {
+      const compactedImage = compactImageForClientPayload(value)
+      if (compactedImage !== undefined) {
+        acc[key] = compactedImage
+      }
+      return acc
+    }
+
+    acc[key] = compactListingImagePayload(value)
+    return acc
+  }, {})
 }
 
 /**
@@ -213,6 +294,8 @@ function getResizedUrl(resized, preferredSize = 'w1600') {
 export {
   buildResizedImagesFromOriginal,
   buildResizedWebPImagesFromOriginal,
+  compactImageForClientPayload,
+  compactListingImagePayload,
   getResizedUrl,
   normalizeImageForRender,
   normalizeResizedImages,

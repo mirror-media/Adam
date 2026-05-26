@@ -13,6 +13,7 @@ import {
 } from '../../../config/index.mjs'
 
 import { getActiveOrderSection } from '../../../utils'
+import { compactListingImagePayload } from '../../../utils/image.mjs'
 
 /**
  * @typedef {import('./related-article-list').Relateds} Relateds
@@ -60,13 +61,18 @@ export default function Aside({
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
       const latestUrl = `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`
-      console.warn('[aside-debug] latestUrl:', latestUrl, 'base:', URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION)
+      console.warn(
+        '[aside-debug] latestUrl:',
+        latestUrl,
+        'base:',
+        URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION
+      )
       const res = await axios({
         method: 'get',
         url: latestUrl,
         timeout: API_TIMEOUT,
       })
-      return res.data?.posts
+      return compactListingImagePayload(res.data?.posts ?? [])
         .filter((post) => post.slug !== storySlug)
         .slice(0, 6)
         .map((post) => {
@@ -97,7 +103,7 @@ export default function Aside({
         timeout: API_TIMEOUT,
       })
 
-      const popularNews = data
+      const popularNews = compactListingImagePayload(data ?? [])
         .map((post) => {
           const sectionsWithOrdered = getActiveOrderSection(
             post.sections,

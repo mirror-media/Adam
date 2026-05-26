@@ -21,6 +21,7 @@ import {
 } from '../../utils/api/section'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '../../utils/ad'
+import { compactListingImagePayload } from '../../utils/image.mjs'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
@@ -264,17 +265,19 @@ export async function getServerSideProps({ req, res }) {
           }
         }
 
-        return /** @type {Article} */ ({
-          id: item.id || '',
-          slug: item.slug || '',
-          title: item.title || '',
-          publishedDate: item.publishedDate || '',
-          type: item.type,
-          brief: { blocks: [{ text: briefText }] },
-          categories: [],
-          sections: [],
-          ...imageObject,
-        })
+        return /** @type {Article} */ (
+          compactListingImagePayload({
+            id: item.id || '',
+            slug: item.slug || '',
+            title: item.title || '',
+            publishedDate: item.publishedDate || '',
+            type: item.type,
+            brief: { blocks: [{ text: briefText }] },
+            categories: [],
+            sections: [],
+            ...imageObject,
+          })
+        )
       })
       return [counts.posts + counts.externals || 0, formattedItems]
     },

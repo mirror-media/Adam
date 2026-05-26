@@ -24,6 +24,7 @@ import { setPageCache } from '../utils/cache-setting'
 import { fetchPromoteVideosList } from '../utils/api/promote-videos'
 import { fetchForumHeadlines } from '../utils/api/forum-headlines'
 import { useDisplayAd } from '../hooks/useDisplayAd'
+import { compactListingImagePayload } from '../utils/image.mjs'
 
 // Components
 import EditorChoice from '../components/index/editor-choice'
@@ -257,11 +258,11 @@ export async function getServerSideProps({ res, req }) {
       globalLogFields
     )
     editorChoicesData = Array.isArray(postResponse?.data?.choices)
-      ? postResponse?.data?.choices
+      ? compactListingImagePayload(postResponse?.data?.choices)
       : []
 
     latestNewsData = Array.isArray(postResponse?.data?.latest)
-      ? postResponse?.data?.latest
+      ? compactListingImagePayload(postResponse?.data?.latest)
       : []
 
     flashNewsData = processSettledResult(

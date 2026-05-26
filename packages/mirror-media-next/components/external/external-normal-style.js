@@ -46,6 +46,7 @@ import ExternalArticleBrief from './external-article-brief'
 import ResponsivePortal from '../story/shared/client-side-portal'
 import useWindowDimensions from '../../hooks/use-window-dimensions'
 import { mediaSize } from '../../styles/media'
+import { compactListingImagePayload } from '../../utils/image.mjs'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,
@@ -496,7 +497,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
         url: `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${EXTERNAL_DEFAULT_SECTION.slug}.json`,
         timeout: API_TIMEOUT,
       })
-      return res.data?.posts
+      return compactListingImagePayload(res.data?.posts ?? [])
         .filter((post) => post.slug !== slug)
         .slice(0, 6)
         .map((post) => {
@@ -525,7 +526,7 @@ export default function ExternalNormalStyle({ external, allRelatedStories }) {
         url: URL_STATIC_POPULAR_NEWS,
         timeout: API_TIMEOUT,
       })
-      const popularNews = data
+      const popularNews = compactListingImagePayload(data ?? [])
         .map((post) => {
           const sectionsWithOrdered = getActiveOrderSection(
             post.sections,

@@ -16,6 +16,7 @@ import {
   getSectionSlugGql,
   getArticleHref,
 } from '../../utils'
+import { compactListingImagePayload } from '../../utils/image.mjs'
 import { IndexTitle } from './share/index-title'
 
 const StyledMicroAd = dynamic(
@@ -104,7 +105,8 @@ function removeArticleWithExternalLink(articles) {
  * @returns {Article[]}
  */
 const transformRawDataContent = function (articleRawData) {
-  const formateArticleData = articleRawData.map((item) => {
+  const compactedArticleRawData = compactListingImagePayload(articleRawData)
+  const formateArticleData = compactedArticleRawData.map((item) => {
     const sectionSlug = getSectionSlugGql(item.sections, item.partner)
     const sectionName = getSectionNameGql(item.sections, item.partner)
     const articleHref = getArticleHref(item.slug, item.style, item.partner)
