@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import Link from 'next/link'
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -93,38 +94,42 @@ export default function RelatedPosts({ relateds = [] }) {
     <Wrapper>
       <Title>延伸閱讀</Title>
       <PostsList>
-        {relateds.map((related) => (
-          <li key={related.id}>
-            <PostCard>
-              <Link
-                href={`/story/${related.slug}`}
-                target="_blank"
-                className="article-image"
-              >
-                <ImageWrapper>
-                  <Image
-                    images={related.heroImage?.resized}
-                    imagesWebP={related.heroImage?.resizedWebp}
-                    alt={related.title}
-                    rwd={{
-                      mobile: '280px',
-                      tablet: '87px',
-                      laptop: '135px',
-                    }}
-                    defaultImage={'/images-next/default-og-img.png'}
-                    loadingImage={'/images-next/loading.gif'}
-                  />
-                </ImageWrapper>
-              </Link>
+        {relateds.map((related) => {
+          const heroImage = normalizeImageForRender(related.heroImage)
 
-              <figcaption className="article-title">
-                <Link href={`/story/${related.slug}`} target="_blank">
-                  {related.title}
+          return (
+            <li key={related.id}>
+              <PostCard>
+                <Link
+                  href={`/story/${related.slug}`}
+                  target="_blank"
+                  className="article-image"
+                >
+                  <ImageWrapper>
+                    <Image
+                      images={heroImage?.resized}
+                      imagesWebP={heroImage?.resizedWebp}
+                      alt={related.title}
+                      rwd={{
+                        mobile: '280px',
+                        tablet: '87px',
+                        laptop: '135px',
+                      }}
+                      defaultImage={'/images-next/default-og-img.png'}
+                      loadingImage={'/images-next/loading.gif'}
+                    />
+                  </ImageWrapper>
                 </Link>
-              </figcaption>
-            </PostCard>
-          </li>
-        ))}
+
+                <figcaption className="article-title">
+                  <Link href={`/story/${related.slug}`} target="_blank">
+                    {related.title}
+                  </Link>
+                </figcaption>
+              </PostCard>
+            </li>
+          )
+        })}
       </PostsList>
     </Wrapper>
   )

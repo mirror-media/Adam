@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import CustomImage from '@readr-media/react-image'
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -173,6 +174,7 @@ export default function HeroImageAndVideo({
 }) {
   const shouldShowHeroVideo = Boolean(heroVideo)
   const shouldShowHeroImage = Boolean(!shouldShowHeroVideo && heroImage)
+  const normalizedHeroImage = normalizeImageForRender(heroImage)
 
   const getHeroJsx = () => {
     if (shouldShowHeroVideo) {
@@ -191,8 +193,8 @@ export default function HeroImageAndVideo({
     } else if (shouldShowHeroImage) {
       return (
         <CustomImage
-          images={heroImage.resized}
-          imagesWebP={heroImage.resizedWebp}
+          images={normalizedHeroImage?.resized}
+          imagesWebP={normalizedHeroImage?.resizedWebp}
           defaultImage={'/images-next/default-og-img.png'}
           alt={heroCaption ? heroCaption : title}
           objectFit={'cover'}

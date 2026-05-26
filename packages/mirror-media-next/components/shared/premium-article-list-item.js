@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { transformTimeDataIntoSlashFormat } from '../../utils'
+import { normalizeImageForRender } from '../../utils/image.mjs'
 
 import Image from '@readr-media/react-image'
 
@@ -119,13 +120,14 @@ const ItemDate = styled.div`
 export default function PremiumArticleListItem({ item, section }) {
   const itemSection =
     section || item.sections.find((section) => section.slug === 'member')
+  const heroImage = normalizeImageForRender(item.heroImage)
 
   return (
     <ItemWrapper href={`/story/${item.slug}`} target="_blank">
       <ImageContainer>
         <Image
-          images={item.heroImage?.resized}
-          imagesWebP={item.heroImage?.resizedWebp}
+          images={heroImage?.resized}
+          imagesWebP={heroImage?.resizedWebp}
           alt={item.title}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"

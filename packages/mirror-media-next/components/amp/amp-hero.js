@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { getResizedUrl } from '../../utils/image.mjs'
 
 const HeroWrapper = styled.div`
   margin-top: 20px;
@@ -79,16 +80,21 @@ export default function AmpHero({
         </HeroWrapper>
       )
     } else if (shouldShowHeroImage) {
+      const resizedUrl = getResizedUrl(heroImage?.resized)
       /**
        * The rules for fallback of the heroImage:
-       * 1. Show w1600 first.
-       * 2. If the URL of w1600 is an empty string or an invalid URL, then show the original by using <amp-img> with `fallback` attribute.
-       * 3. If the URL of original is an empty string, then show the default image url by replacing src of <amp-img>.
+       * 1. Show the preferred resized URL first.
+       * 2. If it is unavailable or invalid, use the original URL via <amp-img> fallback.
+       * 3. If the original URL is empty, show the default image.
        */
       return (
         <HeroWrapper>
           {/** @ts-ignore */}
-          <amp-img src={heroImage?.resized?.w1600} alt={imageAlt} layout="fill">
+          <amp-img
+            src={resizedUrl || '/images-next/default-og-img.png'}
+            alt={imageAlt}
+            layout="fill"
+          >
             {/** @ts-ignore */}
             <amp-img
               fallback=""

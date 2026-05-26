@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import { transformTimeDataIntoDotFormat } from '../../utils'
+import { normalizeImageForRender } from '../../utils/image.mjs'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -121,6 +122,7 @@ export default function ArticleListItem({ item, section }) {
   const formattedPublishedDate = transformTimeDataIntoDotFormat(publishedDate)
   const itemSection =
     section || item.sections.find((section) => section.slug !== 'member')
+  const heroImage = normalizeImageForRender(item.heroImage)
 
   return (
     <ItemWrapper
@@ -133,8 +135,8 @@ export default function ArticleListItem({ item, section }) {
     >
       <ImageContainer>
         <Image
-          images={item.heroImage?.resized}
-          imagesWebP={item.heroImage?.resizedWebp}
+          images={heroImage?.resized}
+          imagesWebP={heroImage?.resizedWebp}
           alt={item.title}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"

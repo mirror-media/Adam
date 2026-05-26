@@ -63,7 +63,7 @@ export default function Topic({ topic, slideshowImages, headerData }) {
           url: `https://${SITE_URL}/story/${post.slug}`,
           headline: post.title,
           image:
-            post.heroImage?.resized?.w800 ||
+            getResizedUrl(post.heroImage?.resized, 'w800') ||
             `https://${SITE_URL}/images-next/default-og-img.png`,
           datePublished: toTaipeiISOString(post.publishedDate),
           author: hasWriter

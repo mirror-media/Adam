@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { GCP_PROJECT_ID } from '../config/index.mjs'
 import timezone from 'dayjs/plugin/timezone'
+import { getResizedUrl } from './image.mjs'
 
 /**
  * @typedef {import('../apollo/fragments/section').Section[]} Sections
@@ -217,22 +218,6 @@ const convertDraftToText = (rawContentBlock) => {
         : text.trim()
 
     return ogDescription
-  } else {
-    return undefined
-  }
-}
-
-/**
- * To get the URL link for `og-image`, sorted in ascending order based on file size.
- * Skip w480 to prevent image size minimum 200 x 200.
- * It's recommended for using images which is at least 1200 * 630 pixels on high resolution devices, so we use w1600 at first.
- * @see https://developers.facebook.com/docs/sharing/webmasters/images
- * @param {import('../apollo/fragments/photo').Resized | undefined | null} resized
- * @returns {string | undefined}
- */
-const getResizedUrl = (resized) => {
-  if (resized) {
-    return resized?.w1600 || resized?.w2400 || resized?.original
   } else {
     return undefined
   }

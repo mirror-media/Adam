@@ -1,5 +1,6 @@
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
+import { normalizeImageForRender } from '../../utils/image.mjs'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -69,6 +70,7 @@ const Title = styled.h3`
  */
 export default function PopularNewsItem({ item }) {
   const firstSection = item.sectionsWithOrdered?.[0] || item.sections?.[0]
+  const heroImage = normalizeImageForRender(item.heroImage)
   return (
     <LinkWrapper
       href={`/story/${item.slug}`}
@@ -76,7 +78,7 @@ export default function PopularNewsItem({ item }) {
       className="GTM-idle-window-click-popular-list"
     >
       <Image
-        images={item?.heroImage?.resized}
+        images={heroImage?.resized}
         alt={item.title}
         loadingImage={'/images-next/loading.gif'}
         defaultImage={'/images-next/default-og-img.png'}

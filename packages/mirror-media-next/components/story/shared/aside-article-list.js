@@ -2,6 +2,7 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import { useEffect, useState, useRef, useCallback } from 'react'
 import { getArticleHref } from '../../../utils'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 import Image from '@readr-media/react-image'
 
 /**
@@ -288,14 +289,15 @@ export default function AsideArticleList({
   }, [isLoaded, handleLoadMore])
   const newsJsx = item.map((item) => {
     const articleHref = getArticleHref(item.slug, item.style, undefined)
+    const heroImage = normalizeImageForRender(item.heroImage)
     return (
       <li key={item.id}>
         {isLoaded ? (
           <Article>
             <Link href={articleHref} target="_blank" className="article-image">
               <Image
-                images={item?.heroImage?.resized}
-                imagesWebP={item?.heroImage?.resizedWebp}
+                images={heroImage?.resized}
+                imagesWebP={heroImage?.resizedWebp}
                 alt={item.title}
                 loadingImage={'/images-next/loading.gif'}
                 defaultImage={'/images-next/default-og-img.png'}

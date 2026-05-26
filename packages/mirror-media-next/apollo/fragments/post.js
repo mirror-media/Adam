@@ -323,7 +323,7 @@ export const post = gql`
     og_title
     og_image {
       resized {
-        w1600
+        original
       }
     }
     og_description

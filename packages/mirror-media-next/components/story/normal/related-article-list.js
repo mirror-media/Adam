@@ -10,6 +10,7 @@ import { mediaSize } from '../../../styles/media'
 import { MICRO_AD_UNITS } from '../../../constants/ads'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import gnewsGif from '../../../public/images-next/story/gnews-gif.gif'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 
 const StyledMicroAd = dynamic(
   () => import('../../../components/ads/micro-ad/micro-ad-with-label'),
@@ -203,50 +204,54 @@ export default function RelatedArticleList({
 
   const relatedsArticleJsx = relateds.length ? (
     <ArticleWrapper>
-      {relateds.map((related) => (
-        <li key={related.id}>
-          <Article>
-            <Link
-              href={related.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`article-image GTM-story-related-list ${
-                related.isMesoRecommend
-                  ? 'GTM-story-related-miso'
-                  : 'GTM-story-related-editor'
-              }`}
-            >
-              <Image
-                images={related.heroImage?.resized}
-                imagesWebP={related.heroImage?.resizedWebp}
-                alt={related.title}
-                rwd={{
-                  mobile: '500px',
-                  tablet: '500px',
-                  laptop: '500px',
-                }}
-                defaultImage={'/images-next/default-og-img.png'}
-                loadingImage={'/images-next/loading.gif'}
-              />
-            </Link>
+      {relateds.map((related) => {
+        const heroImage = normalizeImageForRender(related.heroImage)
 
-            <StyledFigcaption className="article-title">
+        return (
+          <li key={related.id}>
+            <Article>
               <Link
                 href={related.url}
-                className={`GTM-story-related-list ${
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`article-image GTM-story-related-list ${
                   related.isMesoRecommend
                     ? 'GTM-story-related-miso'
                     : 'GTM-story-related-editor'
                 }`}
-                target="_blank"
-                rel="noopener noreferrer"
               >
-                {related.title}
+                <Image
+                  images={heroImage?.resized}
+                  imagesWebP={heroImage?.resizedWebp}
+                  alt={related.title}
+                  rwd={{
+                    mobile: '500px',
+                    tablet: '500px',
+                    laptop: '500px',
+                  }}
+                  defaultImage={'/images-next/default-og-img.png'}
+                  loadingImage={'/images-next/loading.gif'}
+                />
               </Link>
-            </StyledFigcaption>
-          </Article>
-        </li>
-      ))}
+
+              <StyledFigcaption className="article-title">
+                <Link
+                  href={related.url}
+                  className={`GTM-story-related-list ${
+                    related.isMesoRecommend
+                      ? 'GTM-story-related-miso'
+                      : 'GTM-story-related-editor'
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {related.title}
+                </Link>
+              </StyledFigcaption>
+            </Article>
+          </li>
+        )
+      })}
     </ArticleWrapper>
   ) : null
 

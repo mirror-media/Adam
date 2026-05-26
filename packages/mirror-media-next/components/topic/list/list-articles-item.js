@@ -3,6 +3,7 @@ import Image from '@readr-media/react-image'
 
 import { transformTimeData } from '../../../utils'
 import { color } from '../../../styles/theme/color'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 
 /** @typedef {import('../../../type/theme').Theme} Theme */
 
@@ -134,6 +135,7 @@ const ItemBrief = styled.div`
 export default function ListArticlesItem({ item }) {
   const { slug, sections, heroImage, title, publishedDate, brief } = item
   const itemSection = sections.find((section) => section.slug !== 'member')
+  const normalizedHeroImage = normalizeImageForRender(heroImage)
 
   return (
     <ItemWrapper
@@ -143,8 +145,8 @@ export default function ListArticlesItem({ item }) {
     >
       <ImageContainer className="imageContainer">
         <Image
-          images={heroImage?.resized}
-          imagesWebP={heroImage?.resizedWebp}
+          images={normalizedHeroImage?.resized}
+          imagesWebP={normalizedHeroImage?.resizedWebp}
           alt={title}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"

@@ -42,19 +42,6 @@ export const heroImage = gql`
     }
     resized {
       original
-      w480
-      w800
-      w1200
-      w1600
-      w2400
-    }
-    resizedWebp {
-      original
-      w480
-      w800
-      w1200
-      w1600
-      w2400
     }
   }
 `
@@ -63,13 +50,6 @@ export const relatedPostHeroImage = gql`
   fragment relatedPostHeroImage on Photo {
     resized {
       original
-      w480
-      w800
-    }
-    resizedWebp {
-      original
-      w480
-      w800
     }
   }
 `

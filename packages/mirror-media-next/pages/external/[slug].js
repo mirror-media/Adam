@@ -24,6 +24,7 @@ import dynamic from 'next/dynamic'
 import { getRelatedStories } from '../../pages/api/recomemd'
 import { useState, useEffect } from 'react'
 import { toTaipeiISOString } from '../../utils/index'
+import { formatMisoRelatedStories } from '../../utils/miso-related-stories.mjs'
 
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
@@ -87,26 +88,12 @@ export default function External({ external, headerData, jsonLdData }) {
           )
 
           if (result && result.data && result.data.products) {
-            const formattedStories = result.data.products.map((product) => {
-              const productId = product.product_id
-              const relatedSlug = productId.split('_').slice(2).join('_')
-
-              return {
-                id: productId,
-                slug: relatedSlug,
-                title: product.title || '',
-                url: product.url || `/external/${relatedSlug}`,
+            const formattedStories = formatMisoRelatedStories(
+              result.data.products,
+              {
                 type: 'external',
-                heroImage: product.cover_image
-                  ? {
-                      resized: { original: product.cover_image },
-                    }
-                  : null,
-                brief: { blocks: [{ text: '' }] },
-                categories: [],
-                sections: [],
               }
-            })
+            )
 
             setAllRelatedStories((prev) => [...prev, ...formattedStories])
           }

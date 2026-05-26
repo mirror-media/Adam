@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import Link from 'next/link'
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
  */
@@ -133,48 +134,52 @@ const Article = styled.figure`
 export default function RelatedArticleList({ relateds }) {
   const relatedsArticleJsx = relateds.length ? (
     <ArticleWrapper>
-      {relateds.map((related) => (
-        <li key={related.id}>
-          <Article>
-            <Link
-              href={`/story/${related.slug}`}
-              target="_blank"
-              className={`article-image GTM-story-related-list ${
-                related.isMesoRecommend
-                  ? 'GTM-story-related-miso'
-                  : 'GTM-story-related-editor'
-              }`}
-            >
-              <Image
-                images={related.heroImage?.resized}
-                imagesWebP={related?.heroImage?.resizedWebp}
-                alt={related.title}
-                rwd={{
-                  mobile: '500px',
-                  tablet: '500px',
-                  laptop: '500px',
-                }}
-                width={'100%'}
-                height={'100%'}
-                defaultImage={'/images-next/default-og-img.png'}
-                loadingImage={'/images-next/loading.gif'}
-              />
-            </Link>
+      {relateds.map((related) => {
+        const heroImage = normalizeImageForRender(related.heroImage)
 
-            <figcaption
-              className={`article-title GTM-story-related-list ${
-                related.isMesoRecommend
-                  ? 'GTM-story-related-miso'
-                  : 'GTM-story-related-editor'
-              }`}
-            >
-              <Link href={`/story/${related.slug}`} target="_blank">
-                {related.title}
+        return (
+          <li key={related.id}>
+            <Article>
+              <Link
+                href={`/story/${related.slug}`}
+                target="_blank"
+                className={`article-image GTM-story-related-list ${
+                  related.isMesoRecommend
+                    ? 'GTM-story-related-miso'
+                    : 'GTM-story-related-editor'
+                }`}
+              >
+                <Image
+                  images={heroImage?.resized}
+                  imagesWebP={heroImage?.resizedWebp}
+                  alt={related.title}
+                  rwd={{
+                    mobile: '500px',
+                    tablet: '500px',
+                    laptop: '500px',
+                  }}
+                  width={'100%'}
+                  height={'100%'}
+                  defaultImage={'/images-next/default-og-img.png'}
+                  loadingImage={'/images-next/loading.gif'}
+                />
               </Link>
-            </figcaption>
-          </Article>
-        </li>
-      ))}
+
+              <figcaption
+                className={`article-title GTM-story-related-list ${
+                  related.isMesoRecommend
+                    ? 'GTM-story-related-miso'
+                    : 'GTM-story-related-editor'
+                }`}
+              >
+                <Link href={`/story/${related.slug}`} target="_blank">
+                  {related.title}
+                </Link>
+              </figcaption>
+            </Article>
+          </li>
+        )
+      })}
     </ArticleWrapper>
   ) : null
 

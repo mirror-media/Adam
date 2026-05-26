@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { getResizedUrl } from '../../../utils/image.mjs'
 
 /**
  * @param {Object} props
@@ -143,12 +144,7 @@ export default function HeroSection({
   return (
     <HeroImage
       imageUrl={
-        heroImage?.resized?.original ||
-        heroImage?.resized?.w2400 ||
-        heroImage?.resized?.w1600 ||
-        heroImage?.resized?.w1200 ||
-        heroImage?.resized?.w800 ||
-        heroImage?.resized?.w480 ||
+        getResizedUrl(heroImage?.resized, 'w2400') ||
         '/images-next/default-og-img.png'
       }
       isIOS={isIOSDevice}

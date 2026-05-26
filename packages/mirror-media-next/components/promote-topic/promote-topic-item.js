@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import CustomImage from '@readr-media/react-image'
+import { normalizeImageForRender } from '../../utils/image.mjs'
 
 const Card = styled.a`
   display: block;
@@ -66,8 +67,9 @@ const Title = styled.p`
  * @returns {React.ReactElement}
  */
 export default function PromoteTopicItem({ topic }) {
-  const images = topic.heroImage.resized ?? {}
-  const imagesWebP = topic.heroImage.resizedWebp ?? null
+  const heroImage = normalizeImageForRender(topic.heroImage)
+  const images = heroImage?.resized ?? {}
+  const imagesWebP = heroImage?.resizedWebp ?? null
 
   return (
     <Card href={`/topic/${topic.slug}`} target="_blank" rel="noreferrer">

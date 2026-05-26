@@ -32,6 +32,7 @@ import { generateJsonLdsData } from '../../../components/story/shared/json-lds-d
 import { logGqlError } from '../../../utils/log/shared'
 import { getRelatedStories } from '../../api/recomemd'
 import { toTaipeiISOString } from '../../../utils/index'
+import { formatMisoRelatedStories } from '../../../utils/miso-related-stories.mjs'
 
 export const config = { amp: true }
 
@@ -302,27 +303,13 @@ export async function getServerSideProps({ params, req, res }) {
         )
 
         if (result && result.data && result.data.products) {
-          const formattedStories = result.data.products.map((product) => {
-            const productId = product.product_id
-            const relatedSlug = productId.split('_').slice(2).join('_')
-
-            return {
-              id: productId,
-              slug: relatedSlug,
-              title: product.title || '',
-              url: product.url || `/story/${relatedSlug}`,
+          const formattedStories = formatMisoRelatedStories(
+            result.data.products,
+            {
               type: 'story',
-              heroImage: product.cover_image
-                ? {
-                    resized: { original: product.cover_image },
-                  }
-                : null,
-              brief: { blocks: [{ text: '' }] },
-              categories: [],
-              sections: [],
               isMesoRecommend: true,
             }
-          })
+          )
           allRelatedStories = [...initialStories, ...formattedStories]
         }
       } catch (error) {

@@ -9,6 +9,7 @@ import Layout from '../components/shared/layout'
 import ShareHeader from '../components/header/share-header'
 import { HeaderSkeleton } from '../components/header/normal/header'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
+import { normalizeImageForRender } from '../utils/image.mjs'
 /** @typedef {import('../apollo/fragments/post').AsideListingPost & {brief: import('../apollo/fragments/post').Post['brief']} } ArticleDataWithBrief */
 /**
  * @typedef {import('../components/header/share-header').HeaderData} HeaderData
@@ -235,6 +236,7 @@ export default function Custom404() {
     <>
       {popularNews.map((post) => {
         const brief = post?.brief?.blocks?.[0]?.text
+        const heroImage = normalizeImageForRender(post.heroImage)
         return (
           <PostCard key={post.id}>
             <Link
@@ -247,8 +249,8 @@ export default function Custom404() {
                   <CustomImage
                     loadingImage="/images-next/loading.gif"
                     defaultImage="/images-next/default-og-img.png"
-                    images={post.heroImage?.resized}
-                    imagesWebP={post.heroImage?.resizedWebp}
+                    images={heroImage?.resized}
+                    imagesWebP={heroImage?.resizedWebp}
                     rwd={{
                       mobile: '284px',
                       tablet: '284px',

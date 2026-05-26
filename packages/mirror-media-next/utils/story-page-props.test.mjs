@@ -143,6 +143,10 @@ const postFragmentSource = readFileSync(
   join(currentDir, '../apollo/fragments/post.js'),
   'utf8'
 )
+const photoFragmentSource = readFileSync(
+  join(currentDir, '../apollo/fragments/photo.js'),
+  'utf8'
+)
 const cacheSettingSource = readFileSync(
   join(currentDir, './cache-setting.js'),
   'utf8'
@@ -165,6 +169,27 @@ assert.doesNotMatch(
   postFragmentSource.match(/export const relatedPost = gql`[\s\S]*?`\n/)?.[0] ??
     '',
   /\.\.\.heroImage/
+)
+const heroImageFragment =
+  photoFragmentSource.match(/export const heroImage = gql`[\s\S]*?`\n/)?.[0] ??
+  ''
+const relatedPostHeroImageFragment =
+  photoFragmentSource.match(
+    /export const relatedPostHeroImage = gql`[\s\S]*?`\n/
+  )?.[0] ?? ''
+const postFragment =
+  postFragmentSource.match(/export const post = gql`[\s\S]*?`\n/)?.[0] ?? ''
+
+assert.match(heroImageFragment, /resized\s*{\s*original\s*}/)
+assert.doesNotMatch(heroImageFragment, /w480|w800|w1200|w1600|w2400/)
+assert.doesNotMatch(heroImageFragment, /resizedWebp/)
+assert.match(relatedPostHeroImageFragment, /resized\s*{\s*original\s*}/)
+assert.doesNotMatch(relatedPostHeroImageFragment, /w480|w800|w1200|w1600|w2400/)
+assert.doesNotMatch(relatedPostHeroImageFragment, /resizedWebp/)
+assert.match(postFragment, /og_image\s*{\s*resized\s*{\s*original\s*}/)
+assert.doesNotMatch(
+  postFragment.match(/og_image\s*{[\s\S]*?}\s*}/)?.[0] ?? '',
+  /w1600/
 )
 
 assert.match(cacheSettingSource, /case 'no-store':\s*case 'no-cache':/)

@@ -10,6 +10,7 @@ import {
   getSectionSlugGql,
   getArticleHref,
 } from '../../../utils'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 import Image from '@readr-media/react-image'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { needInsertPopInAdAfter, getPopInId } from '../../../utils/ad'
@@ -334,6 +335,7 @@ export default function AsideArticleList({
     const sectionSlug = getSectionSlugGql(item.sectionsWithOrdered, undefined)
     const sectionName = getSectionNameGql(item.sectionsWithOrdered, undefined)
     const articleHref = getArticleHref(item.slug, item.style, undefined)
+    const heroImage = normalizeImageForRender(item.heroImage)
 
     /**
      * Determines whether to show a pop-in ad at a given index.
@@ -359,8 +361,8 @@ export default function AsideArticleList({
                 className={`article-image ${gtmClassName}`}
               >
                 <Image
-                  images={item?.heroImage?.resized}
-                  imagesWebP={item?.heroImage?.resizedWebp}
+                  images={heroImage?.resized}
+                  imagesWebP={heroImage?.resizedWebp}
                   alt={item.title}
                   loadingImage={'/images-next/loading.gif'}
                   defaultImage={'/images-next/default-og-img.png'}

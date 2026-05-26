@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import Image from '@readr-media/react-image'
 import { parseUrl } from '../../../utils/topic'
+import { normalizeResizedImages } from '../../../utils/image.mjs'
 
 const ItemWrapper = styled.a`
   display: block;
@@ -83,11 +84,12 @@ export default function TopicListItem({ item }) {
         }
       : null) ||
     item.heroImage?.resized
+  const normalizedImages = normalizeResizedImages(images)
   return (
     <ItemWrapper href={`/topic/${item.slug}`} target="_blank">
       <ImageContainer>
         <Image
-          images={images}
+          images={normalizedImages}
           alt={item.name}
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"

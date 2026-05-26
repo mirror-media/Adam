@@ -34,6 +34,7 @@ import {
   getInitialRelatedStories,
   serializeStoryPostDataForClient,
 } from '../../utils/story-page-props.mjs'
+import { formatMisoRelatedStories } from '../../utils/miso-related-stories.mjs'
 
 import JsonLdsScript from '../../components/story/shared/json-lds-script'
 import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
@@ -156,27 +157,13 @@ export default function Story({
             )
 
             if (result && result.data && result.data.products) {
-              const formattedStories = result.data.products.map((product) => {
-                const productId = product.product_id
-                const relatedSlug = productId.split('_').slice(2).join('_')
-
-                return {
-                  id: productId,
-                  slug: relatedSlug,
-                  title: product.title || '',
-                  url: product.url || `/story/${relatedSlug}`,
+              const formattedStories = formatMisoRelatedStories(
+                result.data.products,
+                {
                   type: 'story',
-                  heroImage: product.cover_image
-                    ? {
-                        resized: { original: product.cover_image },
-                      }
-                    : null,
-                  brief: { blocks: [{ text: '' }] },
-                  categories: [],
-                  sections: [],
                   isMesoRecommend: true,
                 }
-              })
+              )
 
               if (isMounted) {
                 setAllRelatedStories((prev) => [...prev, ...formattedStories])

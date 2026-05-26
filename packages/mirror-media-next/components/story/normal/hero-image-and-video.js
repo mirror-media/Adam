@@ -2,6 +2,7 @@ import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
 import Image from 'next/image'
 import defaultImage from '../../../public/images-next/default-og-img.png'
+import { normalizeImageForRender } from '../../../utils/image.mjs'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp' | "imageFile">} HeroImage
  */
@@ -104,6 +105,7 @@ export default function HeroImageAndVideo({
 }) {
   const shouldShowHeroVideo = Boolean(heroVideo)
   const shouldShowHeroImage = Boolean(!shouldShowHeroVideo && heroImage)
+  const normalizedHeroImage = normalizeImageForRender(heroImage)
 
   const heroJsx = () => {
     if (shouldShowHeroVideo) {
@@ -124,8 +126,8 @@ export default function HeroImageAndVideo({
           $imgHeight={heroImage?.imageFile?.height}
         >
           <CustomImage
-            images={heroImage.resized}
-            imagesWebP={heroImage.resizedWebp}
+            images={normalizedHeroImage?.resized}
+            imagesWebP={normalizedHeroImage?.resizedWebp}
             defaultImage={'/images-next/default-og-img.png'}
             alt={heroCaption ? heroCaption : title}
             objectFit={'contain'}

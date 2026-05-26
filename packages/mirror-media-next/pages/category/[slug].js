@@ -34,6 +34,7 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { logGqlError } from '../../utils/log/shared'
+import { getResizedUrl } from '../../utils/image.mjs'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme
@@ -220,7 +221,7 @@ export default function Category({
         '@type': 'NewsArticle',
         url: `https://${SITE_URL}/story/${post.slug}`,
         headline: post.title,
-        image: post.heroImage?.resized?.w1200 || '',
+        image: getResizedUrl(post.heroImage?.resized, 'w1200') || '',
         dateCreated: post.publishedDate,
       },
     }
