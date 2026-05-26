@@ -10,6 +10,7 @@ import {
   URL_STATIC_POST_FLASH_NEWS,
   // TEST_GPT_AD_FEATURE_TOGGLE,
   STORY_GQL_ENDPOINT,
+  IS_PREVIEW_MODE,
 } from '../../config/index.mjs'
 import WineWarning from '../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
@@ -157,13 +158,14 @@ export default function Story({
             if (result && result.data && result.data.products) {
               const formattedStories = result.data.products.map((product) => {
                 const productId = product.product_id
-                const slug = productId.split('_').slice(2).join('_')
+                const relatedSlug = productId.split('_').slice(2).join('_')
 
                 return {
                   id: productId,
-                  slug: slug,
+                  slug: relatedSlug,
                   title: product.title || '',
-                  url: product.url || '',
+                  url: product.url || `/story/${relatedSlug}`,
+                  type: 'story',
                   heroImage: product.cover_image
                     ? {
                         resized: { original: product.cover_image },
@@ -334,7 +336,9 @@ export async function getServerSideProps({ params, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   try {
-    const storyClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+    const storyClient = IS_PREVIEW_MODE
+      ? client
+      : getStoryClient(STORY_GQL_ENDPOINT) || client
 
     const result = await storyClient.query({
       query: fetchStoryPostBySlug,
