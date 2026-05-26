@@ -17,6 +17,10 @@ function compactImageUrls(imageUrls) {
   }
 
   const compacted = Object.entries(imageUrls).reduce((acc, [key, value]) => {
+    if (key === '__typename' || value === undefined) {
+      return acc
+    }
+
     if (!IMAGE_SIZE_KEYS.has(key)) {
       acc[key] = compactClientPayload(value)
       return acc

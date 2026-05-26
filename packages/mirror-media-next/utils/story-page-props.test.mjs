@@ -12,22 +12,65 @@ const currentDir = dirname(fileURLToPath(import.meta.url))
 const image = {
   __typename: 'Photo',
   resized: {
+    __typename: 'Resized',
     original: 'https://example.com/image.jpg',
     w480: 'https://example.com/image-w480.jpg',
     w800: '',
     w1600: 'https://example.com/image-w1600.jpg',
   },
   resizedWebp: {
+    __typename: 'ResizedWebp',
     original: 'https://example.com/image.webP',
     w480: '',
     w800: 'https://example.com/image-w800.webP',
   },
 }
 
+const draftImageOriginal = 'https://example.com/draft-image.jpg'
+const draftImageWebpOriginal = 'https://example.com/draft-image.webp'
+
 const postData = {
   __typename: 'Post',
   slug: 'story-slug',
-  content: { blocks: [{ text: 'full content' }], entityMap: {} },
+  content: {
+    __typename: 'RawDraftContentState',
+    blocks: [
+      {
+        __typename: 'ContentBlock',
+        key: 'abcde',
+        text: 'full content',
+        type: 'unstyled',
+        depth: 0,
+        inlineStyleRanges: [],
+        entityRanges: [{ offset: 0, length: 4, key: 0 }],
+        data: {
+          __typename: 'BlockData',
+          alignment: 'left',
+        },
+      },
+    ],
+    entityMap: {
+      0: {
+        __typename: 'Entity',
+        type: 'image',
+        mutability: 'IMMUTABLE',
+        data: {
+          __typename: 'ImageData',
+          desc: 'Draft image caption',
+          resized: {
+            __typename: 'Resized',
+            original: draftImageOriginal,
+            w480: '',
+          },
+          resizedWebp: {
+            __typename: 'ResizedWebp',
+            original: draftImageWebpOriginal,
+            w800: '',
+          },
+        },
+      },
+    },
+  },
   trimmedContent: { blocks: [{ text: 'trimmed content' }], entityMap: {} },
   relatedsOne: {
     __typename: 'Post',
@@ -66,6 +109,30 @@ assert.equal(clientPostData.relateds, undefined)
 assert.equal(clientPostData.relatedsOne, undefined)
 assert.equal(clientPostData.relatedsTwo, undefined)
 assert.equal(clientPostData.relatedsInInputOrder, undefined)
+assert.deepEqual(clientPostData.content.blocks[0], {
+  key: 'abcde',
+  text: 'full content',
+  type: 'unstyled',
+  depth: 0,
+  inlineStyleRanges: [],
+  entityRanges: [{ offset: 0, length: 4, key: 0 }],
+  data: {
+    alignment: 'left',
+  },
+})
+assert.deepEqual(clientPostData.content.entityMap[0], {
+  type: 'image',
+  mutability: 'IMMUTABLE',
+  data: {
+    desc: 'Draft image caption',
+    resized: {
+      original: draftImageOriginal,
+    },
+    resizedWebp: {
+      original: draftImageWebpOriginal,
+    },
+  },
+})
 assert.equal(
   serializeStoryPostDataForClient({
     trimmedContent: { blocks: [{ text: 'trimmed content' }], entityMap: {} },
@@ -134,6 +201,25 @@ const assertNoUndefinedValues = (value) => {
 
 assertNoUndefinedValues(clientPostData)
 assertNoUndefinedValues(initialRelatedStories)
+
+const assertNoTypenameKey = (value) => {
+  if (Array.isArray(value)) {
+    value.forEach(assertNoTypenameKey)
+    return
+  }
+
+  if (!value || typeof value !== 'object') {
+    return
+  }
+
+  Object.entries(value).forEach(([key, child]) => {
+    assert.notEqual(key, '__typename', '__typename should not be serialized')
+    assertNoTypenameKey(child)
+  })
+}
+
+assertNoTypenameKey(clientPostData)
+assertNoTypenameKey(initialRelatedStories)
 
 const postQuerySource = readFileSync(
   join(currentDir, '../apollo/query/posts.js'),
