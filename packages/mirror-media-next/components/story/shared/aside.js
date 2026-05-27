@@ -60,7 +60,12 @@ export default function Aside({
        * @type {import('@apollo/client').ApolloQueryResult<{posts: AsideArticleData[]}>}
        */
       const latestUrl = `${URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION}/section_${sectionSlug}.json`
-      console.warn('[aside-debug] latestUrl:', latestUrl, 'base:', URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION)
+      console.warn(
+        '[aside-debug] latestUrl:',
+        latestUrl,
+        'base:',
+        URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION
+      )
       const res = await axios({
         method: 'get',
         url: latestUrl,
