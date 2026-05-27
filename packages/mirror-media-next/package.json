@@ -30,7 +30,7 @@
     "axios": "^1.2.1",
     "body-scroll-lock": "3.1.5",
     "bowser": "^2.11.0",
-    "constants": "mirror-media/constants#v2.0.0",
+    "constants": "github:mirror-media/constants#691672f39fc7269fdac42776e9c916a42386e464",
     "cookie": "^0.6.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",

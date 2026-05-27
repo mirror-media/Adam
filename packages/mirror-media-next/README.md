@@ -2,10 +2,24 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies from the repository root:
 
 ```bash
-yarn dev
+pnpm install
+```
+
+Go to this package directory:
+
+```bash
+cd packages/mirror-media-next
+```
+
+Run package commands:
+
+```bash
+pnpm dev
+pnpm build
+pnpm lint
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

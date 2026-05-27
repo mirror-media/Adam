@@ -3,20 +3,24 @@ ARG NODE_VERSION=24-slim
 # Install dependencies only when needed
 FROM node:${NODE_VERSION} AS deps
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.17.1 --activate
 
 # Install dependencies based on the preferred package manager
-COPY ["package.json", "yarn.lock", "./"]
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/mirror-media-next/package.json packages/mirror-media-next/package.json
 ARG ANALYZE=false
 RUN if [ "$ANALYZE" = "true" ]; then \
-    yarn install --frozen-lockfile; \
+    pnpm install --frozen-lockfile; \
     else \
-    yarn install --frozen-lockfile --production; \
+    pnpm install --frozen-lockfile --prod; \
     fi
 
 # Rebuild the source code only when needed
 FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.17.1 --activate
 COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /app/packages/mirror-media-next/node_modules ./packages/mirror-media-next/node_modules
 COPY . .
 
 # Accept build arguments for Next.js public environment variables
@@ -26,7 +30,8 @@ ARG ANALYZE=false
 ENV NEXT_PUBLIC_ENV=${NEXT_PUBLIC_ENV}
 ENV ANALYZE=${ANALYZE}
 
-RUN yarn build
+WORKDIR /app/packages/mirror-media-next
+RUN pnpm build
 RUN if [ "$ANALYZE" = "true" ] && [ -d .next/analyze ]; then \
     mkdir -p public/analyze; \
     cp .next/analyze/*.html public/analyze/; \
@@ -43,18 +48,17 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY package.json yarn.lock /app/
-RUN yarn install --frozen-lockfile --production
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/packages/mirror-media-next/node_modules ./packages/mirror-media-next/node_modules
+COPY --from=builder /app/packages/mirror-media-next/run.sh ./
+COPY --from=builder /app/packages/mirror-media-next/amp-proxy-server.js ./packages/mirror-media-next/amp-proxy-server.js
 
-COPY --from=builder /app/run.sh ./
-COPY --from=builder /app/amp-proxy-server.js ./
-
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/packages/mirror-media-next/public ./public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/packages/mirror-media-next/.next/standalone ./
+COPY --from=builder /app/packages/mirror-media-next/.next/static ./.next/static
 
 RUN chmod +x run.sh
 
