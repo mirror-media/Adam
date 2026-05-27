@@ -8,12 +8,18 @@ RUN corepack enable && corepack prepare pnpm@10.17.1 --activate
 # Install dependencies based on the preferred package manager
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY packages/mirror-media-next/package.json packages/mirror-media-next/package.json
-ARG ANALYZE=false
-RUN if [ "$ANALYZE" = "true" ]; then \
-    pnpm install --frozen-lockfile; \
-    else \
-    pnpm install --frozen-lockfile --prod; \
-    fi
+RUN pnpm install --frozen-lockfile
+
+# Two separate install stages by design:
+# - `deps`: full install (including devDependencies) used by `builder`
+# - `prod-deps`: production-only install used by `runner`
+# Do not merge them, or devDependencies would leak into the final image.
+FROM node:${NODE_VERSION} AS prod-deps
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.17.1 --activate
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY packages/mirror-media-next/package.json packages/mirror-media-next/package.json
+RUN pnpm install --frozen-lockfile --prod
 
 # Rebuild the source code only when needed
 FROM node:${NODE_VERSION} AS builder
@@ -48,8 +54,8 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/packages/mirror-media-next/node_modules ./packages/mirror-media-next/node_modules
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=prod-deps /app/packages/mirror-media-next/node_modules ./packages/mirror-media-next/node_modules
 COPY --from=builder /app/packages/mirror-media-next/run.sh ./
 COPY --from=builder /app/packages/mirror-media-next/amp-proxy-server.js ./packages/mirror-media-next/amp-proxy-server.js
 

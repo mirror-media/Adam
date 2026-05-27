@@ -1,11 +1,19 @@
 .git
 .DS_Store
 
+docs
+.github
+.husky
+
 node_modules
 packages/*/node_modules
 packages/*/.next
 packages/*/.turbo
+packages/*/mocks
+packages/*/README.md
 
+.eslintcache
+*.md
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
