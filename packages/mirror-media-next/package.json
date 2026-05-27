@@ -11,7 +11,7 @@
     "start-amp-proxy-server": "node amp-proxy-server"
   },
   "engines": {
-    "node": ">=14.0.0 <17.0.0"
+    "node": ">=24.0.0 <25.0.0"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",

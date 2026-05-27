@@ -365,7 +365,9 @@ export default function Header({
   children = null,
 }) {
   const { searchTerms, setSearchTerms, goSearchPage } = useSearch()
-  const sections = formatSections(sectionsData.filter((item) => item.slug !== 'member'))
+  const sections = formatSections(
+    sectionsData.filter((item) => item.slug !== 'member')
+  )
   const topics = topicsData && topicsData.length ? topicsData.slice(0, 9) : []
   const [showSearchField, setShowSearchField] = useState(false)
   const mobileSearchButtonRef = useRef(null)

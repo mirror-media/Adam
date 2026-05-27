@@ -249,13 +249,13 @@ export default function NavSections({ sectionsAndCategories = [] }) {
           <LogoIcon />
         </a>
       </SectionLogo>
-      
+
       <Sections>
         {sectionsAndCategoriesJsx}
         <MagazineLink href={'/magazine'}>
           <div>動態雜誌</div>
         </MagazineLink>
-        </Sections>
+      </Sections>
     </SectionsWrapper>
   )
 }
