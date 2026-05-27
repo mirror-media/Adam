@@ -1,4 +1,4 @@
-ARG NODE_VERSION=16-slim
+ARG NODE_VERSION=24-slim
 
 # Install dependencies only when needed
 FROM node:${NODE_VERSION} AS deps
