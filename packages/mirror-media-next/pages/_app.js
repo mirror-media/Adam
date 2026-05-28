@@ -9,6 +9,7 @@ import WholeSiteScript from '../components/whole-site-script'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
 import { useRouter } from 'next/router'
 import dynamic from 'next/dynamic'
+import { useAmp } from 'next/amp'
 
 import { MembershipProvider } from '../context/membership'
 import { Provider } from 'react-redux'
@@ -31,12 +32,10 @@ function MyApp({ Component, pageProps }) {
   const { pathname } = router
   const isStoryPage = pathname.startsWith('/story/')
 
-  // PromoteTopic is loaded as a client-only dynamic component from _app, so it
-  // also runs through AMP routes. Next.js can emit client-only fallback markers
-  // such as `<template data-dgst="DYNAMIC_SERVER_USAGE">` during AMP SSR, which
-  // invalidates AMP pages.
-  const isAmpPage =
-    pathname.startsWith('/story/amp/') || pathname.startsWith('/external/amp/')
+  // Skip this client-only dynamic widget on AMP pages because Next.js may emit
+  // React fallback markers (e.g. `<template data-dgst="DYNAMIC_SERVER_USAGE">`)
+  // that AMP treats as invalid `<template>` tags.
+  const isAmpPage = useAmp()
 
   //Temporarily enable google tag manager only in dev and local environment.
   useEffect(() => {
