@@ -31,6 +31,13 @@ function MyApp({ Component, pageProps }) {
   const { pathname } = router
   const isStoryPage = pathname.startsWith('/story/')
 
+  // PromoteTopic is loaded as a client-only dynamic component from _app, so it
+  // also runs through AMP routes. Next.js can emit client-only fallback markers
+  // such as `<template data-dgst="DYNAMIC_SERVER_USAGE">` during AMP SSR, which
+  // invalidates AMP pages.
+  const isAmpPage =
+    pathname.startsWith('/story/amp/') || pathname.startsWith('/external/amp/')
+
   //Temporarily enable google tag manager only in dev and local environment.
   useEffect(() => {
     import('react-gtm-module').then(({ default: TagManager }) => {
@@ -54,7 +61,7 @@ function MyApp({ Component, pageProps }) {
             In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
               {!isStoryPage && <UserBehaviorLogger />}
               <Component {...pageProps} />
-              <PromoteTopic />
+              {!isAmpPage && <PromoteTopic />}
             </ThemeProvider>
           </Provider>
         </ApolloProvider>
