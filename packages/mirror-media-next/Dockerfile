@@ -30,9 +30,11 @@ COPY --from=deps /app/packages/mirror-media-next/node_modules ./packages/mirror-
 COPY . .
 
 # Accept build arguments for Next.js public environment variables
+ARG NEXT_PUBLIC_IS_PREVIEW_MODE
 ARG NEXT_PUBLIC_ENV
 ARG ANALYZE=false
 # Set as environment variables so Next.js can use them during build
+ENV NEXT_PUBLIC_IS_PREVIEW_MODE=${NEXT_PUBLIC_IS_PREVIEW_MODE}
 ENV NEXT_PUBLIC_ENV=${NEXT_PUBLIC_ENV}
 ENV ANALYZE=${ANALYZE}
 
@@ -52,19 +54,19 @@ RUN set -e; \
 
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=prod-deps /app/packages/mirror-media-next/node_modules ./packages/mirror-media-next/node_modules
 COPY --from=builder /app/packages/mirror-media-next/run.sh ./
 COPY --from=builder /app/packages/mirror-media-next/amp-proxy-server.js ./packages/mirror-media-next/amp-proxy-server.js
 
-COPY --from=builder /app/packages/mirror-media-next/public ./public
+COPY --from=builder /app/packages/mirror-media-next/public ./packages/mirror-media-next/public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/packages/mirror-media-next/.next/standalone ./
-COPY --from=builder /app/packages/mirror-media-next/.next/static ./.next/static
+COPY --from=builder /app/packages/mirror-media-next/.next/static ./packages/mirror-media-next/.next/static
 
 RUN chmod +x run.sh
 

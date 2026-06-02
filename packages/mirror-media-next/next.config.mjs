@@ -1,9 +1,13 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import {
   DONATION_PAGE_URL,
   SITE_BASE_PATH,
   FIREBASE_AUTH_DOMAIN,
 } from './config/index.mjs'
 import withPWA from 'next-pwa'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const withBundleAnalyzer =
   process.env.ANALYZE === 'true' && process.env.NEXT_PUBLIC_ENV !== 'prod'
@@ -95,6 +99,9 @@ const nextConfig = {
   },
 
   output: 'standalone',
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, '../..'),
+  },
 }
 
 export default withBundleAnalyzer(withPWA(pwaConfig)(nextConfig))
