@@ -94,7 +94,7 @@ async function main() {
 
   for (const route of routes) {
     const required = !isLocalBaseUrl || route.requiredInLocal
-    const routeUrl = new URL(route.path, baseUrl).toString()
+    const routeUrl = resolveRouteUrl(baseUrl, route.path)
 
     try {
       const html = await fetchHtml(routeUrl)
@@ -143,6 +143,18 @@ function normalizeBaseUrl(input) {
 function isLocalUrl(input) {
   const hostname = new URL(input).hostname
   return hostname === 'localhost' || hostname === '127.0.0.1'
+}
+
+function resolveRouteUrl(base, routePath) {
+  const url = new URL(base)
+  const pathUrl = new URL(routePath, 'http://smoke.test')
+  const basePathname = url.pathname.replace(/\/+$/, '')
+
+  url.pathname = `${basePathname}${pathUrl.pathname}`.replace(/\/+/g, '/')
+  url.search = pathUrl.search
+  url.hash = pathUrl.hash
+
+  return url.toString()
 }
 
 async function fetchHtml(url) {
