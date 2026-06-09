@@ -197,8 +197,9 @@ export default function ApplyDiscount({
       <h4>輸入後請點選「確認」以完成續訂計算</h4>
       <InputButtonWrapper>
         <InputWrapper renewCouponApplied={renewCouponApplied}>
-          <label>MR</label>
+          <label htmlFor="renew-coupon-code">MR</label>
           <input
+            id="renew-coupon-code"
             placeholder="12345678"
             value={promoteCode}
             onChange={handleInputChange}

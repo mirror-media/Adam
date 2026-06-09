@@ -108,6 +108,8 @@ export default function HeroImageAndVideo({
   const heroJsx = () => {
     if (shouldShowHeroVideo) {
       return (
+        /* The CMS HeroVideo payload does not include a caption track URL. */
+        /* eslint-disable-next-line jsx-a11y/media-has-caption */
         <video
           preload="metadata"
           controlsList="nodownload"

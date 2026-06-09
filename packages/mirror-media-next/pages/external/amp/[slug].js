@@ -43,7 +43,6 @@ export default function External({ external, jsonLdData }) {
   const ampGptStickyAdScript = (
     <Script
       async
-      // eslint-disable-next-line react/no-unknown-property
       custom-element="amp-sticky-ad"
       src="https://cdn.ampproject.org/v0/amp-sticky-ad-1.0.js"
     />

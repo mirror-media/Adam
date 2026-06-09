@@ -98,7 +98,8 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
         console.warn(
           JSON.stringify({
             severity: 'WARNING',
-            message: '[fetchStaticJsonOnServer] GCS mount miss, fallback to HTTP',
+            message:
+              '[fetchStaticJsonOnServer] GCS mount miss, fallback to HTTP',
             url: requestUrl,
             localPath: localPath,
             readLatency: `${readLatency}ms`,

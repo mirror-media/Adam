@@ -85,7 +85,7 @@ const getSectionGPTPageKey = (sectionSlug) => {
 
   if (invalidSections.includes(sectionSlug)) {
     GptPageKey = SECTION_IDS['culture']
-  } else if (SECTION_IDS.hasOwnProperty(sectionSlug)) {
+  } else if (Object.prototype.hasOwnProperty.call(SECTION_IDS, sectionSlug)) {
     GptPageKey = SECTION_IDS[sectionSlug]
   } else {
     //if SECTION_IDS doesn't include `sectionSlug` ad units, use `other` ad units

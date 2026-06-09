@@ -1,4 +1,3 @@
-/* eslint-env worker */
 import { FIREBASE_CONFIG } from '../config/firebase.mjs'
 
 const ignorePaths = [
@@ -142,6 +141,5 @@ self.addEventListener('fetch', (event) => {
 
 // In service worker script.
 self.addEventListener('activate', (event) => {
-  /* eslint-disable-next-line no-undef */
   event.waitUntil(clients.claim())
 })
