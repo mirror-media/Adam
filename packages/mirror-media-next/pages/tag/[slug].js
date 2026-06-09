@@ -130,8 +130,8 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
         title: `${tagName}相關報導`,
         description: metaDescription || undefined,
         ogDescription: metaDescription || undefined,
-        robotsMetaContent: postsCount < 5 ? 'noindex' : undefined,
-        skipCanonical: postsCount < 5,
+        robotsMetaContent: (postsCount ?? 0) < 5 ? 'noindex' : undefined,
+        skipCanonical: (postsCount ?? 0) < 5,
       }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
