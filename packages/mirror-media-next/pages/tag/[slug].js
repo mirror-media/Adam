@@ -131,7 +131,7 @@ export default function Tag({ postsCount, posts, tag, headerData }) {
         description: metaDescription || undefined,
         ogDescription: metaDescription || undefined,
         robotsMetaContent: postsCount < 5 ? 'noindex' : undefined,
-        skipCanonical: postsCount < 5 ? true : false,
+        skipCanonical: postsCount < 5,
       }}
       header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
