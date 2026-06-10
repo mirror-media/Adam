@@ -7,65 +7,78 @@ const DEFAULT_BASE_URL = 'http://127.0.0.1:3000'
 const REQUEST_TIMEOUT_MS = Number(process.env.SMOKE_TIMEOUT_MS || 15000)
 const AMP_VALIDATOR_JS = process.env.AMP_VALIDATOR_JS
 
+// Each route is checked on two independent axes:
+//
+// 1. Liveness / structural — the route is reachable, returns HTTP 200, is not an
+//    error page, and rendered its structural shell (`__NEXT_DATA__`, AMP html,
+//    canonical link). A failure here means the deployed candidate is broken
+//    (500 / timeout / crash / routing regression), so it FAILS on prod and on
+//    any deployed non-prod environment (dev-v4, a future staging-v4). Only local
+//    keeps this best-effort, because local detail pages depend on external dev
+//    GraphQL that may not be reachable and is not a deployment under test.
+//
+// 2. Content-calibrated — the sample slug's title, `amphtml` link, and AMP
+//    validity. These expectations are calibrated against prod data, so they are
+//    required only on prod (authoritative). Other networked environments read
+//    from a different CMS, so the same slug may have a different article state
+//    (`state !== 'published'`, advertised) or dirty source HTML; there a content
+//    failure is reported as WARN with an explanation instead of failing the run.
+const AUTHORITATIVE_HOST =
+  process.env.SMOKE_AUTHORITATIVE_HOST || 'www.mirrormedia.mg'
+
 const baseUrl = normalizeBaseUrl(process.env.BASE_URL || DEFAULT_BASE_URL)
+const isAuthoritativeBaseUrl = isAuthoritativeUrl(baseUrl)
 const isLocalBaseUrl = isLocalUrl(baseUrl)
 
-const storySlug = process.env.SMOKE_STORY_SLUG || '20230914ind003'
-const storyTitle = process.env.SMOKE_STORY_TITLE || '永豐銀行加碼採購綠電'
-const externalSlug = process.env.SMOKE_EXTERNAL_SLUG || 'setn_1454423'
-const externalTitle = process.env.SMOKE_EXTERNAL_TITLE || '男嬰送托月餘頭骨碎裂'
+const storySlug = process.env.SMOKE_STORY_SLUG || '20230614ent025'
+const storyTitle = process.env.SMOKE_STORY_TITLE || '徐若瑄'
+const externalSlug = process.env.SMOKE_EXTERNAL_SLUG || 'dailycolumn_12846'
+const externalTitle = process.env.SMOKE_EXTERNAL_TITLE || '王丹專欄'
 
 const routes = [
   {
     name: 'home',
     path: '/',
     amp: false,
-    requiredInLocal: true,
-    markers: ['鏡週刊', /id="__NEXT_DATA__"/],
+    // home has no slug-specific content; its markers are structural liveness.
+    livenessMarkers: ['鏡週刊', /id="__NEXT_DATA__"/],
+    contentMarkers: [],
   },
   {
     name: 'story',
     path: `/story/${storySlug}`,
     amp: false,
-    requiredInLocal: false,
-    markers: [
-      storyTitle,
-      /id="__NEXT_DATA__"/,
-      /<link(?=[^>]+rel="amphtml")[^>]*>/,
-    ],
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    // `amphtml` link is gated by article state (story-head.js: state ===
+    // 'published' && !isAdvertised), so it is content-calibrated, not structural.
+    contentMarkers: [storyTitle, /<link(?=[^>]+rel="amphtml")[^>]*>/],
   },
   {
     name: 'storyAmp',
     path: `/story/amp/${storySlug}`,
     amp: true,
-    requiredInLocal: false,
-    markers: [
-      storyTitle,
+    livenessMarkers: [
       /<html[^>]+(?:⚡|amp)(?:\s|>)/,
       /<link(?=[^>]+rel="canonical")[^>]*>/,
     ],
+    contentMarkers: [storyTitle],
   },
   {
     name: 'external',
     path: `/external/${externalSlug}`,
     amp: false,
-    requiredInLocal: false,
-    markers: [
-      externalTitle,
-      /id="__NEXT_DATA__"/,
-      /<link(?=[^>]+rel="amphtml")[^>]*>/,
-    ],
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    contentMarkers: [externalTitle, /<link(?=[^>]+rel="amphtml")[^>]*>/],
   },
   {
     name: 'externalAmp',
     path: `/external/amp/${externalSlug}`,
     amp: true,
-    requiredInLocal: false,
-    markers: [
-      externalTitle,
+    livenessMarkers: [
       /<html[^>]+(?:⚡|amp)(?:\s|>)/,
       /<link(?=[^>]+rel="canonical")[^>]*>/,
     ],
+    contentMarkers: [externalTitle],
   },
 ]
 
@@ -82,62 +95,111 @@ main().catch((error) => {
 
 async function main() {
   console.log(`Smoke test BASE_URL=${baseUrl}`)
-  console.log(
-    isLocalBaseUrl
-      ? 'Local mode: detail routes are best-effort.'
-      : 'Non-local mode: all routes are required.'
-  )
+  console.log(modeMessage())
 
-  let requiredFailureCount = 0
-  let optionalFailureCount = 0
+  let failureCount = 0
+  let warningCount = 0
   let ampValidator
 
   for (const route of routes) {
-    const required = !isLocalBaseUrl || route.requiredInLocal
     const routeUrl = resolveRouteUrl(baseUrl, route.path)
+    // Liveness FAILs on prod and on any deployed non-prod env; only local is
+    // best-effort for detail routes (home stays required everywhere).
+    const livenessRequired = !isLocalBaseUrl || route.name === 'home'
+    // Content expectations are prod-calibrated, so required only on prod.
+    const contentRequired = isAuthoritativeBaseUrl
 
+    let html
     try {
-      const html = await fetchHtml(routeUrl)
+      html = await fetchHtml(routeUrl)
       assertStatusOk(routeUrl, html.response)
       assertNotErrorPage(routeUrl, html.body)
-      assertMarkers(routeUrl, html.body, route.markers)
+      assertMarkers(routeUrl, html.body, route.livenessMarkers)
+    } catch (error) {
+      if (reportFailure(route, routeUrl, error, livenessRequired, 'liveness')) {
+        failureCount += 1
+      } else {
+        warningCount += 1
+      }
+      // Not alive / no usable body — skip content checks for this route.
+      continue
+    }
 
+    try {
+      assertMarkers(routeUrl, html.body, route.contentMarkers)
       if (route.amp) {
         ampValidator ||= await getAmpValidator()
         assertAmpValid(routeUrl, html.body, ampValidator)
       }
-
-      console.log(`PASS ${route.name} ${routeUrl}`)
     } catch (error) {
-      const label = required ? 'FAIL' : 'WARN'
-      console.error(`${label} ${route.name} ${routeUrl}`)
-      console.error(`  ${error.message}`)
-
-      if (required) {
-        requiredFailureCount += 1
+      if (reportFailure(route, routeUrl, error, contentRequired, 'content')) {
+        failureCount += 1
       } else {
-        optionalFailureCount += 1
+        warningCount += 1
       }
+      continue
     }
+
+    console.log(`PASS ${route.name} ${routeUrl}`)
   }
 
-  if (optionalFailureCount > 0) {
+  if (warningCount > 0) {
     console.warn(
-      `Optional local route failures: ${optionalFailureCount}. Staging remains authoritative for detail routes.`
+      `Non-fatal warnings: ${warningCount}. These do not fail the run; ` +
+        'prod remains the authoritative target for prod-calibrated content checks.'
     )
   }
 
-  if (requiredFailureCount > 0) {
-    throw new Error(`${requiredFailureCount} required smoke route(s) failed`)
+  if (failureCount > 0) {
+    throw new Error(`${failureCount} required smoke check(s) failed`)
   }
 
   console.log('Smoke test passed.')
+}
+
+function modeMessage() {
+  if (isAuthoritativeBaseUrl) {
+    return `Authoritative mode (${AUTHORITATIVE_HOST}): liveness and content both required, including AMP validation and amphtml link.`
+  }
+  if (isLocalBaseUrl) {
+    return 'Local mode: liveness is best-effort for detail routes (home still required); prod-calibrated content checks are WARN. Gate candidates against a deployed env or prod.'
+  }
+  return 'Deployed non-prod mode: route liveness is required (FAILs on network error / timeout / non-200 / error page / missing structure); prod-calibrated content checks (title, amphtml link, AMP validity) are WARN because this environment reads from a different CMS.'
+}
+
+// Returns true if the failure counts as FAIL, false if downgraded to WARN.
+function reportFailure(route, routeUrl, error, required, phase) {
+  const label = required ? 'FAIL' : 'WARN'
+  console.error(`${label} ${route.name} ${routeUrl} (${phase})`)
+  console.error(`  ${error.message}`)
+  if (!required) {
+    console.error(`  Note: ${warnNote(phase)}`)
+  }
+  return required
+}
+
+function warnNote(phase) {
+  if (phase === 'content') {
+    return (
+      'non-authoritative environment. Likely a CMS content/state difference ' +
+      "(e.g. article state !== 'published', advertised, or unsanitized source HTML), " +
+      'not an upgrade regression. Verify against prod, which is authoritative.'
+    )
+  }
+  return (
+    'local best-effort. Detail pages depend on external dev GraphQL that may be ' +
+    'unreachable or lack this slug; gate liveness against a deployed env or prod.'
+  )
 }
 
 function normalizeBaseUrl(input) {
   const url = new URL(input)
   url.pathname = url.pathname.replace(/\/+$/, '')
   return url.toString()
+}
+
+function isAuthoritativeUrl(input) {
+  return new URL(input).hostname === AUTHORITATIVE_HOST
 }
 
 function isLocalUrl(input) {
@@ -196,7 +258,7 @@ function assertMarkers(url, html, markers) {
       marker instanceof RegExp ? marker.test(html) : html.includes(marker)
 
     if (!matched) {
-      throw new Error(`Missing content marker "${marker.toString()}" in ${url}`)
+      throw new Error(`Missing marker "${marker.toString()}" in ${url}`)
     }
   }
 }
