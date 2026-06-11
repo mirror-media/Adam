@@ -8,6 +8,7 @@
     "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
     "lint": "next lint",
+    "test:smoke": "node scripts/smoke-test.mjs",
     "start-amp-proxy-server": "node amp-proxy-server"
   },
   "engines": {
@@ -63,6 +64,7 @@
     "@next/bundle-analyzer": "13.0.7",
     "@types/facebook-js-sdk": "^3.3.6",
     "@types/google-publisher-tag": "^1.20230410.0",
+    "amphtml-validator": "1.0.38",
     "babel-loader": "8.3.0",
     "concurrently": "^7.4.0",
     "eslint-config-next": "12.2.5"
