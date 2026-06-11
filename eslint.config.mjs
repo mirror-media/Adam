@@ -90,6 +90,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.serviceworker,
+        firebase: 'readonly',
       },
     },
   },

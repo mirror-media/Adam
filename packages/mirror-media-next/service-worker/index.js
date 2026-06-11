@@ -25,11 +25,9 @@ const mustNotIgnorePaths = ['\u002F_next\u002Fdata']
 
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js')
-/* eslint-disable-next-line no-undef */
 firebase.initializeApp(FIREBASE_CONFIG)
 
 // Initialize authService
-/* eslint-disable-next-line no-undef */
 const authService = firebase.auth()
 
 /**
