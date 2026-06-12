@@ -53,7 +53,9 @@ const ArticleTitle = styled.h1`
 
 const ArticleSubtitle = styled.h2`
   color: #717171;
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   font-size: 20px;
   font-weight: 500;
   line-height: normal;

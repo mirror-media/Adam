@@ -125,31 +125,33 @@ export default function Profile({ headerData, signInProvider }) {
 /**
  * @type {import('next').GetServerSideProps}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ req, res, user }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
+  req,
+  res,
+  user,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    const signInProvider = user.firebase?.sign_in_provider
+  const signInProvider = user.firebase?.sign_in_provider
 
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
 
-    // handle header data
-    const [sectionsData, topicsData] = processSettledResult(
-      responses[0],
-      getSectionAndTopicFromDefaultHeaderData,
-      'Error occurs while getting header data in profile page',
-      globalLogFields
-    )
+  // handle header data
+  const [sectionsData, topicsData] = processSettledResult(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in profile page',
+    globalLogFields
+  )
 
-    return {
-      props: {
-        signInProvider: signInProvider,
-        headerData: { sectionsData, topicsData },
-      },
-    }
+  return {
+    props: {
+      signInProvider: signInProvider,
+      headerData: { sectionsData, topicsData },
+    },
   }
-)
+})

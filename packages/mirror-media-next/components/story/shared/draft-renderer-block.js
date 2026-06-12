@@ -45,12 +45,12 @@ export default function DraftRenderBlock({
   const jsx = isAmp
     ? AmpRenderBlock(rawContentBlock, contentLayout)
     : DRAFT_RENDERER_FEATURE_TOGGLE === 'on'
-    ? NormalSSRRenderBlock(
-        rawContentBlock,
-        contentLayout,
-        firstImageAdComponent
-      )
-    : NormalRenderBlock(rawContentBlock, contentLayout, firstImageAdComponent)
+      ? NormalSSRRenderBlock(
+          rawContentBlock,
+          contentLayout,
+          firstImageAdComponent
+        )
+      : NormalRenderBlock(rawContentBlock, contentLayout, firstImageAdComponent)
 
   return <>{shouldRenderDraft && wrapper(jsx)}</>
 }

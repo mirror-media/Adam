@@ -45,11 +45,8 @@ const IssueCard = styled.li`
   }
 
   &:hover button {
-    background: linear-gradient(
-        0deg,
-        rgba(5, 79, 119, 0.05),
-        rgba(5, 79, 119, 0.05)
-      ),
+    background:
+      linear-gradient(0deg, rgba(5, 79, 119, 0.05), rgba(5, 79, 119, 0.05)),
       #ffffff;
   }
 `

@@ -343,8 +343,8 @@ export default function AsideArticleList({
     const shouldShowPopInAd = (index) => {
       return Boolean(
         shouldShowAd &&
-          listType === 'popularNews' &&
-          needInsertPopInAdAfter(index)
+        listType === 'popularNews' &&
+        needInsertPopInAdAfter(index)
       )
     }
 

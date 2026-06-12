@@ -16,7 +16,9 @@ const Container = styled.div`
     rgba(97, 184, 198, 1) 0%,
     rgba(5, 79, 119, 1) 100%
   );
-  box-shadow: 0px 4px 28px rgba(0, 0, 0, 0.06), 0px 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0px 4px 28px rgba(0, 0, 0, 0.06),
+    0px 2px 12px rgba(0, 0, 0, 0.08);
   border-radius: 32px;
 
   .title {

@@ -14,7 +14,8 @@ const FormWrapper = styled.div`
     margin-bottom: 48px;
     border-radius: 24px;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.08),
+    box-shadow:
+      0px 2px 12px 0px rgba(0, 0, 0, 0.08),
       0px 4px 28px 0px rgba(0, 0, 0, 0.06);
   }
 `

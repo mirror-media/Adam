@@ -242,35 +242,37 @@ export default function Login({ emailData, headerData }) {
 /**
  * @type {import('next').GetServerSideProps<PageProps>}
  */
-export const getServerSideProps = redirectToDestinationWhileAuthed()(
-  async ({ req, res, query }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToDestinationWhileAuthed()(async ({
+  req,
+  res,
+  query,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    const { email } = query
-    const emailData = Array.isArray(email) ? email.join(',') : email ?? ''
+  const { email } = query
+  const emailData = Array.isArray(email) ? email.join(',') : (email ?? '')
 
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
 
-    // handle header data
-    const [sectionsData, topicsData] = processSettledResult(
-      responses[0],
-      getSectionAndTopicFromDefaultHeaderData,
-      'Error occurs while getting header data in recover password page',
-      globalLogFields
-    )
+  // handle header data
+  const [sectionsData, topicsData] = processSettledResult(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in recover password page',
+    globalLogFields
+  )
 
-    return {
-      props: {
-        emailData,
-        headerData: {
-          sectionsData,
-          topicsData,
-        },
+  return {
+    props: {
+      emailData,
+      headerData: {
+        sectionsData,
+        topicsData,
       },
-    }
+    },
   }
-)
+})

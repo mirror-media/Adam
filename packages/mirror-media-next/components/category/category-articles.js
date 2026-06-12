@@ -59,8 +59,8 @@ export default function CategoryArticles({
       const response = isPremium
         ? await fetchPremiumPostsByCategorySlug(category.slug, take, skip)
         : isNewsCategory
-        ? await fetchNewsCategoryPostsJSON(page, take)
-        : await fetchPostsByCategorySlug(category.slug, take, skip)
+          ? await fetchNewsCategoryPostsJSON(page, take)
+          : await fetchPostsByCategorySlug(category.slug, take, skip)
 
       if (isNewsCategory) {
         return response.data.posts.items || []

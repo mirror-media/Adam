@@ -143,7 +143,8 @@ const RemoveButton = styled.button`
   }
 
   :hover {
-    background: linear-gradient(
+    background:
+      linear-gradient(
         0deg,
         rgba(5, 79, 119, 0.05) 0%,
         rgba(5, 79, 119, 0.05) 100%

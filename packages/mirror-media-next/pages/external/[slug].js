@@ -244,9 +244,8 @@ export async function getServerSideProps({ params, req, res }) {
 
   const fetchStaticJsonSafe = async (url, timeout) => {
     try {
-      const mod = await import(
-        '../../utils/server-side-only/fetch-static-json.js'
-      )
+      const mod =
+        await import('../../utils/server-side-only/fetch-static-json.js')
       const res = await mod.fetchStaticJsonOnServer(url, timeout)
       return res
     } catch (err) {

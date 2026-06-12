@@ -63,8 +63,8 @@ const getMicroAdUnitId = (
  */
 function getPageKeyByPartnerShowOnIndex(partnerShowOnIndex) {
   return partnerShowOnIndex
-    ? SECTION_IDS['news'] ?? 'other'
-    : SECTION_IDS['life'] ?? 'other'
+    ? (SECTION_IDS['news'] ?? 'other')
+    : (SECTION_IDS['life'] ?? 'other')
 }
 
 /**

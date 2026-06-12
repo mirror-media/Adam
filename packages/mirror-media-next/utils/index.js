@@ -462,9 +462,8 @@ const getLogTraceObject = (req) => {
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
     const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+    globalLogFields['logging.googleapis.com/trace'] =
+      `projects/${GCP_PROJECT_ID}/traces/${trace}`
   }
   return globalLogFields
 }

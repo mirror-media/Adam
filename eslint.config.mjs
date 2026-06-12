@@ -1,8 +1,7 @@
 import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
-import eslintConfigPrettier from 'eslint-config-prettier'
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
-import prettierPlugin from 'eslint-plugin-prettier'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooksPlugin from 'eslint-plugin-react-hooks'
 import globals from 'globals'
@@ -49,7 +48,6 @@ export default [
     plugins: {
       '@next/next': nextPlugin,
       'jsx-a11y': jsxA11yPlugin,
-      prettier: prettierPlugin,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
     },
@@ -75,7 +73,6 @@ export default [
       'react/no-unknown-property': 'error',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'prettier/prettier': 'error',
       'no-unused-vars': ['error', { caughtErrors: 'none' }],
     },
   },
@@ -94,5 +91,5 @@ export default [
       },
     },
   },
-  eslintConfigPrettier,
+  eslintPluginPrettierRecommended,
 ]

@@ -87,7 +87,9 @@ const LinksWrapper = styled.ul`
 const LinkItem = styled.a`
   color: #054f77;
   text-align: center;
-  font-feature-settings: 'liga' off, 'clig' off;
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
   font-family: 'PingFang TC';
   font-size: 16px;
   font-weight: 600;

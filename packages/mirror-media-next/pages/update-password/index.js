@@ -66,38 +66,40 @@ export default function UpdatePassword({ headerData }) {
 /**
  * @type {import('next').GetServerSideProps<PageProps>}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ req, res, user }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
+  req,
+  res,
+  user,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    const signInProvider = user.firebase?.sign_in_provider
-    if (signInProvider !== 'password') {
-      return {
-        redirect: {
-          statusCode: 307,
-          destination: '/profile',
-        },
-      }
-    }
-
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
-
-    // handle header data
-    const [sectionsData, topicsData] = processSettledResult(
-      responses[0],
-      getSectionAndTopicFromDefaultHeaderData,
-      'Error occurs while getting header data in update password page',
-      globalLogFields
-    )
-
+  const signInProvider = user.firebase?.sign_in_provider
+  if (signInProvider !== 'password') {
     return {
-      props: {
-        headerData: { sectionsData, topicsData },
+      redirect: {
+        statusCode: 307,
+        destination: '/profile',
       },
     }
   }
-)
+
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
+
+  // handle header data
+  const [sectionsData, topicsData] = processSettledResult(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in update password page',
+    globalLogFields
+  )
+
+  return {
+    props: {
+      headerData: { sectionsData, topicsData },
+    },
+  }
+})

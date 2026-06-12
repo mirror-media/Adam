@@ -64,8 +64,8 @@ export default function MainForm() {
     newPassword === ''
       ? InputState.Incomplete
       : newPassword === newPasswordCheck
-      ? InputState.Valid
-      : InputState.Incomplete
+        ? InputState.Valid
+        : InputState.Incomplete
 
   /** @type {import('react').PointerEventHandler<HTMLButtonElement>} */
   const handleOnClickButton = async () => {

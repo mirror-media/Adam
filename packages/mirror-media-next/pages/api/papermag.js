@@ -79,9 +79,8 @@ export default async function EncryptInfo(req, res) {
     }
 
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
-    const encryptPostData = await newebpay.getEncryptedFormPostData(
-      infoForNewebpay
-    )
+    const encryptPostData =
+      await newebpay.getEncryptedFormPostData(infoForNewebpay)
 
     res.send({
       status: 'success',

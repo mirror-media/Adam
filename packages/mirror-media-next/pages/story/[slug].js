@@ -41,8 +41,8 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 const { hasContentInRawContentBlock } = MirrorMedia
 
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
-const StoryPhotographyStyle = dynamic(() =>
-  import('../../components/story/photography')
+const StoryPhotographyStyle = dynamic(
+  () => import('../../components/story/photography')
 )
 import Image from 'next/image'
 import Skeleton from '../../public/images-next/skeleton.png'
@@ -396,9 +396,8 @@ export async function getServerSideProps({ params, req, res }) {
       try {
         const fetchStaticJsonSafe = async (url, timeout) => {
           try {
-            const mod = await import(
-              '../../utils/server-side-only/fetch-static-json.js'
-            )
+            const mod =
+              await import('../../utils/server-side-only/fetch-static-json.js')
             const res = await mod.fetchStaticJsonOnServer(url, timeout)
             return res
           } catch (err) {

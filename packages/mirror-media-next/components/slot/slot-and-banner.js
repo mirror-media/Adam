@@ -211,14 +211,17 @@ export default function Slot() {
       }, offset * 150)
 
       // After animation
-      setTimeout(() => {
-        // Reset position, so that it doesn't get higher without limit
-        reel.style.transition = `none`
-        reel.style.backgroundPositionY = `${normTargetBackgroundPositionY}px`
-        // Check if we reached the target index
-        // Resolve this promise
-        resolve(delta % num_icons)
-      }, (8 + 1 * delta) * time_per_icon + offset * 150)
+      setTimeout(
+        () => {
+          // Reset position, so that it doesn't get higher without limit
+          reel.style.transition = `none`
+          reel.style.backgroundPositionY = `${normTargetBackgroundPositionY}px`
+          // Check if we reached the target index
+          // Resolve this promise
+          resolve(delta % num_icons)
+        },
+        (8 + 1 * delta) * time_per_icon + offset * 150
+      )
     })
   }
 

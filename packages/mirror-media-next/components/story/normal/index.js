@@ -142,7 +142,9 @@ const SubTitle = styled.h2`
   line-height: 34px;
   font-size: 20px;
   color: rgba(113, 113, 113, 0.87);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   line-height: normal;
   margin-top: 0.5rem;
   ${({ theme }) => theme.breakpoint.md} {

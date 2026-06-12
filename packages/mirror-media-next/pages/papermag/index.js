@@ -39,7 +39,8 @@ const AnnouncementBody = styled.div`
   margin: 0 auto;
   border-radius: 8px;
   padding: 16px;
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       rgba(229, 23, 49, 0.05) 0%,
       rgba(229, 23, 49, 0.05) 100%

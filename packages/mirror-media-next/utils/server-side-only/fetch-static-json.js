@@ -123,7 +123,7 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
   const normalizedRequestConfig =
     typeof requestConfig === 'number'
       ? { timeout: requestConfig }
-      : requestConfig ?? {}
+      : (requestConfig ?? {})
 
   const res = await axiosInstance({
     ...normalizedRequestConfig,

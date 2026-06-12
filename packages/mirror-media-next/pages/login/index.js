@@ -164,31 +164,32 @@ export default function Login({ headerData, isWebview }) {
 /**
  * @type {import('next').GetServerSideProps<PageProps>}
  */
-export const getServerSideProps = redirectToDestinationWhileAuthed()(
-  async ({ req, res }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToDestinationWhileAuthed()(async ({
+  req,
+  res,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
 
-    // handle header data
-    const [sectionsData, topicsData] = processSettledResult(
-      responses[0],
-      getSectionAndTopicFromDefaultHeaderData,
-      'Error occurs while getting header data in login page',
-      globalLogFields
-    )
+  // handle header data
+  const [sectionsData, topicsData] = processSettledResult(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in login page',
+    globalLogFields
+  )
 
-    const userAgent = req.headers?.['user-agent']
+  const userAgent = req.headers?.['user-agent']
 
-    return {
-      props: {
-        isWebview: isInAppBrowser(userAgent),
-        headerData: { sectionsData, topicsData },
-      },
-    }
+  return {
+    props: {
+      isWebview: isInAppBrowser(userAgent),
+      headerData: { sectionsData, topicsData },
+    },
   }
-)
+})
