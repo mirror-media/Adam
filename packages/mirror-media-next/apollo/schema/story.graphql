@@ -1,0 +1,767 @@
+""""""
+type User {
+  """"""
+  email: String
+
+  """"""
+  id: ID
+
+  """"""
+  name: String
+}
+
+""""""
+type Group {
+  """"""
+  id: ID
+
+  """"""
+  keyword: String
+}
+
+""""""
+input IDFilter {
+  """"""
+  equals: ID
+}
+
+""""""
+input CategoryWhereInput {
+  """"""
+  slug: StringFilter
+
+  """"""
+  state: StringFilter
+
+  """"""
+  isMemberOnly: BooleanFilter
+}
+
+""""""
+input SectionWhereInput {
+  """"""
+  slug: StringFilter
+
+  """"""
+  state: StringFilter
+}
+
+""""""
+type Partner {
+  """"""
+  id: ID
+
+  """"""
+  name: String
+
+  """"""
+  showBrief: Boolean
+
+  """"""
+  showOnIndex: Boolean
+
+  """"""
+  showThumb: Boolean
+
+  """"""
+  slug: String
+}
+
+""""""
+type Photo {
+  """"""
+  id: ID
+
+  """"""
+  imageFile: ImageFile
+
+  """"""
+  name: String
+
+  """"""
+  resized: Resized
+
+  """"""
+  resizedWebp: Resized
+
+  """"""
+  topicKeywords: String
+}
+
+""""""
+type Resized {
+  """"""
+  original: String
+
+  """"""
+  w1200: String
+
+  """"""
+  w1600: String
+
+  """"""
+  w2400: String
+
+  """"""
+  w480: String
+
+  """"""
+  w800: String
+}
+
+""""""
+type ImageFile {
+  """"""
+  height: Int
+
+  """"""
+  width: Int
+}
+
+""""""
+input PostOrderByInput {
+  """"""
+  publishedDate: OrderDirection
+
+  """"""
+  updatedAt: OrderDirection
+
+  """"""
+  title: OrderDirection
+
+  """"""
+  auto_faq: OrderDirection
+}
+
+""""""
+input TopicWhereInput {
+  """"""
+  type: StringFilter
+
+  """"""
+  style: StringFilter
+
+  """"""
+  slug: StringFilter
+
+  """"""
+  name: StringFilter
+
+  """"""
+  state: StringFilter
+
+  """"""
+  isFeatured: BooleanFilter
+}
+
+""""""
+type Topic {
+  """"""
+  brief: JSON
+
+  """"""
+  createdAt: DateTime
+
+  """"""
+  dfp: String
+
+  """"""
+  featuredPostsCount(where: PostWhereInput): Int
+
+  """"""
+  heroImage: Photo
+
+  """"""
+  heroUrl: String
+
+  """"""
+  id: ID
+
+  """"""
+  isFeatured: Boolean
+
+  """"""
+  javascript: String
+
+  """"""
+  leading: String
+
+  """"""
+  manualOrderOfSlideshowImages: JSON
+
+  """"""
+  mobile_dfp: String
+
+  """"""
+  name: String
+
+  """"""
+  og_description: String
+
+  """"""
+  og_image: Photo
+
+  """"""
+  og_title: String
+
+  """"""
+  posts(where: PostWhereInput, orderBy: [PostOrderByInput], take: Int, skip: Int): [Post]
+
+  """"""
+  postsCount(where: PostWhereInput): Int
+
+  """"""
+  slideshow_images(where: PhotoWhereInput): [Photo]
+
+  """"""
+  slideshow_imagesInInputOrder: [Photo]
+
+  """"""
+  slug: String
+
+  """"""
+  sortOrder: Int
+
+  """"""
+  state: String
+
+  """"""
+  style: String
+
+  """"""
+  tags(where: TagWhereInput): [Tag]
+
+  """"""
+  tagsCount(where: TagWhereInput): Int
+
+  """"""
+  title_style: String
+
+  """"""
+  type: String
+
+  """"""
+  updatedAt: DateTime
+}
+
+""""""
+type Category {
+  """"""
+  id: ID
+
+  """"""
+  isMemberOnly: Boolean
+
+  """"""
+  name: String
+
+  """"""
+  sections(where: SectionWhereInput): [Section]
+
+  """"""
+  slug: String
+
+  """"""
+  state: String
+}
+
+""""""
+input SectionManyRelationFilter {
+  """"""
+  some: SectionWhereInput
+}
+
+""""""
+type Section {
+  """"""
+  id: ID
+
+  """"""
+  name: String
+
+  """"""
+  slug: String
+
+  """"""
+  state: String
+}
+
+""""""
+input DateTimeNullableFilter {
+  """"""
+  equals: DateTime
+
+  """"""
+  not: DateTimeNullableFilter
+}
+
+""""""
+input StringFilter {
+  """"""
+  not: StringFilter
+
+  """"""
+  equals: String
+
+  """"""
+  in: [String]
+}
+
+""""""
+input BooleanFilter {
+  """"""
+  equals: Boolean
+}
+
+""""""
+input TopicWhereUniqueInput {
+  """"""
+  name: String
+
+  """"""
+  slug: String
+
+  """"""
+  id: ID
+}
+
+""""""
+input CategoryManyRelationFilter {
+  """"""
+  some: CategoryWhereInput
+}
+
+""""""
+type Query {
+  """"""
+  externals(where: ExternalWhereInput, take: Int, skip: Int, orderBy: [ExternalOrderByInput]): [External]
+
+  """"""
+  externalsCount(where: ExternalWhereInput): Int
+
+  """"""
+  post(where: PostWhereUniqueInput): Post
+
+  """"""
+  posts(take: Int, skip: Int, orderBy: [PostOrderByInput], where: PostWhereInput): [Post]
+
+  """"""
+  postsCount(where: PostWhereInput): Int
+
+  """"""
+  topic(where: TopicWhereUniqueInput): Topic
+
+  """"""
+  topics(take: Int, skip: Int, orderBy: [TopicOrderByInput], where: TopicWhereInput): [Topic]
+
+  """"""
+  topicsCount(where: TopicWhereInput): Int
+}
+
+""""""
+input PostTopicsWhereInput {
+  """"""
+  id: IDFilter
+}
+
+""""""
+input PostWhereUniqueInput {
+  """"""
+  id: ID
+
+  """"""
+  slug: String
+}
+
+""""""
+type External {
+  """"""
+  brief: String
+
+  """"""
+  categories(where: CategoryWhereInput): [Category]
+
+  """"""
+  categoriesCount(where: CategoryWhereInput): Int
+
+  """"""
+  content: String
+
+  """"""
+  createdAt: DateTime
+
+  """"""
+  createdBy: User
+
+  """"""
+  extend_byline: String
+
+  """"""
+  groups(where: GroupWhereInput): [Group]
+
+  """"""
+  groupsCount(where: GroupWhereInput): Int
+
+  """"""
+  id: ID
+
+  """"""
+  partner: Partner
+
+  """"""
+  publishedDate: DateTime
+
+  """"""
+  publishedDateString: String
+
+  """"""
+  relateds(where: PostWhereInput, orderBy: [PostOrderByInput], take: Int, skip: Int): [Post]
+
+  """"""
+  relatedsCount(where: PostWhereInput): Int
+
+  """"""
+  sections(where: SectionWhereInput): [Section]
+
+  """"""
+  sectionsCount(where: SectionWhereInput): Int
+
+  """"""
+  slug: String
+
+  """"""
+  source: String
+
+  """"""
+  state: String
+
+  """"""
+  tags(where: TagWhereInput): [Tag]
+
+  """"""
+  tagsCount(where: TagWhereInput): Int
+
+  """"""
+  tags_algo(where: TagWhereInput): [Tag]
+
+  """"""
+  tags_algoCount(where: TagWhereInput): Int
+
+  """"""
+  thumb: String
+
+  """"""
+  thumbCaption: String
+
+  """"""
+  title: String
+
+  """"""
+  updatedAt: DateTime
+
+  """"""
+  updatedBy: User
+}
+
+""""""
+enum OrderDirection {
+  """"""
+  asc
+
+  """"""
+  desc
+}
+
+"""Arbitrary JSON value"""
+scalar JSON
+
+""""""
+type Video {
+  """"""
+  heroImage: Photo
+
+  """"""
+  id: ID
+
+  """"""
+  videoSrc: String
+}
+
+""""""
+type Contact {
+  """"""
+  id: ID
+
+  """"""
+  name: String
+}
+
+""""""
+scalar DateTime
+
+""""""
+type Tag {
+  """"""
+  id: ID
+
+  """"""
+  name: String
+
+  """"""
+  slug: String
+}
+
+""""""
+input PartnerWhereInput {
+  """"""
+  slug: StringFilter
+}
+
+""""""
+input TagWhereInput {
+  """"""
+  slug: StringFilter
+
+  """"""
+  name: StringFilter
+}
+
+""""""
+input ExternalWhereInput {
+  """"""
+  slug: StringFilter
+
+  """"""
+  state: StringFilter
+
+  """"""
+  partner: PartnerWhereInput
+
+  """"""
+  publishedDate: DateTimeNullableFilter
+}
+
+""""""
+input ExternalOrderByInput {
+  """"""
+  updatedAt: OrderDirection
+
+  """"""
+  publishedDate: OrderDirection
+}
+
+""""""
+input GroupWhereInput {
+  """"""
+  _placeholder: String
+}
+
+""""""
+input PhotoWhereInput {
+  """Placeholder field (PhotoWhereInput filtering not implemented yet)"""
+  _placeholder: Boolean
+}
+
+""""""
+input PostWhereInput {
+  """"""
+  sections: SectionManyRelationFilter
+
+  """"""
+  slug: StringFilter
+
+  """"""
+  state: StringFilter
+
+  """"""
+  isAdult: BooleanFilter
+
+  """"""
+  categories: CategoryManyRelationFilter
+
+  """"""
+  isMember: BooleanFilter
+
+  """"""
+  auto_faq: BooleanFilter
+
+  """"""
+  isFeatured: BooleanFilter
+
+  """"""
+  topics: PostTopicsWhereInput
+}
+
+""""""
+type Post {
+  """"""
+  auto_faq: Boolean
+
+  """"""
+  brief: JSON
+
+  """"""
+  camera_man: [Contact]
+
+  """"""
+  categories(where: CategoryWhereInput): [Category]
+
+  """"""
+  categoriesInInputOrder(where: CategoryWhereInput): [Category]
+
+  """"""
+  content: JSON
+
+  """"""
+  designers: [Contact]
+
+  """"""
+  engineers: [Contact]
+
+  """"""
+  extend_byline: String
+
+  """"""
+  faqs_algo: JSON
+
+  """"""
+  heroCaption: String
+
+  """"""
+  heroImage: Photo
+
+  """"""
+  heroVideo: Video
+
+  """"""
+  hiddenAdvertised: Boolean
+
+  """"""
+  id: ID
+
+  """"""
+  isAdult: Boolean
+
+  """"""
+  isAdvertised: Boolean
+
+  """"""
+  isFeatured: Boolean
+
+  """"""
+  isMember: Boolean
+
+  """"""
+  manualOrderOfCategories: JSON
+
+  """"""
+  manualOrderOfRelatedVideos: JSON
+
+  """"""
+  manualOrderOfRelateds: JSON
+
+  """"""
+  manualOrderOfSections: JSON
+
+  """"""
+  manualOrderOfWriters: JSON
+
+  """"""
+  og_description: String
+
+  """"""
+  og_image: Photo
+
+  """"""
+  og_title: String
+
+  """"""
+  photographers: [Contact]
+
+  """"""
+  publishedDate: DateTime
+
+  """"""
+  redirect: String
+
+  """"""
+  relatedVideosInInputOrder: [Video]
+
+  """"""
+  related_videos: [Video]
+
+  """"""
+  relateds: [Post]
+
+  """"""
+  relatedsInInputOrder: [Post]
+
+  """"""
+  relatedsOne: Post
+
+  """"""
+  relatedsTwo: Post
+
+  """"""
+  sections(where: SectionWhereInput): [Section]
+
+  """"""
+  sectionsInInputOrder(where: SectionWhereInput): [Section]
+
+  """"""
+  slug: String
+
+  """"""
+  state: String
+
+  """"""
+  style: String
+
+  """"""
+  subtitle: String
+
+  """"""
+  tags: [Tag]
+
+  """"""
+  tags_algo: [Tag]
+
+  """"""
+  title: String
+
+  """"""
+  topics: Topic
+
+  """"""
+  trimmedContent: JSON
+
+  """"""
+  updatedAt: DateTime
+
+  """"""
+  vocals: [Contact]
+
+  """"""
+  writers: [Contact]
+
+  """"""
+  writersInInputOrder: [Contact]
+}
+
+""""""
+input TopicOrderByInput {
+  """"""
+  name: OrderDirection
+
+  """"""
+  slug: OrderDirection
+
+  """"""
+  sortOrder: OrderDirection
+
+  """"""
+  createdAt: OrderDirection
+
+  """"""
+  updatedAt: OrderDirection
+}

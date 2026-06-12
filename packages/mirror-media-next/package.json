@@ -9,6 +9,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:check": "pnpm codegen && node scripts/check-codegen-clean.mjs",
     "test:smoke": "node scripts/smoke-test.mjs",
     "start-amp-proxy-server": "node amp-proxy-server"
   },

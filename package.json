@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.17.1",
   "scripts": {
     "prepare": "husky install",
-    "typecheck": "pnpm -r run typecheck"
+    "typecheck": "pnpm -r run typecheck",
+    "codegen:check": "pnpm -r run codegen:check"
   },
   "version": "0.0.0",
   "devDependencies": {
