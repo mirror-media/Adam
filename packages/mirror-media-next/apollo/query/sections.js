@@ -4,7 +4,7 @@ import { section, sectionWithCategory } from '../fragments/section'
 
 const fetchSection = gql`
   ${section}
-  query ($where: SectionWhereUniqueInput!) {
+  query fetchSection($where: SectionWhereUniqueInput!) {
     section(where: $where) {
       ...section
     }
@@ -13,7 +13,7 @@ const fetchSection = gql`
 
 const fetchSectionWithCategory = gql`
   ${sectionWithCategory}
-  query ($where: SectionWhereUniqueInput!) {
+  query fetchSectionWithCategory($where: SectionWhereUniqueInput!) {
     section(where: $where) {
       ...sectionWithCategory
     }

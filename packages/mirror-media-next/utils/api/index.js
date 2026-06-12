@@ -193,17 +193,16 @@ const fetchHeaderDataInPremiumPageLayout = async () => {
  * @returns {Promise<AnnouncementQueryResult>}
  */
 const fetchAnnoucementsByScope = (scope) => {
-  if (
-    Array.isArray(scope) &&
-    scope.includes(DEFAULT_ANNOUNCEMENT_SCOPE) === false
-  ) {
-    scope.unshift(DEFAULT_ANNOUNCEMENT_SCOPE)
+  const queryScope = Array.isArray(scope) ? [...scope] : []
+
+  if (queryScope.includes(DEFAULT_ANNOUNCEMENT_SCOPE) === false) {
+    queryScope.unshift(DEFAULT_ANNOUNCEMENT_SCOPE)
   }
 
   return client.query({
     query: fetchAnnoucements,
     variables: {
-      scope,
+      scope: queryScope,
     },
   })
 }

@@ -35,7 +35,7 @@ import { topic } from '../fragments/topic'
 
 const fetchTopics = gql`
   ${topic}
-  query (
+  query fetchTopics(
     $take: Int
     $skip: Int
     $orderBy: [TopicOrderByInput!]!
@@ -53,7 +53,7 @@ const fetchTopic = gql`
   ${slideshowImage}
   ${tag}
   ${topicPost}
-  query (
+  query fetchTopic(
     $topicFilter: TopicWhereInput!
     $postsFilter: PostWhereInput!
     $featuredPostsCountFilter: PostWhereInput
@@ -91,7 +91,7 @@ const fetchTopic = gql`
 `
 
 const fetchTopicPostCount = gql`
-  query Topic(
+  query fetchTopicPostCount(
     $topicFilter: TopicWhereUniqueInput!
     $postsCountFilter: PostWhereInput
   ) {

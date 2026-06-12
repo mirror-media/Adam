@@ -4,7 +4,7 @@ import { tag } from '../fragments/tag'
 
 const fetchTag = gql`
   ${tag}
-  query ($where: TagWhereUniqueInput!) {
+  query fetchTag($where: TagWhereUniqueInput!) {
     tag(where: $where) {
       ...tag
     }
