@@ -4,7 +4,8 @@
   "scripts": {
     "prepare": "husky install",
     "typecheck": "pnpm -r run typecheck",
-    "codegen:check": "pnpm -r run codegen:check"
+    "codegen:check": "pnpm -r run codegen:check",
+    "check:no-new-js": "pnpm -r run check:no-new-js"
   },
   "version": "0.0.0",
   "devDependencies": {
