@@ -182,11 +182,11 @@ function getAmpGptDataSlotSection(section, isMemberArticle) {
 }
 
 export {
-  needInsertMicroAdAfter,
+  getAmpGptDataSlotSection,
   getMicroAdUnitId,
   getPageKeyByPartnerShowOnIndex,
-  getSectionGPTPageKey,
-  needInsertPopInAdAfter,
   getPopInId,
-  getAmpGptDataSlotSection,
+  getSectionGPTPageKey,
+  needInsertMicroAdAfter,
+  needInsertPopInAdAfter,
 }

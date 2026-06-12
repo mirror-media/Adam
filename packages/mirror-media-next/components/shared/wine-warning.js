@@ -1,6 +1,6 @@
 import Image from 'next/image'
-
 import styled from 'styled-components'
+
 import { Z_INDEX } from '../../constants'
 import { getCategoryOfWineSlug } from '../../utils/index'
 

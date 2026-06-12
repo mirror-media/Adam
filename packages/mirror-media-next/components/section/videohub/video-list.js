@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import VideoListItem from '../../shared/video-list-item'
 
 /**

@@ -1,5 +1,7 @@
 import styled from 'styled-components'
+
 import { MIRROR_YOUTUBE_CHANNELS } from '../../../constants'
+
 import SubscribeChannel from './subscribe-channel'
 
 const Wrapper = styled.div`

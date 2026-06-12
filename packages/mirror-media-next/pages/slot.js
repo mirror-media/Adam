@@ -1,11 +1,10 @@
 import errors from '@twreporter/errors'
-import { ENV } from '../config'
 
 import Layout from '../components/shared/layout'
-
-import { setPageCache } from '../utils/cache-setting'
-import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 import Slot from '../components/slot/slot-and-banner'
+import { ENV } from '../config'
+import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
+import { setPageCache } from '../utils/cache-setting'
 
 /**
  *

@@ -1,12 +1,13 @@
-import styled from 'styled-components'
 import Image from 'next/legacy/image'
+import styled from 'styled-components'
 
-import InfiniteScrollList from '../infinite-scroll-list'
-import ArticleList from './article-list'
-import PremiumArticleList from './premium-article-list'
-import { fetchPostsBySectionSlug } from '../../utils/api/section'
 import LoadingPage from '../../public/images-next/loading_page.gif'
 import { fetchPremiumPostsBySectionSlug } from '../../utils/api/premiumsection'
+import { fetchPostsBySectionSlug } from '../../utils/api/section'
+import InfiniteScrollList from '../infinite-scroll-list'
+
+import ArticleList from './article-list'
+import PremiumArticleList from './premium-article-list'
 
 const Loading = styled.div`
   margin: 20px auto 0;

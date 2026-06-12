@@ -1,8 +1,10 @@
-import styled from 'styled-components'
-import FormWrapper from './form-wrapper'
-import useRedirect from '../../hooks/use-redirect'
 import { useEffect } from 'react'
+import styled from 'styled-components'
+
 import { SECOND } from '../../constants/time-unit'
+import useRedirect from '../../hooks/use-redirect'
+
+import FormWrapper from './form-wrapper'
 
 const REDIRECTION_DELAY = 5
 

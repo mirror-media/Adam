@@ -1,6 +1,8 @@
 import styled from 'styled-components'
-import PopInAd from './pop-in-ad'
+
 import { POP_IN_IDS } from '../../../constants/ads'
+
+import PopInAd from './pop-in-ad'
 
 const StyledPopInAd = styled(PopInAd)`
   #_popIn_standard_mobile._popIn_recommend_container {

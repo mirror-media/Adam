@@ -1,5 +1,7 @@
 import styled from 'styled-components'
+
 import { BASIC_FEATURES } from '../../constants/subscribe-constants'
+
 import Check from './check-icon'
 import SecondaryBlueBtn from './secondary-blue-btn'
 

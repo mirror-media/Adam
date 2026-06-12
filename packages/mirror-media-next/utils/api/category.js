@@ -1,7 +1,8 @@
+import axios from 'axios'
+
 import client from '../../apollo/apollo-client'
 import { fetchCategorySections } from '../../apollo/query/categroies'
 import { fetchPosts } from '../../apollo/query/posts'
-import axios from 'axios'
 import {
   API_TIMEOUT,
   URL_STATIC_NEWS_CATEGORY_INFO,

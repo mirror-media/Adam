@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
 
 /**

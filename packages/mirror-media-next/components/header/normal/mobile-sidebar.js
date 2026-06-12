@@ -1,11 +1,13 @@
+import React, { Fragment, useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { Fragment, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import EnterPodcastBtn from './podcast-mb-btn'
+
 import useClickOutside from '../../../hooks/useClickOutside'
 import CloseButton from '../../shared/close-button'
+
 import HamburgerButton from './hamburger-button'
+import EnterPodcastBtn from './podcast-mb-btn'
 /**
  * @typedef {import('../../../apollo/fragments/section').Section} Section
  */

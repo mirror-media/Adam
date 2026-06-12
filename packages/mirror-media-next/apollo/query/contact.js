@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { contact } from '../fragments/contact'
 
 const fetchContact = gql`

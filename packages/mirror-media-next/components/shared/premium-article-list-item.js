@@ -1,7 +1,7 @@
-import styled from 'styled-components'
-import { transformTimeDataIntoSlashFormat } from '../../utils'
-
 import Image from '@readr-media/react-image'
+import styled from 'styled-components'
+
+import { transformTimeDataIntoSlashFormat } from '../../utils'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme

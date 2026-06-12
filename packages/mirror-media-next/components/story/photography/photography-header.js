@@ -1,8 +1,9 @@
-import styled from 'styled-components'
 import Image from 'next/image'
-import { Z_INDEX } from '../../../constants'
-import { DONATION_PAGE_URL } from '../../../config/index.mjs'
 import { ShareButton } from '@readr-media/share-button'
+import styled from 'styled-components'
+
+import { DONATION_PAGE_URL } from '../../../config/index.mjs'
+import { Z_INDEX } from '../../../constants'
 import DonateLink from '../shared/donate-link'
 import SubscribeLink from '../shared/subscribe-link'
 

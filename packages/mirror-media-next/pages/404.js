@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import axios from 'axios'
 import Link from 'next/link'
 import CustomImage from '@readr-media/react-image'
+import axios from 'axios'
+import styled from 'styled-components'
+
+import { HeaderSkeleton } from '../components/header/normal/header'
+import ShareHeader from '../components/header/share-header'
+import Layout from '../components/shared/layout'
 import { URL_STATIC_404_POPULAR_NEWS } from '../config/index.mjs'
 import { API_TIMEOUT } from '../config/index.mjs'
-import Layout from '../components/shared/layout'
-import ShareHeader from '../components/header/share-header'
-import { HeaderSkeleton } from '../components/header/normal/header'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 /** @typedef {import('../apollo/fragments/post').AsideListingPost & {brief: import('../apollo/fragments/post').Post['brief']} } ArticleDataWithBrief */
 /**

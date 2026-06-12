@@ -1,14 +1,14 @@
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import styled from 'styled-components'
-import { useRef, useState } from 'react'
 
-import { getLoginHref } from '../../../utils'
+import { logout, useMembership } from '../../../context/membership'
 import useClickOutside from '../../../hooks/useClickOutside'
 import { useAppDispatch } from '../../../hooks/useRedux'
 import { loginActions } from '../../../slice/login-slice'
-import { logout, useMembership } from '../../../context/membership'
+import { getLoginHref } from '../../../utils'
 
 const MemberLoginButtonWrapper = styled.div`
   cursor: pointer;

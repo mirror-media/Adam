@@ -1,10 +1,10 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
 import useWindowDimensions from '../../hooks/use-window-dimensions'
-import VideoListItem from '../shared/video-list-item'
-import { mediaSize } from '../../styles/media'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { mediaSize } from '../../styles/media'
+import VideoListItem from '../shared/video-list-item'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

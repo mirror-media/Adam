@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import YoutubePolicy from './youtube-policy'
+
 import LeadingVideoItem from './leading-video-item'
+import YoutubePolicy from './youtube-policy'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme

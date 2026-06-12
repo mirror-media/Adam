@@ -1,6 +1,7 @@
-import styled, { css } from 'styled-components'
-import { Z_INDEX } from '../../../constants'
 import { useState } from 'react'
+import styled, { css } from 'styled-components'
+
+import { Z_INDEX } from '../../../constants'
 
 /**
  * @typedef {'default' | 'bottom' | 'modified'| 'unset'} FullScreenAdStyle

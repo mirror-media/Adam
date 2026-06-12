@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { loginActions, loginFormMode, FormMode } from '../../slice/login-slice'
+import { FormMode, loginActions, loginFormMode } from '../../slice/login-slice'
+
 import GenericFailed from './generic-failed'
 
 export default function LoginFailed() {

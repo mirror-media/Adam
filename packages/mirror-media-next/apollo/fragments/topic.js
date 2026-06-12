@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { heroImage } from './photo'
 
 export const topic = gql`

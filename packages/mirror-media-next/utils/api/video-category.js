@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
+
 import client from '../../apollo/apollo-client'
 import { fetchCategory } from '../../apollo/query/categroies'
+import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
 /**
  * @param {string} playlistId - youtube playlist id

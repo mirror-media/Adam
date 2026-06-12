@@ -2,48 +2,47 @@
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
 import { useCallback, useMemo } from 'react'
-
-import styled, { css } from 'styled-components'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'axios'
-import dynamic from 'next/dynamic'
+import styled, { css } from 'styled-components'
+
+import GPTFloatingAd from '../../../components/ads/gpt/gpt-floating-ad'
 import ArticleInfo from '../../../components/story/normal/article-info'
-import ArticleBrief from '../shared/brief'
 import AsideArticleList from '../../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../../components/story/normal/fb-page-plugin'
-import SocialNetworkService from '../../../components/story/normal/social-network-service'
-import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
-import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import RelatedArticleList from '../../../components/story/normal/related-article-list'
-import GPTFloatingAd from '../../../components/ads/gpt/gpt-floating-ad'
-import ArticleContent from './article-content'
-import HeroImageAndVideo from './hero-image-and-video'
-import Divider from '../shared/divider'
-import ShareHeader from '../../header/share-header'
-import Footer from '../../shared/footer'
-import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
-
+import SocialNetworkService from '../../../components/story/normal/social-network-service'
+import MagazineInviteBanner from '../../../components/story/shared/magazine-invite-banner'
 import {
-  transformTimeDataIntoDotFormat,
-  getCategoryOfWineSlug,
-} from '../../../utils'
-
-import {
-  URL_STATIC_POPULAR_NEWS,
   API_TIMEOUT,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+  URL_STATIC_POPULAR_NEWS,
 } from '../../../config/index.mjs'
-import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../../constants/index'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { useDisplayAd } from '../../../hooks/useDisplayAd'
+import { mediaSize } from '../../../styles/media'
+import {
+  getCategoryOfWineSlug,
+  transformTimeDataIntoDotFormat,
+} from '../../../utils'
+import { getActiveOrderCategory, getActiveOrderSection } from '../../../utils'
 import { getSectionGPTPageKey } from '../../../utils/ad'
-import { getActiveOrderSection, getActiveOrderCategory } from '../../../utils'
+import GPTMbStAd from '../../ads/gpt/gpt-mb-st-ad'
 import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '../../ads/gpt/gpt-placeholder'
-import Image from 'next/image'
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
-import { mediaSize } from '../../../styles/media'
+import ShareHeader from '../../header/share-header'
+import Footer from '../../shared/footer'
+import ArticleBrief from '../shared/brief'
+import Divider from '../shared/divider'
+import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
+
+import ArticleContent from './article-content'
+import HeroImageAndVideo from './hero-image-and-video'
 
 const DableAd = dynamic(() => import('../../ads/dable/dable-ad'), {
   ssr: false,

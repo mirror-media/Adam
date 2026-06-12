@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import client from '../../../apollo/apollo-client'
-import { setPageCache } from '../../../utils/cache-setting'
 import { fetchWeeklys } from '../../../apollo/query/magazines'
 import Layout from '../../../components/shared/layout'
 import { getLogTraceObject } from '../../../utils'
+import { setPageCache } from '../../../utils/cache-setting'
 import { processSettledResult } from '../../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../../utils/server-side-only/redirect-to-login-while-unauthed'
 

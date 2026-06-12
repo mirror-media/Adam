@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { transformTimeDataIntoDotFormat } from '../../../utils'
 
 const DateText = styled.p`

@@ -1,5 +1,6 @@
+import React, { Fragment, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import React, { Fragment, useState, useRef } from 'react'
+
 import useClickOutside from '../../../hooks/useClickOutside'
 import NavSubtitleNavigator from '../../story/shared/nav-subtitle-navigator'
 

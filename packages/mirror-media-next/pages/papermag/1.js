@@ -1,13 +1,14 @@
 import styled from 'styled-components'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
-import { setPageCache } from '../../utils/cache-setting'
+
+import SubscribePaperMagForm from '../../components/papermag/subscribe-papermag-form'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
-import SubscribePaperMagForm from '../../components/papermag/subscribe-papermag-form'
 import { PLAN } from '../../constants/papermag'
+import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 const Page = styled.main`
   min-height: 65vh;

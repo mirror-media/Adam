@@ -104,4 +104,4 @@ const RECEIPT_OPTION = /** @type {const} */ ({
 
 /** @typedef {RECEIPT_OPTION[keyof typeof RECEIPT_OPTION]} ReceiptOptionEnum */
 
-export { PLAN, PLAN_LIST, COUPON_DISCOUNT, RECEIPT_OPTION }
+export { COUPON_DISCOUNT, PLAN, PLAN_LIST, RECEIPT_OPTION }

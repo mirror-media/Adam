@@ -38,4 +38,4 @@ const Frequency = {
   Yearly: 'yearly',
 }
 
-export { PaymentMethod, MemberType, Frequency }
+export { Frequency, MemberType, PaymentMethod }

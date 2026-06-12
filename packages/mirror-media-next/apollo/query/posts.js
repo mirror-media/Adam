@@ -1,10 +1,11 @@
 import { gql } from '@apollo/client'
+
 import {
-  listingPost,
   asideListingPost,
+  listingPost,
   post,
-  postTrimmedContent,
   postFullContent,
+  postTrimmedContent,
   relatedPost,
 } from '../fragments/post'
 
@@ -81,4 +82,4 @@ const fetchAmpPostBySlug = gql`
   }
 `
 
-export { fetchPosts, fetchAsidePosts, fetchStoryPostBySlug, fetchAmpPostBySlug }
+export { fetchAmpPostBySlug, fetchAsidePosts, fetchPosts, fetchStoryPostBySlug }

@@ -1,13 +1,14 @@
-import styled from 'styled-components'
-import SubscribePlanBtn from '../subscribe-plan-btn'
-import { PLAN } from '../../constants/papermag'
-import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
-import { getNumberWithCommas } from '../../utils'
 import Image from 'next/image'
-import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
 import Link from 'next/link'
+import styled from 'styled-components'
+
+import { PLAN } from '../../constants/papermag'
 import useWindowDimensions from '../../hooks/use-window-dimensions'
+import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
 import { mediaSize } from '../../styles/media'
+import { getNumberWithCommas } from '../../utils'
+import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
+import SubscribePlanBtn from '../subscribe-plan-btn'
 
 const PlansWrapper = styled.section`
   width: 100%;

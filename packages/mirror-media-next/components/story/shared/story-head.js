@@ -1,14 +1,15 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+
 import { SITE_URL } from '../../../config/index.mjs'
 import {
   getActiveOrderCategory,
   getActiveOrderSection,
   hasUtmParamsInAsPath,
 } from '../../../utils'
-import DevGptAd from '../dev-gpt-ad'
 // import Script from 'next/script'
 import { toTaipeiISOString } from '../../../utils/index'
+import DevGptAd from '../dev-gpt-ad'
 
 /**
  * @typedef {Object} Section

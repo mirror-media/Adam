@@ -1,11 +1,13 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import withPWA from 'next-pwa'
+
 import {
   DONATION_PAGE_URL,
-  SITE_BASE_PATH,
   FIREBASE_AUTH_DOMAIN,
+  SITE_BASE_PATH,
 } from './config/index.mjs'
-import withPWA from 'next-pwa'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 

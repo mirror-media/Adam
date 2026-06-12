@@ -1,11 +1,12 @@
+import dynamic from 'next/dynamic'
+
+import Layout from '../../components/shared/layout'
 import { ENV } from '../../config/index.mjs'
-import { setPageCache } from '../../utils/cache-setting'
 import { getLogTraceObject } from '../../utils'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { processSettledResult } from '../../utils/response-processor'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import Layout from '../../components/shared/layout'
-import dynamic from 'next/dynamic'
+import { processSettledResult } from '../../utils/response-processor'
 const MisoSearch = dynamic(
   () => import('../../components/search/miso-search'),
   { ssr: false }

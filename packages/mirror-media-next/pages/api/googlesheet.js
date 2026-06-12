@@ -1,11 +1,12 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet'
-import { JWT } from 'google-auth-library'
 import Cors from 'cors'
-import { runMiddleware } from '../../utils/api-route'
+import { JWT } from 'google-auth-library'
+import { GoogleSpreadsheet } from 'google-spreadsheet'
+
 import {
-  GOOGLE_SHEETS_PRIVATE_KEY,
   GOOGLE_SHEETS_CLIENT_EMAIL,
+  GOOGLE_SHEETS_PRIVATE_KEY,
 } from '../../config/index.mjs'
+import { runMiddleware } from '../../utils/api-route'
 
 /**
  * @typedef {import("next").NextApiRequest} NextApiRequest

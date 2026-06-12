@@ -1,43 +1,42 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import React, { useState, useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import styled from 'styled-components'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
-import styled from 'styled-components'
-import dynamic from 'next/dynamic'
+import { fetchStoryPostBySlug } from '../../apollo/query/posts'
+import FullScreenAds from '../../components/ads/full-screen-ads'
+import Layout from '../../components/shared/layout'
+import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
+import WineWarning from '../../components/shared/wine-warning'
+import StoryNormalStyle from '../../components/story/normal'
+import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
+import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
+import JsonLdsScript from '../../components/story/shared/json-lds-script'
+import StoryHead from '../../components/story/shared/story-head'
 import {
   API_TIMEOUT,
   ENV,
-  URL_STATIC_POST_FLASH_NEWS,
+  IS_PREVIEW_MODE,
   // TEST_GPT_AD_FEATURE_TOGGLE,
   STORY_GQL_ENDPOINT,
-  IS_PREVIEW_MODE,
+  URL_STATIC_POST_FLASH_NEWS,
 } from '../../config/index.mjs'
-import WineWarning from '../../components/shared/wine-warning'
-import AdultOnlyWarning from '../../components/story/shared/adult-only-warning'
-import { fetchStoryPostBySlug } from '../../apollo/query/posts'
-import StoryNormalStyle from '../../components/story/normal'
-import Layout from '../../components/shared/layout'
-import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
-import StoryHead from '../../components/story/shared/story-head'
 import {
   convertDraftToText,
-  getResizedUrl,
   getCategoryOfWineSlug,
   getLogTraceObject,
+  getResizedUrl,
 } from '../../utils'
-import { logAxiosError, logGqlError } from '../../utils/log/shared'
-import { handleStoryPageRedirect } from '../../utils/story'
-import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
+import { logAxiosError, logGqlError } from '../../utils/log/shared'
+import { handleStoryPageRedirect } from '../../utils/story'
 import {
   getInitialRelatedStories,
   serializeStoryPostDataForClient,
 } from '../../utils/story-page-props.mjs'
-
-import JsonLdsScript from '../../components/story/shared/json-lds-script'
-import { generateJsonLdsData } from '../../components/story/shared/json-lds-data'
-import FullScreenAds from '../../components/ads/full-screen-ads'
 const { hasContentInRawContentBlock } = MirrorMedia
 
 const StoryWideStyle = dynamic(() => import('../../components/story/wide'))
@@ -45,8 +44,9 @@ const StoryPhotographyStyle = dynamic(
   () => import('../../components/story/photography')
 )
 import Image from 'next/image'
-import Skeleton from '../../public/images-next/skeleton.png'
 import axios from 'axios'
+
+import Skeleton from '../../public/images-next/skeleton.png'
 import { processSettledResult } from '../../utils/response-processor'
 import { getRelatedStories } from '../api/recomemd'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {

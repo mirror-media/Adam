@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { transformTimeDataIntoSlashFormat } from '../../utils'
 import ButtonCopyLink from '../story/shared/button-copy-link'
 import ButtonSocialNetworkShare from '../story/shared/button-social-network-share'

@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import styled from 'styled-components'
+
 import AudioPlayer from '../../components/podcast/audio-player'
 import Dropdown from '../../components/podcast/author-select-dropdown'
 import PodcastList from '../../components/podcast/podcast-list'
 import Layout from '../../components/shared/layout'
 import { ENV, URL_STATIC_PODCAST_LIST } from '../../config/index.mjs'
-import {
-  fetchStaticJsonByUrl,
-  fetchHeaderDataInDefaultPageLayout,
-} from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { setPageCache } from '../../utils/cache-setting'
 import { getLogTraceObject } from '../../utils'
+import {
+  fetchHeaderDataInDefaultPageLayout,
+  fetchStaticJsonByUrl,
+} from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
 
 /**

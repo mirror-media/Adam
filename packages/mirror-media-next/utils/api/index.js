@@ -1,5 +1,7 @@
 import errors from '@twreporter/errors'
+
 import client from '../../apollo/apollo-client.js'
+import { fetchAnnoucements } from '../../apollo/query/announcements'
 import axiosInstance from '../../axios/index.js'
 import {
   URL_STATIC_HEADER_HEADERS,
@@ -7,7 +9,6 @@ import {
   URL_STATIC_TOPICS,
 } from '../../config/index.mjs'
 import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
-import { fetchAnnoucements } from '../../apollo/query/announcements'
 
 /**
  * @typedef {Object} Category
@@ -208,8 +209,8 @@ const fetchAnnoucementsByScope = (scope) => {
 }
 
 export {
-  fetchStaticJsonByUrl,
+  fetchAnnoucementsByScope,
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
-  fetchAnnoucementsByScope,
+  fetchStaticJsonByUrl,
 }

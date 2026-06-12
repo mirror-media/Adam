@@ -1,5 +1,5 @@
-import { buildMisoUrl, formatStoryId, misoFetch } from '../../utils/miso'
 import { MISO_ENDPOINTS } from '../../config/index.mjs'
+import { buildMisoUrl, formatStoryId, misoFetch } from '../../utils/miso'
 
 /**
  * @typedef {import('../../type/miso').RelatedStoriesResponse} RelatedStoriesResponse

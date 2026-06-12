@@ -1,12 +1,14 @@
-import styled from 'styled-components'
-import Image from 'next/legacy/image'
-import LoadingPage from '../../public/images-next/loading_page.gif'
-import InfiniteScrollList from '../infinite-scroll-list'
 import { useState } from 'react'
-import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
-import VideoList from './video-list.js'
-import { fetchYoutubePlaylistByPlaylistId } from '../../utils/api/video-category'
+import Image from 'next/legacy/image'
+import styled from 'styled-components'
+
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants'
+import LoadingPage from '../../public/images-next/loading_page.gif'
+import { fetchYoutubePlaylistByPlaylistId } from '../../utils/api/video-category'
+import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
+import InfiniteScrollList from '../infinite-scroll-list'
+
+import VideoList from './video-list.js'
 
 const Loading = styled.div`
   margin: 20px auto 0;

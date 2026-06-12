@@ -1,39 +1,40 @@
-import styled from 'styled-components'
 import { useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { useMembership } from '../../context/membership'
+import { FirebaseError } from 'firebase/app'
 import {
-  loginState,
-  loginActions,
-  FormState,
+  fetchSignInMethodsForEmail,
+  getAdditionalUserInfo,
+  getRedirectResult,
+} from 'firebase/auth'
+import styled from 'styled-components'
+
+import LoginFailed from '../../components/login/login-failed'
+import MainForm from '../../components/login/main-form'
+import RegistrationFailed from '../../components/login/registration-failed'
+import RegistrationSuccess from '../../components/login/registration-success'
+import WebviewHint from '../../components/login/webview-hint'
+import LayoutFull from '../../components/shared/layout-full'
+import { FirebaseAuthError } from '../../constants/firebase'
+import { useMembership } from '../../context/membership'
+import { auth } from '../../firebase'
+import useRedirect from '../../hooks/use-redirect'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
+import {
   AuthMethod,
+  FormState,
+  loginActions,
+  loginState,
 } from '../../slice/login-slice'
+import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { isInAppBrowser } from '../../utils/login'
 import {
   errorHandler,
   loginPageOnAuthStateChangeAction,
 } from '../../utils/membership'
-import MainForm from '../../components/login/main-form'
-import RegistrationSuccess from '../../components/login/registration-success'
-import RegistrationFailed from '../../components/login/registration-failed'
-import LoginFailed from '../../components/login/login-failed'
-import useRedirect from '../../hooks/use-redirect'
-import {
-  getRedirectResult,
-  getAdditionalUserInfo,
-  fetchSignInMethodsForEmail,
-} from 'firebase/auth'
-import { auth } from '../../firebase'
-import { FirebaseError } from 'firebase/app'
-import { setPageCache } from '../../utils/cache-setting'
-import LayoutFull from '../../components/shared/layout-full'
-import { FirebaseAuthError } from '../../constants/firebase'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { getLogTraceObject } from '../../utils'
 import { processSettledResult } from '../../utils/response-processor'
 import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
-import WebviewHint from '../../components/login/webview-hint'
-import { isInAppBrowser } from '../../utils/login'
 
 const Container = styled.div`
   flex-grow: 1;

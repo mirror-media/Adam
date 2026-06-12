@@ -1,9 +1,11 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import RadioInput from './radio-input'
+
+import { RECEIPT_OPTION } from '../../../constants/papermag'
+
 import CustomDropdown from './custom-dropdown'
 import FormInput from './form-input'
-import { RECEIPT_OPTION } from '../../../constants/papermag'
+import RadioInput from './radio-input'
 
 const shakeAnimation = keyframes`
   0%, 100% {

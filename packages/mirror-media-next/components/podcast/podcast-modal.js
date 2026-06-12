@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+
 import { Z_INDEX } from '../../constants'
 
 const ModalWrapper = styled.div`

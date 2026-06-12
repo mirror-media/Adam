@@ -62,8 +62,8 @@ const extractYouTubeId = (url) => {
 }
 
 export {
-  simplifyYoutubeSearchedVideo,
-  simplifyYoutubePlaylistVideo,
-  simplifyYoutubeVideo,
   extractYouTubeId,
+  simplifyYoutubePlaylistVideo,
+  simplifyYoutubeSearchedVideo,
+  simplifyYoutubeVideo,
 }

@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import styled from 'styled-components'
 
+import { mediaSize } from '../../../styles/media.js'
 import {
   getAdSlotParam,
   getAdSlotParamByAdUnit,
   getAdWidth,
 } from '../../../utils/gpt-ad.js'
-import styled from 'styled-components'
-import { mediaSize } from '../../../styles/media.js'
 
 const Wrapper = styled.div`
   /**

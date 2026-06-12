@@ -1,26 +1,26 @@
 import dynamic from 'next/dynamic'
-
-import { ENV } from '../../config/index.mjs'
-import CategoryVideos from '../../components/video_category/category-videos.js'
-import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants/index.js'
 import styled from 'styled-components'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api/index.js'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
-import { setPageCache } from '../../utils/cache-setting.js'
-import LeadingVideo from '../../components/shared/leading-video.js'
+
+import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad.js'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder.js'
 import Layout from '../../components/shared/layout.js'
+import LeadingVideo from '../../components/shared/leading-video.js'
+import CategoryVideos from '../../components/video_category/category-videos.js'
+import { ENV } from '../../config/index.mjs'
+import { Z_INDEX } from '../../constants/index'
+import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants/index.js'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api/index.js'
 import {
   fetchVideoCategory,
   fetchYoutubePlaylistByPlaylistId,
 } from '../../utils/api/video-category.js'
-import { Z_INDEX } from '../../constants/index'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
-import FullScreenAds from '../../components/ads/full-screen-ads'
-import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad.js'
-import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder.js'
+import { setPageCache } from '../../utils/cache-setting.js'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils/index.js'
 import { processSettledResult } from '../../utils/response-processor.js'
+import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

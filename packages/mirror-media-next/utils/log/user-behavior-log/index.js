@@ -1,15 +1,15 @@
 import {
-  getBrowserInfo,
-  getDeviceInfo,
-  detectIsInApp,
-  getWindowSizeInfo,
-  getFormattedPageType,
-} from '../shared'
-import {
   getClientSideOnlyError,
   isServer,
   transformTimeDataIntoSlashFormat,
 } from '../../index'
+import {
+  detectIsInApp,
+  getBrowserInfo,
+  getDeviceInfo,
+  getFormattedPageType,
+  getWindowSizeInfo,
+} from '../shared'
 
 /**
  * @typedef {'pageview' | 'exit' | 'scroll-to-80%' | 'click'} EventType

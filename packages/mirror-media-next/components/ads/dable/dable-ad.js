@@ -1,6 +1,7 @@
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import Script from 'next/script'
+
 import { DABLE_WIDGET_IDS } from '../../../constants/ads'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { mediaSize } from '../../../styles/media'
 
 /**

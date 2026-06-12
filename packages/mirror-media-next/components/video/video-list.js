@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import VideoListItem from '../shared/video-list-item'
+
 import GPTAd from '../../components/ads/gpt/gpt-ad'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import VideoListItem from '../shared/video-list-item'
 
 const Wrapper = styled.div`
   margin-top: 20px;

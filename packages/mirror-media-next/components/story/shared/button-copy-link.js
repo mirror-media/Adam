@@ -1,9 +1,10 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
 
-import styled from 'styled-components'
 import Image from 'next/image'
-import useSharedUrl from '../../../hooks/use-shared-url'
+import styled from 'styled-components'
+
 import useClipboard from '../../../hooks/use-clipboard'
+import useSharedUrl from '../../../hooks/use-shared-url'
 
 const ClickButton = styled.button`
   &:focus {

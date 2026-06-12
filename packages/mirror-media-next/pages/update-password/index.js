@@ -1,13 +1,14 @@
 import styled from 'styled-components'
-import { setPageCache } from '../../utils/cache-setting'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import useMembershipRequired from '../../hooks/use-membership-required'
-import LayoutFull from '../../components/shared/layout-full'
+
 import FormWrapper from '../../components/login/form-wrapper'
+import LayoutFull from '../../components/shared/layout-full'
 import MainForm from '../../components/update-password/main-form'
+import useMembershipRequired from '../../hooks/use-membership-required'
+import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 
 const Container = styled.div`

@@ -1,15 +1,16 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import SearchBarDesktop from '../shared/search-bar-desktop'
 import { Z_INDEX } from '../../../constants'
 import { DEFAULT_PREMIUM_SECTIONS_DATA } from '../../../constants/header'
-import SearchBarInput from '../shared/search-bar-input'
+import useSearch from '../../../hooks/use-search'
 import Logo from '../normal/logo'
+import MemberLoginButton from '../shared/member-Login-Button'
+import SearchBarDesktop from '../shared/search-bar-desktop'
+import SearchBarInput from '../shared/search-bar-input'
+
 import PremiumMobileSidebar from './premium-mobile-sidebar'
 import PremiumNavSections from './premium-nav-sections'
-import useSearch from '../../../hooks/use-search'
-import MemberLoginButton from '../shared/member-Login-Button'
 
 /**
  * @typedef {import('./premium-mobile-sidebar').H2AndH3Block} H2AndH3Block

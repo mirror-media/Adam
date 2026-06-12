@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { API_TIMEOUT, URL_STATIC_POPULAR_NEWS } from '../../config/index.mjs'
-import axios from 'axios'
-import { getActiveOrderSection } from '../../utils'
-import styled from 'styled-components'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import axios from 'axios'
+import styled from 'styled-components'
+
+import { API_TIMEOUT, URL_STATIC_POPULAR_NEWS } from '../../config/index.mjs'
 import { Z_INDEX } from '../../constants'
-import useClickOutside from '../../hooks/useClickOutside'
 import { IDLE_MODAL_LINK } from '../../constants'
 import { CUSTOMER_SERVICE_INFOS } from '../../constants/footer'
+import useClickOutside from '../../hooks/useClickOutside'
+import { getActiveOrderSection } from '../../utils'
+
 import PopularNewsItem from './popular-news-item'
 
 const Background = styled.section`

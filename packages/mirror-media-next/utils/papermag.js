@@ -54,8 +54,8 @@ function getPlanInfoByIdAndShouldFreight(id, shouldCountFreight) {
 }
 
 export {
-  getMerchandiseAndShippingFeeInfo,
   checkOrdererValues,
   checkRecipientValues,
+  getMerchandiseAndShippingFeeInfo,
   getPlanInfoByIdAndShouldFreight,
 }

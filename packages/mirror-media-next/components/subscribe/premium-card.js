@@ -1,9 +1,11 @@
 import styled from 'styled-components'
-import SubscribePlanBtn from '../subscribe-plan-btn'
+
 import {
   PREMIUM_FEATURES,
   PRIZE_LIST,
 } from '../../constants/subscribe-constants'
+import SubscribePlanBtn from '../subscribe-plan-btn'
+
 import Badge from './badge-icon'
 import Check from './check-icon'
 

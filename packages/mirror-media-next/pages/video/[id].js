@@ -1,32 +1,32 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import Head from 'next/head'
+import styled from 'styled-components'
 
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { ENV } from '../../config/index.mjs'
-import {
-  simplifyYoutubeSearchedVideo,
-  simplifyYoutubeVideo,
-} from '../../utils/youtube'
-import { setPageCache } from '../../utils/cache-setting'
-import YoutubeIframe from '../../components/shared/youtube-iframe'
-import YoutubeArticle from '../../components/video/youtube-article'
-import VideoList from '../../components/video/video-list'
-import YoutubePolicy from '../../components/shared/youtube-policy'
+import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import Layout from '../../components/shared/layout'
+import YoutubeIframe from '../../components/shared/youtube-iframe'
+import YoutubePolicy from '../../components/shared/youtube-policy'
+import VideoList from '../../components/video/video-list'
+import YoutubeArticle from '../../components/video/youtube-article'
+import { ENV } from '../../config/index.mjs'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import {
   fetchYoutubeLatestVideosByChannelId,
   fetchYoutubeVideoByVideoId,
 } from '../../utils/api/video'
-import FullScreenAds from '../../components/ads/full-screen-ads'
-import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
-import Head from 'next/head'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { logAxiosError } from '../../utils/log/shared'
+import { processSettledResult } from '../../utils/response-processor'
+import {
+  simplifyYoutubeSearchedVideo,
+  simplifyYoutubeVideo,
+} from '../../utils/youtube'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

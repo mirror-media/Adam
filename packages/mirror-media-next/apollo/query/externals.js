@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
-import { listingExternal, external } from '../fragments/external'
+
+import { external, listingExternal } from '../fragments/external'
 
 const fetchExternals = gql`
   ${listingExternal}
@@ -52,8 +53,8 @@ const fetchLatestPublishedExternals = gql`
 `
 
 export {
-  fetchExternalCounts,
   fetchExternalBySlug,
+  fetchExternalCounts,
   fetchExternals,
   fetchLatestPublishedExternals,
 }

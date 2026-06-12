@@ -1,6 +1,6 @@
-import { parseDocument, DomUtils } from 'htmlparser2'
 import * as CSSselect from 'css-select'
 import { default as render } from 'dom-serializer'
+import { DomUtils, parseDocument } from 'htmlparser2'
 
 /**
  * [Server Side only function]

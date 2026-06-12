@@ -1,23 +1,25 @@
-import styled from 'styled-components'
-import { fetchSignInMethodsForEmail } from 'firebase/auth'
-import { auth } from '../../firebase'
 import { useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../../hooks/useRedux'
+import { fetchSignInMethodsForEmail } from 'firebase/auth'
+import styled from 'styled-components'
+
+import { InputState } from '../../constants/form'
+import { auth } from '../../firebase'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import {
+  AuthMethod,
+  loginActions,
   loginEmail,
+  loginIsFederatedRedirectResultLoading,
   loginPrevAuthMethod,
   loginShouldShowHintOfExitenceOfDifferentAuthMethod,
-  loginActions,
-  loginIsFederatedRedirectResultLoading,
-  AuthMethod,
 } from '../../slice/login-slice'
-import { isValidEmail, isCompanyEmail } from '../../utils'
-import EmailInput from './email-input'
+import { isCompanyEmail, isValidEmail } from '../../utils'
 import PrimaryButton from '../shared/buttons/primary-button'
-import ButtonLoginWithThirdParty from './button-login-with-third-party'
-import ReminderSection from './reminder-section'
 import CenteredHint from '../shared/centered-hint'
-import { InputState } from '../../constants/form'
+
+import ButtonLoginWithThirdParty from './button-login-with-third-party'
+import EmailInput from './email-input'
+import ReminderSection from './reminder-section'
 
 /**
  * @typedef {import('./button-login-with-third-party').ThirdPartyName} ThirdPartyName

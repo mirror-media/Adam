@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 
+import { PRIZE_LIST } from '../../../constants/subscribe-constants'
+
 import DonateLink from './donate-link'
 import SubscribeLink from './subscribe-link'
-import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 
 const Container = styled.div`
   margin: 32px 0;

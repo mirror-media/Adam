@@ -1,10 +1,10 @@
 import { google } from 'googleapis'
 
 import {
-  GOOGLE_SHEETS_PRIVATE_KEY,
-  GOOGLE_SHEETS_CLIENT_ID,
-  GOOGLE_SHEETS_CLIENT_EMAIL,
   GOOGLE_SHEET_SLOT_ID,
+  GOOGLE_SHEETS_CLIENT_EMAIL,
+  GOOGLE_SHEETS_CLIENT_ID,
+  GOOGLE_SHEETS_PRIVATE_KEY,
 } from '../../config/index.mjs'
 
 function getHasPlayed(sheetData, userFirebaseId) {
