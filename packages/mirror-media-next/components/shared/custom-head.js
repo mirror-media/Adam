@@ -74,11 +74,9 @@ export default function CustomHead({
   robotsMetaContent,
 }) {
   const router = useRouter()
-  const canonicalLink = skipCanonical ? (
-    <></>
-  ) : (
-    createCanonicalLink(router.asPath)
-  )
+  const canonicalLink = skipCanonical
+    ? null
+    : createCanonicalLink(router.asPath)
   /** @type {OGProperties} */
   const siteInformation = {
     title: title ? `${title} - ${SITE_TITLE}` : SITE_TITLE,
