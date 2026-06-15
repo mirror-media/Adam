@@ -9,7 +9,7 @@ import { STORY_GQL_ENDPOINT } from '../../config/index.mjs'
 export function fetchTopicList(take, skip) {
   // Use story endpoint if available, fallback to default client
   const topicClient = getStoryClient(STORY_GQL_ENDPOINT) || client
-  
+
   return topicClient.query({
     query: fetchTopics,
     variables: {

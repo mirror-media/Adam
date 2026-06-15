@@ -395,6 +395,8 @@ export default function AudioPlayer({ listeningPodcast }) {
           )}
 
           <AudioPlayerContainer key={audioURL}>
+            {/* Captions are unavailable from the podcast RSS enclosure payload. */}
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio ref={audioRef} src={audioURL} autoPlay></audio>
             <Controls>
               <PlayPauseButton

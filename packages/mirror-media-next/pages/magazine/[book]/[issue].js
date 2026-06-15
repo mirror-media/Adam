@@ -50,7 +50,10 @@ export default function BookBIssuePublish({ weeklys }) {
       footer={{ type: 'empty' }}
     >
       <Page>
-        <iframe src={iframeSrc} />
+        <iframe
+          src={iframeSrc}
+          title={`動態雜誌 ${issueString.split('-')[0]}`}
+        />
       </Page>
     </Layout>
   )

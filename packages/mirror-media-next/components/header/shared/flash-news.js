@@ -192,7 +192,6 @@ export default function FlashNews({ flashNews = [] }) {
           <Arrow className="prev" onClick={handleClickPrev} />
           <Arrow className="next" onClick={handleClickNext} />
         </ArrowWrapper>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <FlashNewsList
           shouldTransition={shouldTransition}
           move={move}

@@ -1,4 +1,3 @@
-/* eslint-env worker */
 import { FIREBASE_CONFIG } from '../config/firebase.mjs'
 
 const ignorePaths = [
@@ -26,11 +25,9 @@ const mustNotIgnorePaths = ['\u002F_next\u002Fdata']
 
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js')
-/* eslint-disable-next-line no-undef */
 firebase.initializeApp(FIREBASE_CONFIG)
 
 // Initialize authService
-/* eslint-disable-next-line no-undef */
 const authService = firebase.auth()
 
 /**
@@ -142,6 +139,5 @@ self.addEventListener('fetch', (event) => {
 
 // In service worker script.
 self.addEventListener('activate', (event) => {
-  /* eslint-disable-next-line no-undef */
   event.waitUntil(clients.claim())
 })
