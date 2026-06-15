@@ -130,7 +130,9 @@ lib
 .vercel
 
 # vscode
-.vscode
+.vscode/*
+!.vscode/
+!.vscode/settings.json
 
 # cursor
 .cursor

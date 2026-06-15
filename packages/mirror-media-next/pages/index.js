@@ -1,38 +1,37 @@
 // External libraries
-import styled from 'styled-components'
-import axios from 'axios'
-import errors from '@twreporter/errors'
 import dynamic from 'next/dynamic'
+import errors from '@twreporter/errors'
+import axios from 'axios'
+import styled from 'styled-components'
 
-// Config and utilities (including hooks)
-import {
-  ENV,
-  API_TIMEOUT,
-  URL_STATIC_POST_FLASH_NEWS,
-  URL_STATIC_POST_EXTERNAL,
-} from '../config/index.mjs'
-import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
-import {
-  getSectionNameGql,
-  getSectionSlugGql,
-  getArticleHref,
-  getLogTraceObject,
-} from '../utils'
-import { processSettledResult } from '../utils/response-processor'
-import { setPageCache } from '../utils/cache-setting'
-import { fetchPromoteVideosList } from '../utils/api/promote-videos'
-import { fetchForumHeadlines } from '../utils/api/forum-headlines'
-import { useDisplayAd } from '../hooks/useDisplayAd'
-
-// Components
-import EditorChoice from '../components/index/editor-choice'
-import LatestNews from '../components/index/latest-news'
-import PromoVideoList from '../components/index/promo-video-list'
-import ForumHeadlinesPreview from '../components/index/forum-headlines-preview'
-import Layout from '../components/shared/layout'
 import FullScreenAds from '../components/ads/full-screen-ads'
 import { GPT_Placeholder } from '../components/ads/gpt/gpt-placeholder'
+// Components
+import EditorChoice from '../components/index/editor-choice'
+import ForumHeadlinesPreview from '../components/index/forum-headlines-preview'
+import LatestNews from '../components/index/latest-news'
+import PromoVideoList from '../components/index/promo-video-list'
+import Layout from '../components/shared/layout'
+// Config and utilities (including hooks)
+import {
+  API_TIMEOUT,
+  ENV,
+  URL_STATIC_POST_EXTERNAL,
+  URL_STATIC_POST_FLASH_NEWS,
+} from '../config/index.mjs'
+import { useDisplayAd } from '../hooks/useDisplayAd'
+import {
+  getArticleHref,
+  getLogTraceObject,
+  getSectionNameGql,
+  getSectionSlugGql,
+} from '../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
+import { fetchForumHeadlines } from '../utils/api/forum-headlines'
+import { fetchPromoteVideosList } from '../utils/api/promote-videos'
+import { setPageCache } from '../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../utils/data-process'
+import { processSettledResult } from '../utils/response-processor'
 
 const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
   ssr: false,

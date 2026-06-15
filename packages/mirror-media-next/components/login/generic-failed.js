@@ -1,7 +1,9 @@
 import styled from 'styled-components'
+
+import DefaultButton from '../shared/buttons/default-button'
+
 import FormWrapper from './form-wrapper'
 import StyledLink from './styled-link'
-import DefaultButton from '../shared/buttons/default-button'
 
 const Main = styled.main`
   display: flex;

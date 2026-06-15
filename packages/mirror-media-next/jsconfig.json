@@ -1,16 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "lib": [ "DOM",
-    "DOM.Iterable",
-    "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "checkJs": true,
     "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    },
-    
+    "isolatedModules": true
+  }
 }

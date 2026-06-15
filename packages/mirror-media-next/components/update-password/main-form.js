@@ -1,14 +1,15 @@
-import styled from 'styled-components'
 import { useState } from 'react'
-import { InputState } from '../../constants/form'
-import { isValidPassword } from '../../utils'
-import { auth } from '../../firebase'
-import GenericPasswordInput from '../shared/inputs/generic-password-input'
-import PrimaryButton from '../shared/buttons/primary-button'
+import { useRouter } from 'next/router'
 import { signInWithEmailAndPassword, updatePassword } from 'firebase/auth'
+import styled from 'styled-components'
+
+import { InputState } from '../../constants/form'
+import { auth } from '../../firebase'
+import { isValidPassword } from '../../utils'
 import { generateErrorReportInfo } from '../../utils/log/error-log'
 import { sendErrorLog } from '../../utils/log/send-log'
-import { useRouter } from 'next/router'
+import PrimaryButton from '../shared/buttons/primary-button'
+import GenericPasswordInput from '../shared/inputs/generic-password-input'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */
@@ -64,8 +65,8 @@ export default function MainForm() {
     newPassword === ''
       ? InputState.Incomplete
       : newPassword === newPasswordCheck
-      ? InputState.Valid
-      : InputState.Incomplete
+        ? InputState.Valid
+        : InputState.Incomplete
 
   /** @type {import('react').PointerEventHandler<HTMLButtonElement>} */
   const handleOnClickButton = async () => {

@@ -1,5 +1,6 @@
-import PopInAd from './pop-in-ad'
 import styled from 'styled-components'
+
+import PopInAd from './pop-in-ad'
 
 const StyledPopInAd = styled(PopInAd)`
   #_popIn_hot {

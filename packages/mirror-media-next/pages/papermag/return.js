@@ -1,26 +1,25 @@
-import styled from 'styled-components'
-import errors from '@twreporter/errors'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
-import Steps from '../../components/subscribe-steps'
-import Succeeded from '../../components/papermag/succeeded'
-import Failed from '../../components/papermag/failed'
-import NewebPay from '@mirrormedia/newebpay-node'
-import {
-  NEWEBPAY_PAPERMAG_KEY,
-  NEWEBPAY_PAPERMAG_IV,
-} from '../../config/index.mjs'
 import { parseBody } from 'next/dist/server/api-utils/node'
-
-import { getMerchandiseAndShippingFeeInfo } from '../../utils/papermag'
+import NewebPay from '@mirrormedia/newebpay-node'
+import errors from '@twreporter/errors'
+import styled from 'styled-components'
 
 import client from '../../apollo/apollo-client'
 import { fetchAllMemberByOrderNo } from '../../apollo/query/magazine-orders'
-import { transformTimeData, getLogTraceObject } from '../../utils/index'
-import { processSettledResult } from '../../utils/response-processor'
+import Failed from '../../components/papermag/failed'
+import Succeeded from '../../components/papermag/succeeded'
+import Layout from '../../components/shared/layout'
+import Steps from '../../components/subscribe-steps'
+import {
+  NEWEBPAY_PAPERMAG_IV,
+  NEWEBPAY_PAPERMAG_KEY,
+} from '../../config/index.mjs'
 import { COUPON_DISCOUNT } from '../../constants/papermag'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { getLogTraceObject, transformTimeData } from '../../utils/index'
+import { getMerchandiseAndShippingFeeInfo } from '../../utils/papermag'
+import { processSettledResult } from '../../utils/response-processor'
 
 const Wrapper = styled.main`
   min-height: 50vh;

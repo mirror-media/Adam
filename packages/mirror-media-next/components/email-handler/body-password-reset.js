@@ -1,15 +1,16 @@
-import styled from 'styled-components'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useState, useEffect, useRef } from 'react'
+import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth'
+import styled from 'styled-components'
+
+import { InputState } from '../../constants/form'
 import { auth } from '../../firebase'
+import { getSearchParamFromApiKeyUrl, isValidPassword } from '../../utils'
 import { generateErrorReportInfo } from '../../utils/log/error-log'
 import { sendErrorLog } from '../../utils/log/send-log'
-import { getSearchParamFromApiKeyUrl, isValidPassword } from '../../utils'
-import { InputState } from '../../constants/form'
 import FormWrapper from '../login/form-wrapper'
-import GenericPasswordInput from '../shared/inputs/generic-password-input'
 import PrimaryButton from '../shared/buttons/primary-button'
-import { confirmPasswordReset, verifyPasswordResetCode } from 'firebase/auth'
+import GenericPasswordInput from '../shared/inputs/generic-password-input'
 
 const Main = styled.main`
   display: flex;

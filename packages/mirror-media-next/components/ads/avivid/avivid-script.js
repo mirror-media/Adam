@@ -1,5 +1,5 @@
-import Script from 'next/script'
 import { useEffect } from 'react'
+import Script from 'next/script'
 
 // Delay AviviD visibility until its injected content has a stable size to reduce CLS from third-party DOM insertion.
 const AVIVID_READY_ATTRIBUTE = 'data-mm-avivid-ready'

@@ -1,16 +1,17 @@
-import IconLine from '../public/images-next/footer-line.svg'
+import IconEmail from '../public/images-next/footer-email.svg'
 // import IconWeibo from '../public/images-next/footer-weibo.svg'
 import IconFacebook from '../public/images-next/footer-facebook.svg'
 import IconInstagram from '../public/images-next/footer-instagram.svg'
-import IconEmail from '../public/images-next/footer-email.svg'
+import IconLine from '../public/images-next/footer-line.svg'
+
 // import IconRss from '../public/images-next/footer-rss.svg'
 import {
-  LINE_LINK,
+  // RSS_LINK,
+  EMAIL_LINK,
   // WEIBO_LINK,
   FACEBOOK_LINK,
   INSTAGRAM_LINK,
-  // RSS_LINK,
-  EMAIL_LINK,
+  LINE_LINK,
 } from './index'
 
 const FOOTER_SOCIAL_MEDIA_LISTS = [
@@ -70,4 +71,4 @@ const CUSTOMER_SERVICE_INFOS = [
   CUSTOMER_SERVICE_HOUR,
 ]
 
-export { FOOTER_SOCIAL_MEDIA_LISTS, CUSTOMER_SERVICE_INFOS }
+export { CUSTOMER_SERVICE_INFOS, FOOTER_SOCIAL_MEDIA_LISTS }

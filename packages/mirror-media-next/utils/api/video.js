@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
 /**

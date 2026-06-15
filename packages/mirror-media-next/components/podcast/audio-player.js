@@ -1,7 +1,9 @@
-import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import styled, { keyframes } from 'styled-components'
+
 import { Z_INDEX } from '../../constants'
+
 import PlayPauseButton from './play-pause-button'
 
 /**

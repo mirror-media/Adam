@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react'
-import { GlobalStyles } from '../styles/global-styles'
-import { ThemeProvider } from 'styled-components'
-import { theme } from '../styles/theme'
-import { ApolloProvider } from '@apollo/client'
-import client from '../apollo/apollo-client'
-import { GTM_ID } from '../config/index.mjs'
-import WholeSiteScript from '../components/whole-site-script'
-import UserBehaviorLogger from '../components/shared/user-behavior-logger'
-import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
-
-import { MembershipProvider } from '../context/membership'
 import { Provider } from 'react-redux'
+import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
+import { ApolloProvider } from '@apollo/client'
+import { ThemeProvider } from 'styled-components'
+
+import client from '../apollo/apollo-client'
+import UserBehaviorLogger from '../components/shared/user-behavior-logger'
+import WholeSiteScript from '../components/whole-site-script'
+import { GTM_ID } from '../config/index.mjs'
+import { MembershipProvider } from '../context/membership'
 import store from '../store'
+import { GlobalStyles } from '../styles/global-styles'
+import { theme } from '../styles/theme'
 
 const PromoteTopic = dynamic(() => import('../components/promote-topic'), {
   ssr: false,

@@ -1,18 +1,18 @@
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
-import styled from 'styled-components'
-import RelatedArticleList from './related-article-list'
-import AsideArticleList from './aside-article-list'
-import Divider from './divider'
 import axios from 'axios'
+import styled from 'styled-components'
 
 import {
-  URL_STATIC_POPULAR_NEWS,
   API_TIMEOUT,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+  URL_STATIC_POPULAR_NEWS,
 } from '../../../config/index.mjs'
-
 import { getActiveOrderSection } from '../../../utils'
+
+import AsideArticleList from './aside-article-list'
+import Divider from './divider'
+import RelatedArticleList from './related-article-list'
 
 /**
  * @typedef {import('./related-article-list').Relateds} Relateds

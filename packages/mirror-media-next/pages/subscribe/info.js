@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import { setPageCache } from '../../utils/cache-setting'
+
 import { ACCESS_SUBSCRIBE_FEATURE_TOGGLE } from '../../config/index.mjs'
 import { getLogTraceObject } from '../../utils'
+import { setPageCache } from '../../utils/cache-setting'
 
 const Page = styled.main`
   min-height: 70vh;

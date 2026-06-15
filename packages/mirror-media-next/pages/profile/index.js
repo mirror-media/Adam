@@ -1,17 +1,18 @@
-import styled from 'styled-components'
-import LayoutFull from '../../components/shared/layout-full'
-import UserProfileForm from '../../components/profile/user-profile-form'
-import UserDeletionForm from '../../components/profile/user-deletion-form'
 import { useState } from 'react'
+import styled from 'styled-components'
+
+import SaveFailed from '../../components/profile/save-failed'
+import SaveSuccess from '../../components/profile/save-success'
+import UserDeletionForm from '../../components/profile/user-deletion-form'
+import UserProfileForm from '../../components/profile/user-profile-form'
+import LayoutFull from '../../components/shared/layout-full'
+import useMembershipRequired from '../../hooks/use-membership-required'
+import { getLogTraceObject } from '../../utils'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
-import useMembershipRequired from '../../hooks/use-membership-required'
-import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import SaveSuccess from '../../components/profile/save-success'
-import SaveFailed from '../../components/profile/save-failed'
+import { processSettledResult } from '../../utils/response-processor'
+import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 
 const FORM = 'form'
 const SUCCESS = 'success'
@@ -125,31 +126,33 @@ export default function Profile({ headerData, signInProvider }) {
 /**
  * @type {import('next').GetServerSideProps}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ req, res, user }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
+  req,
+  res,
+  user,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    const signInProvider = user.firebase?.sign_in_provider
+  const signInProvider = user.firebase?.sign_in_provider
 
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
 
-    // handle header data
-    const [sectionsData, topicsData] = processSettledResult(
-      responses[0],
-      getSectionAndTopicFromDefaultHeaderData,
-      'Error occurs while getting header data in profile page',
-      globalLogFields
-    )
+  // handle header data
+  const [sectionsData, topicsData] = processSettledResult(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in profile page',
+    globalLogFields
+  )
 
-    return {
-      props: {
-        signInProvider: signInProvider,
-        headerData: { sectionsData, topicsData },
-      },
-    }
+  return {
+    props: {
+      signInProvider: signInProvider,
+      headerData: { sectionsData, topicsData },
+    },
   }
-)
+})

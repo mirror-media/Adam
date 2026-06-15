@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
-import {
-  transformTimeDataIntoSlashFormat,
-  getMagazineHrefFromSlug,
-} from '../../utils/index'
+
 import ReadingSvg from '../../public/images-next/magazine-online.svg'
+import {
+  getMagazineHrefFromSlug,
+  transformTimeDataIntoSlashFormat,
+} from '../../utils/index'
 
 const CardsList = styled.ul`
   margin: auto;
@@ -45,11 +46,8 @@ const IssueCard = styled.li`
   }
 
   &:hover button {
-    background: linear-gradient(
-        0deg,
-        rgba(5, 79, 119, 0.05),
-        rgba(5, 79, 119, 0.05)
-      ),
+    background:
+      linear-gradient(0deg, rgba(5, 79, 119, 0.05), rgba(5, 79, 119, 0.05)),
       #ffffff;
   }
 `

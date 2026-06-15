@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { section, sectionWithCategory } from '../fragments/section'
 
 const fetchSection = gql`

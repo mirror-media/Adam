@@ -2,8 +2,10 @@
 //component <Section> will change color of title to section color defined at /styles/sections-color.
 import React from 'react'
 import styled, { css } from 'styled-components'
+
 import { Z_INDEX } from '../../../constants'
 import { minWidth } from '../../../styles/media'
+
 import Logo from './logo'
 
 /**

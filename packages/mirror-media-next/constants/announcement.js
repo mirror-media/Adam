@@ -9,4 +9,4 @@ const ANNOUCEMENT_SCOPE = /** @type {const} */ ({
  * @typedef {ANNOUCEMENT_SCOPE[keyof typeof ANNOUCEMENT_SCOPE]} AnnouncementScopeValue
  */
 
-export { DEFAULT_ANNOUNCEMENT_SCOPE, ANNOUCEMENT_SCOPE }
+export { ANNOUCEMENT_SCOPE, DEFAULT_ANNOUNCEMENT_SCOPE }

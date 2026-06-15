@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+
 import MicroAd from './micro-ad'
 
 const typeListing = css`

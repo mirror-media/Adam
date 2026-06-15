@@ -1,20 +1,21 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import ButtonCopyLink from '../story/shared/button-copy-link'
-import ButtonSocialNetworkShare from '../story/shared/button-social-network-share'
-import AmpCredits from '../story/shared/credits'
-import AmpHero from './amp-hero'
-import AmpInfo from './amp-info'
-import ArticleBrief from '../story/shared/brief'
-import DraftRenderBlock from '../story/shared/draft-renderer-block'
-import useAmpSharedUrl from '../../hooks/use-amp-shared-url'
+
 import AmpGptAd from '../../components/amp/amp-ads/amp-gpt-ad'
+import useAmpSharedUrl from '../../hooks/use-amp-shared-url'
+import { getActiveOrderSection } from '../../utils'
 import {
   copyAndSliceDraftBlock,
   getSlicedIndexAndUnstyledBlocksCount,
 } from '../../utils/story'
+import ArticleBrief from '../story/shared/brief'
+import ButtonCopyLink from '../story/shared/button-copy-link'
+import ButtonSocialNetworkShare from '../story/shared/button-social-network-share'
+import AmpCredits from '../story/shared/credits'
+import DraftRenderBlock from '../story/shared/draft-renderer-block'
 
-import { getActiveOrderSection } from '../../utils'
+import AmpHero from './amp-hero'
+import AmpInfo from './amp-info'
 
 const MainWrapper = styled.div`
   margin-top: 24px;

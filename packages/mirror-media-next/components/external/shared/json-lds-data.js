@@ -1,6 +1,6 @@
 import { SITE_URL } from '../../../config/index.mjs'
-import { toTaipeiISOString } from '../../../utils/index'
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants'
+import { toTaipeiISOString } from '../../../utils/index'
 
 /**
  * @typedef {import('../../../apollo/fragments/external').External} External

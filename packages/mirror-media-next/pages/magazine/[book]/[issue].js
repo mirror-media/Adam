@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 
 import client from '../../../apollo/apollo-client'
-import { setPageCache } from '../../../utils/cache-setting'
 import { fetchWeeklys } from '../../../apollo/query/magazines'
 import Layout from '../../../components/shared/layout'
 import { getLogTraceObject } from '../../../utils'
+import { setPageCache } from '../../../utils/cache-setting'
 import { processSettledResult } from '../../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../../utils/server-side-only/redirect-to-login-while-unauthed'
 
@@ -62,34 +62,36 @@ export default function BookBIssuePublish({ weeklys }) {
 /**
  * @type {import('next').GetServerSideProps}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ params, req, res }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
+  params,
+  req,
+  res,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
-    const { issue } = params
+  const globalLogFields = getLogTraceObject(req)
+  const { issue } = params
 
-    const responses = await Promise.allSettled([
-      client.query({
-        query: fetchWeeklys,
-      }),
-    ])
+  const responses = await Promise.allSettled([
+    client.query({
+      query: fetchWeeklys,
+    }),
+  ])
 
-    const weeklys = processSettledResult(
-      responses[0],
-      (
-        /** @type {import('@apollo/client').ApolloQueryResult<any> | undefined} */ gqlData
-      ) => {
-        return gqlData?.data?.magazines || []
-      },
-      `Error occurs while getting data in magazine page (issue: ${issue})`,
-      globalLogFields
-    )
+  const weeklys = processSettledResult(
+    responses[0],
+    (
+      /** @type {import('@apollo/client').ApolloQueryResult<any> | undefined} */ gqlData
+    ) => {
+      return gqlData?.data?.magazines || []
+    },
+    `Error occurs while getting data in magazine page (issue: ${issue})`,
+    globalLogFields
+  )
 
-    return {
-      props: {
-        weeklys,
-      },
-    }
+  return {
+    props: {
+      weeklys,
+    },
   }
-)
+})

@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import Hint from '../shared/hint'
-import CenteredHint from '../shared/centered-hint'
+
 import { InputState } from '../../constants/form'
+import CenteredHint from '../shared/centered-hint'
+import Hint from '../shared/hint'
 
 const DEFAULT = 'default'
 const NOT_REGISRATED = 'not-registrated'

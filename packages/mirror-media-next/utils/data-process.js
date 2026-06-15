@@ -58,7 +58,7 @@ const getPostsAndPostscountFromGqlData = (gqlData) => {
 }
 
 export {
+  getPostsAndPostscountFromGqlData,
   getSectionAndTopicFromDefaultHeaderData,
   getSectionFromPremiumHeaderData,
-  getPostsAndPostscountFromGqlData,
 }

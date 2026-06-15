@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { NOTIFICATIONS } from '../../constants/subscribe-constants'
 
 const NoticeWrapper = styled.section`

@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
+import { fetchLatestPublishedExternals } from '../../apollo/query/externals'
 import {
   API_TIMEOUT,
   URL_STATIC_DAILY_COLUMN_HEADLINES,
 } from '../../config/index.mjs'
-import { fetchLatestPublishedExternals } from '../../apollo/query/externals'
 
 /**
  * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.

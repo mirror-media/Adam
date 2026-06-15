@@ -18,7 +18,8 @@ const NoticeWrapper = styled.section`
   width: 100%;
   padding: 16px;
   border-radius: 8px;
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       rgba(229, 23, 49, 0.05) 0%,
       rgba(229, 23, 49, 0.05) 100%

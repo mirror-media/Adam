@@ -1,5 +1,6 @@
+import { useRef, useState } from 'react'
 import styled from 'styled-components'
-import { useState, useRef } from 'react'
+
 import useClickOutside from '../../hooks/useClickOutside'
 
 const DropdownMenuWrapper = styled.div`

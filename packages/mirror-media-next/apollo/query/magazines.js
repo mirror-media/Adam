@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+
 import { magazine } from '../fragments/magazine'
 
 const fetchSpecials = gql`

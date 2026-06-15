@@ -1,17 +1,18 @@
 import styled from 'styled-components'
-import {
-  fetchHeaderDataInDefaultPageLayout,
-  fetchAnnoucementsByScope,
-} from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
-import { setPageCache } from '../../utils/cache-setting'
+
+import Notice from '../../components/papermag/notice'
+import PlanSection from '../../components/papermag/plan-selection'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
-import PlanSection from '../../components/papermag/plan-selection'
-import Notice from '../../components/papermag/notice'
 import { ANNOUCEMENT_SCOPE } from '../../constants/announcement'
+import { getLogTraceObject } from '../../utils'
+import {
+  fetchAnnoucementsByScope,
+  fetchHeaderDataInDefaultPageLayout,
+} from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 const Page = styled.main`
   min-height: 65vh;
@@ -39,7 +40,8 @@ const AnnouncementBody = styled.div`
   margin: 0 auto;
   border-radius: 8px;
   padding: 16px;
-  background: linear-gradient(
+  background:
+    linear-gradient(
       0deg,
       rgba(229, 23, 49, 0.05) 0%,
       rgba(229, 23, 49, 0.05) 100%

@@ -1,7 +1,6 @@
 //TODO : this component would rerender twice (once at `handleClickPrev` or `handleClickNext`, once at `handleTransitionEnd`),
 //need to refactor to solve this performance issue.
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
-
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').Post, 'id' | 'slug' |'title'>} FlashNews

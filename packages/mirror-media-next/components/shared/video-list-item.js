@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import styled from 'styled-components'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme

@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import ArticleListItem from './article-list-item'
 
 const ItemContainer = styled.div`

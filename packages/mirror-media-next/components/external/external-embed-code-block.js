@@ -1,8 +1,8 @@
 'use client'
 
+import React from 'react'
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
-import React from 'react'
 
 const EmbedContainer = styled.div`
   .youtube-wrapper {

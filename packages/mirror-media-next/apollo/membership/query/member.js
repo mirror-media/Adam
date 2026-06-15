@@ -33,4 +33,4 @@ const fetchMemberProfile = gql`
   }
 `
 
-export { fetchAllMember, fetchSubscription, fetchMemberProfile }
+export { fetchAllMember, fetchMemberProfile, fetchSubscription }

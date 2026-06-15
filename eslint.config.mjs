@@ -1,13 +1,14 @@
-import js from '@eslint/js'
-import nextPlugin from '@next/eslint-plugin-next'
-import eslintConfigPrettier from 'eslint-config-prettier'
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
-import prettierPlugin from 'eslint-plugin-prettier'
-import reactPlugin from 'eslint-plugin-react'
-import reactHooksPlugin from 'eslint-plugin-react-hooks'
-import globals from 'globals'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
+import js from '@eslint/js'
+import nextPlugin from '@next/eslint-plugin-next'
+import jsxA11yPlugin from 'eslint-plugin-jsx-a11y'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import reactPlugin from 'eslint-plugin-react'
+import reactHooksPlugin from 'eslint-plugin-react-hooks'
+import simpleImportSortPlugin from 'eslint-plugin-simple-import-sort'
+import globals from 'globals'
 
 const nextRecommendedRules = nextPlugin.configs.recommended.rules
 const nextCoreWebVitalsRules = nextPlugin.configs['core-web-vitals'].rules
@@ -49,9 +50,9 @@ export default [
     plugins: {
       '@next/next': nextPlugin,
       'jsx-a11y': jsxA11yPlugin,
-      prettier: prettierPlugin,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
+      'simple-import-sort': simpleImportSortPlugin,
     },
     settings: {
       next: {
@@ -75,7 +76,20 @@ export default [
       'react/no-unknown-property': 'error',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'prettier/prettier': 'error',
+      'simple-import-sort/imports': [
+        'warn',
+        {
+          groups: [
+            ['^\\u0000'],
+            ['^node:'],
+            ['^react', '^next', '^@?\\w'],
+            ['^'],
+            ['^\\.\\.'],
+            ['^\\.'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'warn',
       'no-unused-vars': ['error', { caughtErrors: 'none' }],
     },
   },
@@ -94,5 +108,5 @@ export default [
       },
     },
   },
-  eslintConfigPrettier,
+  eslintPluginPrettierRecommended,
 ]

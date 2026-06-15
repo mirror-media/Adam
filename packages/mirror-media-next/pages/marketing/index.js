@@ -1,13 +1,14 @@
 // TODO: add handle-forbid-to-marketing middleware
 
 import styled from 'styled-components'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { setPageCache } from '../../utils/cache-setting'
+
 import Layout from '../../components/shared/layout'
 import BlankCard from '../../components/subscribe/blank-card'
 import PrimaryBlueBtn from '../../components/subscribe/primary-blue-btn'
 import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
 
 const PageWrapper = styled.section`

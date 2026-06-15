@@ -1,7 +1,8 @@
 import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import { GCP_PROJECT_ID } from '../config/index.mjs'
 import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
+
+import { GCP_PROJECT_ID } from '../config/index.mjs'
 
 /**
  * @typedef {import('../apollo/fragments/section').Section[]} Sections
@@ -462,36 +463,35 @@ const getLogTraceObject = (req) => {
   let globalLogFields = {}
   if (traceHeader && !Array.isArray(traceHeader)) {
     const [trace] = traceHeader.split('/')
-    globalLogFields[
-      'logging.googleapis.com/trace'
-    ] = `projects/${GCP_PROJECT_ID}/traces/${trace}`
+    globalLogFields['logging.googleapis.com/trace'] =
+      `projects/${GCP_PROJECT_ID}/traces/${trace}`
   }
   return globalLogFields
 }
 
 export {
-  toTaipeiISOString,
-  transformTimeDataIntoDotFormat,
-  transformTimeDataIntoSlashFormat,
+  convertDraftToText,
+  getActiveOrderCategory,
+  getActiveOrderSection,
+  getArticleHref,
+  getCategoryOfWineSlug,
+  getClientSideOnlyError,
+  getLoginHref,
+  getLogTraceObject,
+  getMagazineHrefFromSlug,
+  getNumberWithCommas,
+  getResizedUrl,
+  getSearchParamFromApiKeyUrl,
   getSectionNameGql,
   getSectionSlugGql,
-  getArticleHref,
-  sortArrayWithOtherArrayId,
-  getMagazineHrefFromSlug,
-  getCategoryOfWineSlug,
-  convertDraftToText,
-  getResizedUrl,
-  getNumberWithCommas,
-  getActiveOrderSection,
-  getActiveOrderCategory,
+  hasUtmParamsInAsPath,
+  isCompanyEmail,
+  isServer,
   isValidEmail,
   isValidPassword,
-  isCompanyEmail,
+  sortArrayWithOtherArrayId,
+  toTaipeiISOString,
   transformTimeData,
-  getLoginHref,
-  hasUtmParamsInAsPath,
-  isServer,
-  getClientSideOnlyError,
-  getSearchParamFromApiKeyUrl,
-  getLogTraceObject,
+  transformTimeDataIntoDotFormat,
+  transformTimeDataIntoSlashFormat,
 }

@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import Link from 'next/link'
+import styled from 'styled-components'
 
 /**
  * Component for describe copyright of article, and have more information for mirror media.

@@ -1,10 +1,10 @@
 import { Logging } from '@google-cloud/logging'
 import requestIp from 'request-ip'
+
 /**
  * @typedef {import('next').NextApiRequest} Req
  * @typedef {import('next').NextApiResponse} Res
  */
-
 import {
   GCP_PROJECT_ID,
   GCP_STACKDRIVER_ERROR_LOG_NAME,

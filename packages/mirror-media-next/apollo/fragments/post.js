@@ -1,11 +1,12 @@
 import { gql } from '@apollo/client'
-import { heroImage, relatedPostHeroImage } from './photo'
+
+import { aiTag } from './ai-tag'
 import { category, categoryWithSection } from './category'
-import { section } from './section'
 import { contact } from './contact'
+import { heroImage, relatedPostHeroImage } from './photo'
+import { section } from './section'
 import { tag } from './tag'
 import { heroVideo } from './video'
-import { aiTag } from './ai-tag'
 
 /**
  * @typedef {Object} ListingPost

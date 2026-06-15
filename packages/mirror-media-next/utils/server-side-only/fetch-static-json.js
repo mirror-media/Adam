@@ -1,5 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
+
 import axiosInstance from '../../axios/index.js'
 import {
   GCS_FUSE_MOUNT_DIR,
@@ -123,7 +124,7 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
   const normalizedRequestConfig =
     typeof requestConfig === 'number'
       ? { timeout: requestConfig }
-      : requestConfig ?? {}
+      : (requestConfig ?? {})
 
   const res = await axiosInstance({
     ...normalizedRequestConfig,

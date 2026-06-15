@@ -1,15 +1,15 @@
-import styled from 'styled-components'
 import Image from 'next/legacy/image'
+import styled from 'styled-components'
 
+import LoadingPage from '../../public/images-next/loading_page.gif'
+import {
+  fetchNewsCategoryPostsJSON,
+  fetchPostsByCategorySlug,
+  fetchPremiumPostsByCategorySlug,
+} from '../../utils/api/category'
 import InfiniteScrollList from '../infinite-scroll-list'
 import ArticleList from '../shared/article-list'
 import PremiumArticleList from '../shared/premium-article-list'
-import {
-  fetchPostsByCategorySlug,
-  fetchPremiumPostsByCategorySlug,
-  fetchNewsCategoryPostsJSON,
-} from '../../utils/api/category'
-import LoadingPage from '../../public/images-next/loading_page.gif'
 
 const Loading = styled.div`
   margin: 20px auto 0;
@@ -59,8 +59,8 @@ export default function CategoryArticles({
       const response = isPremium
         ? await fetchPremiumPostsByCategorySlug(category.slug, take, skip)
         : isNewsCategory
-        ? await fetchNewsCategoryPostsJSON(page, take)
-        : await fetchPostsByCategorySlug(category.slug, take, skip)
+          ? await fetchNewsCategoryPostsJSON(page, take)
+          : await fetchPostsByCategorySlug(category.slug, take, skip)
 
       if (isNewsCategory) {
         return response.data.posts.items || []

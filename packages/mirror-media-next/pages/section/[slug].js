@@ -1,27 +1,27 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
+import FullScreenAds from '../../components/ads/full-screen-ads'
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
+import Layout from '../../components/shared/layout'
 import SectionArticles from '../../components/shared/section-articles'
 import { ENV } from '../../config/index.mjs'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import {
-  getSectionAndTopicFromDefaultHeaderData,
-  getPostsAndPostscountFromGqlData,
-} from '../../utils/data-process'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
-import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
 import { Z_INDEX } from '../../constants/index'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getLogTraceObject } from '../../utils'
+import { getSectionGPTPageKey } from '../../utils/ad'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import {
   fetchPostsBySectionSlug,
   fetchSectionBySectionSlug,
 } from '../../utils/api/section'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
-import { getSectionGPTPageKey } from '../../utils/ad'
-import FullScreenAds from '../../components/ads/full-screen-ads'
-import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
+import { setPageCache } from '../../utils/cache-setting'
+import {
+  getPostsAndPostscountFromGqlData,
+  getSectionAndTopicFromDefaultHeaderData,
+} from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

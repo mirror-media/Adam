@@ -1,7 +1,7 @@
 //TODO: after login system is added, should check logged in state and link to different page based on logged in state.
 
-import styled from 'styled-components'
 import Link from 'next/link'
+import styled from 'styled-components'
 
 const Wrapper = styled.div`
   margin-top: 16px;

@@ -1,5 +1,5 @@
-import axios from 'axios'
 import { ApolloError } from '@apollo/client'
+import axios from 'axios'
 
 import { logAxiosError, logGenericError, logGqlError } from './log/shared'
 

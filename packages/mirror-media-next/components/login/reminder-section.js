@@ -1,6 +1,8 @@
 import styled from 'styled-components'
+
+import { PRIVACY_POLICY_URL, SERVICE_RULE_URL } from '../../constants/url'
+
 import StyledLink from './styled-link'
-import { SERVICE_RULE_URL, PRIVACY_POLICY_URL } from '../../constants/url'
 
 const Reminder = styled.section`
   font-size: 15px;

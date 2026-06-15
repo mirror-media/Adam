@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import PremiumCard from './premium-card'
+
 import BasicCard from './basic-card'
+import PremiumCard from './premium-card'
 import Notification from './subscribe-notification'
 
 const Page = styled.section`

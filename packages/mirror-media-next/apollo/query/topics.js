@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client'
-import { topic } from '../fragments/topic'
+
 import { slideshowImage } from '../fragments/photo'
-import { tag } from '../fragments/tag'
 import { topicPost } from '../fragments/post'
+import { tag } from '../fragments/tag'
+import { topic } from '../fragments/topic'
 
 /**
  * @typedef {Object} manualOrderOfSlideshowImage
@@ -100,4 +101,4 @@ const fetchTopicPostCount = gql`
   }
 `
 
-export { fetchTopics, fetchTopic, fetchTopicPostCount }
+export { fetchTopic, fetchTopicPostCount, fetchTopics }

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { MISO_API_KEY } from '../../config/index.mjs'
-import styled from 'styled-components'
-import { transformTimeData } from '../../utils'
-import { theme } from '../../styles/theme'
 import { useRouter } from 'next/router'
+import styled from 'styled-components'
+
+import { MISO_API_KEY } from '../../config/index.mjs'
+import { theme } from '../../styles/theme'
+import { transformTimeData } from '../../utils'
 import MisoScript from '../miso-script'
 // @ts-expect-error - styled-components type definition issue
 const SearchWrapper = styled('div')`

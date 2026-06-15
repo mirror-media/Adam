@@ -1,6 +1,7 @@
+import Image from 'next/image'
 import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
-import Image from 'next/image'
+
 import defaultImage from '../../../public/images-next/default-og-img.png'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp' | "imageFile">} HeroImage

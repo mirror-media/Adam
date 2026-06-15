@@ -1,8 +1,9 @@
 import { gql } from '@apollo/client'
-import { partner } from './partner'
-import { tag } from './tag'
+
 import { aiTag } from './ai-tag'
+import { partner } from './partner'
 import { relatedPost } from './post'
+import { tag } from './tag'
 
 /**
  * @typedef {import('./partner').Partner} Partner

@@ -1,13 +1,14 @@
-import errors from '@twreporter/errors'
 import NewebPay from '@mirrormedia/newebpay-node'
-import {
-  NEWEBPAY_PAPERMAG_KEY,
-  NEWEBPAY_PAPERMAG_IV,
-  SITE_URL,
-  ENV,
-} from '../../config/index.mjs'
+import errors from '@twreporter/errors'
+
 import client from '../../apollo/apollo-client'
 import { fetchPaymentDataOfPapermag } from '../../apollo/membership/mutation/magazine-order'
+import {
+  ENV,
+  NEWEBPAY_PAPERMAG_IV,
+  NEWEBPAY_PAPERMAG_KEY,
+  SITE_URL,
+} from '../../config/index.mjs'
 import { PLAN_LIST } from '../../constants/papermag'
 
 // TODO: Add JSDocs
@@ -79,9 +80,8 @@ export default async function EncryptInfo(req, res) {
     }
 
     const newebpay = new NewebPay(NEWEBPAY_PAPERMAG_KEY, NEWEBPAY_PAPERMAG_IV)
-    const encryptPostData = await newebpay.getEncryptedFormPostData(
-      infoForNewebpay
-    )
+    const encryptPostData =
+      await newebpay.getEncryptedFormPostData(infoForNewebpay)
 
     res.send({
       status: 'success',

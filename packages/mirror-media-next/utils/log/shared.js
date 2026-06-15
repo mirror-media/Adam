@@ -1,6 +1,7 @@
-import Bowser from 'bowser'
-import errors from '@twreporter/errors'
 import { ApolloError } from '@apollo/client'
+import errors from '@twreporter/errors'
+import Bowser from 'bowser'
+
 import { ENV } from '../../config/index.mjs'
 
 function getBrowserInfo(userAgent = '') {
@@ -237,12 +238,12 @@ function logGenericError(genericError, errorMessage, traceObject) {
 }
 
 export {
+  detectIsInApp,
   getBrowserInfo,
   getDeviceInfo,
-  detectIsInApp,
-  getWindowSizeInfo,
   getFormattedPageType,
+  getWindowSizeInfo,
   logAxiosError,
-  logGqlError,
   logGenericError,
+  logGqlError,
 }

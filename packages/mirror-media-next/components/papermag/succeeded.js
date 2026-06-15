@@ -1,6 +1,8 @@
 import styled from 'styled-components'
-import Notice from './notice'
+
 import { getNumberWithCommas } from '../../utils'
+
+import Notice from './notice'
 
 const Message = styled.h2`
   color: rgba(0, 0, 0, 0.87);

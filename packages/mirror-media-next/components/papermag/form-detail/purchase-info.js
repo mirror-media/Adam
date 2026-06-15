@@ -1,7 +1,8 @@
 import styled from 'styled-components'
+
+import { COUPON_DISCOUNT } from '../../../constants/papermag'
 import { getNumberWithCommas } from '../../../utils'
 import { getPlanInfoByIdAndShouldFreight } from '../../../utils/papermag'
-import { COUPON_DISCOUNT } from '../../../constants/papermag'
 
 const Wrapper = styled.div`
   border-radius: 12px;

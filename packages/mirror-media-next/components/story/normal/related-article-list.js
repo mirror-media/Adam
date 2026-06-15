@@ -1,15 +1,16 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
 
-import styled from 'styled-components'
-import Image from '@readr-media/react-image'
+import dynamic from 'next/dynamic'
 import nextImage from 'next/image'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
-import { mediaSize } from '../../../styles/media'
+import Image from '@readr-media/react-image'
+import styled from 'styled-components'
+
 import { MICRO_AD_UNITS } from '../../../constants/ads'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import gnewsGif from '../../../public/images-next/story/gnews-gif.gif'
+import { mediaSize } from '../../../styles/media'
 
 const StyledMicroAd = dynamic(
   () => import('../../../components/ads/micro-ad/micro-ad-with-label'),

@@ -1,7 +1,8 @@
 import axios from 'axios'
-import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
+
 import client from '../../apollo/apollo-client'
 import { fetchSectionWithCategory } from '../../apollo/query/sections'
+import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
 /**
  * fetch latest 50 videos in Mirror Media channel
