@@ -403,7 +403,7 @@ export default function AsideArticleList({
   const isDesktop = width >= mediaSize.xl
   const desktopGnewsGif = isDesktop && (
     <Link
-      href="https://news.google.com/publications/CAAqKQgKIiNDQklTRkFnTWFoQUtEbTFwY25KdmNtMWxaR2xoTG0xbktBQVAB?ceid=TW:zh-Hant&oc=3&hl=zh-TW&gl=TW"
+      href="https://google.com/preferences/source?q=mirrormedia.mg"
       target="_blank"
       rel="noreferrer noopener"
     >
