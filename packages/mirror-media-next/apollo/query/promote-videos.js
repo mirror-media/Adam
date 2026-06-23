@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 const fetchPromoteVideos = gql`
-  query ($take: Int, $orderBy: [PromoteVideoOrderByInput!]) {
+  query fetchPromoteVideos($take: Int, $orderBy: [PromoteVideoOrderByInput!]) {
     promoteVideos(
       where: {
         state: { equals: "published" }

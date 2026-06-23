@@ -2,7 +2,10 @@
   "private": true,
   "packageManager": "pnpm@10.17.1",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "typecheck": "pnpm -r run typecheck",
+    "codegen:check": "pnpm -r run codegen:check",
+    "check:no-new-js": "pnpm -r run check:no-new-js"
   },
   "version": "0.0.0",
   "devDependencies": {
@@ -19,9 +22,11 @@
     "globals": "^17.6.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "^3.8.4"
+    "prettier": "^3.8.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.61.0"
   },
   "lint-staged": {
-    "*.{js,mjs,jsx}": "eslint --cache --fix"
+    "*.{js,mjs,jsx,ts,tsx}": "eslint --cache --fix"
   }
 }

@@ -8,7 +8,7 @@ const fetchAllMember = gql`
   }
 `
 const fetchSubscription = gql`
-  query fetchAllMember {
+  query fetchSubscription {
     subscriptions {
       id
     }

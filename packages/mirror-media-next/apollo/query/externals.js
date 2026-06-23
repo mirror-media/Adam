@@ -4,7 +4,7 @@ import { external, listingExternal } from '../fragments/external'
 
 const fetchExternals = gql`
   ${listingExternal}
-  query (
+  query fetchExternals(
     $take: Int
     $skip: Int
     $orderBy: [ExternalOrderByInput!]!
@@ -17,14 +17,14 @@ const fetchExternals = gql`
 `
 
 const fetchExternalCounts = gql`
-  query ($filter: ExternalWhereInput!) {
+  query fetchExternalCounts($filter: ExternalWhereInput!) {
     externalsCount(where: $filter)
   }
 `
 
 const fetchExternalBySlug = gql`
   ${external}
-  query ($slug: String) {
+  query fetchExternalBySlug($slug: String) {
     externals(
       where: { slug: { equals: $slug }, state: { equals: "published" } }
     ) {
@@ -34,7 +34,7 @@ const fetchExternalBySlug = gql`
 `
 
 const fetchLatestPublishedExternals = gql`
-  query ($take: Int, $partnerSlug: String) {
+  query fetchLatestPublishedExternals($take: Int, $partnerSlug: String) {
     externals(
       take: $take
       where: {

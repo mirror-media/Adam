@@ -2,3 +2,13 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 pnpm exec lint-staged
+
+staged_files="$(git diff --cached --name-only)"
+
+if printf '%s\n' "$staged_files" | grep -Eq '^packages/mirror-media-next/(apollo/.*\.(js|ts)|apollo/codegen-documents/|apollo/schema/|codegen\.ts)'; then
+  pnpm -r run codegen:check
+fi
+
+if printf '%s\n' "$staged_files" | grep -Eq '^packages/mirror-media-next/.*\.js$'; then
+  pnpm check:no-new-js -- --staged
+fi

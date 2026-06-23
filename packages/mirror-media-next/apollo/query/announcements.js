@@ -1,7 +1,5 @@
 import { gql } from '@apollo/client'
 
-import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
-
 /**
  * @typedef AnnouncementScope - 公告範圍
  * @property {string} name -  名稱
@@ -17,17 +15,11 @@ import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
  * @property {AnnouncementScope[]} scope - 範圍
  */
 
+// No default $scope on purpose: codegen can't read JS interpolation in the
+// document. Callers must inject the default scope themselves.
 const fetchAnnoucements = gql`
-  query fetchAnnouncements($scope: [String!] = ["${DEFAULT_ANNOUNCEMENT_SCOPE}"]) {
-    announcements(where: {
-      scope: {
-        some: {
-          name: {
-            in: $scope
-          }
-        }
-      }
-    }) {
+  query fetchAnnouncements($scope: [String!]) {
+    announcements(where: { scope: { some: { name: { in: $scope } } } }) {
       id
       title
       description

@@ -31,7 +31,7 @@ const fetchAsidePosts = gql`
 
 const fetchPosts = gql`
   ${listingPost}
-  query (
+  query fetchPosts(
     $take: Int
     $skip: Int
     $orderBy: [PostOrderByInput!]!

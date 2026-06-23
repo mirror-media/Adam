@@ -8,6 +8,10 @@
     "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "codegen:check": "pnpm codegen && node scripts/check-codegen-clean.mjs",
+    "check:no-new-js": "node scripts/check-no-new-js.mjs",
     "test:smoke": "node scripts/smoke-test.mjs",
     "start-amp-proxy-server": "node amp-proxy-server"
   },
@@ -61,11 +65,18 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^7.1.2",
+    "@graphql-codegen/client-preset": "^6.0.1",
+    "@graphql-typed-document-node/core": "^3.2.0",
     "@next/bundle-analyzer": "13.0.7",
     "@types/facebook-js-sdk": "^3.3.6",
     "@types/google-publisher-tag": "^1.20230410.0",
+    "@types/node": "^24.13.2",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
     "amphtml-validator": "1.0.38",
     "babel-loader": "8.3.0",
-    "concurrently": "^7.4.0"
+    "concurrently": "^7.4.0",
+    "typescript": "^5.9.3"
   }
 }

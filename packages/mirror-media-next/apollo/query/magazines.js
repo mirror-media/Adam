@@ -4,7 +4,7 @@ import { magazine } from '../fragments/magazine'
 
 const fetchSpecials = gql`
   ${magazine}
-  query {
+  query fetchSpecials {
     magazines(
       where: { type: { equals: "special" }, state: { equals: "published" } }
       orderBy: { publishedDate: desc }
@@ -16,7 +16,7 @@ const fetchSpecials = gql`
 
 const fetchWeeklys = gql`
   ${magazine}
-  query {
+  query fetchWeeklys {
     magazines(
       where: { type: { equals: "weekly" }, state: { equals: "published" } }
       orderBy: { createdAt: desc }
