@@ -66,8 +66,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.0
       '@mirrormedia/lilith-draft-renderer':
-        specifier: 1.4.4
-        version: 1.4.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@5.3.5(react-dom@18.2.0(react@18.2.0))(react-is@16.13.1)(react@18.2.0))
+        specifier: 1.4.7
+        version: 1.4.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@5.3.5(react-dom@18.2.0(react@18.2.0))(react-is@16.13.1)(react@18.2.0))
       '@mirrormedia/newebpay-node':
         specifier: ^1.0.8
         version: 1.0.8
@@ -1741,12 +1741,12 @@ packages:
     engines: {node: '>= 12'}
     deprecated: Please upgrade to v15 or higher. All reported bugs in this version are fixed in newer releases, dependencies have been updated, and security has been improved.
 
-  '@mirrormedia/lilith-draft-renderer@1.4.4':
-    resolution: {integrity: sha512-N4MQFF07dBtqR6eR/UPRv1Uy2BCSpdC780iMDAniPa0gO3smw2dMkEMC3KTpr2Wz4zVYWyJF0+QC/XRf4L22oA==}
+  '@mirrormedia/lilith-draft-renderer@1.4.7':
+    resolution: {integrity: sha512-xAcSzdMSSdOk89ODklCjgFqOgae0BAH57L6LWNgln0ZfoBYRp9w8gVC/5kaaIAdsTso+RMVWVMx+gViow1rLKQ==}
     peerDependencies:
       react: ^18
       react-dom: ^18
-      styled-components: ^5
+      styled-components: ^5 || ^6
 
   '@mirrormedia/newebpay-node@1.0.8':
     resolution: {integrity: sha512-yl8lEraQMKJkvElzEX64ZCG/rtTKT+hg6nJxokzYI7Xb/fA1f5SA2e+4AXZkDf4mwxdHZXjlwJsEvBUHRU9H3A==}
@@ -8581,7 +8581,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@mirrormedia/lilith-draft-renderer@1.4.4(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@5.3.5(react-dom@18.2.0(react@18.2.0))(react-is@16.13.1)(react@18.2.0))':
+  '@mirrormedia/lilith-draft-renderer@1.4.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(styled-components@5.3.5(react-dom@18.2.0(react@18.2.0))(react-is@16.13.1)(react@18.2.0))':
     dependencies:
       '@readr-media/react-image': 2.1.3(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       body-scroll-lock: 3.1.5

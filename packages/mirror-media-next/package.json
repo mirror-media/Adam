@@ -21,7 +21,7 @@
   "dependencies": {
     "@apollo/client": "^3.7.3",
     "@google-cloud/logging": "^11.0.0",
-    "@mirrormedia/lilith-draft-renderer": "1.4.4",
+    "@mirrormedia/lilith-draft-renderer": "1.4.7",
     "@mirrormedia/newebpay-node": "^1.0.8",
     "@miso.ai/client-sdk": "^1.11.5",
     "@next/font": "^13.1.2",
