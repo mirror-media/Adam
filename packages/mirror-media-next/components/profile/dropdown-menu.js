@@ -47,7 +47,7 @@ const SelectBox = styled.div`
   };
   padding: 12px;
 
-  ::after {
+  &::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -60,7 +60,7 @@ const SelectBox = styled.div`
       ${(props) => (props.isOpen ? 'rotate(135deg);' : 'rotate(-45deg)')};
   }
 
-  ::before {
+  &::before {
     content: '';
     position: absolute;
     bottom: 0px;
@@ -102,7 +102,7 @@ const Ul = styled.ul`
 `
 const Li = styled.li`
   padding: 8px 12px;
-  :hover {
+  &:hover {
     cursor: pointer;
     color: #fff;
     background-color: #054f77;

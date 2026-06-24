@@ -2,7 +2,7 @@ import Link from 'next/link'
 import styled from 'styled-components'
 
 const StyledBtn = styled.button`
-  :focus {
+  &:focus {
     outline: 0;
   }
   border-radius: 12px;

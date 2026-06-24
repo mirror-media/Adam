@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styled from 'styled-components'
 
 const TogglePlayButton = styled.button`
-  :focus {
+  &:focus {
     outline: 0;
   }
   cursor: pointer;

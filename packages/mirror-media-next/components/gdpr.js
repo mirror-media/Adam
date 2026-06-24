@@ -57,7 +57,7 @@ const Wrapper = styled.div`
           padding: 4px 0;
           margin-left: 0;
           margin-top: 18px;
-          :hover {
+          &:hover {
             background: #d8d8d8;
             transition: all 0.3s ease-in-out;
           }

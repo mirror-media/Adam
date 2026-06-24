@@ -21,7 +21,7 @@ const Nav = styled.nav`
   justify-content: space-between;
 
   button {
-    :focus {
+    &:focus {
       outline: 0;
     }
   }

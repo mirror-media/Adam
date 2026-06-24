@@ -3,7 +3,8 @@ import { Provider } from 'react-redux'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { ApolloProvider } from '@apollo/client'
-import { ThemeProvider } from 'styled-components'
+import isPropValid from '@emotion/is-prop-valid'
+import { StyleSheetManager, ThemeProvider } from 'styled-components'
 
 import client from '../apollo/apollo-client'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
@@ -17,6 +18,19 @@ import { theme } from '../styles/theme'
 const PromoteTopic = dynamic(() => import('../components/promote-topic'), {
   ssr: false,
 })
+
+// styled-components v6 forwards every prop to the DOM (v5 filtered automatically),
+// leaking style-only props and triggering React "unknown prop" warnings. Restore v5
+// filtering globally during the v6 migration, until components move to transient ($) props.
+const shouldForwardProp = (propName, target) =>
+  typeof target === 'string' ? isPropValid(propName) : true
+
+const styleSheetManagerProps = {
+  shouldForwardProp,
+  // Preserve v5 automatic vendor prefixing until browser support policy is revised.
+  enableVendorPrefixes: true,
+}
+
 /**
  *
  * @param {Object} props
@@ -43,19 +57,21 @@ function MyApp({ Component, pageProps }) {
       <MembershipProvider>
         <ApolloProvider client={client}>
           <Provider store={store}>
-            <ThemeProvider theme={theme}>
-              {/* some script may need member type to decide render or not,
+            <StyleSheetManager {...styleSheetManagerProps}>
+              <ThemeProvider theme={theme}>
+                {/* some script may need member type to decide render or not,
            make sure the WholeSiteScript component is placed inside contextProvider or other provider  */}
-              <WholeSiteScript />
-              {/* Since user behavior log need member info, make sure the
+                <WholeSiteScript />
+                {/* Since user behavior log need member info, make sure the
             UserBehaviorLogger component is placed inside contextProvider or
             other provider */}
-              {/* Story page has its own UserBehaviorLogger.
+                {/* Story page has its own UserBehaviorLogger.
             In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
-              {!isStoryPage && <UserBehaviorLogger />}
-              <Component {...pageProps} />
-              <PromoteTopic />
-            </ThemeProvider>
+                {!isStoryPage && <UserBehaviorLogger />}
+                <Component {...pageProps} />
+                <PromoteTopic />
+              </ThemeProvider>
+            </StyleSheetManager>
           </Provider>
         </ApolloProvider>
       </MembershipProvider>

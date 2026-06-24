@@ -20,7 +20,7 @@ const Title = styled.h2`
 const ItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  :not(:last-child) {
+  &:not(:last-child) {
     margin-bottom: 8px;
   }
 `

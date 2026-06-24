@@ -208,8 +208,8 @@ const Title = styled.span`
 
     -webkit-line-clamp: 1;
   }
-  :active,
-  :hover {
+  &:active,
+  &:hover {
     text-decoration: underline;
   }
 `
