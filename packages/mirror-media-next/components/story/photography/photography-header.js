@@ -1,9 +1,9 @@
 import Image from 'next/image'
-import { ShareButton } from '@readr-media/share-button'
 import styled from 'styled-components'
 
 import { DONATION_PAGE_URL } from '../../../config/index.mjs'
 import { Z_INDEX } from '../../../constants'
+import ShareButton from '../../shared/share-button'
 import DonateLink from '../shared/donate-link'
 import SubscribeLink from '../shared/subscribe-link'
 
@@ -54,13 +54,9 @@ const IconsWrapper = styled.div`
   /* gap: 20px; */
 
   .share-button {
-    width: 22px;
-    height: 22px;
     margin-left: 12px;
 
     ${({ theme }) => theme.breakpoint.md} {
-      width: 34px;
-      height: 32px;
       margin-left: 18px;
     }
   }
@@ -125,11 +121,7 @@ export default function Header() {
             height={32}
           />
         </PhotosIndexButton> */}
-        <ShareButton
-          pathColor="#FFF"
-          direction="vertical"
-          className="share-button"
-        />
+        <ShareButton className="share-button" />
       </IconsWrapper>
     </Nav>
   )
