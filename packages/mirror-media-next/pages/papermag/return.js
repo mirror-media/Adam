@@ -57,15 +57,24 @@ const REQUEST_BODY_LIMIT_BYTES = 1024 * 1024
 function parseRequestBody(req) {
   return new Promise((resolve, reject) => {
     let bodySize = 0
-    let hasRejected = false
+    let isSettled = false
     const chunks = []
 
-    const rejectOnce = (err) => {
-      if (hasRejected) {
+    const resolveOnce = (value) => {
+      if (isSettled) {
         return
       }
 
-      hasRejected = true
+      isSettled = true
+      resolve(value)
+    }
+
+    const rejectOnce = (err) => {
+      if (isSettled) {
+        return
+      }
+
+      isSettled = true
       reject(err)
     }
 
@@ -82,7 +91,7 @@ function parseRequestBody(req) {
     })
 
     req.on('end', () => {
-      if (hasRejected) {
+      if (isSettled) {
         return
       }
 
@@ -91,7 +100,7 @@ function parseRequestBody(req) {
 
       if (contentType.includes('application/json')) {
         try {
-          resolve(rawBody ? JSON.parse(rawBody) : {})
+          resolveOnce(rawBody ? JSON.parse(rawBody) : {})
         } catch (err) {
           rejectOnce(err)
         }
@@ -99,10 +108,15 @@ function parseRequestBody(req) {
         return
       }
 
-      resolve(parseQueryString(rawBody))
+      resolveOnce(parseQueryString(rawBody))
     })
 
     req.on('error', rejectOnce)
+    req.on('close', () => {
+      if (!isSettled) {
+        rejectOnce(new Error('Request aborted by client'))
+      }
+    })
   })
 }
 
