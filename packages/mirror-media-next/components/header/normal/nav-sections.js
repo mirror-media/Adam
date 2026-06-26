@@ -99,7 +99,7 @@ const Sections = styled('ul')`
 // @ts-expect-error - styled-components type definition issue
 const Section = styled('li')`
   flex: 0 0 auto;
-  :not(:last-child) {
+  &:not(:last-child) {
     padding-right: 8px;
   }
   position: relative;
@@ -111,7 +111,7 @@ const Section = styled('li')`
   font-weight: 600;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    :not(:last-child) {
+    &:not(:last-child) {
       padding-right: 0;
     }
     line-height: 150%;

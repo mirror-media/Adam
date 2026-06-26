@@ -89,7 +89,7 @@ const OrderContent = styled.div`
 const Detail = styled.div`
   display: flex;
   justify-content: space-between;
-  :not(:first-child) {
+  &:not(:first-child) {
     margin-top: 8px;
   }
   width: 100%;

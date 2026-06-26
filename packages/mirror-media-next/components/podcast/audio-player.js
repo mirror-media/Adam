@@ -160,7 +160,7 @@ const SeekSlider = styled.input`
     background-color: #1d9fb8;
   }
 
-  :hover&::-webkit-slider-thumb {
+  &:hover::-webkit-slider-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -172,7 +172,7 @@ const SeekSlider = styled.input`
 
 const SpeedButton = styled.button`
   cursor: pointer;
-  :focus {
+  &:focus {
     outline: 0;
   }
   width: 40px;
@@ -201,7 +201,7 @@ const VolumeControlContainer = styled.div`
   }
 `
 const VolumeMutedButtonsContainer = styled.button`
-  :focus {
+  &:focus {
     outline: 0;
   }
   display: flex;

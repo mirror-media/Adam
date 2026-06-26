@@ -34,7 +34,7 @@ const ModalContent = styled.div`
 
   a {
     color: #1d9fb8;
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }

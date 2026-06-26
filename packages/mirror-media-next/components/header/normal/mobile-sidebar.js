@@ -123,7 +123,7 @@ const Section = styled.div`
   padding: 12px 0 12px 20px;
   border-bottom: 1px solid #fff;
   &::before,
-  ::after {
+  &::after {
     display: block;
     position: absolute;
     content: '';

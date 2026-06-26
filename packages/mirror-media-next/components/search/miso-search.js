@@ -49,7 +49,7 @@ const SearchWrapper = styled('div')`
         box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
         
       }
-      ::before {
+      &::before {
         content: '';
         display: block;
         width: 32px;
@@ -70,7 +70,7 @@ const SearchWrapper = styled('div')`
         background: rgba(0, 0, 0, 0);
         display: flex;
         outline: none !important;
-        ::before {
+        &::before {
           content: '';
           width: 30px;
           height: 27px;
@@ -319,14 +319,14 @@ const SearchWrapper = styled('div')`
           font-size: 24px;
         }
       }
-      ::before {
+      &::before {
         content: '關於';
         font-size: 18px;
         font-weight: 500;
         line-height: 150%;
         margin-right: .5rem;
       }
-      ::after {
+      &::after {
         content: '的搜尋結果';
         font-size: 18px;
         font-weight: 500;
@@ -352,10 +352,10 @@ const SearchWrapper = styled('div')`
         ${({ theme }) => theme.breakpoint.xl} {
           font-size: 16px;
         }
-        ::after {
+        &::after {
           content: " 篇";
         }
-        ::before {
+        &::before {
           content: "共有 ";
         }
       }
@@ -414,13 +414,13 @@ const SearchWrapper = styled('div')`
             border-radius: 0;
             .miso-select__option {
               transition: 0.5s;
-              ::before {
+              &::before {
                 content: none;
               }
               &.selected {
                 color: #1D9FB8;
               }
-              :hover {
+              &:hover {
                 color: #1D9FB8;
               }
             }

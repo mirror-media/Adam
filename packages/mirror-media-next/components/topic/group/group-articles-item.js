@@ -18,11 +18,11 @@ const ItemWrapper = styled.a`
   font-size: 18px;
   border-bottom: 1px solid #4a4a4a;
 
-  :first-child {
+  &:first-child {
     padding-top: 0;
   }
 
-  :last-child {
+  &:last-child {
     padding-bottom: 0;
     border-bottom: none;
   }

@@ -97,7 +97,7 @@ const FormGroup = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 12px;
-    ::placeholder {
+    &::placeholder {
       color: rgba(0, 0, 0, 0.3);
     }
     outline: none;
@@ -134,7 +134,7 @@ const ItemsWrapper = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 12px;
-    ::placeholder {
+    &::placeholder {
       color: rgba(0, 0, 0, 0.3);
     }
     outline: none;

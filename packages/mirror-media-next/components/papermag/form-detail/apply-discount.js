@@ -34,7 +34,7 @@ const InputWrapper = styled.div`
   border-radius: 8px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   margin-right: 8px;
-  :focus-within {
+  &:focus-within {
     border-color: rgba(0, 0, 0, 0.87);
   }
   ${
@@ -63,13 +63,13 @@ const InputWrapper = styled.div`
   }
 
   input {
-    ::placeholder {
+    &::placeholder {
       color: rgba(0, 0, 0, 0.1);
       font-size: 18px;
       font-weight: 500;
     }
     width: 100%;
-    :focus {
+    &:focus {
       outline: none;
     }
     &[disabled] {
@@ -90,11 +90,11 @@ const ConfirmButton = styled.button`
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.07);
   background: #054f77;
   color: #fff;
-  :focus {
+  &:focus {
     outline: none;
   }
 
-  :hover {
+  &:hover {
     background: #9cb7c6;
     color: rgba(0, 0, 0, 0.87);
   }
@@ -138,11 +138,11 @@ const RemoveButton = styled.button`
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.07);
   background: #fff;
   color: #054f77;
-  :focus {
+  &:focus {
     outline: none;
   }
 
-  :hover {
+  &:hover {
     background:
       linear-gradient(
         0deg,

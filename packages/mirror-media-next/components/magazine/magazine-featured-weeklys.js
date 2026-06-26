@@ -122,7 +122,7 @@ const ReadingBtn = styled.button`
   align-items: center;
   grid-column-gap: 10px;
 
-  :focus {
+  &:focus {
     outline: none;
   }
 `
