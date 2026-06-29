@@ -114,9 +114,10 @@ const ItemDate = styled.div`
  * @param {Object} props
  * @param {Article} props.item
  * @param {Section} [props.section]
+ * @param {boolean} [props.priority]
  * @returns {React.ReactElement}
  */
-export default function PremiumArticleListItem({ item, section }) {
+export default function PremiumArticleListItem({ item, section, priority }) {
   const itemSection =
     section || item.sections.find((section) => section.slug === 'member')
 
@@ -130,6 +131,7 @@ export default function PremiumArticleListItem({ item, section }) {
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"
           rwd={{ desktop: '320px' }}
+          priority={priority}
         />
         {itemSection && (
           <ItemSection sectionName={itemSection?.slug}>
