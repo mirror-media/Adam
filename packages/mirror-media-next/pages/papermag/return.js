@@ -1,4 +1,5 @@
-import { parseBody } from 'next/dist/server/api-utils/node'
+import { parse as parseQueryString } from 'node:querystring'
+
 import NewebPay from '@mirrormedia/newebpay-node'
 import errors from '@twreporter/errors'
 import styled from 'styled-components'
@@ -35,6 +36,89 @@ const Wrapper = styled.main`
     padding: 0;
   }
 `
+
+const REQUEST_BODY_LIMIT_BYTES = 1024 * 1024
+
+/**
+ * Reads and parses the raw POST body for this page's getServerSideProps.
+ *
+ * Added during the Next.js 14 upgrade: Next 14 removed the private
+ * `next/dist/server/api-utils/node` parseBody helper this page previously used.
+ * A page's getServerSideProps only receives a raw Node IncomingMessage and
+ * Next.js does not parse the body for pages (only for API routes), so we read
+ * the request stream ourselves. Enforces a 1mb limit, parses `application/json`
+ * and otherwise treats the body as a urlencoded form post (the NewebPay return),
+ * and rejects oversized / invalid bodies so the caller's try/catch renders the
+ * failure page instead of throwing an uncaught error in the stream callback.
+ *
+ * @param {import('http').IncomingMessage} req
+ * @returns {Promise<Record<string, unknown>>}
+ */
+function parseRequestBody(req) {
+  return new Promise((resolve, reject) => {
+    let bodySize = 0
+    let isSettled = false
+    const chunks = []
+
+    const resolveOnce = (value) => {
+      if (isSettled) {
+        return
+      }
+
+      isSettled = true
+      resolve(value)
+    }
+
+    const rejectOnce = (err) => {
+      if (isSettled) {
+        return
+      }
+
+      isSettled = true
+      reject(err)
+    }
+
+    req.on('data', (chunk) => {
+      bodySize += chunk.length
+
+      if (bodySize > REQUEST_BODY_LIMIT_BYTES) {
+        rejectOnce(new Error('Request body exceeded 1mb limit'))
+        req.destroy()
+        return
+      }
+
+      chunks.push(chunk)
+    })
+
+    req.on('end', () => {
+      if (isSettled) {
+        return
+      }
+
+      const rawBody = Buffer.concat(chunks).toString('utf8')
+      const contentType = req.headers['content-type'] || ''
+
+      if (contentType.includes('application/json')) {
+        try {
+          resolveOnce(rawBody ? JSON.parse(rawBody) : {})
+        } catch (err) {
+          rejectOnce(err)
+        }
+
+        return
+      }
+
+      resolveOnce(parseQueryString(rawBody))
+    })
+
+    req.on('error', rejectOnce)
+    req.on('close', () => {
+      if (!isSettled) {
+        rejectOnce(new Error('Request aborted by client'))
+      }
+    })
+  })
+}
 
 /**
  * @typedef PurchasedItem
@@ -139,7 +223,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   try {
     // 資料來源：https://github.com/vercel/next.js/discussions/14979
-    const infoData = await parseBody(req, '1mb')
+    const infoData = await parseRequestBody(req)
     if (infoData.Status !== 'SUCCESS') {
       return {
         props: { sectionsData, topicsData, orderStatus, orderData },
