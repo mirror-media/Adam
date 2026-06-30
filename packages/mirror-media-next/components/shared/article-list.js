@@ -79,7 +79,11 @@ export default function ArticleList({ renderList, section }) {
       <ItemContainer>
         {renderListWithAd.map((item, index) => (
           <Fragment key={item.id}>
-            <ArticleListItem item={item} section={section} />
+            <ArticleListItem
+              item={item}
+              section={section}
+              priority={index === 0}
+            />
             {shouldShowAd && needInsertMicroAdAfter(index) && (
               <StyledMicroAd
                 unitId={getMicroAdUnitId(index, 'LISTING', 'RWD')}

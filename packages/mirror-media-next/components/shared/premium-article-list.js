@@ -56,8 +56,13 @@ export default function PremiumArticleList({ renderList, section }) {
   return (
     <>
       <ItemContainer>
-        {renderListBeforeAd.map((item) => (
-          <PremiumArticleListItem key={item.id} item={item} section={section} />
+        {renderListBeforeAd.map((item, index) => (
+          <PremiumArticleListItem
+            key={item.id}
+            item={item}
+            section={section}
+            priority={index === 0}
+          />
         ))}
       </ItemContainer>
 
