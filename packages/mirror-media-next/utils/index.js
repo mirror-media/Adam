@@ -412,7 +412,7 @@ const getLoginHref = (router) => {
  * @param {string} [asPath] - Next.js `router.asPath`
  * @returns {boolean}
  */
-const hasUtmParamsInAsPath = (asPath) => {
+const hasUtmOrFbParamsInAsPath = (asPath) => {
   if (!asPath || typeof asPath !== 'string') return false
   try {
     const urlObject = new URL(
@@ -420,7 +420,12 @@ const hasUtmParamsInAsPath = (asPath) => {
       'https://www.google.com' /** sample base; same as getLoginHref */
     )
     for (const key of urlObject.searchParams.keys()) {
-      if (key.toLowerCase().startsWith('utm_')) return true
+      if (
+        key.toLowerCase().startsWith('utm_') ||
+        key.toLowerCase().startsWith('fb_') ||
+        key.toLowerCase().startsWith('fbclid')
+      )
+        return true
     }
     return false
   } catch {
@@ -489,7 +494,7 @@ export {
   isCompanyEmail,
   transformTimeData,
   getLoginHref,
-  hasUtmParamsInAsPath,
+  hasUtmOrFbParamsInAsPath,
   isServer,
   getClientSideOnlyError,
   getSearchParamFromApiKeyUrl,
