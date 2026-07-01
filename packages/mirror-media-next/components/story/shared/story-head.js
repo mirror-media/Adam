@@ -5,7 +5,7 @@ import { SITE_URL } from '../../../config/index.mjs'
 import {
   getActiveOrderCategory,
   getActiveOrderSection,
-  hasUtmParamsInAsPath,
+  hasUtmOrFbParamsInAsPath,
 } from '../../../utils'
 // import Script from 'next/script'
 import { toTaipeiISOString } from '../../../utils/index'
@@ -93,8 +93,8 @@ const generateMetaData = (postData) => {
 export default function StoryHead({ postData }) {
   const router = useRouter()
   const meta = generateMetaData(postData)
-  const hasUtm = hasUtmParamsInAsPath(router.asPath)
-  const robots = hasUtm ? 'noindex' : meta.robots
+  const hasUtmOrFb = hasUtmOrFbParamsInAsPath(router.asPath)
+  const robots = hasUtmOrFb ? 'noindex' : meta.robots
   const {
     slug,
     nonAmpUrl,
@@ -113,7 +113,9 @@ export default function StoryHead({ postData }) {
     <>
       <Head>
         <meta name="robots" content={robots} key="robots" />
-        {!hasUtm && <link rel="canonical" href={nonAmpUrl} key="canonical" />}
+        {!hasUtmOrFb && (
+          <link rel="canonical" href={nonAmpUrl} key="canonical" />
+        )}
         {shouldCreateAmpHtmlLink && (
           <link rel="amphtml" href={ampUrl} key="amphtml" />
         )}
