@@ -408,7 +408,7 @@ const getLoginHref = (router) => {
 }
 
 /**
- * True when `asPath` has any `utm_*` query param.
+ * True when `asPath` has any `utm_*`, `fb_*` or `fbclid` query param.
  * @param {string} [asPath] - Next.js `router.asPath`
  * @returns {boolean}
  */
