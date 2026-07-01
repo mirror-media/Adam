@@ -419,11 +419,13 @@ const hasUtmOrFbParamsInAsPath = (asPath) => {
       asPath,
       'https://www.google.com' /** sample base; same as getLoginHref */
     )
+
     for (const key of urlObject.searchParams.keys()) {
+      const lowerKey = key.toLowerCase()
       if (
-        key.toLowerCase().startsWith('utm_') ||
-        key.toLowerCase().startsWith('fb_') ||
-        key.toLowerCase().startsWith('fbclid')
+        lowerKey.startsWith('utm_') ||
+        lowerKey.startsWith('fb_') ||
+        lowerKey.startsWith('fbclid')
       )
         return true
     }
