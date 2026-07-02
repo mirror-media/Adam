@@ -153,39 +153,6 @@ const MESH_LINK = {
 }
 const SUB_BRAND_LINKS = [MIRRORVOICE_LINK, MIRRORFICTION_LINK, MESH_LINK]
 
-const MIRROR_YOUTUBE_CHANNELS = [
-  {
-    title: '鏡週刊',
-    id: 'UCYkldEK001GxR884OZMFnRw',
-    name: 'media',
-    icon: '/images-next/video-mirror-weekly.svg',
-  },
-  {
-    title: '鏡人物',
-    id: 'UCccoVnb8YmHzArr7yrX7bTA',
-    name: 'people',
-    icon: '/images-next/video-mirror-people.svg',
-  },
-  {
-    title: '鏡娛樂',
-    id: 'UCSGNZVECzarsXTxPsNS9Zow',
-    name: 'fun',
-    icon: '/images-next/video-mirror-fun.svg',
-  },
-  {
-    title: '鏡食旅',
-    id: 'UCglE1_DI0TDSY70WfeoPSOQ',
-    name: 'food',
-    icon: '/images-next/video-mirror-food.svg',
-  },
-  {
-    title: '鏡錶誌',
-    id: 'UCbeskkrp36Virbj6lcxWxJA',
-    name: 'watch',
-    icon: '/images-next/video-mirror-watch.svg',
-  },
-]
-
 const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
@@ -221,7 +188,6 @@ export {
   SOCIAL_MEDIA_LINKS,
   PROMOTION_LINKS,
   SUB_BRAND_LINKS,
-  MIRROR_YOUTUBE_CHANNELS,
   SHARE_URL_FACEBOOK,
   SHARE_URL_LINE,
   Z_INDEX,
