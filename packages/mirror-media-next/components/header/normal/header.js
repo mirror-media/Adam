@@ -277,9 +277,6 @@ const formatSectionItem = (section) => {
        * @returns {string}
        */
       function getCategoryHref(sectionSlug, categorySlug) {
-        if (sectionSlug === 'videohub') {
-          return `/video_category/${categorySlug}`
-        }
         if (categorySlug === 'magazine') {
           return '/magazine/'
         }
@@ -316,13 +313,6 @@ const formatCategoryItem = (category) => {
      * @returns {string}
      */
     function getCategoryHref(sections, categorySlug) {
-      if (
-        sections &&
-        sections.length &&
-        sections.some((section) => section === 'videohub')
-      ) {
-        return `/video_category/${categorySlug}`
-      }
       return `/category/${categorySlug}`
     }
   }
@@ -365,7 +355,9 @@ export default function Header({
   children = null,
 }) {
   const { searchTerms, setSearchTerms, goSearchPage } = useSearch()
-  const sections = formatSections(sectionsData.filter((item) => item.slug !== 'member'))
+  const sections = formatSections(
+    sectionsData.filter((item) => item.slug !== 'member')
+  )
   const topics = topicsData && topicsData.length ? topicsData.slice(0, 9) : []
   const [showSearchField, setShowSearchField] = useState(false)
   const mobileSearchButtonRef = useRef(null)
