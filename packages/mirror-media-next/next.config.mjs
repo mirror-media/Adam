@@ -1,8 +1,6 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import withPWA from 'next-pwa'
-
 import {
   DONATION_PAGE_URL,
   FIREBASE_AUTH_DOMAIN,
@@ -17,13 +15,6 @@ const withBundleAnalyzer =
         enabled: true,
       })
     : (config) => config
-
-/** @type {import('next-pwa').PWAConfig} */
-const pwaConfig = {
-  dest: 'public',
-  customWorkerDir: 'service-worker',
-  mode: 'production',
-}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -106,4 +97,4 @@ const nextConfig = {
   },
 }
 
-export default withBundleAnalyzer(withPWA(pwaConfig)(nextConfig))
+export default withBundleAnalyzer(nextConfig)
