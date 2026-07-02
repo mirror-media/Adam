@@ -308,11 +308,11 @@ const formatCategoryItem = (category) => {
 
     /**
      *
-     * @param {HeadersDataCategory['sections']} sections
+     * @param {HeadersDataCategory['sections']} _sections
      * @param {HeadersDataCategory['slug']} categorySlug
      * @returns {string}
      */
-    function getCategoryHref(sections, categorySlug) {
+    function getCategoryHref(_sections, categorySlug) {
       return `/category/${categorySlug}`
     }
   }
