@@ -277,9 +277,6 @@ const formatSectionItem = (section) => {
        * @returns {string}
        */
       function getCategoryHref(sectionSlug, categorySlug) {
-        if (sectionSlug === 'videohub') {
-          return `/video_category/${categorySlug}`
-        }
         if (categorySlug === 'magazine') {
           return '/magazine/'
         }
@@ -311,18 +308,11 @@ const formatCategoryItem = (category) => {
 
     /**
      *
-     * @param {HeadersDataCategory['sections']} sections
+     * @param {HeadersDataCategory['sections']} _sections
      * @param {HeadersDataCategory['slug']} categorySlug
      * @returns {string}
      */
-    function getCategoryHref(sections, categorySlug) {
-      if (
-        sections &&
-        sections.length &&
-        sections.some((section) => section === 'videohub')
-      ) {
-        return `/video_category/${categorySlug}`
-      }
+    function getCategoryHref(_sections, categorySlug) {
       return `/category/${categorySlug}`
     }
   }
