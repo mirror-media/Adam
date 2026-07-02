@@ -76,16 +76,12 @@ function getFormattedPageType(pathname = '', isMemberArticle = false) {
     case pathname.startsWith('/topic/'):
       return 'topic'
 
-    case pathname.startsWith('/video/'):
-      return 'video'
-
     case pathname.startsWith('/section/') ||
       pathname.startsWith('/premiumsection/') ||
       pathname.startsWith('/externals/'):
       return 'section'
 
-    case pathname.startsWith('/category/') ||
-      pathname.startsWith('/video_category/'):
+    case pathname.startsWith('/category/'):
       return 'category'
 
     default:
