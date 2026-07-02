@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"node mocks/server\" \"next dev\"",
     "build": "pnpm build:sw && next build",
-    "build:sw": "sh -c 'esbuild service-worker/index.js --bundle --format=iife --target=es2017 --define:process.env.NEXT_PUBLIC_ENV=\\\"${NEXT_PUBLIC_ENV:-local}\\\" --outfile=public/sw.js'",
+    "build:sw": "node scripts/build-sw.js",
     "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
     "lint": "eslint .",

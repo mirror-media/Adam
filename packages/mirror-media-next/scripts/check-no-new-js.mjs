@@ -5,6 +5,9 @@ const IGNORED_PATTERNS = [
   /^packages\/mirror-media-next\/public\/sw\.js$/,
   /^packages\/mirror-media-next\/public\/workbox-.*\.js$/,
   /^packages\/mirror-media-next\/public\/worker-.*\.js$/,
+  // This is an explicitly reviewed Node tooling script, not application code.
+  // It replaces a hard-to-read package.json shell one-liner for the SW build.
+  /^packages\/mirror-media-next\/scripts\/build-sw\.js$/,
 ]
 
 const args = new Set(process.argv.slice(2))
