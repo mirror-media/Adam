@@ -152,7 +152,9 @@ export default function ShareButton({ className }: ShareButtonProps) {
   const [isCopied, setIsCopied] = useState(false)
   const [shareUrl, setShareUrl] = useState('')
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const hideToastTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const hideToastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
   const menuId = useId()
 
   useEffect(() => {

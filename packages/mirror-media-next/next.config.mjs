@@ -20,7 +20,6 @@ const withBundleAnalyzer =
 const nextConfig = {
   basePath: SITE_BASE_PATH,
   reactStrictMode: true,
-  swcMinify: true,
   compiler: {
     styledComponents: {
       displayName: true,
@@ -92,9 +91,7 @@ const nextConfig = {
   },
 
   output: 'standalone',
-  experimental: {
-    outputFileTracingRoot: path.join(__dirname, '../..'),
-  },
+  outputFileTracingRoot: path.join(__dirname, '../..'),
 }
 
 export default withBundleAnalyzer(nextConfig)
