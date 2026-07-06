@@ -51,6 +51,27 @@ function MyApp({ Component, pageProps }) {
       TagManager.initialize({ gtmId: GTM_ID })
     })
   }, [])
+
+  // The service worker is bundled into public/sw.js by the `build:sw` script
+  // (esbuild) and registered manually here, replacing the auto-registration
+  // that the removed next-pwa dependency used to inject at build time.
+  // Skipped outside production to keep next-pwa's old semantics: `pnpm dev`
+  // does not generate sw.js, and an active worker would interfere with
+  // local development.
+  useEffect(() => {
+    if (
+      process.env.NODE_ENV !== 'production' ||
+      !('serviceWorker' in navigator)
+    ) {
+      return
+    }
+
+    const swUrl = `${router.basePath || ''}/sw.js`
+    navigator.serviceWorker.register(swUrl).catch((error) => {
+      console.error('Failed to register service worker.', error)
+    })
+  }, [router.basePath])
+
   return (
     <>
       <GlobalStyles />
