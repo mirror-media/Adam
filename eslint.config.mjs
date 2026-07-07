@@ -32,6 +32,7 @@ export default [
       '**/.next/**',
       '**/dist/**',
       '**/__generated__/**',
+      '**/next-env.d.ts',
       '**/public/sw.js',
       '**/public/workbox-*.js',
       '**/public/worker-*.js',
@@ -65,7 +66,7 @@ export default [
         rootDir: [mirrorMediaNextRoot],
       },
       react: {
-        version: '18.2.0',
+        version: '19.2.7',
       },
     },
     rules: {
@@ -129,7 +130,7 @@ export default [
         rootDir: [mirrorMediaNextRoot],
       },
       react: {
-        version: '18.2.0',
+        version: '19.2.7',
       },
     },
     rules: {

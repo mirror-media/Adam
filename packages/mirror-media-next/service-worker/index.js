@@ -16,6 +16,9 @@ const ignorePaths = [
   '\u002Fquestionnaire',
   '\u002Frobots.txt',
   '\u002Fmanifest.json',
+  // AviviD/Likr push worker, served by prod infra outside this repo.
+  // Keep it ignored by this auth SW; non-prod 404 registration errors are
+  // known vendor-handled noise. See components/ads/avivid/avivid-script.js.
   '\u002Ffirebase-messaging-sw.js',
   '\u002Fads.txt',
   '\u002Fhodo_adject.php',
