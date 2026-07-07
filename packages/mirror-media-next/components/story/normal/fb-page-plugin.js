@@ -1,7 +1,7 @@
 import Script from 'next/script'
 
 const FB_SDK_URL =
-  'https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v18.0'
+  'https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v25.0'
 const FB_PAGE_URL = 'https://www.facebook.com/mirrormediamg'
 
 /** @typedef {import('../../../type/theme').Theme} Theme */
