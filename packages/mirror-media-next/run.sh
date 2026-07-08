@@ -3,7 +3,7 @@
 
 if [ "$PROXY_AMP" = "true" ]
 then
-  PROXIED_SERVER_PORT="${PROXIED_SERVER_PORT:-3001}"
+  export PROXIED_SERVER_PORT="${PROXIED_SERVER_PORT:-3001}"
 
   # run next.js together with proxy server
   HOSTNAME=0.0.0.0 PORT=$PROXIED_SERVER_PORT node packages/mirror-media-next/server.js &
