@@ -17,6 +17,7 @@ const config: CodegenConfig = {
         'apollo/query/**/*.js',
         'apollo/fragments/**/*.js',
         '!apollo/query/magazine-orders.js',
+        '!apollo/query/magazine-orders.ts',
         '!apollo/__generated__/**',
       ],
       preset: 'client',
@@ -30,8 +31,8 @@ const config: CodegenConfig = {
     'apollo/__generated__/member/': {
       schema: 'apollo/schema/member.graphql',
       documents: [
-        'apollo/membership/**/*.js',
-        'apollo/query/magazine-orders.js',
+        'apollo/membership/**/*.{js,ts}',
+        'apollo/query/magazine-orders.{js,ts}',
         '!apollo/__generated__/**',
       ],
       preset: 'client',

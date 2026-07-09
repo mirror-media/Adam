@@ -1,21 +1,22 @@
-import { gql } from '@apollo/client'
-const fetchAllMember = gql`
+import { graphql } from '../../__generated__/member'
+
+const fetchAllMember = graphql(`
   query fetchAllMember($firebaseId: String!) {
     member(where: { firebaseId: $firebaseId }) {
       id
       firebaseId
     }
   }
-`
-const fetchSubscription = gql`
+`)
+const fetchSubscription = graphql(`
   query fetchSubscription {
     subscriptions {
       id
     }
   }
-`
+`)
 
-const fetchMemberProfile = gql`
+const fetchMemberProfile = graphql(`
   query fetchMemberProfile($firebaseId: String!) {
     member(where: { firebaseId: $firebaseId }) {
       id
@@ -31,6 +32,6 @@ const fetchMemberProfile = gql`
       address
     }
   }
-`
+`)
 
 export { fetchAllMember, fetchMemberProfile, fetchSubscription }

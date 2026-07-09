@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../../__generated__/member'
 
-const fetchPaymentDataOfPapermag = gql`
+const fetchPaymentDataOfPapermag = graphql(`
   mutation fetchPaymentDataOfPapermag(
     $data: createNewebpayTradeInfoForMagazineOrderInput!
   ) {
@@ -18,6 +18,6 @@ const fetchPaymentDataOfPapermag = gql`
       NotifyURL
     }
   }
-`
+`)
 
 export { fetchPaymentDataOfPapermag }

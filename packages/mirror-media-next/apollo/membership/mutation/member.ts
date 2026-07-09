@@ -1,15 +1,15 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../../__generated__/member'
 
-const createMember = gql`
+const createMember = graphql(`
   mutation createMember($firebaseId: String!, $email: String!) {
     createmember(data: { firebaseId: $firebaseId, email: $email }) {
       firebaseId
       id
     }
   }
-`
+`)
 
-const updateMember = gql`
+const updateMember = graphql(`
   mutation updateMember(
     $id: ID!
     $address: String
@@ -44,6 +44,6 @@ const updateMember = gql`
       district
     }
   }
-`
+`)
 
 export { createMember, updateMember }

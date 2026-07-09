@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/member'
 
-const fetchAllMemberByOrderNo = gql`
+const fetchAllMemberByOrderNo = graphql(`
   query magazineOrder($orderNumber: String!) {
     magazineOrders(where: { orderNumber: { equals: $orderNumber } }) {
       id
@@ -24,6 +24,6 @@ const fetchAllMemberByOrderNo = gql`
       promoteCode
     }
   }
-`
+`)
 
 export { fetchAllMemberByOrderNo }
