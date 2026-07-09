@@ -1,18 +1,10 @@
-/**
- *  @readonly
- *  @enum {string}
- */
 const PaymentMethod = {
   NewebPay: 'newebpay',
   LINEPay: 'line_pay',
   GooglePay: 'google_play',
   AppStore: 'app_store',
-}
+} as const
 
-/**
- *  @readonly
- *  @enum {string}
- */
 const MemberType = {
   YearlyDisturbed: 'subscribe_yearly_disturb',
   MonthlyDisturbed: 'subscribe_monthly_disturb',
@@ -24,18 +16,19 @@ const MemberType = {
   OneTime: 'subscribe_one_time',
   Marketing: 'marketing',
   None: 'none',
-}
+} as const
 
-/**
- *  @readonly
- *  @enum {string}
- */
 const Frequency = {
   Marketing: 'marketing',
   Monthly: 'monthly',
   OneTime: 'one_time',
   OneTimeHyphen: 'one-time',
   Yearly: 'yearly',
-}
+} as const
+
+type PaymentMethodValue = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+type MemberTypeValue = (typeof MemberType)[keyof typeof MemberType]
+type FrequencyValue = (typeof Frequency)[keyof typeof Frequency]
 
 export { Frequency, MemberType, PaymentMethod }
+export type { FrequencyValue, MemberTypeValue, PaymentMethodValue }

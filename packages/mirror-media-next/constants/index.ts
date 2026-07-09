@@ -218,14 +218,14 @@ const MIRROR_YOUTUBE_CHANNELS = [
 const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
-const Z_INDEX = /** @type {const}*/ ({
+const Z_INDEX = {
   top: 10000,
   coverHeader: 2000,
   articleRightArrow: 1500, // 用一般 story 和 external 頁的「點擊看第一則延伸閱讀文章的右箭 icon」，須低於廣告的 z-index
   header: 1000,
   promoteTopic: 500,
   coverContent: 100,
-})
+} as const
 
 const SECTION_IDS = {
   member: '5fe15f1e123c831000ee54c2',

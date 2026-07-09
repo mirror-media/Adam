@@ -1,6 +1,6 @@
 // This file is for response codes from Firebaes SDK
 
-export const FirebaseAuthError = /** @type {const} */ ({
+export const FirebaseAuthError = {
   EMAIL_ALREADY_IN_USE: 'auth/email-already-in-use',
   INVALID_EMAIL: 'auth/invalid-email',
   OPERATION_NOT_ALLOWED: 'auth/operation-not-allowed',
@@ -12,4 +12,4 @@ export const FirebaseAuthError = /** @type {const} */ ({
   WRONG_PASSWORD: 'auth/wrong-password',
   EXPIRED_ACTION_CODE: 'auth/expired-action-code',
   INVALID_ACTION_CODE: 'auth/invalid-action-code',
-})
+} as const

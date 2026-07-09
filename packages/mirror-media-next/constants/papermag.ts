@@ -1,45 +1,39 @@
-const PLAN = /** @type {const}*/ ({
+const PLAN = {
   ONE_YEAR: 1,
   TWO_YEAR: 2,
-})
+} as const
 
-/**
- * @typedef {PLAN[keyof typeof PLAN]} PlanEnum
- */
-/**
- * @typedef Discount
- * @property {string} year
- * @property {string} issue
- */
+type PlanEnum = (typeof PLAN)[keyof typeof PLAN]
 
-/** @type {Discount} */
+type Discount = {
+  year: string
+  issue: string
+}
+
 const ONE_YEAR_DISCOUNT = {
   year: '一',
   issue: '5',
-}
+} satisfies Discount
 
-/** @type {Discount} */
 const TWO_YEAR_DISCOUNT = {
   year: '二',
   issue: '10',
+} satisfies Discount
+
+type RenewalDiscount = {
+  issue: string
 }
 
-/**
- * @typedef RenewalDiscount
- * @property {string} issue
- */
-/** @type {RenewalDiscount} */
 const ONE_YEAR_RENEWAL_DISCOUNT = {
   issue: '1',
-}
+} satisfies RenewalDiscount
 
-/** @type {RenewalDiscount} */
 const TWO_YEAR_RENEWAL_DISCOUNT = {
   issue: '2',
-}
+} satisfies RenewalDiscount
 
 const SHIPPING_FEE_PER_YEAR = 1040
-const PLAN_LIST = /** @type {const} */ ([
+const PLAN_LIST = [
   {
     id: PLAN.ONE_YEAR,
     code: 'magazine_one_year',
@@ -92,16 +86,17 @@ const PLAN_LIST = /** @type {const} */ ([
     discount: TWO_YEAR_DISCOUNT,
     renewalDiscount: TWO_YEAR_RENEWAL_DISCOUNT,
   },
-])
+] as const
 
 const COUPON_DISCOUNT = 80
 
-const RECEIPT_OPTION = /** @type {const} */ ({
+const RECEIPT_OPTION = {
   DONATE: 'donate',
   WITH_CARRIER: 'invoiceWithCarrier',
   TRIPPLE: 'tripleInvoice',
-})
+} as const
 
-/** @typedef {RECEIPT_OPTION[keyof typeof RECEIPT_OPTION]} ReceiptOptionEnum */
+type ReceiptOptionEnum = (typeof RECEIPT_OPTION)[keyof typeof RECEIPT_OPTION]
 
 export { COUPON_DISCOUNT, PLAN, PLAN_LIST, RECEIPT_OPTION }
+export type { PlanEnum, ReceiptOptionEnum }
