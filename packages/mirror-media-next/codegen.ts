@@ -14,7 +14,7 @@ const config: CodegenConfig = {
     'apollo/__generated__/content/': {
       schema: 'apollo/schema/content.graphql',
       documents: [
-        'apollo/query/**/*.js',
+        'apollo/query/**/*.{js,ts}',
         'apollo/fragments/**/*.js',
         '!apollo/query/magazine-orders.js',
         '!apollo/query/magazine-orders.ts',

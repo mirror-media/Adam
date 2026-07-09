@@ -7,7 +7,7 @@ import Steps from '../../components/subscribe-steps'
 import { ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
 import { getLogTraceObject } from '../../utils'
 import {
-  fetchAnnoucementsByScope,
+  fetchAnnouncementsByScope,
   fetchHeaderDataInDefaultPageLayout,
 } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
@@ -130,7 +130,7 @@ export async function getServerSideProps({ req, res }) {
   // fetch header data and announcements
   const [headerResponse, announcementResponse] = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchAnnoucementsByScope([ANNOUNCEMENT_SCOPE.PAPER_MAG]),
+    fetchAnnouncementsByScope([ANNOUNCEMENT_SCOPE.PAPER_MAG]),
   ])
 
   const [sectionsData, topicsData] = processSettledResult(

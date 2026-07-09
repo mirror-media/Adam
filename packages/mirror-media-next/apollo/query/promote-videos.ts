@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-const fetchPromoteVideos = gql`
+const fetchPromoteVideos = graphql(`
   query fetchPromoteVideos($take: Int, $orderBy: [PromoteVideoOrderByInput!]) {
     promoteVideos(
       where: {
@@ -17,6 +17,6 @@ const fetchPromoteVideos = gql`
       videoLink
     }
   }
-`
+`)
 
 export { fetchPromoteVideos }

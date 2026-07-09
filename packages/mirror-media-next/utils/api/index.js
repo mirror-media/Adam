@@ -1,7 +1,7 @@
 import errors from '@twreporter/errors'
 
 import client from '../../apollo/apollo-client.js'
-import { fetchAnnoucements } from '../../apollo/query/announcements'
+import { fetchAnnouncements } from '../../apollo/query/announcements'
 import axiosInstance from '../../axios/index.js'
 import {
   URL_STATIC_HEADER_HEADERS,
@@ -192,7 +192,7 @@ const fetchHeaderDataInPremiumPageLayout = async () => {
  * @param {import('../../constants/announcement').AnnouncementScopeValue[]} [scope]
  * @returns {Promise<AnnouncementQueryResult>}
  */
-const fetchAnnoucementsByScope = (scope) => {
+const fetchAnnouncementsByScope = (scope) => {
   const queryScope = Array.isArray(scope) ? [...scope] : []
 
   if (queryScope.includes(DEFAULT_ANNOUNCEMENT_SCOPE) === false) {
@@ -200,7 +200,7 @@ const fetchAnnoucementsByScope = (scope) => {
   }
 
   return client.query({
-    query: fetchAnnoucements,
+    query: fetchAnnouncements,
     variables: {
       scope: queryScope,
     },
@@ -208,7 +208,7 @@ const fetchAnnoucementsByScope = (scope) => {
 }
 
 export {
-  fetchAnnoucementsByScope,
+  fetchAnnouncementsByScope,
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
   fetchStaticJsonByUrl,
