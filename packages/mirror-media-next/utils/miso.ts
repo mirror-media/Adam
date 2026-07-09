@@ -1,21 +1,12 @@
 import { MISO_API_KEY } from '../config/index.mjs'
 
-/**
- * @param {string} endpoint
- * @returns {URL}
- */
-const buildMisoUrl = (endpoint) => {
+const buildMisoUrl = (endpoint: string): URL => {
   const url = new URL(endpoint)
   url.searchParams.set('api_key', MISO_API_KEY)
   return url
 }
 
-/**
- * @param {string} storySlug
- * @param {string} storyType
- * @returns {string}
- */
-const formatStoryId = (storySlug, storyType) => {
+const formatStoryId = (storySlug: string, storyType: string): string => {
   return storySlug.startsWith('mirrormedia')
     ? storySlug.replace(/[+\-&|!(){}[\]^"~*?:\\/]/g, '\\$&')
     : `mirrormedia_${storyType}_${storySlug}`.replace(
@@ -24,12 +15,10 @@ const formatStoryId = (storySlug, storyType) => {
       )
 }
 
-/**
- * @param {URL} url
- * @param {object} body
- * @returns {Promise<Response>}
- */
-const misoFetch = async (url, body) => {
+const misoFetch = async (
+  url: URL,
+  body: Record<string, unknown>
+): Promise<Response> => {
   return fetch(url.toString(), {
     method: body ? 'POST' : 'GET',
     headers: {
