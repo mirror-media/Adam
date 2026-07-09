@@ -5,7 +5,10 @@ import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrorme
 import styled from 'styled-components'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
-import { fetchStoryPostBySlug } from '../../apollo/query/posts'
+import {
+  fetchContentStoryPostBySlug,
+  fetchStoryPostBySlug,
+} from '../../apollo/query/posts'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import Layout from '../../components/shared/layout'
 import UserBehaviorLogger from '../../components/shared/user-behavior-logger'
@@ -336,12 +339,15 @@ export async function getServerSideProps({ params, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   try {
-    const storyClient = IS_PREVIEW_MODE
-      ? client
-      : getStoryClient(STORY_GQL_ENDPOINT) || client
+    const storyEndpointClient = IS_PREVIEW_MODE
+      ? null
+      : getStoryClient(STORY_GQL_ENDPOINT)
+    const storyClient = storyEndpointClient || client
 
     const result = await storyClient.query({
-      query: fetchStoryPostBySlug,
+      query: storyEndpointClient
+        ? fetchStoryPostBySlug
+        : fetchContentStoryPostBySlug,
       variables: { slug },
     })
 

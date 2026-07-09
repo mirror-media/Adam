@@ -137,7 +137,11 @@ assertNoUndefinedValues(clientPostData)
 assertNoUndefinedValues(initialRelatedStories)
 
 const postQuerySource = readFileSync(
-  join(currentDir, '../apollo/query/posts.js'),
+  join(currentDir, '../apollo/query/posts.ts'),
+  'utf8'
+)
+const storyCodegenDocumentSource = readFileSync(
+  join(currentDir, '../apollo/codegen-documents/story.graphql'),
   'utf8'
 )
 const postFragmentSource = readFileSync(
@@ -149,16 +153,18 @@ const cacheSettingSource = readFileSync(
   'utf8'
 )
 
-assert.match(postQuerySource, /const fetchStoryPostBySlug = gql`/)
-assert.match(postQuerySource, /const fetchAmpPostBySlug = gql`/)
+assert.match(postQuerySource, /const fetchContentStoryPostBySlug = graphql\(`/)
+assert.match(postQuerySource, /const fetchAmpPostBySlug = graphql\(`/)
 assert.doesNotMatch(
-  postQuerySource.match(/const fetchStoryPostBySlug = gql`[\s\S]*?`\n/)?.[0] ??
-    '',
+  storyCodegenDocumentSource.match(
+    /query fetchStoryPostBySlug[\s\S]*?query fetchExternalBySlug/
+  )?.[0] ?? '',
   /postTrimmedContent|trimmedContent/
 )
 assert.match(
-  postQuerySource.match(/const fetchAmpPostBySlug = gql`[\s\S]*?`\n/)?.[0] ??
-    '',
+  postQuerySource.match(
+    /const fetchAmpPostBySlug = graphql\(`[\s\S]*?`\)/
+  )?.[0] ?? '',
   /postTrimmedContent/
 )
 assert.match(postFragmentSource, /fragment relatedPost on Post/)

@@ -5,7 +5,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
-import { fetchExternalBySlug } from '../../apollo/query/externals'
+import {
+  fetchExternalBySlug,
+  fetchStoryExternalBySlug,
+} from '../../apollo/query/externals'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
 import generateJsonLdsData from '../../components/external/shared/json-lds-data'
@@ -253,12 +256,15 @@ export async function getServerSideProps({ params, req, res }) {
     }
   }
 
-  const externalClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+  const storyEndpointClient = getStoryClient(STORY_GQL_ENDPOINT)
+  const externalClient = storyEndpointClient || client
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
     externalClient.query({
-      query: fetchExternalBySlug,
+      query: storyEndpointClient
+        ? fetchStoryExternalBySlug
+        : fetchExternalBySlug,
       variables: { slug },
     }),
     fetchStaticJsonSafe(URL_STATIC_POST_FLASH_NEWS, API_TIMEOUT, 'flash_news'),

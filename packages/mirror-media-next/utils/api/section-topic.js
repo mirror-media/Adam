@@ -1,5 +1,5 @@
 import client, { getStoryClient } from '../../apollo/apollo-client'
-import { fetchTopics } from '../../apollo/query/topics'
+import { fetchStoryTopics, fetchTopics } from '../../apollo/query/topics'
 import { STORY_GQL_ENDPOINT } from '../../config/index.mjs'
 
 /**
@@ -8,10 +8,11 @@ import { STORY_GQL_ENDPOINT } from '../../config/index.mjs'
  */
 export function fetchTopicList(take, skip) {
   // Use story endpoint if available, fallback to default client
-  const topicClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+  const storyClient = getStoryClient(STORY_GQL_ENDPOINT)
+  const topicClient = storyClient || client
 
   return topicClient.query({
-    query: fetchTopics,
+    query: storyClient ? fetchStoryTopics : fetchTopics,
     variables: {
       take,
       skip,

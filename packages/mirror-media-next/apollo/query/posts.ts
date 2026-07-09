@@ -1,16 +1,7 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
+import { FetchStoryPostBySlugDocument as fetchStoryPostBySlug } from '../__generated__/story/graphql'
 
-import {
-  asideListingPost,
-  listingPost,
-  post,
-  postFullContent,
-  postTrimmedContent,
-  relatedPost,
-} from '../fragments/post'
-
-const fetchAsidePosts = gql`
-  ${asideListingPost}
+const fetchAsidePosts = graphql(`
   query fetchListingPosts(
     $take: Int
     $sectionSlug: [String!]
@@ -27,10 +18,9 @@ const fetchAsidePosts = gql`
       ...asideListingPost
     }
   }
-`
+`)
 
-const fetchPosts = gql`
-  ${listingPost}
+const fetchPosts = graphql(`
   query fetchPosts(
     $take: Int
     $skip: Int
@@ -42,12 +32,9 @@ const fetchPosts = gql`
       ...listingPost
     }
   }
-`
+`)
 
-const fetchStoryPostBySlug = gql`
-  ${post}
-  ${postFullContent}
-  ${relatedPost}
+const fetchContentStoryPostBySlug = graphql(`
   query fetchStoryPostBySlug($slug: String) {
     post(where: { slug: $slug }) {
       ...post
@@ -60,13 +47,9 @@ const fetchStoryPostBySlug = gql`
       }
     }
   }
-`
+`)
 
-const fetchAmpPostBySlug = gql`
-  ${post}
-  ${postTrimmedContent}
-  ${postFullContent}
-  ${relatedPost}
+const fetchAmpPostBySlug = graphql(`
   query fetchAmpPostBySlug($slug: String) {
     post(where: { slug: $slug }) {
       ...post
@@ -80,6 +63,12 @@ const fetchAmpPostBySlug = gql`
       }
     }
   }
-`
+`)
 
-export { fetchAmpPostBySlug, fetchAsidePosts, fetchPosts, fetchStoryPostBySlug }
+export {
+  fetchAmpPostBySlug,
+  fetchAsidePosts,
+  fetchContentStoryPostBySlug,
+  fetchPosts,
+  fetchStoryPostBySlug,
+}

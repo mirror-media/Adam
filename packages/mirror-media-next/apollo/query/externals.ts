@@ -1,9 +1,7 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
+import { FetchExternalBySlugDocument as fetchStoryExternalBySlug } from '../__generated__/story/graphql'
 
-import { external, listingExternal } from '../fragments/external'
-
-const fetchExternals = gql`
-  ${listingExternal}
+const fetchExternals = graphql(`
   query fetchExternals(
     $take: Int
     $skip: Int
@@ -14,16 +12,15 @@ const fetchExternals = gql`
       ...listingExternal
     }
   }
-`
+`)
 
-const fetchExternalCounts = gql`
+const fetchExternalCounts = graphql(`
   query fetchExternalCounts($filter: ExternalWhereInput!) {
     externalsCount(where: $filter)
   }
-`
+`)
 
-const fetchExternalBySlug = gql`
-  ${external}
+const fetchExternalBySlug = graphql(`
   query fetchExternalBySlug($slug: String) {
     externals(
       where: { slug: { equals: $slug }, state: { equals: "published" } }
@@ -31,9 +28,9 @@ const fetchExternalBySlug = gql`
       ...external
     }
   }
-`
+`)
 
-const fetchLatestPublishedExternals = gql`
+const fetchLatestPublishedExternals = graphql(`
   query fetchLatestPublishedExternals($take: Int, $partnerSlug: String) {
     externals(
       take: $take
@@ -50,11 +47,12 @@ const fetchLatestPublishedExternals = gql`
       publishedDate
     }
   }
-`
+`)
 
 export {
   fetchExternalBySlug,
   fetchExternalCounts,
   fetchExternals,
   fetchLatestPublishedExternals,
+  fetchStoryExternalBySlug,
 }
