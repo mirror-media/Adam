@@ -102,7 +102,7 @@ import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
  */
 const fetchStaticJsonByUrl = async (requestUrl, requestConfig) => {
   if (typeof window === 'undefined') {
-    const mod = await import('../server-side-only/fetch-static-json.js')
+    const mod = await import('../server-side-only/fetch-static-json')
     const res = await mod.fetchStaticJsonOnServer(requestUrl, requestConfig)
     // Note: fetchStaticJsonOnServer internally logs whether it's from GCS mount or HTTP
     // fetchStaticJsonOnServer returns { data: ... } format

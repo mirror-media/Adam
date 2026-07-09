@@ -1,11 +1,6 @@
 import { getClientSideOnlyError, isServer } from '../index'
 
-/**
- * @param {*} log
- * @param {string} target
- * @throws {Error}
- */
-const sendLog = (log, target = '/api/tracking') => {
+const sendLog = (log: unknown, target = '/api/tracking'): void => {
   if (isServer()) getClientSideOnlyError('sendLog')
 
   const blob = new Blob([JSON.stringify(log)], {
@@ -14,8 +9,9 @@ const sendLog = (log, target = '/api/tracking') => {
   navigator.sendBeacon(target, blob)
 }
 
-const sendErrorLog = (log) => sendLog(log, '/api/error-report')
+const sendErrorLog = (log: unknown): void => sendLog(log, '/api/error-report')
 
-const sendUserBehaviorLog = (log) => sendLog(log, '/api/tracking')
+const sendUserBehaviorLog = (log: unknown): void =>
+  sendLog(log, '/api/tracking')
 
 export { sendErrorLog, sendLog, sendUserBehaviorLog }

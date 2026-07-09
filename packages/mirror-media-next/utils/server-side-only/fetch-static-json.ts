@@ -1,3 +1,4 @@
+import type { AxiosRequestConfig } from 'axios'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -7,6 +8,19 @@ import {
   GCS_FUSE_STATIC_BUCKET,
 } from '../../config/index.mjs'
 
+type StaticJsonRequestConfig = number | AxiosRequestConfig
+type ErrorLikeWithMessage = {
+  message?: unknown
+}
+
+function getErrorLogMessage(err: unknown): string {
+  if (err && typeof err === 'object' && 'message' in err) {
+    const { message } = err as ErrorLikeWithMessage
+    return message == null ? String(err) : String(message)
+  }
+  return String(err)
+}
+
 /**
  * Map a HTTPS static URL to a local path under GCS FUSE mount.
  * Uses GCS_FUSE_MOUNT_DIR and GCS_FUSE_STATIC_BUCKET from config (set per environment).
@@ -15,11 +29,8 @@ import {
  * - https://{bucket}/files/json/...
  * - https://storage.googleapis.com/{bucket}/files/json/...
  * - https://{cdn-hostname}/files/json/... (CDN)
- *
- * @param {string} requestUrl
- * @returns {string | null}
  */
-function mapUrlToLocalPath(requestUrl) {
+function mapUrlToLocalPath(requestUrl: string): string | null {
   try {
     if (!GCS_FUSE_MOUNT_DIR || !GCS_FUSE_STATIC_BUCKET) {
       return null
@@ -49,7 +60,7 @@ function mapUrlToLocalPath(requestUrl) {
     }
 
     return localPath
-  } catch (err) {
+  } catch {
     return null
   }
 }
@@ -58,15 +69,11 @@ function mapUrlToLocalPath(requestUrl) {
  * Fetch JSON from local GCS FUSE mount first, fallback to HTTP GET via axios.
  * Returns an axios-like response shape: { data }
  * Client-side will always fallback to HTTP.
- *
- * @typedef {number | import('axios').AxiosRequestConfig} StaticJsonRequestConfig
- *
- * @template T
- * @param {string} requestUrl
- * @param {StaticJsonRequestConfig} [requestConfig]
- * @returns {Promise<{ data: T }>}
  */
-export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
+export async function fetchStaticJsonOnServer<T>(
+  requestUrl: string,
+  requestConfig?: StaticJsonRequestConfig
+): Promise<{ data: T }> {
   const startTime = performance.now()
   // Only try local file on server
   if (typeof window === 'undefined') {
@@ -93,7 +100,7 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
           })
         )
 
-        return /** @type {{ data: T }} */ ({ data })
+        return { data: data as T }
       } catch (err) {
         const readLatency = (performance.now() - startTime).toFixed(2)
         console.warn(
@@ -104,7 +111,7 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
             url: requestUrl,
             localPath: localPath,
             readLatency: `${readLatency}ms`,
-            error: err?.message ?? String(err),
+            error: getErrorLogMessage(err),
           })
         )
         // fall through to HTTP
@@ -121,7 +128,7 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
   }
 
   const httpStartTime = performance.now()
-  const normalizedRequestConfig =
+  const normalizedRequestConfig: AxiosRequestConfig =
     typeof requestConfig === 'number'
       ? { timeout: requestConfig }
       : (requestConfig ?? {})
@@ -146,5 +153,5 @@ export async function fetchStaticJsonOnServer(requestUrl, requestConfig) {
     })
   )
 
-  return /** @type {{ data: T }} */ ({ data: res?.data })
+  return { data: res?.data as T }
 }

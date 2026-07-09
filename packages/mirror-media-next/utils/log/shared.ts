@@ -1,10 +1,34 @@
 import { ApolloError } from '@apollo/client'
 import errors from '@twreporter/errors'
+import type { AxiosError } from 'axios'
 import Bowser from 'bowser'
 
 import { ENV } from '../../config/index.mjs'
 
-function getBrowserInfo(userAgent = '') {
+type BrowserOrDeviceInfo = {
+  name?: string
+  version?: string
+}
+
+type WindowSizeInfo = {
+  width: number
+  height: number
+}
+
+type PageType =
+  | 'index'
+  | 'premium-story'
+  | 'story'
+  | 'external'
+  | 'topic'
+  | 'video'
+  | 'section'
+  | 'category'
+  | 'other'
+
+type TraceObject = Record<string, unknown>
+
+function getBrowserInfo(userAgent = ''): BrowserOrDeviceInfo {
   if (!userAgent) {
     return {
       name: '',
@@ -16,7 +40,7 @@ function getBrowserInfo(userAgent = '') {
   return browserInfo
 }
 
-function getDeviceInfo(userAgent = '') {
+function getDeviceInfo(userAgent = ''): BrowserOrDeviceInfo {
   if (!userAgent) {
     return {
       name: '',
@@ -34,7 +58,7 @@ function getDeviceInfo(userAgent = '') {
 /**
  *  Inspired by https://github.com/f2etw/detect-inapp
  */
-function detectIsInApp(userAgent = '') {
+function detectIsInApp(userAgent = ''): boolean {
   if (!userAgent) {
     return false
   }
@@ -47,20 +71,17 @@ function detectIsInApp(userAgent = '') {
   return Boolean(userAgent.match(regex))
 }
 
-function getWindowSizeInfo() {
+function getWindowSizeInfo(): WindowSizeInfo {
   return {
     width: document.documentElement.clientWidth || document.body.clientWidth,
     height: document.documentElement.clientHeight || document.body.clientHeight,
   }
 }
 
-/**
- *
- * @param {string} pathname
- * @param {boolean} isMemberArticle
- * @returns
- */
-function getFormattedPageType(pathname = '', isMemberArticle = false) {
+function getFormattedPageType(
+  pathname = '',
+  isMemberArticle = false
+): PageType {
   switch (true) {
     case pathname.startsWith('/') && pathname.length === 1:
       return 'index'
@@ -94,12 +115,11 @@ function getFormattedPageType(pathname = '', isMemberArticle = false) {
   }
 }
 
-/**
- * @param {Error | import('axios').AxiosError} axiosErrors
- * @param {string} errorMessage
- * @param {Record<string, any> | undefined} traceObject
- */
-function logAxiosError(axiosErrors, errorMessage, traceObject) {
+function logAxiosError(
+  axiosErrors: Error | AxiosError,
+  errorMessage: string,
+  traceObject?: TraceObject
+): void {
   const annotatingError = errors.helpers.wrap(
     axiosErrors,
     'UnhandledError',
@@ -141,12 +161,11 @@ function logAxiosError(axiosErrors, errorMessage, traceObject) {
   )
 }
 
-/**
- * @param {Error | import('@apollo/client/errors').ApolloError} gqlErrors
- * @param {string} errorMessage
- * @param {Record<string, any> | undefined} traceObject
- */
-function logGqlError(gqlErrors, errorMessage, traceObject) {
+function logGqlError(
+  gqlErrors: Error | ApolloError,
+  errorMessage: string,
+  traceObject?: TraceObject
+): void {
   if (!(gqlErrors instanceof ApolloError)) {
     return logGenericError(gqlErrors, errorMessage, {
       ...(traceObject ?? {}),
@@ -198,14 +217,13 @@ function logGqlError(gqlErrors, errorMessage, traceObject) {
   )
 }
 
-/**
- * @param {unknown} genericError
- * @param {string} errorMessage
- * @param {Record<string, any>} [traceObject]
- */
-function logGenericError(genericError, errorMessage, traceObject) {
+function logGenericError(
+  genericError: unknown,
+  errorMessage: string,
+  traceObject?: TraceObject
+): void {
   const annotatingError = errors.helpers.wrap(
-    /** @type {Error} */ (genericError),
+    genericError as Error,
     'UnhandledError',
     errorMessage
   )
@@ -247,3 +265,4 @@ export {
   logGenericError,
   logGqlError,
 }
+export type { BrowserOrDeviceInfo, PageType, TraceObject, WindowSizeInfo }

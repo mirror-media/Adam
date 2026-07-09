@@ -1,50 +1,50 @@
 import { URL, URLSearchParams } from 'node:url'
 
+import type { GetServerSideProps, PreviewData } from 'next'
+import type { IncomingHttpHeaders } from 'http'
+import type { ParsedUrlQuery } from 'querystring'
+
+import type {
+  Dictionary,
+  SSRPropsContext,
+  SSRPropsGetter,
+} from './with-user-ssr'
 import withUserSSR from './with-user-ssr'
 
-/**
- * @typedef {import('querystring').ParsedUrlQuery} ParsedUrlQuery
- * @typedef {import('next').Redirect} Redirect
- * @typedef {import('next').PreviewData} PreviewData
- * @typedef {import('firebase-admin/auth').DecodedIdToken} DecodedIdToken
- */
+type NormalizedDestination = {
+  finalPathAndQuery: string
+  finalFullUrl: string | null
+}
+type QueryParamValue = string | string[] | undefined
 
-/**
- * @template [T=any]
- * @typedef {import('./with-user-ssr').Dictionary} Dictionary
- */
+type RedirectToDestinationWhileAuthed = () => <
+  P extends Dictionary = Dictionary,
+  Q extends ParsedUrlQuery = ParsedUrlQuery,
+  D extends PreviewData = PreviewData,
+>(
+  propGetter?: SSRPropsGetter<P, Q, D>
+) => GetServerSideProps<P, Q, D>
 
-/**
- * @template P
- * @typedef {import('./with-user-ssr').GetSSRProps<P>} GetSSRProps
- */
+function createUrlSearchParamsFromQuery(
+  query: Record<string, QueryParamValue>
+): URLSearchParams {
+  const params = new URLSearchParams()
 
-/**
- * @template P
- * @typedef {import('./with-user-ssr').GetSSRResult<P>} GetSSRResult
- */
+  Object.entries(query).forEach(([key, value]) => {
+    params.set(key, String(value))
+  })
 
-/**
- * @template {ParsedUrlQuery} [Q=ParsedUrlQuery]
- * @template {PreviewData} [D=PreviewData]
- * @typedef {import('next').GetServerSidePropsContext<Q, D> & { user?: DecodedIdToken}} SSRPropsContext
- */
-
-/**
- * @template P
- * @template {ParsedUrlQuery} Q
- * @template {PreviewData} D
- * @typedef {import('./with-user-ssr').SSRPropsGetter<P, Q, D>} SSRPropsGetter
- */
+  return params
+}
 
 /**
  * Normalizes the destination from query parameters to be a path on the current domain,
  * merging other original query parameters.
- * @param {ParsedUrlQuery} currentQuery The current query object from context.
- * @param {import('http').IncomingMessage['headers']} reqHeaders The request headers.
- * @returns {{finalPathAndQuery: string, finalFullUrl: string | null}}
  */
-function normalizeDestination(currentQuery, reqHeaders) {
+function normalizeDestination(
+  currentQuery: ParsedUrlQuery,
+  reqHeaders: IncomingHttpHeaders
+): NormalizedDestination {
   const protocol = reqHeaders['x-forwarded-proto']?.toString() || 'http'
   const host = reqHeaders.host
 
@@ -80,9 +80,7 @@ function normalizeDestination(currentQuery, reqHeaders) {
   // Merge query parameters: start with those from the destination,
   // then add/override with any other parameters from the original request.
   const finalSearchParams = new URLSearchParams(queryParamsFromDestination)
-  const originalRequestParams = new URLSearchParams(
-    /** @type {Record<string, string | string[]>} */ (currentQuery)
-  )
+  const originalRequestParams = createUrlSearchParamsFromQuery(currentQuery)
   originalRequestParams.delete('destination') // Don't re-add 'destination' itself
 
   originalRequestParams.forEach((value, key) => {
@@ -102,32 +100,18 @@ function normalizeDestination(currentQuery, reqHeaders) {
 }
 
 /**
- * @callback RedirectToDestinationWhileAuthed
- * @returns {
-    <P extends Dictionary=Dictionary,
-     Q extends ParsedUrlQuery=ParsedUrlQuery,
-     D extends PreviewData=PreviewData>
-    (propGetter?: SSRPropsGetter<P, Q, D>)
-     => import('next').GetServerSideProps<P, Q, D>
-   }
- */
-
-/**
  * should be used on SSR page which redirects user to `destination` route if authed
- *
- * @type {RedirectToDestinationWhileAuthed}
  */
-const redirectToDestinationWhileAuthed =
+const redirectToDestinationWhileAuthed: RedirectToDestinationWhileAuthed =
   () =>
-  /**
-   * @template {Dictionary} P
-   * @template {ParsedUrlQuery} Q
-   * @template {PreviewData} D
-   */
-  (
-    /** @type {import('next').GetServerSideProps<P, Q, D>} */ getServerSidePropsFunc
+  <
+    P extends Dictionary = Dictionary,
+    Q extends ParsedUrlQuery = ParsedUrlQuery,
+    D extends PreviewData = PreviewData,
+  >(
+    getServerSidePropsFunc?: SSRPropsGetter<P, Q, D>
   ) =>
-    withUserSSR()(async (/** @type {SSRPropsContext<Q, D>} */ ctx) => {
+    withUserSSR()(async (ctx: SSRPropsContext<Q, D>) => {
       const { query, user, req } = ctx
 
       const { finalPathAndQuery, finalFullUrl } = normalizeDestination(
@@ -150,9 +134,7 @@ const redirectToDestinationWhileAuthed =
         originalDestString !== finalFullUrl // The original is different from the normalized full URL.
       ) {
         // Preserve all other original query parameters for the intermediate redirect.
-        const intermediateRedirectParams = new URLSearchParams(
-          /** @type {Record<string, string | string[]>} */ (query)
-        )
+        const intermediateRedirectParams = createUrlSearchParamsFromQuery(query)
         intermediateRedirectParams.set('destination', finalFullUrl) // Set the new, normalized destination value.
 
         return {
@@ -184,9 +166,9 @@ const redirectToDestinationWhileAuthed =
         const contextForPage = {
           ...ctx,
           query: { ...query, destination: finalFullUrl || finalPathAndQuery },
-        }
+        } as SSRPropsContext<Q, D>
 
-        let props = /** @type {P} */ ({})
+        let props = {} as P
         if (getServerSidePropsFunc) {
           const composedProps = await getServerSidePropsFunc(contextForPage)
 
@@ -210,3 +192,4 @@ const redirectToDestinationWhileAuthed =
     })
 
 export default redirectToDestinationWhileAuthed
+export type { NormalizedDestination, RedirectToDestinationWhileAuthed }
