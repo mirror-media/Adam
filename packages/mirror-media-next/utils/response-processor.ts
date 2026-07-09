@@ -8,19 +8,13 @@ import { logAxiosError, logGenericError, logGqlError } from './log/shared'
  * T may be AxiosResponse, ApolloQueryResult, or a domain shape.
  * If the settled item is fulfilled, we map its value; otherwise we log by transport and
  * return the mapped fallback by calling `dataHandler(undefined)`.
- * @template T,V
- * @param {PromiseSettledResult<T>} response
- * @param {(value: T | undefined) => V} dataHandler
- * @param {string} errorMessage
- * @param {Record<string, any>} [traceObject]
- * @returns {V}
  */
-const processSettledResult = (
-  response,
-  dataHandler,
-  errorMessage,
-  traceObject
-) => {
+const processSettledResult = <T, V>(
+  response: PromiseSettledResult<T>,
+  dataHandler: (value: T | undefined) => V,
+  errorMessage: string,
+  traceObject?: Record<string, unknown>
+): V => {
   // PromiseSettledResult<T> is a closed union type:
   //     - PromiseFulfilledResult<T> has status: 'fulfilled'
   //     - PromiseRejectedResult     has status: 'rejected'

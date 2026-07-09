@@ -16,11 +16,11 @@ import {
   fetchVideoCategory,
   fetchYoutubePlaylistByPlaylistId,
 } from '../../utils/api/video-category.js'
-import { setPageCache } from '../../utils/cache-setting.js'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils/index.js'
-import { processSettledResult } from '../../utils/response-processor.js'
-import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
+import { processSettledResult } from '../../utils/response-processor'
+import { simplifyYoutubePlaylistVideo } from '../../utils/youtube'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

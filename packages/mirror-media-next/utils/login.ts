@@ -1,8 +1,6 @@
-/**
- * @param {string} userAgent
- * @returns {'ios' | 'android' | 'other'}
- */
-export function detectMobileOs(userAgent) {
+type MobileOs = 'ios' | 'android' | 'other'
+
+function detectMobileOs(userAgent: string): MobileOs {
   if (/iPad|iPhone|iPod/.test(userAgent)) {
     return 'ios'
   } else if (/android/i.test(userAgent)) {
@@ -13,11 +11,7 @@ export function detectMobileOs(userAgent) {
   }
 }
 
-/**
- * @param {string} userAgent
- * @returns boolean
- */
-export function isInAppBrowser(userAgent) {
+function isInAppBrowser(userAgent: string): boolean {
   // source1: https://gist.github.com/fostyfost/0591c79f4cd7ca26e5941a53fd4bf1a4
   // source2: https://gist.github.com/monkianer/c163651c86897d744f10
   const rules = [
@@ -41,3 +35,5 @@ export function isInAppBrowser(userAgent) {
   const regex = new RegExp(`(${rules.join('|')})`, 'ig')
   return regex.test(userAgent)
 }
+
+export { detectMobileOs, isInAppBrowser }

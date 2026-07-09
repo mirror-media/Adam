@@ -27,7 +27,7 @@ import {
   simplifyYoutubePlaylistVideo,
   simplifyYoutubeSearchedVideo,
   simplifyYoutubeVideo,
-} from '../../utils/youtube.js'
+} from '../../utils/youtube'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

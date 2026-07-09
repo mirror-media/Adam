@@ -145,7 +145,7 @@ const postFragmentSource = readFileSync(
   'utf8'
 )
 const cacheSettingSource = readFileSync(
-  join(currentDir, './cache-setting.js'),
+  join(currentDir, './cache-setting.ts'),
   'utf8'
 )
 

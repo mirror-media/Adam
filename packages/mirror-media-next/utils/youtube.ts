@@ -1,8 +1,13 @@
-/**
- * @param {import("../type/youtube").YoutubeRawSearchedVideo[]} videos
- * @returns {import("../type/youtube").YoutubeVideo[]}
- */
-function simplifyYoutubeSearchedVideo(videos) {
+import type {
+  YoutubeRawPlaylistVideo,
+  YoutubeRawSearchedVideo,
+  YoutubeRawVideo,
+  YoutubeVideo,
+} from '../type/youtube'
+
+function simplifyYoutubeSearchedVideo(
+  videos: YoutubeRawSearchedVideo[]
+): YoutubeVideo[] {
   return videos.map((video) => ({
     id: video.id.videoId,
     title: video.snippet.title,
@@ -13,11 +18,9 @@ function simplifyYoutubeSearchedVideo(videos) {
   }))
 }
 
-/**
- * @param {import("../type/youtube").YoutubeRawPlaylistVideo[]} videos
- * @returns {import("../type/youtube").YoutubeVideo[]}
- */
-function simplifyYoutubePlaylistVideo(videos) {
+function simplifyYoutubePlaylistVideo(
+  videos: YoutubeRawPlaylistVideo[]
+): YoutubeVideo[] {
   return videos.map((video) => ({
     id: video.snippet.resourceId.videoId,
     title: video.snippet.title,
@@ -28,11 +31,7 @@ function simplifyYoutubePlaylistVideo(videos) {
   }))
 }
 
-/**
- * @param {import("../type/youtube").YoutubeRawVideo[]} videos
- * @returns {import("../type/youtube").YoutubeVideo[]}
- */
-function simplifyYoutubeVideo(videos) {
+function simplifyYoutubeVideo(videos: YoutubeRawVideo[]): YoutubeVideo[] {
   return (
     videos
       .filter((video) => video)
@@ -49,11 +48,9 @@ function simplifyYoutubeVideo(videos) {
 
 /**
  * Extracts the YouTube video ID from a given URL.
- * @param {string} url
- * @returns {string} The extracted video ID, or an empty string if not found.
  */
 
-const extractYouTubeId = (url) => {
+const extractYouTubeId = (url: string): string => {
   const match = url?.match(
     /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
   )

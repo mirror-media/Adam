@@ -1,39 +1,36 @@
+import type { GetServerSidePropsContext } from 'next'
+
 import { IS_PREVIEW_MODE } from '../config/index.mjs'
 
-/**
- * @typedef {import('next').GetServerSidePropsContext['res']} Res
- */
+type Res = GetServerSidePropsContext['res']
+type PageUrl = GetServerSidePropsContext['req']['url']
 
-/**
- * @typedef {import('next').GetServerSidePropsContext['req']['url']} PageUrl
- */
-
-/**
- * @typedef {Object} CacheSetting
- * @property {'max-age' | 'no-store' | 'no-cache'} cachePolicy
- * - Policy of `Cache-Control` want to set. Currently accept three type of value: 'no-store', 'no-cache', and 'max-age'.
- * - If `cachePolicy` is 'no-store' or 'no-cache', value of Cache-Control would be set as 'no-store' or 'no-cache'.
- * - If `cachePolicy` is 'max-age', value of Cache-Control would be set as 'public, max-age', and seconds we want to set will be determined by another parameter `cacheSetting.cacheTime`.
- * - If `cachePolicy` is not a accept value, value of Cache-Control would be set as 'public, max-age=300'.
- * - If `cachePolicy` is 'max-age' but `cacheSetting.cacheTime` is not a number, value of Cache-Control would be set as 'public, max-age=300' too.
- * @property {number} [cacheTime] - Seconds we want the cache to be set.
- * @property {number} [sharedCacheTime] - Seconds shared caches should keep the response, emitted as `s-maxage`.
- * @property {number} [staleWhileRevalidate] - Seconds shared caches may serve stale content while revalidating.
- */
+type CacheSetting = {
+  /**
+   * - Policy of `Cache-Control` want to set. Currently accept three type of value: 'no-store', 'no-cache', and 'max-age'.
+   * - If `cachePolicy` is 'no-store' or 'no-cache', value of Cache-Control would be set as 'no-store' or 'no-cache'.
+   * - If `cachePolicy` is 'max-age', value of Cache-Control would be set as 'public, max-age', and seconds we want to set will be determined by another parameter `cacheSetting.cacheTime`.
+   * - If `cachePolicy` is not a accept value, value of Cache-Control would be set as 'public, max-age=300'.
+   * - If `cachePolicy` is 'max-age' but `cacheSetting.cacheTime` is not a number, value of Cache-Control would be set as 'public, max-age=300' too.
+   */
+  cachePolicy: 'max-age' | 'no-store' | 'no-cache'
+  /** Seconds we want the cache to be set. */
+  cacheTime?: number
+  /** Seconds shared caches should keep the response, emitted as `s-maxage`. */
+  sharedCacheTime?: number
+  /** Seconds shared caches may serve stale content while revalidating. */
+  staleWhileRevalidate?: number
+}
 
 /**
  * Function for setting Cache-Control on pages.
  * This function only works on `getServerSideProps` of each pages.
- *
- * @param {Res} res - response of Nextjs `getServerSideProps`
- * @param {CacheSetting} cacheSetting - Setting of Cache Control
- * @param {PageUrl} pageUrl - The page url where the cache is set. This params is just for logging warning message if needed.
  */
 const setPageCache = (
-  res,
-  cacheSetting = { cachePolicy: 'no-store' },
-  pageUrl = undefined
-) => {
+  res: Res,
+  cacheSetting: CacheSetting = { cachePolicy: 'no-store' },
+  pageUrl: PageUrl = undefined
+): void => {
   if (IS_PREVIEW_MODE) {
     res.setHeader('Cache-Control', 'no-store')
     return
