@@ -1,5 +1,9 @@
+import type { Draft } from '../../type/draft-js'
 import { graphql } from '../__generated__/content'
 import { FetchTopicsDocument as fetchStoryTopics } from '../__generated__/story/graphql'
+import type { Photo, SlideshowImage } from '../fragments/photo'
+import type { TopicPost } from '../fragments/post'
+import type { Tag } from '../fragments/tag'
 
 type ManualOrderOfSlideshowImage = {
   id: string
@@ -10,8 +14,8 @@ export type Topic = {
   id: string
   slug: string
   name: string
-  brief: unknown
-  heroImage: unknown
+  brief: Draft
+  heroImage: Photo
   heroUrl: string
   sortOrder: number
   createdAt: string
@@ -20,11 +24,11 @@ export type Topic = {
   style: string
   postsCount: number
   featuredPostsCount: number
-  posts: unknown[]
-  tags: unknown[]
+  posts: TopicPost[]
+  tags: Tag[]
   og_description: string
-  og_image: unknown
-  slideshow_images: unknown[]
+  og_image: Photo
+  slideshow_images: SlideshowImage[]
   manualOrderOfSlideshowImages: ManualOrderOfSlideshowImage[]
   dfp: string
 }

@@ -1,14 +1,11 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-import { tag } from '../fragments/tag'
-
-const fetchTag = gql`
-  ${tag}
+const fetchTag = graphql(`
   query fetchTag($where: TagWhereUniqueInput!) {
     tag(where: $where) {
       ...tag
     }
   }
-`
+`)
 
 export { fetchTag }

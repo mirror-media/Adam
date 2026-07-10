@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
-import { fetchCategory } from '../../apollo/query/categroies'
+import { fetchCategory } from '../../apollo/query/categories'
 import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
 /**

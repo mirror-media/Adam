@@ -1,14 +1,11 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-import { partner } from '../fragments/partner'
-
-const fetchPartnerBySlug = gql`
-  ${partner}
+const fetchPartnerBySlug = graphql(`
   query fetchPartnerBySlug($slug: String) {
     partners(where: { slug: { equals: $slug }, public: { equals: true } }) {
       ...partner
     }
   }
-`
+`)
 
 export { fetchPartnerBySlug }

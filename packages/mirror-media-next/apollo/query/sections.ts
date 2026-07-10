@@ -1,23 +1,19 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-import { section, sectionWithCategory } from '../fragments/section'
-
-const fetchSection = gql`
-  ${section}
+const fetchSection = graphql(`
   query fetchSection($where: SectionWhereUniqueInput!) {
     section(where: $where) {
       ...section
     }
   }
-`
+`)
 
-const fetchSectionWithCategory = gql`
-  ${sectionWithCategory}
+const fetchSectionWithCategory = graphql(`
   query fetchSectionWithCategory($where: SectionWhereUniqueInput!) {
     section(where: $where) {
       ...sectionWithCategory
     }
   }
-`
+`)
 
 export { fetchSection, fetchSectionWithCategory }

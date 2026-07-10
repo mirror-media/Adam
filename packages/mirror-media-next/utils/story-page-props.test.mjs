@@ -145,7 +145,7 @@ const storyCodegenDocumentSource = readFileSync(
   'utf8'
 )
 const postFragmentSource = readFileSync(
-  join(currentDir, '../apollo/fragments/post.js'),
+  join(currentDir, '../apollo/fragments/post.ts'),
   'utf8'
 )
 const cacheSettingSource = readFileSync(
@@ -169,8 +169,9 @@ assert.match(
 )
 assert.match(postFragmentSource, /fragment relatedPost on Post/)
 assert.doesNotMatch(
-  postFragmentSource.match(/export const relatedPost = gql`[\s\S]*?`\n/)?.[0] ??
-    '',
+  postFragmentSource.match(
+    /export const relatedPost = graphql\(`[\s\S]*?`\)/
+  )?.[0] ?? '',
   /\.\.\.heroImage/
 )
 

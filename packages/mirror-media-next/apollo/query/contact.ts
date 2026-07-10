@@ -1,13 +1,11 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-import { contact } from '../fragments/contact'
-
-const fetchContact = gql`
-  ${contact}
+const fetchContact = graphql(`
   query fetchContact($where: ContactWhereUniqueInput!) {
     contact(where: $where) {
       ...contact
     }
   }
-`
+`)
+
 export { fetchContact }

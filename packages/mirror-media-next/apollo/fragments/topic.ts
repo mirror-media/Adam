@@ -1,9 +1,6 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-import { heroImage } from './photo'
-
-export const topic = gql`
-  ${heroImage}
+export const topic = graphql(`
   fragment topic on Topic {
     id
     slug
@@ -18,4 +15,4 @@ export const topic = gql`
     style
     createdAt
   }
-`
+`)

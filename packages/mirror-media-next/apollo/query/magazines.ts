@@ -1,9 +1,6 @@
-import { gql } from '@apollo/client'
+import { graphql } from '../__generated__/content'
 
-import { magazine } from '../fragments/magazine'
-
-const fetchSpecials = gql`
-  ${magazine}
+const fetchSpecials = graphql(`
   query fetchSpecials {
     magazines(
       where: { type: { equals: "special" }, state: { equals: "published" } }
@@ -12,10 +9,9 @@ const fetchSpecials = gql`
       ...magazine
     }
   }
-`
+`)
 
-const fetchWeeklys = gql`
-  ${magazine}
+const fetchWeeklys = graphql(`
   query fetchWeeklys {
     magazines(
       where: { type: { equals: "weekly" }, state: { equals: "published" } }
@@ -25,6 +21,6 @@ const fetchWeeklys = gql`
       ...magazine
     }
   }
-`
+`)
 
 export { fetchSpecials, fetchWeeklys }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
-import { fetchCategorySections } from '../../apollo/query/categroies'
+import { fetchCategorySections } from '../../apollo/query/categories'
 import { fetchPosts } from '../../apollo/query/posts'
 import {
   API_TIMEOUT,
