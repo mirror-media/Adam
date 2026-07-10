@@ -8,6 +8,8 @@ import {
   GCS_FUSE_STATIC_BUCKET,
 } from '../../config/index.mjs'
 
+import { monitorStaticJsonByUrl } from './static-json-monitor'
+
 type StaticJsonRequestConfig = number | AxiosRequestConfig
 type ErrorLikeWithMessage = {
   message?: unknown
@@ -100,6 +102,7 @@ export async function fetchStaticJsonOnServer<T>(
           })
         )
 
+        monitorStaticJsonByUrl(requestUrl, data)
         return { data: data as T }
       } catch (err) {
         const readLatency = (performance.now() - startTime).toFixed(2)
@@ -153,5 +156,6 @@ export async function fetchStaticJsonOnServer<T>(
     })
   )
 
+  monitorStaticJsonByUrl(requestUrl, res?.data)
   return { data: res?.data as T }
 }

@@ -6,6 +6,7 @@ import {
   GCP_PROJECT_ID,
   GCP_STACKDRIVER_LOG_NAME,
 } from '../../config/index.mjs'
+import { monitorLoggingRequestBody } from '../../utils/api/logging.schema'
 
 const loggingClient = new Logging({
   projectId: GCP_PROJECT_ID,
@@ -14,6 +15,7 @@ const loggingClient = new Logging({
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     res.send({ msg: 'Received.' })
+    monitorLoggingRequestBody('tracking', req.body)
     const query = req.body
     const log = loggingClient.log(GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
