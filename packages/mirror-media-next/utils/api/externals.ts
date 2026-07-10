@@ -1,33 +1,11 @@
 import client from '../../apollo/apollo-client'
 import { fetchExternals } from '../../apollo/query/externals'
 
-/**
- * @typedef {import('../../apollo/fragments/external').ListingExternal} ListingExternal
- */
-
-/**
- * @typedef {import('@apollo/client').ApolloQueryResult<{externals: ListingExternal[]}>} ExternalsQueryResult
- */
-
-/**
- * @callback FetchExternalsByPartnerSlug
- * @param {number} page
- * @param {number} renderPageSize
- * @param {string | string[]} [partnerSlug]
- * @returns {Promise<ExternalsQueryResult>}
- */
-
-/**
- * @callback FetchExternalsWhichPartnerIsNotShowOnIndex
- * @param {number} page
- * @param {number} renderPageSize
- * @returns {Promise<ExternalsQueryResult>}
- */
-
-/**
- * @type {FetchExternalsByPartnerSlug}
- */
-const fetchExternalsByPartnerSlug = (page, renderPageSize, partnerSlug) => {
+const fetchExternalsByPartnerSlug = (
+  page: number,
+  renderPageSize: number,
+  partnerSlug?: string | string[]
+) => {
   const partnerSlugForFetch = Array.isArray(partnerSlug)
     ? partnerSlug[0]
     : partnerSlug
@@ -45,10 +23,10 @@ const fetchExternalsByPartnerSlug = (page, renderPageSize, partnerSlug) => {
   })
 }
 
-/**
- * @type {FetchExternalsWhichPartnerIsNotShowOnIndex}
- */
-const fetchExternalsWhichPartnerIsNotShowOnIndex = (page, renderPageSize) => {
+const fetchExternalsWhichPartnerIsNotShowOnIndex = (
+  page: number,
+  renderPageSize: number
+) => {
   return client.query({
     query: fetchExternals,
     variables: {
@@ -62,6 +40,13 @@ const fetchExternalsWhichPartnerIsNotShowOnIndex = (page, renderPageSize) => {
     },
   })
 }
+
+export type FetchExternalsByPartnerSlug = typeof fetchExternalsByPartnerSlug
+export type FetchExternalsWhichPartnerIsNotShowOnIndex =
+  typeof fetchExternalsWhichPartnerIsNotShowOnIndex
+export type ExternalsQueryResult = Awaited<
+  ReturnType<FetchExternalsByPartnerSlug>
+>
 
 export {
   fetchExternalsByPartnerSlug,

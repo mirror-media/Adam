@@ -1,3 +1,5 @@
+import type { ApolloQueryResult } from '@apollo/client'
+import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
@@ -7,11 +9,10 @@ import {
   URL_STATIC_DAILY_COLUMN_HEADLINES,
 } from '../../config/index.mjs'
 
-/**
- * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
- * @returns {Promise<import('axios').AxiosResponse<any> | import('@apollo/client').ApolloQueryResult<any>>}
- */
-export async function fetchForumHeadlines() {
+// Fetch forum headlines data from JSON URL, fallback to GQL API if JSON fails.
+export async function fetchForumHeadlines(): Promise<
+  AxiosResponse<unknown> | ApolloQueryResult<unknown>
+> {
   try {
     const jsonRes = await axios({
       method: 'get',

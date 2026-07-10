@@ -2,12 +2,11 @@ import client from '../../apollo/apollo-client'
 import { fetchContact } from '../../apollo/query/contact'
 import { fetchPosts } from '../../apollo/query/posts'
 
-/**
- * @param {string} authorId
- * @param {number} take
- * @param {number} skip
- */
-export function fetchPostsByAuthorId(authorId, take, skip) {
+export function fetchPostsByAuthorId(
+  authorId: string,
+  take: number,
+  skip: number
+) {
   return client.query({
     query: fetchPosts,
     variables: {
@@ -25,7 +24,7 @@ export function fetchPostsByAuthorId(authorId, take, skip) {
   })
 }
 
-export function fetchAuthorByAuthorId(authorId) {
+export function fetchAuthorByAuthorId(authorId: string) {
   return client.query({
     query: fetchContact,
     variables: {

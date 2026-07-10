@@ -4,12 +4,10 @@ import client from '../../apollo/apollo-client'
 import { fetchCategory } from '../../apollo/query/categories'
 import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
-/**
- * @param {string} playlistId - youtube playlist id
- * @param {string} nextToken - youtube next page token to fetch more playlist item
- * @returns
- */
-export function fetchYoutubePlaylistByPlaylistId(playlistId, nextToken = '') {
+export function fetchYoutubePlaylistByPlaylistId(
+  playlistId: string,
+  nextToken = ''
+) {
   return axios({
     method: 'get',
     url: `${WEEKLY_API_SERVER_YOUTUBE_ENDPOINT}/playlistItems`,
@@ -24,7 +22,7 @@ export function fetchYoutubePlaylistByPlaylistId(playlistId, nextToken = '') {
   })
 }
 
-export function fetchVideoCategory(videoCategorySlug) {
+export function fetchVideoCategory(videoCategorySlug: string) {
   return client.query({
     query: fetchCategory,
     variables: {

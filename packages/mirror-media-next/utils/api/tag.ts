@@ -2,13 +2,12 @@ import client from '../../apollo/apollo-client'
 import { fetchPosts } from '../../apollo/query/posts'
 import { fetchTag } from '../../apollo/query/tags'
 
-/**
- * Fetch posts by tag slug, including both manual tags and algorithm tags
- * @param {string} tagSlug
- * @param {number} take
- * @param {number} skip
- */
-export function fetchPostsByTagSlug(tagSlug, take, skip) {
+// Fetch posts by tag slug, including both manual tags and algorithm tags.
+export function fetchPostsByTagSlug(
+  tagSlug: string,
+  take: number,
+  skip: number
+) {
   return client.query({
     query: fetchPosts,
     variables: {
@@ -26,10 +25,7 @@ export function fetchPostsByTagSlug(tagSlug, take, skip) {
   })
 }
 
-/**
- * @param {string} tagSlug
- */
-export function fetchTagByTagSlug(tagSlug) {
+export function fetchTagByTagSlug(tagSlug: string) {
   return client.query({
     query: fetchTag,
     variables: {

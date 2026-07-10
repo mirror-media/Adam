@@ -2,13 +2,14 @@ import client from '../../apollo/apollo-client'
 import { fetchPosts } from '../../apollo/query/posts'
 import { fetchSection } from '../../apollo/query/sections'
 
-/**
- * @param {string} sectionSlug
- * @param {number} take
- * @param {number} skip
- * @param {Record<string, any>} [filterRules]
- */
-export function fetchPostsBySectionSlug(sectionSlug, take, skip, filterRules) {
+type FilterRules = Record<string, unknown>
+
+export function fetchPostsBySectionSlug(
+  sectionSlug: string,
+  take: number,
+  skip: number,
+  filterRules?: FilterRules
+) {
   return client.query({
     query: fetchPosts,
     variables: {
@@ -24,10 +25,7 @@ export function fetchPostsBySectionSlug(sectionSlug, take, skip, filterRules) {
   })
 }
 
-/**
- * @param {string} sectionSlug
- */
-export function fetchSectionBySectionSlug(sectionSlug) {
+export function fetchSectionBySectionSlug(sectionSlug: string) {
   return client.query({
     query: fetchSection,
     variables: {

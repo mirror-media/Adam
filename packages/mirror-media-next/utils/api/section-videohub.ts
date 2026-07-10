@@ -4,9 +4,6 @@ import client from '../../apollo/apollo-client'
 import { fetchSectionWithCategory } from '../../apollo/query/sections'
 import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
-/**
- * fetch latest 50 videos in Mirror Media channel
- */
 export function fetchYoutubeLatestVideos() {
   return axios({
     method: 'get',
@@ -21,11 +18,7 @@ export function fetchYoutubeLatestVideos() {
   })
 }
 
-/**
- * fetch youtube videos' statistics info
- * @param {string} ids
- */
-export function fetchYoutubeVideosWithStatistics(ids) {
+export function fetchYoutubeVideosWithStatistics(ids: string) {
   return axios({
     method: 'get',
     url: `${WEEKLY_API_SERVER_YOUTUBE_ENDPOINT}/videos`,
@@ -38,9 +31,6 @@ export function fetchYoutubeVideosWithStatistics(ids) {
   })
 }
 
-/**
- * fetch section data for videohub
- */
 export function fetchVideohubSection() {
   return client.query({
     query: fetchSectionWithCategory,
@@ -52,7 +42,7 @@ export function fetchVideohubSection() {
   })
 }
 
-export function fetchYoutubePlaylistByChannelId(channelId) {
+export function fetchYoutubePlaylistByChannelId(channelId: string) {
   return axios({
     method: 'get',
     url: `${WEEKLY_API_SERVER_YOUTUBE_ENDPOINT}/playlistItems`,

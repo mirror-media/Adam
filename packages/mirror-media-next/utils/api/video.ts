@@ -2,10 +2,7 @@ import axios from 'axios'
 
 import { WEEKLY_API_SERVER_YOUTUBE_ENDPOINT } from '../../config/index.mjs'
 
-/**
- * @param {string} videoId - youtube video id
- */
-export function fetchYoutubeVideoByVideoId(videoId) {
+export function fetchYoutubeVideoByVideoId(videoId: string) {
   return axios({
     method: 'get',
     url: `${WEEKLY_API_SERVER_YOUTUBE_ENDPOINT}/videos`,
@@ -19,10 +16,7 @@ export function fetchYoutubeVideoByVideoId(videoId) {
   })
 }
 
-/**
- * @param {string} channelId - youtube channel id
- */
-export function fetchYoutubeLatestVideosByChannelId(channelId) {
+export function fetchYoutubeLatestVideosByChannelId(channelId: string) {
   return axios({
     method: 'get',
     url: `${WEEKLY_API_SERVER_YOUTUBE_ENDPOINT}/search`,

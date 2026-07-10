@@ -2,6 +2,7 @@
  * These functions should be used on server-side only
  */
 
+import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 import Redis from 'ioredis'
 import { z } from 'zod'
@@ -34,59 +35,65 @@ const searchQuerySchema = z.object({
   take: z.number().int().min(1).optional().default(SEARCH_NUM),
 })
 
-/**
- * @typedef {Object} StructData
- * @property {string[]} [author]
- * @property {string[]} [datePublished]
- * @property {string[]} [dateModified]
- * @property {string[]} [page-type]
- * @property {string[]} [page-slug]
- * @property {string[]} [page-image]
- * @property {string[]} [section-slug]
- * @property {string[]} [section-name]
- * @property {string[]} [article-description]
- */
+export type StructData = {
+  author?: string[]
+  datePublished?: string[]
+  dateModified?: string[]
+  'page-type'?: string[]
+  'page-slug'?: string[]
+  'page-image'?: string[]
+  'section-slug'?: string[]
+  'section-name'?: string[]
+  'article-description'?: string[]
+}
 
-/**
- * @typedef {Object} DerivedStructData
- * @property {string} title
- * @property {string} link
- * @property {string} displayLink
- * @property {string} htmlTitle
- */
+export type DerivedStructData = {
+  title: string
+  link: string
+  displayLink: string
+  htmlTitle: string
+}
 
-/**
- * @typedef {Object} Document
- * @property {string} id
- * @property {StructData} [structData]
- * @property {DerivedStructData} [derivedStructData]
- */
+export type Document = {
+  id: string
+  structData?: StructData
+  derivedStructData?: DerivedStructData
+}
 
-/**
- * @typedef {Object} Item
- * @property {string} id
- * @property {Document} document
- */
+type Item = {
+  id: string
+  document: Document
+}
 
-/**
- * @typedef {Object} SearchResult
- * @property {Item[]} results
- * @property {number} totalSize
- * @property {string} [nextPageToken]
- */
+type SearchResult = {
+  results: Item[]
+  totalSize: number
+  nextPageToken?: string
+}
 
-/**
- * @typedef {Object} Result
- * @property {boolean} success
- * @property {number} code
- * @property {Document[] | string} data
- */
+type Result = {
+  success: boolean
+  code: number
+  data: Document[] | string
+}
 
-/**
- * @param {z.infer<typeof searchQuerySchema>} opts
- * @returns {Promise<Result>}
- */
-export async function getSearchResult(opts) {
+type SearchQuery = z.infer<typeof searchQuerySchema>
+
+const getErrorMessage = (error: unknown): string => {
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return String(error.message)
+  }
+  return String(error)
+}
+
+const getErrorStack = (error: unknown): unknown => {
+  if (typeof error === 'object' && error !== null && 'stack' in error) {
+    return error.stack
+  }
+  return undefined
+}
+
+export async function getSearchResult(opts: SearchQuery): Promise<Result> {
   const { success, data, error } = searchQuerySchema.safeParse(opts)
 
   if (!success) {
@@ -112,7 +119,6 @@ export async function getSearchResult(opts) {
   const prefix = 'VERTEX_AI_SEARCH'
   const redisKey = `${prefix}_${query}`
 
-  /** @type {Document[]} */
   let documents = []
   let documentCount = documents.length
 
@@ -128,8 +134,7 @@ export async function getSearchResult(opts) {
     documents = JSON.parse(searchResultFromCache)
     documentCount = documents.length
   } else {
-    /** @type {string | undefined} */
-    let nextPageToken
+    let nextPageToken: string | undefined
     do {
       try {
         /** @see https://cloud.google.com/generative-ai-app-builder/docs/reference/rest/v1/projects.locations.collections.engines.servingConfigs/searchLite */
@@ -139,12 +144,13 @@ export async function getSearchResult(opts) {
           pageToken: nextPageToken,
         }
 
-        /**
-         * @type {import('axios').AxiosResponse<SearchResult>}
-         */
-        const response = await axios.post(URL_SEARCH, requestBody, {
-          timeout: API_TIMEOUT,
-        })
+        const response: AxiosResponse<SearchResult> = await axios.post(
+          URL_SEARCH,
+          requestBody,
+          {
+            timeout: API_TIMEOUT,
+          }
+        )
 
         const resData = response.data
         nextPageToken = resData.nextPageToken
@@ -155,9 +161,9 @@ export async function getSearchResult(opts) {
         console.log(
           JSON.stringify({
             severity: 'ERROR',
-            message: error.message,
+            message: getErrorMessage(error),
             debugPayload: {
-              stack: error.stack,
+              stack: getErrorStack(error),
             },
           })
         )
@@ -198,8 +204,12 @@ export async function getSearchResult(opts) {
       })
 
       documents.sort((a, b) => {
-        const dateA = new Date(a.structData?.datePublished?.[0] ?? null)
-        const dateB = new Date(b.structData?.datePublished?.[0] ?? null)
+        const dateA = new Date(
+          (a.structData?.datePublished?.[0] ?? null) as unknown as string
+        )
+        const dateB = new Date(
+          (b.structData?.datePublished?.[0] ?? null) as unknown as string
+        )
         return dateB.valueOf() - dateA.valueOf()
       })
     }
@@ -212,8 +222,7 @@ export async function getSearchResult(opts) {
     )
   }
 
-  /** @type {Document[]} */
-  let result = []
+  let result: Document[] = []
 
   if (documents.length > 0) {
     const { skip, take } = data

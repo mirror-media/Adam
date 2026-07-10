@@ -1,14 +1,15 @@
+import type { ApolloQueryResult } from '@apollo/client'
+import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
 import { fetchPromoteVideos } from '../../apollo/query/promote-videos'
 import { API_TIMEOUT, URL_STATIC_PROMOTE_VIDEOS } from '../../config/index.mjs'
 
-/**
- * Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
- * @returns {Promise<import('axios').AxiosResponse<any> | import('@apollo/client').ApolloQueryResult<any>>}
- */
-export async function fetchPromoteVideosList() {
+// Fetch promote videos data from JSON URL, fallback to GQL API if JSON fails.
+export async function fetchPromoteVideosList(): Promise<
+  AxiosResponse<unknown> | ApolloQueryResult<unknown>
+> {
   try {
     const jsonRes = await axios({
       method: 'get',

@@ -1,12 +1,11 @@
 import client from '../../apollo/apollo-client'
 import { fetchTopic } from '../../apollo/query/topics'
 
-/**
- * @param {string} topicSlug
- * @param {number} postsTake
- * @param {number} postsSkip
- */
-export function fetchTopicByTopicSlug(topicSlug, postsTake, postsSkip) {
+export function fetchTopicByTopicSlug(
+  topicSlug: string,
+  postsTake: number,
+  postsSkip: number
+) {
   return client.query({
     query: fetchTopic,
     variables: {

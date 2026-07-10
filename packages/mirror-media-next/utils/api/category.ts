@@ -1,3 +1,4 @@
+import type { AxiosResponse } from 'axios'
 import axios from 'axios'
 
 import client from '../../apollo/apollo-client'
@@ -9,7 +10,30 @@ import {
   URL_STATIC_NEWS_CATEGORY_POSTS,
 } from '../../config/index.mjs'
 
-export function fetchPostsByCategorySlug(categorySlug, take, skip) {
+type NewsCategoryPostsJsonResponse = {
+  posts: {
+    items: unknown[]
+    counts: {
+      posts: number
+      externals: number
+    }
+  }
+}
+
+type NewsCategoryPostsResponse = {
+  data: {
+    posts: {
+      items: unknown[]
+      counts: number
+    }
+  }
+}
+
+export function fetchPostsByCategorySlug(
+  categorySlug: string,
+  take: number,
+  skip: number
+) {
   return client.query({
     query: fetchPosts,
     variables: {
@@ -24,7 +48,9 @@ export function fetchPostsByCategorySlug(categorySlug, take, skip) {
   })
 }
 
-export async function fetchNewsCategoryInfo() {
+export async function fetchNewsCategoryInfo(): Promise<
+  AxiosResponse<unknown> | undefined
+> {
   try {
     const response = await axios({
       method: 'get',
@@ -37,14 +63,17 @@ export async function fetchNewsCategoryInfo() {
   }
 }
 
-export async function fetchNewsCategoryPostsJSON(page = 1, take = 24) {
+export async function fetchNewsCategoryPostsJSON(
+  page = 1,
+  take = 24
+): Promise<NewsCategoryPostsResponse> {
   const POSTS_PER_JSON = 120
   const TAKE_PER_JSON = POSTS_PER_JSON / take
   const jsonFileOrder = Math.ceil(page / TAKE_PER_JSON)
   const jsonUrl = `${URL_STATIC_NEWS_CATEGORY_POSTS}_${jsonFileOrder}.json`
 
   try {
-    const response = await axios({
+    const response = await axios<NewsCategoryPostsJsonResponse>({
       method: 'get',
       url: jsonUrl,
       timeout: API_TIMEOUT,
@@ -74,7 +103,11 @@ export async function fetchNewsCategoryPostsJSON(page = 1, take = 24) {
   }
 }
 
-export function fetchPremiumPostsByCategorySlug(categorySlug, take, skip) {
+export function fetchPremiumPostsByCategorySlug(
+  categorySlug: string,
+  take: number,
+  skip: number
+) {
   return client.query({
     query: fetchPosts,
     variables: {
@@ -90,7 +123,7 @@ export function fetchPremiumPostsByCategorySlug(categorySlug, take, skip) {
   })
 }
 
-export function fetchCategoryByCategorySlug(categorySlug) {
+export function fetchCategoryByCategorySlug(categorySlug: string) {
   return client.query({
     query: fetchCategorySections,
     variables: {
