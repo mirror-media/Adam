@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import Cors from 'cors'
 import { JWT } from 'google-auth-library'
 import { GoogleSpreadsheet } from 'google-spreadsheet'
@@ -8,29 +9,23 @@ import {
 } from '../../config/index.mjs'
 import { runMiddleware } from '../../utils/api-route'
 
-/**
- * @typedef {import("next").NextApiRequest} NextApiRequest
- * @typedef {import("next").NextApiResponse} NextApiResponse
- *
- * @typedef {Object} ErrorWithStatus
- * @property {string} message - error message
- * @property {number} status - http status
- *
- * @typedef {Object} GooglSheetParam
- * @property {string} id - google sheet id
- * @property {string} title - google sheet title
- * @property {Object} row - google sheet row, different structure on different sheet
- */
+type ErrorWithStatus = {
+  message: string
+  status: number
+}
 
-/**
- *
- * @param {string} message - error message
- * @param {number} status - http status
- * @returns {ErrorWithStatus}
- */
-function errorWithStatus(message, status) {
+type GoogleSheetParam = {
+  id: string
+  title: string
+  row: Parameters<GoogleSpreadsheet['sheetsByTitle'][string]['addRow']>[0]
+}
+
+type GoogleSheetRequestBody = {
+  googleSheet?: GoogleSheetParam
+}
+
+function errorWithStatus(message: string, status: number): ErrorWithStatus {
   const error = new Error(message)
-  /** @type {ErrorWithStatus} */
   const customError = {
     message: error.message,
     status,
@@ -44,11 +39,7 @@ const cors = Cors({
   methods: ['POST'],
 })
 
-/**
- * @param {GooglSheetParam} googleSheet
- * @throws {ErrorWithStatus}
- */
-async function addRowToGoogleSheet(googleSheet) {
+async function addRowToGoogleSheet(googleSheet?: GoogleSheetParam) {
   try {
     if (!googleSheet) {
       throw new Error('without google sheet param')
@@ -72,23 +63,25 @@ async function addRowToGoogleSheet(googleSheet) {
 
     const doc = new GoogleSpreadsheet(id, serviceAccountAuth)
     await doc.loadInfo()
-    let sheet = doc.sheetsByTitle[title]
+    const sheet = doc.sheetsByTitle[title]
     await sheet.addRow(row)
   } catch (e) {
-    if (e.message.startsWith('without')) {
-      throw errorWithStatus(e.message, 400)
+    const error = e as Error
+    if (error.message.startsWith('without')) {
+      throw errorWithStatus(error.message, 400)
     }
-    throw errorWithStatus(e.message, 500)
+    throw errorWithStatus(error.message, 500)
   }
 }
 
 /**
  * google sheet api to add row to specific google spreadsheet
  * To balance security and experience of development, allow cors in dev and local environment.
- * @param {NextApiRequest} req
- * @param {NextApiResponse} res
  */
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== 'POST') {
     res
       .status(405)
@@ -98,7 +91,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { googleSheet } = req.body
+    const { googleSheet } = req.body as GoogleSheetRequestBody
 
     if (
       process.env.NEXT_PUBLIC_ENV === 'dev' ||
@@ -121,16 +114,17 @@ export default async function handler(req, res) {
       status: 'success',
     })
   } catch (e) {
+    const error = e as Partial<ErrorWithStatus>
     const wrappedMessage =
-      '[ERROR] Adding row to google sheet failed: ' + e.message
+      '[ERROR] Adding row to google sheet failed: ' + error.message
     console.log(
       JSON.stringify({
         severity: 'ERROR',
         message: wrappedMessage,
       })
     )
-    if (e.status) {
-      res.status(e.status).send({
+    if (error.status) {
+      res.status(error.status).send({
         error: wrappedMessage,
       })
     } else {

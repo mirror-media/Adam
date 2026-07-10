@@ -28,9 +28,9 @@ import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import { generateJsonLdsData } from '../../../components/story/shared/json-lds-data'
 import JsonLdsScript from '../../../components/story/shared/json-lds-script'
 import { getAmpGptDataSlotSection } from '../../../utils/ad'
+import { getRelatedStories } from '../../../utils/api/recommendation'
 import { toTaipeiISOString } from '../../../utils/index'
 import { logGqlError } from '../../../utils/log/shared'
-import { getRelatedStories } from '../../api/recomemd'
 
 export const config = { amp: true }
 

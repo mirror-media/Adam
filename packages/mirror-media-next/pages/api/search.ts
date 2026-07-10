@@ -1,12 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { z } from 'zod'
 
 import { getSearchResult } from '../../utils/api/search'
 
-/**
- * @param {string | undefined} val
- * @returns {number | undefined}
- */
-const transformFunc = (val) => {
+const transformFunc = (val: string | undefined): number | undefined => {
   if (typeof val === 'string') {
     return Number(val)
   } else {
@@ -20,12 +17,10 @@ const querySchema = z.object({
   take: z.string().optional().transform(transformFunc),
 })
 
-/**
- *
- * @param {import("next").NextApiRequest} req
- * @param {import("next").NextApiResponse} res
- */
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== 'GET') {
     return res.status(400).json({
       success: false,

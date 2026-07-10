@@ -50,8 +50,8 @@ import Image from 'next/image'
 import axios from 'axios'
 
 import Skeleton from '../../public/images-next/skeleton.png'
+import { getRelatedStories } from '../../utils/api/recommendation'
 import { processSettledResult } from '../../utils/response-processor'
-import { getRelatedStories } from '../api/recomemd'
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
 })

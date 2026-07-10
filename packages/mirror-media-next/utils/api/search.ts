@@ -77,7 +77,7 @@ type Result = {
   data: Document[] | string
 }
 
-type SearchQuery = z.infer<typeof searchQuerySchema>
+type SearchQuery = z.input<typeof searchQuerySchema>
 
 const getErrorMessage = (error: unknown): string => {
   if (typeof error === 'object' && error !== null && 'message' in error) {

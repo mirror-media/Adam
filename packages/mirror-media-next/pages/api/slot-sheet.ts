@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { google } from 'googleapis'
 
 import {
@@ -7,7 +8,19 @@ import {
   GOOGLE_SHEETS_PRIVATE_KEY,
 } from '../../config/index.mjs'
 
-function getHasPlayed(sheetData, userFirebaseId) {
+type SlotSheetBody = {
+  userEmail?: string
+  dispatch?: string
+  prize?: string
+  userFirebaseId?: string
+}
+
+type WinningProbabilities = {
+  prize100?: number
+  prize50?: number
+}
+
+function getHasPlayed(sheetData: string[][], userFirebaseId?: string) {
   const today = new Date().toLocaleDateString('zh-TW', {
     timeZone: 'Asia/Taipei',
     year: 'numeric',
@@ -26,7 +39,7 @@ function getHasPlayed(sheetData, userFirebaseId) {
   return false
 }
 
-function calculateWinningProbabilities(inputArray) {
+function calculateWinningProbabilities(inputArray: string[]) {
   // eslint-disable-next-line
   const [_, __, ___, total100, total50, ____, _____, prob100, prob50] =
     inputArray
@@ -34,7 +47,7 @@ function calculateWinningProbabilities(inputArray) {
   const total100Participants = parseInt(total100)
   const total50Participants = parseInt(total50)
 
-  const probabilities = {}
+  const probabilities: WinningProbabilities = {}
 
   // 100 元機率
   if (total100Participants < 100) {
@@ -53,9 +66,13 @@ function calculateWinningProbabilities(inputArray) {
   return probabilities
 }
 
-export default async function handler(req, res) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   res.setHeader('Content-Type', 'text/plain')
-  const { userEmail, dispatch, prize, userFirebaseId } = req.body
+  const { userEmail, dispatch, prize, userFirebaseId } =
+    req.body as SlotSheetBody
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: GOOGLE_SHEETS_CLIENT_EMAIL,
@@ -85,7 +102,7 @@ export default async function handler(req, res) {
         second: '2-digit',
       })
 
-      const dataToAppend = [
+      const dataToAppend: (string | undefined)[][] = [
         [
           now,
           userEmail,
@@ -128,8 +145,9 @@ export default async function handler(req, res) {
       if (!values) {
         throw new Error('cannot fetch google sheets')
       }
+      const sheetValues = values as string[][]
       // 判斷使用者今日是否玩過
-      const hasPlayed = getHasPlayed(values, userFirebaseId)
+      const hasPlayed = getHasPlayed(sheetValues, userFirebaseId)
       if (hasPlayed) {
         res.send({
           status: 'success',
@@ -140,7 +158,7 @@ export default async function handler(req, res) {
       }
 
       // 判斷中獎機率
-      const probabilities = calculateWinningProbabilities(values[0])
+      const probabilities = calculateWinningProbabilities(sheetValues[0])
       res.send({
         status: 'success',
         data: { hasPlayed: false, probabilities },

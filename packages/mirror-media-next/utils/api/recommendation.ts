@@ -1,23 +1,13 @@
 import { MISO_ENDPOINTS } from '../../config/index.mjs'
+import type { RelatedStoriesResponse } from '../../type/miso'
 import { buildMisoUrl, formatStoryId, misoFetch } from '../../utils/miso'
 
-/**
- * @typedef {import('../../type/miso').RelatedStoriesResponse} RelatedStoriesResponse
- */
-
-/**
- * @param {string} storySlug
- * @param {string[]} filterIds
- * @param {number} takeCount
- * @param {string} storyType
- * @returns {Promise<any>}
- */
 export async function getRelatedStories(
-  storySlug,
-  filterIds,
+  storySlug: string,
+  filterIds: string[],
   takeCount = 4,
-  storyType
-) {
+  storyType: string
+): Promise<RelatedStoriesResponse | []> {
   const url = buildMisoUrl(MISO_ENDPOINTS.relatedStories)
 
   // NOTE: miso ai use mesh_story prefix to search so ensure the story id is in right format.

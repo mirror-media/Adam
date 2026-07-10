@@ -21,9 +21,9 @@ import {
   STORY_GQL_ENDPOINT,
   URL_STATIC_POST_FLASH_NEWS,
 } from '../../config/index.mjs'
-import { getRelatedStories } from '../../pages/api/recomemd'
 import { getLogTraceObject } from '../../utils'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getRelatedStories } from '../../utils/api/recommendation'
 import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { toTaipeiISOString } from '../../utils/index'
