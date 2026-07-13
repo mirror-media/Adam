@@ -4,7 +4,6 @@ import NewebPay from '@mirrormedia/newebpay-node'
 import errors from '@twreporter/errors'
 
 import type {
-  CreateNewebpayTradeInfoForMagazineOrderInput,
   FetchPaymentDataOfPapermagMutation,
   FetchPaymentDataOfPapermagMutationVariables,
 } from '../../apollo/__generated__/member/graphql'
@@ -18,9 +17,12 @@ import {
 } from '../../config/index.mjs'
 import { PLAN_LIST } from '../../constants/papermag'
 
-type TradeInfo = CreateNewebpayTradeInfoForMagazineOrderInput & {
-  data: {
-    Amt?: number
+type PapermagTradeInfoInput =
+  FetchPaymentDataOfPapermagMutationVariables['data']
+
+type TradeInfo = FetchPaymentDataOfPapermagMutationVariables & {
+  data: PapermagTradeInfoInput & {
+    Amt?: unknown
     merchandise: {
       connect: {
         code: string
@@ -76,21 +78,25 @@ async function fireGqlRequest(
 }
 
 async function getPaymentDataOfMagazineOrders(
-  gateWayPayload: TradeInfo
+  variables: FetchPaymentDataOfPapermagMutationVariables
 ): Promise<PaymentDataOfMagazineOrders> {
-  const { data = {} } = await fireGqlRequest(
-    fetchPaymentDataOfPapermag,
-    gateWayPayload as unknown as FetchPaymentDataOfPapermagMutationVariables
-  )
-  const paymentData = data as PaymentDataOfMagazineOrders
-  paymentData.createNewebpayTradeInfoForMagazineOrder.ReturnURL =
-    ENV === 'local'
-      ? `http://localhost:3000/papermag/return`
-      : `https://${SITE_URL}/papermag/return`
-  paymentData.createNewebpayTradeInfoForMagazineOrder.CREDIT = 1
-  paymentData.createNewebpayTradeInfoForMagazineOrder.Version = '2.2'
+  const { data } = await fireGqlRequest(fetchPaymentDataOfPapermag, variables)
+  const tradeInfo = data?.createNewebpayTradeInfoForMagazineOrder
+  if (!tradeInfo) {
+    throw new Error('Failed to create NewebPay trade info')
+  }
 
-  return paymentData
+  return {
+    createNewebpayTradeInfoForMagazineOrder: {
+      ...tradeInfo,
+      ReturnURL:
+        ENV === 'local'
+          ? `http://localhost:3000/papermag/return`
+          : `https://${SITE_URL}/papermag/return`,
+      CREDIT: 1,
+      Version: '2.2',
+    },
+  }
 }
 
 export default async function EncryptInfo(
@@ -101,11 +107,20 @@ export default async function EncryptInfo(
   try {
     // 防止使用者自行修改 Amt 的值
     // 詳見：https://app.asana.com/1/614399484723017/project/1210077071799813/task/1210384428427743?focus=true
-    if (tradeInfo.data?.Amt) {
+    const hasInputAmt = Object.prototype.hasOwnProperty.call(
+      tradeInfo.data,
+      'Amt'
+    )
+    const paymentInput = { ...tradeInfo.data }
+    delete paymentInput.Amt
+    if (hasInputAmt) {
       throw new Error('Amt is not correct input')
     }
 
-    const data = await getPaymentDataOfMagazineOrders(tradeInfo)
+    const variables: FetchPaymentDataOfPapermagMutationVariables = {
+      data: paymentInput,
+    }
+    const data = await getPaymentDataOfMagazineOrders(variables)
     const infoForNewebpay = data.createNewebpayTradeInfoForMagazineOrder
 
     const itemCode = tradeInfo.data.merchandise.connect.code

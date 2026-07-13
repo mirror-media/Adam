@@ -30,6 +30,31 @@ const headersDataCategorySchema = z
   })
   .passthrough()
 
+const premiumSectionCategorySchema = z
+  .object({
+    id: z.string(),
+    slug: z.string(),
+    name: z.string(),
+  })
+  .passthrough()
+
+const premiumSectionSchema = z
+  .object({
+    id: z.string(),
+    slug: z.string(),
+    name: z.string(),
+    categories: z.array(premiumSectionCategorySchema),
+  })
+  .passthrough()
+
+const topicSchema = z
+  .object({
+    id: z.string(),
+    slug: z.string(),
+    name: z.string(),
+  })
+  .passthrough()
+
 const headersDataSchema = z.array(
   z.discriminatedUnion('type', [
     headersDataSectionSchema,
@@ -39,18 +64,18 @@ const headersDataSchema = z.array(
 
 export const headersStaticJsonSchema = z
   .object({
-    headers: headersDataSchema.optional(),
+    headers: headersDataSchema,
   })
   .passthrough()
 
 export const premiumSectionsStaticJsonSchema = z
   .object({
-    sections: headersDataSchema.optional(),
+    sections: z.array(premiumSectionSchema),
   })
   .passthrough()
 
 export const topicsStaticJsonSchema = z
   .object({
-    topics: z.array(z.record(z.unknown())).optional(),
+    topics: z.array(topicSchema),
   })
   .passthrough()

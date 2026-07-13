@@ -1,6 +1,8 @@
+import type { ApolloQueryResult } from '@apollo/client'
 import errors from '@twreporter/errors'
 import type { AxiosRequestConfig } from 'axios'
 
+import type { FetchAnnouncementsQuery } from '../../apollo/__generated__/content/graphql'
 import client from '../../apollo/apollo-client.js'
 import { fetchAnnouncements } from '../../apollo/query/announcements'
 import type { Topic } from '../../apollo/query/topics'
@@ -72,6 +74,8 @@ export type ColumnSectionResponse = {
 }
 
 export type HeadersData = (HeadersDataSection | HeadersDataCategory)[]
+
+export type AnnouncementQueryResult = ApolloQueryResult<FetchAnnouncementsQuery>
 
 type HeadersStaticJsonResponse = {
   headers?: HeadersData
