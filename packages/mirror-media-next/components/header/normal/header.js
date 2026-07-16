@@ -265,7 +265,8 @@ const formatSectionItem = (section) => {
       function getCategoryHref(categorySlug) {
         if (categorySlug === 'magazine') {
           return '/magazine/'
-        } else if (categorySlug === 'daily_forum') {
+        }
+        if (categorySlug === 'daily_forum') {
           return '/externals/dailycolumn'
         }
         return `/category/${categorySlug}`
