@@ -158,7 +158,11 @@ export default async function handler(
       }
 
       // 判斷中獎機率
-      const probabilities = calculateWinningProbabilities(sheetValues[0])
+      const probabilitySettings = sheetValues[0]
+      if (!probabilitySettings) {
+        throw new Error('cannot fetch winning probability settings')
+      }
+      const probabilities = calculateWinningProbabilities(probabilitySettings)
       res.send({
         status: 'success',
         data: { hasPlayed: false, probabilities },

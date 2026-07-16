@@ -204,12 +204,8 @@ export async function getSearchResult(opts: SearchQuery): Promise<Result> {
       })
 
       documents.sort((a, b) => {
-        const dateA = new Date(
-          (a.structData?.datePublished?.[0] ?? null) as unknown as string
-        )
-        const dateB = new Date(
-          (b.structData?.datePublished?.[0] ?? null) as unknown as string
-        )
+        const dateA = new Date(a.structData?.datePublished?.[0] ?? 0)
+        const dateB = new Date(b.structData?.datePublished?.[0] ?? 0)
         return dateB.valueOf() - dateA.valueOf()
       })
     }

@@ -24,6 +24,27 @@ type GoogleSheetRequestBody = {
   googleSheet?: GoogleSheetParam
 }
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message
+  }
+  if (typeof error === 'object' && error !== null && 'message' in error) {
+    return String(error.message)
+  }
+  return String(error)
+}
+
+function isErrorWithStatus(error: unknown): error is ErrorWithStatus {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string' &&
+    'status' in error &&
+    typeof error.status === 'number'
+  )
+}
+
 function errorWithStatus(message: string, status: number): ErrorWithStatus {
   const error = new Error(message)
   const customError = {
@@ -66,11 +87,11 @@ async function addRowToGoogleSheet(googleSheet?: GoogleSheetParam) {
     const sheet = doc.sheetsByTitle[title]
     await sheet.addRow(row)
   } catch (e) {
-    const error = e as Error
-    if (error.message.startsWith('without')) {
-      throw errorWithStatus(error.message, 400)
+    const message = getErrorMessage(e)
+    if (message.startsWith('without')) {
+      throw errorWithStatus(message, 400)
     }
-    throw errorWithStatus(error.message, 500)
+    throw errorWithStatus(message, 500)
   }
 }
 
@@ -114,23 +135,18 @@ export default async function handler(
       status: 'success',
     })
   } catch (e) {
-    const error = e as Partial<ErrorWithStatus>
+    const message = getErrorMessage(e)
+    const status = isErrorWithStatus(e) && e.status ? e.status : 500
     const wrappedMessage =
-      '[ERROR] Adding row to google sheet failed: ' + error.message
+      '[ERROR] Adding row to google sheet failed: ' + message
     console.log(
       JSON.stringify({
         severity: 'ERROR',
         message: wrappedMessage,
       })
     )
-    if (error.status) {
-      res.status(error.status).send({
-        error: wrappedMessage,
-      })
-    } else {
-      res.status(500).send({
-        error: wrappedMessage,
-      })
-    }
+    res.status(status).send({
+      error: wrappedMessage,
+    })
   }
 }
