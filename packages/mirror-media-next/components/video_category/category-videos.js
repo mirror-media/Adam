@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants'
 import LoadingPage from '../../public/images-next/loading_page.gif'
 import { fetchYoutubePlaylistByPlaylistId } from '../../utils/api/video-category'
-import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
+import { simplifyYoutubePlaylistVideo } from '../../utils/youtube'
 import InfiniteScrollList from '../infinite-scroll-list'
 
 import VideoList from './video-list.js'

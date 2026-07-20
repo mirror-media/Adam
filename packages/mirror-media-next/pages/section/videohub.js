@@ -13,7 +13,7 @@ import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getLogTraceObject } from '../../utils'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api/index.js'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import {
   fetchVideohubSection,
   fetchYoutubeLatestVideos,
@@ -27,7 +27,7 @@ import {
   simplifyYoutubePlaylistVideo,
   simplifyYoutubeSearchedVideo,
   simplifyYoutubeVideo,
-} from '../../utils/youtube.js'
+} from '../../utils/youtube'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

@@ -8,19 +8,19 @@ import Layout from '../../components/shared/layout.js'
 import LeadingVideo from '../../components/shared/leading-video.js'
 import CategoryVideos from '../../components/video_category/category-videos.js'
 import { ENV } from '../../config/index.mjs'
+import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants'
 import { Z_INDEX } from '../../constants/index'
-import { VIDEOHUB_CATEGORIES_PLAYLIST_MAPPING } from '../../constants/index.js'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api/index.js'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import {
   fetchVideoCategory,
   fetchYoutubePlaylistByPlaylistId,
-} from '../../utils/api/video-category.js'
-import { setPageCache } from '../../utils/cache-setting.js'
+} from '../../utils/api/video-category'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getLogTraceObject } from '../../utils/index.js'
-import { processSettledResult } from '../../utils/response-processor.js'
-import { simplifyYoutubePlaylistVideo } from '../../utils/youtube.js'
+import { processSettledResult } from '../../utils/response-processor'
+import { simplifyYoutubePlaylistVideo } from '../../utils/youtube'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

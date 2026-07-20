@@ -120,7 +120,7 @@ const ItemBrief = styled.div`
  *  title: string,
  *  publishedDate: string,
  *  brief: import('../../../type/draft-js').Draft,
- *  categroies: Category[],
+ *  categories: Category[],
  *  sections: Section[],
  *  heroImage: HeroImage,
  * }} Article

@@ -5,7 +5,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import client, { getStoryClient } from '../../apollo/apollo-client'
-import { fetchExternalBySlug } from '../../apollo/query/externals'
+import {
+  fetchExternalBySlug,
+  fetchStoryExternalBySlug,
+} from '../../apollo/query/externals'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import ExternalNormalStyle from '../../components/external/external-normal-style'
 import generateJsonLdsData from '../../components/external/shared/json-lds-data'
@@ -18,9 +21,9 @@ import {
   STORY_GQL_ENDPOINT,
   URL_STATIC_POST_FLASH_NEWS,
 } from '../../config/index.mjs'
-import { getRelatedStories } from '../../pages/api/recomemd'
 import { getLogTraceObject } from '../../utils'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getRelatedStories } from '../../utils/api/recommendation'
 import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { toTaipeiISOString } from '../../utils/index'
@@ -245,8 +248,7 @@ export async function getServerSideProps({ params, req, res }) {
 
   const fetchStaticJsonSafe = async (url, timeout) => {
     try {
-      const mod =
-        await import('../../utils/server-side-only/fetch-static-json.js')
+      const mod = await import('../../utils/server-side-only/fetch-static-json')
       const res = await mod.fetchStaticJsonOnServer(url, timeout)
       return res
     } catch (err) {
@@ -254,12 +256,15 @@ export async function getServerSideProps({ params, req, res }) {
     }
   }
 
-  const externalClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+  const storyEndpointClient = getStoryClient(STORY_GQL_ENDPOINT)
+  const externalClient = storyEndpointClient || client
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
     externalClient.query({
-      query: fetchExternalBySlug,
+      query: storyEndpointClient
+        ? fetchStoryExternalBySlug
+        : fetchExternalBySlug,
       variables: { slug },
     }),
     fetchStaticJsonSafe(URL_STATIC_POST_FLASH_NEWS, API_TIMEOUT, 'flash_news'),

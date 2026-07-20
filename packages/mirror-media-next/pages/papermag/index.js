@@ -4,10 +4,10 @@ import Notice from '../../components/papermag/notice'
 import PlanSection from '../../components/papermag/plan-selection'
 import Layout from '../../components/shared/layout'
 import Steps from '../../components/subscribe-steps'
-import { ANNOUCEMENT_SCOPE } from '../../constants/announcement'
+import { ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
 import { getLogTraceObject } from '../../utils'
 import {
-  fetchAnnoucementsByScope,
+  fetchAnnouncementsByScope,
   fetchHeaderDataInDefaultPageLayout,
 } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
@@ -130,7 +130,7 @@ export async function getServerSideProps({ req, res }) {
   // fetch header data and announcements
   const [headerResponse, announcementResponse] = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchAnnoucementsByScope([ANNOUCEMENT_SCOPE.PAPER_MAG]),
+    fetchAnnouncementsByScope([ANNOUNCEMENT_SCOPE.PAPER_MAG]),
   ])
 
   const [sectionsData, topicsData] = processSettledResult(
