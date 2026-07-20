@@ -220,19 +220,6 @@ const formatSectionItem = (section) => {
           ...section.categories,
         ],
       }
-    } else if (section.slug === 'life') {
-      return {
-        ...section,
-        categories: [
-          ...section.categories,
-          {
-            id: '306dac073da6dc1ddb4e34c228035915', //hash for ensure it is unique from other category, no other usage.
-            slug: 'warmlife',
-            name: '暖流',
-            isMemberOnly: false,
-          },
-        ],
-      }
     }
     return { ...section }
   }
@@ -268,20 +255,16 @@ const formatSectionItem = (section) => {
       return categories.map((category) => {
         return {
           ...category,
-          href: getCategoryHref(section.slug, category.slug),
+          href: getCategoryHref(category.slug),
         }
       })
       /**
-       * @param {HeadersDataSection['slug']} sectionSlug
        * @param {import('./nav-sections').CategoryInHeadersDataSection['slug']} categorySlug
        * @returns {string}
        */
-      function getCategoryHref(sectionSlug, categorySlug) {
+      function getCategoryHref(categorySlug) {
         if (categorySlug === 'magazine') {
           return '/magazine/'
-        }
-        if (sectionSlug === 'life' && categorySlug === 'warmlife') {
-          return '/externals/warmlife'
         }
         if (categorySlug === 'daily_forum') {
           return '/externals/dailycolumn'
