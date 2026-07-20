@@ -19,16 +19,25 @@ Run package commands:
 ```bash
 pnpm dev
 pnpm build
+pnpm start
 pnpm lint
+pnpm typecheck
+pnpm codegen:check
+pnpm check:no-new-js
+pnpm test:smoke
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+
+## 架構升級護欄
+
+- 本波架構升級以 Next.js 15 為終點，保留 Pages Router（頁面路由器）與 `/story/amp/[slug]`、`/external/amp/[slug]` 內建 AMP 路由。
+- 升級 Next.js 16 前，必須先決定 AMP 長期路線；Next.js 16 已移除內建 AMP API，並須重新評估 Turbopack（打包工具）與既有 webpack loader（載入器）的相容性。
+- `output: 'standalone'` 與 monorepo（單一儲存庫）輸出是 Docker 部署前提；任何框架升級都必須重跑 standalone（獨立輸出）與 Docker 雙 runtime（執行期）驗證。
+- TypeScript 採 `strict: true`、`allowJs: true` 漸進遷移。不得新增 application（應用程式）`.js`／`.jsx` 檔，請使用 `.ts`／`.tsx`。
+- Topic CMS（內容管理系統）可能提供動態 CSS；未來導入 Tailwind CSS 前，必須保留並回歸驗證既有 topic class names（類別名稱）與 cascade（層疊）行為。
 
 ## Learn More
 

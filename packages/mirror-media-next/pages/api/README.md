@@ -20,7 +20,7 @@
 用於將 log 寫入 [Google Cloud Logging]。(https://console.cloud.google.com/logs/)。
 目前僅用於寫入 user-behavior-log。
 
-該 API 會引入套件 `@google-cloud/logging`，而在 Google Cloud Run 部署的服務( [adam-mirror-media-next-dev](https://console.cloud.google.com/run/detail/asia-east1/adam-mirror-media-next-dev/metrics?project=mirrormedia-1470651750304), [adam-mirror-media-next-staging](https://console.cloud.google.com/run/detail/asia-east1/adam-mirror-media-next-staging/metrics?project=mirrormedia-1470651750304), [adam-mirror-media-next-prod](https://console.cloud.google.com/run/detail/asia-east1/adam-mirror-media-next-prod/metrics?project=mirrormedia-1470651750304) 等)，皆有使用一隻名為`mm-next`的 Google Service Account，該 service account 具有寫入 Logging 的權限，因此不需要於檔案 `tracking.js` 中設定相關權限。（ mirror-media-nuxt 則需要額外設定[`keyFilename`](https://github.com/mirror-media/mirror-media-nuxt/blob/b9949345c89dd09c4fc91e029393e363b94f5558/api/tracking.js#L7)）
+該 API 會引入套件 `@google-cloud/logging`，而在 Google Cloud Run 部署的服務( [adam-mirror-media-next-dev](https://console.cloud.google.com/run/detail/asia-east1/adam-mirror-media-next-dev/metrics?project=mirrormedia-1470651750304), [adam-mirror-media-next-staging](https://console.cloud.google.com/run/detail/asia-east1/adam-mirror-media-next-staging/metrics?project=mirrormedia-1470651750304), [adam-mirror-media-next-prod](https://console.cloud.google.com/run/detail/asia-east1/adam-mirror-media-next-prod/metrics?project=mirrormedia-1470651750304) 等)，皆有使用一隻名為`mm-next`的 Google Service Account，該 service account 具有寫入 Logging 的權限，因此不需要於檔案 `tracking.ts` 中設定相關權限。（ mirror-media-nuxt 則需要額外設定[`keyFilename`](https://github.com/mirror-media/mirror-media-nuxt/blob/b9949345c89dd09c4fc91e029393e363b94f5558/api/tracking.js#L7)）
 
 ### 如何在本地端開啟 Cloud Logging 寫入權限
 
