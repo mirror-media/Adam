@@ -79,7 +79,7 @@ switch (ENV) {
   case 'prod':
     SITE_URL = 'www.mirrormedia.mg'
     API_TIMEOUT = 1500
-    API_TIMEOUT_GRAPHQL = 4000
+    API_TIMEOUT_GRAPHQL = 8000
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
     PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-prod-ufaummkd5q-de.a.run.app'
@@ -147,7 +147,7 @@ switch (ENV) {
   case 'staging':
     SITE_URL = 'staging.mirrormedia.mg'
     API_TIMEOUT = 1500
-    API_TIMEOUT_GRAPHQL = 4000
+    API_TIMEOUT_GRAPHQL = 8000
 
     WEEKLY_API_SERVER_ORIGIN =
       'adam-weekly-api-server-staging-ufaummkd5q-de.a.run.app'
