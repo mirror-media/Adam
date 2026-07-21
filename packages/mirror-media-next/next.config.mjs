@@ -9,6 +9,10 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
+// Architecture guardrail: keep Next.js 15 while the built-in AMP
+// routes remain. Before upgrading to Next.js 16, decide the long-term AMP path
+// and revalidate the custom webpack loaders against Turbopack.
+
 const withBundleAnalyzer =
   process.env.ANALYZE === 'true' && process.env.NEXT_PUBLIC_ENV !== 'prod'
     ? (await import('@next/bundle-analyzer')).default({
@@ -91,6 +95,9 @@ const nextConfig = {
   },
 
   output: 'standalone',
+  // Next.js 15 treats outputFileTracingRoot as a top-level option.
+  // Revalidate the standalone output layout and both Docker runtimes after any
+  // future framework upgrade.
   outputFileTracingRoot: path.join(__dirname, '../..'),
 }
 
