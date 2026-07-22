@@ -773,7 +773,7 @@ export default function StoryNormalStyle({
               </Link>
               、
               <Link href="/subscribe" target="_blank">
-                鏡週刊數位訂閱
+                鏡週刊動態雜誌
               </Link>
               、
               <Link href="/story/webauthorize/" target="_blank">
@@ -842,7 +842,7 @@ export default function StoryNormalStyle({
           </Link>
           、
           <Link href="/subscribe" target="_blank">
-            鏡週刊數位訂閱
+            鏡週刊動態雜誌
           </Link>
           、
           <Link href="/story/webauthorize/" target="_blank">
