@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
+import { useAmp } from 'next/amp'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { ApolloProvider } from '@apollo/client'
@@ -44,6 +45,11 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter()
   const { pathname } = router
   const isStoryPage = pathname.startsWith('/story/')
+
+  // Skip this client-only dynamic widget on AMP pages because Next.js may emit
+  // React fallback markers (e.g. `<template data-dgst="DYNAMIC_SERVER_USAGE">`)
+  // that AMP treats as invalid `<template>` tags.
+  const isAmpPage = useAmp()
 
   //Temporarily enable google tag manager only in dev and local environment.
   useEffect(() => {
@@ -90,7 +96,7 @@ function MyApp({ Component, pageProps }) {
             In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
                 {!isStoryPage && <UserBehaviorLogger />}
                 <Component {...pageProps} />
-                <PromoteTopic />
+                {!isAmpPage && <PromoteTopic />}
               </ThemeProvider>
             </StyleSheetManager>
           </Provider>

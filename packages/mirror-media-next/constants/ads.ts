@@ -1000,69 +1000,6 @@ const GPT_UNITS = {
     },
   },
 
-  // page key: 影音, video
-  videohub: {
-    MB_HD: {
-      adUnit: 'mirror_m_video_300x250_HD',
-      adSize: [
-        [336, 280],
-        [300, 250],
-        [320, 100],
-        [1, 1],
-      ],
-    },
-    MB_E1: {
-      adUnit: 'mirror_m_video_300x250_E1',
-      adSize: [
-        [336, 280],
-        [300, 250],
-        [320, 100],
-        [1, 1],
-      ],
-    },
-    MB_FT: {
-      adUnit: 'mirror_m_video_300x250_FT',
-      adSize: [
-        [336, 280],
-        [300, 250],
-        [320, 100],
-        [1, 1],
-      ],
-    },
-    MB_ST: {
-      adUnit: 'mirror_m_video_320x100_ST',
-      adSize: [
-        [320, 100],
-        [320, 50],
-        [1, 1],
-      ],
-    },
-    PC_HD: {
-      adUnit: 'mirror_pc_video_970x250_HD',
-      adSize: [
-        [970, 250],
-        [970, 90],
-        [1, 1],
-      ],
-    },
-    PC_R1: {
-      adUnit: 'mirror_pc_video_300x250_R1',
-      adSize: [
-        [300, 600],
-        [300, 250],
-        [1, 1],
-      ],
-    },
-    PC_FT: {
-      adUnit: 'mirror_pc_video_970x250_FT',
-      adSize: [
-        [970, 250],
-        [970, 90],
-        [1, 1],
-      ],
-    },
-  },
-
   // page key: 國際, int
   [international]: {
     MB_HD: {

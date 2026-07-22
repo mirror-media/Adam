@@ -294,7 +294,7 @@ const SocialNetworkServiceLarge = styled(SocialNetworkService)`
   display: flex;
   margin-top: 20px;
   margin-bottom: 24px;
-  ${({ theme }) => theme.breakpoint.xl} {
+  ${({ theme }) => theme.breakpoint.md} {
     display: none;
   }
 `

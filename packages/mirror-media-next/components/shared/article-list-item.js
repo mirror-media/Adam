@@ -115,9 +115,10 @@ const ItemBrief = styled.div`
  * @param {Object} props
  * @param {Article} props.item
  * @param {Section} [props.section]
+ * @param {boolean} [props.priority]
  * @returns {React.ReactElement}
  */
-export default function ArticleListItem({ item, section }) {
+export default function ArticleListItem({ item, section, priority }) {
   const { publishedDate } = item
   const formattedPublishedDate = transformTimeDataIntoDotFormat(publishedDate)
   const itemSection =
@@ -140,6 +141,7 @@ export default function ArticleListItem({ item, section }) {
           loadingImage="/images-next/loading.gif"
           defaultImage="/images-next/default-og-img.png"
           rwd={{ mobile: '400px', tablet: '400px', desktop: '400px' }}
+          priority={priority}
         />
         {itemSection && (
           <ItemSection sectionName={itemSection?.slug}>
