@@ -1,10 +1,10 @@
-import styled from 'styled-components'
 import Image from 'next/legacy/image'
+import styled from 'styled-components'
 
+import LoadingPage from '../../public/images-next/loading_page.gif'
+import { fetchPostsByAuthorId } from '../../utils/api/author'
 import InfiniteScrollList from '../infinite-scroll-list'
 import ArticleList from '../shared/article-list'
-import { fetchPostsByAuthorId } from '../../utils/api/author'
-import LoadingPage from '../../public/images-next/loading_page.gif'
 
 const Loading = styled.div`
   margin: 20px auto 0;

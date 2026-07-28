@@ -1,6 +1,8 @@
 import styled from 'styled-components'
-import Notice from './notice'
+
 import { getNumberWithCommas } from '../../utils'
+
+import Notice from './notice'
 
 const Message = styled.h2`
   color: rgba(0, 0, 0, 0.87);
@@ -87,7 +89,7 @@ const OrderContent = styled.div`
 const Detail = styled.div`
   display: flex;
   justify-content: space-between;
-  :not(:first-child) {
+  &:not(:first-child) {
     margin-top: 8px;
   }
   width: 100%;

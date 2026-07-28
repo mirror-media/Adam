@@ -3,49 +3,50 @@
 //TODO: adjust function `handleFetchPopularNews` and `handleFetchPopularNews`, make it more reuseable in other pages.
 
 import { useCallback } from 'react'
-
-import styled from 'styled-components'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import axios from 'axios'
-import dynamic from 'next/dynamic'
+import styled from 'styled-components'
+
+import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
+import ExternalArticleContent from '../../components/external/external-article-content'
 import ExternalArticleInfo from '../../components/external/external-article-info'
+import ExternalHeroImage from '../../components/external/external-hero-image'
 // import ExternalArticleBrief from '../../components/external/external-article-brief'
 import AsideArticleList from '../../components/story/normal/aside-article-list'
 import FbPagePlugin from '../../components/story/normal/fb-page-plugin'
+import RelatedArticleList from '../../components/story/normal/related-article-list'
 import SocialNetworkService from '../../components/story/normal/social-network-service'
 import SubscribeInviteBanner from '../../components/story/normal/subscribe-invite-banner'
-import DonateBanner from '../../components/story/shared/donate-banner'
-import RelatedArticleList from '../../components/story/normal/related-article-list'
-import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
-import ExternalArticleContent from '../../components/external/external-article-content'
-import ExternalHeroImage from '../../components/external/external-hero-image'
 import Divider from '../../components/story/shared/divider'
+import DonateBanner from '../../components/story/shared/donate-banner'
+import MagazineInviteBanner from '../../components/story/shared/magazine-invite-banner'
 import {
-  transformTimeDataIntoDotFormat,
-  getActiveOrderSection,
-} from '../../utils'
-import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
-import {
-  URL_STATIC_POPULAR_NEWS,
-  URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
   API_TIMEOUT,
+  URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+  URL_STATIC_POPULAR_NEWS,
 } from '../../config/index.mjs'
-import {
-  getExternalSectionTitle,
-  getExternalPartnerColor,
-} from '../../utils/external'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { Z_INDEX } from '../../constants/index'
+import useWindowDimensions from '../../hooks/use-window-dimensions'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { mediaSize } from '../../styles/media'
+import {
+  getActiveOrderSection,
+  transformTimeDataIntoDotFormat,
+} from '../../utils'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
+import {
+  getExternalPartnerColor,
+  getExternalSectionTitle,
+} from '../../utils/external'
 import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '../ads/gpt/gpt-placeholder'
-import Image from 'next/image'
-import ExternalArticleBrief from './external-article-brief'
 import ResponsivePortal from '../story/shared/client-side-portal'
-import useWindowDimensions from '../../hooks/use-window-dimensions'
-import { mediaSize } from '../../styles/media'
+
+import ExternalArticleBrief from './external-article-brief'
 
 const DableAd = dynamic(() => import('../ads/dable/dable-ad'), {
   ssr: false,

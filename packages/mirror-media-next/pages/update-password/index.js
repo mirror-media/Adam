@@ -1,13 +1,14 @@
 import styled from 'styled-components'
-import { setPageCache } from '../../utils/cache-setting'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import useMembershipRequired from '../../hooks/use-membership-required'
-import LayoutFull from '../../components/shared/layout-full'
+
 import FormWrapper from '../../components/login/form-wrapper'
+import LayoutFull from '../../components/shared/layout-full'
 import MainForm from '../../components/update-password/main-form'
+import useMembershipRequired from '../../hooks/use-membership-required'
+import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 
 const Container = styled.div`
@@ -66,38 +67,40 @@ export default function UpdatePassword({ headerData }) {
 /**
  * @type {import('next').GetServerSideProps<PageProps>}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ req, res, user }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
+  req,
+  res,
+  user,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    const signInProvider = user.firebase?.sign_in_provider
-    if (signInProvider !== 'password') {
-      return {
-        redirect: {
-          statusCode: 307,
-          destination: '/profile',
-        },
-      }
-    }
-
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
-
-    // handle header data
-    const [sectionsData, topicsData] = processSettledResult(
-      responses[0],
-      getSectionAndTopicFromDefaultHeaderData,
-      'Error occurs while getting header data in update password page',
-      globalLogFields
-    )
-
+  const signInProvider = user.firebase?.sign_in_provider
+  if (signInProvider !== 'password') {
     return {
-      props: {
-        headerData: { sectionsData, topicsData },
+      redirect: {
+        statusCode: 307,
+        destination: '/profile',
       },
     }
   }
-)
+
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInDefaultPageLayout(),
+  ])
+
+  // handle header data
+  const [sectionsData, topicsData] = processSettledResult(
+    responses[0],
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting header data in update password page',
+    globalLogFields
+  )
+
+  return {
+    props: {
+      headerData: { sectionsData, topicsData },
+    },
+  }
+})

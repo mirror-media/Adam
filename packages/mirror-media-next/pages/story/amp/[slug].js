@@ -1,37 +1,36 @@
 import Head from 'next/head'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import styled from 'styled-components'
 
 import client from '../../../apollo/apollo-client'
-import Layout from '../../../components/shared/layout'
-import AmpHeader from '../../../components/amp/amp-header'
-import AmpFooter from '../../../components/amp/amp-footer'
-import AmpRelated from '../../../components/amp/amp-related'
-import AmpMain from '../../../components/amp/amp-main'
-import {
-  getCategoryOfWineSlug,
-  convertDraftToText,
-  getResizedUrl,
-  getActiveOrderSection,
-  getLogTraceObject,
-} from '../../../utils'
-
-import { handleStoryPageRedirect } from '../../../utils/story'
-import { setPageCache } from '../../../utils/cache-setting'
 import { fetchAmpPostBySlug } from '../../../apollo/query/posts'
-import { ENV, GA_MEASUREMENT_ID, SITE_URL } from '../../../config/index.mjs'
-import styled from 'styled-components'
-import AdultOnlyWarning from '../../../components/story/shared/adult-only-warning'
+import AmpFooter from '../../../components/amp/amp-footer'
+import AmpHeader from '../../../components/amp/amp-header'
+import AmpMain from '../../../components/amp/amp-main'
+import AmpRelated from '../../../components/amp/amp-related'
+import Layout from '../../../components/shared/layout'
 import WineWarning from '../../../components/shared/wine-warning'
-import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import AdultOnlyWarning from '../../../components/story/shared/adult-only-warning'
+import { ENV, GA_MEASUREMENT_ID, SITE_URL } from '../../../config/index.mjs'
+import {
+  convertDraftToText,
+  getActiveOrderSection,
+  getCategoryOfWineSlug,
+  getLogTraceObject,
+  getResizedUrl,
+} from '../../../utils'
+import { setPageCache } from '../../../utils/cache-setting'
+import { handleStoryPageRedirect } from '../../../utils/story'
 const { hasContentInRawContentBlock } = MirrorMedia
-import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import AmpGptAd from '../../../components/amp/amp-ads/amp-gpt-ad'
 import AmpGptStickyAd from '../../../components/amp/amp-ads/amp-gpt-sticky-ad'
-import { getAmpGptDataSlotSection } from '../../../utils/ad'
-import JsonLdsScript from '../../../components/story/shared/json-lds-script'
+import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import { generateJsonLdsData } from '../../../components/story/shared/json-lds-data'
-import { logGqlError } from '../../../utils/log/shared'
-import { getRelatedStories } from '../../api/recomemd'
+import JsonLdsScript from '../../../components/story/shared/json-lds-script'
+import { getAmpGptDataSlotSection } from '../../../utils/ad'
+import { getRelatedStories } from '../../../utils/api/recommendation'
 import { toTaipeiISOString } from '../../../utils/index'
+import { logGqlError } from '../../../utils/log/shared'
 
 export const config = { amp: true }
 

@@ -28,4 +28,4 @@ const maxWidth = {
   xxl: `(max-width: ${mediaSize.xxl - 1}px)`,
 }
 
-export { mediaSize, minWidth, maxWidth }
+export { maxWidth, mediaSize, minWidth }

@@ -1,6 +1,7 @@
-import styled from 'styled-components'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+import styled from 'styled-components'
+
 import { COURSE_URL } from '../../../config/index.mjs'
 import LogoCourseHorizontal from '../../../public/images-next/course-horizontal.png'
 import LogoCourseVertial from '../../../public/images-next/course-vertical.png'

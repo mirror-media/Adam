@@ -35,7 +35,7 @@ const Close = styled.button`
     margin: 0 5px 0 0;
     position: relative;
     &:before,
-    :after {
+    &:after {
       position: absolute;
       left: 8.5px;
       top: 5px;

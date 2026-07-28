@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import { FullBleedBackgroundStyle } from '../shared/full-bleed-background'
+
 import { IndexTitle } from './share/index-title'
 
 const StyledSection = styled.section`

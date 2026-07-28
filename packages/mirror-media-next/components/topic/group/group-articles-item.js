@@ -1,8 +1,8 @@
-import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import styled from 'styled-components'
 
-import { transformTimeData } from '../../../utils'
 import { color } from '../../../styles/theme/color'
+import { transformTimeData } from '../../../utils'
 
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
@@ -18,11 +18,11 @@ const ItemWrapper = styled.a`
   font-size: 18px;
   border-bottom: 1px solid #4a4a4a;
 
-  :first-child {
+  &:first-child {
     padding-top: 0;
   }
 
-  :last-child {
+  &:last-child {
     padding-bottom: 0;
     border-bottom: none;
   }

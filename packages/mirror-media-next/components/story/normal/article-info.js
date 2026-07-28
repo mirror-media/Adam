@@ -1,11 +1,11 @@
 import styled from 'styled-components'
 
 import ButtonCopyLink from '../shared/button-copy-link'
+import ButtonSocialNetworkShare from '../shared/button-social-network-share'
+import Credits from '../shared/credits'
 import DonateLink from '../shared/donate-link'
 import SubscribeLink from '../shared/subscribe-link'
-import ButtonSocialNetworkShare from '../shared/button-social-network-share'
 import Tags from '../shared/tags'
-import Credits from '../shared/credits'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */

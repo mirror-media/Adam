@@ -1,31 +1,31 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
-import { ENV, URL_STATIC_COLUMN_SECTION_POSTS } from '../../config/index.mjs'
-import {
-  fetchStaticJsonByUrl,
-  fetchHeaderDataInDefaultPageLayout,
-} from '../../utils/api'
-import {
-  getSectionAndTopicFromDefaultHeaderData,
-  getPostsAndPostscountFromGqlData,
-} from '../../utils/data-process'
-import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
-import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
-import { Z_INDEX } from '../../constants/index'
-import {
-  fetchPostsBySectionSlug,
-  fetchSectionBySectionSlug,
-} from '../../utils/api/section'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
-import { getSectionGPTPageKey } from '../../utils/ad'
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import ColumnList from '../../components/section/column/column-list'
+import Layout from '../../components/shared/layout'
 import SectionArticles from '../../components/shared/section-articles'
+import { ENV, URL_STATIC_COLUMN_SECTION_POSTS } from '../../config/index.mjs'
+import { Z_INDEX } from '../../constants/index'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getLogTraceObject } from '../../utils'
+import { getSectionGPTPageKey } from '../../utils/ad'
+import {
+  fetchHeaderDataInDefaultPageLayout,
+  fetchStaticJsonByUrl,
+} from '../../utils/api'
+import {
+  fetchPostsBySectionSlug,
+  fetchSectionBySectionSlug,
+} from '../../utils/api/section'
+import { setPageCache } from '../../utils/cache-setting'
+import {
+  getPostsAndPostscountFromGqlData,
+  getSectionAndTopicFromDefaultHeaderData,
+} from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 /** @typedef {import('../../utils/api').postsInColumnSection} PostsInColumnSection */
 /** @typedef {import('../../utils/api').ColumnSectionResponse} ColumnSectionResponse */

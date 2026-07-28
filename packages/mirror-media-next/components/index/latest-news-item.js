@@ -1,8 +1,8 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
 
-import styled from 'styled-components'
 import Link from 'next/link'
 import CustomImage from '@readr-media/react-image'
+import styled from 'styled-components'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme

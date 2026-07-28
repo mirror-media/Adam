@@ -1,7 +1,9 @@
-import styled from 'styled-components'
-import FormWrapper from './form-wrapper'
 import { useEffect } from 'react'
+import styled from 'styled-components'
+
 import { SECOND } from '../../constants/time-unit'
+
+import FormWrapper from './form-wrapper'
 
 const REDIRECTION_DELAY = 5
 

@@ -4,13 +4,14 @@
  */
 
 import styled from 'styled-components'
-import { setPageCache } from '../../utils/cache-setting'
-import LayoutFull from '../../components/shared/layout-full'
-import BodyPasswordReset from '../../components/email-handler/body-password-reset'
+
 import BodyEmailVerification from '../../components/email-handler/body-email-verification'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import BodyPasswordReset from '../../components/email-handler/body-password-reset'
+import LayoutFull from '../../components/shared/layout-full'
 import { getLogTraceObject, getSearchParamFromApiKeyUrl } from '../../utils'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
 
 const RESET_PASSWORD = 'resetPassword'

@@ -1,9 +1,10 @@
-import GenericTextInput from '../shared/inputs/generic-text-input'
-import { InputState } from '../../constants/form'
 import { useState } from 'react'
+
+import { InputState } from '../../constants/form'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
-import { loginEmail, loginActions } from '../../slice/login-slice'
+import { loginActions, loginEmail } from '../../slice/login-slice'
 import { isValidEmail } from '../../utils'
+import GenericTextInput from '../shared/inputs/generic-text-input'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */

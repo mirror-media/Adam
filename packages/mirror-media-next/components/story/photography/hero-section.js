@@ -10,7 +10,8 @@ import styled from 'styled-components'
 const getImageUrl = (props) => props.imageUrl
 
 const HeroImage = styled.div`
-  background: linear-gradient(
+  background:
+    linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.2) 0%,
       rgba(0, 0, 0, 0.05) 50%,

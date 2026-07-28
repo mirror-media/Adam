@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
-import { transformTimeDataIntoSlashFormat } from '../../utils/index'
+
 import DownloadSvg from '../../public/images-next/magazine-download-icon.svg'
+import { transformTimeDataIntoSlashFormat } from '../../utils/index'
 
 const CardsList = styled.ul`
   margin: auto;

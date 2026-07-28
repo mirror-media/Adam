@@ -1,30 +1,30 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
+import React, { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+
 import {
   PROMOTION_LINKS,
   SOCIAL_MEDIA_LINKS,
   SUB_BRAND_LINKS,
 } from '../../../constants'
 import { DEFAULT_NORMAL_SECTIONS_DATA } from '../../../constants/header'
-
-import SubscribeMagazineButton from './subscribe-papermag-mb-btn'
-import EntranceButton from './entrance-button'
-import Logo from './logo'
+import useSearch from '../../../hooks/use-search'
+import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import MemberLoginButton from '../shared/member-Login-Button'
+import SearchBarDesktop from '../shared/search-bar-desktop'
+import SearchBarInput from '../shared/search-bar-input'
+
+import EntranceButton from './entrance-button'
+import LinkToCourse from './link-to-course'
+import Logo from './logo'
 import MobileSidebar from './mobile-sidebar'
 import NavSections from './nav-sections'
 import NavTopics from './nav-topics'
 import PromotionLinks from './promotion-links'
-import SearchBarDesktop from '../shared/search-bar-desktop'
-import SearchBarInput from '../shared/search-bar-input'
 import SubBrandList from './sub-brand-list'
-import LinkToCourse from './link-to-course'
-
-import { useDisplayAd } from '../../../hooks/useDisplayAd'
-import useSearch from '../../../hooks/use-search'
+import SubscribeMagazineButton from './subscribe-papermag-mb-btn'
 
 const GPTAd = dynamic(() => import('../../ads/gpt/gpt-ad'), {
   ssr: false,

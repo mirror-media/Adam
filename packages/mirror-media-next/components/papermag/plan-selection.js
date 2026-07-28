@@ -1,13 +1,14 @@
-import styled from 'styled-components'
-import SubscribePlanBtn from '../subscribe-plan-btn'
-import { PLAN } from '../../constants/papermag'
-import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
-import { getNumberWithCommas } from '../../utils'
 import Image from 'next/image'
-import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
 import Link from 'next/link'
+import styled from 'styled-components'
+
+import { PLAN } from '../../constants/papermag'
 import useWindowDimensions from '../../hooks/use-window-dimensions'
+import PlanBannerImg from '../../public/images-next/papermag/plan-banner.jpg'
 import { mediaSize } from '../../styles/media'
+import { getNumberWithCommas } from '../../utils'
+import { getPlanInfoByIdAndShouldFreight } from '../../utils/papermag'
+import SubscribePlanBtn from '../subscribe-plan-btn'
 
 const PlansWrapper = styled.section`
   width: 100%;
@@ -65,7 +66,8 @@ const PlanCard = styled.div`
   border-radius: 20px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fff;
-  box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.06),
+  box-shadow:
+    0px 4px 28px 0px rgba(0, 0, 0, 0.06),
     0px 2px 12px 0px rgba(0, 0, 0, 0.08);
 
   ${({ theme }) => theme.breakpoint.xl} {

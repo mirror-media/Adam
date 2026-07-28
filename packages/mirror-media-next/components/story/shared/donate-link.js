@@ -1,5 +1,4 @@
 import Image from 'next/image'
-
 import styled from 'styled-components'
 
 const Link = styled.a`
@@ -16,7 +15,7 @@ const Link = styled.a`
   font-weight: 400;
   border-radius: 32px;
   color: white;
-  :hover {
+  &:hover {
     background: rgba(0, 0, 0, 0.87);
     transition: background 0.3s ease;
   }

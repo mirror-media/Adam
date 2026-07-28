@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 const shakeAnimation = keyframes`
@@ -35,16 +35,16 @@ const InputWrapper = styled.div`
     font-size: 18px;
     font-weight: 400;
 
-    :focus {
+    &:focus {
       outline: none;
       border: 1px solid rgba(0, 0, 0, 0.87);
 
-      ::placeholder {
+      &::placeholder {
         font-size: 16px;
       }
     }
 
-    ::placeholder {
+    &::placeholder {
       color: rgba(0, 0, 0, 0.3);
       font-size: 18px;
       font-weight: 400;
@@ -54,7 +54,7 @@ const InputWrapper = styled.div`
       background: #e3e3e3;
       border: 1px solid rgba(0, 0, 0, 0.1);
       color: rgba(0, 0, 0, 0.6);
-      ::placeholder {
+      &::placeholder {
         color: #e3e3e3;
       }
     }
@@ -64,11 +64,11 @@ const InputWrapper = styled.div`
       (props) =>
         props.isFocused &&
         css`
-          :invalid ~ span {
+          &:invalid ~ span {
             display: block;
           }
 
-          :invalid {
+          &:invalid {
             border: 1px solid #e51731;
             animation: ${shakeAnimation} 0.3s ease-in-out;
           }

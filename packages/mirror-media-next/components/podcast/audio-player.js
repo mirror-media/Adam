@@ -1,7 +1,9 @@
-import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import styled, { keyframes } from 'styled-components'
+
 import { Z_INDEX } from '../../constants'
+
 import PlayPauseButton from './play-pause-button'
 
 /**
@@ -158,7 +160,7 @@ const SeekSlider = styled.input`
     background-color: #1d9fb8;
   }
 
-  :hover&::-webkit-slider-thumb {
+  &:hover::-webkit-slider-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -170,7 +172,7 @@ const SeekSlider = styled.input`
 
 const SpeedButton = styled.button`
   cursor: pointer;
-  :focus {
+  &:focus {
     outline: 0;
   }
   width: 40px;
@@ -199,7 +201,7 @@ const VolumeControlContainer = styled.div`
   }
 `
 const VolumeMutedButtonsContainer = styled.button`
-  :focus {
+  &:focus {
     outline: 0;
   }
   display: flex;
@@ -395,6 +397,8 @@ export default function AudioPlayer({ listeningPodcast }) {
           )}
 
           <AudioPlayerContainer key={audioURL}>
+            {/* Captions are unavailable from the podcast RSS enclosure payload. */}
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <audio ref={audioRef} src={audioURL} autoPlay></audio>
             <Controls>
               <PlayPauseButton

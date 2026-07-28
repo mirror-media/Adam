@@ -1,5 +1,6 @@
-import styled from 'styled-components'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import styled from 'styled-components'
+
 import ExternalEmbedCodeBlock from './external-embed-code-block'
 const { draftEditorCssExternal } = MirrorMedia
 import ArticleRightArrow from '../../components/shared/article-right-arrow'

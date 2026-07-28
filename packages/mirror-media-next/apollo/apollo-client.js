@@ -1,11 +1,12 @@
-import ApolloLinkTimeout from 'apollo-link-timeout'
 import { HttpLink } from '@apollo/client'
+import { ApolloClient, concat, InMemoryCache } from '@apollo/client'
+import ApolloLinkTimeout from 'apollo-link-timeout'
+
 import { IS_PREVIEW_MODE } from '../config/index.mjs'
-import { ApolloClient, InMemoryCache, concat } from '@apollo/client'
 import {
   API_TIMEOUT_GRAPHQL,
-  WEEKLY_API_SERVER_ORIGIN,
   PREVIEW_SERVER_ORIGIN,
+  WEEKLY_API_SERVER_ORIGIN,
 } from '../config/index.mjs'
 
 const DEFAULT_URI = '/graphql'

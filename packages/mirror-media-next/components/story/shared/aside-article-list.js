@@ -1,8 +1,9 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import styled from 'styled-components'
-import { useEffect, useState, useRef, useCallback } from 'react'
-import { getArticleHref } from '../../../utils'
 import Image from '@readr-media/react-image'
+import styled from 'styled-components'
+
+import { getArticleHref } from '../../../utils'
 
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
@@ -207,8 +208,8 @@ const Title = styled.span`
 
     -webkit-line-clamp: 1;
   }
-  :active,
-  :hover {
+  &:active,
+  &:hover {
     text-decoration: underline;
   }
 `

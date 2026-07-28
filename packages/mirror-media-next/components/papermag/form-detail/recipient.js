@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import FormInput from './form-input'
+
 import Checkbox from './checkbox-input'
+import FormInput from './form-input'
 
 const Wrapper = styled.div`
   margin-top: 48px;

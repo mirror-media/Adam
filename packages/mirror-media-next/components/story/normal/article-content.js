@@ -1,16 +1,17 @@
+import { useMemo } from 'react'
+import dynamic from 'next/dynamic'
+import Script from 'next/script'
 import styled from 'styled-components'
-import DraftRenderBlock from '../shared/draft-renderer-block'
+
+import ArticleRightArrow from '../../../components/shared/article-right-arrow'
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import {
   copyAndSliceDraftBlock,
   getSlicedIndexAndUnstyledBlocksCount,
   modifyFirstImageEntity,
 } from '../../../utils/story'
-import dynamic from 'next/dynamic'
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
-import { useDisplayAd } from '../../../hooks/useDisplayAd'
-import { useMemo } from 'react'
-import Script from 'next/script'
-import ArticleRightArrow from '../../../components/shared/article-right-arrow'
+import DraftRenderBlock from '../shared/draft-renderer-block'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,

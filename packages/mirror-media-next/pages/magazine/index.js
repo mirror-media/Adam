@@ -3,21 +3,20 @@ import styled from 'styled-components'
 
 import client from '../../apollo/apollo-client'
 import { fetchSpecials, fetchWeeklys } from '../../apollo/query/magazines'
-import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
-import { getSectionFromPremiumHeaderData } from '../../utils/data-process'
-import { useMembership } from '../../context/membership'
-import { setPageCache } from '../../utils/cache-setting'
-
+import MagazineFeatures from '../../components/magazine/magazine-featured-weeklys'
 import MagazinePlatforms from '../../components/magazine/magazine-platforms'
 import MagazineSpecials from '../../components/magazine/magazine-specials'
 import MagazineWeeklys from '../../components/magazine/magazine-weeklys'
-import MagazineFeatures from '../../components/magazine/magazine-featured-weeklys'
-import Layout from '../../components/shared/layout'
 import JoinPremiumMember from '../../components/magazine/ui-join-premium-member'
+import Layout from '../../components/shared/layout'
+import { useMembership } from '../../context/membership'
+import useMembershipRequired from '../../hooks/use-membership-required'
 import { getLogTraceObject } from '../../utils'
+import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionFromPremiumHeaderData } from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
-import useMembershipRequired from '../../hooks/use-membership-required'
 
 const Section = styled.div`
   padding: 48px 0;
@@ -191,28 +190,29 @@ export default function Magazine({ sectionsData = [] }) {
 /**
  * @type {import('next').GetServerSideProps<PageProps>}
  */
-export const getServerSideProps = redirectToLoginWhileUnauthed()(
-  async ({ req, res }) => {
-    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
+  req,
+  res,
+}) => {
+  setPageCache(res, { cachePolicy: 'no-store' }, req.url)
 
-    const globalLogFields = getLogTraceObject(req)
+  const globalLogFields = getLogTraceObject(req)
 
-    // Fetch header data
-    const responses = await Promise.allSettled([
-      fetchHeaderDataInPremiumPageLayout(),
-    ])
+  // Fetch header data
+  const responses = await Promise.allSettled([
+    fetchHeaderDataInPremiumPageLayout(),
+  ])
 
-    const sectionsData = processSettledResult(
-      responses[0],
-      getSectionFromPremiumHeaderData,
-      'Error occurs while getting premium header data in magazine list page',
-      globalLogFields
-    )
+  const sectionsData = processSettledResult(
+    responses[0],
+    getSectionFromPremiumHeaderData,
+    'Error occurs while getting premium header data in magazine list page',
+    globalLogFields
+  )
 
-    return {
-      props: {
-        sectionsData,
-      },
-    }
+  return {
+    props: {
+      sectionsData,
+    },
   }
-)
+})

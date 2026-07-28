@@ -2,8 +2,10 @@
 //component <Section> will change color of title to section color defined at /styles/sections-color.
 import React from 'react'
 import styled, { css } from 'styled-components'
+
 import { Z_INDEX } from '../../../constants'
 import { minWidth } from '../../../styles/media'
+
 import Logo from './logo'
 
 /**
@@ -97,7 +99,7 @@ const Sections = styled('ul')`
 // @ts-expect-error - styled-components type definition issue
 const Section = styled('li')`
   flex: 0 0 auto;
-  :not(:last-child) {
+  &:not(:last-child) {
     padding-right: 8px;
   }
   position: relative;
@@ -109,7 +111,7 @@ const Section = styled('li')`
   font-weight: 600;
 
   ${({ theme }) => theme.breakpoint.xl} {
-    :not(:last-child) {
+    &:not(:last-child) {
       padding-right: 0;
     }
     line-height: 150%;
@@ -249,13 +251,13 @@ export default function NavSections({ sectionsAndCategories = [] }) {
           <LogoIcon />
         </a>
       </SectionLogo>
-      
+
       <Sections>
         {sectionsAndCategoriesJsx}
         <MagazineLink href={'/magazine'}>
           <div>動態雜誌</div>
         </MagazineLink>
-        </Sections>
+      </Sections>
     </SectionsWrapper>
   )
 }

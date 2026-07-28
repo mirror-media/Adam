@@ -1,12 +1,14 @@
 //TODO: change facebook page plugin `data-tabs` by different viewport breakpoint
 
-import styled from 'styled-components'
 import Image from 'next/image'
 import Link from 'next/link'
-import snsLine from '../../../public/images-next/sns-line.png'
+import styled from 'styled-components'
+
 import snsIG from '../../../public/images-next/sns-ig.png'
-import snsYT from '../../../public/images-next/sns-yt.png'
+import snsLine from '../../../public/images-next/sns-line.png'
 import snsMM from '../../../public/images-next/sns-mm.png'
+import snsYT from '../../../public/images-next/sns-yt.png'
+
 import FbPagePlugin from './fb-page-plugin'
 
 /**

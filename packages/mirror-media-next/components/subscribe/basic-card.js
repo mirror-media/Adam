@@ -1,5 +1,7 @@
 import styled from 'styled-components'
+
 import { BASIC_FEATURES } from '../../constants/subscribe-constants'
+
 import Check from './check-icon'
 import SecondaryBlueBtn from './secondary-blue-btn'
 
@@ -12,7 +14,8 @@ const PlanCard = styled.div`
   border-radius: 24px;
   border: 1px solid rgba(0, 0, 0, 0.1);
   background: #fff;
-  box-shadow: 0px 4px 28px 0px rgba(0, 0, 0, 0.06),
+  box-shadow:
+    0px 4px 28px 0px rgba(0, 0, 0, 0.06),
     0px 2px 12px 0px rgba(0, 0, 0, 0.08);
 
   ${({ theme }) => theme.breakpoint.xl} {

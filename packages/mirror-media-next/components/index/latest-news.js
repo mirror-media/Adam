@@ -1,21 +1,23 @@
 import { Fragment } from 'react'
-import styled from 'styled-components'
-import axios from 'axios'
 import dynamic from 'next/dynamic'
-import InfiniteScrollList from '../infinite-scroll-list'
-import LoadingPage from '../../public/images-next/loading_page.gif'
-import LatestNewsItem from './latest-news-item'
-import { URL_STATIC_POST_EXTERNAL } from '../../config/index.mjs'
 import Image from 'next/legacy/image'
-import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
+import axios from 'axios'
+import styled from 'styled-components'
+
+import { URL_STATIC_POST_EXTERNAL } from '../../config/index.mjs'
 import useWindowDimensions from '../../hooks/use-window-dimensions'
-import { mediaSize } from '../../styles/media'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import LoadingPage from '../../public/images-next/loading_page.gif'
+import { mediaSize } from '../../styles/media'
 import {
+  getArticleHref,
   getSectionNameGql,
   getSectionSlugGql,
-  getArticleHref,
 } from '../../utils'
+import { getMicroAdUnitId, needInsertMicroAdAfter } from '../../utils/ad'
+import InfiniteScrollList from '../infinite-scroll-list'
+
+import LatestNewsItem from './latest-news-item'
 import { IndexTitle } from './share/index-title'
 
 const StyledMicroAd = dynamic(

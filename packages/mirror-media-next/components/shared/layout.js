@@ -1,8 +1,9 @@
-import ShareHeader from '../header/share-header'
-import Footer from './footer'
-import CustomHead from './custom-head'
 import GDPRNotification from '../gdpr'
+import ShareHeader from '../header/share-header'
 import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
+
+import CustomHead from './custom-head'
+import Footer from './footer'
 
 /**
  * @typedef {Object} Header

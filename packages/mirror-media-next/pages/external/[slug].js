@@ -1,29 +1,33 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
+import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import Head from 'next/head'
+import { useRouter } from 'next/router'
+
 import client, { getStoryClient } from '../../apollo/apollo-client'
+import {
+  fetchExternalBySlug,
+  fetchStoryExternalBySlug,
+} from '../../apollo/query/externals'
+import FullScreenAds from '../../components/ads/full-screen-ads'
+import ExternalNormalStyle from '../../components/external/external-normal-style'
+import generateJsonLdsData from '../../components/external/shared/json-lds-data'
+import JsonLdsScript from '../../components/external/shared/json-lds-script'
+import Layout from '../../components/shared/layout'
 import {
   API_TIMEOUT,
   ENV,
   SITE_URL,
-  URL_STATIC_POST_FLASH_NEWS,
   STORY_GQL_ENDPOINT,
+  URL_STATIC_POST_FLASH_NEWS,
 } from '../../config/index.mjs'
-import { setPageCache } from '../../utils/cache-setting'
-import { fetchExternalBySlug } from '../../apollo/query/externals'
-import generateJsonLdsData from '../../components/external/shared/json-lds-data'
-import ExternalNormalStyle from '../../components/external/external-normal-style'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import Layout from '../../components/shared/layout'
-import FullScreenAds from '../../components/ads/full-screen-ads'
-import { useRouter } from 'next/router'
-import Head from 'next/head'
-import JsonLdsScript from '../../components/external/shared/json-lds-script'
 import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { getRelatedStories } from '../../utils/api/recommendation'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import dynamic from 'next/dynamic'
-import { getRelatedStories } from '../../pages/api/recomemd'
-import { useState, useEffect } from 'react'
 import { toTaipeiISOString } from '../../utils/index'
+import { processSettledResult } from '../../utils/response-processor'
 
 const MisoPageView = dynamic(() => import('../../components/miso-pageview'), {
   ssr: false,
@@ -244,9 +248,7 @@ export async function getServerSideProps({ params, req, res }) {
 
   const fetchStaticJsonSafe = async (url, timeout) => {
     try {
-      const mod = await import(
-        '../../utils/server-side-only/fetch-static-json.js'
-      )
+      const mod = await import('../../utils/server-side-only/fetch-static-json')
       const res = await mod.fetchStaticJsonOnServer(url, timeout)
       return res
     } catch (err) {
@@ -254,12 +256,15 @@ export async function getServerSideProps({ params, req, res }) {
     }
   }
 
-  const externalClient = getStoryClient(STORY_GQL_ENDPOINT) || client
+  const storyEndpointClient = getStoryClient(STORY_GQL_ENDPOINT)
+  const externalClient = storyEndpointClient || client
 
   const responses = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(), //fetch header data
     externalClient.query({
-      query: fetchExternalBySlug,
+      query: storyEndpointClient
+        ? fetchStoryExternalBySlug
+        : fetchExternalBySlug,
       variables: { slug },
     }),
     fetchStaticJsonSafe(URL_STATIC_POST_FLASH_NEWS, API_TIMEOUT, 'flash_news'),
