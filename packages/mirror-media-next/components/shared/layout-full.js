@@ -1,8 +1,10 @@
 import styled from 'styled-components'
-import ShareHeader from '../header/share-header'
-import Footer from './footer'
-import CustomHead from './custom-head'
+
 import GDPRNotification from '../gdpr'
+import ShareHeader from '../header/share-header'
+
+import CustomHead from './custom-head'
+import Footer from './footer'
 
 const Container = styled.div`
   display: flex;

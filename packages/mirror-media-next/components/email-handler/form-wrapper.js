@@ -1,5 +1,6 @@
 // This component is for wrapping form in password modification pages
 import styled from 'styled-components'
+
 import Wrapper from '../shared/form-wrapper'
 
 const FormWrapper = styled(Wrapper)`

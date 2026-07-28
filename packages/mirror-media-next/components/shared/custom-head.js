@@ -1,8 +1,8 @@
 import Head from 'next/head'
-
-import { FB_APP_ID, FB_PAGE_ID, SITE_TITLE } from '../../constants'
-import { SITE_URL } from '../../config/index.mjs'
 import { useRouter } from 'next/router'
+
+import { SITE_URL } from '../../config/index.mjs'
+import { FB_APP_ID, FB_PAGE_ID, SITE_TITLE } from '../../constants'
 
 /**
  * @typedef {Object} OGProperties

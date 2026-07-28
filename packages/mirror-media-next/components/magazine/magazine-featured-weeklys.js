@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
-import { getMagazineHrefFromSlug } from '../../utils/index'
+
 import ReadingSvg from '../../public/images-next/magazine-online.svg'
+import { getMagazineHrefFromSlug } from '../../utils/index'
 
 const CardsList = styled.ul`
   margin: auto;
@@ -45,11 +46,8 @@ const IssueCard = styled.li`
   }
 
   &:hover button {
-    background: linear-gradient(
-        0deg,
-        rgba(29, 159, 184, 0.5),
-        rgba(29, 159, 184, 0.5)
-      ),
+    background:
+      linear-gradient(0deg, rgba(29, 159, 184, 0.5), rgba(29, 159, 184, 0.5)),
       #054f77;
   }
 `
@@ -124,7 +122,7 @@ const ReadingBtn = styled.button`
   align-items: center;
   grid-column-gap: 10px;
 
-  :focus {
+  &:focus {
     outline: none;
   }
 `

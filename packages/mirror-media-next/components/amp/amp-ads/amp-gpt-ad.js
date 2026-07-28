@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { GPT_AD_NETWORK } from '../../../constants/ads'
 
 const Wrapper = styled.div`

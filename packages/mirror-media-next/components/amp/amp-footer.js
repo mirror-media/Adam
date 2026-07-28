@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import useAmpSharedUrl from '../../hooks/use-amp-shared-url'
+
 import { SHARE_URL_FACEBOOK, SHARE_URL_LINE } from '../../constants'
+import useAmpSharedUrl from '../../hooks/use-amp-shared-url'
 
 const FooterWrapper = styled.div`
   height: 45px;

@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import styled from 'styled-components'
-import AmpPopIn from './amp-ads/amp-popin-ad'
+
 import AmpGptAd from './amp-ads/amp-gpt-ad'
+import AmpPopIn from './amp-ads/amp-popin-ad'
 
 const RelatedWrapper = styled.section`
   width: 100%;

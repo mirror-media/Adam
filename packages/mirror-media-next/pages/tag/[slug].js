@@ -1,19 +1,19 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
+import FullScreenAds from '../../components/ads/full-screen-ads'
+import Layout from '../../components/shared/layout'
 import TagArticles from '../../components/tag/tag-articles'
 import { ENV } from '../../config/index.mjs'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import {
-  getSectionAndTopicFromDefaultHeaderData,
-  getPostsAndPostscountFromGqlData,
-} from '../../utils/data-process'
-import Layout from '../../components/shared/layout'
 import { Z_INDEX } from '../../constants/index'
-import { fetchPostsByTagSlug, fetchTagByTagSlug } from '../../utils/api/tag'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { fetchPostsByTagSlug, fetchTagByTagSlug } from '../../utils/api/tag'
 import { setPageCache } from '../../utils/cache-setting'
-import FullScreenAds from '../../components/ads/full-screen-ads'
+import {
+  getPostsAndPostscountFromGqlData,
+  getSectionAndTopicFromDefaultHeaderData,
+} from '../../utils/data-process'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })

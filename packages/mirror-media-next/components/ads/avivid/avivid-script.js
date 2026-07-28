@@ -1,5 +1,5 @@
-import Script from 'next/script'
 import { useEffect } from 'react'
+import Script from 'next/script'
 
 // Delay AviviD visibility until its injected content has a stable size to reduce CLS from third-party DOM insertion.
 const AVIVID_READY_ATTRIBUTE = 'data-mm-avivid-ready'
@@ -160,6 +160,13 @@ export default function AvividScript() {
     }
   }, [])
 
+  // This AviviD/Likr bootstrap (all environments) triggers a web-push flow
+  // that registers /firebase-messaging-sw.js (scope
+  // /firebase-cloud-messaging-ns-scope). That worker file is served by prod
+  // infrastructure outside this repo, so non-prod environments log a 404
+  // ServiceWorker registration error in clean browser sessions. Pre-existing,
+  // vendor-handled noise — do not "fix" it with a stub public/ file, which
+  // could silently replace the real prod push worker at the same URL.
   return (
     <Script
       async

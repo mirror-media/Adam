@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
 import ListArticlesAboveAd from './list-articles-above-ad'
 import ListArticlesBelowAd from './list-articles-below-ad'

@@ -1,20 +1,22 @@
-import styled from 'styled-components'
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import countryOptions from 'constants/lib/countries.json'
 import taiwanDisTrictOptions from 'constants/lib/taiwan-districts.json'
-import DropdownMenu from './dropdown-menu'
-import PrimaryButton from '../shared/buttons/primary-button'
-import DefaultButton from '../shared/buttons/default-button'
-import { useRouter } from 'next/router'
-import client from '../../apollo/apollo-client'
-import { updateMember } from '../../apollo/membership/mutation/member'
-import { useMembership } from '../../context/membership'
-import { fetchMemberProfile } from '../../apollo/membership/query/member'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
+import styled from 'styled-components'
+
+import client from '../../apollo/apollo-client'
+import { updateMember } from '../../apollo/membership/mutation/member'
+import { fetchMemberProfile } from '../../apollo/membership/query/member'
+import { useMembership } from '../../context/membership'
+import { MODE } from '../../pages/profile'
 import { generateErrorReportInfo } from '../../utils/log/error-log'
 import { sendErrorLog } from '../../utils/log/send-log'
-import { MODE } from '../../pages/profile'
+import DefaultButton from '../shared/buttons/default-button'
+import PrimaryButton from '../shared/buttons/primary-button'
+
+import DropdownMenu from './dropdown-menu'
 
 const Form = styled.form`
   display: flex;
@@ -95,7 +97,7 @@ const FormGroup = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 12px;
-    ::placeholder {
+    &::placeholder {
       color: rgba(0, 0, 0, 0.3);
     }
     outline: none;
@@ -132,7 +134,7 @@ const ItemsWrapper = styled.div`
     border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 12px;
-    ::placeholder {
+    &::placeholder {
       color: rgba(0, 0, 0, 0.3);
     }
     outline: none;

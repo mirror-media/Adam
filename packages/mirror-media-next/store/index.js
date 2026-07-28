@@ -1,5 +1,6 @@
 //See examples: https://github.com/vercel/next.js/tree/09f235d9be8d3c6ae23bfad1baccdf68bd501390/examples/with-redux
 import { configureStore } from '@reduxjs/toolkit'
+
 import loginReducer from '../slice/login-slice'
 /**
  * @typedef {ReturnType<typeof store.getState>} AppState

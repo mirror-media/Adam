@@ -1,5 +1,6 @@
-import styled from 'styled-components'
 import { useRef, useState } from 'react'
+import styled from 'styled-components'
+
 import { Z_INDEX } from '../constants'
 
 const Popup = styled.div`

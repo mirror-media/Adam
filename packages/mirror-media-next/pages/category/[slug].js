@@ -1,32 +1,32 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
 import CategoryArticles from '../../components/category/category-articles'
+import Layout from '../../components/shared/layout'
+import WineWarning from '../../components/shared/wine-warning'
 import { ENV, SITE_URL } from '../../config/index.mjs'
+import { Z_INDEX } from '../../constants/index'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getCategoryOfWineSlug, getLogTraceObject } from '../../utils'
+import { getSectionGPTPageKey } from '../../utils/ad'
 import {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
 } from '../../utils/api'
 import {
-  getSectionAndTopicFromDefaultHeaderData,
-  getSectionFromPremiumHeaderData,
-  getPostsAndPostscountFromGqlData,
-} from '../../utils/data-process'
-import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
-import { Z_INDEX } from '../../constants/index'
-import {
   fetchCategoryByCategorySlug,
-  fetchPostsByCategorySlug,
-  fetchPremiumPostsByCategorySlug,
   fetchNewsCategoryInfo,
   fetchNewsCategoryPostsJSON,
+  fetchPostsByCategorySlug,
+  fetchPremiumPostsByCategorySlug,
 } from '../../utils/api/category'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
-import { getCategoryOfWineSlug, getLogTraceObject } from '../../utils'
+import { setPageCache } from '../../utils/cache-setting'
+import {
+  getPostsAndPostscountFromGqlData,
+  getSectionAndTopicFromDefaultHeaderData,
+  getSectionFromPremiumHeaderData,
+} from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
-import { getSectionGPTPageKey } from '../../utils/ad'
-import WineWarning from '../../components/shared/wine-warning'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })

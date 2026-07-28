@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import Tags from './tags'
+
 import CopyrightWarning from './copyright-warning'
+import Tags from './tags'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */

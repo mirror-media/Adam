@@ -1,6 +1,7 @@
 import styled from 'styled-components'
-import { transformTimeDataIntoDotFormat } from '../../utils'
+
 import { color } from '../../styles/theme/color'
+import { transformTimeDataIntoDotFormat } from '../../utils'
 
 const Section = styled.div`
   font-weight: 400;

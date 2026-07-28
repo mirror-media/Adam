@@ -1,12 +1,14 @@
-import { useState } from 'react'
-import styled from 'styled-components'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Pagination } from 'swiper'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
+import { useState } from 'react'
+import styled from 'styled-components'
+import { Autoplay, Pagination } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
 import { Z_INDEX } from '../../constants/index'
 import CloseIcon from '../../public/images-next/close.svg'
+
 import PromoteTopicItem from './promote-topic-item'
 
 const CARD_WIDTH = 124

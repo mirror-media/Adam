@@ -1,6 +1,5 @@
-import styled from 'styled-components'
-
 import Link from 'next/link'
+import styled from 'styled-components'
 const SubscribeMagazineButton = styled.button`
   display: block;
   width: 62px;

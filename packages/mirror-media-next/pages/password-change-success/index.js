@@ -1,16 +1,17 @@
-import styled from 'styled-components'
 import { useEffect } from 'react'
-import { SECOND } from '../../constants/time-unit'
-import LayoutFull from '../../components/shared/layout-full'
-import FormWrapper from '../../components/login/form-wrapper'
 import { useRouter } from 'next/router'
-import { logout } from '../../context/membership'
-import { setPageCache } from '../../utils/cache-setting'
+import styled from 'styled-components'
+
+import FormWrapper from '../../components/login/form-wrapper'
+import LayoutFull from '../../components/shared/layout-full'
 import { ENV } from '../../config/index.mjs'
+import { SECOND } from '../../constants/time-unit'
+import { logout } from '../../context/membership'
 import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 const REDIRECTION_DELAY = 5 // 秒
 

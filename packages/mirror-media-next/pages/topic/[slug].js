@@ -1,27 +1,28 @@
 // TODO: modify component `<WineWarning>`, no need to props `categories`
 
-import { ENV, SITE_URL } from '../../config/index.mjs'
-import TopicList from '../../components/topic/list/topic-list'
-import TopicGroup from '../../components/topic/group/topic-group'
-import WineWarning from '../../components/shared/wine-warning'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
-import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
 import Head from 'next/head'
-import { parseUrl } from '../../utils/topic'
+
+import Layout from '../../components/shared/layout'
+import WineWarning from '../../components/shared/wine-warning'
+import SlotAndBanner from '../../components/slot/slot-and-banner'
+import TopicGroup from '../../components/topic/group/topic-group'
+import TopicList from '../../components/topic/list/topic-list'
+import { ENV, SITE_URL } from '../../config/index.mjs'
+import { SITE_TITLE } from '../../constants/index'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { fetchTopicByTopicSlug } from '../../utils/api/topic'
+import { setPageCache } from '../../utils/cache-setting'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import {
   convertDraftToText,
-  toTaipeiISOString,
   getLogTraceObject,
   getResizedUrl,
   sortArrayWithOtherArrayId,
+  toTaipeiISOString,
 } from '../../utils/index'
-import { processSettledResult } from '../../utils/response-processor'
-import { fetchTopicByTopicSlug } from '../../utils/api/topic'
 import { logGqlError } from '../../utils/log/shared'
-import SlotAndBanner from '../../components/slot/slot-and-banner'
-import { SITE_TITLE } from '../../constants/index'
+import { processSettledResult } from '../../utils/response-processor'
+import { parseUrl } from '../../utils/topic'
 
 const RENDER_PAGE_SIZE = 12
 const WINE_TOPICS_SLUG = [

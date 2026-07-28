@@ -2,8 +2,8 @@ import Link from 'next/link'
 import styled from 'styled-components'
 
 import ButtonCopyLink from '../../components/story/shared/button-copy-link'
-import DonateLink from '../../components/story/shared/donate-link'
 import ButtonSocialNetworkShare from '../../components/story/shared/button-social-network-share'
+import DonateLink from '../../components/story/shared/donate-link'
 import { getCreditsHtml } from '../../utils/external'
 import Tags from '../story/shared/tags'
 
@@ -121,7 +121,7 @@ const StyledTags = styled(Tags)`
  * @param {string} props.publishedDate
  * @param {string} props.credits
  * @param {Partner | null} props.partner
- * @param {import('../../apollo/fragments/ai-tag.js').Tag[]} props.displayTags
+ * @param {import('../../apollo/fragments/ai-tag').Tag[]} props.displayTags
  * @returns {import('react').JSX.Element}
  */
 export default function ArticleInfo({

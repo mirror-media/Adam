@@ -1,13 +1,14 @@
 import styled from 'styled-components'
+
+import useAmpSharedUrl from '../../../hooks/use-amp-shared-url'
+import ExternalArticleContent from '../../external/external-article-content'
 import ButtonCopyLink from '../../story/shared/button-copy-link'
 import ButtonSocialNetworkShare from '../../story/shared/button-social-network-share'
 import AmpCredits from '../../story/shared/credits'
+
+import AmpArticleBrief from './amp-article-brief'
 import AmpHero from './amp-hero'
 import AmpInfo from './amp-info'
-import AmpArticleBrief from './amp-article-brief'
-import useAmpSharedUrl from '../../../hooks/use-amp-shared-url'
-
-import ExternalArticleContent from '../../external/external-article-content'
 
 const MainWrapper = styled.div`
   margin-top: 24px;

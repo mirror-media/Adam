@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react'
-import SvgCloseIcon from '../../../public/images-next/close-black.svg'
 import styled from 'styled-components'
-import GPTAd from './gpt-ad'
+
 import { Z_INDEX } from '../../../constants/index'
+import SvgCloseIcon from '../../../public/images-next/close-black.svg'
+
+import GPTAd from './gpt-ad'
 
 const FloatingAdContainer = styled.div`
   display: none;

@@ -1,30 +1,32 @@
-import styled from 'styled-components'
 import { useState } from 'react'
+import { FirebaseError } from 'firebase/app'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import styled from 'styled-components'
+
+import { FirebaseAuthError } from '../../constants/firebase'
+import { InputState } from '../../constants/form'
+import { auth } from '../../firebase'
 import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import {
+  FormState,
+  loginActions,
   loginEmail,
   loginPassword,
-  loginActions,
-  FormState,
 } from '../../slice/login-slice'
+import { isValidEmail, isValidPassword } from '../../utils'
 import {
+  errorHandler,
   getAccessToken,
   loginPageOnAuthStateChangeAction,
-  errorHandler,
 } from '../../utils/membership'
-import { auth } from '../../firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { FirebaseError } from 'firebase/app'
+import DefaultButton from '../shared/buttons/default-button'
+import PrimaryButton from '../shared/buttons/primary-button'
+import CenteredHint from '../shared/centered-hint'
+
+import FormTitle from './form-title'
 import RegistartionEmailInput from './registration-email-input'
 import RegistrationPasswordInput from './registration-password-input'
-import CenteredHint from '../shared/centered-hint'
-import { InputState } from '../../constants/form'
-import PrimaryButton from '../shared/buttons/primary-button'
-import DefaultButton from '../shared/buttons/default-button'
-import { isValidEmail, isValidPassword } from '../../utils'
 import ReminderSection from './reminder-section'
-import { FirebaseAuthError } from '../../constants/firebase'
-import FormTitle from './form-title'
 
 const InputGroup = styled.div`
   display: flex;

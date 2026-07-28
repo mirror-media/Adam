@@ -1,6 +1,7 @@
+import Image from 'next/image'
 import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
-import Image from 'next/image'
+
 import defaultImage from '../../../public/images-next/default-og-img.png'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp' | "imageFile">} HeroImage
@@ -108,6 +109,8 @@ export default function HeroImageAndVideo({
   const heroJsx = () => {
     if (shouldShowHeroVideo) {
       return (
+        /* The CMS HeroVideo payload does not include a caption track URL. */
+        /* eslint-disable-next-line jsx-a11y/media-has-caption */
         <video
           preload="metadata"
           controlsList="nodownload"

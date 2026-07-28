@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
 import YouTube from 'react-youtube'
+import styled from 'styled-components'
 
 import { extractYouTubeId } from '../../utils/youtube'
 import { FullBleedBackgroundStyle } from '../shared/full-bleed-background'
+
 import { IndexTitle } from './share/index-title'
 
 const StyledSection = styled.section`

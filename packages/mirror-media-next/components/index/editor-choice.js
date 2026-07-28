@@ -1,15 +1,15 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
 
-import { Swiper, SwiperSlide } from 'swiper/react'
-
-import { Autoplay, Pagination, Navigation } from 'swiper'
-import CustomImage from '@readr-media/react-image'
-import styled from 'styled-components'
-import Link from 'next/link'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
+
+import Link from 'next/link'
+import CustomImage from '@readr-media/react-image'
+import styled from 'styled-components'
+import { Autoplay, Navigation, Pagination } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 /**
  * @typedef {import('../../type/theme').Theme} Theme

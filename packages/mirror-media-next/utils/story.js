@@ -214,11 +214,11 @@ function extractArticleBody(draft, maxLength = 5000) {
 }
 
 export {
-  handleStoryPageRedirect,
+  changeUtcToGmtTimeStamp,
   copyAndSliceDraftBlock,
+  extractArticleBody,
   getBlocksCount,
   getSlicedIndexAndUnstyledBlocksCount,
-  changeUtcToGmtTimeStamp,
+  handleStoryPageRedirect,
   modifyFirstImageEntity,
-  extractArticleBody,
 }
