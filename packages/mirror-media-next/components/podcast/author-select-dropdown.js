@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+
 import { Z_INDEX } from '../../constants'
 
 const CustomDropdownContainer = styled.div`
@@ -20,11 +21,11 @@ const DropdownButton = styled.button`
   border: 1px solid #808080;
   cursor: pointer;
 
-  :focus {
+  &:focus {
     outline: 0;
   }
 
-  ::before {
+  &::before {
     content: '';
     position: absolute;
 
@@ -49,7 +50,7 @@ const DropdownButton = styled.button`
     }
   }
 
-  ::after {
+  &::after {
     content: '';
     position: absolute;
     top: 100%;

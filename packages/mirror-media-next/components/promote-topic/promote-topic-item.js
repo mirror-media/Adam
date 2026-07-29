@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import CustomImage from '@readr-media/react-image'
+import styled from 'styled-components'
 
 const Card = styled.a`
   display: block;

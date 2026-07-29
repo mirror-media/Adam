@@ -1,14 +1,16 @@
-import styled, { css } from 'styled-components'
-import { useAppSelector } from '../../hooks/useRedux'
-import { loginFormMode, FormMode } from '../../slice/login-slice'
 import NextImage from 'next/image'
-import FormWrapper from './form-wrapper'
-import MainFormStart from './main-form-start'
-import MainFormRegistration from './main-form-registration'
-import MainFormLoginWithPassword from './main-form-login-with-password'
+import styled, { css } from 'styled-components'
+
+import { useAppSelector } from '../../hooks/useRedux'
+import DesktopBanner from '../../public/images-next/login/banner-desktop.png'
 import MobileBanner from '../../public/images-next/login/banner-mobile.png'
 import TabletBanner from '../../public/images-next/login/banner-tablet.png'
-import DesktopBanner from '../../public/images-next/login/banner-desktop.png'
+import { FormMode, loginFormMode } from '../../slice/login-slice'
+
+import FormWrapper from './form-wrapper'
+import MainFormLoginWithPassword from './main-form-login-with-password'
+import MainFormRegistration from './main-form-registration'
+import MainFormStart from './main-form-start'
 
 const Main = styled.main`
   display: flex;

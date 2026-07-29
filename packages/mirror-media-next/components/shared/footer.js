@@ -1,11 +1,11 @@
-import styled from 'styled-components'
 import Nextink from 'next/link'
+import styled from 'styled-components'
 
-import { FOOTER_PROMOTION_LINKS } from '../../constants/index'
 import {
-  FOOTER_SOCIAL_MEDIA_LISTS,
   CUSTOMER_SERVICE_INFOS,
+  FOOTER_SOCIAL_MEDIA_LISTS,
 } from '../../constants/footer'
+import { FOOTER_PROMOTION_LINKS } from '../../constants/index'
 
 const {
   PAPER_MAGAZINE_LINK,

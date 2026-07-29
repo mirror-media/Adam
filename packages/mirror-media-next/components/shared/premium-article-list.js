@@ -1,8 +1,10 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import PremiumArticleListItem from './premium-article-list-item'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
+import styled from 'styled-components'
+
 import { SECTION_IDS } from '../../constants/index'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+
+import PremiumArticleListItem from './premium-article-list-item'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

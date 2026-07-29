@@ -1,0 +1,9 @@
+**/node_modules/**
+**/.yalc/**
+**/.next/**
+**/dist/**
+**/__generated__/**
+**/public/sw.js
+**/public/workbox-*.js
+**/public/worker-*.js
+pnpm-lock.yaml

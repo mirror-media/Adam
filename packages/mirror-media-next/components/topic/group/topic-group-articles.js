@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import GroupArticlesItem from './group-articles-item'
 
 const Container = styled.div`

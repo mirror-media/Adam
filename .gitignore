@@ -59,7 +59,6 @@ typings/
 
 # TypeScript cache
 *.tsbuildinfo
-next-env.d.ts
 
 # Optional npm cache directory
 .npm
@@ -130,7 +129,9 @@ lib
 .vercel
 
 # vscode
-.vscode
+.vscode/*
+!.vscode/
+!.vscode/settings.json
 
 # cursor
 .cursor

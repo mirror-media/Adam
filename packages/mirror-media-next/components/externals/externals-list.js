@@ -1,10 +1,12 @@
 import { Fragment, useEffect, useRef } from 'react'
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import ExternalListItem from './externals-list-item'
-import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../utils/ad'
+import styled from 'styled-components'
+
 import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { getMicroAdUnitId, needInsertMicroAdAfter } from '../../utils/ad'
 import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
+
+import ExternalListItem from './externals-list-item'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

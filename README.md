@@ -1,2 +1,3 @@
 # Adam
-Monorepo for Mirrormedia-next and Mirrormedia-search-next.
+
+Monorepo for Mirror Media's web applications. It currently contains the Next.js news platform in `packages/mirror-media-next`.

@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
-import { useMembership } from '../context/membership'
 import { useRouter } from 'next/router'
+
+import { useMembership } from '../context/membership'
 import { getLoginHref } from '../utils'
 
 /**

@@ -1,6 +1,7 @@
-import styled from 'styled-components'
-import Image from '@readr-media/react-image'
 import Link from 'next/link'
+import Image from '@readr-media/react-image'
+import styled from 'styled-components'
+
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage

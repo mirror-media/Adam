@@ -1,13 +1,14 @@
-import styled from 'styled-components'
-import LayoutFull from '../../components/shared/layout-full'
-import GenericFailed from '../../components/login/generic-failed'
 import { useRouter } from 'next/router'
-import { setPageCache } from '../../utils/cache-setting'
+import styled from 'styled-components'
+
+import GenericFailed from '../../components/login/generic-failed'
+import LayoutFull from '../../components/shared/layout-full'
 import { ENV } from '../../config/index.mjs'
 import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 const FROM_TYPE = /** @type {const} */ ({
   RECOVER_PASSWORD: '/recover-password',

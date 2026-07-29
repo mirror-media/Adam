@@ -1,7 +1,8 @@
+import { useState } from 'react'
 import CustomImage from '@readr-media/react-image'
 import dayjs from 'dayjs'
-import { useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
+
 import PodcastModal from './podcast-modal'
 
 const CardContainer = styled.li`

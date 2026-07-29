@@ -1,17 +1,18 @@
-import styled from 'styled-components'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Autoplay, Navigation } from 'swiper'
-import Link from 'next/link'
-
-import TopicListArticles from './topic-list-articles'
-import CustomImage from '@readr-media/react-image'
 // Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 import { useCallback, useState } from 'react'
+import Link from 'next/link'
+import CustomImage from '@readr-media/react-image'
+import styled from 'styled-components'
+import { Autoplay, Navigation } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
 import { parseUrl } from '../../../utils/topic'
+
+import TopicListArticles from './topic-list-articles'
 
 /**
  * @typedef {import('../../../type/theme').Theme} Theme

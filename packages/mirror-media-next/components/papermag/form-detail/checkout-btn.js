@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import Spinner from './spinner'
 
 const Wrapper = styled.div`
@@ -22,11 +23,11 @@ const StyledCheckoutBtn = styled.button`
   box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.07);
   background: #054f77;
   color: #fff;
-  :focus {
+  &:focus {
     outline: none;
   }
 
-  :hover {
+  &:hover {
     background: #9cb7c6;
     color: rgba(0, 0, 0, 0.87);
   }

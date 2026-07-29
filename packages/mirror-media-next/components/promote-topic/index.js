@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { URL_STATIC_PROMOTE_TOPICS } from '../../config/index.mjs'
 import { fetchStaticJsonByUrl } from '../../utils/api'
+
 import PromoteTopicSwiper from './promote-topic-swiper'
 
 /**

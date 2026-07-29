@@ -1,15 +1,17 @@
-import { useRef, useEffect, useState } from 'react'
-import styled from 'styled-components'
-import DraftRenderBlock from '../shared/draft-renderer-block'
+import { useEffect, useRef, useState } from 'react'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import styled from 'styled-components'
+
+import DraftRenderBlock from '../shared/draft-renderer-block'
 const { getContentTextBlocks } = MirrorMedia
-import Credits from './potography-credits'
-import HeroSection from './hero-section'
-import Header from './photography-header'
-import Slide from './slide'
-import RelatedPosts from './related-posts'
-import { ArrowDown } from './icons'
 import Footer from '../../shared/footer'
+
+import HeroSection from './hero-section'
+import { ArrowDown } from './icons'
+import Header from './photography-header'
+import Credits from './potography-credits'
+import RelatedPosts from './related-posts'
+import Slide from './slide'
 
 /**
  * Determines if the current browser is Safari.

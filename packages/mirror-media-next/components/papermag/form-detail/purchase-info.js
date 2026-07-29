@@ -1,7 +1,8 @@
 import styled from 'styled-components'
+
+import { COUPON_DISCOUNT } from '../../../constants/papermag'
 import { getNumberWithCommas } from '../../../utils'
 import { getPlanInfoByIdAndShouldFreight } from '../../../utils/papermag'
-import { COUPON_DISCOUNT } from '../../../constants/papermag'
 
 const Wrapper = styled.div`
   border-radius: 12px;
@@ -19,7 +20,7 @@ const Title = styled.h2`
 const ItemWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  :not(:last-child) {
+  &:not(:last-child) {
     margin-bottom: 8px;
   }
 `

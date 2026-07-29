@@ -1,9 +1,10 @@
-import styled, { css } from 'styled-components'
 import { useState } from 'react'
+import styled, { css } from 'styled-components'
+
 import { InputState } from '../../../constants/form'
-import getHint from '../../../utils/hint'
 import IconConceal from '../../../public/images-next/login/conceal.svg'
 import IconReveal from '../../../public/images-next/login/reveal.svg'
+import getHint from '../../../utils/hint'
 
 /** @typedef {import('../../../constants/form').InputStateEnum} PasswordInputState */
 

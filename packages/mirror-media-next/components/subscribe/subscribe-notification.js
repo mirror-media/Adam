@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { NOTIFICATIONS } from '../../constants/subscribe-constants'
 
 const NoticeWrapper = styled.section`
@@ -37,7 +38,7 @@ const Li = styled.li`
   };
   font-size: 14px;
   font-weight: 400;
-  ::marker {
+  &::marker {
     color: rgba(0, 0, 0, 0.5);
   }
 

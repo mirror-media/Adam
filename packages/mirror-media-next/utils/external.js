@@ -85,8 +85,8 @@ function getCreditsHtml(credits = '') {
 }
 
 export {
-  transformStringToDraft,
-  getExternalSectionTitle,
   getCreditsHtml,
   getExternalPartnerColor,
+  getExternalSectionTitle,
+  transformStringToDraft,
 }

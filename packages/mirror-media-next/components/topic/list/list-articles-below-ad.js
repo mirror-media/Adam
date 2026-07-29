@@ -1,9 +1,11 @@
-import styled from 'styled-components'
-import InfiniteScrollList from '../../infinite-scroll-list'
 import Image from 'next/legacy/image'
+import styled from 'styled-components'
+
 import LoadingPage from '../../../public/images-next/loading_page.gif'
-import ListArticles from './list-articles'
 import { fetchTopicByTopicSlug } from '../../../utils/api/topic'
+import InfiniteScrollList from '../../infinite-scroll-list'
+
+import ListArticles from './list-articles'
 
 const Loading = styled.div`
   margin: 20px auto 0;

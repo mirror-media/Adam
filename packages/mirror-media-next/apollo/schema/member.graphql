@@ -1,0 +1,3318 @@
+input createNewebpayTradeInfoForMagazineOrderInput {
+  desc: String
+  comment: String
+  merchandise: merchandiseRelateToOneForCreateInput!
+  itemCount: Int!
+  purchaseDatetime: String!
+  promoteCode: String
+  purchaseName: String!
+  purchaseMobile: String
+  purchasePhone: String
+  purchaseAddress: String!
+  purchaseEmail: String!
+  receiveName: String!
+  receiveMobile: String
+  receivePhone: String
+  receiveAddress: String!
+  receiveNote: String
+  category: magazineOrderCategoryType!
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  printFlag: String
+  createdBy: userRelateToOneForCreateInput
+}
+
+type newebpayTradeInfo {
+  MerchantID: String!
+  RespondType: String!
+  TimeStamp: String!
+  Version: String!
+  MerchantOrderNo: String!
+  Amt: Int!
+  ItemDesc: String!
+  LoginType: Int!
+  Email: String!
+  TradeLimit: Int
+  NotifyURL: String
+  ReturnURL: String
+}
+
+type Mutation {
+  """
+  This mutation will create a 'paying' magazine order in the database,
+  and return the trade info fields required by Newebpay MPG API.
+  """
+  createNewebpayTradeInfoForMagazineOrder(data: createNewebpayTradeInfoForMagazineOrderInput!): newebpayTradeInfo
+
+  """
+  Israfel does provide `updateMembers` mutation, however, that mutation updates member records
+  without optimistic concurrency control (OCC).
+
+  Note:
+  Optimistic concurrency control reference:
+  https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#optimistic-concurrency-control
+
+  `updateMemberType` will only update those records whose `updatedAt` and `id` matches.
+  """
+  updateMemberType(targetType: memberTypeType!, where: updateMemberTypeWhereInput!): [member]
+
+  """
+  Create a newebpay payment and update its corresponding subscription which matches all the following conditions
+  1. status === 'paying' || status === 'invalid'
+  2. periodEndDatetime <= paymentData.paymentTime (optional: if subscription is monthly or yearly frequency)
+  4. orderNumber === subsOrderNumber
+  """
+  createNewebpayPaymentAndUpdateSubscription(paymentData: RawNewebpayPaymentInput!): newebpayPayment
+
+  """
+  Create or update a LINEPay payment and update its corresponding subscription which matches all the following conditions
+  1. linePayStatus === 'paying' || linePayStatus === 'invalid'
+  2. orderId === subsOrderNumber
+  """
+  updateLINEPayPaymentAndSubscription(paymentData: RawLINEPayPaymentInput!): linepayPayment
+
+  """
+  This mutation adds notification event time constraint.
+  It will only update the Google Play subscription if the following conditions matched:
+  1. `googlePlayPurchaseToken` is in the request payload
+  2. `googlePlayNotificationEventDatetime` is in the request payload and is greater than the subscription we want to update
+
+  If `linkedPurchaseToken` is in the request payload, then this mutation will update the subscription matched `linkedPurchaseToken` to `googlePlayPurchaseToken`.
+  """
+  updateGooglePlaySubscriptionByNotificationEvent(data: googlePlaySubscriptionInput!): subscription
+
+  """
+  This mutation is designed for the very first time Google Play subscription purchase.
+  It will create or update a Google Play subscription.
+  If the database doesn't have the subscription with certain `googlePlayPurchaseToken`, and then create the subscription.
+  Otherwise, update the existing subscription.
+
+  This mutation is designed only to be used for
+    - Google Play notification with `SUBSCRIPTION_PURCHASED` type
+    - App receives the purchase result, and wants to verify that purchase with secured backend
+  """
+  createOrUpdateGooglePlaySubscription(data: googlePlaySubscriptionInput!): subscription
+
+  """
+  Update a subscription by optimistic lock.
+  This mutation updatesubscription created by keystonejs does not have
+  optimistic lock. Therefore, this custom mutation updateSubscriptionByOptimisticLock
+  makes sure we won't update subscription mistakenly.
+  """
+  updateSubscriptionByOptimisticLock(data: subscriptionUpdateInput!, where: updateSubscriptionByOptimisticLockWhereInput!): subscription
+
+  """
+  Set status of (`take` number of) subscriptions with paymentMethod equals 'newebpay' from 'to_pay' to 'paying'.
+  """
+  setSubscriptionsStatusFromToPayToPaying(take: Int): [subscription]
+
+  """
+  Set linePayStatus of (`take` number of) subscriptions with paymentMethod equals 'line_pay' from 'to_pay' to 'paying'.
+  """
+  setSubscriptionsLinePayStatusFromToPayToPaying(take: Int): [subscription]
+
+  """
+  Set recurring subscriptions' status to 'to_pay' if they are matched (AND clause) the following conditions:
+  1. paymentMethod === 'newebpay'
+  2. frequency === 'monthly' OR frequency === 'yearly' OR frequency === 'halfyearly'
+  3. status === 'fail' OR status === 'paid'
+  4. isCanceled === false
+  5. periodNextPayDatetime <= now
+  6. related member's state is 'active'
+  """
+  setSubscriptionsStatusToPay: [subscription]
+
+  """
+  Set recurring subscriptions' linePayStatus to 'to_pay' if they are matched (AND clause) the following conditions:
+  1. paymentMethod === 'line_pay'
+  2. frequency === 'monthly' OR frequency === 'yearly' OR frequency === 'halfyearly'
+  3. linePayStatus === 'fail' OR linePayStatus === 'paid'
+  4. isCanceled === false
+  5. periodNextPayDatetime <= now
+  6. related member's state is 'active'
+  """
+  setSubscriptionsLinePayStatusToPay: [subscription]
+
+  """Deactivate expired subscriptions."""
+  deactivateExpiredSubscriptions: [subscription]
+
+  """
+  upsertAppStoreSubscription will upsert a subscription, and connect it to a payment if a payment is provided.
+
+  If a payment is provided, then the following actions will proceed:
+  1. It will upsert a payment and connect it to the subscription.
+  2. It will update the subscription dates and isActive according to the payment if the payment's date is newer than the subscription's.
+  """
+  upsertAppStoreSubscription(data: upsertAppStoreSubscriptionInput!): subscription
+  createInitialuser(data: CreateInitialuserInput!): userAuthenticationWithPasswordSuccess!
+  authenticateuserWithPassword(email: String!, password: String!): userAuthenticationWithPasswordResult!
+  createuser(data: userCreateInput!): user
+  createUsers(data: [userCreateInput!]!): [user]
+  updateuser(where: userWhereUniqueInput!, data: userUpdateInput!): user
+  updateUsers(data: [userUpdateArgs!]!): [user]
+  deleteuser(where: userWhereUniqueInput!): user
+  deleteUsers(where: [userWhereUniqueInput!]!): [user]
+  createinvoice(data: invoiceCreateInput!): invoice
+  createInvoices(data: [invoiceCreateInput!]!): [invoice]
+  updateinvoice(where: invoiceWhereUniqueInput!, data: invoiceUpdateInput!): invoice
+  updateInvoices(data: [invoiceUpdateArgs!]!): [invoice]
+  deleteinvoice(where: invoiceWhereUniqueInput!): invoice
+  deleteInvoices(where: [invoiceWhereUniqueInput!]!): [invoice]
+  createmember(data: memberCreateInput!): member
+  createMembers(data: [memberCreateInput!]!): [member]
+  updatemember(where: memberWhereUniqueInput!, data: memberUpdateInput!): member
+  updateMembers(data: [memberUpdateArgs!]!): [member]
+  deletemember(where: memberWhereUniqueInput!): member
+  deleteMembers(where: [memberWhereUniqueInput!]!): [member]
+  createmerchandise(data: merchandiseCreateInput!): merchandise
+  createMerchandises(data: [merchandiseCreateInput!]!): [merchandise]
+  updatemerchandise(where: merchandiseWhereUniqueInput!, data: merchandiseUpdateInput!): merchandise
+  updateMerchandises(data: [merchandiseUpdateArgs!]!): [merchandise]
+  deletemerchandise(where: merchandiseWhereUniqueInput!): merchandise
+  deleteMerchandises(where: [merchandiseWhereUniqueInput!]!): [merchandise]
+  createmarketingMembership(data: marketingMembershipCreateInput!): marketingMembership
+  createMarketingMemberships(data: [marketingMembershipCreateInput!]!): [marketingMembership]
+  updatemarketingMembership(where: marketingMembershipWhereUniqueInput!, data: marketingMembershipUpdateInput!): marketingMembership
+  updateMarketingMemberships(data: [marketingMembershipUpdateArgs!]!): [marketingMembership]
+  deletemarketingMembership(where: marketingMembershipWhereUniqueInput!): marketingMembership
+  deleteMarketingMemberships(where: [marketingMembershipWhereUniqueInput!]!): [marketingMembership]
+  createmailRecord(data: mailRecordCreateInput!): mailRecord
+  createMailRecords(data: [mailRecordCreateInput!]!): [mailRecord]
+  updatemailRecord(where: mailRecordWhereUniqueInput!, data: mailRecordUpdateInput!): mailRecord
+  updateMailRecords(data: [mailRecordUpdateArgs!]!): [mailRecord]
+  deletemailRecord(where: mailRecordWhereUniqueInput!): mailRecord
+  deleteMailRecords(where: [mailRecordWhereUniqueInput!]!): [mailRecord]
+  createnewebpayPaymentInfo(data: newebpayPaymentInfoCreateInput!): newebpayPaymentInfo
+  createNewebpayPaymentInfos(data: [newebpayPaymentInfoCreateInput!]!): [newebpayPaymentInfo]
+  updatenewebpayPaymentInfo(where: newebpayPaymentInfoWhereUniqueInput!, data: newebpayPaymentInfoUpdateInput!): newebpayPaymentInfo
+  updateNewebpayPaymentInfos(data: [newebpayPaymentInfoUpdateArgs!]!): [newebpayPaymentInfo]
+  deletenewebpayPaymentInfo(where: newebpayPaymentInfoWhereUniqueInput!): newebpayPaymentInfo
+  deleteNewebpayPaymentInfos(where: [newebpayPaymentInfoWhereUniqueInput!]!): [newebpayPaymentInfo]
+  createnewebpayPayment(data: newebpayPaymentCreateInput!): newebpayPayment
+  createNewebpayPayments(data: [newebpayPaymentCreateInput!]!): [newebpayPayment]
+  updatenewebpayPayment(where: newebpayPaymentWhereUniqueInput!, data: newebpayPaymentUpdateInput!): newebpayPayment
+  updateNewebpayPayments(data: [newebpayPaymentUpdateArgs!]!): [newebpayPayment]
+  deletenewebpayPayment(where: newebpayPaymentWhereUniqueInput!): newebpayPayment
+  deleteNewebpayPayments(where: [newebpayPaymentWhereUniqueInput!]!): [newebpayPayment]
+  createappStorePayment(data: appStorePaymentCreateInput!): appStorePayment
+  createAppStorePayments(data: [appStorePaymentCreateInput!]!): [appStorePayment]
+  updateappStorePayment(where: appStorePaymentWhereUniqueInput!, data: appStorePaymentUpdateInput!): appStorePayment
+  updateAppStorePayments(data: [appStorePaymentUpdateArgs!]!): [appStorePayment]
+  deleteappStorePayment(where: appStorePaymentWhereUniqueInput!): appStorePayment
+  deleteAppStorePayments(where: [appStorePaymentWhereUniqueInput!]!): [appStorePayment]
+  creategooglePlayPayment(data: googlePlayPaymentCreateInput!): googlePlayPayment
+  createGooglePlayPayments(data: [googlePlayPaymentCreateInput!]!): [googlePlayPayment]
+  updategooglePlayPayment(where: googlePlayPaymentWhereUniqueInput!, data: googlePlayPaymentUpdateInput!): googlePlayPayment
+  updateGooglePlayPayments(data: [googlePlayPaymentUpdateArgs!]!): [googlePlayPayment]
+  deletegooglePlayPayment(where: googlePlayPaymentWhereUniqueInput!): googlePlayPayment
+  deleteGooglePlayPayments(where: [googlePlayPaymentWhereUniqueInput!]!): [googlePlayPayment]
+  createlinepayPayment(data: linepayPaymentCreateInput!): linepayPayment
+  createLinepayPayments(data: [linepayPaymentCreateInput!]!): [linepayPayment]
+  updatelinepayPayment(where: linepayPaymentWhereUniqueInput!, data: linepayPaymentUpdateInput!): linepayPayment
+  updateLinepayPayments(data: [linepayPaymentUpdateArgs!]!): [linepayPayment]
+  deletelinepayPayment(where: linepayPaymentWhereUniqueInput!): linepayPayment
+  deleteLinepayPayments(where: [linepayPaymentWhereUniqueInput!]!): [linepayPayment]
+  createlinepayPaymentInfo(data: linepayPaymentInfoCreateInput!): linepayPaymentInfo
+  createLinepayPaymentInfos(data: [linepayPaymentInfoCreateInput!]!): [linepayPaymentInfo]
+  updatelinepayPaymentInfo(where: linepayPaymentInfoWhereUniqueInput!, data: linepayPaymentInfoUpdateInput!): linepayPaymentInfo
+  updateLinepayPaymentInfos(data: [linepayPaymentInfoUpdateArgs!]!): [linepayPaymentInfo]
+  deletelinepayPaymentInfo(where: linepayPaymentInfoWhereUniqueInput!): linepayPaymentInfo
+  deleteLinepayPaymentInfos(where: [linepayPaymentInfoWhereUniqueInput!]!): [linepayPaymentInfo]
+  createpromotion(data: promotionCreateInput!): promotion
+  createPromotions(data: [promotionCreateInput!]!): [promotion]
+  updatepromotion(where: promotionWhereUniqueInput!, data: promotionUpdateInput!): promotion
+  updatePromotions(data: [promotionUpdateArgs!]!): [promotion]
+  deletepromotion(where: promotionWhereUniqueInput!): promotion
+  deletePromotions(where: [promotionWhereUniqueInput!]!): [promotion]
+  createsubscription(data: subscriptionCreateInput!): subscription
+  createSubscriptions(data: [subscriptionCreateInput!]!): [subscription]
+  updatesubscription(where: subscriptionWhereUniqueInput!, data: subscriptionUpdateInput!): subscription
+  updateSubscriptions(data: [subscriptionUpdateArgs!]!): [subscription]
+  deletesubscription(where: subscriptionWhereUniqueInput!): subscription
+  deleteSubscriptions(where: [subscriptionWhereUniqueInput!]!): [subscription]
+  createsubscriptionHistory(data: subscriptionHistoryCreateInput!): subscriptionHistory
+  createSubscriptionHistories(data: [subscriptionHistoryCreateInput!]!): [subscriptionHistory]
+  updatesubscriptionHistory(where: subscriptionHistoryWhereUniqueInput!, data: subscriptionHistoryUpdateInput!): subscriptionHistory
+  updateSubscriptionHistories(data: [subscriptionHistoryUpdateArgs!]!): [subscriptionHistory]
+  deletesubscriptionHistory(where: subscriptionHistoryWhereUniqueInput!): subscriptionHistory
+  deleteSubscriptionHistories(where: [subscriptionHistoryWhereUniqueInput!]!): [subscriptionHistory]
+  createmagazineOrder(data: magazineOrderCreateInput!): magazineOrder
+  createMagazineOrders(data: [magazineOrderCreateInput!]!): [magazineOrder]
+  updatemagazineOrder(where: magazineOrderWhereUniqueInput!, data: magazineOrderUpdateInput!): magazineOrder
+  updateMagazineOrders(data: [magazineOrderUpdateArgs!]!): [magazineOrder]
+  deletemagazineOrder(where: magazineOrderWhereUniqueInput!): magazineOrder
+  deleteMagazineOrders(where: [magazineOrderWhereUniqueInput!]!): [magazineOrder]
+  creategroup(data: groupCreateInput!): group
+  createGroups(data: [groupCreateInput!]!): [group]
+  updategroup(where: groupWhereUniqueInput!, data: groupUpdateInput!): group
+  updateGroups(data: [groupUpdateArgs!]!): [group]
+  deletegroup(where: groupWhereUniqueInput!): group
+  deleteGroups(where: [groupWhereUniqueInput!]!): [group]
+  createeditLog(data: editLogCreateInput!): editLog
+  createEditLogs(data: [editLogCreateInput!]!): [editLog]
+  updateeditLog(where: editLogWhereUniqueInput!, data: editLogUpdateInput!): editLog
+  updateEditLogs(data: [editLogUpdateArgs!]!): [editLog]
+  deleteeditLog(where: editLogWhereUniqueInput!): editLog
+  deleteEditLogs(where: [editLogWhereUniqueInput!]!): [editLog]
+  endSession: Boolean!
+}
+
+input updateMemberTypeWhereInput {
+  OR: [updateMemberTypeWhereInput!]
+  id: ID
+  updatedAt: String
+}
+
+input RawNewebpayPaymentInput {
+  amount: Int!
+  status: String!
+  paymentTime: String!
+  paymentMethod: String
+  tradeNumber: String
+  message: String
+  merchantId: String!
+  orderNumber: String!
+  tokenUseStatus: Int
+  respondCode: String
+  ECI: String
+  authCode: String
+  authBank: String
+  cardInfoLastFour: String
+  cardInfoFirstSix: String
+  cardInfoExp: String
+  tokenValue: String
+  tokenLife: String
+  subscriptionFrequency: subscriptionFrequencyType!
+  subscriptionOrderNumber: String!
+}
+
+input RawLINEPayPaymentInput {
+  transactionId: String!
+  orderId: String!
+  amount: Int!
+  transactionTime: String!
+  payInfoMethod: String
+  returnCode: String!
+  returnMessage: String
+  creditCardNickName: String
+  creditCardBrand: String
+  maskedCreditCardNumber: String
+  regKey: String
+  subscriptionFrequency: subscriptionFrequencyType!
+  subscriptionOrderNumber: String!
+}
+
+input updateSubscriptionByOptimisticLockWhereInput {
+  id: ID
+  updatedAt: String
+}
+
+input googlePlaySubscriptionInput {
+  member: memberRelateToOneForCreateInput
+  amount: Float
+  currency: subscriptionCurrencyType
+  orderNumber: String
+  isActive: Boolean
+  isCanceled: Boolean
+  frequency: subscriptionFrequencyType
+  nextFrequency: subscriptionNextFrequencyType
+  periodLastSuccessDatetime: String
+  periodCreateDatetime: String
+  periodFirstDatetime: String
+  periodEndDatetime: String
+  googlePlayStatus: subscriptionGooglePlayStatusType
+  googlePlayPurchaseToken: String
+  linkedPurchaseToken: String
+  googlePlayProductId: String
+  googlePlayPackageName: String
+  googlePlayNotificationEventDatetime: String
+  googlePlayPaymentOrderId: String
+  googlePlayPaymentTransactionDatetime: String
+  cancelReason: String
+  refundNote: String
+  changePlanDatetime: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input appStoreSubscriptionInput {
+  aaplOriginalTransactionId: String!
+  cancelReason: String
+  isCanceled: Boolean
+  member: memberRelateToOneForCreateInput
+  frequency: subscriptionFrequencyType
+  nextFrequency: subscriptionNextFrequencyType
+}
+
+input appStorePaymentInput {
+  purchaseDate: String
+  originalPurchaseDate: String
+  expiryDate: String
+  productId: String
+  transactionId: String!
+}
+
+input upsertAppStoreSubscriptionInput {
+  appStoreSubscription: appStoreSubscriptionInput!
+  appStorePayment: appStorePaymentInput
+}
+
+input CreateInitialuserInput {
+  name: String
+  email: String
+  password: String
+  role: userRoleType
+}
+
+union AuthenticatedItem = user
+
+union userAuthenticationWithPasswordResult = userAuthenticationWithPasswordSuccess | userAuthenticationWithPasswordFailure
+
+type userAuthenticationWithPasswordSuccess {
+  sessionToken: String!
+  item: user!
+}
+
+type userAuthenticationWithPasswordFailure {
+  code: PasswordAuthErrorCode!
+  message: String!
+}
+
+enum PasswordAuthErrorCode {
+  FAILURE
+  IDENTITY_NOT_FOUND
+  SECRET_NOT_SET
+  MULTIPLE_IDENTITY_MATCHES
+  SECRET_MISMATCH
+}
+
+type user {
+  id: ID!
+  name: String
+  email: String
+  password: PasswordState
+  role: userRoleType
+  lastLogin: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+type PasswordState {
+  isSet: Boolean!
+}
+
+enum userRoleType {
+  admin
+  editor
+  api
+}
+
+input userWhereUniqueInput {
+  id: ID
+  email: String
+}
+
+input userWhereInput {
+  AND: [userWhereInput!]
+  OR: [userWhereInput!]
+  NOT: [userWhereInput!]
+  id: IDFilter
+  name: StringNullableFilter
+  email: StringNullableFilter
+  password: PasswordFilter
+  role: userRoleTypeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input IDFilter {
+  equals: ID
+  in: [ID!]
+  notIn: [ID!]
+  lt: ID
+  lte: ID
+  gt: ID
+  gte: ID
+  not: IDFilter
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+}
+
+enum QueryMode {
+  default
+  insensitive
+}
+
+input NestedStringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
+}
+
+input PasswordFilter {
+  isSet: Boolean!
+}
+
+input userRoleTypeNullableFilter {
+  equals: userRoleType
+  in: [userRoleType!]
+  notIn: [userRoleType!]
+  not: userRoleTypeNullableFilter
+}
+
+input DateTimeNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  not: DateTimeNullableFilter
+}
+
+input userOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  email: OrderDirection
+  role: OrderDirection
+  lastLogin: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+enum OrderDirection {
+  asc
+  desc
+}
+
+input userUpdateInput {
+  name: String
+  email: String
+  password: String
+  role: userRoleType
+  lastLogin: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input userRelateToOneForUpdateInput {
+  create: userCreateInput
+  connect: userWhereUniqueInput
+  disconnect: Boolean
+}
+
+input userUpdateArgs {
+  where: userWhereUniqueInput!
+  data: userUpdateInput!
+}
+
+input userCreateInput {
+  name: String
+  email: String
+  password: String
+  role: userRoleType
+  lastLogin: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input userRelateToOneForCreateInput {
+  create: userCreateInput
+  connect: userWhereUniqueInput
+}
+
+type invoice {
+  id: ID!
+  newebpayPayment: newebpayPayment
+  linepayPayment: linepayPayment
+  amount: Int
+  email: String
+  desc: String
+  invoiceNo: String
+  category: invoiceCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  status: invoiceStatusType
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum invoiceCategoryType {
+  B2B
+  B2C
+}
+
+enum invoiceStatusType {
+  success
+  failed
+  canceled
+}
+
+input invoiceWhereUniqueInput {
+  id: ID
+  invoiceNo: String
+}
+
+input invoiceWhereInput {
+  AND: [invoiceWhereInput!]
+  OR: [invoiceWhereInput!]
+  NOT: [invoiceWhereInput!]
+  id: IDFilter
+  newebpayPayment: newebpayPaymentWhereInput
+  linepayPayment: linepayPaymentWhereInput
+  amount: IntNullableFilter
+  email: StringNullableFilter
+  desc: StringNullableFilter
+  invoiceNo: StringNullableFilter
+  category: invoiceCategoryTypeNullableFilter
+  loveCode: IntNullableFilter
+  carrierType: StringNullableFilter
+  carrierNum: StringNullableFilter
+  buyerName: StringNullableFilter
+  buyerUBN: StringNullableFilter
+  status: invoiceStatusTypeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
+}
+
+input invoiceCategoryTypeNullableFilter {
+  equals: invoiceCategoryType
+  in: [invoiceCategoryType!]
+  notIn: [invoiceCategoryType!]
+  not: invoiceCategoryTypeNullableFilter
+}
+
+input invoiceStatusTypeNullableFilter {
+  equals: invoiceStatusType
+  in: [invoiceStatusType!]
+  notIn: [invoiceStatusType!]
+  not: invoiceStatusTypeNullableFilter
+}
+
+input invoiceOrderByInput {
+  id: OrderDirection
+  amount: OrderDirection
+  email: OrderDirection
+  desc: OrderDirection
+  invoiceNo: OrderDirection
+  category: OrderDirection
+  loveCode: OrderDirection
+  carrierType: OrderDirection
+  carrierNum: OrderDirection
+  buyerName: OrderDirection
+  buyerUBN: OrderDirection
+  status: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input invoiceUpdateInput {
+  newebpayPayment: newebpayPaymentRelateToOneForUpdateInput
+  linepayPayment: linepayPaymentRelateToOneForUpdateInput
+  amount: Int
+  email: String
+  desc: String
+  invoiceNo: String
+  category: invoiceCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  status: invoiceStatusType
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input newebpayPaymentRelateToOneForUpdateInput {
+  create: newebpayPaymentCreateInput
+  connect: newebpayPaymentWhereUniqueInput
+  disconnect: Boolean
+}
+
+input linepayPaymentRelateToOneForUpdateInput {
+  create: linepayPaymentCreateInput
+  connect: linepayPaymentWhereUniqueInput
+  disconnect: Boolean
+}
+
+input invoiceUpdateArgs {
+  where: invoiceWhereUniqueInput!
+  data: invoiceUpdateInput!
+}
+
+input invoiceCreateInput {
+  newebpayPayment: newebpayPaymentRelateToOneForCreateInput
+  linepayPayment: linepayPaymentRelateToOneForCreateInput
+  amount: Int
+  email: String
+  desc: String
+  invoiceNo: String
+  category: invoiceCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  status: invoiceStatusType
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input newebpayPaymentRelateToOneForCreateInput {
+  create: newebpayPaymentCreateInput
+  connect: newebpayPaymentWhereUniqueInput
+}
+
+input linepayPaymentRelateToOneForCreateInput {
+  create: linepayPaymentCreateInput
+  connect: linepayPaymentWhereUniqueInput
+}
+
+type member {
+  id: ID!
+  firebaseId: String
+  email: String
+  marketingMembership: marketingMembership
+  group: group
+  type: memberTypeType
+  state: memberStateType
+  tos: Boolean
+  dateJoined: String
+  firstName: String
+  lastName: String
+  name: String
+  gender: memberGenderType
+  phone: String
+  birthday: String
+  address: String
+  nickname: String
+  profileImage: String
+  city: String
+  country: String
+  district: String
+  subscription(where: subscriptionWhereInput! = {}, orderBy: [subscriptionOrderByInput!]! = [], take: Int, skip: Int! = 0): [subscription!]
+  subscriptionCount(where: subscriptionWhereInput! = {}): Int
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum memberTypeType {
+  subscribe_yearly
+  subscribe_halfyearly
+  subscribe_monthly
+  subscribe_one_time
+  subscribe_group
+  marketing
+  none
+}
+
+enum memberStateType {
+  active
+  inactive
+}
+
+enum memberGenderType {
+  M
+  F
+  NA
+}
+
+input memberWhereUniqueInput {
+  id: ID
+  firebaseId: String
+  email: String
+}
+
+input memberWhereInput {
+  AND: [memberWhereInput!]
+  OR: [memberWhereInput!]
+  NOT: [memberWhereInput!]
+  id: IDFilter
+  firebaseId: StringNullableFilter
+  email: StringNullableFilter
+  marketingMembership: marketingMembershipWhereInput
+  group: groupWhereInput
+  type: memberTypeTypeNullableFilter
+  state: memberStateTypeNullableFilter
+  tos: BooleanNullableFilter
+  firstName: StringNullableFilter
+  lastName: StringNullableFilter
+  name: StringNullableFilter
+  gender: memberGenderTypeNullableFilter
+  phone: StringNullableFilter
+  address: StringNullableFilter
+  nickname: StringNullableFilter
+  profileImage: StringNullableFilter
+  city: StringNullableFilter
+  country: StringNullableFilter
+  district: StringNullableFilter
+  subscription: subscriptionManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input memberTypeTypeNullableFilter {
+  equals: memberTypeType
+  in: [memberTypeType!]
+  notIn: [memberTypeType!]
+  not: memberTypeTypeNullableFilter
+}
+
+input memberStateTypeNullableFilter {
+  equals: memberStateType
+  in: [memberStateType!]
+  notIn: [memberStateType!]
+  not: memberStateTypeNullableFilter
+}
+
+input BooleanNullableFilter {
+  equals: Boolean
+  not: BooleanNullableFilter
+}
+
+input memberGenderTypeNullableFilter {
+  equals: memberGenderType
+  in: [memberGenderType!]
+  notIn: [memberGenderType!]
+  not: memberGenderTypeNullableFilter
+}
+
+input subscriptionManyRelationFilter {
+  every: subscriptionWhereInput
+  some: subscriptionWhereInput
+  none: subscriptionWhereInput
+}
+
+input memberOrderByInput {
+  id: OrderDirection
+  firebaseId: OrderDirection
+  email: OrderDirection
+  type: OrderDirection
+  state: OrderDirection
+  tos: OrderDirection
+  dateJoined: OrderDirection
+  firstName: OrderDirection
+  lastName: OrderDirection
+  name: OrderDirection
+  gender: OrderDirection
+  phone: OrderDirection
+  birthday: OrderDirection
+  address: OrderDirection
+  nickname: OrderDirection
+  profileImage: OrderDirection
+  city: OrderDirection
+  country: OrderDirection
+  district: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input memberUpdateInput {
+  firebaseId: String
+  email: String
+  marketingMembership: marketingMembershipRelateToOneForUpdateInput
+  group: groupRelateToOneForUpdateInput
+  type: memberTypeType
+  state: memberStateType
+  tos: Boolean
+  dateJoined: String
+  firstName: String
+  lastName: String
+  name: String
+  gender: memberGenderType
+  phone: String
+  birthday: String
+  address: String
+  nickname: String
+  profileImage: String
+  city: String
+  country: String
+  district: String
+  subscription: subscriptionRelateToManyForUpdateInput
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input marketingMembershipRelateToOneForUpdateInput {
+  create: marketingMembershipCreateInput
+  connect: marketingMembershipWhereUniqueInput
+  disconnect: Boolean
+}
+
+input groupRelateToOneForUpdateInput {
+  create: groupCreateInput
+  connect: groupWhereUniqueInput
+  disconnect: Boolean
+}
+
+input subscriptionRelateToManyForUpdateInput {
+  disconnect: [subscriptionWhereUniqueInput!]
+  set: [subscriptionWhereUniqueInput!]
+  create: [subscriptionCreateInput!]
+  connect: [subscriptionWhereUniqueInput!]
+}
+
+input memberUpdateArgs {
+  where: memberWhereUniqueInput!
+  data: memberUpdateInput!
+}
+
+input memberCreateInput {
+  firebaseId: String
+  email: String
+  marketingMembership: marketingMembershipRelateToOneForCreateInput
+  group: groupRelateToOneForCreateInput
+  type: memberTypeType
+  state: memberStateType
+  tos: Boolean
+  dateJoined: String
+  firstName: String
+  lastName: String
+  name: String
+  gender: memberGenderType
+  phone: String
+  birthday: String
+  address: String
+  nickname: String
+  profileImage: String
+  city: String
+  country: String
+  district: String
+  subscription: subscriptionRelateToManyForCreateInput
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input marketingMembershipRelateToOneForCreateInput {
+  create: marketingMembershipCreateInput
+  connect: marketingMembershipWhereUniqueInput
+}
+
+input groupRelateToOneForCreateInput {
+  create: groupCreateInput
+  connect: groupWhereUniqueInput
+}
+
+input subscriptionRelateToManyForCreateInput {
+  create: [subscriptionCreateInput!]
+  connect: [subscriptionWhereUniqueInput!]
+}
+
+type merchandise {
+  id: ID!
+  name: String
+  code: String
+  price: Float
+  currency: merchandiseCurrencyType
+  state: merchandiseStateType
+  desc: String
+  comment: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum merchandiseCurrencyType {
+  TWD
+}
+
+enum merchandiseStateType {
+  active
+  inactive
+}
+
+input merchandiseWhereUniqueInput {
+  id: ID
+  name: String
+  code: String
+}
+
+input merchandiseWhereInput {
+  AND: [merchandiseWhereInput!]
+  OR: [merchandiseWhereInput!]
+  NOT: [merchandiseWhereInput!]
+  id: IDFilter
+  name: StringNullableFilter
+  code: StringNullableFilter
+  price: FloatNullableFilter
+  currency: merchandiseCurrencyTypeNullableFilter
+  state: merchandiseStateTypeNullableFilter
+  desc: StringNullableFilter
+  comment: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input FloatNullableFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatNullableFilter
+}
+
+input merchandiseCurrencyTypeNullableFilter {
+  equals: merchandiseCurrencyType
+  in: [merchandiseCurrencyType!]
+  notIn: [merchandiseCurrencyType!]
+  not: merchandiseCurrencyTypeNullableFilter
+}
+
+input merchandiseStateTypeNullableFilter {
+  equals: merchandiseStateType
+  in: [merchandiseStateType!]
+  notIn: [merchandiseStateType!]
+  not: merchandiseStateTypeNullableFilter
+}
+
+input merchandiseOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  code: OrderDirection
+  price: OrderDirection
+  currency: OrderDirection
+  state: OrderDirection
+  desc: OrderDirection
+  comment: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input merchandiseUpdateInput {
+  name: String
+  code: String
+  price: Float
+  currency: merchandiseCurrencyType
+  state: merchandiseStateType
+  desc: String
+  comment: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input merchandiseUpdateArgs {
+  where: merchandiseWhereUniqueInput!
+  data: merchandiseUpdateInput!
+}
+
+input merchandiseCreateInput {
+  name: String
+  code: String
+  price: Float
+  currency: merchandiseCurrencyType
+  state: merchandiseStateType
+  desc: String
+  comment: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type marketingMembership {
+  id: ID!
+  member: member
+  status: marketingMembershipStatusType
+  startDate: String
+  endDate: String
+  requesterEmail: String
+  approvedBy: String
+  note: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum marketingMembershipStatusType {
+  active
+  inactive
+}
+
+input marketingMembershipWhereUniqueInput {
+  id: ID
+}
+
+input marketingMembershipWhereInput {
+  AND: [marketingMembershipWhereInput!]
+  OR: [marketingMembershipWhereInput!]
+  NOT: [marketingMembershipWhereInput!]
+  id: IDFilter
+  member: memberWhereInput
+  status: marketingMembershipStatusTypeNullableFilter
+  requesterEmail: StringNullableFilter
+  approvedBy: StringNullableFilter
+  note: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input marketingMembershipStatusTypeNullableFilter {
+  equals: marketingMembershipStatusType
+  in: [marketingMembershipStatusType!]
+  notIn: [marketingMembershipStatusType!]
+  not: marketingMembershipStatusTypeNullableFilter
+}
+
+input marketingMembershipOrderByInput {
+  id: OrderDirection
+  status: OrderDirection
+  startDate: OrderDirection
+  endDate: OrderDirection
+  requesterEmail: OrderDirection
+  approvedBy: OrderDirection
+  note: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input marketingMembershipUpdateInput {
+  member: memberRelateToOneForUpdateInput
+  status: marketingMembershipStatusType
+  startDate: String
+  endDate: String
+  requesterEmail: String
+  approvedBy: String
+  note: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input memberRelateToOneForUpdateInput {
+  create: memberCreateInput
+  connect: memberWhereUniqueInput
+  disconnect: Boolean
+}
+
+input marketingMembershipUpdateArgs {
+  where: marketingMembershipWhereUniqueInput!
+  data: marketingMembershipUpdateInput!
+}
+
+input marketingMembershipCreateInput {
+  member: memberRelateToOneForCreateInput
+  status: marketingMembershipStatusType
+  startDate: String
+  endDate: String
+  requesterEmail: String
+  approvedBy: String
+  note: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input memberRelateToOneForCreateInput {
+  create: memberCreateInput
+  connect: memberWhereUniqueInput
+}
+
+type mailRecord {
+  id: ID!
+  subscription: subscription
+  receiverMail: String
+  mailStatus: mailRecordMailStatusType
+  sendDate: String
+  subject: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum mailRecordMailStatusType {
+  success
+  failure
+}
+
+input mailRecordWhereUniqueInput {
+  id: ID
+}
+
+input mailRecordWhereInput {
+  AND: [mailRecordWhereInput!]
+  OR: [mailRecordWhereInput!]
+  NOT: [mailRecordWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  receiverMail: StringNullableFilter
+  mailStatus: mailRecordMailStatusTypeNullableFilter
+  sendDate: DateTimeNullableFilter
+  subject: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input mailRecordMailStatusTypeNullableFilter {
+  equals: mailRecordMailStatusType
+  in: [mailRecordMailStatusType!]
+  notIn: [mailRecordMailStatusType!]
+  not: mailRecordMailStatusTypeNullableFilter
+}
+
+input mailRecordOrderByInput {
+  id: OrderDirection
+  receiverMail: OrderDirection
+  mailStatus: OrderDirection
+  sendDate: OrderDirection
+  subject: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input mailRecordUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  receiverMail: String
+  mailStatus: mailRecordMailStatusType
+  sendDate: String
+  subject: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input subscriptionRelateToOneForUpdateInput {
+  create: subscriptionCreateInput
+  connect: subscriptionWhereUniqueInput
+  disconnect: Boolean
+}
+
+input mailRecordUpdateArgs {
+  where: mailRecordWhereUniqueInput!
+  data: mailRecordUpdateInput!
+}
+
+input mailRecordCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  receiverMail: String
+  mailStatus: mailRecordMailStatusType
+  sendDate: String
+  subject: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input subscriptionRelateToOneForCreateInput {
+  create: subscriptionCreateInput
+  connect: subscriptionWhereUniqueInput
+}
+
+type newebpayPaymentInfo {
+  id: ID!
+  subscription: subscription
+  tokenTerm: String
+  tokenValue: String
+  tokenLife: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+input newebpayPaymentInfoWhereUniqueInput {
+  id: ID
+}
+
+input newebpayPaymentInfoWhereInput {
+  AND: [newebpayPaymentInfoWhereInput!]
+  OR: [newebpayPaymentInfoWhereInput!]
+  NOT: [newebpayPaymentInfoWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  tokenTerm: StringNullableFilter
+  tokenValue: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input newebpayPaymentInfoOrderByInput {
+  id: OrderDirection
+  tokenTerm: OrderDirection
+  tokenValue: OrderDirection
+  tokenLife: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input newebpayPaymentInfoUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  tokenTerm: String
+  tokenValue: String
+  tokenLife: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input newebpayPaymentInfoUpdateArgs {
+  where: newebpayPaymentInfoWhereUniqueInput!
+  data: newebpayPaymentInfoUpdateInput!
+}
+
+input newebpayPaymentInfoCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  tokenTerm: String
+  tokenValue: String
+  tokenLife: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type newebpayPayment {
+  id: ID!
+  subscription: subscription
+  magazineOrder: magazineOrder
+  invoice(where: invoiceWhereInput! = {}, orderBy: [invoiceOrderByInput!]! = [], take: Int, skip: Int! = 0): [invoice!]
+  invoiceCount(where: invoiceWhereInput! = {}): Int
+  amount: Int
+  status: String
+  paymentMethod: String
+  paymentTime: String
+  tradeNumber: String
+  message: String
+  merchantId: String
+  orderNumber: String
+  tokenUseStatus: Int
+  respondCode: String
+  ECI: String
+  authCode: String
+  authBank: String
+  cardInfoLastFour: String
+  cardInfoFirstSix: String
+  cardInfoExp: String
+  frequency: newebpayPaymentFrequencyType
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum newebpayPaymentFrequencyType {
+  one_time
+  yearly
+  halfyearly
+  monthly
+}
+
+input newebpayPaymentWhereUniqueInput {
+  id: ID
+  orderNumber: String
+}
+
+input newebpayPaymentWhereInput {
+  AND: [newebpayPaymentWhereInput!]
+  OR: [newebpayPaymentWhereInput!]
+  NOT: [newebpayPaymentWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  magazineOrder: magazineOrderWhereInput
+  invoice: invoiceManyRelationFilter
+  amount: IntNullableFilter
+  status: StringNullableFilter
+  paymentMethod: StringNullableFilter
+  tradeNumber: StringNullableFilter
+  message: StringNullableFilter
+  merchantId: StringNullableFilter
+  orderNumber: StringNullableFilter
+  tokenUseStatus: IntNullableFilter
+  respondCode: StringNullableFilter
+  ECI: StringNullableFilter
+  authCode: StringNullableFilter
+  authBank: StringNullableFilter
+  cardInfoLastFour: StringNullableFilter
+  cardInfoFirstSix: StringNullableFilter
+  cardInfoExp: StringNullableFilter
+  frequency: newebpayPaymentFrequencyTypeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input invoiceManyRelationFilter {
+  every: invoiceWhereInput
+  some: invoiceWhereInput
+  none: invoiceWhereInput
+}
+
+input newebpayPaymentFrequencyTypeNullableFilter {
+  equals: newebpayPaymentFrequencyType
+  in: [newebpayPaymentFrequencyType!]
+  notIn: [newebpayPaymentFrequencyType!]
+  not: newebpayPaymentFrequencyTypeNullableFilter
+}
+
+input newebpayPaymentOrderByInput {
+  id: OrderDirection
+  amount: OrderDirection
+  status: OrderDirection
+  paymentMethod: OrderDirection
+  paymentTime: OrderDirection
+  tradeNumber: OrderDirection
+  message: OrderDirection
+  merchantId: OrderDirection
+  orderNumber: OrderDirection
+  tokenUseStatus: OrderDirection
+  respondCode: OrderDirection
+  ECI: OrderDirection
+  authCode: OrderDirection
+  authBank: OrderDirection
+  cardInfoLastFour: OrderDirection
+  cardInfoFirstSix: OrderDirection
+  cardInfoExp: OrderDirection
+  frequency: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input newebpayPaymentUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  magazineOrder: magazineOrderRelateToOneForUpdateInput
+  invoice: invoiceRelateToManyForUpdateInput
+  amount: Int
+  status: String
+  paymentMethod: String
+  paymentTime: String
+  tradeNumber: String
+  message: String
+  merchantId: String
+  orderNumber: String
+  tokenUseStatus: Int
+  respondCode: String
+  ECI: String
+  authCode: String
+  authBank: String
+  cardInfoLastFour: String
+  cardInfoFirstSix: String
+  cardInfoExp: String
+  frequency: newebpayPaymentFrequencyType
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input magazineOrderRelateToOneForUpdateInput {
+  create: magazineOrderCreateInput
+  connect: magazineOrderWhereUniqueInput
+  disconnect: Boolean
+}
+
+input invoiceRelateToManyForUpdateInput {
+  disconnect: [invoiceWhereUniqueInput!]
+  set: [invoiceWhereUniqueInput!]
+  create: [invoiceCreateInput!]
+  connect: [invoiceWhereUniqueInput!]
+}
+
+input newebpayPaymentUpdateArgs {
+  where: newebpayPaymentWhereUniqueInput!
+  data: newebpayPaymentUpdateInput!
+}
+
+input newebpayPaymentCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  magazineOrder: magazineOrderRelateToOneForCreateInput
+  invoice: invoiceRelateToManyForCreateInput
+  amount: Int
+  status: String
+  paymentMethod: String
+  paymentTime: String
+  tradeNumber: String
+  message: String
+  merchantId: String
+  orderNumber: String
+  tokenUseStatus: Int
+  respondCode: String
+  ECI: String
+  authCode: String
+  authBank: String
+  cardInfoLastFour: String
+  cardInfoFirstSix: String
+  cardInfoExp: String
+  frequency: newebpayPaymentFrequencyType
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input magazineOrderRelateToOneForCreateInput {
+  create: magazineOrderCreateInput
+  connect: magazineOrderWhereUniqueInput
+}
+
+input invoiceRelateToManyForCreateInput {
+  create: [invoiceCreateInput!]
+  connect: [invoiceWhereUniqueInput!]
+}
+
+type appStorePayment {
+  id: ID!
+  subscription: subscription
+  purchaseDate: String
+  originalPurchaseDate: String
+  expiryDate: String
+  productId: String
+  originalTransactionId: String
+  transactionId: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+input appStorePaymentWhereUniqueInput {
+  id: ID
+  transactionId: String
+}
+
+input appStorePaymentWhereInput {
+  AND: [appStorePaymentWhereInput!]
+  OR: [appStorePaymentWhereInput!]
+  NOT: [appStorePaymentWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  purchaseDate: DateTimeNullableFilter
+  originalPurchaseDate: DateTimeNullableFilter
+  expiryDate: DateTimeNullableFilter
+  productId: StringNullableFilter
+  originalTransactionId: StringNullableFilter
+  transactionId: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input appStorePaymentOrderByInput {
+  id: OrderDirection
+  purchaseDate: OrderDirection
+  originalPurchaseDate: OrderDirection
+  expiryDate: OrderDirection
+  productId: OrderDirection
+  originalTransactionId: OrderDirection
+  transactionId: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input appStorePaymentUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  purchaseDate: String
+  originalPurchaseDate: String
+  expiryDate: String
+  productId: String
+  originalTransactionId: String
+  transactionId: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input appStorePaymentUpdateArgs {
+  where: appStorePaymentWhereUniqueInput!
+  data: appStorePaymentUpdateInput!
+}
+
+input appStorePaymentCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  purchaseDate: String
+  originalPurchaseDate: String
+  expiryDate: String
+  productId: String
+  originalTransactionId: String
+  transactionId: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type googlePlayPayment {
+  id: ID!
+  subscription: subscription
+  orderId: String
+  transactionDatetime: String
+  productId: String
+  amount: Int
+  currency: googlePlayPaymentCurrencyType
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum googlePlayPaymentCurrencyType {
+  TWD
+}
+
+input googlePlayPaymentWhereUniqueInput {
+  id: ID
+  orderId: String
+}
+
+input googlePlayPaymentWhereInput {
+  AND: [googlePlayPaymentWhereInput!]
+  OR: [googlePlayPaymentWhereInput!]
+  NOT: [googlePlayPaymentWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  orderId: StringNullableFilter
+  productId: StringNullableFilter
+  amount: IntNullableFilter
+  currency: googlePlayPaymentCurrencyTypeNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input googlePlayPaymentCurrencyTypeNullableFilter {
+  equals: googlePlayPaymentCurrencyType
+  in: [googlePlayPaymentCurrencyType!]
+  notIn: [googlePlayPaymentCurrencyType!]
+  not: googlePlayPaymentCurrencyTypeNullableFilter
+}
+
+input googlePlayPaymentOrderByInput {
+  id: OrderDirection
+  orderId: OrderDirection
+  transactionDatetime: OrderDirection
+  productId: OrderDirection
+  amount: OrderDirection
+  currency: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input googlePlayPaymentUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  orderId: String
+  transactionDatetime: String
+  productId: String
+  amount: Int
+  currency: googlePlayPaymentCurrencyType
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input googlePlayPaymentUpdateArgs {
+  where: googlePlayPaymentWhereUniqueInput!
+  data: googlePlayPaymentUpdateInput!
+}
+
+input googlePlayPaymentCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  orderId: String
+  transactionDatetime: String
+  productId: String
+  amount: Int
+  currency: googlePlayPaymentCurrencyType
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type linepayPayment {
+  id: ID!
+  subscription: subscription
+  transactionTime: String
+  transactionId: String
+  orderId: String
+  payInfoMethod: String
+  amount: Int
+  returnCode: String
+  returnMessage: String
+  isCompletedAndSuccess: Boolean
+  creditCardNickName: String
+  creditCardBrand: String
+  maskedCreditCardNumber: String
+  frequency: linepayPaymentFrequencyType
+  invoice(where: invoiceWhereInput! = {}, orderBy: [invoiceOrderByInput!]! = [], take: Int, skip: Int! = 0): [invoice!]
+  invoiceCount(where: invoiceWhereInput! = {}): Int
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum linepayPaymentFrequencyType {
+  one_time
+  yearly
+  halfyearly
+  monthly
+}
+
+input linepayPaymentWhereUniqueInput {
+  id: ID
+  transactionId: String
+  orderId: String
+}
+
+input linepayPaymentWhereInput {
+  AND: [linepayPaymentWhereInput!]
+  OR: [linepayPaymentWhereInput!]
+  NOT: [linepayPaymentWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  transactionId: StringNullableFilter
+  orderId: StringNullableFilter
+  payInfoMethod: StringNullableFilter
+  amount: IntNullableFilter
+  returnCode: StringNullableFilter
+  returnMessage: StringNullableFilter
+  isCompletedAndSuccess: BooleanNullableFilter
+  creditCardNickName: StringNullableFilter
+  creditCardBrand: StringNullableFilter
+  maskedCreditCardNumber: StringNullableFilter
+  frequency: linepayPaymentFrequencyTypeNullableFilter
+  invoice: invoiceManyRelationFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input linepayPaymentFrequencyTypeNullableFilter {
+  equals: linepayPaymentFrequencyType
+  in: [linepayPaymentFrequencyType!]
+  notIn: [linepayPaymentFrequencyType!]
+  not: linepayPaymentFrequencyTypeNullableFilter
+}
+
+input linepayPaymentOrderByInput {
+  id: OrderDirection
+  transactionTime: OrderDirection
+  transactionId: OrderDirection
+  orderId: OrderDirection
+  payInfoMethod: OrderDirection
+  amount: OrderDirection
+  returnCode: OrderDirection
+  returnMessage: OrderDirection
+  isCompletedAndSuccess: OrderDirection
+  creditCardNickName: OrderDirection
+  creditCardBrand: OrderDirection
+  maskedCreditCardNumber: OrderDirection
+  frequency: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input linepayPaymentUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  transactionTime: String
+  transactionId: String
+  orderId: String
+  payInfoMethod: String
+  amount: Int
+  returnCode: String
+  returnMessage: String
+  isCompletedAndSuccess: Boolean
+  creditCardNickName: String
+  creditCardBrand: String
+  maskedCreditCardNumber: String
+  frequency: linepayPaymentFrequencyType
+  invoice: invoiceRelateToManyForUpdateInput
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input linepayPaymentUpdateArgs {
+  where: linepayPaymentWhereUniqueInput!
+  data: linepayPaymentUpdateInput!
+}
+
+input linepayPaymentCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  transactionTime: String
+  transactionId: String
+  orderId: String
+  payInfoMethod: String
+  amount: Int
+  returnCode: String
+  returnMessage: String
+  isCompletedAndSuccess: Boolean
+  creditCardNickName: String
+  creditCardBrand: String
+  maskedCreditCardNumber: String
+  frequency: linepayPaymentFrequencyType
+  invoice: invoiceRelateToManyForCreateInput
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type linepayPaymentInfo {
+  id: ID!
+  subscription: subscription
+  regKey: String
+  isExpired: Boolean
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+input linepayPaymentInfoWhereUniqueInput {
+  id: ID
+}
+
+input linepayPaymentInfoWhereInput {
+  AND: [linepayPaymentInfoWhereInput!]
+  OR: [linepayPaymentInfoWhereInput!]
+  NOT: [linepayPaymentInfoWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  regKey: StringNullableFilter
+  isExpired: BooleanNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input linepayPaymentInfoOrderByInput {
+  id: OrderDirection
+  regKey: OrderDirection
+  isExpired: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input linepayPaymentInfoUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  regKey: String
+  isExpired: Boolean
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input linepayPaymentInfoUpdateArgs {
+  where: linepayPaymentInfoWhereUniqueInput!
+  data: linepayPaymentInfoUpdateInput!
+}
+
+input linepayPaymentInfoCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  regKey: String
+  isExpired: Boolean
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type promotion {
+  id: ID!
+  code: String
+  plan: promotionPlanType
+  state: promotionStateType
+  startAt: String
+  endAt: String
+  discount: Float
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum promotionPlanType {
+  yearly
+  halfyearly
+  monthly
+}
+
+enum promotionStateType {
+  active
+  inactive
+}
+
+input promotionWhereUniqueInput {
+  id: ID
+}
+
+input promotionWhereInput {
+  AND: [promotionWhereInput!]
+  OR: [promotionWhereInput!]
+  NOT: [promotionWhereInput!]
+  id: IDFilter
+  code: StringNullableFilter
+  plan: promotionPlanTypeNullableFilter
+  state: promotionStateTypeNullableFilter
+  discount: FloatNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input promotionPlanTypeNullableFilter {
+  equals: promotionPlanType
+  in: [promotionPlanType!]
+  notIn: [promotionPlanType!]
+  not: promotionPlanTypeNullableFilter
+}
+
+input promotionStateTypeNullableFilter {
+  equals: promotionStateType
+  in: [promotionStateType!]
+  notIn: [promotionStateType!]
+  not: promotionStateTypeNullableFilter
+}
+
+input promotionOrderByInput {
+  id: OrderDirection
+  code: OrderDirection
+  plan: OrderDirection
+  state: OrderDirection
+  startAt: OrderDirection
+  endAt: OrderDirection
+  discount: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input promotionUpdateInput {
+  code: String
+  plan: promotionPlanType
+  state: promotionStateType
+  startAt: String
+  endAt: String
+  discount: Float
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input promotionUpdateArgs {
+  where: promotionWhereUniqueInput!
+  data: promotionUpdateInput!
+}
+
+input promotionCreateInput {
+  code: String
+  plan: promotionPlanType
+  state: promotionStateType
+  startAt: String
+  endAt: String
+  discount: Float
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+type subscription {
+  id: ID!
+  member: member
+  orderNumber: String
+  frequency: subscriptionFrequencyType
+  nextFrequency: subscriptionNextFrequencyType
+  paymentMethod: subscriptionPaymentMethodType
+  newebpayPayment(where: newebpayPaymentWhereInput! = {}, orderBy: [newebpayPaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [newebpayPayment!]
+  newebpayPaymentCount(where: newebpayPaymentWhereInput! = {}): Int
+  appStorePayment(where: appStorePaymentWhereInput! = {}, orderBy: [appStorePaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [appStorePayment!]
+  appStorePaymentCount(where: appStorePaymentWhereInput! = {}): Int
+  googlePlayPayment(where: googlePlayPaymentWhereInput! = {}, orderBy: [googlePlayPaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [googlePlayPayment!]
+  googlePlayPaymentCount(where: googlePlayPaymentWhereInput! = {}): Int
+  linepayPayment(where: linepayPaymentWhereInput! = {}, orderBy: [linepayPaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [linepayPayment!]
+  linepayPaymentCount(where: linepayPaymentWhereInput! = {}): Int
+  status: subscriptionStatusType
+  linePayStatus: subscriptionLinePayStatusType
+  amount: Float
+  currency: subscriptionCurrencyType
+  desc: String
+  comment: String
+  email: String
+  isActive: Boolean
+  isCanceled: Boolean
+  periodFailureTimes: Int
+  periodLastSuccessDatetime: String
+  periodNextPayDatetime: String
+  periodCreateDatetime: String
+  periodFirstDatetime: String
+  periodEndDatetime: String
+  changePlanDatetime: String
+  googlePlayStatus: subscriptionGooglePlayStatusType
+  googlePlayPurchaseToken: String
+  googlePlayNotificationEventDatetime: String
+  googlePlayPackageName: String
+  cancelReason: String
+  refundNote: String
+  note: String
+  promoteId: Int
+  postId: String
+  oneTimeStartDatetime: String
+  oneTimeEndDatetime: String
+  newebpayPaymentInfo: newebpayPaymentInfo
+  linepayPaymentInfo: linepayPaymentInfo
+  category: subscriptionCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  printFlag: String
+  cronjobInfo: JSON
+  aaplOriginalTransactionId: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum subscriptionFrequencyType {
+  one_time
+  yearly
+  halfyearly
+  monthly
+}
+
+enum subscriptionNextFrequencyType {
+  none
+  yearly
+  halfyearly
+  monthly
+}
+
+enum subscriptionPaymentMethodType {
+  newebpay
+  app_store
+  google_play
+  line_pay
+}
+
+enum subscriptionStatusType {
+  to_pay
+  paying
+  paid
+  fail
+  stopped
+  invalid
+}
+
+enum subscriptionLinePayStatusType {
+  to_pay
+  paying
+  paid
+  fail
+  stopped
+  invalid
+}
+
+enum subscriptionCurrencyType {
+  TWD
+}
+
+enum subscriptionGooglePlayStatusType {
+  purchased
+  renewed
+  expired
+  on_hold
+  in_grace_period
+  canceled
+  restarted
+  revoked
+  recovered
+}
+
+enum subscriptionCategoryType {
+  B2B
+  B2C
+}
+
+input subscriptionWhereUniqueInput {
+  id: ID
+  orderNumber: String
+  googlePlayPurchaseToken: String
+  aaplOriginalTransactionId: String
+}
+
+input subscriptionWhereInput {
+  AND: [subscriptionWhereInput!]
+  OR: [subscriptionWhereInput!]
+  NOT: [subscriptionWhereInput!]
+  id: IDFilter
+  member: memberWhereInput
+  orderNumber: StringNullableFilter
+  frequency: subscriptionFrequencyTypeNullableFilter
+  nextFrequency: subscriptionNextFrequencyTypeNullableFilter
+  paymentMethod: subscriptionPaymentMethodTypeNullableFilter
+  newebpayPayment: newebpayPaymentManyRelationFilter
+  appStorePayment: appStorePaymentManyRelationFilter
+  googlePlayPayment: googlePlayPaymentManyRelationFilter
+  linepayPayment: linepayPaymentManyRelationFilter
+  status: subscriptionStatusTypeNullableFilter
+  linePayStatus: subscriptionLinePayStatusTypeNullableFilter
+  amount: FloatNullableFilter
+  currency: subscriptionCurrencyTypeNullableFilter
+  desc: StringNullableFilter
+  comment: StringNullableFilter
+  email: StringNullableFilter
+  isActive: BooleanNullableFilter
+  isCanceled: BooleanNullableFilter
+  periodFailureTimes: IntNullableFilter
+  googlePlayStatus: subscriptionGooglePlayStatusTypeNullableFilter
+  googlePlayPurchaseToken: StringNullableFilter
+  googlePlayPackageName: StringNullableFilter
+  cancelReason: StringNullableFilter
+  refundNote: StringNullableFilter
+  note: StringNullableFilter
+  promoteId: IntNullableFilter
+  postId: StringNullableFilter
+  newebpayPaymentInfo: newebpayPaymentInfoWhereInput
+  linepayPaymentInfo: linepayPaymentInfoWhereInput
+  category: subscriptionCategoryTypeNullableFilter
+  loveCode: IntNullableFilter
+  carrierType: StringNullableFilter
+  carrierNum: StringNullableFilter
+  buyerName: StringNullableFilter
+  buyerUBN: StringNullableFilter
+  aaplOriginalTransactionId: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input subscriptionFrequencyTypeNullableFilter {
+  equals: subscriptionFrequencyType
+  in: [subscriptionFrequencyType!]
+  notIn: [subscriptionFrequencyType!]
+  not: subscriptionFrequencyTypeNullableFilter
+}
+
+input subscriptionNextFrequencyTypeNullableFilter {
+  equals: subscriptionNextFrequencyType
+  in: [subscriptionNextFrequencyType!]
+  notIn: [subscriptionNextFrequencyType!]
+  not: subscriptionNextFrequencyTypeNullableFilter
+}
+
+input subscriptionPaymentMethodTypeNullableFilter {
+  equals: subscriptionPaymentMethodType
+  in: [subscriptionPaymentMethodType!]
+  notIn: [subscriptionPaymentMethodType!]
+  not: subscriptionPaymentMethodTypeNullableFilter
+}
+
+input newebpayPaymentManyRelationFilter {
+  every: newebpayPaymentWhereInput
+  some: newebpayPaymentWhereInput
+  none: newebpayPaymentWhereInput
+}
+
+input appStorePaymentManyRelationFilter {
+  every: appStorePaymentWhereInput
+  some: appStorePaymentWhereInput
+  none: appStorePaymentWhereInput
+}
+
+input googlePlayPaymentManyRelationFilter {
+  every: googlePlayPaymentWhereInput
+  some: googlePlayPaymentWhereInput
+  none: googlePlayPaymentWhereInput
+}
+
+input linepayPaymentManyRelationFilter {
+  every: linepayPaymentWhereInput
+  some: linepayPaymentWhereInput
+  none: linepayPaymentWhereInput
+}
+
+input subscriptionStatusTypeNullableFilter {
+  equals: subscriptionStatusType
+  in: [subscriptionStatusType!]
+  notIn: [subscriptionStatusType!]
+  not: subscriptionStatusTypeNullableFilter
+}
+
+input subscriptionLinePayStatusTypeNullableFilter {
+  equals: subscriptionLinePayStatusType
+  in: [subscriptionLinePayStatusType!]
+  notIn: [subscriptionLinePayStatusType!]
+  not: subscriptionLinePayStatusTypeNullableFilter
+}
+
+input subscriptionCurrencyTypeNullableFilter {
+  equals: subscriptionCurrencyType
+  in: [subscriptionCurrencyType!]
+  notIn: [subscriptionCurrencyType!]
+  not: subscriptionCurrencyTypeNullableFilter
+}
+
+input subscriptionGooglePlayStatusTypeNullableFilter {
+  equals: subscriptionGooglePlayStatusType
+  in: [subscriptionGooglePlayStatusType!]
+  notIn: [subscriptionGooglePlayStatusType!]
+  not: subscriptionGooglePlayStatusTypeNullableFilter
+}
+
+input subscriptionCategoryTypeNullableFilter {
+  equals: subscriptionCategoryType
+  in: [subscriptionCategoryType!]
+  notIn: [subscriptionCategoryType!]
+  not: subscriptionCategoryTypeNullableFilter
+}
+
+input subscriptionOrderByInput {
+  id: OrderDirection
+  orderNumber: OrderDirection
+  frequency: OrderDirection
+  nextFrequency: OrderDirection
+  paymentMethod: OrderDirection
+  status: OrderDirection
+  linePayStatus: OrderDirection
+  amount: OrderDirection
+  currency: OrderDirection
+  desc: OrderDirection
+  comment: OrderDirection
+  email: OrderDirection
+  isActive: OrderDirection
+  isCanceled: OrderDirection
+  periodFailureTimes: OrderDirection
+  periodLastSuccessDatetime: OrderDirection
+  periodNextPayDatetime: OrderDirection
+  periodCreateDatetime: OrderDirection
+  periodFirstDatetime: OrderDirection
+  periodEndDatetime: OrderDirection
+  changePlanDatetime: OrderDirection
+  googlePlayStatus: OrderDirection
+  googlePlayPurchaseToken: OrderDirection
+  googlePlayNotificationEventDatetime: OrderDirection
+  googlePlayPackageName: OrderDirection
+  cancelReason: OrderDirection
+  refundNote: OrderDirection
+  note: OrderDirection
+  promoteId: OrderDirection
+  postId: OrderDirection
+  oneTimeStartDatetime: OrderDirection
+  oneTimeEndDatetime: OrderDirection
+  category: OrderDirection
+  loveCode: OrderDirection
+  carrierType: OrderDirection
+  carrierNum: OrderDirection
+  buyerName: OrderDirection
+  buyerUBN: OrderDirection
+  aaplOriginalTransactionId: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input subscriptionUpdateInput {
+  member: memberRelateToOneForUpdateInput
+  orderNumber: String
+  frequency: subscriptionFrequencyType
+  nextFrequency: subscriptionNextFrequencyType
+  paymentMethod: subscriptionPaymentMethodType
+  newebpayPayment: newebpayPaymentRelateToManyForUpdateInput
+  appStorePayment: appStorePaymentRelateToManyForUpdateInput
+  googlePlayPayment: googlePlayPaymentRelateToManyForUpdateInput
+  linepayPayment: linepayPaymentRelateToManyForUpdateInput
+  status: subscriptionStatusType
+  linePayStatus: subscriptionLinePayStatusType
+  amount: Float
+  currency: subscriptionCurrencyType
+  desc: String
+  comment: String
+  email: String
+  isActive: Boolean
+  isCanceled: Boolean
+  periodFailureTimes: Int
+  periodLastSuccessDatetime: String
+  periodNextPayDatetime: String
+  periodCreateDatetime: String
+  periodFirstDatetime: String
+  periodEndDatetime: String
+  changePlanDatetime: String
+  googlePlayStatus: subscriptionGooglePlayStatusType
+  googlePlayPurchaseToken: String
+  googlePlayNotificationEventDatetime: String
+  googlePlayPackageName: String
+  cancelReason: String
+  refundNote: String
+  note: String
+  promoteId: Int
+  postId: String
+  oneTimeStartDatetime: String
+  oneTimeEndDatetime: String
+  newebpayPaymentInfo: newebpayPaymentInfoRelateToOneForUpdateInput
+  linepayPaymentInfo: linepayPaymentInfoRelateToOneForUpdateInput
+  category: subscriptionCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  cronjobInfo: JSON
+  aaplOriginalTransactionId: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input newebpayPaymentRelateToManyForUpdateInput {
+  disconnect: [newebpayPaymentWhereUniqueInput!]
+  set: [newebpayPaymentWhereUniqueInput!]
+  create: [newebpayPaymentCreateInput!]
+  connect: [newebpayPaymentWhereUniqueInput!]
+}
+
+input appStorePaymentRelateToManyForUpdateInput {
+  disconnect: [appStorePaymentWhereUniqueInput!]
+  set: [appStorePaymentWhereUniqueInput!]
+  create: [appStorePaymentCreateInput!]
+  connect: [appStorePaymentWhereUniqueInput!]
+}
+
+input googlePlayPaymentRelateToManyForUpdateInput {
+  disconnect: [googlePlayPaymentWhereUniqueInput!]
+  set: [googlePlayPaymentWhereUniqueInput!]
+  create: [googlePlayPaymentCreateInput!]
+  connect: [googlePlayPaymentWhereUniqueInput!]
+}
+
+input linepayPaymentRelateToManyForUpdateInput {
+  disconnect: [linepayPaymentWhereUniqueInput!]
+  set: [linepayPaymentWhereUniqueInput!]
+  create: [linepayPaymentCreateInput!]
+  connect: [linepayPaymentWhereUniqueInput!]
+}
+
+input newebpayPaymentInfoRelateToOneForUpdateInput {
+  create: newebpayPaymentInfoCreateInput
+  connect: newebpayPaymentInfoWhereUniqueInput
+  disconnect: Boolean
+}
+
+input linepayPaymentInfoRelateToOneForUpdateInput {
+  create: linepayPaymentInfoCreateInput
+  connect: linepayPaymentInfoWhereUniqueInput
+  disconnect: Boolean
+}
+
+input subscriptionUpdateArgs {
+  where: subscriptionWhereUniqueInput!
+  data: subscriptionUpdateInput!
+}
+
+input subscriptionCreateInput {
+  member: memberRelateToOneForCreateInput
+  orderNumber: String
+  frequency: subscriptionFrequencyType
+  nextFrequency: subscriptionNextFrequencyType
+  paymentMethod: subscriptionPaymentMethodType
+  newebpayPayment: newebpayPaymentRelateToManyForCreateInput
+  appStorePayment: appStorePaymentRelateToManyForCreateInput
+  googlePlayPayment: googlePlayPaymentRelateToManyForCreateInput
+  linepayPayment: linepayPaymentRelateToManyForCreateInput
+  status: subscriptionStatusType
+  linePayStatus: subscriptionLinePayStatusType
+  amount: Float
+  currency: subscriptionCurrencyType
+  desc: String
+  comment: String
+  email: String
+  isActive: Boolean
+  isCanceled: Boolean
+  periodFailureTimes: Int
+  periodLastSuccessDatetime: String
+  periodNextPayDatetime: String
+  periodCreateDatetime: String
+  periodFirstDatetime: String
+  periodEndDatetime: String
+  changePlanDatetime: String
+  googlePlayStatus: subscriptionGooglePlayStatusType
+  googlePlayPurchaseToken: String
+  googlePlayNotificationEventDatetime: String
+  googlePlayPackageName: String
+  cancelReason: String
+  refundNote: String
+  note: String
+  promoteId: Int
+  postId: String
+  oneTimeStartDatetime: String
+  oneTimeEndDatetime: String
+  newebpayPaymentInfo: newebpayPaymentInfoRelateToOneForCreateInput
+  linepayPaymentInfo: linepayPaymentInfoRelateToOneForCreateInput
+  category: subscriptionCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  cronjobInfo: JSON
+  aaplOriginalTransactionId: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input newebpayPaymentRelateToManyForCreateInput {
+  create: [newebpayPaymentCreateInput!]
+  connect: [newebpayPaymentWhereUniqueInput!]
+}
+
+input appStorePaymentRelateToManyForCreateInput {
+  create: [appStorePaymentCreateInput!]
+  connect: [appStorePaymentWhereUniqueInput!]
+}
+
+input googlePlayPaymentRelateToManyForCreateInput {
+  create: [googlePlayPaymentCreateInput!]
+  connect: [googlePlayPaymentWhereUniqueInput!]
+}
+
+input linepayPaymentRelateToManyForCreateInput {
+  create: [linepayPaymentCreateInput!]
+  connect: [linepayPaymentWhereUniqueInput!]
+}
+
+input newebpayPaymentInfoRelateToOneForCreateInput {
+  create: newebpayPaymentInfoCreateInput
+  connect: newebpayPaymentInfoWhereUniqueInput
+}
+
+input linepayPaymentInfoRelateToOneForCreateInput {
+  create: linepayPaymentInfoCreateInput
+  connect: linepayPaymentInfoWhereUniqueInput
+}
+
+type subscriptionHistory {
+  id: ID!
+  subscription: subscription
+  subscriptionCreatedAt: String
+  subscriptionUpdatedAt: String
+  member: member
+  status: subscriptionHistoryStatusType
+  amount: Int
+  currency: subscriptionHistoryCurrencyType
+  desc: String
+  email: String
+  orderNumber: String
+  frequency: subscriptionHistoryFrequencyType
+  tokenValue: String
+  tokenLife: String
+  tokenTerm: String
+  periodLastSuccessDate: String
+  periodNextPayDate: String
+  periodFirstDate: String
+  changePlanDatetime: String
+  note: String
+  promoteId: Int
+  postId: String
+  oneTimeStartDate: String
+  oneTimeEndDate: String
+  action: subscriptionHistoryActionType
+}
+
+enum subscriptionHistoryStatusType {
+  to_pay
+  paying
+  paid
+  fail
+  stopped
+  canceled
+  invalid
+}
+
+enum subscriptionHistoryCurrencyType {
+  TWD
+}
+
+enum subscriptionHistoryFrequencyType {
+  one_time
+  yearly
+  halfyearly
+  monthly
+}
+
+enum subscriptionHistoryActionType {
+  purge
+  upgrade
+  canceled
+}
+
+input subscriptionHistoryWhereUniqueInput {
+  id: ID
+}
+
+input subscriptionHistoryWhereInput {
+  AND: [subscriptionHistoryWhereInput!]
+  OR: [subscriptionHistoryWhereInput!]
+  NOT: [subscriptionHistoryWhereInput!]
+  id: IDFilter
+  subscription: subscriptionWhereInput
+  member: memberWhereInput
+  status: subscriptionHistoryStatusTypeNullableFilter
+  amount: IntNullableFilter
+  currency: subscriptionHistoryCurrencyTypeNullableFilter
+  desc: StringNullableFilter
+  email: StringNullableFilter
+  orderNumber: StringNullableFilter
+  frequency: subscriptionHistoryFrequencyTypeNullableFilter
+  tokenValue: StringNullableFilter
+  tokenLife: StringNullableFilter
+  tokenTerm: StringNullableFilter
+  note: StringNullableFilter
+  promoteId: IntNullableFilter
+  postId: StringNullableFilter
+  action: subscriptionHistoryActionTypeNullableFilter
+}
+
+input subscriptionHistoryStatusTypeNullableFilter {
+  equals: subscriptionHistoryStatusType
+  in: [subscriptionHistoryStatusType!]
+  notIn: [subscriptionHistoryStatusType!]
+  not: subscriptionHistoryStatusTypeNullableFilter
+}
+
+input subscriptionHistoryCurrencyTypeNullableFilter {
+  equals: subscriptionHistoryCurrencyType
+  in: [subscriptionHistoryCurrencyType!]
+  notIn: [subscriptionHistoryCurrencyType!]
+  not: subscriptionHistoryCurrencyTypeNullableFilter
+}
+
+input subscriptionHistoryFrequencyTypeNullableFilter {
+  equals: subscriptionHistoryFrequencyType
+  in: [subscriptionHistoryFrequencyType!]
+  notIn: [subscriptionHistoryFrequencyType!]
+  not: subscriptionHistoryFrequencyTypeNullableFilter
+}
+
+input subscriptionHistoryActionTypeNullableFilter {
+  equals: subscriptionHistoryActionType
+  in: [subscriptionHistoryActionType!]
+  notIn: [subscriptionHistoryActionType!]
+  not: subscriptionHistoryActionTypeNullableFilter
+}
+
+input subscriptionHistoryOrderByInput {
+  id: OrderDirection
+  subscriptionCreatedAt: OrderDirection
+  subscriptionUpdatedAt: OrderDirection
+  status: OrderDirection
+  amount: OrderDirection
+  currency: OrderDirection
+  desc: OrderDirection
+  email: OrderDirection
+  orderNumber: OrderDirection
+  frequency: OrderDirection
+  tokenValue: OrderDirection
+  tokenLife: OrderDirection
+  tokenTerm: OrderDirection
+  periodLastSuccessDate: OrderDirection
+  periodNextPayDate: OrderDirection
+  periodFirstDate: OrderDirection
+  changePlanDatetime: OrderDirection
+  note: OrderDirection
+  promoteId: OrderDirection
+  postId: OrderDirection
+  oneTimeStartDate: OrderDirection
+  oneTimeEndDate: OrderDirection
+  action: OrderDirection
+}
+
+input subscriptionHistoryUpdateInput {
+  subscription: subscriptionRelateToOneForUpdateInput
+  subscriptionCreatedAt: String
+  subscriptionUpdatedAt: String
+  member: memberRelateToOneForUpdateInput
+  status: subscriptionHistoryStatusType
+  amount: Int
+  currency: subscriptionHistoryCurrencyType
+  desc: String
+  email: String
+  orderNumber: String
+  frequency: subscriptionHistoryFrequencyType
+  tokenValue: String
+  tokenLife: String
+  tokenTerm: String
+  periodLastSuccessDate: String
+  periodNextPayDate: String
+  periodFirstDate: String
+  changePlanDatetime: String
+  note: String
+  promoteId: Int
+  postId: String
+  oneTimeStartDate: String
+  oneTimeEndDate: String
+  action: subscriptionHistoryActionType
+}
+
+input subscriptionHistoryUpdateArgs {
+  where: subscriptionHistoryWhereUniqueInput!
+  data: subscriptionHistoryUpdateInput!
+}
+
+input subscriptionHistoryCreateInput {
+  subscription: subscriptionRelateToOneForCreateInput
+  subscriptionCreatedAt: String
+  subscriptionUpdatedAt: String
+  member: memberRelateToOneForCreateInput
+  status: subscriptionHistoryStatusType
+  amount: Int
+  currency: subscriptionHistoryCurrencyType
+  desc: String
+  email: String
+  orderNumber: String
+  frequency: subscriptionHistoryFrequencyType
+  tokenValue: String
+  tokenLife: String
+  tokenTerm: String
+  periodLastSuccessDate: String
+  periodNextPayDate: String
+  periodFirstDate: String
+  changePlanDatetime: String
+  note: String
+  promoteId: Int
+  postId: String
+  oneTimeStartDate: String
+  oneTimeEndDate: String
+  action: subscriptionHistoryActionType
+}
+
+type magazineOrder {
+  id: ID!
+  orderNumber: String
+  purchaseDatetime: String
+  note: String
+  paymentMethod: magazineOrderPaymentMethodType
+  newebpayPayment: newebpayPayment
+  paymentStatus: magazineOrderPaymentStatusType
+  desc: String
+  comment: String
+  refundNote: String
+  merchandise: merchandise
+  itemCount: Int
+  totalAmount: Int
+  currency: magazineOrderCurrencyType
+  promoteCode: String
+  purchaseName: String
+  purchaseMobile: String
+  purchasePhone: String
+  purchaseAddress: String
+  purchaseEmail: String
+  receiveName: String
+  receiveMobile: String
+  receivePhone: String
+  receiveAddress: String
+  receiveNote: String
+  category: magazineOrderCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  printFlag: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum magazineOrderPaymentMethodType {
+  newebpay
+}
+
+enum magazineOrderPaymentStatusType {
+  paying
+  paid
+  fail
+  invalid
+}
+
+enum magazineOrderCurrencyType {
+  TWD
+}
+
+enum magazineOrderCategoryType {
+  B2B
+  B2C
+}
+
+input magazineOrderWhereUniqueInput {
+  id: ID
+  orderNumber: String
+}
+
+input magazineOrderWhereInput {
+  AND: [magazineOrderWhereInput!]
+  OR: [magazineOrderWhereInput!]
+  NOT: [magazineOrderWhereInput!]
+  id: IDFilter
+  orderNumber: StringNullableFilter
+  purchaseDatetime: DateTimeNullableFilter
+  note: StringNullableFilter
+  paymentMethod: magazineOrderPaymentMethodTypeNullableFilter
+  newebpayPayment: newebpayPaymentWhereInput
+  paymentStatus: magazineOrderPaymentStatusTypeNullableFilter
+  desc: StringNullableFilter
+  comment: StringNullableFilter
+  refundNote: StringNullableFilter
+  merchandise: merchandiseWhereInput
+  itemCount: IntNullableFilter
+  totalAmount: IntNullableFilter
+  currency: magazineOrderCurrencyTypeNullableFilter
+  promoteCode: StringNullableFilter
+  purchaseName: StringNullableFilter
+  purchaseMobile: StringNullableFilter
+  purchasePhone: StringNullableFilter
+  purchaseAddress: StringNullableFilter
+  purchaseEmail: StringNullableFilter
+  receiveName: StringNullableFilter
+  receiveMobile: StringNullableFilter
+  receivePhone: StringNullableFilter
+  receiveAddress: StringNullableFilter
+  receiveNote: StringNullableFilter
+  category: magazineOrderCategoryTypeNullableFilter
+  loveCode: IntNullableFilter
+  carrierType: StringNullableFilter
+  carrierNum: StringNullableFilter
+  buyerName: StringNullableFilter
+  buyerUBN: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input magazineOrderPaymentMethodTypeNullableFilter {
+  equals: magazineOrderPaymentMethodType
+  in: [magazineOrderPaymentMethodType!]
+  notIn: [magazineOrderPaymentMethodType!]
+  not: magazineOrderPaymentMethodTypeNullableFilter
+}
+
+input magazineOrderPaymentStatusTypeNullableFilter {
+  equals: magazineOrderPaymentStatusType
+  in: [magazineOrderPaymentStatusType!]
+  notIn: [magazineOrderPaymentStatusType!]
+  not: magazineOrderPaymentStatusTypeNullableFilter
+}
+
+input magazineOrderCurrencyTypeNullableFilter {
+  equals: magazineOrderCurrencyType
+  in: [magazineOrderCurrencyType!]
+  notIn: [magazineOrderCurrencyType!]
+  not: magazineOrderCurrencyTypeNullableFilter
+}
+
+input magazineOrderCategoryTypeNullableFilter {
+  equals: magazineOrderCategoryType
+  in: [magazineOrderCategoryType!]
+  notIn: [magazineOrderCategoryType!]
+  not: magazineOrderCategoryTypeNullableFilter
+}
+
+input magazineOrderOrderByInput {
+  id: OrderDirection
+  orderNumber: OrderDirection
+  purchaseDatetime: OrderDirection
+  note: OrderDirection
+  paymentMethod: OrderDirection
+  paymentStatus: OrderDirection
+  desc: OrderDirection
+  comment: OrderDirection
+  refundNote: OrderDirection
+  itemCount: OrderDirection
+  totalAmount: OrderDirection
+  currency: OrderDirection
+  promoteCode: OrderDirection
+  purchaseName: OrderDirection
+  purchaseMobile: OrderDirection
+  purchasePhone: OrderDirection
+  purchaseAddress: OrderDirection
+  purchaseEmail: OrderDirection
+  receiveName: OrderDirection
+  receiveMobile: OrderDirection
+  receivePhone: OrderDirection
+  receiveAddress: OrderDirection
+  receiveNote: OrderDirection
+  category: OrderDirection
+  loveCode: OrderDirection
+  carrierType: OrderDirection
+  carrierNum: OrderDirection
+  buyerName: OrderDirection
+  buyerUBN: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input magazineOrderUpdateInput {
+  orderNumber: String
+  purchaseDatetime: String
+  note: String
+  paymentMethod: magazineOrderPaymentMethodType
+  newebpayPayment: newebpayPaymentRelateToOneForUpdateInput
+  paymentStatus: magazineOrderPaymentStatusType
+  desc: String
+  comment: String
+  refundNote: String
+  merchandise: merchandiseRelateToOneForUpdateInput
+  itemCount: Int
+  totalAmount: Int
+  currency: magazineOrderCurrencyType
+  promoteCode: String
+  purchaseName: String
+  purchaseMobile: String
+  purchasePhone: String
+  purchaseAddress: String
+  purchaseEmail: String
+  receiveName: String
+  receiveMobile: String
+  receivePhone: String
+  receiveAddress: String
+  receiveNote: String
+  category: magazineOrderCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input merchandiseRelateToOneForUpdateInput {
+  create: merchandiseCreateInput
+  connect: merchandiseWhereUniqueInput
+  disconnect: Boolean
+}
+
+input magazineOrderUpdateArgs {
+  where: magazineOrderWhereUniqueInput!
+  data: magazineOrderUpdateInput!
+}
+
+input magazineOrderCreateInput {
+  orderNumber: String
+  purchaseDatetime: String
+  note: String
+  paymentMethod: magazineOrderPaymentMethodType
+  newebpayPayment: newebpayPaymentRelateToOneForCreateInput
+  paymentStatus: magazineOrderPaymentStatusType
+  desc: String
+  comment: String
+  refundNote: String
+  merchandise: merchandiseRelateToOneForCreateInput
+  itemCount: Int
+  totalAmount: Int
+  currency: magazineOrderCurrencyType
+  promoteCode: String
+  purchaseName: String
+  purchaseMobile: String
+  purchasePhone: String
+  purchaseAddress: String
+  purchaseEmail: String
+  receiveName: String
+  receiveMobile: String
+  receivePhone: String
+  receiveAddress: String
+  receiveNote: String
+  category: magazineOrderCategoryType
+  loveCode: Int
+  carrierType: String
+  carrierNum: String
+  buyerName: String
+  buyerUBN: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input merchandiseRelateToOneForCreateInput {
+  create: merchandiseCreateInput
+  connect: merchandiseWhereUniqueInput
+}
+
+type group {
+  id: ID!
+  company: String
+  taxIdNumber: String
+  member(where: memberWhereInput! = {}, orderBy: [memberOrderByInput!]! = [], take: Int, skip: Int! = 0): [member!]
+  memberCount(where: memberWhereInput! = {}): Int
+  startDate: String
+  endDate: String
+  requesterEmail: String
+  approvedBy: String
+  note: String
+  invoice: String
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+input groupWhereUniqueInput {
+  id: ID
+}
+
+input groupWhereInput {
+  AND: [groupWhereInput!]
+  OR: [groupWhereInput!]
+  NOT: [groupWhereInput!]
+  id: IDFilter
+  company: StringNullableFilter
+  taxIdNumber: StringNullableFilter
+  member: memberManyRelationFilter
+  requesterEmail: StringNullableFilter
+  approvedBy: StringNullableFilter
+  note: StringNullableFilter
+  invoice: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input memberManyRelationFilter {
+  every: memberWhereInput
+  some: memberWhereInput
+  none: memberWhereInput
+}
+
+input groupOrderByInput {
+  id: OrderDirection
+  company: OrderDirection
+  taxIdNumber: OrderDirection
+  startDate: OrderDirection
+  endDate: OrderDirection
+  requesterEmail: OrderDirection
+  approvedBy: OrderDirection
+  note: OrderDirection
+  invoice: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input groupUpdateInput {
+  company: String
+  taxIdNumber: String
+  member: memberRelateToManyForUpdateInput
+  startDate: String
+  endDate: String
+  requesterEmail: String
+  approvedBy: String
+  note: String
+  invoice: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input memberRelateToManyForUpdateInput {
+  disconnect: [memberWhereUniqueInput!]
+  set: [memberWhereUniqueInput!]
+  create: [memberCreateInput!]
+  connect: [memberWhereUniqueInput!]
+}
+
+input groupUpdateArgs {
+  where: groupWhereUniqueInput!
+  data: groupUpdateInput!
+}
+
+input groupCreateInput {
+  company: String
+  taxIdNumber: String
+  member: memberRelateToManyForCreateInput
+  startDate: String
+  endDate: String
+  requesterEmail: String
+  approvedBy: String
+  note: String
+  invoice: String
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+input memberRelateToManyForCreateInput {
+  create: [memberCreateInput!]
+  connect: [memberWhereUniqueInput!]
+}
+
+type editLog {
+  id: ID!
+  user: String
+  operation: editLogOperationType
+  target: editLogTargetType
+  targetId: Int
+  targetIdentificationKey: editLogTargetIdentificationKeyType
+  targetIdentificationValue: String
+  originalFields: JSON
+  updatedFields: JSON
+  createdAt: String
+  updatedAt: String
+  createdBy: user
+  updatedBy: user
+}
+
+enum editLogOperationType {
+  create
+  update
+  delete
+}
+
+enum editLogTargetType {
+  invoice
+  member
+  marketingMembership
+  group
+  linepayPayment
+  newebpayPayment
+  appStorePayment
+  googlePlayPayment
+  subscription
+}
+
+enum editLogTargetIdentificationKeyType {
+  email
+  orderNumber
+  orderId
+  company
+}
+
+input editLogWhereUniqueInput {
+  id: ID
+}
+
+input editLogWhereInput {
+  AND: [editLogWhereInput!]
+  OR: [editLogWhereInput!]
+  NOT: [editLogWhereInput!]
+  id: IDFilter
+  user: StringNullableFilter
+  operation: editLogOperationTypeNullableFilter
+  target: editLogTargetTypeNullableFilter
+  targetId: IntNullableFilter
+  targetIdentificationKey: editLogTargetIdentificationKeyTypeNullableFilter
+  targetIdentificationValue: StringNullableFilter
+  createdAt: DateTimeNullableFilter
+  updatedAt: DateTimeNullableFilter
+  createdBy: userWhereInput
+  updatedBy: userWhereInput
+}
+
+input editLogOperationTypeNullableFilter {
+  equals: editLogOperationType
+  in: [editLogOperationType!]
+  notIn: [editLogOperationType!]
+  not: editLogOperationTypeNullableFilter
+}
+
+input editLogTargetTypeNullableFilter {
+  equals: editLogTargetType
+  in: [editLogTargetType!]
+  notIn: [editLogTargetType!]
+  not: editLogTargetTypeNullableFilter
+}
+
+input editLogTargetIdentificationKeyTypeNullableFilter {
+  equals: editLogTargetIdentificationKeyType
+  in: [editLogTargetIdentificationKeyType!]
+  notIn: [editLogTargetIdentificationKeyType!]
+  not: editLogTargetIdentificationKeyTypeNullableFilter
+}
+
+input editLogOrderByInput {
+  id: OrderDirection
+  user: OrderDirection
+  operation: OrderDirection
+  target: OrderDirection
+  targetId: OrderDirection
+  targetIdentificationKey: OrderDirection
+  targetIdentificationValue: OrderDirection
+  createdAt: OrderDirection
+  updatedAt: OrderDirection
+}
+
+input editLogUpdateInput {
+  user: String
+  operation: editLogOperationType
+  target: editLogTargetType
+  targetId: Int
+  targetIdentificationKey: editLogTargetIdentificationKeyType
+  targetIdentificationValue: String
+  originalFields: JSON
+  updatedFields: JSON
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForUpdateInput
+  updatedBy: userRelateToOneForUpdateInput
+}
+
+input editLogUpdateArgs {
+  where: editLogWhereUniqueInput!
+  data: editLogUpdateInput!
+}
+
+input editLogCreateInput {
+  user: String
+  operation: editLogOperationType
+  target: editLogTargetType
+  targetId: Int
+  targetIdentificationKey: editLogTargetIdentificationKeyType
+  targetIdentificationValue: String
+  originalFields: JSON
+  updatedFields: JSON
+  createdAt: String
+  updatedAt: String
+  createdBy: userRelateToOneForCreateInput
+  updatedBy: userRelateToOneForCreateInput
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+type Query {
+  authenticatedItem: AuthenticatedItem
+  users(where: userWhereInput! = {}, orderBy: [userOrderByInput!]! = [], take: Int, skip: Int! = 0): [user!]
+  user(where: userWhereUniqueInput!): user
+  usersCount(where: userWhereInput! = {}): Int
+  invoices(where: invoiceWhereInput! = {}, orderBy: [invoiceOrderByInput!]! = [], take: Int, skip: Int! = 0): [invoice!]
+  invoice(where: invoiceWhereUniqueInput!): invoice
+  invoicesCount(where: invoiceWhereInput! = {}): Int
+  members(where: memberWhereInput! = {}, orderBy: [memberOrderByInput!]! = [], take: Int, skip: Int! = 0): [member!]
+  member(where: memberWhereUniqueInput!): member
+  membersCount(where: memberWhereInput! = {}): Int
+  merchandises(where: merchandiseWhereInput! = {}, orderBy: [merchandiseOrderByInput!]! = [], take: Int, skip: Int! = 0): [merchandise!]
+  merchandise(where: merchandiseWhereUniqueInput!): merchandise
+  merchandisesCount(where: merchandiseWhereInput! = {}): Int
+  marketingMemberships(where: marketingMembershipWhereInput! = {}, orderBy: [marketingMembershipOrderByInput!]! = [], take: Int, skip: Int! = 0): [marketingMembership!]
+  marketingMembership(where: marketingMembershipWhereUniqueInput!): marketingMembership
+  marketingMembershipsCount(where: marketingMembershipWhereInput! = {}): Int
+  mailRecords(where: mailRecordWhereInput! = {}, orderBy: [mailRecordOrderByInput!]! = [], take: Int, skip: Int! = 0): [mailRecord!]
+  mailRecord(where: mailRecordWhereUniqueInput!): mailRecord
+  mailRecordsCount(where: mailRecordWhereInput! = {}): Int
+  newebpayPaymentInfos(where: newebpayPaymentInfoWhereInput! = {}, orderBy: [newebpayPaymentInfoOrderByInput!]! = [], take: Int, skip: Int! = 0): [newebpayPaymentInfo!]
+  newebpayPaymentInfo(where: newebpayPaymentInfoWhereUniqueInput!): newebpayPaymentInfo
+  newebpayPaymentInfosCount(where: newebpayPaymentInfoWhereInput! = {}): Int
+  newebpayPayments(where: newebpayPaymentWhereInput! = {}, orderBy: [newebpayPaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [newebpayPayment!]
+  newebpayPayment(where: newebpayPaymentWhereUniqueInput!): newebpayPayment
+  newebpayPaymentsCount(where: newebpayPaymentWhereInput! = {}): Int
+  appStorePayments(where: appStorePaymentWhereInput! = {}, orderBy: [appStorePaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [appStorePayment!]
+  appStorePayment(where: appStorePaymentWhereUniqueInput!): appStorePayment
+  appStorePaymentsCount(where: appStorePaymentWhereInput! = {}): Int
+  googlePlayPayments(where: googlePlayPaymentWhereInput! = {}, orderBy: [googlePlayPaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [googlePlayPayment!]
+  googlePlayPayment(where: googlePlayPaymentWhereUniqueInput!): googlePlayPayment
+  googlePlayPaymentsCount(where: googlePlayPaymentWhereInput! = {}): Int
+  linepayPayments(where: linepayPaymentWhereInput! = {}, orderBy: [linepayPaymentOrderByInput!]! = [], take: Int, skip: Int! = 0): [linepayPayment!]
+  linepayPayment(where: linepayPaymentWhereUniqueInput!): linepayPayment
+  linepayPaymentsCount(where: linepayPaymentWhereInput! = {}): Int
+  linepayPaymentInfos(where: linepayPaymentInfoWhereInput! = {}, orderBy: [linepayPaymentInfoOrderByInput!]! = [], take: Int, skip: Int! = 0): [linepayPaymentInfo!]
+  linepayPaymentInfo(where: linepayPaymentInfoWhereUniqueInput!): linepayPaymentInfo
+  linepayPaymentInfosCount(where: linepayPaymentInfoWhereInput! = {}): Int
+  promotions(where: promotionWhereInput! = {}, orderBy: [promotionOrderByInput!]! = [], take: Int, skip: Int! = 0): [promotion!]
+  promotion(where: promotionWhereUniqueInput!): promotion
+  promotionsCount(where: promotionWhereInput! = {}): Int
+  subscriptions(where: subscriptionWhereInput! = {}, orderBy: [subscriptionOrderByInput!]! = [], take: Int, skip: Int! = 0): [subscription!]
+  subscription(where: subscriptionWhereUniqueInput!): subscription
+  subscriptionsCount(where: subscriptionWhereInput! = {}): Int
+  subscriptionHistories(where: subscriptionHistoryWhereInput! = {}, orderBy: [subscriptionHistoryOrderByInput!]! = [], take: Int, skip: Int! = 0): [subscriptionHistory!]
+  subscriptionHistory(where: subscriptionHistoryWhereUniqueInput!): subscriptionHistory
+  subscriptionHistoriesCount(where: subscriptionHistoryWhereInput! = {}): Int
+  magazineOrders(where: magazineOrderWhereInput! = {}, orderBy: [magazineOrderOrderByInput!]! = [], take: Int, skip: Int! = 0): [magazineOrder!]
+  magazineOrder(where: magazineOrderWhereUniqueInput!): magazineOrder
+  magazineOrdersCount(where: magazineOrderWhereInput! = {}): Int
+  groups(where: groupWhereInput! = {}, orderBy: [groupOrderByInput!]! = [], take: Int, skip: Int! = 0): [group!]
+  group(where: groupWhereUniqueInput!): group
+  groupsCount(where: groupWhereInput! = {}): Int
+  editLogs(where: editLogWhereInput! = {}, orderBy: [editLogOrderByInput!]! = [], take: Int, skip: Int! = 0): [editLog!]
+  editLog(where: editLogWhereUniqueInput!): editLog
+  editLogsCount(where: editLogWhereInput! = {}): Int
+  keystone: KeystoneMeta!
+}
+
+type KeystoneMeta {
+  adminMeta: KeystoneAdminMeta!
+}
+
+type KeystoneAdminMeta {
+  enableSignout: Boolean!
+  enableSessionItem: Boolean!
+  lists: [KeystoneAdminUIListMeta!]!
+  list(key: String!): KeystoneAdminUIListMeta
+}
+
+type KeystoneAdminUIListMeta {
+  key: String!
+  itemQueryName: String!
+  listQueryName: String!
+  hideCreate: Boolean!
+  hideDelete: Boolean!
+  path: String!
+  label: String!
+  singular: String!
+  plural: String!
+  description: String
+  initialColumns: [String!]!
+  pageSize: Int!
+  labelField: String!
+  fields: [KeystoneAdminUIFieldMeta!]!
+  initialSort: KeystoneAdminUISort
+  isHidden: Boolean!
+}
+
+type KeystoneAdminUIFieldMeta {
+  path: String!
+  label: String!
+  isOrderable: Boolean!
+  isFilterable: Boolean!
+  fieldMeta: JSON
+  viewsIndex: Int!
+  customViewsIndex: Int
+  createView: KeystoneAdminUIFieldMetaCreateView!
+  listView: KeystoneAdminUIFieldMetaListView!
+  itemView(id: ID!): KeystoneAdminUIFieldMetaItemView
+  search: QueryMode
+}
+
+type KeystoneAdminUIFieldMetaCreateView {
+  fieldMode: KeystoneAdminUIFieldMetaCreateViewFieldMode!
+}
+
+enum KeystoneAdminUIFieldMetaCreateViewFieldMode {
+  edit
+  hidden
+}
+
+type KeystoneAdminUIFieldMetaListView {
+  fieldMode: KeystoneAdminUIFieldMetaListViewFieldMode!
+}
+
+enum KeystoneAdminUIFieldMetaListViewFieldMode {
+  read
+  hidden
+}
+
+type KeystoneAdminUIFieldMetaItemView {
+  fieldMode: KeystoneAdminUIFieldMetaItemViewFieldMode!
+}
+
+enum KeystoneAdminUIFieldMetaItemViewFieldMode {
+  edit
+  read
+  hidden
+}
+
+type KeystoneAdminUISort {
+  field: String!
+  direction: KeystoneAdminUISortDirection!
+}
+
+enum KeystoneAdminUISortDirection {
+  ASC
+  DESC
+}

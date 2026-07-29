@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import { getNumberWithCommas } from '../../../utils'
 import { getPlanInfoByIdAndShouldFreight } from '../../../utils/papermag'
 
@@ -31,7 +32,7 @@ const Tr = styled.tr`
   font-size: 18px;
   font-weight: 400;
 
-  :not(:last-child) {
+  &:not(:last-child) {
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   }
   .item-name {
@@ -56,7 +57,7 @@ const CountButton = styled.button`
   font-size: 24px;
   font-weight: 300;
   position: relative;
-  :focus {
+  &:focus {
     outline: none;
   }
   -webkit-touch-callout: none; /* iOS Safari */

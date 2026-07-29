@@ -1,28 +1,29 @@
+import { useMemo, useRef, useState } from 'react'
+import { useRouter } from 'next/router'
 import axios from 'axios'
-import { useState, useRef, useMemo } from 'react'
 import styled from 'styled-components'
-import MerchandiseItem from './form-detail/merchandise-item'
-import ApplyDiscount from './form-detail/apply-discount'
-import PurchaseInfo from './form-detail/purchase-info'
-import Shipping from './form-detail/shipping'
-import Receipt from './form-detail/receipt'
-import AcceptingTermsAndConditions from './form-detail/accepting-terms-and-conditions'
-import CheckoutBtn from './form-detail/checkout-btn'
-import Orderer from './form-detail/orderer'
-import Recipient from './form-detail/recipient'
-import NewebpayForm from './form-detail/newebpay-form'
+
+import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
+import { RECEIPT_OPTION } from '../../constants/papermag'
+import { SECOND } from '../../constants/time-unit'
+import { generateErrorReportInfo } from '../../utils/log/error-log'
+import { sendErrorLog } from '../../utils/log/send-log'
 import {
   checkOrdererValues,
   checkRecipientValues,
   getPlanInfoByIdAndShouldFreight,
 } from '../../utils/papermag'
 
-import { NEWEBPAY_PAPERMAG_API_URL } from '../../config/index.mjs'
-import { useRouter } from 'next/router'
-import { SECOND } from '../../constants/time-unit'
-import { generateErrorReportInfo } from '../../utils/log/error-log'
-import { sendErrorLog } from '../../utils/log/send-log'
-import { RECEIPT_OPTION } from '../../constants/papermag'
+import AcceptingTermsAndConditions from './form-detail/accepting-terms-and-conditions'
+import ApplyDiscount from './form-detail/apply-discount'
+import CheckoutBtn from './form-detail/checkout-btn'
+import MerchandiseItem from './form-detail/merchandise-item'
+import NewebpayForm from './form-detail/newebpay-form'
+import Orderer from './form-detail/orderer'
+import PurchaseInfo from './form-detail/purchase-info'
+import Receipt from './form-detail/receipt'
+import Recipient from './form-detail/recipient'
+import Shipping from './form-detail/shipping'
 
 const Form = styled.form`
   display: flex;

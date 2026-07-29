@@ -14,7 +14,7 @@ const Link = styled.a`
   font-weight: 400;
   border-radius: 32px;
   color: white;
-  :hover {
+  &:hover {
     background: #054f77;
     transition: background 0.3s ease;
   }

@@ -1,6 +1,6 @@
 const defaultDestination = '/premiumsection/member'
-import { useRouter } from 'next/router'
 import { useCallback } from 'react'
+import { useRouter } from 'next/router'
 
 /**
  *

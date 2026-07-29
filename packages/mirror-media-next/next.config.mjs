@@ -1,9 +1,17 @@
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import {
   DONATION_PAGE_URL,
-  SITE_BASE_PATH,
   FIREBASE_AUTH_DOMAIN,
+  SITE_BASE_PATH,
 } from './config/index.mjs'
-import withPWA from 'next-pwa'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Architecture guardrail: keep Next.js 15 while the built-in AMP
+// routes remain. Before upgrading to Next.js 16, decide the long-term AMP path
+// and revalidate the custom webpack loaders against Turbopack.
 
 const withBundleAnalyzer =
   process.env.ANALYZE === 'true' && process.env.NEXT_PUBLIC_ENV !== 'prod'
@@ -12,18 +20,10 @@ const withBundleAnalyzer =
       })
     : (config) => config
 
-/** @type {import('next-pwa').PWAConfig} */
-const pwaConfig = {
-  dest: 'public',
-  customWorkerDir: 'service-worker',
-  mode: 'production',
-}
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: SITE_BASE_PATH,
   reactStrictMode: true,
-  swcMinify: true,
   compiler: {
     styledComponents: {
       displayName: true,
@@ -95,6 +95,10 @@ const nextConfig = {
   },
 
   output: 'standalone',
+  // Next.js 15 treats outputFileTracingRoot as a top-level option.
+  // Revalidate the standalone output layout and both Docker runtimes after any
+  // future framework upgrade.
+  outputFileTracingRoot: path.join(__dirname, '../..'),
 }
 
-export default withBundleAnalyzer(withPWA(pwaConfig)(nextConfig))
+export default withBundleAnalyzer(nextConfig)

@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import debounce from 'debounce'
-import { sendUserBehaviorLog } from '../../utils/log/send-log'
-import { useMembership } from '../../context/membership'
 
+import { useMembership } from '../../context/membership'
+import { sendUserBehaviorLog } from '../../utils/log/send-log'
 import { generateUserBehaviorLogInfo } from '../../utils/log/user-behavior-log'
 /**
  * Component for recording and sending user-behavior-log to Google Cloud Logging.

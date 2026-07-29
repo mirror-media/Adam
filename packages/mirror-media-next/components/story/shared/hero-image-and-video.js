@@ -1,5 +1,6 @@
-import styled, { css } from 'styled-components'
 import CustomImage from '@readr-media/react-image'
+import styled, { css } from 'styled-components'
+
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
@@ -53,7 +54,9 @@ const ArticleTitle = styled.h1`
 
 const ArticleSubtitle = styled.h2`
   color: #717171;
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   font-size: 20px;
   font-weight: 500;
   line-height: normal;

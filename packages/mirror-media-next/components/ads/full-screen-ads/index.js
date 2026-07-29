@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useDisplayAd } from '../../../hooks/useDisplayAd'
+import GPTAd from '../gpt/gpt-ad'
 
 import FullScreenAd from './ad-item'
-import GPTAd from '../gpt/gpt-ad'
-import { useDisplayAd } from '../../../hooks/useDisplayAd'
 
 /**
  * @typedef {'default' | 'bottom' | 'modified'| 'unset'} FullScreenAdStyle

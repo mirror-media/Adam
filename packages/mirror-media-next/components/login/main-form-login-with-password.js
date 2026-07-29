@@ -1,29 +1,31 @@
-import styled from 'styled-components'
 import { useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../../hooks/useRedux'
-import {
-  loginPassword,
-  loginEmail,
-  loginActions,
-  FormState,
-} from '../../slice/login-slice'
+import { FirebaseError } from 'firebase/app'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import styled from 'styled-components'
+
+import { FirebaseAuthError } from '../../constants/firebase'
+import { InputState } from '../../constants/form'
 import { auth } from '../../firebase'
+import useRedirect from '../../hooks/use-redirect'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
 import {
-  getAccessToken,
+  FormState,
+  loginActions,
+  loginEmail,
+  loginPassword,
+} from '../../slice/login-slice'
+import { isValidEmail, isValidPassword } from '../../utils'
+import {
   errorHandler,
+  getAccessToken,
   loginPageOnAuthStateChangeAction,
 } from '../../utils/membership'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import FormTitle from './form-title'
-import GenericPasswordInput from '../shared/inputs/generic-password-input'
-import PrimaryButton from '../shared/buttons/primary-button'
 import DefaultButton from '../shared/buttons/default-button'
+import PrimaryButton from '../shared/buttons/primary-button'
+import GenericPasswordInput from '../shared/inputs/generic-password-input'
+
+import FormTitle from './form-title'
 import TextButton from './text-button'
-import { FirebaseError } from 'firebase/app'
-import { InputState } from '../../constants/form'
-import { FirebaseAuthError } from '../../constants/firebase'
-import { isValidEmail, isValidPassword } from '../../utils'
-import useRedirect from '../../hooks/use-redirect'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */
