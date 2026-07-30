@@ -9,6 +9,6 @@ if printf '%s\n' "$staged_files" | grep -Eq '^packages/mirror-media-next/(apollo
   pnpm -r run codegen:check
 fi
 
-if printf '%s\n' "$staged_files" | grep -Eq '^packages/mirror-media-next/.*\.js$'; then
+if printf '%s\n' "$staged_files" | grep -Eq '^packages/mirror-media-next/.*\.(js|jsx)$'; then
   pnpm check:no-new-js -- --staged
 fi
