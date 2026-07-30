@@ -93,7 +93,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0(@apollo/client@3.14.1(@types/react@19.2.17)(graphql-ws@6.0.8(graphql@16.6.0)(ws@8.21.0))(graphql@16.6.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7))
       axios:
-        specifier: ^1.2.1
+        specifier: ^1.19.0
         version: 1.19.0
       body-scroll-lock:
         specifier: 3.1.5

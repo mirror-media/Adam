@@ -32,7 +32,7 @@
     "@svgr/webpack": "^6.3.1",
     "@twreporter/errors": "^1.1.2",
     "apollo-link-timeout": "^4.0.0",
-    "axios": "^1.2.1",
+    "axios": "^1.19.0",
     "body-scroll-lock": "3.1.5",
     "bowser": "^2.11.0",
     "constants": "github:mirror-media/constants#691672f39fc7269fdac42776e9c916a42386e464",
