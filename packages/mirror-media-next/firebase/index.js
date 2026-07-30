@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
+
 import { FIREBASE_CONFIG } from '../config/index.mjs'
 
 // It is safe to expose the Firebase config.
@@ -18,4 +19,4 @@ const firebaseApp = initializeApp(FIREBASE_CONFIG)
  */
 const auth = getAuth(firebaseApp)
 
-export { firebaseApp, auth }
+export { auth, firebaseApp }

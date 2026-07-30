@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 
+import { PRIZE_LIST } from '../../../constants/subscribe-constants'
+
 import DonateLink from './donate-link'
 import SubscribeLink from './subscribe-link'
-import { PRIZE_LIST } from '../../../constants/subscribe-constants'
 
 const Container = styled.div`
   margin: 32px 0;
@@ -16,7 +17,9 @@ const Container = styled.div`
     rgba(97, 184, 198, 1) 0%,
     rgba(5, 79, 119, 1) 100%
   );
-  box-shadow: 0px 4px 28px rgba(0, 0, 0, 0.06), 0px 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0px 4px 28px rgba(0, 0, 0, 0.06),
+    0px 2px 12px rgba(0, 0, 0, 0.08);
   border-radius: 32px;
 
   .title {

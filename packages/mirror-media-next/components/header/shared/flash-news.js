@@ -1,7 +1,6 @@
 //TODO : this component would rerender twice (once at `handleClickPrev` or `handleClickNext`, once at `handleTransitionEnd`),
 //need to refactor to solve this performance issue.
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
-
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').Post, 'id' | 'slug' |'title'>} FlashNews
@@ -192,7 +191,6 @@ export default function FlashNews({ flashNews = [] }) {
           <Arrow className="prev" onClick={handleClickPrev} />
           <Arrow className="next" onClick={handleClickNext} />
         </ArrowWrapper>
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <FlashNewsList
           shouldTransition={shouldTransition}
           move={move}

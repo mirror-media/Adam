@@ -1,22 +1,31 @@
 {
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "pnpm@10.17.1",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "typecheck": "pnpm -r run typecheck",
+    "codegen:check": "pnpm -r run codegen:check",
+    "check:no-new-js": "pnpm -r run check:no-new-js"
   },
   "version": "0.0.0",
   "devDependencies": {
-    "babel-plugin-styled-components": "^2.0.7",
-    "eslint": "8.22.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "@eslint/js": "^9.39.4",
+    "@next/eslint-plugin-next": "^15.5.19",
+    "eslint": "9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "globals": "^17.6.0",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "prettier": "^2.7.1"
+    "prettier": "^3.8.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.61.0"
   },
   "lint-staged": {
-    "*.{js,mjs,jsx}": "eslint --cache --fix"
+    "*.{js,mjs,jsx,ts,tsx}": "eslint --cache --fix"
   }
 }

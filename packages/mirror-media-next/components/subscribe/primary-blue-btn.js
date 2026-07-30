@@ -1,8 +1,8 @@
-import styled from 'styled-components'
 import Link from 'next/link'
+import styled from 'styled-components'
 
 const StyledBtn = styled.button`
-  :focus {
+  &:focus {
     outline: 0;
   }
   border-radius: 12px;
@@ -17,7 +17,8 @@ const StyledBtn = styled.button`
   background: #054f77;
 
   &:hover {
-    background: linear-gradient(
+    background:
+      linear-gradient(
         0deg,
         rgba(5, 79, 119, 0.05) 0%,
         rgba(5, 79, 119, 0.05) 100%
@@ -29,7 +30,9 @@ const StyledBtn = styled.button`
     }
   }
 
-  transition: background 0.25s ease, color 0.25s ease;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
 
   .title {
     color: #fff;

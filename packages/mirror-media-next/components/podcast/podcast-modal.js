@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
+
 import { Z_INDEX } from '../../constants'
 
 const ModalWrapper = styled.div`
@@ -33,7 +34,7 @@ const ModalContent = styled.div`
 
   a {
     color: #1d9fb8;
-    :hover {
+    &:hover {
       text-decoration: underline;
     }
   }

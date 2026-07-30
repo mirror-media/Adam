@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+
 import { IS_PREVIEW_MODE, SITE_BASE_PATH } from './config/index.mjs'
 
 /** @typedef {import('next/server').NextRequest} NextRequest */

@@ -1,5 +1,6 @@
-import Script from 'next/script'
 import { useEffect } from 'react'
+import Script from 'next/script'
+
 import useWindowDimensions from '../../hooks/use-window-dimensions'
 
 export default function DevGptAd() {

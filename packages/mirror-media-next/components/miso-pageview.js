@@ -8,9 +8,11 @@
  *
  * @returns {null} 此元件不會渲染任何可見內容，僅用於觸發 Miso 上報邏輯
  */
-import { useMembership } from '../context/membership'
-import { MISO_API_KEY } from '../config/index.mjs'
 import { useEffect, useState } from 'react'
+
+import { MISO_API_KEY } from '../config/index.mjs'
+import { useMembership } from '../context/membership'
+
 import MisoScript from './miso-script'
 
 export default function MisoPageView({ productIds }) {

@@ -1,5 +1,6 @@
-import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import styled from 'styled-components'
+
 // import gtag from '../utils/programmable-search/gtag'
 import { transformTimeData } from '../../utils'
 

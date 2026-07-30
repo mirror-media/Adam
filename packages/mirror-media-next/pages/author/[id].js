@@ -1,22 +1,21 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
 import AuthorArticles from '../../components/author/author-articles'
-import { ENV } from '../../config/index.mjs'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import {
-  getSectionAndTopicFromDefaultHeaderData,
-  getPostsAndPostscountFromGqlData,
-} from '../../utils/data-process'
-import { setPageCache } from '../../utils/cache-setting'
-
 import Layout from '../../components/shared/layout'
+import { ENV } from '../../config/index.mjs'
 import { Z_INDEX } from '../../constants/index'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import {
   fetchAuthorByAuthorId,
   fetchPostsByAuthorId,
 } from '../../utils/api/author'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
+import { setPageCache } from '../../utils/cache-setting'
+import {
+  getPostsAndPostscountFromGqlData,
+  getSectionAndTopicFromDefaultHeaderData,
+} from '../../utils/data-process'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })

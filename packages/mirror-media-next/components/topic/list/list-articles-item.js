@@ -1,8 +1,8 @@
-import styled from 'styled-components'
 import Image from '@readr-media/react-image'
+import styled from 'styled-components'
 
-import { transformTimeData } from '../../../utils'
 import { color } from '../../../styles/theme/color'
+import { transformTimeData } from '../../../utils'
 
 /** @typedef {import('../../../type/theme').Theme} Theme */
 
@@ -120,7 +120,7 @@ const ItemBrief = styled.div`
  *  title: string,
  *  publishedDate: string,
  *  brief: import('../../../type/draft-js').Draft,
- *  categroies: Category[],
+ *  categories: Category[],
  *  sections: Section[],
  *  heroImage: HeroImage,
  * }} Article

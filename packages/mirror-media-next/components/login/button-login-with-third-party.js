@@ -1,23 +1,23 @@
-import styled from 'styled-components'
 import { useMemo } from 'react'
-import { auth } from '../../firebase'
 import {
-  OAuthProvider,
-  GoogleAuthProvider,
   FacebookAuthProvider,
+  GoogleAuthProvider,
+  OAuthProvider,
   signInWithRedirect,
 } from 'firebase/auth'
+import styled from 'styled-components'
 
-import { useAppSelector, useAppDispatch } from '../../hooks/useRedux'
-import {
-  loginIsFederatedRedirectResultLoading,
-  loginActions,
-  AuthMethod,
-} from '../../slice/login-slice'
-import DefaultButton from '../shared/buttons/default-button'
+import { auth } from '../../firebase'
+import { useAppDispatch, useAppSelector } from '../../hooks/useRedux'
+import IconApple from '../../public/images-next/login/apple.svg'
 import IconFacebook from '../../public/images-next/login/facebook.svg'
 import IconGoogle from '../../public/images-next/login/google.svg'
-import IconApple from '../../public/images-next/login/apple.svg'
+import {
+  AuthMethod,
+  loginActions,
+  loginIsFederatedRedirectResultLoading,
+} from '../../slice/login-slice'
+import DefaultButton from '../shared/buttons/default-button'
 
 // following comments is required since these variables are used by comments but not codes.
 /* eslint-disable-next-line no-unused-vars */

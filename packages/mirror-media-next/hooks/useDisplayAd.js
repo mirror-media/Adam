@@ -14,8 +14,8 @@ export const useDisplayAd = (hiddenAdvertised = false) => {
 
   const shouldShowAd = Boolean(
     !hiddenAdvertised &&
-      isLogInProcessFinished &&
-      invalidMemberType.includes(memberType)
+    isLogInProcessFinished &&
+    invalidMemberType.includes(memberType)
   )
 
   return { shouldShowAd, isLogInProcessFinished }

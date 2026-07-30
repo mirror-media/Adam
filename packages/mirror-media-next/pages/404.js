@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import axios from 'axios'
 import Link from 'next/link'
 import CustomImage from '@readr-media/react-image'
+import axios from 'axios'
+import styled from 'styled-components'
+
+import { HeaderSkeleton } from '../components/header/normal/header'
+import ShareHeader from '../components/header/share-header'
+import Layout from '../components/shared/layout'
 import { URL_STATIC_404_POPULAR_NEWS } from '../config/index.mjs'
 import { API_TIMEOUT } from '../config/index.mjs'
-import Layout from '../components/shared/layout'
-import ShareHeader from '../components/header/share-header'
-import { HeaderSkeleton } from '../components/header/normal/header'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 /** @typedef {import('../apollo/fragments/post').AsideListingPost & {brief: import('../apollo/fragments/post').Post['brief']} } ArticleDataWithBrief */
 /**
@@ -70,20 +71,20 @@ const JoinMemberBtn = styled.button`
     margin-bottom: 16px;
   }
 
-  :hover {
+  &:hover {
     cursor: pointer;
     background-color: #0d6b9e;
     transition: 0.1s ease-in;
   }
 
-  :active {
+  &:active {
     background-color: #ffffff;
     border: 1px solid #054f77;
     color: #054f77;
     transition: 0.1s ease-in;
   }
 
-  :focus {
+  &:focus {
     outline: 0;
   }
 `
@@ -101,7 +102,7 @@ const PostCard = styled.div`
   align-items: center;
   padding-bottom: 12px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
 
     .post-title {
@@ -111,7 +112,7 @@ const PostCard = styled.div`
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
-    :not(:last-child) {
+    &:not(:last-child) {
       margin-right: 28px;
     }
   }

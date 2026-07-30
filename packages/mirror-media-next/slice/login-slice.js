@@ -242,16 +242,16 @@ const loginSlice = createSlice({
 })
 
 export {
-  loginState,
-  loginPrevAuthMethod,
-  loginShouldShowHintOfExitenceOfDifferentAuthMethod,
-  loginEmail,
-  loginPassword,
-  loginFormMode,
-  loginIsFederatedRedirectResultLoading,
+  AuthMethod,
   FormMode,
   FormState,
-  AuthMethod,
+  loginEmail,
+  loginFormMode,
+  loginIsFederatedRedirectResultLoading,
+  loginPassword,
+  loginPrevAuthMethod,
+  loginShouldShowHintOfExitenceOfDifferentAuthMethod,
+  loginState,
 }
 export const loginActions = loginSlice.actions
 

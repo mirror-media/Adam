@@ -1,5 +1,5 @@
-import { InputState } from '../constants/form'
 import Hint from '../components/shared/hint'
+import { InputState } from '../constants/form'
 import IconCheckPass from '../public/images-next/check-pass.svg'
 
 /**

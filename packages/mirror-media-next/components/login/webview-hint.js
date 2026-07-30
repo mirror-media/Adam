@@ -1,11 +1,13 @@
-import styled from 'styled-components'
-import FormWrapper from './form-wrapper'
-import PrimaryButton from '../shared/buttons/primary-button'
-import DefaultButton from '../shared/buttons/default-button'
-import StyledLink from './styled-link'
-import { detectMobileOs } from '../../utils/login'
 import { useEffect, useRef, useState } from 'react'
+import styled from 'styled-components'
+
 import useClipboard from '../../hooks/use-clipboard'
+import { detectMobileOs } from '../../utils/login'
+import DefaultButton from '../shared/buttons/default-button'
+import PrimaryButton from '../shared/buttons/primary-button'
+
+import FormWrapper from './form-wrapper'
+import StyledLink from './styled-link'
 
 const Main = styled.main`
   display: flex;

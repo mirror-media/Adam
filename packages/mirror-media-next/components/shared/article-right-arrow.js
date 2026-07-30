@@ -1,6 +1,7 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import styled from 'styled-components'
+
 import { Z_INDEX } from '../../constants/index'
 
 const StyledLink = styled(Link)`

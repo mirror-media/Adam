@@ -2,9 +2,9 @@
 //We also add server-side setting of `styled-components`, which can be rendered at timing of page has visible content but not interactive.
 //For more detail, please visited documentation of [Nextjs](https://nextjs.org/docs/advanced-features/custom-document) and [styled-component](https://styled-components.com/docs/advanced#server-side-rendering)
 
-import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { ServerStyleSheet } from 'styled-components'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
 import Script from 'next/script'
+import { ServerStyleSheet } from 'styled-components'
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet()

@@ -1,9 +1,10 @@
 import dynamic from 'next/dynamic'
 import styled from 'styled-components'
-import TopicGroupArticles from './topic-group-articles'
 
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
 import { parseUrl } from '../../../utils/topic'
+
+import TopicGroupArticles from './topic-group-articles'
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
 })

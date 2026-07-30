@@ -1,8 +1,9 @@
-import styled from 'styled-components'
-import { Z_INDEX } from '../../../constants'
-import { useState, useEffect, useRef } from 'react'
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import { useEffect, useRef, useState } from 'react'
 import { useAmp } from 'next/amp'
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
+import styled from 'styled-components'
+
+import { Z_INDEX } from '../../../constants'
 
 const Wrapper = styled.div`
   position: fixed;

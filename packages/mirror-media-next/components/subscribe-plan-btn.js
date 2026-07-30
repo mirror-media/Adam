@@ -1,8 +1,8 @@
-import styled from 'styled-components'
 import Link from 'next/link'
+import styled from 'styled-components'
 
 const StyledSubscribeBtn = styled.button`
-  :focus {
+  &:focus {
     outline: 0;
   }
   border-radius: 12px;
@@ -38,7 +38,9 @@ const StyledSubscribeBtn = styled.button`
     }
   }
 
-  transition: background 0.25s ease, color 0.25s ease;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
 
   .title {
     color: #fff;

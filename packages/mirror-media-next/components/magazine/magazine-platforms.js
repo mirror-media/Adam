@@ -1,6 +1,7 @@
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import styled from 'styled-components'
+
 import { MAGAZINE_PLATFORM_LINKS } from '../../constants/magazine-platform-links'
 
 const PlatformsList = styled.div`

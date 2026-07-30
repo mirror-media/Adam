@@ -1,6 +1,5 @@
-import styled from 'styled-components'
-
 import Link from 'next/link'
+import styled from 'styled-components'
 const StyledButton = styled.button`
   display: none;
   ${({ theme }) => theme.breakpoint.xl} {
@@ -15,7 +14,7 @@ const StyledButton = styled.button`
     color: white;
     text-align: center;
     margin-left: 12px;
-    :hover {
+    &:hover {
       color: #61b8c6;
       transition: all 0.2s ease-in-out;
     }

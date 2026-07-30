@@ -1,22 +1,23 @@
 //REMINDER: DO NOT REMOVE className which has prefix `GTM-`, since it is used for collecting data of Google Analytics event.
 
 import { Fragment } from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
-import { useEffect, useState, useRef, useCallback } from 'react'
+import nextImage from 'next/image'
+import Link from 'next/link'
+import Image from '@readr-media/react-image'
+import styled from 'styled-components'
+
+import useWindowDimensions from '../../../hooks/use-window-dimensions'
+import { useDisplayAd } from '../../../hooks/useDisplayAd'
+import gnewsGif from '../../../public/images-next/story/gnews-gif.gif'
+import { mediaSize } from '../../../styles/media'
 import {
+  getArticleHref,
   getSectionNameGql,
   getSectionSlugGql,
-  getArticleHref,
 } from '../../../utils'
-import Image from '@readr-media/react-image'
-import { useDisplayAd } from '../../../hooks/useDisplayAd'
-import { needInsertPopInAdAfter, getPopInId } from '../../../utils/ad'
-import useWindowDimensions from '../../../hooks/use-window-dimensions'
-import { mediaSize } from '../../../styles/media'
-import nextImage from 'next/image'
-import gnewsGif from '../../../public/images-next/story/gnews-gif.gif'
+import { getPopInId, needInsertPopInAdAfter } from '../../../utils/ad'
 
 const PopInAdInHotList = dynamic(
   () => import('../../../components/ads/pop-in/pop-in-ad-in-hot-list'),
@@ -343,8 +344,8 @@ export default function AsideArticleList({
     const shouldShowPopInAd = (index) => {
       return Boolean(
         shouldShowAd &&
-          listType === 'popularNews' &&
-          needInsertPopInAdAfter(index)
+        listType === 'popularNews' &&
+        needInsertPopInAdAfter(index)
       )
     }
 

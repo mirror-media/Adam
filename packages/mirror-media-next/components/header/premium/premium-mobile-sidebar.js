@@ -1,5 +1,6 @@
+import React, { Fragment, useRef, useState } from 'react'
 import styled, { css } from 'styled-components'
-import React, { Fragment, useState, useRef } from 'react'
+
 import useClickOutside from '../../../hooks/useClickOutside'
 import NavSubtitleNavigator from '../../story/shared/nav-subtitle-navigator'
 
@@ -101,7 +102,7 @@ const CloseButton = styled.button`
     margin: 0 5px 0 0;
     position: relative;
     &:before,
-    :after {
+    &:after {
       position: absolute;
       left: 8.5px;
       top: 5px;

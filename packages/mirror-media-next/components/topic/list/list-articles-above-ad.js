@@ -1,11 +1,12 @@
-import ListArticles from './list-articles'
-import styled from 'styled-components'
 import { useState } from 'react'
+import Image from 'next/image'
 import { useLazyQuery } from '@apollo/client'
+import styled from 'styled-components'
+
 import { fetchTopic } from '../../../apollo/query/topics'
 import LoadingPage from '../../../public/images-next/loading_page.gif'
 
-import Image from 'next/image'
+import ListArticles from './list-articles'
 /**
  * @typedef {import('../../../type/theme').Theme} Theme
  */

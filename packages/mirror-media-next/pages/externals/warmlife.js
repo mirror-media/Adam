@@ -1,25 +1,23 @@
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
+import styled from 'styled-components'
 
-import PartnerArticles from '../../components/externals/partner-articles'
 import client from '../../apollo/apollo-client'
-import { ENV } from '../../config/index.mjs'
-import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
-import { setPageCache } from '../../utils/cache-setting'
-import Layout from '../../components/shared/layout'
-import { Z_INDEX } from '../../constants/index'
-import { useDisplayAd } from '../../hooks/useDisplayAd'
-import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
-
 import { fetchExternalCounts } from '../../apollo/query/externals'
-import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/externals'
-
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
+import PartnerArticles from '../../components/externals/partner-articles'
+import Layout from '../../components/shared/layout'
+import { ENV } from '../../config/index.mjs'
+import { Z_INDEX } from '../../constants/index'
+import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getLogTraceObject } from '../../utils'
-import { processSettledResult } from '../../utils/response-processor'
+import { getPageKeyByPartnerShowOnIndex } from '../../utils/ad'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
+import { fetchExternalsWhichPartnerIsNotShowOnIndex } from '../../utils/api/externals'
+import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { processSettledResult } from '../../utils/response-processor'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
   ssr: false,

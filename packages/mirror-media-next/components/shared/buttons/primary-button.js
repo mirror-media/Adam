@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+
 import PrimaryButtonLoadingEffect from './primary-button-loading-effect'
 
 const Button = styled.button`

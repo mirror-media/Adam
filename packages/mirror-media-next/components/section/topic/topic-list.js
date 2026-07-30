@@ -1,9 +1,11 @@
 import { Fragment } from 'react'
-import styled from 'styled-components'
 import dynamic from 'next/dynamic'
-import TopicListItem from './topic-list-item'
-import { needInsertMicroAdAfter, getMicroAdUnitId } from '../../../utils/ad'
+import styled from 'styled-components'
+
 import { useDisplayAd } from '../../../hooks/useDisplayAd'
+import { getMicroAdUnitId, needInsertMicroAdAfter } from '../../../utils/ad'
+
+import TopicListItem from './topic-list-item'
 
 const GPTAd = dynamic(() => import('../../../components/ads/gpt/gpt-ad'), {
   ssr: false,
