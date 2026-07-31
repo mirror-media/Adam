@@ -99,6 +99,8 @@ dist
 
 # Babel transpiled folder
 lib
+!packages/mirror-media-next/lib/
+!packages/mirror-media-next/lib/**
 
 # Gatsby files
 .cache/
