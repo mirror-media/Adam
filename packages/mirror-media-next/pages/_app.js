@@ -1,3 +1,5 @@
+import '../styles/tailwind.css'
+
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { useAmp } from 'next/amp'
@@ -13,7 +15,7 @@ import WholeSiteScript from '../components/whole-site-script'
 import { GTM_ID } from '../config/index.mjs'
 import { MembershipProvider } from '../context/membership'
 import store from '../store'
-import { GlobalStyles } from '../styles/global-styles'
+import { AmpGlobalStyles, GlobalStyles } from '../styles/global-styles'
 import { theme } from '../styles/theme'
 
 const PromoteTopic = dynamic(() => import('../components/promote-topic'), {
@@ -80,7 +82,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <GlobalStyles />
+      {isAmpPage ? <AmpGlobalStyles /> : <GlobalStyles />}
       <MembershipProvider>
         <ApolloProvider client={client}>
           <Provider store={store}>
