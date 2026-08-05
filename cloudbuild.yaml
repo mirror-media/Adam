@@ -11,18 +11,51 @@ steps:
   #    - |
   #      /kaniko/executor --context="$(pwd)" --dockerfile=packages/$_TARGET_PACKAGE/Dockerfile --cache=true --cache-ttl=48h --destination=gcr.io/$PROJECT_ID/$_IMAGE_NAME:${BRANCH_NAME}_${SHORT_SHA}
 
-  - name: node:24-slim
-    id: Typecheck
+  - name: node:24
+    id: Quality gates
     entrypoint: bash
     env:
       - HUSKY=0
+      - PR_BASE_BRANCH=$_BASE_BRANCH
+      - BUILD_BRANCH_NAME=$BRANCH_NAME
+      - NO_NEW_JS_FALLBACK_BASE_BRANCH=$_NO_NEW_JS_BASE_BRANCH
     args:
       - '-c'
       - |
+        set -euo pipefail
+
         corepack enable
         corepack prepare pnpm@10.17.1 --activate
         pnpm install --frozen-lockfile
+
+        remote_name="$$(git remote | head -n 1)"
+        if [[ -z "$$remote_name" ]]; then
+          echo "No Git remote is available for the no-new-JS/JSX gate." >&2
+          exit 2
+        fi
+
+        if [[ "$$(git rev-parse --is-shallow-repository)" == "true" ]]; then
+          git fetch --no-tags --unshallow "$$remote_name"
+        fi
+
+        if [[ -n "$$PR_BASE_BRANCH" ]]; then
+          base_branch="$$PR_BASE_BRANCH"
+          git fetch --no-tags "$$remote_name" \
+            "+refs/heads/$$base_branch:refs/remotes/$$remote_name/$$base_branch"
+          no_new_js_base_ref="$$remote_name/$$base_branch"
+        elif [[ "$$BUILD_BRANCH_NAME" == "$$NO_NEW_JS_FALLBACK_BASE_BRANCH" ]]; then
+          no_new_js_base_ref="HEAD^"
+        else
+          base_branch="$$NO_NEW_JS_FALLBACK_BASE_BRANCH"
+          git fetch --no-tags "$$remote_name" \
+            "+refs/heads/$$base_branch:refs/remotes/$$remote_name/$$base_branch"
+          no_new_js_base_ref="$$remote_name/$$base_branch"
+        fi
+
+        pnpm --dir packages/mirror-media-next lint
         pnpm typecheck
+        NO_NEW_JS_BASE_REF="$$no_new_js_base_ref" pnpm check:no-new-js
+        pnpm codegen:check
 
   # Pull previous image
   - name: gcr.io/cloud-builders/docker
@@ -86,3 +119,7 @@ substitutions:
   _IS_PREVIEW_MODE: 'false' # default value
   _NEXT_PUBLIC_ENV: 'dev' # default value, will be overridden by branch name normalization
   _ANALYZE: 'false' # set to 'true' to publish bundle analyzer reports under /analyze/*.html
+  # Push builds compare feature branches with this target. GitHub PR triggers
+  # override it with the actual `$_BASE_BRANCH`; builds on the target itself
+  # compare the pushed commit with its first parent.
+  _NO_NEW_JS_BASE_BRANCH: 'dev'

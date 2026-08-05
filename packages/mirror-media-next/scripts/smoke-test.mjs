@@ -13,8 +13,8 @@ const AMP_VALIDATOR_JS = process.env.AMP_VALIDATOR_JS
 //    error page, and rendered its structural shell (`__NEXT_DATA__`, AMP html,
 //    canonical link). A failure here means the deployed candidate is broken
 //    (500 / timeout / crash / routing regression), so it FAILS on prod and on
-//    any deployed non-prod environment (dev-v4, a future staging-v4). Only local
-//    keeps this best-effort, because local detail pages depend on external dev
+//    any deployed non-prod environment. Only local keeps this best-effort,
+//    because local detail pages depend on external dev
 //    GraphQL that may not be reachable and is not a deployment under test.
 //
 // 2. Content-calibrated — the sample slug's title, `amphtml` link, and AMP
@@ -34,6 +34,20 @@ const storySlug = process.env.SMOKE_STORY_SLUG || '20230614ent025'
 const storyTitle = process.env.SMOKE_STORY_TITLE || '徐若瑄'
 const externalSlug = process.env.SMOKE_EXTERNAL_SLUG || 'dailycolumn_12846'
 const externalTitle = process.env.SMOKE_EXTERNAL_TITLE || '王丹專欄'
+const sectionSlug = process.env.SMOKE_SECTION_SLUG || 'entertainment'
+const sectionTitle = process.env.SMOKE_SECTION_TITLE || '娛樂'
+const categorySlug = process.env.SMOKE_CATEGORY_SLUG || 'news'
+const categoryTitle = process.env.SMOKE_CATEGORY_TITLE || '焦點'
+const tagSlug = process.env.SMOKE_TAG_SLUG || '586244ab3c1f950d00ce25b9'
+const tagTitle = process.env.SMOKE_TAG_TITLE || '徐若瑄'
+// This production-only fixture had fewer than five posts on 2026-07-24. It
+// intentionally exercises the low-content noindex / no-canonical boundary.
+// Non-authoritative CMS environments may not contain the tag at all, so their
+// required tag liveness is covered by the stable fixture above instead.
+const lowContentTagSlug =
+  process.env.SMOKE_LOW_CONTENT_TAG_SLUG || '6a63036b001458005927eb67'
+const lowContentTagTitle = process.env.SMOKE_LOW_CONTENT_TAG_TITLE || '好里家'
+const searchKeyword = process.env.SMOKE_SEARCH_KEYWORD || '台股'
 
 const routes = [
   {
@@ -80,6 +94,51 @@ const routes = [
     ],
     contentMarkers: [externalTitle],
   },
+  {
+    name: 'section',
+    path: `/section/${sectionSlug}`,
+    amp: false,
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    contentMarkers: [sectionTitle],
+  },
+  {
+    name: 'category',
+    path: `/category/${categorySlug}`,
+    amp: false,
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    contentMarkers: [
+      categoryTitle,
+      /<script[^>]+type="application\/ld\+json"[^>]*>/,
+    ],
+  },
+  {
+    name: 'tag',
+    path: `/tag/${tagSlug}`,
+    amp: false,
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    contentMarkers: [tagTitle],
+  },
+  {
+    name: 'tagLowContentSeo',
+    path: `/tag/${lowContentTagSlug}`,
+    amp: false,
+    authoritativeOnly: true,
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    contentMarkers: [
+      lowContentTagTitle,
+      /<meta(?=[^>]+name="robots")(?=[^>]+content="noindex")[^>]*>/,
+    ],
+    contentForbiddenMarkers: [/<link(?=[^>]+rel="canonical")[^>]*>/],
+  },
+  {
+    // This is the MISO UI route. The independently deployed/repo-owned
+    // `/api/search` and its Redis topology are deliberately not covered here.
+    name: 'search',
+    path: `/search/${searchKeyword}`,
+    amp: false,
+    livenessMarkers: [/id="__NEXT_DATA__"/],
+    contentMarkers: [searchKeyword],
+  },
 ]
 
 const errorPageMarkers = [
@@ -103,6 +162,12 @@ async function main() {
 
   for (const route of routes) {
     const routeUrl = resolveRouteUrl(baseUrl, route.path)
+    if (route.authoritativeOnly && !isAuthoritativeBaseUrl) {
+      console.log(
+        `SKIP ${route.name} ${routeUrl} (authoritative CMS fixture only)`
+      )
+      continue
+    }
     // Liveness FAILs on prod and on any deployed non-prod env; only local is
     // best-effort for detail routes (home stays required everywhere).
     const livenessRequired = !isLocalBaseUrl || route.name === 'home'
@@ -127,6 +192,11 @@ async function main() {
 
     try {
       assertMarkers(routeUrl, html.body, route.contentMarkers)
+      assertForbiddenMarkers(
+        routeUrl,
+        html.body,
+        route.contentForbiddenMarkers || []
+      )
       if (route.amp) {
         ampValidator ||= await getAmpValidator()
         assertAmpValid(routeUrl, html.body, ampValidator)
@@ -259,6 +329,17 @@ function assertMarkers(url, html, markers) {
 
     if (!matched) {
       throw new Error(`Missing marker "${marker.toString()}" in ${url}`)
+    }
+  }
+}
+
+function assertForbiddenMarkers(url, html, markers) {
+  for (const marker of markers) {
+    const matched =
+      marker instanceof RegExp ? marker.test(html) : html.includes(marker)
+
+    if (matched) {
+      throw new Error(`Unexpected marker "${marker.toString()}" in ${url}`)
     }
   }
 }
