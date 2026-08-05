@@ -58,10 +58,10 @@ const GPTAd = dynamic(() => import('../components/ads/gpt/gpt-ad'), {
 
 const IndexContainer = styled.main`
   background-color: rgba(255, 255, 255, 1);
-  max-width: ${({ theme }) => theme.layout.maxWidth.md};
+  max-width: ${({ theme }) => theme.layout.legacyContentMaxWidth.tablet};
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: ${({ theme }) => theme.layout.maxWidth.xl};
+    max-width: ${({ theme }) => theme.layout.legacyContentMaxWidth.desktop};
   }
   margin: 0 auto;
 `

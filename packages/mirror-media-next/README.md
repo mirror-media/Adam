@@ -37,6 +37,45 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
+## Storybook（元件展示與文件工具）
+
+本專案提供兩種 Storybook 開啟方式，兩者用途不同，請不要混用：
+
+### Live Storybook dev server（即時 Storybook 開發伺服器）
+
+用於開發 UI component（使用者介面元件）stories（元件案例），有較快的 hot reload（熱更新）：
+
+```bash
+pnpm storybook
+```
+
+開啟：
+
+```text
+http://localhost:6006
+```
+
+### Next.js static embedded route（Next.js 靜態嵌入路由）
+
+用於檢查 non-prod（非正式環境）同站 `/storybook` 發布結果。這條路由只讀取 `public/_storybook` static artifact（靜態產物），local 要查看的話需要先 build 過：
+
+```bash
+pnpm storybook:build
+pnpm dev:storybook-route
+```
+
+開啟：
+
+```text
+http://localhost:3000/storybook
+```
+
+注意事項：
+
+- `pnpm dev:storybook-route` 會用 `NEXT_PUBLIC_ENV=local` 啟動 Next.js，避免本機 `.env` 若設為 `NEXT_PUBLIC_ENV="prod"` 時 `/storybook` 依正式環境規則回 404。
+- 若尚未執行 `pnpm storybook:build`，`/storybook` 會顯示 static artifact missing（缺少靜態產物）的提示頁。
+- Production（正式環境）不應包含 `public/_storybook`，且 `/storybook` 必須回 404。
+
 ## Docker
 
 Dockerfile 需要完整的 pnpm workspace（pnpm 工作區），因此 image（映像檔）必須從 repository root 建置，不可在本 package 目錄直接使用 `docker build .`：

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"node mocks/server\" \"next dev\"",
+    "dev:storybook-route": "NEXT_PUBLIC_ENV=local concurrently \"node mocks/server\" \"next dev\"",
     "build": "pnpm build:sw && next build",
     "build:sw": "node scripts/build-sw.js",
     "storybook": "storybook dev -p 6006",
