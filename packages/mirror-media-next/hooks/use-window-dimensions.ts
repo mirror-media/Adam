@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
 
-/**
- * @typedef {Object} WindowDimension
- * @property {number | undefined} width
- * @property {number | undefined} height
- */
+type WindowDimension = {
+  width: number | undefined
+  height: number | undefined
+}
 
-/** @type {WindowDimension} */
-const initialWindowDimension = {
+const initialWindowDimension: WindowDimension = {
   width: undefined,
   height: undefined,
 }
