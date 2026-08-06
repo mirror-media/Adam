@@ -2,7 +2,7 @@ import type { HTMLAttributes } from 'react'
 
 import { cn } from '@/lib/utils'
 
-type ContainerSize = 'mobile' | 'tablet' | 'desktop' | 'md' | 'xl' | 'full'
+type ContainerSize = 'mobile' | 'tablet' | 'desktop' | 'full'
 
 type ContainerProps = HTMLAttributes<HTMLDivElement> & {
   size?: ContainerSize
@@ -12,15 +12,13 @@ const sizeClassByName = {
   mobile: 'max-w-[375px]',
   tablet: 'max-w-[768px]',
   desktop: 'max-w-[1280px]',
-  md: 'max-w-[768px]',
-  xl: 'max-w-[1280px]',
   full: 'max-w-none',
 } satisfies Record<ContainerSize, string>
 
 export function Container({
   children,
   className,
-  size = 'xl',
+  size = 'desktop',
   ...props
 }: ContainerProps) {
   return (

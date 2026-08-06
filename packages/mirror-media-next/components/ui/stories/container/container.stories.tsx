@@ -11,7 +11,7 @@ const meta = {
   argTypes: {
     size: {
       control: 'select',
-      options: ['mobile', 'tablet', 'desktop', 'md', 'xl', 'full'],
+      options: ['mobile', 'tablet', 'desktop', 'full'],
     },
   },
 } satisfies Meta<typeof Container>
