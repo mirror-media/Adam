@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/components/cn'
 
 type TypographyVariant =
   | 'hero-title'

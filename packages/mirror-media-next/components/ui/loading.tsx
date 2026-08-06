@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from 'react'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/components/cn'
 
 type LoadingProps = HTMLAttributes<HTMLDivElement> & {
   label?: string
@@ -9,7 +9,7 @@ type LoadingProps = HTMLAttributes<HTMLDivElement> & {
 export function Loading({ className, label, ...props }: LoadingProps) {
   return (
     <div
-      aria-label={label ?? 'Loading'}
+      aria-label={label ? undefined : 'Loading'}
       className={cn(
         'inline-flex items-center gap-mm-m text-mm-neutral-600',
         className
