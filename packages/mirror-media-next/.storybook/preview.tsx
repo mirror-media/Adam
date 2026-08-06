@@ -38,7 +38,7 @@ const preview: Preview = {
       viewports: {
         mobile: {
           name: 'Mobile',
-          styles: { height: '844px', width: '390px' },
+          styles: { height: '812px', width: '375px' },
         },
         tablet: {
           name: 'Tablet',
@@ -46,7 +46,7 @@ const preview: Preview = {
         },
         desktop: {
           name: 'Desktop',
-          styles: { height: '900px', width: '1440px' },
+          styles: { height: '900px', width: '1280px' },
         },
       },
     },
