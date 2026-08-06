@@ -9,7 +9,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'muted'],
+      options: ['default', 'muted', 'button'],
     },
   },
 } satisfies Meta<typeof Link>
@@ -30,5 +30,13 @@ export const Muted: Story = {
     children: 'Secondary link',
     href: '/',
     variant: 'muted',
+  },
+}
+
+export const Button: Story = {
+  args: {
+    children: '返回首頁',
+    href: '/',
+    variant: 'button',
   },
 }
