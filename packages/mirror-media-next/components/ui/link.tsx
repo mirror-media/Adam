@@ -1,7 +1,7 @@
 import type { ComponentPropsWithoutRef } from 'react'
 import NextLink from 'next/link'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/components/cn'
 
 type LinkVariant = 'default' | 'muted' | 'button'
 
@@ -9,13 +9,16 @@ type LinkProps = ComponentPropsWithoutRef<typeof NextLink> & {
   variant?: LinkVariant
 }
 
+const baseLinkClass =
+  'font-mm-sans underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500'
+
 const variantClassByName = {
   default:
-    'text-mm-base-700 underline-offset-4 hover:text-mm-second-600 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500',
+    'text-mm-body2 text-mm-base-700 hover:text-mm-second-600 hover:underline',
   muted:
-    'text-mm-neutral-600 underline-offset-4 hover:text-mm-base-700 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500',
+    'text-mm-body2 text-mm-neutral-600 hover:text-mm-base-700 hover:underline',
   button:
-    'inline-flex h-8 min-w-[100px] items-center justify-center rounded-mm-s bg-mm-base-700 px-mm-l font-mm-sans text-mm-subtitle text-mm-neutral-0 transition-colors hover:bg-mm-base-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500',
+    'inline-flex h-8 min-w-[100px] items-center justify-center rounded-mm-s bg-mm-base-700 px-mm-l text-mm-subtitle text-mm-neutral-0 transition-colors hover:bg-mm-base-500',
 } satisfies Record<LinkVariant, string>
 
 export function Link({
@@ -25,7 +28,10 @@ export function Link({
   ...props
 }: LinkProps) {
   return (
-    <NextLink className={cn(variantClassByName[variant], className)} {...props}>
+    <NextLink
+      className={cn(baseLinkClass, variantClassByName[variant], className)}
+      {...props}
+    >
       {children}
     </NextLink>
   )
