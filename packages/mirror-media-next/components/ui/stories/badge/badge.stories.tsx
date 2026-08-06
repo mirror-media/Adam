@@ -55,3 +55,11 @@ export const Variants: Story = {
     </div>
   ),
 }
+
+export const LongText: Story = {
+  render: () => (
+    <div className="max-w-xs">
+      <Badge>這是一個很長的標籤名稱 Mirror Media</Badge>
+    </div>
+  ),
+}

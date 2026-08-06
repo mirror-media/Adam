@@ -19,3 +19,11 @@ export const WithLabel: Story = {
     label: '載入中',
   },
 }
+
+export const Centered: Story = {
+  render: () => (
+    <div className="flex h-40 items-center justify-center rounded-mm-s border border-mm-neutral-300">
+      <Loading label="載入中" />
+    </div>
+  ),
+}

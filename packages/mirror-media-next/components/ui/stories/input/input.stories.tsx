@@ -131,6 +131,41 @@ export const Types: Story = {
           type="search"
         />
       </div>
+      <div className="grid gap-mm-s">
+        <label
+          className="text-mm-body2 text-mm-neutral-700"
+          htmlFor="input-types-number-story"
+        >
+          數字
+        </label>
+        <Input id="input-types-number-story" placeholder="123" type="number" />
+      </div>
+      <div className="grid gap-mm-s">
+        <label
+          className="text-mm-body2 text-mm-neutral-700"
+          htmlFor="input-types-tel-story"
+        >
+          電話
+        </label>
+        <Input
+          id="input-types-tel-story"
+          placeholder="0912-345-678"
+          type="tel"
+        />
+      </div>
+      <div className="grid gap-mm-s">
+        <label
+          className="text-mm-body2 text-mm-neutral-700"
+          htmlFor="input-types-url-story"
+        >
+          網址
+        </label>
+        <Input
+          id="input-types-url-story"
+          placeholder="https://www.mirrormedia.mg"
+          type="url"
+        />
+      </div>
     </div>
   ),
 }

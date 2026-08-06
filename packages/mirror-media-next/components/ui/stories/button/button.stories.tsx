@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
-import { Button } from '../../button'
+import { Button, type ButtonSize, type ButtonVariant } from '../../button'
 
 function ArrowDownIcon() {
   return (
@@ -79,6 +79,21 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
+const textVariants = [
+  ['default', '贊助本文'],
+  ['secondary', '加入訂閱會員'],
+  ['outline', '看更多'],
+  ['ghost', 'Ghost'],
+  ['destructive', 'Destructive'],
+  ['link', 'Link'],
+] satisfies Array<[ButtonVariant, string]>
+
+const sizes = [
+  ['sm', 'Small'],
+  ['default', 'Default'],
+  ['lg', 'Large'],
+] satisfies Array<[ButtonSize, string]>
+
 export const Default: Story = {
   args: {
     children: '贊助本文',
@@ -124,7 +139,7 @@ export const Icon: Story = {
   args: {
     'aria-label': 'Close',
     children: '×',
-    size: 'icon',
+    variant: 'icon',
   },
 }
 
@@ -163,4 +178,61 @@ export const LongText: Story = {
     children: '這是一段很長的中文與 English mixed button label',
     className: 'max-w-[240px] whitespace-normal',
   },
+}
+
+export const Variants: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-mm-m">
+      {textVariants.map(([variant, label]) => (
+        <Button key={variant} variant={variant}>
+          {label}
+        </Button>
+      ))}
+      <Button aria-label="Scroll down" variant="icon">
+        <ArrowDownIcon />
+      </Button>
+      <Button aria-label="Search" variant="icon-search">
+        <SearchButtonIcon />
+      </Button>
+    </div>
+  ),
+}
+
+export const Sizes: Story = {
+  render: () => (
+    <div className="flex flex-wrap items-center gap-mm-m">
+      {sizes.map(([size, label]) => (
+        <Button key={size} size={size}>
+          {label}
+        </Button>
+      ))}
+      <Button aria-label="Small icon" size="icon-sm" variant="icon">
+        <ArrowDownIcon />
+      </Button>
+      <Button aria-label="Default icon" size="icon" variant="icon">
+        <ArrowDownIcon />
+      </Button>
+    </div>
+  ),
+}
+
+export const States: Story = {
+  render: () => (
+    <div className="grid gap-mm-l">
+      <div className="flex flex-wrap items-center gap-mm-m">
+        <Button>贊助本文</Button>
+        <Button disabled>Disabled</Button>
+        <Button isLoading>載入中</Button>
+      </div>
+      <div className="flex flex-wrap items-center gap-mm-m">
+        <Button variant="secondary">加入訂閱會員</Button>
+        <Button disabled variant="secondary">
+          Disabled
+        </Button>
+        <Button isLoading variant="secondary">
+          載入中
+        </Button>
+      </div>
+    </div>
+  ),
 }
