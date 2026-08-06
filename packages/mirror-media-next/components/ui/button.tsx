@@ -67,7 +67,7 @@ function Button({
       className={cn(buttonVariants({ variant, size: resolvedSize }), className)}
       {...props}
     >
-      {isLoading ? 'Loading' : children}
+      {children}
     </ButtonPrimitive>
   )
 }
