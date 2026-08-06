@@ -10,6 +10,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       Disallow: /login
       Disallow: /subscribe/*
       Disallow: /search/*
+      Disallow: /_next/data/*
 
       User-agent: facebookexternalhit
         Allow: /
