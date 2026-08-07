@@ -21,12 +21,12 @@ const ContentWrapper = styled.section`
   color: ${({ theme }) => theme.color.brandColor.white};
 
   ${({ theme }) => theme.breakpoint.md} {
-    max-width: ${({ theme }) => theme.layout.maxWidth.md};
+    max-width: ${({ theme }) => theme.layout.legacyContentMaxWidth.tablet};
     padding: 40px 0;
   }
 
   ${({ theme }) => theme.breakpoint.xl} {
-    max-width: ${({ theme }) => theme.layout.maxWidth.xl};
+    max-width: ${({ theme }) => theme.layout.legacyContentMaxWidth.desktop};
     gap: 32px;
   }
 `

@@ -1,28 +1,23 @@
-const defaultDestination = '/premiumsection/member'
 import { useCallback } from 'react'
-import { useRouter } from 'next/router'
+import { type NextRouter, useRouter } from 'next/router'
 
-/**
- *
- * @param {import('next/router').NextRouter} router
- * @returns {string}
- */
-const getDestination = (router) => {
+const defaultDestination = '/premiumsection/member'
+
+const getDestination = (router: NextRouter) => {
   const destination = router?.query?.destination
 
   if (!destination) {
     const url = new URL(window.location.origin)
     url.pathname = defaultDestination
 
-    /** @type {[string, string][]} */
-    const entries = []
+    const entries: [string, string][] = []
     for (const [key, value] of Object.entries(router.query)) {
       if (Array.isArray(value)) {
         for (const v of value) {
           entries.push([key, v])
         }
       } else {
-        entries.push([key, value])
+        entries.push([key, String(value)])
       }
     }
 
@@ -34,8 +29,7 @@ const getDestination = (router) => {
   const queryParam = Object.assign({}, router.query)
   delete queryParam['destination']
 
-  /** @type {string} */
-  let destinationString
+  let destinationString: string
 
   if (Array.isArray(destination)) {
     destinationString =

@@ -4,22 +4,22 @@ import { useRouter } from 'next/router'
 import { useMembership } from '../context/membership'
 import { getLoginHref } from '../utils'
 
-/**
- * @callback MembershipValidator
- * @param {import('../context/membership').MemberInfo | undefined} memberInfo
- * @returns {boolean}
- */
+type MemberInfo = import('../context/membership').MemberInfo
+
+type MembershipValidator = (memberInfo: MemberInfo | undefined) => boolean
+
+type UseMembershipRequiredOptions = {
+  skipCheck?: boolean
+}
 
 /**
  * Client-side authenication handle.
  * It is useful when membership state changed but page didn't reloaded.
- *
- * @param {MembershipValidator} [validator]
- * @param {{ skipCheck?: boolean }} [options] - If true, membership validation will be bypassed.
- *                                              Useful for temporary public-access pages,
- *                                              experiments, or special campaigns.
  */
-export default function useMembershipRequired(validator, { skipCheck } = {}) {
+export default function useMembershipRequired(
+  validator?: MembershipValidator,
+  { skipCheck }: UseMembershipRequiredOptions = {}
+) {
   const router = useRouter()
   const { isLoggedIn, memberInfo, isLogInProcessFinished } = useMembership()
 
