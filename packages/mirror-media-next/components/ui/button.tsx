@@ -61,11 +61,11 @@ function Button({
 
   return (
     <ButtonPrimitive
+      {...props}
       data-slot="button"
-      aria-busy={isLoading || undefined}
+      aria-busy={isLoading || props['aria-busy'] || undefined}
       disabled={disabled || isLoading}
       className={cn(buttonVariants({ variant, size: resolvedSize }), className)}
-      {...props}
     >
       {children}
     </ButtonPrimitive>
