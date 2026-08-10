@@ -4,6 +4,21 @@
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
 @theme {
+  /* Keep Tailwind's default breakpoint names and values, normalized to px. */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Preserve Bootstrap-era layout thresholds during legacy route migration. */
+  --breakpoint-legacy-sm: 576px;
+  --breakpoint-legacy-md: 768px;
+  --breakpoint-legacy-lg: 992px;
+  --breakpoint-legacy-xl: 1200px;
+  --breakpoint-legacy-xxl: 1440px;
+
   --font-mm-sans: 'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC',
     'Microsoft JhengHei', sans-serif;
   --font-mm-body: 'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC',
