@@ -87,11 +87,11 @@ export default function PodcastPage({
       head={{ title: 'Podcasts' }}
       header={{ type: 'default', data: headerData }}
     >
-      <main className="mx-auto min-[768px]:w-[516px] min-[1200px]:w-[1024px]">
-        <div className="flex w-full items-center justify-between px-mm-xl py-[15px] md:px-0 md:py-mm-2xl">
+      <main className="mx-auto legacy-md:w-[516px] legacy-xl:w-[1024px]">
+        <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
           <Typography
             as="h1"
-            className="text-[16px] leading-[1.15] font-medium tracking-[0.5px] text-black min-[768px]:text-[20px] min-[1200px]:text-[28px] md:font-semibold"
+            className="text-[16px] leading-[1.15] font-medium tracking-[0.5px] text-black legacy-md:text-[20px] legacy-md:font-semibold legacy-xl:text-[28px]"
             variant="subtitle"
           >
             Podcasts
