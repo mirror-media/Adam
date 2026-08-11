@@ -1,8 +1,10 @@
 import { z } from 'zod'
 
+import { URL_STATIC_PODCAST_LIST } from '@/config/index.mjs'
+import { fetchStaticJsonByUrl } from '@/utils/api'
 import { logZodMonitorFailure, monitorZodSafeParse } from '@/utils/zod-monitor'
 
-import type { Podcast, PodcastEnclosure } from './podcast.types'
+import type { Podcast, PodcastEnclosure } from './podcast-types'
 
 const podcastEnclosureSchema: z.ZodType<PodcastEnclosure> = z.object({
   file_size: z.number().nonnegative(),
@@ -70,4 +72,10 @@ function toPodcastListViewModel(input: unknown): Podcast[] | null {
   return podcasts
 }
 
-export { toPodcastListViewModel }
+async function fetchPodcastList(): Promise<Podcast[]> {
+  const response = await fetchStaticJsonByUrl<unknown>(URL_STATIC_PODCAST_LIST)
+
+  return toPodcastListViewModel(response.data) ?? []
+}
+
+export { fetchPodcastList }

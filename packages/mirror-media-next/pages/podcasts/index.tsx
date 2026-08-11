@@ -1,20 +1,17 @@
 import { useState } from 'react'
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
+import type { GetServerSideProps } from 'next'
 
 import AudioPlayer from '@/components/podcast/audio-player'
 import Dropdown from '@/components/podcast/author-select-dropdown'
-import type { Podcast } from '@/components/podcast/podcast.types'
-import { toPodcastListViewModel } from '@/components/podcast/podcast-adapter'
 import PodcastList from '@/components/podcast/podcast-list'
 import Layout from '@/components/shared/layout'
 import { Typography } from '@/components/ui/typography'
-import { ENV, URL_STATIC_PODCAST_LIST } from '@/config/index.mjs'
+import { ENV } from '@/config/index.mjs'
+import { fetchPodcastList } from '@/modules/podcast/podcast-data'
+import type { Podcast } from '@/modules/podcast/podcast-types'
 import { getLogTraceObject } from '@/utils'
 import type { HeadersData, Topics } from '@/utils/api'
-import {
-  fetchHeaderDataInDefaultPageLayout,
-  fetchStaticJsonByUrl,
-} from '@/utils/api'
+import { fetchHeaderDataInDefaultPageLayout } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '@/utils/data-process'
 import { processSettledResult } from '@/utils/response-processor'
@@ -31,7 +28,7 @@ type HeaderResponse = Awaited<
   ReturnType<typeof fetchHeaderDataInDefaultPageLayout>
 >
 
-type PodcastResponse = Awaited<ReturnType<typeof fetchStaticJsonByUrl<unknown>>>
+type PodcastResponse = Awaited<ReturnType<typeof fetchPodcastList>>
 
 const ALL_AUTHORS = '全部'
 
@@ -63,7 +60,7 @@ function groupPodcastsByAuthor(podcasts: Podcast[]): Record<string, Podcast[]> {
 export default function PodcastPage({
   headerData,
   podcastListData,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: PodcastPageProps) {
   const [selectedPodcasts, setSelectedPodcasts] = useState<Podcast[]>([])
   const [selectedAuthor, setSelectedAuthor] = useState('')
   const [listeningPodcast, setListeningPodcast] = useState<Podcast | null>(null)
@@ -137,7 +134,7 @@ export const getServerSideProps = (async ({ req, res }) => {
   }
   const [headerResponse, podcastResponse] = await Promise.allSettled([
     fetchHeaderDataInDefaultPageLayout(),
-    fetchStaticJsonByUrl<unknown>(URL_STATIC_PODCAST_LIST),
+    fetchPodcastList(),
   ])
 
   const [sectionsData, topicsData] = processSettledResult<
@@ -152,7 +149,7 @@ export const getServerSideProps = (async ({ req, res }) => {
 
   const podcastListData = processSettledResult<PodcastResponse, Podcast[]>(
     podcastResponse,
-    (response) => toPodcastListViewModel(response?.data) ?? [],
+    (podcasts) => podcasts ?? [],
     'Error occurs while getting podcast list in podcasts page',
     globalLogFields
   )
