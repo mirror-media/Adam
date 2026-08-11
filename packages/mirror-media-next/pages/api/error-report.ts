@@ -21,7 +21,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     monitorLoggingRequestBody('error-report', req.body)
     const query = req.body
     const log = loggingClient.log(GCP_STACKDRIVER_ERROR_LOG_NAME)
-    const metadata = { resource: { type: 'global' } }
+    // Error Reporting only picks up entries logged at ERROR or above.
+    const metadata = { resource: { type: 'global' }, severity: 'ERROR' }
     const clientIp = requestIp.getClientIp(req)
 
     query.clientInfo.ip = clientIp
