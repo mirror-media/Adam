@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 
 import { SITE_URL } from '../config/index.mjs'
+
 export default function useAmpSharedUrl(url = '') {
   const { asPath } = useRouter()
 

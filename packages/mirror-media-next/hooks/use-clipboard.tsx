@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { Z_INDEX } from '../constants'
 
-const Popup = styled.div`
+const Popup = styled.div<{ shouldShowMessage: boolean }>`
   position: fixed;
   top: 40px;
   left: calc((100vw - 100px) / 2);
@@ -19,25 +19,16 @@ const Popup = styled.div`
   border-radius: 40px;
   z-index: ${Z_INDEX.coverHeader};
   transition: all 0.3s ease-in;
-  visibility: ${
-    /**
-     * @param {{shouldShowMessage: Boolean}} param
-     */
-    ({ shouldShowMessage }) => (shouldShowMessage ? 'visible' : 'hidden')
-  };
-  opacity: ${
-    /**
-     * @param {{shouldShowMessage: Boolean}} param
-     */
-    ({ shouldShowMessage }) => (shouldShowMessage ? 1 : 0)
-  };
+  visibility: ${({ shouldShowMessage }) =>
+    shouldShowMessage ? 'visible' : 'hidden'};
+  opacity: ${({ shouldShowMessage }) => (shouldShowMessage ? 1 : 0)};
 `
 
 export default function useClipboard() {
   const allowToWrite = useRef(true)
   const [shouldShowMessage, setShouldShowMessage] = useState(false)
 
-  const write = (/** @type {string} */ url) => {
+  const write = (url: string) => {
     if (allowToWrite.current === false) return
 
     if (window.navigator.clipboard) {
@@ -59,7 +50,7 @@ export default function useClipboard() {
     }
   }
 
-  const getPopup = (/** @type {string} */ text = '已複製連結') => {
+  const getPopup = (text = '已複製連結') => {
     return <Popup shouldShowMessage={shouldShowMessage}>{text}</Popup>
   }
 

@@ -12,7 +12,7 @@
       "options": {
         "plugins": ["prettier-plugin-tailwindcss"],
         "tailwindStylesheet": "./packages/mirror-media-next/styles/tailwind.css",
-        "tailwindFunctions": ["cn", "clsx"]
+        "tailwindFunctions": ["cn", "clsx", "cva"]
       }
     }
   ]

@@ -4,8 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"node mocks/server\" \"next dev\"",
+    "dev:storybook-route": "NEXT_PUBLIC_ENV=local concurrently \"node mocks/server\" \"next dev\"",
     "build": "pnpm build:sw && next build",
     "build:sw": "node scripts/build-sw.js",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build -o public/_storybook",
     "analyze": "ANALYZE=true next build --no-lint",
     "start": "next start",
     "lint": "eslint .",
@@ -21,6 +24,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.14.1",
+    "@base-ui/react": "^1.7.0",
     "@emotion/is-prop-valid": "^1.4.0",
     "@google-cloud/logging": "^11.0.0",
     "@mirrormedia/lilith-draft-renderer": "1.4.7",
@@ -35,6 +39,7 @@
     "axios": "^1.19.0",
     "body-scroll-lock": "3.1.5",
     "bowser": "^2.11.0",
+    "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
     "constants": "github:mirror-media/constants#691672f39fc7269fdac42776e9c916a42386e464",
     "cookie": "^0.6.0",
@@ -71,6 +76,8 @@
     "@graphql-codegen/client-preset": "^6.0.1",
     "@graphql-typed-document-node/core": "^3.2.0",
     "@next/bundle-analyzer": "15.5.22",
+    "@storybook/addon-a11y": "10.5.6",
+    "@storybook/nextjs-vite": "10.5.6",
     "@tailwindcss/postcss": "4.3.3",
     "@types/facebook-js-sdk": "^3.3.6",
     "@types/google-publisher-tag": "^1.20230410.0",
@@ -81,7 +88,10 @@
     "concurrently": "^7.4.0",
     "esbuild": "^0.28.1",
     "postcss": "8.5.25",
+    "storybook": "10.5.6",
     "tailwindcss": "4.3.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite": "7.0.0",
+    "vite-plugin-svgr": "5.2.0"
   }
 }
