@@ -4,6 +4,7 @@ type MonitorZodFailureInput = {
   boundary: string
   schemaName: string
   error: z.ZodError
+  debugPayload?: Record<string, unknown>
 }
 
 const LOG_INTERVAL_MS = 60_000
@@ -28,6 +29,7 @@ export function logZodMonitorFailure({
   boundary,
   schemaName,
   error,
+  debugPayload,
 }: MonitorZodFailureInput): void {
   const now = Date.now()
   const key = `${boundary}:${schemaName}`
@@ -46,6 +48,7 @@ export function logZodMonitorFailure({
         path: formatPath(issue.path),
         code: issue.code,
       })),
+      ...(debugPayload ? { debugPayload } : {}),
     })
   )
 }

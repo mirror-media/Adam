@@ -100,11 +100,149 @@ AMP proxy runtime（AMP 代理執行期）：
 docker run --rm -e PROXY_AMP=true -p 3000:3000 mirror-media-next
 ```
 
+## Repository architecture（程式庫架構）
+
+本節是 `packages/mirror-media-next/` 的 committed reference（進版控參考）。架構依 ownership（所有權）與 dependency direction（依賴方向）說明，不把交付階段當作檔案分類，也不能把尚未建立的 target directory（目標目錄）當成已落地功能。
+
+狀態定義：
+
+- **Current**：目前可直接使用且已有真實 consumer（使用端）。
+- **Transitional**：仍服務既有 routes（路由），但新功能不應延續其 ownership（所有權）模式。
+- **Target when needed**：只有達到下列建立條件時才新增；不可先建空目錄或 facade（門面）檔案。
+
+### Target ownership map（目標所有權架構）
+
+這張圖表達完成遷移後的 ownership，不代表所有目錄目前都已實體建立：
+
+```text
+packages/mirror-media-next/
+├── pages/                              # Next.js routes, GSSP, route composition and policy
+│   └── podcasts/index.tsx              # Podcast route composition
+├── modules/                            # Business capabilities, shallow by default
+│   └── podcast/
+│       ├── podcast-types.ts            # Podcast-owned view-model types
+│       ├── podcast-data.ts             # Fetch, validate and normalize Podcast data
+│       └── components/                 # Podcast-owned UI
+│           ├── audio-player.tsx
+│           ├── author-select-dropdown.tsx
+│           ├── play-pause-button.tsx
+│           ├── podcast-card.tsx
+│           ├── podcast-list.tsx
+│           └── podcast-modal.tsx
+├── components/
+│   ├── ui/                             # Domain-neutral design-system primitives
+│   ├── common/                         # Proven cross-capability composed UI
+│   └── shell/                          # Application Layout/Header/Footer ownership
+├── apollo/                             # GraphQL clients, sources, and generated output
+├── axios/                              # Existing HTTP compatibility wrapper
+├── config/                             # Environment configuration
+├── constants/                          # Cross-cutting constants; review touched files
+├── context/                            # Existing React context state
+├── firebase/                           # Firebase client/admin integration boundary
+├── hooks/                              # Proven cross-cutting browser hooks
+├── mocks/                              # Development fixtures and mock server
+├── public/                             # Runtime assets and generated public artifacts
+├── scripts/                            # Package tooling
+├── service-worker/                     # Auth-only service worker source
+├── slice/                              # Existing Redux slices
+├── store/                              # Redux store infrastructure
+├── styles/                             # Tailwind source/theme and legacy styling
+├── type/                               # Legacy JSDoc/global types; no new entries
+├── types/                              # Ambient external module declarations only
+├── utils/
+│   ├── api/                            # Transitional shared/domain transports
+│   ├── log/                            # Cross-cutting logging
+│   ├── server-side-only/               # Strict Node/SSR-only utilities
+│   └── <shared files>                  # Proven cross-module utilities
+├── .storybook/                         # Storybook configuration
+├── next.config.mjs                     # Next.js configuration
+├── postcss.config.mjs                  # Tailwind/PostCSS entry
+└── components.json                     # shadcn source aliases and generator settings
+```
+
+Target map（目標架構圖）可以列出尚未完成的 ownership，但不以 `.gitkeep`、空 barrel 或 placeholder（占位檔）製造實體目錄。`components/common/`、`components/shell/`、`modules/<capability>/components/` 與任何 shared capability module（共用能力模組）仍必須由真實 consumer（使用端）與明確 ownership 賺得。
+
+### Current Podcast migration state（Podcast 目前遷移狀態）
+
+目前 type／data 已進入 capability module；六個 JavaScript UI 仍是 Legacy capability UI bridge（舊版能力 UI 橋接）：
+
+```text
+packages/mirror-media-next/
+├── pages/
+│   └── podcasts/
+│       └── index.tsx                   # Route composition + GSSP
+├── modules/
+│   └── podcast/
+│       ├── podcast-types.ts
+│       └── podcast-data.ts
+└── components/
+    └── podcast/                        # Legacy capability UI bridge
+        ├── audio-player.js
+        ├── author-select-dropdown.js
+        ├── play-pause-button.js
+        ├── podcast-card.js
+        ├── podcast-list.js
+        └── podcast-modal.js
+```
+
+Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、互動與無障礙驗證，並將所有 consumers 更新到 `modules/podcast/components/` 後，刪除 `components/podcast/` 舊路徑。執行時程與 owner 放在 local-only execution 文件，不寫入這份長期架構表。
+
+### Ownership and placement（所有權與放置規則）
+
+| 位置                                                     | 責任                                                                        |
+| -------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `pages/**`                                               | Next.js route exports、GSSP、cache／redirect／404、SEO 與頁面組合           |
+| `modules/<capability>/`                                  | 能力擁有的 types、data、logic、components 與 hooks；預設保持扁平            |
+| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                 |
+| `components/common/**`                                   | 由 primitives 組合、經不相關 consumers 證明可跨能力重用的 UI／controller   |
+| `components/shell/**`                                    | Layout、Header、Footer 等 application shell（應用外殼）                     |
+| `components/shared/**`、`components/<legacy-feature>/**` | Legacy compatibility（舊版相容）路徑；不新增 ownership，consumer 歸零後刪除 |
+| `utils/**`、`hooks/**`                                   | 真正跨能力且符合執行環境的共用工具／hooks；單一能力內容回到最近 module      |
+| `type/**`、`types/**`                                    | `type/` 不再新增；`types/` 只放 ambient declarations（環境宣告）            |
+
+`components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。`button`、`input`、`container`、`link`、`loading`、`typography` 都屬於這一層。
+
+### Core rules（核心規則）
+
+- Page 依 URL 拆分並保留 route policy（路由政策）；module 依 business capability（業務能力）與共同生命週期拆分，兩者不做一對一鏡像。
+- Module 預設扁平放 `<capability>-types.ts`、`<capability>-data.ts` 與單一 logic／hook；只有同類檔案形成真實集合時才建立 `components/`、`hooks/` 或 `data/`。
+- Capability component 可知道領域型別與行為；`components/common/` 不可知道 business entity（業務實體），且應是由低階 primitives 組成的跨能力 UI／controller；`components/ui/` 只放無領域、低階 design-system primitives。
+- 不建立空目錄、`.gitkeep`、props-only page facade 或雙軌新舊實作。
+- 新 application files 一律使用 `.ts`／`.tsx`；Legacy `.js`／`.jsx` 搬移時必須同步完成型別遷移。
+
+### Dependency boundaries（依賴邊界）
+
+以下 dependency boundaries（依賴邊界）是目前的 code-review contract（程式碼審查契約），尚未由專用 ESLint 規則自動強制。
+
+- `pages/**` 可組合 modules、shell、common、design-system UI 與遷移中的 Legacy components，但不可依賴另一個 page 的 route policy。
+- Module components／hooks 可依賴同 module、核准的 shared capability、common、design-system UI 與 browser-safe utilities。
+- Browser UI／hooks 不得 import `utils/server-side-only/**` 或 `firebase/admin`；`components/common/**` 與 `components/ui/**` 也不得反向依賴 modules／pages。
+- `utils/server-side-only/` 是既有的 Node／credential 安全邊界，不是 module 的固定子目錄；production build（正式建置）仍須確認這些程式沒有進入 client bundle（瀏覽器套件）。
+
+### Shared roots and styling（共用根目錄與樣式）
+
+- Root `hooks/`／`utils/` 只保留跨能力、符合執行環境的內容；capability-specific code（能力專屬程式）放回最近 module。
+- `type/` 不再新增；feature-owned types 放最近 module，`types/` 只保留外部套件的 ambient declarations。
+- Tailwind current breakpoints（現行斷點）為 `sm: 640px`、`md: 768px`、`lg: 1024px`、`xl: 1280px`、`2xl: 1536px`；舊版視覺一致性使用 `legacy-*`。
+- Tailwind `@source` 只在真實 module component 開始產生 classes 時加入；AMP code 必須保持可排除。
+
+### Minimum checks（最低檢查）
+
+```bash
+pnpm lint
+pnpm typecheck
+NO_NEW_JS_BASE_REF=upstream/dev pnpm check:no-new-js
+pnpm codegen:check
+pnpm build
+```
+
+另外驗證受影響 route；變更涉及 client／server、Tailwind 或 AMP 邊界時，再補對應的 bundle、CSS 或 validator 證據。
+
 ## v4.0 架構基準
 
 `mirror-media-next` v4.0 的現行架構與維護限制如下；只有在對應實作完成變更後，才應同步更新或移除這些限制：
 
-- Framework and routing（框架與路由）：使用 Next.js 15.5.20、React 19.2.7 與 Pages Router（頁面路由器），並保留 `/story/amp/[slug]`、`/external/amp/[slug]` 內建 AMP 路由。Next.js 16 已移除內建 AMP API；升級前必須先決定 AMP 的替代或退場方式，並驗證 Turbopack（打包工具）與 SVG、GraphQL 等既有 webpack loaders（webpack 載入器）的相容性。
+- Framework and routing（框架與路由）：使用 Next.js 15.5.22、React 19.2.7 與 Pages Router（頁面路由器），並保留 `/story/amp/[slug]`、`/external/amp/[slug]` 內建 AMP 路由。Next.js 16 已移除內建 AMP API；升級前必須先決定 AMP 的替代或退場方式，並驗證 Turbopack（打包工具）與 SVG、GraphQL 等既有 webpack loaders（webpack 載入器）的相容性。
 - App Router（應用程式路由器）：目前未使用。若要導入，必須同時設計 `getServerSideProps`、styled-components SSR、Apollo SSR 與會員個人化驗證流程的替代方案；不可只搬移路由檔案。
 - Deployment（部署）：Docker runtime（Docker 執行期）依賴 `output: 'standalone'`、monorepo output tracing（單一儲存庫輸出追蹤）與 repository-root build context（儲存庫根目錄建置上下文）。調整 Next.js、pnpm workspace 或 Dockerfile 後，必須確認一般模式及 `PROXY_AMP=true` 都能建置與啟動。
 - TypeScript：採 `strict: true`、`allowJs: true` 漸進遷移；既有 JavaScript 可繼續維護，但不得新增 application（應用程式）`.js`／`.jsx` 檔，請使用 `.ts`／`.tsx`。
