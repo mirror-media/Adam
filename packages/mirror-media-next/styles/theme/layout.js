@@ -1,6 +1,6 @@
 export const layout = {
-  maxWidth: {
-    md: '596px', // Max width for mobile/tablet (md breakpoint and below)
-    xl: '1024px', // Max width for desktop (xl breakpoint and above)
+  legacyContentMaxWidth: {
+    tablet: '596px', // Legacy max width for mobile/tablet (md breakpoint and below)
+    desktop: '1024px', // Legacy max width for desktop (xl breakpoint and above)
   },
 }

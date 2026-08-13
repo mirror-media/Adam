@@ -3,6 +3,164 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
+@theme {
+  /* Keep Tailwind's default breakpoint names and values, normalized to px. */
+  --breakpoint-*: initial;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Preserve Bootstrap-era layout thresholds during legacy route migration. */
+  --breakpoint-legacy-sm: 576px;
+  --breakpoint-legacy-md: 768px;
+  --breakpoint-legacy-lg: 992px;
+  --breakpoint-legacy-xl: 1200px;
+  --breakpoint-legacy-xxl: 1440px;
+
+  --font-mm-sans: 'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC',
+    'Microsoft JhengHei', sans-serif;
+  --font-mm-body: 'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC',
+    'Microsoft JhengHei', sans-serif;
+
+  --color-mm-neutral-900: #0b0b0b;
+  --color-mm-neutral-800: #131313;
+  --color-mm-neutral-700: #3a3a3a;
+  --color-mm-neutral-600: #5e5e5e;
+  --color-mm-neutral-500: #7c7c7c;
+  --color-mm-neutral-400: #a7a7a7;
+  --color-mm-neutral-300: #cacaca;
+  --color-mm-neutral-200: #eaeaea;
+  --color-mm-neutral-100: #f0f0f0;
+  --color-mm-neutral-50: #fcfcfc;
+  --color-mm-neutral-0: #ffffff;
+
+  --color-mm-base-700: #013958;
+  --color-mm-base-600: #054567;
+  --color-mm-base-500: #054f77;
+  --color-mm-base-400: #0d6b9e;
+  --color-mm-base-300: #1282bf;
+  --color-mm-base-200: #62b3df;
+  --color-mm-base-100: #a2daf8;
+
+  --color-mm-second-700: #007a92;
+  --color-mm-second-600: #048fa9;
+  --color-mm-second-500: #1d9fb8;
+  --color-mm-second-400: #45c0d8;
+  --color-mm-second-300: #90d6e3;
+  --color-mm-second-200: #c4ebf2;
+  --color-mm-second-100: #def3f7;
+
+  --color-mm-error-700: #9c0000;
+  --color-mm-error-600: #ba1818;
+  --color-mm-error-500: #da4242;
+  --color-mm-error-400: #e78e8e;
+  --color-mm-error-300: #f0c4c4;
+  --color-mm-error-200: #fde3e3;
+  --color-mm-error-100: #fff1f1;
+
+  --spacing-mm-sx: 2px;
+  --spacing-mm-s: 4px;
+  --spacing-mm-m: 8px;
+  --spacing-mm-l: 12px;
+  --spacing-mm-xl: 16px;
+  --spacing-mm-2xl: 20px;
+  --spacing-mm-3xl: 24px;
+  --spacing-mm-4xl: 32px;
+  --spacing-mm-5xl: 40px;
+  --spacing-mm-6xl: 60px;
+
+  --radius-mm-xs: 4px;
+  --radius-mm-s: 6px;
+  --radius-mm-m: 8px;
+  --radius-mm-l: 12px;
+  --radius-mm-xl: 24px;
+  --radius-mm-full: 100px;
+
+  --text-mm-hero-title: 36px;
+  --text-mm-hero-title--line-height: 1.3;
+  --text-mm-hero-title--letter-spacing: 0;
+  --text-mm-hero-title--font-weight: 700;
+  --text-mm-h1: 32px;
+  --text-mm-h1--line-height: 1.3;
+  --text-mm-h1--letter-spacing: 0;
+  --text-mm-h1--font-weight: 700;
+  --text-mm-h2: 28px;
+  --text-mm-h2--line-height: 1.3;
+  --text-mm-h2--letter-spacing: 0;
+  --text-mm-h2--font-weight: 700;
+  --text-mm-h3: 24px;
+  --text-mm-h3--line-height: 1.3;
+  --text-mm-h3--letter-spacing: 0;
+  --text-mm-h3--font-weight: 700;
+  --text-mm-h4: 20px;
+  --text-mm-h4--line-height: 1.5;
+  --text-mm-h4--letter-spacing: 0;
+  --text-mm-h4--font-weight: 700;
+  --text-mm-h5: 18px;
+  --text-mm-h5--line-height: 1.5;
+  --text-mm-h5--letter-spacing: 0;
+  --text-mm-h5--font-weight: 700;
+  --text-mm-h6: 16px;
+  --text-mm-h6--line-height: 1.5;
+  --text-mm-h6--letter-spacing: 0;
+  --text-mm-h6--font-weight: 700;
+  --text-mm-subtitle: 14px;
+  --text-mm-subtitle--line-height: 1.3;
+  --text-mm-subtitle--letter-spacing: 0;
+  --text-mm-subtitle--font-weight: 700;
+  --text-mm-body2: 14px;
+  --text-mm-body2--line-height: 1.6;
+  --text-mm-body2--letter-spacing: 0;
+  --text-mm-body2--font-weight: 400;
+  --text-mm-body-l: 18px;
+  --text-mm-body-l--line-height: 1.8;
+  --text-mm-body-l--letter-spacing: 0;
+  --text-mm-body-l--font-weight: 400;
+  --text-mm-body-m: 16px;
+  --text-mm-body-m--line-height: 1.8;
+  --text-mm-body-m--letter-spacing: 0;
+  --text-mm-body-m--font-weight: 400;
+  --text-mm-body-s: 14px;
+  --text-mm-body-s--line-height: 1.8;
+  --text-mm-body-s--letter-spacing: 0;
+  --text-mm-body-s--font-weight: 400;
+  --text-mm-caption-l: 14px;
+  --text-mm-caption-l--line-height: 1.5;
+  --text-mm-caption-l--letter-spacing: 0;
+  --text-mm-caption-l--font-weight: 500;
+  --text-mm-caption-s: 12px;
+  --text-mm-caption-s--line-height: 1.5;
+  --text-mm-caption-s--letter-spacing: 0;
+  --text-mm-caption-s--font-weight: 500;
+}
+
+@layer theme {
+  :root {
+    --mm-color-surface: var(--color-mm-neutral-0);
+    --mm-color-surface-muted: var(--color-mm-neutral-50);
+    --mm-color-surface-subtle: var(--color-mm-neutral-100);
+    --mm-color-text: var(--color-mm-neutral-900);
+    --mm-color-text-muted: var(--color-mm-neutral-600);
+    --mm-color-text-subtle: var(--color-mm-neutral-500);
+    --mm-color-border: var(--color-mm-neutral-300);
+    --mm-color-brand: var(--color-mm-base-500);
+    --mm-color-brand-strong: var(--color-mm-base-700);
+    --mm-color-accent: var(--color-mm-second-500);
+    --mm-color-accent-strong: var(--color-mm-second-700);
+    --mm-color-error: var(--color-mm-error-500);
+    --mm-color-error-subtle: var(--color-mm-error-100);
+  }
+}
+
+/*
+ * Original Figma values with known issues:
+ * - --spacing-mm-sx is 2px and does not follow the intended 4px spacing grid.
+ * - --radius-mm-s is 6px and does not follow the intended 4px radius grid.
+ * They are preserved so implementation matches the current design file.
+ */
+
 @source "../pages";
 @source "../components";
 @source "../hooks";

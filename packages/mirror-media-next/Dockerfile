@@ -40,6 +40,11 @@ ENV ANALYZE=${ANALYZE}
 
 WORKDIR /app/packages/mirror-media-next
 RUN pnpm build
+RUN if [ "$NEXT_PUBLIC_ENV" = "local" ] || [ "$NEXT_PUBLIC_ENV" = "dev" ] || [ "$NEXT_PUBLIC_ENV" = "staging" ]; then \
+    pnpm storybook:build; \
+    else \
+    test ! -d public/_storybook && test ! -d public/storybook; \
+    fi
 RUN if [ "$ANALYZE" = "true" ] && [ -d .next/analyze ]; then \
     mkdir -p public/analyze; \
     cp .next/analyze/*.html public/analyze/; \

@@ -36,7 +36,15 @@ export default {}
  */
 
 /**
+ * @typedef {Object} ThemeLayout
+ * @property {Object} legacyContentMaxWidth
+ * @property {String} legacyContentMaxWidth.tablet
+ * @property {String} legacyContentMaxWidth.desktop
+ */
+
+/**
  * @typedef Theme
  * @property {ThemeBreakpoint} breakpoint
  * @property  {ThemeColors} color
+ * @property {ThemeLayout} layout
  */

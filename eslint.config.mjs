@@ -34,6 +34,8 @@ export default [
       '**/__generated__/**',
       '**/next-env.d.ts',
       '**/public/sw.js',
+      '**/public/_storybook/**',
+      '**/public/storybook/**',
       '**/public/workbox-*.js',
       '**/public/worker-*.js',
     ],

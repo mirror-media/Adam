@@ -1,4 +1,4 @@
-import useFirstScrollDetector from '../../../hooks/useFirstScrollDetector.js'
+import useFirstScrollDetector from '../../../hooks/useFirstScrollDetector'
 
 import GPTAd from './gpt-ad.js'
 
