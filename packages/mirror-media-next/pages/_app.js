@@ -1,3 +1,5 @@
+import '../styles/tailwind.css'
+
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { useAmp } from 'next/amp'
@@ -8,12 +10,14 @@ import isPropValid from '@emotion/is-prop-valid'
 import { StyleSheetManager, ThemeProvider } from 'styled-components'
 
 import client from '../apollo/apollo-client'
+import ErrorBoundary from '../components/shared/error-boundary'
+import ErrorPage from '../components/shared/error-page'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
 import WholeSiteScript from '../components/whole-site-script'
 import { GTM_ID } from '../config/index.mjs'
 import { MembershipProvider } from '../context/membership'
 import store from '../store'
-import { GlobalStyles } from '../styles/global-styles'
+import { AmpGlobalStyles, GlobalStyles } from '../styles/global-styles'
 import { theme } from '../styles/theme'
 
 const PromoteTopic = dynamic(() => import('../components/promote-topic'), {
@@ -80,7 +84,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      <GlobalStyles />
+      {isAmpPage ? <AmpGlobalStyles /> : <GlobalStyles />}
       <MembershipProvider>
         <ApolloProvider client={client}>
           <Provider store={store}>
@@ -95,8 +99,31 @@ function MyApp({ Component, pageProps }) {
                 {/* Story page has its own UserBehaviorLogger.
             In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
                 {!isStoryPage && <UserBehaviorLogger />}
-                <Component {...pageProps} />
-                {!isAmpPage && <PromoteTopic />}
+                {/* Catches errors thrown while rendering the page on the client,
+                    which would otherwise surface as a blank "Application error"
+                    page. */}
+                <ErrorBoundary
+                  boundary="mainpage"
+                  resetKey={router.asPath}
+                  fallback={
+                    <ErrorPage
+                      message="oops 發生了一些問題"
+                      showRetry
+                      showGoHome
+                    />
+                  }
+                >
+                  <Component {...pageProps} />
+                </ErrorBoundary>
+                {/* Sits outside the page boundary above, so this is the only
+                    thing catching it: without it, a failure in this secondary
+                    widget would take down the whole app. No fallback props, so it just
+                    disappears. */}
+                {!isAmpPage && (
+                  <ErrorBoundary boundary="promote-topic">
+                    <PromoteTopic />
+                  </ErrorBoundary>
+                )}
               </ThemeProvider>
             </StyleSheetManager>
           </Provider>

@@ -14,6 +14,9 @@ const ignorePaths = [
   '\u002Fjson',
   '\u002Frss',
   '\u002Fquestionnaire',
+  // Storybook is public static HTML in non-prod. It must not trigger auth token
+  // refresh or receive Authorization headers.
+  '\u002Fstorybook',
   '\u002Frobots.txt',
   '\u002Fmanifest.json',
   // AviviD/Likr push worker, served by prod infra outside this repo.

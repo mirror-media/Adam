@@ -11,6 +11,8 @@ node_modules
 packages/*/node_modules
 packages/*/.next
 packages/*/.turbo
+packages/*/public/_storybook
+packages/*/public/storybook
 packages/*/mocks
 packages/*/README.md
 

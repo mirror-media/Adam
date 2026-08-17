@@ -1,8 +1,9 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle, css } from 'styled-components'
 
 import { defaultSansSerifFontFamily } from './shared-style'
 
-export const GlobalStyles = createGlobalStyle`
+// prettier-ignore
+const legacyBaseReset = css`
 /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
 
 /* Document
@@ -12,16 +13,9 @@ export const GlobalStyles = createGlobalStyle`
  * 1. Correct the line height in all browsers.
  * 2. Prevent adjustments of font size after orientation changes in iOS.
  */
-
-
-
- //default font family  
- html {
-  ${defaultSansSerifFontFamily};
+html {
   line-height: 1.5; /* 2 */
   -webkit-text-size-adjust: 100%; /* 2 */
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 /* Sections
@@ -33,8 +27,6 @@ export const GlobalStyles = createGlobalStyle`
 
 body {
   margin: 0;
-  overflow-x: hidden;
-  overflow-x: clip;
 }
 
 /**
@@ -595,19 +587,45 @@ video {
   max-width: 100%;
   height: auto;
 }
+`
 
-/* Keep the injected AviviD banner hidden until its content size stabilizes, without overriding any vendor transform used for positioning. */
-.avivid_onpage_mobile_bottom {
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s ease-out;
-}
+const applicationGlobalPolicy = css`
+  html {
+    ${defaultSansSerifFontFamily};
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
 
-/* Re-enable visibility and interaction only after the third-party content has stayed stable for a short window. */
-.avivid_onpage_mobile_bottom[data-mm-avivid-ready='true'] {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-}
+  body {
+    overflow-x: hidden;
+    overflow-x: clip;
+  }
+
+  /* Keep the injected AviviD banner hidden until its content size stabilizes, without overriding any vendor transform used for positioning. */
+  .avivid_onpage_mobile_bottom {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+  }
+
+  /* Re-enable visibility and interaction only after the third-party content has stayed stable for a short window. */
+  .avivid_onpage_mobile_bottom[data-mm-avivid-ready='true'] {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+`
+
+export const GlobalStyles = createGlobalStyle`
+  @layer base {
+    ${legacyBaseReset}
+  }
+
+  ${applicationGlobalPolicy}
+`
+
+export const AmpGlobalStyles = createGlobalStyle`
+  ${legacyBaseReset}
+  ${applicationGlobalPolicy}
 `

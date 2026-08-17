@@ -92,6 +92,8 @@ typings/
 # Next.js build output
 .next/
 out/
+packages/mirror-media-next/public/storybook/
+packages/mirror-media-next/public/_storybook/
 
 # Nuxt.js build / generate output
 .nuxt
@@ -99,6 +101,8 @@ dist
 
 # Babel transpiled folder
 lib
+!packages/mirror-media-next/lib/
+!packages/mirror-media-next/lib/**
 
 # Gatsby files
 .cache/
