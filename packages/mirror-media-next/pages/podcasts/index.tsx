@@ -1,34 +1,54 @@
 import { useState } from 'react'
 import type { GetServerSideProps } from 'next'
 
+import GDPRNotification from '@/components/gdpr'
+import IdleTimeoutModal from '@/components/idle-modal/idle-timeout-modal'
 import AudioPlayer from '@/components/podcast/audio-player'
 import Dropdown from '@/components/podcast/author-select-dropdown'
 import PodcastList from '@/components/podcast/podcast-list'
-import Layout from '@/components/shared/layout'
+import CustomHead from '@/components/shared/custom-head'
+import { ApplicationShell } from '@/components/shell/application-shell'
+import { SiteFooter } from '@/components/shell/footer/site-footer'
+import { SiteHeader } from '@/components/shell/header/site-header'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { fetchPodcastList } from '@/modules/podcast/podcast-data'
 import type { Podcast } from '@/modules/podcast/podcast-types'
 import { getLogTraceObject } from '@/utils'
-import type { HeadersData, Topics } from '@/utils/api'
-import { fetchHeaderDataInDefaultPageLayout } from '@/utils/api'
+import type {
+  HeadersDataSection,
+  ShellFlashNews,
+  ShellSectionPosts,
+  Topics,
+} from '@/utils/api'
+import {
+  fetchShellFlashNews,
+  fetchShellNavigationData,
+  fetchShellSectionPosts,
+  fetchShellTopicsData,
+} from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
-import { getSectionAndTopicFromDefaultHeaderData } from '@/utils/data-process'
 import { processSettledResult } from '@/utils/response-processor'
 
 type PodcastPageProps = {
   headerData: {
-    sectionsData: HeadersData
+    flashNewsData: ShellFlashNews[]
+    navigationData: HeadersDataSection[]
+    sectionPostsData: ShellSectionPosts
     topicsData: Topics
   }
   podcastListData: Podcast[]
 }
 
-type HeaderResponse = Awaited<
-  ReturnType<typeof fetchHeaderDataInDefaultPageLayout>
->
-
 type PodcastResponse = Awaited<ReturnType<typeof fetchPodcastList>>
+
+type NavigationResponse = Awaited<ReturnType<typeof fetchShellNavigationData>>
+
+type TopicsResponse = Awaited<ReturnType<typeof fetchShellTopicsData>>
+
+type FlashNewsResponse = Awaited<ReturnType<typeof fetchShellFlashNews>>
+
+type SectionPostsResponse = Awaited<ReturnType<typeof fetchShellSectionPosts>>
 
 const ALL_AUTHORS = '全部'
 
@@ -79,37 +99,48 @@ export default function PodcastPage({
   }
 
   return (
-    <Layout
-      footer={{ type: 'default' }}
-      head={{ title: 'Podcasts' }}
-      header={{ type: 'default', data: headerData }}
-    >
-      <main className="mx-auto legacy-md:w-[516px] legacy-xl:w-[1024px]">
-        <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
-          <Typography
-            as="h1"
-            className="text-[16px] leading-[1.15] font-medium tracking-[0.5px] text-black legacy-md:text-[20px] legacy-md:font-semibold legacy-xl:text-[28px]"
-            variant="subtitle"
-          >
-            Podcasts
-          </Typography>
-          <Dropdown
-            authors={AUTHORS}
-            displayPodcastsByAuthor={displayPodcastsByAuthor}
+    <>
+      <CustomHead title="Podcasts" />
+      <ApplicationShell
+        footer={<SiteFooter />}
+        globalModal={<IdleTimeoutModal />}
+        header={
+          <SiteHeader
+            flashNewsData={headerData.flashNewsData}
+            navigationData={headerData.navigationData}
+            sectionPostsData={headerData.sectionPostsData}
+            topicsData={headerData.topicsData}
           />
-        </div>
-        <PodcastList
-          allPodcasts={podcastListData}
-          listeningPodcast={listeningPodcast}
-          onPodcastSelect={setListeningPodcast}
-          selectedAuthor={selectedAuthor}
-          selectedPodcasts={selectedPodcasts}
-        />
-        {listeningPodcast && (
-          <AudioPlayer listeningPodcast={listeningPodcast} />
-        )}
-      </main>
-    </Layout>
+        }
+        privacyNotice={<GDPRNotification />}
+      >
+        <main className="mx-auto w-full legacy-md:w-[516px] legacy-xl:w-[1024px]">
+          <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
+            <Typography
+              as="h1"
+              className="text-[16px] leading-[1.15] font-medium tracking-[0.5px] text-black legacy-md:text-[20px] legacy-md:font-semibold legacy-xl:text-[28px]"
+              variant="subtitle"
+            >
+              Podcasts
+            </Typography>
+            <Dropdown
+              authors={AUTHORS}
+              displayPodcastsByAuthor={displayPodcastsByAuthor}
+            />
+          </div>
+          <PodcastList
+            allPodcasts={podcastListData}
+            listeningPodcast={listeningPodcast}
+            onPodcastSelect={setListeningPodcast}
+            selectedAuthor={selectedAuthor}
+            selectedPodcasts={selectedPodcasts}
+          />
+          {listeningPodcast && (
+            <AudioPlayer listeningPodcast={listeningPodcast} />
+          )}
+        </main>
+      </ApplicationShell>
+    </>
   )
 }
 
@@ -132,18 +163,54 @@ export const getServerSideProps = (async ({ req, res }) => {
   const globalLogFields: Record<string, unknown> = {
     ...getLogTraceObject(req),
   }
-  const [headerResponse, podcastResponse] = await Promise.allSettled([
-    fetchHeaderDataInDefaultPageLayout(),
+  const [
+    topicsResponse,
+    navigationResponse,
+    flashNewsResponse,
+    sectionPostsResponse,
+    podcastResponse,
+  ] = await Promise.allSettled([
+    fetchShellTopicsData(),
+    fetchShellNavigationData(),
+    fetchShellFlashNews(),
+    fetchShellSectionPosts(),
     fetchPodcastList(),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult<
-    HeaderResponse,
-    [HeadersData, Topics]
+  const topicsData = processSettledResult<TopicsResponse, Topics>(
+    topicsResponse,
+    (value) => value ?? [],
+    'Error occurs while getting shell topics data in podcasts page',
+    globalLogFields
+  )
+
+  const navigationData = processSettledResult<
+    NavigationResponse,
+    HeadersDataSection[]
   >(
-    headerResponse,
-    getSectionAndTopicFromDefaultHeaderData,
-    'Error occurs while getting header data in podcasts page',
+    navigationResponse,
+    (value) => value ?? [],
+    'Error occurs while getting shell navigation data in podcasts page',
+    globalLogFields
+  )
+
+  const flashNewsData = processSettledResult<
+    FlashNewsResponse,
+    ShellFlashNews[]
+  >(
+    flashNewsResponse,
+    (value) => value ?? [],
+    'Error occurs while getting shell flash news in podcasts page',
+    globalLogFields
+  )
+
+  const sectionPostsData = processSettledResult<
+    SectionPostsResponse,
+    ShellSectionPosts
+  >(
+    sectionPostsResponse,
+    (value) => value ?? {},
+    'Error occurs while getting shell section posts in podcasts page',
     globalLogFields
   )
 
@@ -160,7 +227,12 @@ export const getServerSideProps = (async ({ req, res }) => {
 
   return {
     props: {
-      headerData: { sectionsData, topicsData },
+      headerData: {
+        flashNewsData,
+        navigationData,
+        sectionPostsData,
+        topicsData,
+      },
       podcastListData,
     },
   }
