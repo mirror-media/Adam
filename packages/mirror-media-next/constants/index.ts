@@ -156,6 +156,22 @@ const SUB_BRAND_LINKS = [MIRRORVOICE_LINK, MIRRORFICTION_LINK, MESH_LINK]
 const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
+/**
+ * Legacy stacking scale, used by the styled-components era components.
+ *
+ * The V2 application shell and the shadcn primitives under components/ui use
+ * Tailwind z-index utilities, whose defaults (z-40/z-50/z-60) sit far below
+ * every value here. Any legacy floating element would therefore cover a V2
+ * overlay. To keep both systems usable side by side during the UI migration,
+ * shell and overlay primitives use the `shell*` range below, which is slotted
+ * into the legacy scale rather than above it: the shell header sits at the
+ * legacy header level, overlays clear `coverHeader`, and everything stays
+ * below `top` so global dialogs (IdleTimeoutModal) keep winning.
+ *
+ * When the two systems are unified into a single token scale, replace these
+ * with the shared tokens and drop the duplicated Tailwind arbitrary values in
+ * components/ui and components/shell.
+ */
 const Z_INDEX = {
   top: 10000,
   coverHeader: 2000,
@@ -163,6 +179,18 @@ const Z_INDEX = {
   header: 1000,
   promoteTopic: 500,
   coverContent: 100,
+  /**
+   * V2 shell chrome. Mirrors the legacy header (`header`, 1000) so the shell
+   * keeps the same relationship to the rest of the page: above page content
+   * and PromoteTopic, but below global dialogs such as IdleTimeoutModal.
+   */
+  shellHeader: 1000,
+  /** V2 sheet/dialog backdrop: above the shell header and cover headers. */
+  shellOverlay: 2500,
+  /** V2 sheet/dialog panel. */
+  shellOverlayContent: 2501,
+  /** V2 popover/menu surfaces, which may open from inside an overlay. */
+  shellPopover: 2600,
 } as const
 
 const SECTION_IDS = {
