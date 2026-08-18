@@ -2,7 +2,17 @@ import { useCallback, useRef } from 'react'
 import Image from 'next/image'
 import NextLink from 'next/link'
 
+import { cn } from '@/components/cn'
+
 import type { ShellNavigationItem } from './navigation'
+
+/**
+ * The panel is entirely neutral, so the hover indicator is a white rule rather
+ * than a colour shift. How far below the element it sits is left to each
+ * use: a 388px card and a four-character label do not want the same gap.
+ */
+const RULE =
+  'after:absolute after:inset-x-0 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-mm-neutral-0 after:transition-transform after:duration-150 after:content-[""] motion-reduce:after:transition-none'
 
 type DesktopNavigationFlyoutProps = {
   item: ShellNavigationItem
@@ -68,7 +78,11 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
           <div className="flex shrink-0 gap-mm-xl">
             {posts.map((post) => (
               <NextLink
-                className="flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
+                className={cn(
+                  'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400',
+                  RULE,
+                  'after:-bottom-3 hover:after:scale-x-100'
+                )}
                 href={post.href}
                 key={post.href}
               >
@@ -89,7 +103,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
                     {post.title}
                   </span>
                   <time
-                    className="font-mm-sans text-mm-caption-l text-mm-neutral-0"
+                    className="font-mm-sans text-mm-caption-l text-mm-neutral-400"
                     dateTime={post.publishedDate}
                   >
                     {formatPostDate(post.publishedDate)}
@@ -115,7 +129,11 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
           >
             {item.categories.map((category) => (
               <NextLink
-                className="rounded-mm-xs text-center font-mm-sans text-mm-h6 whitespace-nowrap text-mm-neutral-0 outline-none hover:text-mm-second-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
+                className={cn(
+                  'relative w-fit justify-self-center rounded-mm-xs font-mm-sans text-mm-h6 whitespace-nowrap text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400',
+                  RULE,
+                  'after:-bottom-1 hover:after:scale-x-100'
+                )}
                 href={category.href}
                 key={category.slug}
               >
