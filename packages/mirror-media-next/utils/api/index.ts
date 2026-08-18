@@ -9,6 +9,8 @@ import type { Topic } from '../../apollo/query/topics'
 import axiosInstance from '../../axios/index.js'
 import {
   URL_STATIC_HEADER_HEADERS,
+  URL_STATIC_MENU_SECTIONS,
+  URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
 } from '../../config/index.mjs'
@@ -75,6 +77,30 @@ export type ColumnSectionResponse = {
 
 export type HeadersData = (HeadersDataSection | HeadersDataCategory)[]
 
+export type ShellFlashNews = {
+  id: string
+  slug: string
+  title: string
+}
+
+/**
+ * A section's two latest posts, used by the desktop navigation flyout.
+ *
+ * `heroImage` is null for posts that have no artwork, and `post_url` is an
+ * absolute link into the environment that produced the file, so the shell
+ * builds its own href from `slug` rather than following it across
+ * environments.
+ */
+export type ShellSectionPost = {
+  heroImage: string | null
+  id: string
+  publishedDate: string
+  slug: string
+  title: string
+}
+
+export type ShellSectionPosts = Record<string, ShellSectionPost[]>
+
 export type AnnouncementQueryResult = ApolloQueryResult<FetchAnnouncementsQuery>
 
 type HeadersStaticJsonResponse = {
@@ -83,6 +109,17 @@ type HeadersStaticJsonResponse = {
 
 type TopicsStaticJsonResponse = {
   topics?: Topics
+}
+
+type FlashNewsStaticJsonResponse = {
+  posts?: ShellFlashNews[]
+}
+
+type MenuSectionsStaticJsonResponse = {
+  sections?: {
+    slug?: string
+    posts?: ShellSectionPost[]
+  }[]
 }
 
 type PremiumSectionsStaticJsonResponse = {
@@ -156,6 +193,79 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
   }
 }
 
+/**
+ * The header sections file the legacy header also reads. It is the canonical
+ * one for navigation: it carries all ten sections in the order the design
+ * shows, each with its own categories. The plain sections file is a smaller,
+ * differently ordered set and is not interchangeable with it.
+ *
+ * Category entries are dropped; the shell's top level is sections only.
+ */
+const fetchShellNavigationData = async (): Promise<HeadersDataSection[]> => {
+  try {
+    const response = await fetchStaticJsonByUrl<HeadersStaticJsonResponse>(
+      URL_STATIC_HEADER_HEADERS
+    )
+    const headers = Array.isArray(response.data.headers)
+      ? response.data.headers
+      : []
+
+    return headers
+      .filter(
+        (header): header is HeadersDataSection => header.type === 'section'
+      )
+      .sort((a, b) => a.order - b.order)
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
+const fetchShellFlashNews = async (): Promise<ShellFlashNews[]> => {
+  try {
+    const response = await fetchStaticJsonByUrl<FlashNewsStaticJsonResponse>(
+      URL_STATIC_POST_FLASH_NEWS
+    )
+
+    return Array.isArray(response.data.posts) ? response.data.posts : []
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
+/**
+ * The two latest posts per section, keyed by slug. It uses the same slugs as
+ * the header sections file, so the navigation joins on them directly.
+ */
+const fetchShellSectionPosts = async (): Promise<ShellSectionPosts> => {
+  try {
+    const response = await fetchStaticJsonByUrl<MenuSectionsStaticJsonResponse>(
+      URL_STATIC_MENU_SECTIONS
+    )
+    const sections = Array.isArray(response.data.sections)
+      ? response.data.sections
+      : []
+
+    return Object.fromEntries(
+      sections
+        .filter((section) => section.slug && Array.isArray(section.posts))
+        .map((section) => [section.slug as string, section.posts ?? []])
+    )
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
+const fetchShellTopicsData = async (): Promise<Topics> => {
+  try {
+    const response =
+      await fetchStaticJsonByUrl<TopicsStaticJsonResponse>(URL_STATIC_TOPICS)
+
+    return Array.isArray(response.data.topics) ? response.data.topics : []
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
 const fetchHeaderDataInPremiumPageLayout = async () => {
   let sectionsData: HeadersData = []
   try {
@@ -192,5 +302,9 @@ export {
   fetchAnnouncementsByScope,
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
+  fetchShellFlashNews,
+  fetchShellNavigationData,
+  fetchShellSectionPosts,
+  fetchShellTopicsData,
   fetchStaticJsonByUrl,
 }
