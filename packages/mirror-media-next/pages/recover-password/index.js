@@ -21,6 +21,11 @@ import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-proces
 import { generateErrorReportInfo } from '../../utils/log/error-log'
 import { sendErrorLog } from '../../utils/log/send-log'
 import { processSettledResult } from '../../utils/response-processor'
+import {
+  getStorageItem,
+  removeStorageItem,
+  setStorageItem,
+} from '../../utils/safe-storage'
 import redirectToDestinationWhileAuthed from '../../utils/server-side-only/redirect-to-destination-while-authed'
 
 // following comments is required since these variables are used by comments but not codes.
@@ -142,7 +147,7 @@ export default function Login({ emailData, headerData }) {
       setAvoidSpanCooldown(AVOID_SPAM_COOLDOWN)
       /** @type {number} */
       const coolDownExpiredTime = Date.now() + AVOID_SPAM_COOLDOWN
-      localStorage.setItem(COOLDOWN_STORAGE_KEY, coolDownExpiredTime.toString())
+      setStorageItem(COOLDOWN_STORAGE_KEY, coolDownExpiredTime.toString())
     } catch (e) {
       if (
         e instanceof FirebaseError &&
@@ -161,9 +166,7 @@ export default function Login({ emailData, headerData }) {
   // load cooldown info while page loaded
   useEffect(() => {
     /** @type {number} */
-    const coolDownExpiredTime = Number(
-      localStorage.getItem(COOLDOWN_STORAGE_KEY)
-    )
+    const coolDownExpiredTime = Number(getStorageItem(COOLDOWN_STORAGE_KEY))
     const now = Date.now()
 
     if (Number.isNaN(coolDownExpiredTime)) return
@@ -173,7 +176,7 @@ export default function Login({ emailData, headerData }) {
       setAvoidSpanCooldown(cooldown)
       setHintState(HINT_STATE.SUCCESS)
     } else {
-      localStorage.removeItem(COOLDOWN_STORAGE_KEY)
+      removeStorageItem(COOLDOWN_STORAGE_KEY)
     }
   }, [])
 
@@ -184,7 +187,7 @@ export default function Login({ emailData, headerData }) {
       else {
         setHintState(HINT_STATE.DEFAULT)
         clearInterval(timer)
-        localStorage.removeItem(COOLDOWN_STORAGE_KEY)
+        removeStorageItem(COOLDOWN_STORAGE_KEY)
       }
     }, SECOND * 1)
 
