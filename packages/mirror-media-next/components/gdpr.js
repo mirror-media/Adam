@@ -3,6 +3,11 @@ import styled, { css } from 'styled-components'
 
 import { Z_INDEX } from '../constants'
 import useFirstScrollDetector from '../hooks/useFirstScrollDetector'
+import {
+  getStorageItem,
+  isStorageAvailable,
+  setStorageItem,
+} from '../utils/safe-storage'
 
 const Wrapper = styled.div`
   position: relative;
@@ -96,7 +101,16 @@ export default function GDPRNotification() {
   const hasScrolled = useFirstScrollDetector()
 
   useEffect(() => {
-    const gdprSeen = localStorage.getItem('mirrormedia-gdprSeen')
+    /*
+      Reading `window.localStorage` can throw a SecurityError on the property
+      access itself. Without it the agreement can never be recorded, so hide the
+      notification instead of showing a button that remembers nothing.
+     */
+    if (!isStorageAvailable()) {
+      return
+    }
+
+    const gdprSeen = getStorageItem('mirrormedia-gdprSeen')
 
     if (!gdprSeen) {
       setShowNotification(true)
@@ -105,7 +119,7 @@ export default function GDPRNotification() {
 
   const handleAgree = () => {
     setShowNotification(false)
-    localStorage.setItem('mirrormedia-gdprSeen', 'true')
+    setStorageItem('mirrormedia-gdprSeen', 'true')
   }
 
   return (
