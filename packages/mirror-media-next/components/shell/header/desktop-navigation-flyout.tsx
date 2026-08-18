@@ -21,11 +21,25 @@ type DesktopNavigationFlyoutProps = {
 /** Figma 子類別 renders dates as `2022.10.06 21:22`. */
 function formatPostDate(isoDate: string) {
   const date = new Date(isoDate)
-  const pad = (value: number) => String(value).padStart(2, '0')
+  if (Number.isNaN(date.getTime())) {
+    return ''
+  }
 
-  return `${date.getFullYear()}.${pad(date.getMonth() + 1)}.${pad(
-    date.getDate()
-  )} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    day: '2-digit',
+    hour: '2-digit',
+    hourCycle: 'h23',
+    minute: '2-digit',
+    month: '2-digit',
+    timeZone: 'Asia/Taipei',
+    year: 'numeric',
+  }).formatToParts(date)
+  const getPart = (type: Intl.DateTimeFormatPartTypes) =>
+    parts.find((part) => part.type === type)?.value ?? ''
+
+  return `${getPart('year')}.${getPart('month')}.${getPart('day')} ${getPart(
+    'hour'
+  )}:${getPart('minute')}`
 }
 
 /**
