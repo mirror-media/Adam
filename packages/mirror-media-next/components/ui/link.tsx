@@ -18,7 +18,7 @@ const variantClassByName = {
   muted:
     'text-mm-body2 text-mm-neutral-600 hover:text-mm-base-700 hover:underline',
   button:
-    'inline-flex h-8 min-w-[100px] items-center justify-center rounded-mm-s bg-mm-base-700 px-mm-l text-mm-subtitle text-mm-neutral-0 transition-colors hover:bg-mm-base-500',
+    'inline-flex h-8 min-w-25 items-center justify-center rounded-mm-s bg-mm-base-700 px-mm-l text-mm-subtitle text-mm-neutral-0 transition-colors hover:bg-mm-base-500',
 } satisfies Record<LinkVariant, string>
 
 export function Link({

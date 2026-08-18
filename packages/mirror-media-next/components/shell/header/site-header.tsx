@@ -109,7 +109,7 @@ function SiteHeader({
             showStickyControls && 'hidden lg:flex'
           )}
         >
-          <div className="mx-auto flex w-full max-w-[1240px] min-w-0 items-center justify-between gap-mm-xl">
+          <div className="mx-auto flex w-full max-w-310 min-w-0 items-center justify-between gap-mm-xl">
             {activeFlashNews ? (
               <NextLink
                 className="min-w-0 truncate rounded-mm-xs font-mm-body text-mm-body-m outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
@@ -149,7 +149,7 @@ function SiteHeader({
       >
         <div
           className={cn(
-            'mx-auto flex h-[60px] w-full max-w-[1280px] items-center justify-between px-mm-2xl',
+            'mx-auto flex h-15 w-full max-w-7xl items-center justify-between px-mm-2xl',
             // Desktop sticky is a single row, so the logo row scrolls away.
             showStickyControls && 'lg:hidden'
           )}
@@ -164,7 +164,7 @@ function SiteHeader({
                 alt="鏡週刊 Mirror Media"
                 // The asset's intrinsic size is 108x46; Figma's 107x45.235 is a
                 // placement artefact, so render it unscaled.
-                className="h-auto w-[108px]"
+                className="h-auto w-27"
                 height={46}
                 priority
                 src="/images-next/mirror-media-logo.svg"
@@ -183,7 +183,7 @@ function SiteHeader({
                 110×50
               </div>
               <div
-                className="flex h-[30px] w-[120px] items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
+                className="flex h-[30px] w-30 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
                 data-slot="header-ad-slot"
               >
                 120×30
@@ -224,7 +224,7 @@ function SiteHeader({
                 </NextLink>
               ))}
             </nav>
-            <ShellSearch className="w-[220px]" />
+            <ShellSearch className="w-55" />
             <MemberMenu />
           </div>
         </div>
@@ -236,7 +236,7 @@ function SiteHeader({
           )}
           onMouseLeave={() => setOpenFlyoutSlug(null)}
         >
-          <div className="mx-auto flex h-full w-full max-w-[1280px] items-center gap-mm-xl px-mm-2xl">
+          <div className="mx-auto flex h-full w-full max-w-7xl items-center gap-mm-xl px-mm-2xl">
             {/* Only rendered while stuck: a zero-width placeholder would still
                 contribute the flex gap and push the category row out of the
                 20px column shared by the flash news bar and the logo. */}
@@ -311,7 +311,7 @@ function SiteHeader({
         <div
           aria-hidden="true"
           // Compact shell fixes two rows (60 + 48); desktop fixes only the 48px row.
-          className="h-[108px] lg:h-12"
+          className="h-27 lg:h-12"
         />
       )}
     </header>

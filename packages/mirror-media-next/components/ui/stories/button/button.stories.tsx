@@ -183,7 +183,7 @@ export const Disabled: Story = {
 export const LongText: Story = {
   args: {
     children: '這是一段很長的中文與 English mixed button label',
-    className: 'max-w-[240px] whitespace-normal',
+    className: 'max-w-60 whitespace-normal',
   },
 }
 

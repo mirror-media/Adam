@@ -134,7 +134,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
 
         <nav
           aria-label="主要分類"
-          className="min-h-0 flex-1 [scrollbar-color:rgb(0_0_0_/_0.32)_transparent] overflow-y-auto px-10 py-mm-3xl md:px-11 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/30 [&::-webkit-scrollbar-track]:bg-transparent"
+          className="min-h-0 flex-1 [scrollbar-color:rgb(0_0_0/0.32)_transparent] overflow-y-auto px-10 py-mm-3xl md:px-11 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/30 [&::-webkit-scrollbar-track]:bg-transparent"
         >
           {/* Figma insets these rows by 10px, which is off the project's 4px
               grid. It is kept rather than snapped: 12px would add 4px to each

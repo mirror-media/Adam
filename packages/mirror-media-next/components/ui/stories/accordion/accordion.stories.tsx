@@ -77,7 +77,7 @@ export const MobileLongLabels: Story = {
     viewport: { defaultViewport: 'mobile' },
   },
   render: () => (
-    <Accordion className="max-w-[300px]">
+    <Accordion className="max-w-75">
       <ExampleItems />
     </Accordion>
   ),

@@ -67,7 +67,7 @@ function SiteFooter() {
       className="bg-mm-base-700 px-mm-xl py-12 font-mm-sans text-mm-neutral-0"
       data-slot="site-footer"
     >
-      <div className="mx-auto flex w-full max-w-[1064px] flex-col items-center gap-7">
+      <div className="mx-auto flex w-full max-w-266 flex-col items-center gap-7">
         <div className="flex w-full flex-col items-center justify-center gap-7 lg:flex-row lg:gap-mm-3xl">
           <nav
             aria-label="網站資訊"

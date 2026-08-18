@@ -64,7 +64,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         className={cn(
-          'fixed top-1/2 left-1/2 z-[2501] grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-mm-xl overflow-y-auto rounded-mm-l border border-mm-neutral-300 bg-mm-neutral-0 p-mm-xl font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 focus-visible:outline-solid sm:max-w-[480px]',
+          'fixed top-1/2 left-1/2 z-[2501] grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-mm-xl overflow-y-auto rounded-mm-l border border-mm-neutral-300 bg-mm-neutral-0 p-mm-xl font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 focus-visible:outline-solid sm:max-w-120',
           className
         )}
         data-slot="dialog-content"

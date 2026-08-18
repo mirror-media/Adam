@@ -61,7 +61,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
       data-slot="navigation-flyout"
       ref={panelRef}
     >
-      <div className="mx-auto flex h-[248px] w-full max-w-[1280px] items-center gap-mm-3xl px-mm-2xl">
+      <div className="mx-auto flex h-62 w-full max-w-7xl items-center gap-mm-3xl px-mm-2xl">
         {posts.length > 0 && (
           // The frame spaces image, title, image, title evenly at 16px rather
           // than setting the two articles apart, so the row reads as one strip.
@@ -77,7 +77,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
                     and the panel height and divider are placed against it. */}
                 <Image
                   alt=""
-                  className="h-[146px] w-[220px] shrink-0 object-cover"
+                  className="h-[146px] w-55 shrink-0 object-cover"
                   height={146}
                   src={post.heroImage}
                   width={220}
@@ -103,7 +103,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
         {posts.length > 0 && item.categories.length > 0 && (
           <div
             aria-hidden="true"
-            className="h-[172px] w-px shrink-0 bg-mm-neutral-600"
+            className="h-43 w-px shrink-0 bg-mm-neutral-600"
           />
         )}
 
@@ -111,7 +111,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
           <nav
             aria-label={`${item.name}子分類`}
             ref={listRef}
-            className="grid h-[172px] flex-1 [scrollbar-color:rgb(255_255_255_/_0.4)_transparent] auto-rows-min grid-cols-2 gap-x-mm-4xl gap-y-mm-xl overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/40 [&::-webkit-scrollbar-track]:bg-transparent"
+            className="grid h-43 flex-1 [scrollbar-color:rgb(255_255_255/0.4)_transparent] auto-rows-min grid-cols-2 gap-x-mm-4xl gap-y-mm-xl overflow-y-auto overscroll-contain [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/40 [&::-webkit-scrollbar-track]:bg-transparent"
           >
             {item.categories.map((category) => (
               <NextLink
