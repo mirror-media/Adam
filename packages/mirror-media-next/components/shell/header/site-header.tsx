@@ -11,6 +11,7 @@ import type {
   Topics,
 } from '@/utils/api'
 
+import { FlashNews } from './flash-news'
 import { navLinkClassName, navLinkRuleOnHover } from './nav-link'
 import {
   createShellNavigation,
@@ -45,11 +46,6 @@ type SiteHeaderProps = {
   topicsData: Topics
 }
 
-/** PM contract: 32 characters, then a space and an ellipsis. */
-function truncateFlashNews(title: string) {
-  return title.length > 32 ? `${title.slice(0, 32)} …` : title
-}
-
 function SiteHeader({
   activeNavigationSlug,
   flashNewsData,
@@ -57,7 +53,6 @@ function SiteHeader({
   sectionPostsData,
   topicsData,
 }: SiteHeaderProps) {
-  const [activeFlashNewsIndex, setActiveFlashNewsIndex] = useState(0)
   const [showStickyControls, setShowStickyControls] = useState(false)
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
@@ -66,23 +61,7 @@ function SiteHeader({
     (item) => item.slug === openFlyoutSlug && item.categories.length > 0
   )
   const visibleTopics = topicsData.slice(0, 7)
-  const activeFlashNews = flashNewsData?.[activeFlashNewsIndex]
-
-  useEffect(() => {
-    setActiveFlashNewsIndex(0)
-
-    if (!flashNewsData || flashNewsData.length <= 1) {
-      return
-    }
-
-    const intervalId = window.setInterval(() => {
-      setActiveFlashNewsIndex(
-        (currentIndex) => (currentIndex + 1) % flashNewsData.length
-      )
-    }, 5000)
-
-    return () => window.clearInterval(intervalId)
-  }, [flashNewsData])
+  const flashNews = flashNewsData ?? []
 
   useEffect(() => {
     function updateStickyState() {
@@ -101,7 +80,7 @@ function SiteHeader({
       className="relative z-[1000] bg-mm-neutral-0"
       data-slot="site-header"
     >
-      {(activeFlashNews || visibleTopics.length > 0) && (
+      {(flashNews.length > 0 || visibleTopics.length > 0) && (
         <div
           className={cn(
             'flex h-12 items-center bg-mm-base-500 px-mm-2xl text-mm-error-300 lg:px-mm-2xl',
@@ -110,14 +89,8 @@ function SiteHeader({
           )}
         >
           <div className="mx-auto flex w-full max-w-310 min-w-0 items-center justify-between gap-mm-xl">
-            {activeFlashNews ? (
-              <NextLink
-                className="min-w-0 truncate rounded-mm-xs font-mm-body text-mm-body-m outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
-                href={`/story/${activeFlashNews.slug}`}
-              >
-                <strong className="font-mm-sans">快訊｜</strong>
-                {truncateFlashNews(activeFlashNews.title)}
-              </NextLink>
+            {flashNews.length > 0 ? (
+              <FlashNews items={flashNews} />
             ) : (
               <span aria-hidden="true" />
             )}
