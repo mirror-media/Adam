@@ -200,7 +200,8 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 | `utils/**`、`hooks/**`                                   | 真正跨能力且符合執行環境的共用工具／hooks；單一能力內容回到最近 module      |
 | `type/**`、`types/**`                                    | `type/` 不再新增；`types/` 只放 ambient declarations（環境宣告）            |
 
-`components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。`button`、`input`、`container`、`link`、`loading`、`typography` 都屬於這一層。
+`components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。`button`、`input`、`container`、`link`、`spinner`、`typography` 都屬於這一層。
+新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
 
 ### Core rules（核心規則）
 
