@@ -31,6 +31,21 @@ type ShellUtilityLink = {
   target?: '_blank'
 }
 
+function getCategoryHref(slug: string) {
+  // The header payload only supplies category slugs, so most destinations can
+  // be derived as /category/<slug>. Mirror 3.0's legacy header already treated
+  // daily_forum as a route exception, and the current dev and prod payloads
+  // still contain it: its owned route is /externals/dailycolumn, while the
+  // derived /category/daily_forum is a 404. The V2 shell preserves that behavior
+  // to avoid a migration regression. Remove this exception if the header
+  // contract later supplies canonical hrefs.
+  if (slug === 'daily_forum') {
+    return '/externals/dailycolumn'
+  }
+
+  return `/category/${slug}`
+}
+
 const shellUtilityLinks: readonly ShellUtilityLink[] = [
   { href: '/podcasts', label: 'PODCAST' },
   {
@@ -99,7 +114,7 @@ function createShellNavigation(
 ): ShellNavigationItem[] {
   return sections.map((section) => ({
     categories: section.categories.map((category) => ({
-      href: `/category/${category.slug}`,
+      href: getCategoryHref(category.slug),
       name: category.name,
       slug: category.slug,
     })),
