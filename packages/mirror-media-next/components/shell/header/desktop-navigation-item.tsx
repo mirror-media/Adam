@@ -32,11 +32,17 @@ function DesktopNavigationItem({
 
   return (
     <NextLink
+      aria-controls={
+        hasFlyout && expanded ? 'site-header-navigation-flyout' : undefined
+      }
       aria-expanded={hasFlyout ? expanded : undefined}
+      aria-haspopup={hasFlyout ? 'true' : undefined}
       className={cn(
         navLinkClassName,
-        active ? navLinkRuleAlways : navLinkRuleOnHover
+        active || expanded ? navLinkRuleAlways : navLinkRuleOnHover
       )}
+      data-navigation-slug={item.slug}
+      data-slot="desktop-navigation-trigger"
       href={item.href}
       onFocus={() => onOpen(item.slug)}
       onMouseEnter={() => onOpen(item.slug)}

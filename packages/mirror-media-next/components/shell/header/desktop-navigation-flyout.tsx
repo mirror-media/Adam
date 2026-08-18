@@ -76,13 +76,16 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
     }
 
     node.addEventListener('wheel', handleWheel, { passive: false })
-    return () => node.removeEventListener('wheel', handleWheel)
+    return () => {
+      node.removeEventListener('wheel', handleWheel)
+    }
   }, [])
 
   return (
     <div
       className="absolute inset-x-0 top-full z-[1000] hidden bg-mm-neutral-800 text-mm-neutral-0 lg:block"
       data-slot="navigation-flyout"
+      id="site-header-navigation-flyout"
       ref={panelRef}
     >
       <div className="mx-auto flex h-62 w-full max-w-7xl items-center gap-mm-3xl px-mm-2xl">

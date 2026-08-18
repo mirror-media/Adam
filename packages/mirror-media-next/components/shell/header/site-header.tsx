@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import NextLink from 'next/link'
@@ -56,6 +56,7 @@ function SiteHeader({
   const [showStickyControls, setShowStickyControls] = useState(false)
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
+  const navigationRegionRef = useRef<HTMLDivElement | null>(null)
   const navigation = createShellNavigation(navigationData, sectionPostsData)
   const openFlyoutItem = navigation.find(
     (item) => item.slug === openFlyoutSlug && item.categories.length > 0
@@ -74,6 +75,69 @@ function SiteHeader({
     window.addEventListener('scroll', updateStickyState, { passive: true })
     return () => window.removeEventListener('scroll', updateStickyState)
   }, [])
+
+  useEffect(() => {
+    if (!openFlyoutSlug) {
+      return
+    }
+    const activeFlyoutSlug = openFlyoutSlug
+
+    function closeOnFocusOutside(event: FocusEvent) {
+      const target = event.target
+      const focusedTrigger =
+        target instanceof Element &&
+        target.matches('[data-slot="desktop-navigation-trigger"]')
+      const focusedInsideFlyout = navigationRegionRef.current
+        ?.querySelector('[data-slot="navigation-flyout"]')
+        ?.contains(target as Node)
+
+      if (!focusedTrigger && !focusedInsideFlyout) {
+        setOpenFlyoutSlug(null)
+      }
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== 'Escape') {
+        return
+      }
+
+      event.preventDefault()
+      const trigger = [
+        ...(navigationRegionRef.current?.querySelectorAll<HTMLAnchorElement>(
+          '[data-slot="desktop-navigation-trigger"]'
+        ) ?? []),
+      ].find((element) => element.dataset.navigationSlug === activeFlyoutSlug)
+
+      // Focus first: the trigger's focus handler reopens the flyout, then the
+      // state updates below close it in the same event.
+      trigger?.focus()
+      setOpenFlyoutSlug(null)
+    }
+
+    function closeOnNavigation(event: MouseEvent) {
+      const target = event.target
+      if (
+        target instanceof Element &&
+        navigationRegionRef.current?.contains(target) &&
+        target.closest('a')
+      ) {
+        setOpenFlyoutSlug(null)
+      }
+    }
+
+    document.addEventListener('focusin', closeOnFocusOutside)
+    document.addEventListener('keydown', closeOnEscape)
+    document.addEventListener('click', closeOnNavigation)
+    return () => {
+      document.removeEventListener('focusin', closeOnFocusOutside)
+      document.removeEventListener('keydown', closeOnEscape)
+      document.removeEventListener('click', closeOnNavigation)
+    }
+  }, [openFlyoutSlug])
+
+  function openFlyoutFromPointerOrFocus(slug: string) {
+    setOpenFlyoutSlug(slug)
+  }
 
   return (
     <header
@@ -207,7 +271,10 @@ function SiteHeader({
             'relative z-[1000] flex h-12 w-full items-center border-b border-mm-neutral-200 bg-mm-neutral-0',
             showStickyControls && 'lg:fixed lg:inset-x-0 lg:top-0'
           )}
-          onMouseLeave={() => setOpenFlyoutSlug(null)}
+          onMouseLeave={() => {
+            setOpenFlyoutSlug(null)
+          }}
+          ref={navigationRegionRef}
         >
           <div className="mx-auto flex h-full w-full max-w-7xl items-center gap-mm-xl px-mm-2xl">
             {/* Only rendered while stuck: a zero-width placeholder would still
@@ -253,7 +320,7 @@ function SiteHeader({
                     active={activeNavigationSlug === item.slug}
                     expanded={openFlyoutSlug === item.slug}
                     item={item}
-                    onOpen={setOpenFlyoutSlug}
+                    onOpen={openFlyoutFromPointerOrFocus}
                   />
                 </div>
               ))}
@@ -267,6 +334,8 @@ function SiteHeader({
                   className={cn(navLinkClassName, navLinkRuleOnHover)}
                   href={link.href}
                   key={link.label}
+                  onFocus={() => setOpenFlyoutSlug(null)}
+                  onMouseEnter={() => setOpenFlyoutSlug(null)}
                   rel={link.rel}
                   target={link.target}
                 >
