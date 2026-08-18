@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import { Button, type ButtonSize, type ButtonVariant } from '../../button'
+import { Spinner } from '../../spinner'
 
 function ArrowDownIcon() {
   return (
@@ -160,10 +161,16 @@ export const BrandSearchIcon: Story = {
 }
 
 export const Loading: Story = {
-  args: {
-    children: '載入中',
-    isLoading: true,
-  },
+  render: () => (
+    <Button isLoading>
+      <Spinner
+        aria-hidden="true"
+        data-icon="inline-start"
+        role="presentation"
+      />
+      載入中
+    </Button>
+  ),
 }
 
 export const Disabled: Story = {
@@ -222,7 +229,14 @@ export const States: Story = {
       <div className="flex flex-wrap items-center gap-mm-m">
         <Button>贊助本文</Button>
         <Button disabled>Disabled</Button>
-        <Button isLoading>載入中</Button>
+        <Button isLoading>
+          <Spinner
+            aria-hidden="true"
+            data-icon="inline-start"
+            role="presentation"
+          />
+          載入中
+        </Button>
       </div>
       <div className="flex flex-wrap items-center gap-mm-m">
         <Button variant="secondary">加入訂閱會員</Button>
@@ -230,6 +244,11 @@ export const States: Story = {
           Disabled
         </Button>
         <Button isLoading variant="secondary">
+          <Spinner
+            aria-hidden="true"
+            data-icon="inline-start"
+            role="presentation"
+          />
           載入中
         </Button>
       </div>
