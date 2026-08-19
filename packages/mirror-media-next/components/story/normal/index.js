@@ -35,8 +35,8 @@ import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '../../ads/gpt/gpt-placeholder'
-import ShareHeader from '../../header/share-header'
-import Footer from '../../shared/footer'
+import { SiteFooter } from '../../shell/footer/site-footer'
+import { LegacyHeaderAdapter } from '../../shell/legacy-layout-adapter'
 import ArticleBrief from '../shared/brief'
 import Divider from '../shared/divider'
 import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
@@ -665,12 +665,14 @@ export default function StoryNormalStyle({
 
   return (
     <>
-      <ShareHeader
-        pageLayoutType="default-with-flash-news"
-        headerData={{
-          sectionsData: headerData?.sectionsData,
-          topicsData: headerData?.topicsData,
-          flashNewsData,
+      <LegacyHeaderAdapter
+        header={{
+          type: 'default-with-flash-news',
+          data: {
+            sectionsData: headerData?.sectionsData,
+            topicsData: headerData?.topicsData,
+            flashNewsData,
+          },
         }}
       />
 
@@ -865,7 +867,7 @@ export default function StoryNormalStyle({
       {shouldShowAd && noCategoryOfWineSlug ? (
         <StickyGPTAd_MB_ST pageKey={pageKeyForGptAd} />
       ) : null}
-      <Footer footerType="default" />
+      <SiteFooter />
     </>
   )
 }

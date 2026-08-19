@@ -39,6 +39,12 @@ export type HeadersDataSection = {
   slug: string
   name: string
   categories: CategoryInHeadersDataSection[]
+  /**
+   * Optional shell-only enrichment from `menu_sections_latest.json`.
+   * V3 header consumers ignore this field, while the V4 layout adapter
+   * uses it without issuing a second request from the browser.
+   */
+  posts?: ShellSectionPost[]
 }
 
 export type HeadersDataCategory = {
@@ -168,6 +174,7 @@ const errorLogger = (errorMessage: unknown): never => {
 const fetchHeaderDataInDefaultPageLayout = async () => {
   let sectionsData: HeadersData = []
   let topicsData: Topics = []
+  let sectionPostsData: ShellSectionPosts = {}
 
   try {
     const responses = await Promise.allSettled([
@@ -175,6 +182,7 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
         URL_STATIC_HEADER_HEADERS
       ),
       fetchStaticJsonByUrl<TopicsStaticJsonResponse>(URL_STATIC_TOPICS),
+      fetchShellSectionPosts({ onError: 'empty' }),
     ])
 
     const sectionsResult =
@@ -186,6 +194,14 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
     const topicsResult =
       responses[1].status === 'fulfilled' ? responses[1].value.data : undefined
     topicsData = Array.isArray(topicsResult?.topics) ? topicsResult.topics : []
+
+    sectionPostsData =
+      responses[2].status === 'fulfilled' ? responses[2].value : {}
+    sectionsData = sectionsData.map((item) =>
+      item.type === 'section'
+        ? { ...item, posts: sectionPostsData[item.slug] ?? [] }
+        : item
+    )
 
     return { sectionsData, topicsData }
   } catch (err) {
@@ -236,7 +252,13 @@ const fetchShellFlashNews = async (): Promise<ShellFlashNews[]> => {
  * The two latest posts per section, keyed by slug. It uses the same slugs as
  * the header sections file, so the navigation joins on them directly.
  */
-const fetchShellSectionPosts = async (): Promise<ShellSectionPosts> => {
+type FetchShellSectionPostsOptions = {
+  onError?: 'empty' | 'throw'
+}
+
+const fetchShellSectionPosts = async ({
+  onError = 'throw',
+}: FetchShellSectionPostsOptions = {}): Promise<ShellSectionPosts> => {
   try {
     const response = await fetchStaticJsonByUrl<MenuSectionsStaticJsonResponse>(
       URL_STATIC_MENU_SECTIONS
@@ -251,6 +273,10 @@ const fetchShellSectionPosts = async (): Promise<ShellSectionPosts> => {
         .map((section) => [section.slug as string, section.posts ?? []])
     )
   } catch (err) {
+    if (onError === 'empty') {
+      return {}
+    }
+
     return errorLogger(err)
   }
 }

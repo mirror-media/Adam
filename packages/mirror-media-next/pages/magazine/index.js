@@ -12,9 +12,9 @@ import Layout from '../../components/shared/layout'
 import { useMembership } from '../../context/membership'
 import useMembershipRequired from '../../hooks/use-membership-required'
 import { getLogTraceObject } from '../../utils'
-import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
-import { getSectionFromPremiumHeaderData } from '../../utils/data-process'
+import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../utils/server-side-only/redirect-to-login-while-unauthed'
 
@@ -57,12 +57,13 @@ const Title = styled.h2`
 /**
  * @typedef {Object} PageProps
  * @property {import('../../utils/api').HeadersData} sectionsData
+ * @property {import('../../utils/api').Topics} topicsData
  */
 
 /**
  * @param {PageProps} props
  */
-export default function Magazine({ sectionsData = [] }) {
+export default function Magazine({ sectionsData = [], topicsData = [] }) {
   useMembershipRequired()
   const [specials, setSpecials] = useState([])
   const [weeklys, setWeeklys] = useState([])
@@ -143,8 +144,8 @@ export default function Magazine({ sectionsData = [] }) {
     <Layout
       head={{ title: `動態雜誌` }}
       header={{
-        type: 'premium',
-        data: { sectionsData: sectionsData },
+        type: 'default',
+        data: { sectionsData, topicsData },
       }}
       footer={{ type: 'default' }}
     >
@@ -200,19 +201,20 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
 
   // Fetch header data
   const responses = await Promise.allSettled([
-    fetchHeaderDataInPremiumPageLayout(),
+    fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const sectionsData = processSettledResult(
+  const [sectionsData, topicsData] = processSettledResult(
     responses[0],
-    getSectionFromPremiumHeaderData,
-    'Error occurs while getting premium header data in magazine list page',
+    getSectionAndTopicFromDefaultHeaderData,
+    'Error occurs while getting V4 header data in magazine list page',
     globalLogFields
   )
 
   return {
     props: {
       sectionsData,
+      topicsData,
     },
   }
 })

@@ -6,9 +6,9 @@ import client from '../../../apollo/apollo-client'
 import { fetchAmpPostBySlug } from '../../../apollo/query/posts'
 import AmpFooter from '../../../components/amp/amp-footer'
 import AmpHeader from '../../../components/amp/amp-header'
+import Layout from '../../../components/amp/amp-layout'
 import AmpMain from '../../../components/amp/amp-main'
 import AmpRelated from '../../../components/amp/amp-related'
-import Layout from '../../../components/shared/layout'
 import WineWarning from '../../../components/shared/wine-warning'
 import AdultOnlyWarning from '../../../components/story/shared/adult-only-warning'
 import { ENV, GA_MEASUREMENT_ID, SITE_URL } from '../../../config/index.mjs'
@@ -136,8 +136,6 @@ function StoryAmpPage({ postData, jsonLdData }) {
             getResizedUrl(postData.heroImage?.resized),
           skipCanonical: true,
         }}
-        header={{ type: 'empty' }}
-        footer={{ type: 'empty' }}
       >
         <>
           {/* @ts-ignore */}

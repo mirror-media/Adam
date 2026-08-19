@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import DraftRenderBlock from '../shared/draft-renderer-block'
 const { getContentTextBlocks } = MirrorMedia
-import Footer from '../../shared/footer'
+import { SiteFooter } from '../../shell/footer/site-footer'
 
 import HeroSection from './hero-section'
 import { ArrowDown } from './icons'
@@ -290,7 +290,7 @@ export default function StoryPhotographyStyle({
           <Credits credits={credits}></Credits>
         </ContentContainer>
         <RelatedPosts relateds={allRelatedStories} />
-        <Footer footerType="default" />
+        <SiteFooter />
       </Page>
     </Main>
   )

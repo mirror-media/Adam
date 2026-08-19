@@ -9,10 +9,7 @@ import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getCategoryOfWineSlug, getLogTraceObject } from '../../utils'
 import { getSectionGPTPageKey } from '../../utils/ad'
-import {
-  fetchHeaderDataInDefaultPageLayout,
-  fetchHeaderDataInPremiumPageLayout,
-} from '../../utils/api'
+import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import {
   fetchCategoryByCategorySlug,
   fetchNewsCategoryInfo,
@@ -24,7 +21,6 @@ import { setPageCache } from '../../utils/cache-setting'
 import {
   getPostsAndPostscountFromGqlData,
   getSectionAndTopicFromDefaultHeaderData,
-  getSectionFromPremiumHeaderData,
 } from '../../utils/data-process'
 import { processSettledResult } from '../../utils/response-processor'
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -236,7 +232,7 @@ export default function Category({
   return (
     <Layout
       head={{ title: `${categoryName}分類報導` }}
-      header={{ type: isPremium ? 'premium' : 'default', data: headerData }}
+      header={{ type: 'default', data: headerData }}
       footer={{ type: 'default' }}
     >
       <script
@@ -361,15 +357,15 @@ export async function getServerSideProps({ query, req, res }) {
 
   if (isPremium) {
     const responses = await Promise.allSettled([
-      fetchHeaderDataInPremiumPageLayout(),
+      fetchHeaderDataInDefaultPageLayout(),
       fetchPremiumPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
     ])
 
     // handle header data
-    sectionsData = processSettledResult(
+    ;[sectionsData, topicsData] = processSettledResult(
       responses[0],
-      getSectionFromPremiumHeaderData,
-      `Error occurs while getting premium header data in category page (categorySlug: ${categorySlug})`,
+      getSectionAndTopicFromDefaultHeaderData,
+      `Error occurs while getting V4 header data in premium category page (categorySlug: ${categorySlug})`,
       globalLogFields
     )
 

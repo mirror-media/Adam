@@ -1,9 +1,13 @@
+import dynamic from 'next/dynamic'
+
 import GDPRNotification from '../gdpr'
-import ShareHeader from '../header/share-header'
 import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
+import { LegacyLayoutAdapter } from '../shell/legacy-layout-adapter'
 
 import CustomHead from './custom-head'
-import Footer from './footer'
+
+const V3ShareHeader = dynamic(() => import('../header/share-header'))
+const V3Footer = dynamic(() => import('./footer'))
 
 /**
  * @typedef {Object} Header
@@ -25,6 +29,10 @@ import Footer from './footer'
  * @returns {React.ReactElement}
  */
 export default function Layout({ head, header, footer, children }) {
+  const shouldKeepV3PremiumShell =
+    header.type === 'premium' ||
+    header.type === 'premium-with-subtitle-navigator'
+
   return (
     <>
       <CustomHead
@@ -39,11 +47,27 @@ export default function Layout({ head, header, footer, children }) {
         pageSlug={head?.pageSlug}
         robotsMetaContent={head?.robotsMetaContent}
       />
-      <ShareHeader pageLayoutType={header.type} headerData={header.data} />
-      <IdleTimeoutModal />
-      {children}
-      <GDPRNotification />
-      <Footer footerType={footer.type} />
+      {shouldKeepV3PremiumShell ? (
+        <>
+          <V3ShareHeader
+            pageLayoutType={header.type}
+            headerData={header.data}
+          />
+          <IdleTimeoutModal />
+          {children}
+          <GDPRNotification />
+          <V3Footer footerType={footer.type} />
+        </>
+      ) : (
+        <LegacyLayoutAdapter
+          footer={footer}
+          globalModal={<IdleTimeoutModal />}
+          header={header}
+          privacyNotice={<GDPRNotification />}
+        >
+          {children}
+        </LegacyLayoutAdapter>
+      )}
     </>
   )
 }
