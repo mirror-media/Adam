@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
 import { Button } from '../../button'
@@ -13,15 +14,45 @@ import {
   SheetTrigger,
 } from '../../sheet'
 
+type SheetStoryArgs = ComponentProps<typeof Sheet> & {
+  closeLabel: string
+  showCloseButton: boolean
+  side: SheetSide
+}
+
 const meta = {
   title: 'UI/Sheet',
   component: Sheet,
   tags: ['autodocs'],
-} satisfies Meta<typeof Sheet>
+  argTypes: {
+    closeLabel: {
+      control: 'text',
+      description: '關閉按鈕的 accessible name，icon-only 控制項必須提供。',
+    },
+    disablePointerDismissal: {
+      control: 'boolean',
+      description: '關閉「點擊背景即關閉」的行為。',
+    },
+    modal: {
+      control: 'inline-radio',
+      description: 'trap-focus 只鎖焦點，不鎖背景捲動。',
+      options: [false, true, 'trap-focus'],
+    },
+    showCloseButton: {
+      control: 'boolean',
+    },
+    side: {
+      control: 'inline-radio',
+      description:
+        '面板進入的方向；Shell 的 mobile menu 使用 left，其他 consumers 依需求選擇。',
+      options: ['top', 'right', 'bottom', 'left'],
+    },
+  },
+} satisfies Meta<SheetStoryArgs>
 
 export default meta
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<SheetStoryArgs>
 
 function SheetExample({ side = 'right' }: { side?: SheetSide }) {
   return (
@@ -33,7 +64,8 @@ function SheetExample({ side = 'right' }: { side?: SheetSide }) {
         <SheetHeader>
           <SheetTitle>補充面板</SheetTitle>
           <SheetDescription>
-            Generic Sheet 支援四個方向；shell 使用方向仍等待 D10 決策。
+            Generic Sheet 支援四個方向；Shell 的 mobile menu 使用 left，其他
+            consumers 依需求選擇。
           </SheetDescription>
         </SheetHeader>
         <div className="px-mm-xl">面板內容</div>
@@ -46,7 +78,37 @@ function SheetExample({ side = 'right' }: { side?: SheetSide }) {
 }
 
 export const Default: Story = {
-  render: () => <SheetExample />,
+  args: {
+    closeLabel: '關閉面板',
+    disablePointerDismissal: false,
+    modal: true,
+    showCloseButton: true,
+    side: 'right',
+  },
+  render: ({ closeLabel, showCloseButton, side, ...rootProps }) => (
+    <Sheet {...rootProps}>
+      <SheetTrigger render={<Button variant="outline" />}>
+        從 {side} 開啟
+      </SheetTrigger>
+      <SheetContent
+        closeLabel={closeLabel}
+        showCloseButton={showCloseButton}
+        side={side}
+      >
+        <SheetHeader>
+          <SheetTitle>補充面板</SheetTitle>
+          <SheetDescription>
+            Generic Sheet 支援四個方向；Shell 的 mobile menu 使用 left，其他
+            consumers 依需求選擇。
+          </SheetDescription>
+        </SheetHeader>
+        <div className="px-mm-xl">面板內容</div>
+        <SheetFooter>
+          <SheetClose render={<Button variant="outline" />}>關閉</SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  ),
 }
 
 export const FourSides: Story = {

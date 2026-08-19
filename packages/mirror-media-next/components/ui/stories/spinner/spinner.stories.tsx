@@ -7,13 +7,33 @@ const meta = {
   title: 'UI/Spinner',
   component: Spinner,
   tags: ['autodocs'],
+  argTypes: {
+    'aria-label': {
+      control: 'text',
+      description: '螢幕閱讀器朗讀的載入說明；隱藏用途時改由外層提供。',
+    },
+    className: {
+      control: 'select',
+      description: '尺寸由 consumer 以 Tailwind size utility 決定。',
+      options: ['size-3', 'size-4', 'size-6', 'size-8'],
+    },
+    strokeWidth: {
+      control: { max: 4, min: 1, step: 0.25, type: 'range' },
+    },
+  },
 } satisfies Meta<typeof Spinner>
 
 export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const Default: Story = {
+  args: {
+    'aria-label': 'Loading',
+    className: 'size-4',
+    strokeWidth: 2,
+  },
+}
 
 export const Sizes: Story = {
   render: () => (

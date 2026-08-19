@@ -60,7 +60,6 @@ http://localhost:6006
 用於檢查 non-prod（非正式環境）同站 `/storybook` 發布結果。這條路由只讀取 `public/_storybook` static artifact（靜態產物），local 要查看的話需要先 build 過：
 
 ```bash
-pnpm storybook:build
 pnpm dev:storybook-route
 ```
 
@@ -73,7 +72,8 @@ http://localhost:3000/storybook
 注意事項：
 
 - `pnpm dev:storybook-route` 會用 `NEXT_PUBLIC_ENV=local` 啟動 Next.js，避免本機 `.env` 若設為 `NEXT_PUBLIC_ENV="prod"` 時 `/storybook` 依正式環境規則回 404。
-- 若尚未執行 `pnpm storybook:build`，`/storybook` 會顯示 static artifact missing（缺少靜態產物）的提示頁。
+- `pnpm dev:storybook-route` 已內含 `pnpm storybook:build`，因此每次啟動都會重建產物。若改用 `pnpm dev` 直接開 `/storybook`，看到的是上一次 build 的舊產物；新增的 story、argTypes 或 addon 不會出現。
+- 若 `public/_storybook` 不存在，`/storybook` 會顯示 static artifact missing（缺少靜態產物）的提示頁。
 - Production（正式環境）不應包含 `public/_storybook`，且 `/storybook` 必須回 404。
 
 ## Docker
@@ -193,8 +193,8 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 | -------------------------------------------------------- | --------------------------------------------------------------------------- |
 | `pages/**`                                               | Next.js route exports、GSSP、cache／redirect／404、SEO 與頁面組合           |
 | `modules/<capability>/`                                  | 能力擁有的 types、data、logic、components 與 hooks；預設保持扁平            |
-| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                 |
-| `components/common/**`                                   | 無領域、由 primitives 組成且經不相關 consumers 證明可重用的 UI／controller |
+| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                  |
+| `components/common/**`                                   | 無領域、由 primitives 組成且經不相關 consumers 證明可重用的 UI／controller  |
 | `components/shell/**`                                    | Layout、Header、Footer 等 application shell（應用外殼）                     |
 | `components/shared/**`、`components/<legacy-feature>/**` | Legacy compatibility（舊版相容）路徑；不新增 ownership，consumer 歸零後刪除 |
 | `utils/**`、`hooks/**`                                   | 真正跨能力且符合執行環境的共用工具／hooks；單一能力內容回到最近 module      |

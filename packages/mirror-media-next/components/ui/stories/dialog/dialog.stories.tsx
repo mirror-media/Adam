@@ -1,3 +1,4 @@
+import type { ComponentProps } from 'react'
 import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 
@@ -13,23 +14,53 @@ import {
   DialogTrigger,
 } from '../../dialog'
 
+type DialogStoryArgs = ComponentProps<typeof Dialog> & {
+  closeLabel: string
+  showCloseButton: boolean
+}
+
 const meta = {
   title: 'UI/Dialog',
   component: Dialog,
   tags: ['autodocs'],
-} satisfies Meta<typeof Dialog>
+  argTypes: {
+    closeLabel: {
+      control: 'text',
+      description: '關閉按鈕的 accessible name，icon-only 控制項必須提供。',
+    },
+    disablePointerDismissal: {
+      control: 'boolean',
+      description: '關閉「點擊背景即關閉」的行為。',
+    },
+    modal: {
+      control: 'inline-radio',
+      description: 'trap-focus 只鎖焦點，不鎖背景捲動。',
+      options: [false, true, 'trap-focus'],
+    },
+    showCloseButton: {
+      control: 'boolean',
+      description: '隱藏預設關閉按鈕時，內容必須自行提供 DialogClose。',
+    },
+  },
+} satisfies Meta<DialogStoryArgs>
 
 export default meta
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<DialogStoryArgs>
 
-function DefaultDialog() {
-  return (
-    <Dialog>
+export const Default: Story = {
+  args: {
+    closeLabel: '關閉對話框',
+    disablePointerDismissal: false,
+    modal: true,
+    showCloseButton: true,
+  },
+  render: ({ closeLabel, showCloseButton, ...rootProps }) => (
+    <Dialog {...rootProps}>
       <DialogTrigger render={<Button variant="outline" />}>
         開啟對話框
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={closeLabel} showCloseButton={showCloseButton}>
         <DialogHeader>
           <DialogTitle>確認操作</DialogTitle>
           <DialogDescription>
@@ -42,11 +73,7 @@ function DefaultDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
-
-export const Default: Story = {
-  render: () => <DefaultDialog />,
+  ),
 }
 
 function ControlledDialog() {

@@ -7,6 +7,15 @@ const meta = {
   title: 'UI/Label',
   component: Label,
   tags: ['autodocs'],
+  argTypes: {
+    children: {
+      control: 'text',
+    },
+    htmlFor: {
+      control: 'text',
+      description: '必須對應受控欄位的 id，否則點擊標籤不會聚焦欄位。',
+    },
+  },
 } satisfies Meta<typeof Label>
 
 export default meta

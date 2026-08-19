@@ -11,6 +11,16 @@ const meta = {
   title: 'UI/Accordion',
   component: Accordion,
   tags: ['autodocs'],
+  argTypes: {
+    disabled: {
+      control: 'boolean',
+      description: '停用整組 accordion，個別項目另有自己的 disabled。',
+    },
+    multiple: {
+      control: 'boolean',
+      description: '是否允許同時展開多個項目；展開第二個項目即可驗證。',
+    },
+  },
 } satisfies Meta<typeof Accordion>
 
 export default meta
@@ -45,8 +55,12 @@ function ExampleItems({ includeDisabled = false }) {
 }
 
 export const Single: Story = {
-  render: () => (
-    <Accordion className="max-w-xl" defaultValue={['item-1']}>
+  args: {
+    disabled: false,
+    multiple: false,
+  },
+  render: (args) => (
+    <Accordion {...args} className="max-w-xl" defaultValue={['item-1']}>
       <ExampleItems />
     </Accordion>
   ),

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"node mocks/server\" \"next dev\"",
-    "dev:storybook-route": "NEXT_PUBLIC_ENV=local concurrently \"node mocks/server\" \"next dev\"",
+    "dev:storybook-route": "NEXT_PUBLIC_ENV=local pnpm storybook:build && NEXT_PUBLIC_ENV=local concurrently \"node mocks/server\" \"next dev\"",
     "build": "pnpm build:sw && next build",
     "build:sw": "node scripts/build-sw.js",
     "storybook": "storybook dev -p 6006",
@@ -78,6 +78,7 @@
     "@graphql-typed-document-node/core": "^3.2.0",
     "@next/bundle-analyzer": "15.5.22",
     "@storybook/addon-a11y": "10.5.6",
+    "@storybook/addon-docs": "10.5.6",
     "@storybook/nextjs-vite": "10.5.6",
     "@tailwindcss/postcss": "4.3.3",
     "@types/facebook-js-sdk": "^3.3.6",
