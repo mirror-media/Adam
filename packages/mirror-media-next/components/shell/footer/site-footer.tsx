@@ -7,6 +7,7 @@ import {
   FOOTER_PROMOTION_LINKS,
   INSTAGRAM_LINK,
   LINE_LINK,
+  MESH_LINK,
 } from '@/constants'
 
 const {
@@ -32,28 +33,28 @@ const socialLinks = [
     alt: 'LINE',
     height: 20,
     href: LINE_LINK.href,
-    src: '/images-next/sns-line.png',
+    src: '/images-next/shell-footer-line.svg',
     width: 20,
   },
   {
     alt: 'Facebook',
     height: 20,
     href: FACEBOOK_LINK.href,
-    src: '/images-next/facebook_white.png',
+    src: '/images-next/shell-footer-facebook.svg',
     width: 20,
   },
   {
     alt: 'Instagram',
     height: 20,
     href: INSTAGRAM_LINK.href,
-    src: '/images-next/sns-ig.png',
+    src: '/images-next/shell-footer-instagram.svg',
     width: 20,
   },
   {
     alt: 'YouTube',
     height: 20,
     href: 'https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw?sub_confirmation=1',
-    src: '/images-next/sns-yt.png',
+    src: '/images-next/shell-footer-youtube.svg',
     width: 27,
   },
 ]
@@ -71,7 +72,7 @@ function SiteFooter() {
         <div className="flex w-full flex-col items-center justify-center gap-7 lg:flex-row lg:gap-mm-3xl">
           <nav
             aria-label="網站資訊"
-            className="grid grid-cols-2 gap-x-7 gap-y-mm-l text-mm-h6 text-mm-base-100 md:flex md:flex-wrap md:justify-center md:gap-x-7"
+            className="grid grid-cols-2 gap-x-7 gap-y-mm-l text-mm-h6 text-mm-base-100 md:flex md:flex-nowrap md:justify-center md:gap-x-7"
           >
             {promotionLinks.map((link) => (
               <NextLink
@@ -86,22 +87,39 @@ function SiteFooter() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-9 lg:gap-mm-3xl">
-            <NextLink
-              aria-label="READr"
-              className={externalLinkClass}
-              href="https://www.readr.tw/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <Image
-                alt=""
-                className="h-5 w-[50px] object-contain"
-                height={20}
-                src="/images-next/readr-colorless.png"
-                width={50}
-              />
-            </NextLink>
+          <div className="flex flex-col items-center gap-7 md:flex-row md:gap-mm-3xl">
+            <div className="flex items-center gap-9 md:gap-mm-3xl">
+              <NextLink
+                aria-label="READr"
+                className={externalLinkClass}
+                href="https://www.readr.tw/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <Image
+                  alt=""
+                  className="h-[22px] w-[76px] object-contain md:w-[75px]"
+                  height={22}
+                  src="/images-next/shell-footer-readr.svg"
+                  width={76}
+                />
+              </NextLink>
+              <NextLink
+                aria-label={MESH_LINK.title}
+                className={externalLinkClass}
+                href={MESH_LINK.href}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <Image
+                  alt=""
+                  className="h-[14px] w-9 object-contain md:h-5 md:w-[50px]"
+                  height={20}
+                  src="/images-next/shell-footer-mesh.svg"
+                  width={50}
+                />
+              </NextLink>
+            </div>
             <nav aria-label="社群媒體" className="flex items-center gap-mm-l">
               {socialLinks.map((link) => (
                 <NextLink
