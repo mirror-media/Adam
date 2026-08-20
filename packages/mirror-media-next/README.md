@@ -203,6 +203,14 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 `components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。
 新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
 
+`components/shell/` 有三種組合入口：
+
+- `PageShell` 是新頁面的標準入口，固定組合 `SiteHeader`、`SiteFooter` 與 `GDPRNotification`，並預設加入 `IdleTimeoutModal`。只有已確認不使用 Idle modal 的頁面才傳入 `withIdleTimeout={false}`。
+- `ApplicationShell` 是較低階的結構入口，只固定 slot order；標準組合無法涵蓋的特殊頁面才直接使用。
+- `LegacyLayoutAdapter` 只服務仍由 `Layout`／`LayoutFull` 擁有的既有頁面，保留原本的裸 DOM flow。遷移 route body 前不得只為統一寫法改用 `PageShell`。
+
+`PageShell` 與 `ApplicationShell` 都不在 render path 自行取得 Header data；Pages Router route 的 server data boundary 必須呼叫 `fetchShellHeaderData()`，再以 serializable props 傳入。Flash news 維持 opt-in，active navigation 仍由 route 提供。
+
 ### Component placement guide（元件放置指南）
 
 React component（React 元件）是呈現單位，不是 ownership 類別；`components/` 與 `modules/` 都可以包含 `.tsx`。本專案的 `components/` 只承接跨領域呈現責任，`modules/` 則承接會隨特定 business concept、use case 或 lifecycle（業務概念、使用案例或生命週期）共同變更的完整能力。Figma component（設計元件）、檔案種類、外觀相似或 consumer 數量都不能單獨決定放置位置。

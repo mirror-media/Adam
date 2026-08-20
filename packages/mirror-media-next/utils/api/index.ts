@@ -16,6 +16,7 @@ import {
 } from '../../config/index.mjs'
 import type { AnnouncementScopeValue } from '../../constants/announcement'
 import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
+import { processSettledResult } from '../response-processor'
 
 export type Category = {
   id: string
@@ -106,6 +107,13 @@ export type ShellSectionPost = {
 }
 
 export type ShellSectionPosts = Record<string, ShellSectionPost[]>
+
+export type ShellHeaderData = {
+  flashNewsData: ShellFlashNews[]
+  navigationData: HeadersDataSection[]
+  sectionPostsData: ShellSectionPosts
+  topicsData: Topics
+}
 
 export type AnnouncementQueryResult = ApolloQueryResult<FetchAnnouncementsQuery>
 
@@ -291,6 +299,61 @@ const fetchShellTopicsData = async (): Promise<Topics> => {
   }
 }
 
+type FetchShellHeaderDataOptions = {
+  includeFlashNews?: boolean
+  logFields?: Record<string, unknown>
+}
+
+/**
+ * Collects the serializable data consumed by the standard page shell.
+ * Flash news remains opt-in because existing routes do not all own that variant.
+ */
+const fetchShellHeaderData = async ({
+  includeFlashNews = false,
+  logFields,
+}: FetchShellHeaderDataOptions = {}): Promise<ShellHeaderData> => {
+  const [
+    navigationResponse,
+    topicsResponse,
+    sectionPostsResponse,
+    flashNewsResponse,
+  ] = await Promise.allSettled([
+    fetchShellNavigationData(),
+    fetchShellTopicsData(),
+    fetchShellSectionPosts(),
+    includeFlashNews
+      ? fetchShellFlashNews()
+      : Promise.resolve<ShellFlashNews[]>([]),
+  ])
+
+  return {
+    flashNewsData: processSettledResult(
+      flashNewsResponse,
+      (value) => value ?? [],
+      'Error occurs while getting shell flash news',
+      logFields
+    ),
+    navigationData: processSettledResult(
+      navigationResponse,
+      (value) => value ?? [],
+      'Error occurs while getting shell navigation data',
+      logFields
+    ),
+    sectionPostsData: processSettledResult(
+      sectionPostsResponse,
+      (value) => value ?? {},
+      'Error occurs while getting shell section posts',
+      logFields
+    ),
+    topicsData: processSettledResult(
+      topicsResponse,
+      (value) => value ?? [],
+      'Error occurs while getting shell topics data',
+      logFields
+    ),
+  }
+}
+
 const fetchHeaderDataInPremiumPageLayout = async () => {
   let sectionsData: HeadersData = []
   try {
@@ -328,6 +391,7 @@ export {
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
   fetchShellFlashNews,
+  fetchShellHeaderData,
   fetchShellNavigationData,
   fetchShellSectionPosts,
   fetchShellTopicsData,

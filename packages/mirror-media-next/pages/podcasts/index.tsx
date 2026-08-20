@@ -1,54 +1,27 @@
 import { useState } from 'react'
 import type { GetServerSideProps } from 'next'
 
-import GDPRNotification from '@/components/gdpr'
-import IdleTimeoutModal from '@/components/idle-modal/idle-timeout-modal'
 import AudioPlayer from '@/components/podcast/audio-player'
 import Dropdown from '@/components/podcast/author-select-dropdown'
 import PodcastList from '@/components/podcast/podcast-list'
 import CustomHead from '@/components/shared/custom-head'
-import { ApplicationShell } from '@/components/shell/application-shell'
-import { SiteFooter } from '@/components/shell/footer/site-footer'
-import { SiteHeader } from '@/components/shell/header/site-header'
+import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { fetchPodcastList } from '@/modules/podcast/podcast-data'
 import type { Podcast } from '@/modules/podcast/podcast-types'
 import { getLogTraceObject } from '@/utils'
-import type {
-  HeadersDataSection,
-  ShellFlashNews,
-  ShellSectionPosts,
-  Topics,
-} from '@/utils/api'
-import {
-  fetchShellFlashNews,
-  fetchShellNavigationData,
-  fetchShellSectionPosts,
-  fetchShellTopicsData,
-} from '@/utils/api'
+import type { ShellHeaderData } from '@/utils/api'
+import { fetchShellHeaderData } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
 import { processSettledResult } from '@/utils/response-processor'
 
 type PodcastPageProps = {
-  headerData: {
-    flashNewsData: ShellFlashNews[]
-    navigationData: HeadersDataSection[]
-    sectionPostsData: ShellSectionPosts
-    topicsData: Topics
-  }
+  headerData: ShellHeaderData
   podcastListData: Podcast[]
 }
 
 type PodcastResponse = Awaited<ReturnType<typeof fetchPodcastList>>
-
-type NavigationResponse = Awaited<ReturnType<typeof fetchShellNavigationData>>
-
-type TopicsResponse = Awaited<ReturnType<typeof fetchShellTopicsData>>
-
-type FlashNewsResponse = Awaited<ReturnType<typeof fetchShellFlashNews>>
-
-type SectionPostsResponse = Awaited<ReturnType<typeof fetchShellSectionPosts>>
 
 const ALL_AUTHORS = '全部'
 
@@ -101,19 +74,7 @@ export default function PodcastPage({
   return (
     <>
       <CustomHead title="Podcasts" />
-      <ApplicationShell
-        footer={<SiteFooter />}
-        globalModal={<IdleTimeoutModal />}
-        header={
-          <SiteHeader
-            flashNewsData={headerData.flashNewsData}
-            navigationData={headerData.navigationData}
-            sectionPostsData={headerData.sectionPostsData}
-            topicsData={headerData.topicsData}
-          />
-        }
-        privacyNotice={<GDPRNotification />}
-      >
+      <PageShell headerData={headerData}>
         <main className="mx-auto w-full legacy-md:w-[516px] legacy-xl:w-[1024px]">
           <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
             <Typography
@@ -139,7 +100,7 @@ export default function PodcastPage({
             <AudioPlayer listeningPodcast={listeningPodcast} />
           )}
         </main>
-      </ApplicationShell>
+      </PageShell>
     </>
   )
 }
@@ -163,56 +124,13 @@ export const getServerSideProps = (async ({ req, res }) => {
   const globalLogFields: Record<string, unknown> = {
     ...getLogTraceObject(req),
   }
-  const [
-    topicsResponse,
-    navigationResponse,
-    flashNewsResponse,
-    sectionPostsResponse,
-    podcastResponse,
-  ] = await Promise.allSettled([
-    fetchShellTopicsData(),
-    fetchShellNavigationData(),
-    fetchShellFlashNews(),
-    fetchShellSectionPosts(),
-    fetchPodcastList(),
+  const [headerData, [podcastResponse]] = await Promise.all([
+    fetchShellHeaderData({
+      includeFlashNews: true,
+      logFields: globalLogFields,
+    }),
+    Promise.allSettled([fetchPodcastList()]),
   ])
-
-  const topicsData = processSettledResult<TopicsResponse, Topics>(
-    topicsResponse,
-    (value) => value ?? [],
-    'Error occurs while getting shell topics data in podcasts page',
-    globalLogFields
-  )
-
-  const navigationData = processSettledResult<
-    NavigationResponse,
-    HeadersDataSection[]
-  >(
-    navigationResponse,
-    (value) => value ?? [],
-    'Error occurs while getting shell navigation data in podcasts page',
-    globalLogFields
-  )
-
-  const flashNewsData = processSettledResult<
-    FlashNewsResponse,
-    ShellFlashNews[]
-  >(
-    flashNewsResponse,
-    (value) => value ?? [],
-    'Error occurs while getting shell flash news in podcasts page',
-    globalLogFields
-  )
-
-  const sectionPostsData = processSettledResult<
-    SectionPostsResponse,
-    ShellSectionPosts
-  >(
-    sectionPostsResponse,
-    (value) => value ?? {},
-    'Error occurs while getting shell section posts in podcasts page',
-    globalLogFields
-  )
 
   const podcastListData = processSettledResult<PodcastResponse, Podcast[]>(
     podcastResponse,
@@ -227,12 +145,7 @@ export const getServerSideProps = (async ({ req, res }) => {
 
   return {
     props: {
-      headerData: {
-        flashNewsData,
-        navigationData,
-        sectionPostsData,
-        topicsData,
-      },
+      headerData,
       podcastListData,
     },
   }
