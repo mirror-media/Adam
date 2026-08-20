@@ -232,7 +232,10 @@ export default function Category({
   return (
     <Layout
       head={{ title: `${categoryName}分類報導` }}
-      header={{ type: 'default', data: headerData }}
+      header={{
+        type: 'default',
+        data: { ...headerData, activeNavigationSlug: sectionSlug },
+      }}
       footer={{ type: 'default' }}
     >
       <script

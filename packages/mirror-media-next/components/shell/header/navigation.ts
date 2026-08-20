@@ -36,7 +36,7 @@ function getCategoryHref(slug: string) {
   // be derived as /category/<slug>. Mirror 3.0's legacy header already treated
   // daily_forum as a route exception, and the current dev and prod payloads
   // still contain it: its owned route is /externals/dailycolumn, while the
-  // derived /category/daily_forum is a 404. The V2 shell preserves that behavior
+  // derived /category/daily_forum is a 404. The V4 shell preserves that behavior
   // to avoid a migration regression. Remove this exception if the header
   // contract later supplies canonical hrefs.
   if (slug === 'daily_forum') {
@@ -112,24 +112,27 @@ function createShellNavigation(
   sections: HeadersDataSection[],
   sectionPosts: ShellSectionPosts = {}
 ): ShellNavigationItem[] {
-  return sections.map((section) => ({
-    categories: section.categories.map((category) => ({
-      href: getCategoryHref(category.slug),
-      name: category.name,
-      slug: category.slug,
-    })),
-    href: `/section/${section.slug}`,
-    name: section.name,
-    // The feed's post_url points at the environment that produced the file, so
-    // the href is rebuilt here to keep the reader in this one.
-    posts: (sectionPosts[section.slug] ?? []).slice(0, 2).map((post) => ({
-      heroImage: post.heroImage ?? FALLBACK_HERO_IMAGE,
-      href: `/story/${post.slug}`,
-      publishedDate: post.publishedDate,
-      title: post.title,
-    })),
-    slug: section.slug,
-  }))
+  // Both data paths converge here, so order is applied once.
+  return [...sections]
+    .sort((a, b) => a.order - b.order)
+    .map((section) => ({
+      categories: section.categories.map((category) => ({
+        href: getCategoryHref(category.slug),
+        name: category.name,
+        slug: category.slug,
+      })),
+      href: `/section/${section.slug}`,
+      name: section.name,
+      // The feed's post_url points at the environment that produced the file, so
+      // the href is rebuilt here to keep the reader in this one.
+      posts: (sectionPosts[section.slug] ?? []).slice(0, 2).map((post) => ({
+        heroImage: post.heroImage ?? FALLBACK_HERO_IMAGE,
+        href: `/story/${post.slug}`,
+        publishedDate: post.publishedDate,
+        title: post.title,
+      })),
+      slug: section.slug,
+    }))
 }
 
 export { createShellNavigation, shellPartnerLinks, shellUtilityLinks }

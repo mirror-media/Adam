@@ -2,16 +2,6 @@ import { Menu as DropdownMenuPrimitive } from '@base-ui/react/menu'
 
 import { cn } from '@/components/cn'
 
-/*
- * z-index: the legacy styled-components scale in constants/index.ts goes up to
- * 10000 (Z_INDEX.top), so shadcn's default z-50/z-51 would be covered by any
- * legacy floating element (PromoteTopic at 500, headers at 1000). The values
- * below mirror Z_INDEX.shellOverlay/shellOverlayContent: high enough to clear
- * the shell header and cover headers, still below Z_INDEX.top so global
- * dialogs such as IdleTimeoutModal stay on top.
- * Update both places together, or replace them with a shared token scale.
- */
-
 function DropdownMenu(props: DropdownMenuPrimitive.Root.Props) {
   return <DropdownMenuPrimitive.Root {...props} />
 }
@@ -36,7 +26,7 @@ function DropdownMenuPositioner({
 }: DropdownMenuPrimitive.Positioner.Props) {
   return (
     <DropdownMenuPrimitive.Positioner
-      className={cn('z-[2600] outline-none', className)}
+      className={cn('z-(--mm-z-shell-popover) outline-none', className)}
       data-slot="dropdown-menu-positioner"
       sideOffset={sideOffset}
       {...props}

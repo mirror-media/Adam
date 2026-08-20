@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import NextLink from 'next/link'
@@ -57,23 +57,46 @@ function SiteHeader({
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
   const navigationRegionRef = useRef<HTMLDivElement | null>(null)
+  const flashNewsRowRef = useRef<HTMLDivElement | null>(null)
+  const stickyOffsetsRef = useRef({ compact: 0, desktop: 0 })
+  const logoRowRef = useRef<HTMLDivElement | null>(null)
   const navigation = createShellNavigation(navigationData, sectionPostsData)
   const openFlyoutItem = navigation.find(
     (item) => item.slug === openFlyoutSlug && item.categories.length > 0
   )
   const visibleTopics = topicsData.slice(0, 7)
   const flashNews = flashNewsData ?? []
+  const hasFlashNewsRow = flashNews.length > 0 || visibleTopics.length > 0
+
+  // Measured while nothing is fixed or hidden yet: reading the live values once
+  // the header sticks would feed that state back into the threshold producing it.
+  useLayoutEffect(() => {
+    const flashNewsRowHeight = flashNewsRowRef.current?.offsetHeight ?? 0
+    const logoRowHeight = logoRowRef.current?.offsetHeight ?? 0
+
+    stickyOffsetsRef.current = {
+      compact: flashNewsRowHeight,
+      desktop: flashNewsRowHeight + logoRowHeight,
+    }
+  }, [hasFlashNewsRow])
 
   useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1024px)')
+
     function updateStickyState() {
-      // The flash news row (48) plus the logo row (60): the point where both
-      // have scrolled away. Keep in step with those two heights.
-      setShowStickyControls(window.scrollY >= 108)
+      const offsets = stickyOffsetsRef.current
+      setShowStickyControls(
+        window.scrollY >= (desktop.matches ? offsets.desktop : offsets.compact)
+      )
     }
 
     updateStickyState()
     window.addEventListener('scroll', updateStickyState, { passive: true })
-    return () => window.removeEventListener('scroll', updateStickyState)
+    desktop.addEventListener('change', updateStickyState)
+    return () => {
+      window.removeEventListener('scroll', updateStickyState)
+      desktop.removeEventListener('change', updateStickyState)
+    }
   }, [])
 
   useEffect(() => {
@@ -141,16 +164,15 @@ function SiteHeader({
 
   return (
     <header
-      className="relative z-[1000] bg-mm-neutral-0"
+      className="relative z-(--mm-z-shell-header) bg-mm-neutral-0"
       data-slot="site-header"
     >
       {(flashNews.length > 0 || visibleTopics.length > 0) && (
         <div
-          className={cn(
-            'flex h-12 items-center bg-mm-base-500 px-mm-2xl text-mm-error-300 lg:px-mm-2xl',
-            // Compact shell drops the flash news row once the header sticks.
-            showStickyControls && 'hidden lg:flex'
-          )}
+          // Must stay in the flow: hiding it here takes its height out of the
+          // document and the page jumps under the reader.
+          className="flex h-12 items-center bg-mm-base-500 px-mm-2xl text-mm-error-300 lg:px-mm-2xl"
+          ref={flashNewsRowRef}
         >
           <div className="mx-auto flex w-full max-w-310 min-w-0 items-center justify-between gap-mm-xl">
             {flashNews.length > 0 ? (
@@ -181,15 +203,12 @@ function SiteHeader({
           // Compact shell (<lg) sticks logo row + category row together;
           // desktop keeps only the category row fixed, see below.
           showStickyControls &&
-            'fixed inset-x-0 top-0 z-[1000] shadow-sm lg:static lg:z-auto lg:shadow-none'
+            'fixed inset-x-0 top-0 z-(--mm-z-shell-header) shadow-sm lg:static lg:z-auto lg:shadow-none'
         )}
       >
         <div
-          className={cn(
-            'mx-auto flex h-15 w-full max-w-7xl items-center justify-between px-mm-2xl',
-            // Desktop sticky is a single row, so the logo row scrolls away.
-            showStickyControls && 'lg:hidden'
-          )}
+          className="mx-auto flex h-15 w-full max-w-7xl items-center justify-between px-mm-2xl"
+          ref={logoRowRef}
         >
           <div className="flex items-center gap-mm-4xl">
             <NextLink
@@ -268,7 +287,7 @@ function SiteHeader({
 
         <div
           className={cn(
-            'relative z-[1000] flex h-12 w-full items-center border-b border-mm-neutral-200 bg-mm-neutral-0',
+            'relative z-(--mm-z-shell-header) flex h-12 w-full items-center border-b border-mm-neutral-200 bg-mm-neutral-0',
             showStickyControls && 'lg:fixed lg:inset-x-0 lg:top-0'
           )}
           onMouseLeave={() => {
@@ -352,7 +371,7 @@ function SiteHeader({
       {showStickyControls && (
         <div
           aria-hidden="true"
-          // Compact shell fixes two rows (60 + 48); desktop fixes only the 48px row.
+          // Must equal what left the flow: two fixed rows on compact, one on desktop.
           className="h-27 lg:h-12"
         />
       )}

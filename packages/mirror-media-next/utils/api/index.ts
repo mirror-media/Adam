@@ -226,11 +226,10 @@ const fetchShellNavigationData = async (): Promise<HeadersDataSection[]> => {
       ? response.data.headers
       : []
 
-    return headers
-      .filter(
-        (header): header is HeadersDataSection => header.type === 'section'
-      )
-      .sort((a, b) => a.order - b.order)
+    // Order is applied by createShellNavigation, not here.
+    return headers.filter(
+      (header): header is HeadersDataSection => header.type === 'section'
+    )
   } catch (err) {
     return errorLogger(err)
   }

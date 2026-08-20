@@ -53,7 +53,7 @@ function formatPostDate(isoDate: string) {
  * contents stay in the same column as the rest of the header.
  *
  * Article data comes from the menu sections static file, joined to the
- * navigation by `postsSlug` in ./navigation.
+ * navigation by section slug in ./navigation.
  */
 function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
   const posts = item.posts
@@ -83,7 +83,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
 
   return (
     <div
-      className="absolute inset-x-0 top-full z-[1000] hidden bg-mm-neutral-800 text-mm-neutral-0 lg:block"
+      className="absolute inset-x-0 top-full z-(--mm-z-shell-header) hidden bg-mm-neutral-800 text-mm-neutral-0 lg:block"
       data-slot="navigation-flyout"
       id="site-header-navigation-flyout"
       ref={panelRef}

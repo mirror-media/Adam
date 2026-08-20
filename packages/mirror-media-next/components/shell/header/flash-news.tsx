@@ -69,11 +69,13 @@ function FlashNews({ items }: FlashNewsProps) {
     return <span aria-hidden="true" />
   }
 
+  const faceClassName =
+    'absolute inset-0 truncate rounded-mm-xs leading-8 backface-hidden outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400'
+
+  // One link per face: a single link around the cube would still point at the
+  // item rotating away once the reader can see the one rotating in.
   return (
-    <NextLink
-      className="flex min-w-0 flex-1 items-center rounded-mm-xs font-mm-body text-mm-body-m outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
-      href={`/story/${current.slug}`}
-    >
+    <span className="flex min-w-0 flex-1 items-center font-mm-body text-mm-body-m">
       <strong className="shrink-0 font-mm-sans">快訊｜</strong>
       <span
         className="block min-w-0 flex-1 [perspective:400px]"
@@ -89,22 +91,25 @@ function FlashNews({ items }: FlashNewsProps) {
             transform: `translateZ(-${HALF}px) rotateX(${turning ? 90 : 0}deg)`,
           }}
         >
-          <span
-            className="absolute inset-0 truncate leading-8 backface-hidden"
+          <NextLink
+            className={faceClassName}
+            href={`/story/${current.slug}`}
             style={{ transform: `translateZ(${HALF}px)` }}
           >
             {truncate(current.title)}
-          </span>
-          <span
+          </NextLink>
+          <NextLink
             aria-hidden="true"
-            className="absolute inset-0 truncate leading-8 backface-hidden"
+            className={faceClassName}
+            href={`/story/${incoming.slug}`}
             style={{ transform: `rotateX(-90deg) translateZ(${HALF}px)` }}
+            tabIndex={-1}
           >
             {truncate(incoming.title)}
-          </span>
+          </NextLink>
         </span>
       </span>
-    </NextLink>
+    </span>
   )
 }
 

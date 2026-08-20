@@ -5,16 +5,6 @@ import { XIcon } from 'lucide-react'
 import { cn } from '@/components/cn'
 import { Button } from '@/components/ui/button'
 
-/*
- * z-index: the legacy styled-components scale in constants/index.ts goes up to
- * 10000 (Z_INDEX.top), so shadcn's default z-50/z-51 would be covered by any
- * legacy floating element (PromoteTopic at 500, headers at 1000). The values
- * below mirror Z_INDEX.shellOverlay/shellOverlayContent: high enough to clear
- * the shell header and cover headers, still below Z_INDEX.top so global
- * dialogs such as IdleTimeoutModal stay on top.
- * Update both places together, or replace them with a shared token scale.
- */
-
 function Dialog(props: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
@@ -38,7 +28,7 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Backdrop
       className={cn(
-        'fixed inset-0 isolate z-[2500] bg-mm-neutral-900/40 supports-backdrop-filter:backdrop-blur-xs',
+        'fixed inset-0 isolate z-(--mm-z-shell-overlay) bg-mm-neutral-900/40 supports-backdrop-filter:backdrop-blur-xs',
         className
       )}
       data-slot="dialog-overlay"
@@ -64,7 +54,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         className={cn(
-          'fixed top-1/2 left-1/2 z-[2501] grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-mm-xl overflow-y-auto rounded-mm-l border border-mm-neutral-300 bg-mm-neutral-0 p-mm-xl font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 focus-visible:outline-solid sm:max-w-120',
+          'fixed top-1/2 left-1/2 z-(--mm-z-shell-overlay-content) grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-mm-xl overflow-y-auto rounded-mm-l border border-mm-neutral-300 bg-mm-neutral-0 p-mm-xl font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 focus-visible:outline-solid sm:max-w-120',
           className
         )}
         data-slot="dialog-content"

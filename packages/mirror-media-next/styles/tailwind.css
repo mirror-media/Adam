@@ -19,10 +19,12 @@
   --breakpoint-legacy-xl: 1200px;
   --breakpoint-legacy-xxl: 1440px;
 
-  --font-mm-sans: 'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC',
-    'Microsoft JhengHei', sans-serif;
-  --font-mm-body: 'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC',
-    'Microsoft JhengHei', sans-serif;
+  --font-mm-sans:
+    'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC', 'Microsoft JhengHei',
+    sans-serif;
+  --font-mm-body:
+    'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei',
+    sans-serif;
 
   --color-mm-neutral-900: #0b0b0b;
   --color-mm-neutral-800: #131313;
@@ -134,6 +136,17 @@
   --text-mm-caption-s--line-height: 1.5;
   --text-mm-caption-s--letter-spacing: 0;
   --text-mm-caption-s--font-weight: 500;
+
+  /*
+   * V4 shell stacking order, consumed as z-(--mm-z-*). They clear the legacy
+   * styled-components scale in constants/index.ts, where shadcn's default
+   * z-50/z-51 would sit under PromoteTopic (500) and headers (1000), and stay
+   * under Z_INDEX.top (10000) so global dialogs keep winning.
+   */
+  --mm-z-shell-header: 1000;
+  --mm-z-shell-overlay: 2500;
+  --mm-z-shell-overlay-content: 2501;
+  --mm-z-shell-popover: 2600;
 }
 
 @layer theme {
@@ -161,14 +174,14 @@
  * They are preserved so implementation matches the current design file.
  */
 
-@source "../pages";
-@source "../components";
-@source "../hooks";
-@source "../context";
-@source "../store";
-@source "../lib";
-@source "../constants";
+@source '../pages';
+@source '../components';
+@source '../hooks';
+@source '../context';
+@source '../store';
+@source '../lib';
+@source '../constants';
 
-@source not "../pages/story/amp";
-@source not "../pages/external/amp";
-@source not "../components/amp";
+@source not '../pages/story/amp';
+@source not '../pages/external/amp';
+@source not '../components/amp';
