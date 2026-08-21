@@ -59,3 +59,13 @@ declare module '@mirrormedia/newebpay-node' {
     getEncryptedFormPostData(data: unknown): Promise<unknown>
   }
 }
+
+declare module '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia' {
+  import type { Draft } from '@/type/draft-js'
+
+  const MirrorMedia: {
+    hasContentInRawContentBlock: (content?: Draft | null) => boolean
+  }
+
+  export default MirrorMedia
+}
