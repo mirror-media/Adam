@@ -53,6 +53,8 @@ let URL_STATIC_PODCAST_LIST = ''
 let DONATION_PAGE_URL = ''
 let GA_MEASUREMENT_ID = ''
 let GTM_ID = ''
+let GTM_AUTH = ''
+let GTM_PREVIEW = ''
 let URL_STATIC_POPULAR_NEWS = ''
 let URL_STATIC_404_POPULAR_NEWS = ''
 let NEWEBPAY_PAPERMAG_API_URL = ''
@@ -128,6 +130,8 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = ''
+    GTM_PREVIEW = ''
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
 
     GPT_MODE = 'prod'
@@ -197,7 +201,9 @@ switch (ENV) {
     TEST_GPT_AD_FEATURE_TOGGLE = 'off'
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
-    GTM_ID = 'GTM-KVDZ27K'
+    GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = 'dP0ngxsSIQu1WL3StB9JxA'
+    GTM_PREVIEW = 'env-568'
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     GPT_MODE = 'prod'
 
@@ -261,7 +267,9 @@ switch (ENV) {
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
-    GTM_ID = 'GTM-PBNLSMX'
+    GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = 'xyFHWcr3RoNXEgOn9JWPFA'
+    GTM_PREVIEW = 'env-567'
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
@@ -333,7 +341,9 @@ switch (ENV) {
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
-    GTM_ID = 'GTM-PBNLSMX'
+    GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = 'xyFHWcr3RoNXEgOn9JWPFA'
+    GTM_PREVIEW = 'env-567'
     GPT_MODE = 'dev'
     FIREBASE_AUTH_DOMAIN = 'mirrormediaapptest.firebaseapp.com'
     ACTION_CODE_SETTING = {
@@ -377,7 +387,9 @@ export {
   GOOGLE_SHEETS_CLIENT_ID,
   GOOGLE_SHEETS_PRIVATE_KEY,
   GPT_MODE,
+  GTM_AUTH,
   GTM_ID,
+  GTM_PREVIEW,
   IS_PREVIEW_MODE,
   LOGIN_PAGE_FEATURE_TOGGLE,
   MISO_API_BASE_URL,

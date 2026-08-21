@@ -20,6 +20,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
+import { buildSingleCatDataLayer } from '../../utils/gtm/build-data-layer'
 import { processSettledResult } from '../../utils/response-processor'
 
 const TagContainer = styled.main`
@@ -248,6 +249,7 @@ export async function getServerSideProps({ query, req, res }) {
     posts,
     tag,
     headerData: { sectionsData, topicsData },
+    dataLayer: buildSingleCatDataLayer(tag.name || ''),
   }
 
   return { props }

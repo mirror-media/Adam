@@ -6,12 +6,12 @@ import { getLogTraceObject } from '../../utils'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { buildSearchDataLayer } from '../../utils/gtm/build-data-layer'
 import { processSettledResult } from '../../utils/response-processor'
 const MisoSearch = dynamic(
   () => import('../../components/search/miso-search'),
   { ssr: false }
 )
-import { useEffect } from 'react'
 
 /**
  * @typedef {Object} SearchResult
@@ -29,25 +29,8 @@ import { useEffect } from 'react'
  * @returns {React.ReactElement}
  */
 
-export default function Search({ searchResult, headerData, testGroup }) {
+export default function Search({ searchResult, headerData }) {
   const searchTerms = searchResult?.searchTerms ?? ''
-
-  // mounted 時寫入 GTM 變數層中
-  useEffect(() => {
-    const tagManagerArgs = {
-      dataLayer: {
-        event: 'pageview',
-        page: {
-          title: document.title,
-          url: window.location.pathname,
-          SearchResultPageVariable: testGroup,
-        },
-      },
-    }
-    import('react-gtm-module').then(({ default: TagManager }) => {
-      TagManager.dataLayer(tagManagerArgs)
-    })
-  }, [testGroup])
 
   return (
     <Layout
@@ -96,6 +79,7 @@ export async function getServerSideProps({ req, res, params }) {
   const props = {
     searchResult: { searchTerms, items: searchData },
     headerData: { sectionsData, topicsData },
+    dataLayer: buildSearchDataLayer(searchTerms),
   }
 
   return { props }

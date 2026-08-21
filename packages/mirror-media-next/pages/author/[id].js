@@ -23,6 +23,7 @@ import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
 import { getLogTraceObject } from '../../utils'
+import { buildSingleCatDataLayer } from '../../utils/gtm/build-data-layer'
 import { processSettledResult } from '../../utils/response-processor'
 
 const AuthorContainer = styled.main`
@@ -234,6 +235,7 @@ export async function getServerSideProps({ query, req, res }) {
     posts,
     author,
     headerData: { sectionsData, topicsData },
+    dataLayer: buildSingleCatDataLayer(author.name || ''),
   }
 
   return { props }

@@ -25,6 +25,7 @@ import {
   getPostsAndPostscountFromGqlData,
   getSectionAndTopicFromDefaultHeaderData,
 } from '../../utils/data-process'
+import { buildSingleCatDataLayer } from '../../utils/gtm/build-data-layer'
 import { processSettledResult } from '../../utils/response-processor'
 
 /** @typedef {import('../../utils/api').postsInColumnSection} PostsInColumnSection */
@@ -349,6 +350,7 @@ export async function getServerSideProps({ req, res }) {
     headerData: { sectionsData, topicsData },
     filterPostIds,
     gqlPostsCount,
+    dataLayer: buildSingleCatDataLayer(section.name || ''),
   }
 
   return { props }
