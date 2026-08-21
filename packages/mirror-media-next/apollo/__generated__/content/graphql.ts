@@ -566,54 +566,51 @@ export type VideoWhereInput = {
   urlOriginal?: StringFilter | null | undefined;
 };
 
-export type AiTagFragment = { id: string, name: string | null, slug: string | null } & { ' $fragmentName'?: 'AiTagFragment' };
+export type AiTagFragment = { id: string, name: string | null, slug: string | null };
 
-export type CategoryFragment = { id: string, name: string | null, slug: string | null, state: string | null } & { ' $fragmentName'?: 'CategoryFragment' };
+export type CategoryFragment = { id: string, name: string | null, slug: string | null, state: string | null };
 
-export type CategoryWithSectionFragment = { id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } }> | null } & { ' $fragmentName'?: 'CategoryWithSectionFragment' };
+export type CategoryWithSectionFragment = { id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null };
 
-export type ContactFragment = { id: string, name: string | null } & { ' $fragmentName'?: 'ContactFragment' };
+export type ContactFragment = { id: string, name: string | null };
 
-export type ListingExternalFragment = { id: string, slug: string | null, title: string | null, thumb: string | null, brief: string | null, publishedDate: string | null, partner: { ' $fragmentRefs'?: { 'PartnerFragment': PartnerFragment } } | null } & { ' $fragmentName'?: 'ListingExternalFragment' };
+export type ListingExternalFragment = { id: string, slug: string | null, title: string | null, thumb: string | null, brief: string | null, publishedDate: string | null, partner: { id: string, slug: string | null, name: string | null, showOnIndex: boolean | null } | null };
 
-export type ExternalFragment = { id: string, slug: string | null, title: string | null, thumb: string | null, brief: string | null, content: string | null, publishedDate: string | null, extend_byline: string | null, thumbCaption: string | null, updatedAt: string | null, partner: (
-    { showThumb: boolean | null, showBrief: boolean | null }
-    & { ' $fragmentRefs'?: { 'PartnerFragment': PartnerFragment } }
-  ) | null, relateds: Array<{ ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } }> | null, tags: Array<{ ' $fragmentRefs'?: { 'TagFragment': TagFragment } }> | null, tags_algo: Array<{ ' $fragmentRefs'?: { 'AiTagFragment': AiTagFragment } }> | null } & { ' $fragmentName'?: 'ExternalFragment' };
+export type ExternalFragment = { id: string, slug: string | null, title: string | null, thumb: string | null, brief: string | null, content: string | null, publishedDate: string | null, extend_byline: string | null, thumbCaption: string | null, updatedAt: string | null, partner: { showThumb: boolean | null, showBrief: boolean | null, id: string, slug: string | null, name: string | null, showOnIndex: boolean | null } | null, relateds: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null }> | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null, tags_algo: Array<{ id: string, name: string | null, slug: string | null }> | null };
 
-export type MagazineFragment = { id: string, slug: string | null, title: string | null, urlOriginal: string | null, type: string | null, state: string | null, publishedDate: string | null, createdAt: string | null, updatedAt: string | null, coverPhoto: { resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null } & { ' $fragmentName'?: 'MagazineFragment' };
+export type MagazineFragment = { id: string, slug: string | null, title: string | null, urlOriginal: string | null, type: string | null, state: string | null, publishedDate: string | null, createdAt: string | null, updatedAt: string | null, coverPhoto: { resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null };
 
-export type PartnerFragment = { id: string, slug: string | null, name: string | null, showOnIndex: boolean | null } & { ' $fragmentName'?: 'PartnerFragment' };
+export type PartnerFragment = { id: string, slug: string | null, name: string | null, showOnIndex: boolean | null };
 
-export type HeroImageFragment = { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } & { ' $fragmentName'?: 'HeroImageFragment' };
+export type HeroImageFragment = { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null };
 
-export type RelatedPostHeroImageFragment = { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } & { ' $fragmentName'?: 'RelatedPostHeroImageFragment' };
+export type RelatedPostHeroImageFragment = { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null };
 
-export type SlideshowImageFragment = { id: string, name: string | null, topicKeywords: string | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } & { ' $fragmentName'?: 'SlideshowImageFragment' };
+export type SlideshowImageFragment = { id: string, name: string | null, topicKeywords: string | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null };
 
-export type ListingPostFragment = { id: string, slug: string | null, title: string | null, brief: unknown, publishedDate: string | null, state: string | null, isFeatured: boolean | null, sections: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } }> | null, categories: Array<{ ' $fragmentRefs'?: { 'CategoryFragment': CategoryFragment } }> | null, heroImage: { ' $fragmentRefs'?: { 'HeroImageFragment': HeroImageFragment } } | null } & { ' $fragmentName'?: 'ListingPostFragment' };
+export type ListingPostFragment = { id: string, slug: string | null, title: string | null, brief: unknown, publishedDate: string | null, state: string | null, isFeatured: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null };
 
-export type AsideListingPostFragment = { id: string, slug: string | null, title: string | null, sections: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } }> | null, sectionsInInputOrder: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } } | null> | null, heroImage: { ' $fragmentRefs'?: { 'HeroImageFragment': HeroImageFragment } } | null } & { ' $fragmentName'?: 'AsideListingPostFragment' };
+export type AsideListingPostFragment = { id: string, slug: string | null, title: string | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sectionsInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null } | null> | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null };
 
-export type TopicPostFragment = { id: string, slug: string | null, title: string | null, updatedAt: string | null, publishedDate: string | null, brief: unknown, categories: Array<{ ' $fragmentRefs'?: { 'CategoryFragment': CategoryFragment } }> | null, sections: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } }> | null, writers: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, writersInInputOrder: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } } | null> | null, heroImage: { ' $fragmentRefs'?: { 'HeroImageFragment': HeroImageFragment } } | null, tags: Array<{ ' $fragmentRefs'?: { 'TagFragment': TagFragment } }> | null } & { ' $fragmentName'?: 'TopicPostFragment' };
+export type TopicPostFragment = { id: string, slug: string | null, title: string | null, updatedAt: string | null, publishedDate: string | null, brief: unknown, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, writers: Array<{ id: string, name: string | null }> | null, writersInInputOrder: Array<{ id: string, name: string | null } | null> | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null };
 
-export type PostTrimmedContentFragment = { trimmedContent: unknown } & { ' $fragmentName'?: 'PostTrimmedContentFragment' };
+export type PostTrimmedContentFragment = { trimmedContent: unknown };
 
-export type PostFullContentFragment = { content: unknown } & { ' $fragmentName'?: 'PostFullContentFragment' };
+export type PostFullContentFragment = { content: unknown };
 
-export type RelatedPostFragment = { id: string, slug: string | null, title: string | null, heroImage: { ' $fragmentRefs'?: { 'RelatedPostHeroImageFragment': RelatedPostHeroImageFragment } } | null } & { ' $fragmentName'?: 'RelatedPostFragment' };
+export type RelatedPostFragment = { id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null };
 
-export type PostFragment = { id: string, slug: string | null, title: string | null, subtitle: string | null, state: string | null, style: string | null, isMember: boolean | null, isAdult: boolean | null, publishedDate: string | null, updatedAt: string | null, extend_byline: string | null, heroCaption: string | null, brief: unknown, redirect: string | null, og_title: string | null, og_description: string | null, hiddenAdvertised: boolean | null, isAdvertised: boolean | null, sections: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } }> | null, sectionsInInputOrder: Array<{ ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } } | null> | null, categories: Array<{ ' $fragmentRefs'?: { 'CategoryWithSectionFragment': CategoryWithSectionFragment } }> | null, categoriesInInputOrder: Array<{ ' $fragmentRefs'?: { 'CategoryWithSectionFragment': CategoryWithSectionFragment } } | null> | null, writers: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, writersInInputOrder: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } } | null> | null, photographers: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, camera_man: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, designers: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, engineers: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, vocals: Array<{ ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } }> | null, tags: Array<{ ' $fragmentRefs'?: { 'TagFragment': TagFragment } }> | null, tags_algo: Array<{ ' $fragmentRefs'?: { 'AiTagFragment': AiTagFragment } }> | null, heroVideo: { ' $fragmentRefs'?: { 'HeroVideoFragment': HeroVideoFragment } } | null, heroImage: { ' $fragmentRefs'?: { 'HeroImageFragment': HeroImageFragment } } | null, relateds: Array<{ ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } }> | null, relatedsInInputOrder: Array<{ ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } } | null> | null, og_image: { resized: { w1600: string | null } | null } | null, topics: { slug: string | null } | null } & { ' $fragmentName'?: 'PostFragment' };
+export type PostFragment = { id: string, slug: string | null, title: string | null, subtitle: string | null, state: string | null, style: string | null, isMember: boolean | null, isAdult: boolean | null, publishedDate: string | null, updatedAt: string | null, extend_byline: string | null, heroCaption: string | null, brief: unknown, redirect: string | null, og_title: string | null, og_description: string | null, hiddenAdvertised: boolean | null, isAdvertised: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sectionsInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null } | null> | null, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null }> | null, categoriesInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null } | null> | null, writers: Array<{ id: string, name: string | null }> | null, writersInInputOrder: Array<{ id: string, name: string | null } | null> | null, photographers: Array<{ id: string, name: string | null }> | null, camera_man: Array<{ id: string, name: string | null }> | null, designers: Array<{ id: string, name: string | null }> | null, engineers: Array<{ id: string, name: string | null }> | null, vocals: Array<{ id: string, name: string | null }> | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null, tags_algo: Array<{ id: string, name: string | null, slug: string | null }> | null, heroVideo: { id: string, videoSrc: string | null, heroImage: { id: string, resized: { original: string | null } | null } | null } | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, relateds: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null }> | null, relatedsInInputOrder: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null> | null, og_image: { resized: { w1600: string | null } | null } | null, topics: { slug: string | null } | null };
 
-export type SectionFragment = { id: string, name: string | null, slug: string | null, state: string | null } & { ' $fragmentName'?: 'SectionFragment' };
+export type SectionFragment = { id: string, name: string | null, slug: string | null, state: string | null };
 
-export type SectionWithCategoryFragment = { id: string, name: string | null, slug: string | null, categories: Array<{ name: string | null, slug: string | null }> | null } & { ' $fragmentName'?: 'SectionWithCategoryFragment' };
+export type SectionWithCategoryFragment = { id: string, name: string | null, slug: string | null, categories: Array<{ name: string | null, slug: string | null }> | null };
 
-export type TagFragment = { id: string, name: string | null, slug: string | null } & { ' $fragmentName'?: 'TagFragment' };
+export type TagFragment = { id: string, name: string | null, slug: string | null };
 
-export type TopicFragment = { id: string, slug: string | null, name: string | null, brief: unknown, style: string | null, createdAt: string | null, og_image: { ' $fragmentRefs'?: { 'HeroImageFragment': HeroImageFragment } } | null, heroImage: { ' $fragmentRefs'?: { 'HeroImageFragment': HeroImageFragment } } | null } & { ' $fragmentName'?: 'TopicFragment' };
+export type TopicFragment = { id: string, slug: string | null, name: string | null, brief: unknown, style: string | null, createdAt: string | null, og_image: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null };
 
-export type HeroVideoFragment = { id: string, videoSrc: string | null, heroImage: { id: string, resized: { original: string | null } | null } | null } & { ' $fragmentName'?: 'HeroVideoFragment' };
+export type HeroVideoFragment = { id: string, videoSrc: string | null, heroImage: { id: string, resized: { original: string | null } | null } | null };
 
 export type FetchAnnouncementsQueryVariables = Exact<{
   scope?: Array<string> | string | null | undefined;
@@ -627,21 +624,21 @@ export type FetchCategorySectionsQueryVariables = Exact<{
 }>;
 
 
-export type FetchCategorySectionsQuery = { category: { ' $fragmentRefs'?: { 'CategoryWithSectionFragment': CategoryWithSectionFragment } } | null };
+export type FetchCategorySectionsQuery = { category: { id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null } | null };
 
 export type FetchCategoryQueryVariables = Exact<{
   categorySlug?: string | null | undefined;
 }>;
 
 
-export type FetchCategoryQuery = { category: { ' $fragmentRefs'?: { 'CategoryFragment': CategoryFragment } } | null };
+export type FetchCategoryQuery = { category: { id: string, name: string | null, slug: string | null, state: string | null } | null };
 
 export type FetchContactQueryVariables = Exact<{
   where: ContactWhereUniqueInput;
 }>;
 
 
-export type FetchContactQuery = { contact: { ' $fragmentRefs'?: { 'ContactFragment': ContactFragment } } | null };
+export type FetchContactQuery = { contact: { id: string, name: string | null } | null };
 
 export type FetchExternalsQueryVariables = Exact<{
   take?: number | null | undefined;
@@ -651,7 +648,7 @@ export type FetchExternalsQueryVariables = Exact<{
 }>;
 
 
-export type FetchExternalsQuery = { externals: Array<{ ' $fragmentRefs'?: { 'ListingExternalFragment': ListingExternalFragment } }> | null };
+export type FetchExternalsQuery = { externals: Array<{ id: string, slug: string | null, title: string | null, thumb: string | null, brief: string | null, publishedDate: string | null, partner: { id: string, slug: string | null, name: string | null, showOnIndex: boolean | null } | null }> | null };
 
 export type FetchExternalCountsQueryVariables = Exact<{
   filter: ExternalWhereInput;
@@ -665,7 +662,7 @@ export type FetchExternalBySlugQueryVariables = Exact<{
 }>;
 
 
-export type FetchExternalBySlugQuery = { externals: Array<{ ' $fragmentRefs'?: { 'ExternalFragment': ExternalFragment } }> | null };
+export type FetchExternalBySlugQuery = { externals: Array<{ id: string, slug: string | null, title: string | null, thumb: string | null, brief: string | null, content: string | null, publishedDate: string | null, extend_byline: string | null, thumbCaption: string | null, updatedAt: string | null, partner: { showThumb: boolean | null, showBrief: boolean | null, id: string, slug: string | null, name: string | null, showOnIndex: boolean | null } | null, relateds: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null }> | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null, tags_algo: Array<{ id: string, name: string | null, slug: string | null }> | null }> | null };
 
 export type FetchLatestPublishedExternalsQueryVariables = Exact<{
   take?: number | null | undefined;
@@ -678,19 +675,19 @@ export type FetchLatestPublishedExternalsQuery = { externals: Array<{ id: string
 export type FetchSpecialsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchSpecialsQuery = { magazines: Array<{ ' $fragmentRefs'?: { 'MagazineFragment': MagazineFragment } }> | null };
+export type FetchSpecialsQuery = { magazines: Array<{ id: string, slug: string | null, title: string | null, urlOriginal: string | null, type: string | null, state: string | null, publishedDate: string | null, createdAt: string | null, updatedAt: string | null, coverPhoto: { resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null }> | null };
 
 export type FetchWeeklysQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type FetchWeeklysQuery = { magazines: Array<{ ' $fragmentRefs'?: { 'MagazineFragment': MagazineFragment } }> | null };
+export type FetchWeeklysQuery = { magazines: Array<{ id: string, slug: string | null, title: string | null, urlOriginal: string | null, type: string | null, state: string | null, publishedDate: string | null, createdAt: string | null, updatedAt: string | null, coverPhoto: { resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null }> | null };
 
 export type FetchPartnerBySlugQueryVariables = Exact<{
   slug?: string | null | undefined;
 }>;
 
 
-export type FetchPartnerBySlugQuery = { partners: Array<{ ' $fragmentRefs'?: { 'PartnerFragment': PartnerFragment } }> | null };
+export type FetchPartnerBySlugQuery = { partners: Array<{ id: string, slug: string | null, name: string | null, showOnIndex: boolean | null }> | null };
 
 export type FetchListingPostsQueryVariables = Exact<{
   take?: number | null | undefined;
@@ -699,7 +696,7 @@ export type FetchListingPostsQueryVariables = Exact<{
 }>;
 
 
-export type FetchListingPostsQuery = { posts: Array<{ ' $fragmentRefs'?: { 'AsideListingPostFragment': AsideListingPostFragment } }> | null };
+export type FetchListingPostsQuery = { posts: Array<{ id: string, slug: string | null, title: string | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sectionsInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null } | null> | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null }> | null };
 
 export type FetchPostsQueryVariables = Exact<{
   take?: number | null | undefined;
@@ -709,27 +706,21 @@ export type FetchPostsQueryVariables = Exact<{
 }>;
 
 
-export type FetchPostsQuery = { postsCount: number | null, posts: Array<{ ' $fragmentRefs'?: { 'ListingPostFragment': ListingPostFragment } }> | null };
+export type FetchPostsQuery = { postsCount: number | null, posts: Array<{ id: string, slug: string | null, title: string | null, brief: unknown, publishedDate: string | null, state: string | null, isFeatured: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null }> | null };
 
 export type FetchStoryPostBySlugQueryVariables = Exact<{
   slug?: string | null | undefined;
 }>;
 
 
-export type FetchStoryPostBySlugQuery = { post: (
-    { relatedsOne: { ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } } | null, relatedsTwo: { ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } } | null }
-    & { ' $fragmentRefs'?: { 'PostFragment': PostFragment;'PostFullContentFragment': PostFullContentFragment } }
-  ) | null };
+export type FetchStoryPostBySlugQuery = { post: { id: string, slug: string | null, title: string | null, subtitle: string | null, state: string | null, style: string | null, isMember: boolean | null, isAdult: boolean | null, publishedDate: string | null, updatedAt: string | null, extend_byline: string | null, heroCaption: string | null, brief: unknown, redirect: string | null, og_title: string | null, og_description: string | null, hiddenAdvertised: boolean | null, isAdvertised: boolean | null, content: unknown, relatedsOne: { id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null, relatedsTwo: { id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sectionsInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null } | null> | null, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null }> | null, categoriesInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null } | null> | null, writers: Array<{ id: string, name: string | null }> | null, writersInInputOrder: Array<{ id: string, name: string | null } | null> | null, photographers: Array<{ id: string, name: string | null }> | null, camera_man: Array<{ id: string, name: string | null }> | null, designers: Array<{ id: string, name: string | null }> | null, engineers: Array<{ id: string, name: string | null }> | null, vocals: Array<{ id: string, name: string | null }> | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null, tags_algo: Array<{ id: string, name: string | null, slug: string | null }> | null, heroVideo: { id: string, videoSrc: string | null, heroImage: { id: string, resized: { original: string | null } | null } | null } | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, relateds: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null }> | null, relatedsInInputOrder: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null> | null, og_image: { resized: { w1600: string | null } | null } | null, topics: { slug: string | null } | null } | null };
 
 export type FetchAmpPostBySlugQueryVariables = Exact<{
   slug?: string | null | undefined;
 }>;
 
 
-export type FetchAmpPostBySlugQuery = { post: (
-    { relatedsOne: { ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } } | null, relatedsTwo: { ' $fragmentRefs'?: { 'RelatedPostFragment': RelatedPostFragment } } | null }
-    & { ' $fragmentRefs'?: { 'PostFragment': PostFragment;'PostTrimmedContentFragment': PostTrimmedContentFragment;'PostFullContentFragment': PostFullContentFragment } }
-  ) | null };
+export type FetchAmpPostBySlugQuery = { post: { id: string, slug: string | null, title: string | null, subtitle: string | null, state: string | null, style: string | null, isMember: boolean | null, isAdult: boolean | null, publishedDate: string | null, updatedAt: string | null, extend_byline: string | null, heroCaption: string | null, brief: unknown, redirect: string | null, og_title: string | null, og_description: string | null, hiddenAdvertised: boolean | null, isAdvertised: boolean | null, trimmedContent: unknown, content: unknown, relatedsOne: { id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null, relatedsTwo: { id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sectionsInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null } | null> | null, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null }> | null, categoriesInInputOrder: Array<{ id: string, name: string | null, slug: string | null, state: string | null, isMemberOnly: boolean | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null } | null> | null, writers: Array<{ id: string, name: string | null }> | null, writersInInputOrder: Array<{ id: string, name: string | null } | null> | null, photographers: Array<{ id: string, name: string | null }> | null, camera_man: Array<{ id: string, name: string | null }> | null, designers: Array<{ id: string, name: string | null }> | null, engineers: Array<{ id: string, name: string | null }> | null, vocals: Array<{ id: string, name: string | null }> | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null, tags_algo: Array<{ id: string, name: string | null, slug: string | null }> | null, heroVideo: { id: string, videoSrc: string | null, heroImage: { id: string, resized: { original: string | null } | null } | null } | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, relateds: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null }> | null, relatedsInInputOrder: Array<{ id: string, slug: string | null, title: string | null, heroImage: { resized: { original: string | null, w480: string | null, w800: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null } | null } | null } | null> | null, og_image: { resized: { w1600: string | null } | null } | null, topics: { slug: string | null } | null } | null };
 
 export type FetchPromoteVideosQueryVariables = Exact<{
   take?: number | null | undefined;
@@ -744,21 +735,21 @@ export type FetchSectionQueryVariables = Exact<{
 }>;
 
 
-export type FetchSectionQuery = { section: { ' $fragmentRefs'?: { 'SectionFragment': SectionFragment } } | null };
+export type FetchSectionQuery = { section: { id: string, name: string | null, slug: string | null, state: string | null } | null };
 
 export type FetchSectionWithCategoryQueryVariables = Exact<{
   where: SectionWhereUniqueInput;
 }>;
 
 
-export type FetchSectionWithCategoryQuery = { section: { ' $fragmentRefs'?: { 'SectionWithCategoryFragment': SectionWithCategoryFragment } } | null };
+export type FetchSectionWithCategoryQuery = { section: { id: string, name: string | null, slug: string | null, categories: Array<{ name: string | null, slug: string | null }> | null } | null };
 
 export type FetchTagQueryVariables = Exact<{
   where: TagWhereUniqueInput;
 }>;
 
 
-export type FetchTagQuery = { tag: { ' $fragmentRefs'?: { 'TagFragment': TagFragment } } | null };
+export type FetchTagQuery = { tag: { id: string, name: string | null, slug: string | null } | null };
 
 export type FetchTopicsQueryVariables = Exact<{
   take?: number | null | undefined;
@@ -768,7 +759,7 @@ export type FetchTopicsQueryVariables = Exact<{
 }>;
 
 
-export type FetchTopicsQuery = { topicsCount: number | null, topics: Array<{ ' $fragmentRefs'?: { 'TopicFragment': TopicFragment } }> | null };
+export type FetchTopicsQuery = { topicsCount: number | null, topics: Array<{ id: string, slug: string | null, name: string | null, brief: unknown, style: string | null, createdAt: string | null, og_image: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null }> | null };
 
 export type FetchTopicQueryVariables = Exact<{
   topicFilter: TopicWhereInput;
@@ -780,13 +771,7 @@ export type FetchTopicQueryVariables = Exact<{
 }>;
 
 
-export type FetchTopicQuery = { topics: Array<(
-    { heroUrl: string | null, leading: string | null, type: string | null, postsCount: number | null, og_description: string | null, manualOrderOfSlideshowImages: unknown, dfp: string | null, featuredPostsCount: number | null, tags: Array<{ ' $fragmentRefs'?: { 'TagFragment': TagFragment } }> | null, slideshow_images: Array<{ ' $fragmentRefs'?: { 'SlideshowImageFragment': SlideshowImageFragment } }> | null, posts: Array<(
-      { isFeatured: boolean | null }
-      & { ' $fragmentRefs'?: { 'TopicPostFragment': TopicPostFragment } }
-    )> | null }
-    & { ' $fragmentRefs'?: { 'TopicFragment': TopicFragment } }
-  )> | null };
+export type FetchTopicQuery = { topics: Array<{ heroUrl: string | null, leading: string | null, type: string | null, postsCount: number | null, og_description: string | null, manualOrderOfSlideshowImages: unknown, dfp: string | null, id: string, slug: string | null, name: string | null, brief: unknown, style: string | null, createdAt: string | null, featuredPostsCount: number | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null, slideshow_images: Array<{ id: string, name: string | null, topicKeywords: string | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null }> | null, posts: Array<{ isFeatured: boolean | null, id: string, slug: string | null, title: string | null, updatedAt: string | null, publishedDate: string | null, brief: unknown, categories: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, sections: Array<{ id: string, name: string | null, slug: string | null, state: string | null }> | null, writers: Array<{ id: string, name: string | null }> | null, writersInInputOrder: Array<{ id: string, name: string | null } | null> | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, tags: Array<{ id: string, name: string | null, slug: string | null }> | null }> | null, og_image: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null, heroImage: { imageFile: { width: number, height: number } | null, resized: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null, resizedWebp: { original: string | null, w480: string | null, w800: string | null, w1200: string | null, w1600: string | null, w2400: string | null } | null } | null }> | null };
 
 export type FetchTopicPostCountQueryVariables = Exact<{
   topicFilter: TopicWhereUniqueInput;
