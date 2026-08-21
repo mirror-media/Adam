@@ -13,6 +13,7 @@ import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { fetchTopicByTopicSlug } from '../../utils/api/topic'
 import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
+import { buildSingleCatDataLayer } from '../../utils/gtm/build-data-layer'
 import {
   convertDraftToText,
   getLogTraceObject,
@@ -287,6 +288,7 @@ export async function getServerSideProps({ query, req, res }) {
     topic,
     slideshowImages,
     headerData: { sectionsData, topicsData },
+    dataLayer: buildSingleCatDataLayer(topic.name || ''),
   }
 
   return { props }

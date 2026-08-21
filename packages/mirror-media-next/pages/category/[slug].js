@@ -29,6 +29,7 @@ const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
 import FullScreenAds from '../../components/ads/full-screen-ads'
 import GPTMbStAd from '../../components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '../../components/ads/gpt/gpt-placeholder'
+import { buildCategoryDataLayer } from '../../utils/gtm/build-data-layer'
 import { logGqlError } from '../../utils/log/shared'
 
 /**
@@ -455,6 +456,10 @@ export async function getServerSideProps({ query, req, res }) {
     isPremium,
     headerData: { sectionsData, topicsData },
     isNewsCategory,
+    dataLayer: buildCategoryDataLayer(
+      category?.sections?.[0]?.name || '',
+      category.name || ''
+    ),
   }
   return { props }
 }

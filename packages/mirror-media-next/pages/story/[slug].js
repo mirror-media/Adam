@@ -34,6 +34,7 @@ import {
 } from '../../utils'
 import { fetchHeaderDataInDefaultPageLayout } from '../../utils/api'
 import { setPageCache } from '../../utils/cache-setting'
+import { buildStoryDataLayer } from '../../utils/gtm/build-data-layer'
 import { logAxiosError, logGqlError } from '../../utils/log/shared'
 import { handleStoryPageRedirect } from '../../utils/story'
 import {
@@ -459,6 +460,7 @@ export async function getServerSideProps({ params, req, res }) {
         headerData,
         storyLayoutType,
         jsonLdData,
+        dataLayer: buildStoryDataLayer(postData),
       },
     }
   } catch (err) {

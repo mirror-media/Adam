@@ -19,6 +19,7 @@ import { fetchExternalsByPartnerSlug } from '../../utils/api/externals'
 import { setPageCache } from '../../utils/cache-setting'
 import { getSectionAndTopicFromDefaultHeaderData } from '../../utils/data-process'
 import { getExternalPartnerColor } from '../../utils/external'
+import { buildSingleCatDataLayer } from '../../utils/gtm/build-data-layer'
 import { processSettledResult } from '../../utils/response-processor'
 
 const GPTAd = dynamic(() => import('../../components/ads/gpt/gpt-ad'), {
@@ -240,6 +241,7 @@ export async function getServerSideProps({ params, req, res }) {
     externals,
     partner,
     headerData: { sectionsData, topicsData },
+    dataLayer: buildSingleCatDataLayer(partner.name || ''),
   }
 
   return { props }

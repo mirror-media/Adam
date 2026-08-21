@@ -1,12 +1,13 @@
 import '../styles/tailwind.css'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Provider } from 'react-redux'
 import { useAmp } from 'next/amp'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { ApolloProvider } from '@apollo/client'
 import isPropValid from '@emotion/is-prop-valid'
+import { GoogleTagManager } from '@next/third-parties/google'
 import { StyleSheetManager, ThemeProvider } from 'styled-components'
 
 import client from '../apollo/apollo-client'
@@ -14,11 +15,16 @@ import ErrorBoundary from '../components/shared/error-boundary'
 import ErrorPage from '../components/shared/error-page'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
 import WholeSiteScript from '../components/whole-site-script'
-import { GTM_ID } from '../config/index.mjs'
+import { GTM_AUTH, GTM_ID, GTM_PREVIEW } from '../config/index.mjs'
 import { MembershipProvider } from '../context/membership'
 import store from '../store'
 import { AmpGlobalStyles, GlobalStyles } from '../styles/global-styles'
 import { theme } from '../styles/theme'
+import {
+  compactDataLayer,
+  resolvePageDataLayer,
+} from '../utils/gtm/build-data-layer'
+import { pushDataLayer } from '../utils/gtm/push-data-layer'
 
 const PromoteTopic = dynamic(() => import('../components/promote-topic'), {
   ssr: false,
@@ -41,8 +47,7 @@ const styleSheetManagerProps = {
  * @param {Object} props
  * @param {React.ElementType} props.Component
  * @param {Object} props.pageProps
- * @param {Object[]} props.sectionsData
- * @param {Object[]} props.topicsData
+ * @param {import('../types/dataLayer').DataLayerPayload} [props.pageProps.dataLayer]
  * @returns {React.ReactElement}
  */
 function MyApp({ Component, pageProps }) {
@@ -54,13 +59,31 @@ function MyApp({ Component, pageProps }) {
   // React fallback markers (e.g. `<template data-dgst="DYNAMIC_SERVER_USAGE">`)
   // that AMP treats as invalid `<template>` tags.
   const isAmpPage = useAmp()
+  // Frozen on the first render: GoogleTagManager inlines this into the same
+  // script as `gtm.start`, which only runs once per full page load. Subsequent
+  // CSR navigations go through pushDataLayer below instead.
+  const initialDataLayer = compactDataLayer(
+    resolvePageDataLayer(router.pathname, router.asPath, pageProps.dataLayer)
+  )
+  const ssrDataLayerRef = useRef(
+    Object.keys(initialDataLayer).length > 0 ? initialDataLayer : undefined
+  )
+  const isFirstLoadRef = useRef(true)
 
-  //Temporarily enable google tag manager only in dev and local environment.
   useEffect(() => {
-    import('react-gtm-module').then(({ default: TagManager }) => {
-      TagManager.initialize({ gtmId: GTM_ID })
-    })
-  }, [])
+    if (isAmpPage) {
+      return
+    }
+
+    if (isFirstLoadRef.current) {
+      isFirstLoadRef.current = false
+      return
+    }
+
+    pushDataLayer(
+      resolvePageDataLayer(router.pathname, router.asPath, pageProps.dataLayer)
+    )
+  }, [isAmpPage, pageProps.dataLayer, router.asPath, router.pathname])
 
   // The service worker is bundled into public/sw.js by the `build:sw` script
   // (esbuild) and registered manually here, replacing the auto-registration
@@ -84,6 +107,14 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
+      {!isAmpPage && (
+        <GoogleTagManager
+          gtmId={GTM_ID}
+          auth={GTM_AUTH || undefined}
+          preview={GTM_PREVIEW || undefined}
+          dataLayer={ssrDataLayerRef.current}
+        />
+      )}
       {isAmpPage ? <AmpGlobalStyles /> : <GlobalStyles />}
       <MembershipProvider>
         <ApolloProvider client={client}>
