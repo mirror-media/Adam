@@ -4,7 +4,7 @@ import svgr from 'vite-plugin-svgr'
 const config = defineMain({
   framework: '@storybook/nextjs-vite',
   stories: ['../components/ui/**/*.stories.@(ts|tsx)'],
-  addons: ['@storybook/addon-a11y'],
+  addons: ['@storybook/addon-a11y', '@storybook/addon-docs'],
   async viteFinal(config) {
     config.publicDir = false
     config.plugins = [

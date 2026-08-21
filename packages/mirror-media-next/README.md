@@ -60,7 +60,6 @@ http://localhost:6006
 用於檢查 non-prod（非正式環境）同站 `/storybook` 發布結果。這條路由只讀取 `public/_storybook` static artifact（靜態產物），local 要查看的話需要先 build 過：
 
 ```bash
-pnpm storybook:build
 pnpm dev:storybook-route
 ```
 
@@ -73,7 +72,8 @@ http://localhost:3000/storybook
 注意事項：
 
 - `pnpm dev:storybook-route` 會用 `NEXT_PUBLIC_ENV=local` 啟動 Next.js，避免本機 `.env` 若設為 `NEXT_PUBLIC_ENV="prod"` 時 `/storybook` 依正式環境規則回 404。
-- 若尚未執行 `pnpm storybook:build`，`/storybook` 會顯示 static artifact missing（缺少靜態產物）的提示頁。
+- `pnpm dev:storybook-route` 已內含 `pnpm storybook:build`，因此每次啟動都會重建產物。若改用 `pnpm dev` 直接開 `/storybook`，看到的是上一次 build 的舊產物；新增的 story、argTypes 或 addon 不會出現。
+- 若 `public/_storybook` 不存在，`/storybook` 會顯示 static artifact missing（缺少靜態產物）的提示頁。
 - Production（正式環境）不應包含 `public/_storybook`，且 `/storybook` 必須回 404。
 
 ## Docker
@@ -131,7 +131,7 @@ packages/mirror-media-next/
 │           └── podcast-modal.tsx
 ├── components/
 │   ├── ui/                             # Domain-neutral design-system primitives
-│   ├── common/                         # Proven cross-capability composed UI
+│   ├── common/                         # Domain-neutral composed UI proven by unrelated consumers
 │   └── shell/                          # Application Layout/Header/Footer ownership
 ├── apollo/                             # GraphQL clients, sources, and generated output
 ├── axios/                              # Existing HTTP compatibility wrapper
@@ -193,20 +193,48 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 | -------------------------------------------------------- | --------------------------------------------------------------------------- |
 | `pages/**`                                               | Next.js route exports、GSSP、cache／redirect／404、SEO 與頁面組合           |
 | `modules/<capability>/`                                  | 能力擁有的 types、data、logic、components 與 hooks；預設保持扁平            |
-| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                 |
-| `components/common/**`                                   | 由 primitives 組合、經不相關 consumers 證明可跨能力重用的 UI／controller   |
+| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                  |
+| `components/common/**`                                   | 無領域、由 primitives 組成且經不相關 consumers 證明可重用的 UI／controller  |
 | `components/shell/**`                                    | Layout、Header、Footer 等 application shell（應用外殼）                     |
 | `components/shared/**`、`components/<legacy-feature>/**` | Legacy compatibility（舊版相容）路徑；不新增 ownership，consumer 歸零後刪除 |
 | `utils/**`、`hooks/**`                                   | 真正跨能力且符合執行環境的共用工具／hooks；單一能力內容回到最近 module      |
 | `type/**`、`types/**`                                    | `type/` 不再新增；`types/` 只放 ambient declarations（環境宣告）            |
 
-`components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。`button`、`input`、`container`、`link`、`loading`、`typography` 都屬於這一層。
+`components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。
+新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
+
+`components/shell/` 有三種組合入口：
+
+- `PageShell` 是新頁面的標準入口，固定組合 `SiteHeader`、`SiteFooter` 與 `GDPRNotification`，並預設加入 `IdleTimeoutModal`。只有已確認不使用 Idle modal 的頁面才傳入 `withIdleTimeout={false}`。
+- `ApplicationShell` 是較低階的結構入口，只固定 slot order；標準組合無法涵蓋的特殊頁面才直接使用。
+- `LegacyLayoutAdapter` 只服務仍由 `Layout`／`LayoutFull` 擁有的既有頁面，保留原本的裸 DOM flow。遷移 route body 前不得只為統一寫法改用 `PageShell`。
+
+`PageShell` 與 `ApplicationShell` 都不在 render path 自行取得 Header data；Pages Router route 的 server data boundary 必須呼叫 `fetchShellHeaderData()`，再以 serializable props 傳入。Flash news 維持 opt-in，active navigation 仍由 route 提供。
+
+### Component placement guide（元件放置指南）
+
+React component（React 元件）是呈現單位，不是 ownership 類別；`components/` 與 `modules/` 都可以包含 `.tsx`。本專案的 `components/` 只承接跨領域呈現責任，`modules/` 則承接會隨特定 business concept、use case 或 lifecycle（業務概念、使用案例或生命週期）共同變更的完整能力。Figma component（設計元件）、檔案種類、外觀相似或 consumer 數量都不能單獨決定放置位置。
+
+新增元件時依序判斷，第一個成立就停止：
+
+1. **責任只在特定 URL 與 route policy（路由政策）中成立**：放 `pages/**`。
+2. **責任是所有適用 routes 共同的外框、全域導覽呈現或 slot order（插槽順序）**：放 `components/shell/**`。
+3. **責任包含業務實體、規則、資料語意、狀態轉換或 use case**：放 `modules/<capability>/**`；一個或多個 consumers 都不改變此 ownership，也不另建 `modules/shared/`。
+4. **責任是無領域、低階的 design-system contract（設計系統契約）**：放 `components/ui/**`。
+5. **責任無領域、由 UI primitives 組成，且不相關 consumers 已證明需要相同的呈現責任**：放 `components/common/**`。
+6. **仍無法判斷**：留在目前最明確的 owner boundary（所有權邊界）並提出 ownership review；不得先放入 `shared`／`common`、建立空 module 或複製第二份。
+
+若同一個元件同時符合 shell 與 capability、route 與 capability 等多項責任，不以前後順序掩蓋混合 ownership；先拆開責任，或在建立 public contract 前完成 architecture review（架構審查）。
+
+Route 與 capability 是不同分類軸：route 是 framework／runtime entry（框架／執行期入口），capability 是 change／ownership boundary（變更／所有權邊界）。兩者是多對多關係；不因新增 route 自動建立同名 module，也不因 module 只有一個 consumer 就視為 route-owned。
 
 ### Core rules（核心規則）
 
-- Page 依 URL 拆分並保留 route policy（路由政策）；module 依 business capability（業務能力）與共同生命週期拆分，兩者不做一對一鏡像。
+- Page 依 URL 拆分並保留 route policy；module 依 business capability（業務能力）與共同生命週期拆分，兩者不做一對一鏡像。
+- 建立 module 時必須能指出穩定的業務責任、明確 owner／public contract，並在不 import route policy 的情況下成立；名稱不得只描述暫時 URL、畫面位置、元件尺寸或檔案種類。
 - Module 預設扁平放 `<capability>-types.ts`、`<capability>-data.ts` 與單一 logic／hook；只有同類檔案形成真實集合時才建立 `components/`、`hooks/` 或 `data/`。
-- Capability component 可知道領域型別與行為；`components/common/` 不可知道 business entity（業務實體），且應是由低階 primitives 組成的跨能力 UI／controller；`components/ui/` 只放無領域、低階 design-system primitives。
+- Capability component 可知道領域型別與行為；`components/common/` 與 `components/ui/` 不可知道 business entity（業務實體），也不可用 slots（插槽）或泛型 props 隱藏原本清楚的領域耦合。
+- 手寫型別與 validation schema（驗證結構）跟隨其 owner；route-only 型別留在 route，capability 型別留在 module，generated output（生成產物）維持 generator-owned boundary（生成器所有權邊界）。
 - 不建立空目錄、`.gitkeep`、props-only page facade 或雙軌新舊實作。
 - 新 application files 一律使用 `.ts`／`.tsx`；Legacy `.js`／`.jsx` 搬移時必須同步完成型別遷移。
 
@@ -215,8 +243,10 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 以下 dependency boundaries（依賴邊界）是目前的 code-review contract（程式碼審查契約），尚未由專用 ESLint 規則自動強制。
 
 - `pages/**` 可組合 modules、shell、common、design-system UI 與遷移中的 Legacy components，但不可依賴另一個 page 的 route policy。
-- Module components／hooks 可依賴同 module、核准的 shared capability、common、design-system UI 與 browser-safe utilities。
-- Browser UI／hooks 不得 import `utils/server-side-only/**` 或 `firebase/admin`；`components/common/**` 與 `components/ui/**` 也不得反向依賴 modules／pages。
+- Module components／hooks 可依賴同 module、核准的其他 capability public contract、common、design-system UI 與 browser-safe utilities。
+- `components/common/**` 與 `components/ui/**` 不得反向依賴 modules、pages 或 shell。
+- Shell 可以呈現 capability 提供的公開狀態與操作，但不接管其資料生命週期或 route policy；是否允許特定 direct module import 必須另以 dependency contract 核准，不能只由放置位置推定。
+- Browser UI／hooks 不得 import `utils/server-side-only/**` 或 `firebase/admin`。
 - `utils/server-side-only/` 是既有的 Node／credential 安全邊界，不是 module 的固定子目錄；production build（正式建置）仍須確認這些程式沒有進入 client bundle（瀏覽器套件）。
 
 ### Shared roots and styling（共用根目錄與樣式）

@@ -1,10 +1,9 @@
 import styled from 'styled-components'
 
 import GDPRNotification from '../gdpr'
-import ShareHeader from '../header/share-header'
+import { LegacyLayoutAdapter } from '../shell/legacy-layout-adapter'
 
 import CustomHead from './custom-head'
-import Footer from './footer'
 
 const Container = styled.div`
   display: flex;
@@ -49,10 +48,13 @@ export default function LayoutFull({ head, header, footer, children }) {
         robotsMetaContent={head?.robotsMetaContent}
       />
       <Container>
-        <ShareHeader pageLayoutType={header.type} headerData={header.data} />
-        {children}
-        <GDPRNotification />
-        <Footer footerType={footer.type} />
+        <LegacyLayoutAdapter
+          footer={footer}
+          header={header}
+          privacyNotice={<GDPRNotification />}
+        >
+          {children}
+        </LegacyLayoutAdapter>
       </Container>
     </>
   )

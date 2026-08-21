@@ -9,11 +9,14 @@ import type { Topic } from '../../apollo/query/topics'
 import axiosInstance from '../../axios/index.js'
 import {
   URL_STATIC_HEADER_HEADERS,
+  URL_STATIC_MENU_SECTIONS,
+  URL_STATIC_POST_FLASH_NEWS,
   URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
 } from '../../config/index.mjs'
 import type { AnnouncementScopeValue } from '../../constants/announcement'
 import { DEFAULT_ANNOUNCEMENT_SCOPE } from '../../constants/announcement'
+import { processSettledResult } from '../response-processor'
 
 export type Category = {
   id: string
@@ -37,6 +40,12 @@ export type HeadersDataSection = {
   slug: string
   name: string
   categories: CategoryInHeadersDataSection[]
+  /**
+   * Optional shell-only enrichment from `menu_sections_latest.json`.
+   * V3 header consumers ignore this field, while the V4 layout adapter
+   * uses it without issuing a second request from the browser.
+   */
+  posts?: ShellSectionPost[]
 }
 
 export type HeadersDataCategory = {
@@ -75,6 +84,37 @@ export type ColumnSectionResponse = {
 
 export type HeadersData = (HeadersDataSection | HeadersDataCategory)[]
 
+export type ShellFlashNews = {
+  id: string
+  slug: string
+  title: string
+}
+
+/**
+ * A section's two latest posts, used by the desktop navigation flyout.
+ *
+ * `heroImage` is null for posts that have no artwork, and `post_url` is an
+ * absolute link into the environment that produced the file, so the shell
+ * builds its own href from `slug` rather than following it across
+ * environments.
+ */
+export type ShellSectionPost = {
+  heroImage: string | null
+  id: string
+  publishedDate: string
+  slug: string
+  title: string
+}
+
+export type ShellSectionPosts = Record<string, ShellSectionPost[]>
+
+export type ShellHeaderData = {
+  flashNewsData: ShellFlashNews[]
+  navigationData: HeadersDataSection[]
+  sectionPostsData: ShellSectionPosts
+  topicsData: Topics
+}
+
 export type AnnouncementQueryResult = ApolloQueryResult<FetchAnnouncementsQuery>
 
 type HeadersStaticJsonResponse = {
@@ -83,6 +123,17 @@ type HeadersStaticJsonResponse = {
 
 type TopicsStaticJsonResponse = {
   topics?: Topics
+}
+
+type FlashNewsStaticJsonResponse = {
+  posts?: ShellFlashNews[]
+}
+
+type MenuSectionsStaticJsonResponse = {
+  sections?: {
+    slug?: string
+    posts?: ShellSectionPost[]
+  }[]
 }
 
 type PremiumSectionsStaticJsonResponse = {
@@ -131,6 +182,7 @@ const errorLogger = (errorMessage: unknown): never => {
 const fetchHeaderDataInDefaultPageLayout = async () => {
   let sectionsData: HeadersData = []
   let topicsData: Topics = []
+  let sectionPostsData: ShellSectionPosts = {}
 
   try {
     const responses = await Promise.allSettled([
@@ -138,6 +190,7 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
         URL_STATIC_HEADER_HEADERS
       ),
       fetchStaticJsonByUrl<TopicsStaticJsonResponse>(URL_STATIC_TOPICS),
+      fetchShellSectionPosts({ onError: 'empty' }),
     ])
 
     const sectionsResult =
@@ -150,9 +203,154 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
       responses[1].status === 'fulfilled' ? responses[1].value.data : undefined
     topicsData = Array.isArray(topicsResult?.topics) ? topicsResult.topics : []
 
+    sectionPostsData =
+      responses[2].status === 'fulfilled' ? responses[2].value : {}
+    sectionsData = sectionsData.map((item) =>
+      item.type === 'section'
+        ? { ...item, posts: sectionPostsData[item.slug] ?? [] }
+        : item
+    )
+
     return { sectionsData, topicsData }
   } catch (err) {
     errorLogger(err)
+  }
+}
+
+/**
+ * The header sections file the legacy header also reads. It is the canonical
+ * one for navigation: it carries all ten sections in the order the design
+ * shows, each with its own categories. The plain sections file is a smaller,
+ * differently ordered set and is not interchangeable with it.
+ *
+ * Category entries are dropped; the shell's top level is sections only.
+ */
+const fetchShellNavigationData = async (): Promise<HeadersDataSection[]> => {
+  try {
+    const response = await fetchStaticJsonByUrl<HeadersStaticJsonResponse>(
+      URL_STATIC_HEADER_HEADERS
+    )
+    const headers = Array.isArray(response.data.headers)
+      ? response.data.headers
+      : []
+
+    // Order is applied by createShellNavigation, not here.
+    return headers.filter(
+      (header): header is HeadersDataSection => header.type === 'section'
+    )
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
+const fetchShellFlashNews = async (): Promise<ShellFlashNews[]> => {
+  try {
+    const response = await fetchStaticJsonByUrl<FlashNewsStaticJsonResponse>(
+      URL_STATIC_POST_FLASH_NEWS
+    )
+
+    return Array.isArray(response.data.posts) ? response.data.posts : []
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
+/**
+ * The two latest posts per section, keyed by slug. It uses the same slugs as
+ * the header sections file, so the navigation joins on them directly.
+ */
+type FetchShellSectionPostsOptions = {
+  onError?: 'empty' | 'throw'
+}
+
+const fetchShellSectionPosts = async ({
+  onError = 'throw',
+}: FetchShellSectionPostsOptions = {}): Promise<ShellSectionPosts> => {
+  try {
+    const response = await fetchStaticJsonByUrl<MenuSectionsStaticJsonResponse>(
+      URL_STATIC_MENU_SECTIONS
+    )
+    const sections = Array.isArray(response.data.sections)
+      ? response.data.sections
+      : []
+
+    return Object.fromEntries(
+      sections
+        .filter((section) => section.slug && Array.isArray(section.posts))
+        .map((section) => [section.slug as string, section.posts ?? []])
+    )
+  } catch (err) {
+    if (onError === 'empty') {
+      return {}
+    }
+
+    return errorLogger(err)
+  }
+}
+
+const fetchShellTopicsData = async (): Promise<Topics> => {
+  try {
+    const response =
+      await fetchStaticJsonByUrl<TopicsStaticJsonResponse>(URL_STATIC_TOPICS)
+
+    return Array.isArray(response.data.topics) ? response.data.topics : []
+  } catch (err) {
+    return errorLogger(err)
+  }
+}
+
+type FetchShellHeaderDataOptions = {
+  includeFlashNews?: boolean
+  logFields?: Record<string, unknown>
+}
+
+/**
+ * Collects the serializable data consumed by the standard page shell.
+ * Flash news remains opt-in because existing routes do not all own that variant.
+ */
+const fetchShellHeaderData = async ({
+  includeFlashNews = false,
+  logFields,
+}: FetchShellHeaderDataOptions = {}): Promise<ShellHeaderData> => {
+  const [
+    navigationResponse,
+    topicsResponse,
+    sectionPostsResponse,
+    flashNewsResponse,
+  ] = await Promise.allSettled([
+    fetchShellNavigationData(),
+    fetchShellTopicsData(),
+    fetchShellSectionPosts(),
+    includeFlashNews
+      ? fetchShellFlashNews()
+      : Promise.resolve<ShellFlashNews[]>([]),
+  ])
+
+  return {
+    flashNewsData: processSettledResult(
+      flashNewsResponse,
+      (value) => value ?? [],
+      'Error occurs while getting shell flash news',
+      logFields
+    ),
+    navigationData: processSettledResult(
+      navigationResponse,
+      (value) => value ?? [],
+      'Error occurs while getting shell navigation data',
+      logFields
+    ),
+    sectionPostsData: processSettledResult(
+      sectionPostsResponse,
+      (value) => value ?? {},
+      'Error occurs while getting shell section posts',
+      logFields
+    ),
+    topicsData: processSettledResult(
+      topicsResponse,
+      (value) => value ?? [],
+      'Error occurs while getting shell topics data',
+      logFields
+    ),
   }
 }
 
@@ -192,5 +390,10 @@ export {
   fetchAnnouncementsByScope,
   fetchHeaderDataInDefaultPageLayout,
   fetchHeaderDataInPremiumPageLayout,
+  fetchShellFlashNews,
+  fetchShellHeaderData,
+  fetchShellNavigationData,
+  fetchShellSectionPosts,
+  fetchShellTopicsData,
   fetchStaticJsonByUrl,
 }

@@ -5,8 +5,8 @@ import axios from 'axios'
 import styled from 'styled-components'
 
 import { HeaderSkeleton } from '../components/header/normal/header'
-import ShareHeader from '../components/header/share-header'
 import Layout from '../components/shared/layout'
+import { LegacyHeaderAdapter } from '../components/shell/legacy-layout-adapter'
 import { URL_STATIC_404_POPULAR_NEWS } from '../config/index.mjs'
 import { API_TIMEOUT } from '../config/index.mjs'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
@@ -271,7 +271,7 @@ export default function Custom404() {
     <Layout header={{ type: 'empty' }} footer={{ type: 'empty' }}>
       <>
         {isHeaderDataLoaded ? (
-          <ShareHeader pageLayoutType="default" headerData={headerData} />
+          <LegacyHeaderAdapter header={{ type: 'default', data: headerData }} />
         ) : (
           <HeaderSkeleton />
         )}

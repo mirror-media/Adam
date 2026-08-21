@@ -4,29 +4,22 @@ import type { GetServerSideProps } from 'next'
 import AudioPlayer from '@/components/podcast/audio-player'
 import Dropdown from '@/components/podcast/author-select-dropdown'
 import PodcastList from '@/components/podcast/podcast-list'
-import Layout from '@/components/shared/layout'
+import CustomHead from '@/components/shared/custom-head'
+import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { fetchPodcastList } from '@/modules/podcast/podcast-data'
 import type { Podcast } from '@/modules/podcast/podcast-types'
 import { getLogTraceObject } from '@/utils'
-import type { HeadersData, Topics } from '@/utils/api'
-import { fetchHeaderDataInDefaultPageLayout } from '@/utils/api'
+import type { ShellHeaderData } from '@/utils/api'
+import { fetchShellHeaderData } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
-import { getSectionAndTopicFromDefaultHeaderData } from '@/utils/data-process'
 import { processSettledResult } from '@/utils/response-processor'
 
 type PodcastPageProps = {
-  headerData: {
-    sectionsData: HeadersData
-    topicsData: Topics
-  }
+  headerData: ShellHeaderData
   podcastListData: Podcast[]
 }
-
-type HeaderResponse = Awaited<
-  ReturnType<typeof fetchHeaderDataInDefaultPageLayout>
->
 
 type PodcastResponse = Awaited<ReturnType<typeof fetchPodcastList>>
 
@@ -79,37 +72,36 @@ export default function PodcastPage({
   }
 
   return (
-    <Layout
-      footer={{ type: 'default' }}
-      head={{ title: 'Podcasts' }}
-      header={{ type: 'default', data: headerData }}
-    >
-      <main className="mx-auto legacy-md:w-[516px] legacy-xl:w-[1024px]">
-        <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
-          <Typography
-            as="h1"
-            className="text-[16px] leading-[1.15] font-medium tracking-[0.5px] text-black legacy-md:text-[20px] legacy-md:font-semibold legacy-xl:text-[28px]"
-            variant="subtitle"
-          >
-            Podcasts
-          </Typography>
-          <Dropdown
-            authors={AUTHORS}
-            displayPodcastsByAuthor={displayPodcastsByAuthor}
+    <>
+      <CustomHead title="Podcasts" />
+      <PageShell headerData={headerData}>
+        <main className="mx-auto w-full legacy-md:w-[516px] legacy-xl:w-[1024px]">
+          <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
+            <Typography
+              as="h1"
+              className="text-[16px] leading-[1.15] font-medium tracking-[0.5px] text-black legacy-md:text-[20px] legacy-md:font-semibold legacy-xl:text-[28px]"
+              variant="subtitle"
+            >
+              Podcasts
+            </Typography>
+            <Dropdown
+              authors={AUTHORS}
+              displayPodcastsByAuthor={displayPodcastsByAuthor}
+            />
+          </div>
+          <PodcastList
+            allPodcasts={podcastListData}
+            listeningPodcast={listeningPodcast}
+            onPodcastSelect={setListeningPodcast}
+            selectedAuthor={selectedAuthor}
+            selectedPodcasts={selectedPodcasts}
           />
-        </div>
-        <PodcastList
-          allPodcasts={podcastListData}
-          listeningPodcast={listeningPodcast}
-          onPodcastSelect={setListeningPodcast}
-          selectedAuthor={selectedAuthor}
-          selectedPodcasts={selectedPodcasts}
-        />
-        {listeningPodcast && (
-          <AudioPlayer listeningPodcast={listeningPodcast} />
-        )}
-      </main>
-    </Layout>
+          {listeningPodcast && (
+            <AudioPlayer listeningPodcast={listeningPodcast} />
+          )}
+        </main>
+      </PageShell>
+    </>
   )
 }
 
@@ -132,20 +124,13 @@ export const getServerSideProps = (async ({ req, res }) => {
   const globalLogFields: Record<string, unknown> = {
     ...getLogTraceObject(req),
   }
-  const [headerResponse, podcastResponse] = await Promise.allSettled([
-    fetchHeaderDataInDefaultPageLayout(),
-    fetchPodcastList(),
+  const [headerData, [podcastResponse]] = await Promise.all([
+    fetchShellHeaderData({
+      includeFlashNews: true,
+      logFields: globalLogFields,
+    }),
+    Promise.allSettled([fetchPodcastList()]),
   ])
-
-  const [sectionsData, topicsData] = processSettledResult<
-    HeaderResponse,
-    [HeadersData, Topics]
-  >(
-    headerResponse,
-    getSectionAndTopicFromDefaultHeaderData,
-    'Error occurs while getting header data in podcasts page',
-    globalLogFields
-  )
 
   const podcastListData = processSettledResult<PodcastResponse, Podcast[]>(
     podcastResponse,
@@ -160,7 +145,7 @@ export const getServerSideProps = (async ({ req, res }) => {
 
   return {
     props: {
-      headerData: { sectionsData, topicsData },
+      headerData,
       podcastListData,
     },
   }

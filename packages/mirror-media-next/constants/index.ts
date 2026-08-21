@@ -156,6 +156,13 @@ const SUB_BRAND_LINKS = [MIRRORVOICE_LINK, MIRRORFICTION_LINK, MESH_LINK]
 const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
+/**
+ * Legacy stacking scale, used by the styled-components era components.
+ *
+ * The V4 shell and the shadcn primitives under components/ui keep their layers
+ * as --mm-z-shell-* in styles/tailwind.css, slotted into this scale rather than
+ * above it, and below `top` so global dialogs (IdleTimeoutModal) keep winning.
+ */
 const Z_INDEX = {
   top: 10000,
   coverHeader: 2000,
@@ -191,6 +198,7 @@ export {
   IDLE_MODAL_LINK,
   INSTAGRAM_LINK,
   LINE_LINK,
+  MESH_LINK,
   PROMOTION_LINKS,
   RSS_LINK,
   SECTION_IDS,
