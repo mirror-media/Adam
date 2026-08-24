@@ -319,7 +319,7 @@ function SiteHeader({
             <nav
               aria-label="主要分類"
               ref={categoryStripRef}
-              className="flex min-w-0 flex-1 [scrollbar-width:none] items-center gap-mm-2xl overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] lg:gap-[clamp(1rem,6.25vw-3rem,2rem)] [&::-webkit-scrollbar]:hidden"
+              className="flex min-w-0 flex-1 [scrollbar-width:none] items-center gap-mm-2xl overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] md:justify-between lg:justify-start lg:gap-[clamp(1rem,6.25vw-3rem,2rem)] [&::-webkit-scrollbar]:hidden"
             >
               {navigation.map((item) => (
                 <div className="lg:hidden" key={`compact-${item.slug}`}>
