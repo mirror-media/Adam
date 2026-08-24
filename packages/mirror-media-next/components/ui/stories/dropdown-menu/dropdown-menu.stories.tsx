@@ -1,6 +1,6 @@
 import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { CircleUserRoundIcon } from 'lucide-react'
+import { UserIcon } from 'lucide-react'
 
 import { Button } from '../../button'
 import {
@@ -62,7 +62,7 @@ export const Default: Story = {
           aria-label="開啟會員選單"
           render={<Button size="icon-sm" variant="ghost" />}
         >
-          <CircleUserRoundIcon aria-hidden="true" />
+          <UserIcon aria-hidden="true" className="size-5" />
         </DropdownMenuTrigger>
         <DropdownMenuPortal>
           <DropdownMenuPositioner

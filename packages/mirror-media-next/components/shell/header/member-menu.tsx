@@ -1,6 +1,6 @@
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { CircleUserRoundIcon } from 'lucide-react'
+import { UserIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -40,13 +40,13 @@ function MemberMenu() {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         aria-label="開啟會員選單"
         className="GTM-header-login"
         render={<Button size="icon-sm" variant="ghost" />}
       >
-        <CircleUserRoundIcon aria-hidden="true" className="size-7" />
+        <UserIcon aria-hidden="true" className="size-5" />
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuPositioner align="end">
