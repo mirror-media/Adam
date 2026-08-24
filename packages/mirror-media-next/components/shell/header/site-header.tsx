@@ -4,6 +4,7 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
+import { ENV } from '@/config/index.mjs'
 import type {
   HeadersDataSection,
   ShellFlashNews,
@@ -228,23 +229,24 @@ function SiteHeader({
               />
             </NextLink>
 
-            {/* Figma 661:8400 places two ad slots next to the logo. These are
-                sized placeholders only; the real ad integration is out of scope
-                for this round. */}
-            <div className="hidden items-center gap-mm-l lg:flex">
-              <div
-                className="flex h-[50px] w-[110px] items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
-                data-slot="header-ad-slot"
-              >
-                110×50
+            {ENV !== 'prod' && (
+              /* Figma 661:8400 places two ad slots next to the logo. Keep
+                 these preview-only placeholders out of production markup. */
+              <div className="hidden items-center gap-mm-l lg:flex">
+                <div
+                  className="flex h-[50px] w-[110px] items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
+                  data-slot="header-ad-slot"
+                >
+                  110×50
+                </div>
+                <div
+                  className="flex h-[30px] w-30 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
+                  data-slot="header-ad-slot"
+                >
+                  120×30
+                </div>
               </div>
-              <div
-                className="flex h-[30px] w-30 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
-                data-slot="header-ad-slot"
-              >
-                120×30
-              </div>
-            </div>
+            )}
           </div>
 
           <div className="flex items-center gap-mm-l lg:hidden">
