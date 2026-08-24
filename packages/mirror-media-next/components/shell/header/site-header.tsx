@@ -231,8 +231,12 @@ function SiteHeader({
 
             {ENV !== 'prod' && (
               /* Figma 661:8400 places two ad slots next to the logo. Keep
-                 these preview-only placeholders out of production markup. */
-              <div className="hidden items-center gap-mm-l lg:flex">
+                 these preview-only placeholders out of production markup.
+                 110x50 stands in for GPT `global/RWD_LOGO`, an RWD unit the
+                 legacy header serves on every device, so neither box is gated
+                 by breakpoint. 120x30 has no unit in `constants/ads.ts` yet;
+                 it is placed here on the owner's call, pending its real id. */
+              <div className="flex items-center gap-mm-l">
                 <div
                   className="flex h-[50px] w-[110px] items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
                   data-slot="header-ad-slot"
