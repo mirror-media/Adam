@@ -73,10 +73,13 @@ function BackToTop() {
     <button
       aria-label="回到頁首"
       className={cn(
+        // The white ring pads the dark outline so the pair reads on any
+        // backdrop: this floats over both the white page and the navy footer,
+        // where a single dark ring would all but vanish.
         // z-2400 sits above the content and the sticky header, and below the
         // shell overlay, popover and ad layers. A corner ad covering this is
         // accepted: the button never hides anything else.
-        'fixed right-mm-xl bottom-mm-xl z-2400 flex size-11 items-center justify-center rounded-mm-full border border-mm-neutral-300 bg-mm-neutral-0 text-mm-base-500 shadow-lg transition duration-200 outline-none hover:border-mm-neutral-0 hover:bg-mm-base-700 hover:text-mm-neutral-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500',
+        'fixed right-mm-xl bottom-mm-xl z-2400 flex size-11 items-center justify-center rounded-mm-full border border-mm-neutral-300 bg-mm-neutral-0 text-mm-base-500 shadow-lg transition duration-200 outline-none hover:border-mm-neutral-0 hover:bg-mm-base-700 hover:text-mm-neutral-0 focus-visible:ring-2 focus-visible:ring-mm-neutral-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
         // `invisible` also takes it out of the tab order while it is hidden.
         !visible && 'invisible translate-y-mm-m opacity-0'
       )}

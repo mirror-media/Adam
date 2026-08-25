@@ -26,7 +26,7 @@ function MemberMenu() {
   if (!isLoggedIn) {
     return (
       <NextLink
-        className="GTM-header-login shrink-0 rounded-mm-xs font-mm-sans text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900 transition-colors outline-none hover:text-mm-base-500 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500"
+        className="GTM-header-login shrink-0 rounded-mm-xs font-mm-sans text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900 transition-colors outline-none hover:text-mm-base-500 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid"
         href={getLoginHref(router)}
       >
         登入

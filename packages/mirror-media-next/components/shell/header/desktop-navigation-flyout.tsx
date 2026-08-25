@@ -96,7 +96,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
             {posts.map((post) => (
               <NextLink
                 className={cn(
-                  'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400',
+                  'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid',
                   RULE,
                   'after:-bottom-3 hover:after:scale-x-100'
                 )}
@@ -147,7 +147,7 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
             {item.categories.map((category) => (
               <NextLink
                 className={cn(
-                  'relative w-fit justify-self-center rounded-mm-xs pb-1 font-mm-sans text-mm-h6 whitespace-nowrap text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400',
+                  'relative w-fit justify-self-center rounded-mm-xs pb-1 font-mm-sans text-mm-h6 whitespace-nowrap text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid',
                   RULE,
                   'after:bottom-0 hover:after:scale-x-100'
                 )}

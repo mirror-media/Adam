@@ -10,7 +10,7 @@ type LinkProps = ComponentPropsWithoutRef<typeof NextLink> & {
 }
 
 const baseLinkClass =
-  'font-mm-sans underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500'
+  'font-mm-sans underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid'
 
 const variantClassByName = {
   default:

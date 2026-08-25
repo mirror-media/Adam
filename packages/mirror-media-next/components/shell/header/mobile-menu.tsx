@@ -113,7 +113,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
             >
               {visibleTopics.map((topic) => (
                 <NextLink
-                  className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
+                  className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
                   href={`/topic/${topic.slug}`}
                   key={topic.id}
                   onClick={closeMenu}
@@ -122,7 +122,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                 </NextLink>
               ))}
               <NextLink
-                className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
+                className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
                 href="/section/topic"
                 onClick={closeMenu}
               >
@@ -148,7 +148,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                   value={item.slug}
                 >
                   <AccordionTrigger
-                    className="items-center rounded-mm-m bg-mm-base-500 p-[10px] text-mm-h5 text-mm-neutral-0 hover:text-mm-neutral-0 focus-visible:outline-mm-second-400"
+                    className="items-center rounded-mm-m bg-mm-base-500 p-[10px] text-mm-h5 text-mm-neutral-0 hover:text-mm-neutral-0 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
                     icon={<AccordionCaret />}
                   >
                     {item.name}
@@ -170,7 +170,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                 </AccordionItem>
               ) : (
                 <NextLink
-                  className="flex items-center rounded-mm-m bg-mm-base-500 p-[10px] font-mm-sans text-mm-h5 text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400"
+                  className="flex items-center rounded-mm-m bg-mm-base-500 p-[10px] font-mm-sans text-mm-h5 text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
                   href={item.href}
                   key={item.slug}
                   onClick={closeMenu}
@@ -188,7 +188,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
         >
           {shellUtilityLinks.map((link) => (
             <NextLink
-              className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-100"
+              className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
               href={link.href}
               key={link.label}
               onClick={closeMenu}

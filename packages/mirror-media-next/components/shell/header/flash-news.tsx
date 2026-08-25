@@ -114,7 +114,7 @@ function FlashNews({ items }: FlashNewsProps) {
   }
 
   const faceClassName =
-    'absolute inset-0 truncate rounded-mm-xs leading-8 backface-hidden outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400'
+    'absolute inset-0 truncate rounded-mm-xs leading-8 backface-hidden outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
 
   // One link per face: a single link around the cube would still point at the
   // item rotating away once the reader can see the one rotating in.
@@ -130,7 +130,7 @@ function FlashNews({ items }: FlashNewsProps) {
         */}
         <button
           aria-label="看下一則快訊"
-          className="rounded-mm-xs py-mm-s outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400 enabled:cursor-pointer enabled:hover:underline enabled:hover:underline-offset-4"
+          className="rounded-mm-xs py-mm-s outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid enabled:cursor-pointer enabled:hover:underline enabled:hover:underline-offset-4"
           disabled={items.length <= 1}
           onClick={advance}
           type="button"

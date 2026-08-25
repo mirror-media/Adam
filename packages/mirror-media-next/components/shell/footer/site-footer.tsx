@@ -66,7 +66,7 @@ const socialLinks = [
 
 /** Small print and the support address: blue with a standing rule, white on hover. */
 const footnoteLinkClass =
-  'rounded-mm-xs text-mm-second-400 underline underline-offset-2 outline-none transition-colors hover:text-mm-neutral-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400'
+  'rounded-mm-xs text-mm-second-400 underline underline-offset-2 outline-none transition-colors hover:text-mm-neutral-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
 
 function SiteFooter() {
   return (

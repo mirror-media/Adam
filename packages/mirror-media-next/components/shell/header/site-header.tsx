@@ -347,7 +347,7 @@ function SiteHeader({
                 <div className="lg:hidden" key={`compact-${item.slug}`}>
                   <NextLink
                     className={cn(
-                      'rounded-mm-xs font-mm-sans text-mm-h5 text-mm-neutral-800 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500',
+                      'rounded-mm-xs font-mm-sans text-mm-h5 text-mm-neutral-800 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
                       activeNavigationSlug === item.slug &&
                         'text-mm-base-500 md:text-mm-neutral-800 md:underline md:underline-offset-4'
                     )}
