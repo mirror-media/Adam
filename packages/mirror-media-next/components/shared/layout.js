@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 
 import GDPRNotification from '../gdpr'
 import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
+import { BackToTop } from '../shell/back-to-top'
 import { LegacyLayoutAdapter } from '../shell/legacy-layout-adapter'
 
 import CustomHead from './custom-head'
@@ -68,6 +69,9 @@ export default function Layout({ head, header, footer, children }) {
           {children}
         </LegacyLayoutAdapter>
       )}
+      {/* Outside both branches so every legacy route gets it exactly once.
+          Routes keep it as they move to PageShell, which renders its own. */}
+      <BackToTop />
     </>
   )
 }
