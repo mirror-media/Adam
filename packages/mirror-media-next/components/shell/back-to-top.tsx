@@ -4,9 +4,6 @@ import { ChevronUpIcon } from 'lucide-react'
 
 import { cn } from '@/components/cn'
 
-/** Below this the header is still a short scroll away, so the button stays out. */
-const SHOW_AFTER_PX = 400
-
 function BackToTop() {
   const [visible, setVisible] = useState(false)
 
@@ -15,7 +12,10 @@ function BackToTop() {
 
     const read = () => {
       frame = 0
-      setVisible(window.scrollY > SHOW_AFTER_PX)
+      // One viewport means the same thing on every screen: the reader has left
+      // the first one. Pages under two viewports tall never scroll this far.
+      const threshold = window.innerHeight
+      setVisible(window.scrollY > threshold)
     }
 
     const onScroll = () => {
@@ -27,9 +27,11 @@ function BackToTop() {
 
     read()
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
 
     return () => {
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
       if (frame) {
         window.cancelAnimationFrame(frame)
       }
