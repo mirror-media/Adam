@@ -176,6 +176,7 @@
 
 @source '../pages';
 @source '../components';
+@source '../modules';
 @source '../hooks';
 @source '../context';
 @source '../store';

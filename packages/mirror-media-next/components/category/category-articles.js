@@ -1,9 +1,9 @@
 import Image from 'next/legacy/image'
 import styled from 'styled-components'
 
+import { fetchNewsCategoryPostsJSON } from '../../modules/category/category-data'
 import LoadingPage from '../../public/images-next/loading_page.gif'
 import {
-  fetchNewsCategoryPostsJSON,
   fetchPostsByCategorySlug,
   fetchPremiumPostsByCategorySlug,
 } from '../../utils/api/category'
@@ -25,7 +25,7 @@ const Loading = styled.div`
 /**
  * @typedef {import('../shared/article-list').Article} Article
  * @typedef {import('../shared/article-list').Section} Section
- * @typedef {import('../../apollo/fragments/category').Category} Category
+ * @typedef {import('../../modules/category/category-types').CategorySummary} Category
  */
 
 /**
@@ -63,7 +63,7 @@ export default function CategoryArticles({
           : await fetchPostsByCategorySlug(category.slug, take, skip)
 
       if (isNewsCategory) {
-        return response.data.posts.items || []
+        return response.items || []
       }
       return response.data.posts
     } catch (error) {
