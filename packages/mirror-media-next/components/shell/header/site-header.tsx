@@ -4,6 +4,10 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
+import {
+  shellBrandLinkClass,
+  shellTextLinkClass,
+} from '@/components/shell/link-styles'
 import { ENV } from '@/config/index.mjs'
 import type {
   HeadersDataSection,
@@ -184,14 +188,24 @@ function SiteHeader({
             {visibleTopics.length > 0 && (
               <nav
                 aria-label="專題推薦"
-                className="hidden min-w-0 gap-mm-xl overflow-hidden font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 lg:flex"
+                // The row clips its overflow, and each link's hover rules sit
+                // just outside its margin box, so the first and last would be
+                // cut off. Widen the padding box and take the width back out of
+                // the layout again.
+                className="-mx-mm-m hidden min-w-0 gap-mm-xl overflow-hidden px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 lg:flex"
               >
                 {visibleTopics.map((topic) => (
-                  <NextLink href={`/topic/${topic.slug}`} key={topic.id}>
+                  <NextLink
+                    className={shellTextLinkClass}
+                    href={`/topic/${topic.slug}`}
+                    key={topic.id}
+                  >
                     {topic.name}
                   </NextLink>
                 ))}
-                <NextLink href="/section/topic">更多</NextLink>
+                <NextLink className={shellTextLinkClass} href="/section/topic">
+                  更多
+                </NextLink>
               </nav>
             )}
           </div>
@@ -214,7 +228,7 @@ function SiteHeader({
           <div className="flex items-center gap-mm-4xl">
             <NextLink
               aria-label="回到鏡週刊首頁"
-              className="GTM-header-logo rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500"
+              className={cn('GTM-header-logo', shellBrandLinkClass)}
               href="/"
             >
               <Image
@@ -268,6 +282,7 @@ function SiteHeader({
               {shellPartnerLinks.map((link) => (
                 <NextLink
                   aria-label={link.label}
+                  className={shellBrandLinkClass}
                   href={link.href}
                   key={link.label}
                   rel="noopener noreferrer"
@@ -308,7 +323,10 @@ function SiteHeader({
             {showStickyControls && (
               <NextLink
                 aria-label="回到鏡週刊首頁"
-                className="GTM-header-logo hidden shrink-0 rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 lg:block"
+                className={cn(
+                  'GTM-header-logo hidden shrink-0 lg:block',
+                  shellBrandLinkClass
+                )}
                 href="/"
               >
                 <Image

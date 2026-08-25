@@ -3,6 +3,11 @@ import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
 import {
+  shellBrandLinkOnDarkClass,
+  shellIconLinkOnDarkClass,
+  shellTextLinkClass,
+} from '@/components/shell/link-styles'
+import {
   FACEBOOK_LINK,
   FOOTER_PROMOTION_LINKS,
   INSTAGRAM_LINK,
@@ -59,8 +64,9 @@ const socialLinks = [
   },
 ]
 
-const externalLinkClass =
-  'rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400'
+/** Small print and the support address: blue with a standing rule, white on hover. */
+const footnoteLinkClass =
+  'rounded-mm-xs text-mm-second-400 underline underline-offset-2 outline-none transition-colors hover:text-mm-neutral-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400'
 
 function SiteFooter() {
   return (
@@ -76,7 +82,7 @@ function SiteFooter() {
           >
             {promotionLinks.map((link) => (
               <NextLink
-                className={externalLinkClass}
+                className={shellTextLinkClass}
                 href={link.href}
                 key={link.name}
                 rel="noopener noreferrer"
@@ -91,7 +97,7 @@ function SiteFooter() {
             <div className="flex items-center gap-9 md:gap-mm-3xl">
               <NextLink
                 aria-label="READr"
-                className={externalLinkClass}
+                className={cn(shellBrandLinkOnDarkClass, '-mx-1 px-1')}
                 href="https://www.readr.tw/"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -106,7 +112,9 @@ function SiteFooter() {
               </NextLink>
               <NextLink
                 aria-label={MESH_LINK.title}
-                className={externalLinkClass}
+                // Its artwork runs closer to the edge of its own artboard than
+                // READr's, so the rules need a step more room here.
+                className={cn(shellBrandLinkOnDarkClass, '-mx-2 px-2')}
                 href={MESH_LINK.href}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -124,7 +132,7 @@ function SiteFooter() {
               {socialLinks.map((link) => (
                 <NextLink
                   aria-label={link.alt}
-                  className={externalLinkClass}
+                  className={shellIconLinkOnDarkClass}
                   href={link.href}
                   key={link.alt}
                   rel="noopener noreferrer"
@@ -150,7 +158,7 @@ function SiteFooter() {
           <p>
             本網頁使用{' '}
             <a
-              className="text-mm-second-400 underline underline-offset-2"
+              className={footnoteLinkClass}
               href="https://developers.google.com/youtube/terms/developer-policies?hl=zh-tw#definition-youtube-api-services"
               rel="noopener noreferrer"
               target="_blank"
@@ -159,7 +167,7 @@ function SiteFooter() {
             </a>
             ，詳見{' '}
             <a
-              className="text-mm-second-400 underline underline-offset-2"
+              className={footnoteLinkClass}
               href="https://www.youtube.com/t/terms"
               rel="noopener noreferrer"
               target="_blank"
@@ -168,7 +176,7 @@ function SiteFooter() {
             </a>
             、{' '}
             <a
-              className="text-mm-second-400 underline underline-offset-2"
+              className={footnoteLinkClass}
               href="https://policies.google.com/privacy"
               rel="noopener noreferrer"
               target="_blank"
@@ -183,7 +191,7 @@ function SiteFooter() {
           <p>
             客服信箱{' '}
             <a
-              className="underline underline-offset-2"
+              className={footnoteLinkClass}
               href="mailto:MM-onlineservice@mirrormedia.mg"
             >
               MM-onlineservice@mirrormedia.mg
