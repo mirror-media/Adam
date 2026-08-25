@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import type { MouseEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
@@ -32,6 +33,13 @@ type FlashNewsProps = {
 function FlashNews({ items }: FlashNewsProps) {
   const [index, setIndex] = useState(0)
   const [turning, setTurning] = useState(false)
+  // Bumped on every manual advance so the auto interval restarts from the tap
+  // rather than firing whatever was left of the previous hold.
+  const [cycle, setCycle] = useState(0)
+  // Only manual advances are announced. Autoplay stays silent so the strip does
+  // not talk over the reader every few seconds.
+  const [announcement, setAnnouncement] = useState('')
+  const stripRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     setIndex(0)
@@ -43,9 +51,24 @@ function FlashNews({ items }: FlashNewsProps) {
       return
     }
 
-    const intervalId = window.setInterval(() => setTurning(true), HOLD_MS)
+    const intervalId = window.setInterval(() => {
+      // Let the strip answer for itself rather than mirroring pointer and
+      // keyboard state into flags that can fall out of step. `:hover` only
+      // counts on devices that really hover: touch browsers leave it stuck on
+      // the last thing tapped, which would stop the strip for good.
+      const hoverCapable = window.matchMedia('(hover: hover)').matches
+      const restingOnStrip = hoverCapable
+        ? ':hover, :focus-within'
+        : ':focus-within'
+
+      if (stripRef.current?.matches(restingOnStrip)) {
+        return
+      }
+      setTurning(true)
+    }, HOLD_MS)
+
     return () => window.clearInterval(intervalId)
-  }, [items.length])
+  }, [cycle, items.length])
 
   useEffect(() => {
     if (!turning) {
@@ -62,6 +85,27 @@ function FlashNews({ items }: FlashNewsProps) {
     return () => window.clearTimeout(timeoutId)
   }, [turning, items.length])
 
+  function advance(event: MouseEvent<HTMLButtonElement>) {
+    // Ignore taps mid-turn: the face the reader is aiming at is still moving.
+    if (items.length <= 1 || turning) {
+      return
+    }
+
+    // A tap parks focus on the button, and a touch browser keeps it there, so
+    // `:focus-within` would hold the strip still for the rest of the visit.
+    // Keyboard activation reports `detail === 0` and keeps its focus; a pointer
+    // hands it back, and on desktop `:hover` still covers the pause.
+    if (event.detail > 0) {
+      event.currentTarget.blur()
+    }
+
+    // The face rolling in is the one the reader asked for, so it can be named
+    // now rather than after the turn settles.
+    setAnnouncement(truncate(items[(index + 1) % items.length].title))
+    setCycle((currentCycle) => currentCycle + 1)
+    setTurning(true)
+  }
+
   const current = items[index]
   const incoming = items[(index + 1) % items.length]
 
@@ -75,10 +119,28 @@ function FlashNews({ items }: FlashNewsProps) {
   // One link per face: a single link around the cube would still point at the
   // item rotating away once the reader can see the one rotating in.
   return (
-    <span className="flex min-w-0 flex-1 items-center font-mm-body text-mm-body-m">
-      <strong className="shrink-0 font-mm-sans">快訊｜</strong>
+    <span
+      className="flex min-w-0 flex-1 items-center font-mm-body text-mm-body-m"
+      ref={stripRef}
+    >
+      <strong className="shrink-0 font-mm-sans">
+        {/*
+          The label doubles as the only manual control. Its visible text names
+          the strip, so the accessible name has to spell out what tapping does.
+        */}
+        <button
+          aria-label="看下一則快訊"
+          className="rounded-mm-xs py-mm-s outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-400 enabled:cursor-pointer enabled:hover:underline enabled:hover:underline-offset-4"
+          disabled={items.length <= 1}
+          onClick={advance}
+          type="button"
+        >
+          快訊
+        </button>
+        <span aria-hidden="true">｜</span>
+      </strong>
       <span
-        className="block min-w-0 flex-1 [perspective:400px]"
+        className="block min-w-0 flex-1 perspective-[400px]"
         style={{ height: FACE_HEIGHT }}
       >
         <span
@@ -108,6 +170,9 @@ function FlashNews({ items }: FlashNewsProps) {
             {truncate(incoming.title)}
           </NextLink>
         </span>
+      </span>
+      <span aria-live="polite" className="sr-only">
+        {announcement}
       </span>
     </span>
   )
