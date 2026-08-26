@@ -222,19 +222,18 @@ function SiteHeader({
         )}
       >
         <div
-          className="mx-auto flex h-15 w-full max-w-7xl items-center justify-between px-mm-2xl"
+          className="mx-auto flex h-15 w-full max-w-7xl items-center gap-mm-2xl px-mm-2xl"
           ref={logoRowRef}
         >
-          <div className="flex items-center gap-mm-4xl">
+          <div className="flex min-w-0 flex-1 items-center gap-mm-4xl">
             <NextLink
               aria-label="回到鏡週刊首頁"
-              className={cn('GTM-header-logo', shellBrandLinkClass)}
+              className={cn('GTM-header-logo shrink-0', shellBrandLinkClass)}
               href="/"
             >
               <Image
                 alt="鏡週刊 Mirror Media"
-                // The asset's intrinsic size is 108x46; Figma's 107x45.235 is a
-                // placement artefact, so render it unscaled.
+                // Keep the logo at its intrinsic size.
                 className="h-auto w-27"
                 height={46}
                 priority
@@ -244,35 +243,32 @@ function SiteHeader({
             </NextLink>
 
             {ENV !== 'prod' && (
-              /* Figma 661:8400 places two ad slots next to the logo. Keep
-                 these preview-only placeholders out of production markup.
-                 110x50 stands in for GPT `global/RWD_LOGO`, an RWD unit the
-                 legacy header serves on every device, so neither box is gated
-                 by breakpoint. 120x30 has no unit in `constants/ads.ts` yet;
-                 it is placed here on the owner's call, pending its real id. */
-              <div className="flex items-center gap-mm-l">
-                <div
-                  className="flex h-[50px] w-[110px] items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
-                  data-slot="header-ad-slot"
-                >
-                  110×50
-                </div>
-                <div
-                  className="flex h-[30px] w-30 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
-                  data-slot="header-ad-slot"
-                >
-                  120×30
+              <div className="@container min-w-0 flex-1">
+                {/* Show each preview slot only when it fits. */}
+                <div className="flex items-center gap-mm-l">
+                  <div
+                    className="hidden h-[50px] w-[110px] shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[110px]:flex"
+                    data-slot="header-ad-slot"
+                  >
+                    110×50
+                  </div>
+                  <div
+                    className="hidden h-[30px] w-30 shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[120px]:only:flex @min-[242px]:flex"
+                    data-slot="header-ad-slot"
+                  >
+                    120×30
+                  </div>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-mm-l lg:hidden">
+          <div className="flex shrink-0 items-center gap-mm-l lg:hidden">
             <MemberMenu />
             <MobileMenu navigation={navigation} topics={topicsData} />
           </div>
 
-          <div className="hidden min-w-0 items-center gap-mm-2xl lg:flex">
+          <div className="hidden shrink-0 items-center gap-mm-2xl lg:flex">
             <nav
               aria-label="合作品牌"
               // Figma 661:8400 gives this row a shared 28px height with the
