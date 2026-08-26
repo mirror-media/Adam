@@ -160,13 +160,10 @@ export default function AvividScript() {
     }
   }, [])
 
-  // This AviviD/Likr bootstrap (all environments) triggers a web-push flow
-  // that registers /firebase-messaging-sw.js (scope
-  // /firebase-cloud-messaging-ns-scope). That worker file is served by prod
-  // infrastructure outside this repo, so non-prod environments log a 404
-  // ServiceWorker registration error in clean browser sessions. Pre-existing,
-  // vendor-handled noise — do not "fix" it with a stub public/ file, which
-  // could silently replace the real prod push worker at the same URL.
+  // This bootstrap can register /firebase-messaging-sw.js, which is served by
+  // prod infrastructure outside this repo. WholeSiteScript excludes it on
+  // loopback hosts; do not add a public stub that could replace the real prod
+  // push worker.
   return (
     <Script
       async
