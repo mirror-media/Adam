@@ -9,6 +9,7 @@
  * over any layered rule regardless of specificity.
  */
 @import '../modules/list-article/components/micro-ad.css';
+@import '../modules/aside/components/pop-in-ad.css';
 
 @theme {
   /* Keep Tailwind's default breakpoint names and values, normalized to px. */
