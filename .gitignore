@@ -91,6 +91,8 @@ typings/
 
 # Next.js build output
 .next/
+.next-dev/
+.next-analyze/
 out/
 packages/mirror-media-next/public/storybook/
 packages/mirror-media-next/public/_storybook/
