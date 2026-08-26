@@ -6,10 +6,10 @@ import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
 import CategoryArticles from '@/components/category/category-articles'
-import { cn } from '@/components/cn'
 import CustomHead from '@/components/shared/custom-head'
 import WineWarning from '@/components/shared/wine-warning'
 import { PageShell } from '@/components/shell/page-shell'
+import { Typography } from '@/components/ui/typography'
 import { ENV, SITE_URL } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import {
@@ -18,7 +18,6 @@ import {
   toCategorySummary,
 } from '@/modules/category/category-data'
 import type { CategorySummary } from '@/modules/category/category-types'
-import { CategoryTitle } from '@/modules/category/components/category-title'
 import { getCategoryOfWineSlug, getLogTraceObject } from '@/utils'
 import { getSectionGPTPageKey } from '@/utils/ad'
 import type { ShellHeaderData } from '@/utils/api'
@@ -99,12 +98,7 @@ export default function CategoryPage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <main
-          className={cn(
-            'mx-auto w-[320px] legacy-md:w-[672px] legacy-xl:w-[1024px]',
-            isPremium && 'mt-mm-2xl legacy-md:mt-7 legacy-xl:mt-9'
-          )}
-        >
+        <main className="mx-auto w-full max-w-7xl px-10">
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -118,20 +112,28 @@ export default function CategoryPage({
             )}
           </GPT_Placeholder>
 
-          <CategoryTitle
-            isPremium={isPremium}
-            name={category.name}
-            sectionSlug={sectionSlug}
-          />
+          <Typography
+            as="h1"
+            variant="h3"
+            className="mt-mm-2xl mb-mm-xl ml-mm-xl text-mm-base-700 legacy-md:mx-0 legacy-md:mb-mm-3xl legacy-xl:mt-mm-3xl legacy-xl:mb-mm-l"
+          >
+            {category.name}
+          </Typography>
 
-          <CategoryArticles
-            postsCount={postsCount}
-            posts={posts}
-            category={category}
-            renderPageSize={RENDER_PAGE_SIZE}
-            isPremium={isPremium}
-            isNewsCategory={isNewsCategory}
-          />
+          <div className="flex xl:gap-6.5">
+            <div className="w-full max-w-187.5">
+              <CategoryArticles
+                postsCount={postsCount}
+                posts={posts}
+                category={category}
+                renderPageSize={RENDER_PAGE_SIZE}
+                isPremium={isPremium}
+                isNewsCategory={isNewsCategory}
+              />
+            </div>
+
+            <aside className="w-full max-w-106 shrink-0" />
+          </div>
 
           {shouldShowAd && isNotWineCategory ? (
             // Above the shell header (--mm-z-shell-header, 1000) and below its
