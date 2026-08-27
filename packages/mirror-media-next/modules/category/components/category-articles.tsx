@@ -1,8 +1,7 @@
 import Image from 'next/legacy/image'
 
 import type { ListingPost } from '@/apollo/fragments/post'
-import { fetchNewsCategoryPostsJSON } from '@/modules/category/category-data'
-import type { CategorySummary } from '@/modules/category/category-types'
+import InfiniteScrollList from '@/components/infinite-scroll-list'
 import { ArticleList } from '@/modules/list-article/components/article-list'
 import LoadingPage from '@/public/images-next/loading_page.gif'
 import {
@@ -10,7 +9,8 @@ import {
   fetchPremiumPostsByCategorySlug,
 } from '@/utils/api/category'
 
-import InfiniteScrollList from '../infinite-scroll-list'
+import { fetchNewsCategoryPostsJSON } from '../category-data'
+import type { CategorySummary } from '../category-types'
 
 type CategoryArticlesProps = {
   category: CategorySummary
@@ -81,6 +81,7 @@ export default function CategoryArticles({
       fetchCount={Math.ceil(postsCount / fetchPageSize)}
       fetchListInPage={fetchPostsFromPage}
       loader={loader}
+      key={category.slug}
     >
       {(renderList) => (
         <ArticleList

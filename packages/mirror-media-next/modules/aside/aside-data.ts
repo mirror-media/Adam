@@ -48,7 +48,6 @@ function toAsideArticles(input: unknown, boundary: string): AsideArticle[] {
     const itemResult = asideArticleSchema.safeParse(item)
 
     if (itemResult.success) {
-      console.log('success')
       articles.push(itemResult.data)
       return
     }

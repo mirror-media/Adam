@@ -8,7 +8,6 @@ import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '@/components/ads/gpt/gpt-placeholder'
-import CategoryArticles from '@/components/category/category-articles'
 import CustomHead from '@/components/shared/custom-head'
 import WineWarning from '@/components/shared/wine-warning'
 import { PageShell } from '@/components/shell/page-shell'
@@ -25,6 +24,7 @@ import {
   toCategorySummary,
 } from '@/modules/category/category-data'
 import type { CategorySummary } from '@/modules/category/category-types'
+import CategoryArticles from '@/modules/category/components/category-articles'
 import { getCategoryOfWineSlug, getLogTraceObject } from '@/utils'
 import { getSectionGPTPageKey } from '@/utils/ad'
 import type { ShellHeaderData } from '@/utils/api'
@@ -105,7 +105,7 @@ export default function CategoryPage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <main className="mx-auto w-full max-w-7xl px-10">
+        <main className="mx-auto w-full max-w-7xl px-10 pb-10 md:pb-mm-6xl">
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}

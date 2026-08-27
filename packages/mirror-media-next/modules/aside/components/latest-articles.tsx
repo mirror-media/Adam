@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback } from 'react'
 
 import { fetchLatestArticlesInSection } from '../aside-data'
-import type { AsideArticle } from '../aside-types'
 
 import { AsideArticleList } from './aside-article-list'
 
@@ -10,26 +9,16 @@ type LatestArticlesProps = {
 }
 
 export function LatestArticles({ sectionSlug }: LatestArticlesProps) {
-  const [articles, setArticles] = useState<AsideArticle[]>([])
-
-  useEffect(() => {
-    let isStale = false
-
-    fetchLatestArticlesInSection(sectionSlug).then((latestArticles) => {
-      if (!isStale) {
-        setArticles(latestArticles)
-      }
-    })
-
-    return () => {
-      isStale = true
-    }
-  }, [sectionSlug])
+  // Memoised so the list does not rebuild its observer on every render.
+  const fetchFunc = useCallback(
+    () => fetchLatestArticlesInSection(sectionSlug),
+    [sectionSlug]
+  )
 
   return (
     <AsideArticleList
+      fetchFunc={fetchFunc}
       from="cate_newnews"
-      articles={articles}
       title="最新文章"
     />
   )
