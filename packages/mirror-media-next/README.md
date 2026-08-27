@@ -117,8 +117,15 @@ docker run --rm -e PROXY_AMP=true -p 3000:3000 mirror-media-next
 ```text
 packages/mirror-media-next/
 ├── pages/                              # Next.js routes, GSSP, route composition and policy
+│   ├── index.tsx                       # Homepage route composition
 │   └── podcasts/index.tsx              # Podcast route composition
 ├── modules/                            # Business capabilities, shallow by default
+│   ├── homepage/
+│   │   ├── homepage-types.ts           # Homepage-owned view-model types
+│   │   ├── homepage-data.ts            # Server data aggregation
+│   │   ├── homepage-client-data.ts     # Browser load-more boundary
+│   │   ├── homepage-static-json.schema.ts
+│   │   └── components/                 # Homepage-owned UI
 │   └── podcast/
 │       ├── podcast-types.ts            # Podcast-owned view-model types
 │       ├── podcast-data.ts             # Fetch, validate and normalize Podcast data
