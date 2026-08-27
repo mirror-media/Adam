@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
@@ -6,7 +6,10 @@ import { Typography } from '@/components/ui/typography'
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
-import { homepageCardHoverClass } from './homepage-card-styles'
+import {
+  homepageCardHoverClass,
+  homepageCardLinkFocusClass,
+} from './homepage-card-styles'
 import { SectionTitle } from './section-title'
 
 type HeadlineListProps = {
@@ -33,10 +36,11 @@ function HeadlineList({
             className="border-t border-mm-neutral-300 py-mm-m"
             key={article.key}
           >
-            <Link
+            <NextLink
               className={cn(
                 'group grid min-h-16 grid-cols-[96px_minmax(0,1fr)] items-center gap-mm-m xl:gap-mm-l',
-                homepageCardHoverClass
+                homepageCardHoverClass,
+                homepageCardLinkFocusClass
               )}
               href={article.href}
               rel="noopener noreferrer"
@@ -52,7 +56,7 @@ function HeadlineList({
               >
                 {article.title}
               </Typography>
-            </Link>
+            </NextLink>
           </li>
         ))}
       </ol>

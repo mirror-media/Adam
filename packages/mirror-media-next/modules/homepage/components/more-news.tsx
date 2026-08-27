@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
+import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,10 @@ import { fetchMoreHomepageNews } from '../homepage-client-data'
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
-import { homepageCardHoverClass } from './homepage-card-styles'
+import {
+  homepageCardHoverClass,
+  homepageCardLinkFocusClass,
+} from './homepage-card-styles'
 import { SectionTitle } from './section-title'
 
 const MicroAd = dynamic(
@@ -164,10 +167,11 @@ function MoreNews({
           return (
             <Fragment key={article.key}>
               <article className="h-full min-w-0">
-                <Link
+                <NextLink
                   className={cn(
                     'GTM-homepage-latest-list group flex h-full flex-col',
-                    homepageCardHoverClass
+                    homepageCardHoverClass,
+                    homepageCardLinkFocusClass
                   )}
                   href={article.href}
                   ref={
@@ -207,7 +211,7 @@ function MoreNews({
                       {formatPublishedDate(article.publishedDate)}
                     </Typography>
                   )}
-                </Link>
+                </NextLink>
               </article>
 
               {shouldShowAd &&

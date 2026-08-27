@@ -3,7 +3,7 @@
 import 'swiper/css'
 
 import { useState } from 'react'
-import Link from 'next/link'
+import NextLink from 'next/link'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import type { Swiper as SwiperInstance } from 'swiper'
 import { A11y } from 'swiper'
@@ -83,9 +83,9 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
               className="relative size-full bg-mm-neutral-0"
               key={article.key}
             >
-              <Link
+              <NextLink
                 aria-label={`編輯精選第 ${index + 1} 則，共 ${articles.length} 則：${article.title}`}
-                className="GTM-editorchoice-list absolute inset-0 block"
+                className="GTM-editorchoice-list absolute inset-0 block outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
                 href={article.href}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -107,7 +107,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
                 >
                   {article.title}
                 </Typography>
-              </Link>
+              </NextLink>
             </SwiperSlide>
           ))}
         </Swiper>
@@ -123,7 +123,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
           <>
             <Button
               aria-label="上一則編輯精選"
-              className="absolute inset-y-0 left-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 active:not-aria-[haspopup]:translate-y-0 md:left-mm-xl"
+              className="absolute inset-y-0 left-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:left-mm-xl"
               onClick={selectPrevious}
               size="icon-sm"
               type="button"
@@ -133,7 +133,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
             </Button>
             <Button
               aria-label="下一則編輯精選"
-              className="absolute inset-y-0 right-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 active:not-aria-[haspopup]:translate-y-0 md:right-mm-xl"
+              className="absolute inset-y-0 right-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:right-mm-xl"
               onClick={selectNext}
               size="icon-sm"
               type="button"

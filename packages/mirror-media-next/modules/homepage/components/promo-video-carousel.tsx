@@ -255,7 +255,7 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
           <>
             <Button
               aria-label={`上一${videosPerGroup === 1 ? '則' : '組'}最新影音`}
-              className="absolute inset-y-0 -left-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 active:not-aria-[haspopup]:translate-y-0 md:-left-10 xl:-left-3"
+              className="absolute inset-y-0 -left-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:-left-10 xl:-left-3"
               onClick={selectPrevious}
               size="icon-sm"
               type="button"
@@ -265,7 +265,7 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
             </Button>
             <Button
               aria-label={`下一${videosPerGroup === 1 ? '則' : '組'}最新影音`}
-              className="absolute inset-y-0 -right-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 active:not-aria-[haspopup]:translate-y-0 md:-right-10 xl:-right-3"
+              className="absolute inset-y-0 -right-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:-right-10 xl:-right-3"
               onClick={selectNext}
               size="icon-sm"
               type="button"
