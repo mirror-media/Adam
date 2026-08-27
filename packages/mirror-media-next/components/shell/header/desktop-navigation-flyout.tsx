@@ -89,49 +89,53 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
       ref={panelRef}
     >
       <div className="mx-auto flex h-62 w-full max-w-7xl items-center gap-mm-3xl px-mm-2xl">
-        {posts.length > 0 && (
-          // The frame spaces image, title, image, title evenly at 16px rather
-          // than setting the two articles apart, so the row reads as one strip.
-          <div className="flex shrink-0 gap-mm-xl">
-            {posts.map((post) => (
-              <NextLink
-                className={cn(
-                  'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid',
-                  RULE,
-                  'after:-bottom-3 hover:after:scale-x-100'
-                )}
-                href={post.href}
-                key={post.href}
-              >
-                {/* 220x146 is the frame's image box. The height is off the 4px
+        {/* Laid out even when it has nothing to show. Holding the width is what
+            keeps the divider and the category columns where they are when a
+            section comes back with fewer than two posts; without it the columns
+            slide left and centre themselves against the whole panel.
+            2 x (220 image + 16 + 152 title) + 16 between the pair = 792.
+
+            The frame spaces image, title, image, title evenly at 16px rather
+            than setting the two articles apart, so the row reads as one strip. */}
+        <div className="flex w-198 shrink-0 gap-mm-xl">
+          {posts.map((post) => (
+            <NextLink
+              className={cn(
+                'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid',
+                RULE,
+                'after:-bottom-3 hover:after:scale-x-100'
+              )}
+              href={post.href}
+              key={post.href}
+            >
+              {/* 220x146 is the frame's image box. The height is off the 4px
                     grid but stays: it sets the ratio the artwork is cropped to,
                     and the panel height and divider are placed against it. */}
-                <Image
-                  alt=""
-                  className="h-[146px] w-55 shrink-0 bg-mm-neutral-0 object-cover"
-                  height={146}
-                  src={post.heroImage}
-                  width={220}
-                />
-                {/* Figma's 150px here is the measured width of the title text
+              <Image
+                alt=""
+                className="h-[146px] w-55 shrink-0 bg-mm-neutral-0 object-cover"
+                height={146}
+                src={post.heroImage}
+                width={220}
+              />
+              {/* Figma's 150px here is the measured width of the title text
                     box, not a chosen column width, so it snaps to the grid. */}
-                <div className="flex w-38 flex-col justify-between">
-                  <span className="line-clamp-3 font-mm-sans text-mm-h6 text-mm-neutral-0">
-                    {post.title}
-                  </span>
-                  <time
-                    className="font-mm-sans text-mm-caption-l text-mm-neutral-400"
-                    dateTime={post.publishedDate}
-                  >
-                    {formatPostDate(post.publishedDate)}
-                  </time>
-                </div>
-              </NextLink>
-            ))}
-          </div>
-        )}
+              <div className="flex w-38 flex-col justify-between">
+                <span className="line-clamp-3 font-mm-sans text-mm-h6 text-mm-neutral-0">
+                  {post.title}
+                </span>
+                <time
+                  className="font-mm-sans text-mm-caption-l text-mm-neutral-400"
+                  dateTime={post.publishedDate}
+                >
+                  {formatPostDate(post.publishedDate)}
+                </time>
+              </div>
+            </NextLink>
+          ))}
+        </div>
 
-        {posts.length > 0 && item.categories.length > 0 && (
+        {item.categories.length > 0 && (
           <div
             aria-hidden="true"
             className="h-43 w-px shrink-0 bg-mm-neutral-600"
