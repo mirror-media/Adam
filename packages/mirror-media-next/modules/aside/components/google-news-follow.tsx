@@ -6,7 +6,7 @@ import gnewsGif from '@/public/images-next/gnews-gif.gif'
 export function GoogleNewsFollow() {
   return (
     <Link
-      className="hidden legacy-xl:block"
+      className="hidden xl:block"
       href="https://google.com/preferences/source?q=mirrormedia.mg"
       target="_blank"
       rel="noreferrer noopener"

@@ -22,5 +22,12 @@ export function PopularArticles() {
     }
   }, [])
 
-  return <AsideArticleList articles={articles} title="熱門文章" withPopInAd />
+  return (
+    <AsideArticleList
+      from="cate_hotnews"
+      articles={articles}
+      title="熱門文章"
+      withPopInAd
+    />
+  )
 }

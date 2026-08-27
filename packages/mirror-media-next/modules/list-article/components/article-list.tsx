@@ -2,6 +2,8 @@ import { Fragment } from 'react'
 import dynamic from 'next/dynamic'
 
 import type { ListingPost } from '@/apollo/fragments/post'
+import { useBreakpoint } from '@/hooks/use-breakpoint'
+import useWindowDimensions from '@/hooks/use-window-dimensions'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import {
   getMicroAdUnitId,
@@ -11,8 +13,8 @@ import {
 
 import type { ArticleListSection } from '../list-article-types'
 
-import { ArticleCard } from './article-card'
 import { ArticleListItem } from './article-list-item'
+import { LeadArticle } from './lead-article'
 
 const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
   ssr: false,
@@ -24,12 +26,15 @@ const MicroAd = dynamic(
 )
 
 type ArticleListProps = {
+  from?: string
   renderList: ListingPost[]
   section?: ArticleListSection
 }
 
-export function ArticleList({ renderList, section }: ArticleListProps) {
+export function ArticleList({ from, renderList, section }: ArticleListProps) {
   const { shouldShowAd } = useDisplayAd()
+  const { width } = useWindowDimensions()
+  const smBreakpoint = useBreakpoint('sm')
 
   /**
    * 這個元件會被共用於 author/tag/category 列表頁
@@ -37,48 +42,66 @@ export function ArticleList({ renderList, section }: ArticleListProps) {
    * 在 category 列表頁時，GPT 廣告的 PageKey 設定為 'section.slug'
    * 若 category 無所屬的 section (related-Section)，函式 `getSectionGPTPageKey` 會回傳 'other'
    */
+
   const gptAdPageKey = getSectionGPTPageKey(section?.slug ?? '')
 
-  // The lead articles are taken off the top before the ad slots are worked
-  // out, so those keep counting from the first row exactly as before.
-  const cardList = renderList.slice(0, 3)
-  const listAfterCards = renderList.slice(3)
+  const leadArticles = renderList.slice(0, 3)
+  const articlesAfterLead = renderList.slice(3)
+
+  /**
+   * 領頭的那幾篇在 Tailwind `sm` 以下會渲染成一般的列表列，此時整頁是一串連續的
+   * 列表，特企的位置要從第一篇開始算，所以它們也要參與計算、列表區的 index 要補上
+   * 被切走的三篇。`width` 和 `smBreakpoint` 在首次 client render 前都是 undefined，
+   * 但廣告要等 `shouldShowAd`（登入流程跑完）才會出現，不會早於它們。
+   */
+  const isMobile =
+    width !== undefined && smBreakpoint !== undefined && width < smBreakpoint
 
   const renderListWithAd = shouldShowAd
-    ? listAfterCards.slice(0, 9)
-    : listAfterCards.slice(0, 12)
+    ? articlesAfterLead.slice(0, 6)
+    : articlesAfterLead.slice(0, 9)
 
   const renderListWithoutAd = shouldShowAd
-    ? listAfterCards.slice(9)
-    : listAfterCards.slice(12)
+    ? articlesAfterLead.slice(6)
+    : articlesAfterLead.slice(9)
 
   return (
     <>
-      {/* 列表元件_List */}
-      <div className="mb-mm-2xl flex gap-7 bg-mm-neutral-100 px-[16.5px] py-[27.5px]">
-        {cardList.map((item, index) => (
-          <ArticleCard
-            key={item.id}
-            className="min-w-0 flex-1"
-            item={item}
-            priority={index === 0}
-          />
-        ))}
+      <div className="mb-mm-2xl space-y-mm-2xl sm:flex sm:gap-7 sm:space-y-0 sm:bg-mm-neutral-100 sm:px-[16.5px] sm:py-[27.5px]">
+        {leadArticles.map((item, index) => {
+          const microAdUnitId =
+            shouldShowAd && isMobile && needInsertMicroAdAfter(index)
+              ? getMicroAdUnitId(index, 'LISTING', 'RWD')
+              : null
+
+          return (
+            <Fragment key={item.id}>
+              <LeadArticle
+                className="sm:min-w-0 sm:flex-1"
+                from={from}
+                item={item}
+                priority={index === 0}
+              />
+              {microAdUnitId && <MicroAd unitId={microAdUnitId} />}
+            </Fragment>
+          )
+        })}
       </div>
 
       <div className="max-w-180">
         <div className="space-y-mm-2xl">
           {renderListWithAd.map((item, index) => {
+            const adIndex = isMobile ? index + leadArticles.length : index
             // `getMicroAdUnitId` returns null when the slot has no unit, which
             // the ad component cannot render.
             const microAdUnitId =
-              shouldShowAd && needInsertMicroAdAfter(index)
-                ? getMicroAdUnitId(index, 'LISTING', 'RWD')
+              shouldShowAd && needInsertMicroAdAfter(adIndex)
+                ? getMicroAdUnitId(adIndex, 'LISTING', 'RWD')
                 : null
 
             return (
               <Fragment key={item.id}>
-                <ArticleListItem item={item} />
+                <ArticleListItem from={from} item={item} />
                 {microAdUnitId && <MicroAd unitId={microAdUnitId} />}
               </Fragment>
             )
@@ -87,15 +110,15 @@ export function ArticleList({ renderList, section }: ArticleListProps) {
 
         {shouldShowAd && (
           <GPTAd
-            adKey="FT"
-            className="mx-auto my-mm-2xl h-auto w-full legacy-xl:my-[35px]"
+            adKey="MB_FT"
+            className="mx-auto my-mm-2xl h-auto w-full xl:my-[35px]"
             pageKey={gptAdPageKey}
           />
         )}
 
         <div className="space-y-mm-2xl">
           {renderListWithoutAd.map((item) => (
-            <ArticleListItem key={item.id} item={item} />
+            <ArticleListItem key={item.id} from={from} item={item} />
           ))}
         </div>
       </div>

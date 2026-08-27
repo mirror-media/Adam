@@ -15,6 +15,7 @@ const PopInAd = dynamic(() => import('@/components/ads/pop-in/pop-in-ad'), {
 
 type AsideArticleListProps = {
   articles: AsideArticle[]
+  from?: string
   renderAmount?: number
   title: string
   withPopInAd?: boolean
@@ -22,6 +23,7 @@ type AsideArticleListProps = {
 
 export function AsideArticleList({
   articles,
+  from,
   renderAmount = 6,
   title,
   withPopInAd = false,
@@ -47,7 +49,7 @@ export function AsideArticleList({
 
           return (
             <Fragment key={article.id}>
-              <AsideArticleItem article={article} />
+              <AsideArticleItem article={article} from={from} />
               {popInId && (
                 <PopInAd popInId={popInId} className="mm-pop-in-ad-hot" />
               )}

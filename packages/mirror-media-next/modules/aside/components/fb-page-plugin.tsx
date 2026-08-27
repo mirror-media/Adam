@@ -20,7 +20,7 @@ export function FbPagePlugin({ width = 424 }: FbPagePluginProps) {
         strategy="lazyOnload"
         nonce="SMSY4ynQ"
       />
-      <section className="hidden w-full text-center legacy-md:block">
+      <section className="hidden w-full text-center md:block">
         {/*
          * TODO: 每個用到 FB plugin 的元件都各自渲染一份 `#fb-root`，同一頁出現兩份就會 id 重複，
          * 之後可思考到 `_document` 統一處理。目前放在 section 內是為了不讓它佔掉 <aside> 的一個 flex item。

@@ -14,6 +14,7 @@ import InfiniteScrollList from '../infinite-scroll-list'
 
 type CategoryArticlesProps = {
   category: CategorySummary
+  from?: string
   isNewsCategory: boolean
   isPremium: boolean
   posts: ListingPost[]
@@ -23,6 +24,7 @@ type CategoryArticlesProps = {
 
 export default function CategoryArticles({
   category,
+  from,
   isNewsCategory,
   isPremium,
   posts,
@@ -82,6 +84,7 @@ export default function CategoryArticles({
     >
       {(renderList) => (
         <ArticleList
+          from={from}
           // `InfiniteScrollList` declares its render list as `Object[]`, a
           // JSDoc type in untyped JavaScript. Correcting it is a separate
           // change.

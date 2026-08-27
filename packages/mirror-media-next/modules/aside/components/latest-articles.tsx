@@ -26,5 +26,11 @@ export function LatestArticles({ sectionSlug }: LatestArticlesProps) {
     }
   }, [sectionSlug])
 
-  return <AsideArticleList articles={articles} title="最新文章" />
+  return (
+    <AsideArticleList
+      from="cate_newnews"
+      articles={articles}
+      title="最新文章"
+    />
+  )
 }

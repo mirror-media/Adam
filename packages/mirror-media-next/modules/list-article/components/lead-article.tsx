@@ -1,26 +1,34 @@
 import Image from '@readr-media/react-image'
 
 import type { ListingPost } from '@/apollo/fragments/post'
+import { cn } from '@/components/cn'
 import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
 import { transformTimeDataIntoDotFormat } from '@/utils'
 
-type ArticleListItemProps = {
+type LeadArticleProps = {
+  className?: string
   from?: string
   item: ListingPost
   priority?: boolean
 }
 
-export function ArticleListItem({
+/**
+ * One of the articles leading the list. It is a card from sm up; below it the
+ * design has no card, so it reads as an ordinary list row — which is why the
+ * section badge and the date are rendered here and hidden from sm up.
+ */
+export function LeadArticle({
+  className,
   from,
   item,
   priority,
-}: ArticleListItemProps) {
+}: LeadArticleProps) {
   const sectionName = item.sections?.[0]?.name
 
   return (
     <Link
-      className="relative block hover:no-underline sm:flex sm:items-center sm:gap-mm-xl"
+      className={cn('relative block hover:no-underline', className)}
       href={`${
         item.type === 'external'
           ? `/external/${item.slug}`
@@ -29,7 +37,7 @@ export function ArticleListItem({
       target="_blank"
       rel="noreferrer"
     >
-      <div className="relative mb-mm-l aspect-[330/220] w-full sm:mb-0 sm:aspect-auto sm:h-[127px] sm:w-[179px] sm:shrink-0">
+      <div className="relative aspect-[330/220] w-full sm:aspect-[112/80]">
         <Image
           images={item.heroImage?.resized}
           imagesWebP={item.heroImage?.resizedWebp}
@@ -51,29 +59,21 @@ export function ArticleListItem({
         </Typography>
       )}
 
-      <div>
-        <Typography
-          as="h2"
-          variant="subtitle"
-          className="mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-1 sm:text-mm-h5"
-        >
-          {item.title}
-        </Typography>
-        <Typography
-          as="p"
-          variant="caption-l"
-          className="text-[#a1a1a1] sm:text-mm-caption-s sm:text-mm-neutral-700"
-        >
-          {transformTimeDataIntoDotFormat(item.publishedDate)}
-        </Typography>
-        <Typography
-          as="p"
-          variant="body-s"
-          className="hidden text-mm-neutral-500 sm:line-clamp-2"
-        >
-          {item.brief?.blocks?.[0]?.text}
-        </Typography>
-      </div>
+      <Typography
+        as="h2"
+        variant="subtitle"
+        className="mt-mm-l mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-0 sm:text-mm-h5 sm:text-[rgba(0,0,0,0.87)]"
+      >
+        {item.title}
+      </Typography>
+
+      <Typography
+        as="p"
+        variant="caption-l"
+        className="text-[#a1a1a1] sm:hidden"
+      >
+        {transformTimeDataIntoDotFormat(item.publishedDate)}
+      </Typography>
     </Link>
   )
 }

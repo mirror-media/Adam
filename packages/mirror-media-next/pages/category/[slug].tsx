@@ -122,13 +122,13 @@ export default function CategoryPage({
           <Typography
             as="h1"
             variant="h3"
-            className="mt-mm-2xl mb-mm-xl ml-mm-xl text-mm-base-700 legacy-md:mx-0 legacy-md:mb-mm-3xl legacy-xl:mt-mm-3xl legacy-xl:mb-mm-l"
+            className="mt-mm-2xl mb-mm-2xl text-mm-base-700 sm:ml-mm-xl md:mx-0 md:mb-mm-3xl xl:mt-mm-3xl xl:mb-mm-l"
           >
             {category.name}
           </Typography>
 
-          <div className="flex xl:gap-6.5">
-            <div className="w-full max-w-187.5">
+          <div className="flex md:gap-10 xl:gap-6.5">
+            <div className="mx-auto w-[calc(100%-464px)] max-w-187.5 flex-1 lg:mx-0">
               <CategoryArticles
                 postsCount={postsCount}
                 posts={posts}
@@ -136,10 +136,11 @@ export default function CategoryPage({
                 renderPageSize={RENDER_PAGE_SIZE}
                 isPremium={isPremium}
                 isNewsCategory={isNewsCategory}
+                from={'cate_list'}
               />
             </div>
 
-            <aside className="flex w-full max-w-106 shrink-0 flex-col gap-mm-4xl">
+            <aside className="hidden w-full max-w-106 shrink-0 flex-col gap-mm-4xl lg:flex">
               <LatestArticles sectionSlug={sectionSlug} />
               <GPT_Placeholder_Aside
                 shouldShowAd={shouldShowAd}
@@ -163,7 +164,7 @@ export default function CategoryPage({
             // Above the shell header (--mm-z-shell-header, 1000) and below its
             // overlays, matching the legacy Z_INDEX.coverHeader this ad used.
             <GPTMbStAd
-              className="fixed inset-x-0 bottom-0 z-[2000] mx-auto h-auto max-h-[50px] w-full max-w-[320px] legacy-xl:hidden"
+              className="fixed inset-x-0 bottom-0 z-[2000] mx-auto h-auto max-h-[50px] w-full max-w-[320px] xl:hidden"
               pageKey={GptPageKey}
             />
           ) : null}

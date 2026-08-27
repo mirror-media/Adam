@@ -8,13 +8,14 @@ import type { ArticleStyle, AsideArticle } from '../aside-types'
 
 type AsideArticleItemProps = {
   article: AsideArticle
+  from?: string
 }
 
-export function AsideArticleItem({ article }: AsideArticleItemProps) {
+export function AsideArticleItem({ article, from }: AsideArticleItemProps) {
   return (
     <Link
       className="flex items-center gap-mm-3xl hover:no-underline"
-      href={getArticleHref(
+      href={`${getArticleHref(
         article.slug,
         // The JSON is not validated down to the style names, and only
         // 'campaign' and 'projects' change the href anyway.
@@ -26,7 +27,7 @@ export function AsideArticleItem({ article }: AsideArticleItemProps) {
           所以維持 空字串
          */
         ''
-      )}
+      )}${from ? `?from=${from}` : ''}`}
       target="_blank"
       rel="noreferrer"
     >

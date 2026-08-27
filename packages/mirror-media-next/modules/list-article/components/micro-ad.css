@@ -10,15 +10,14 @@
 
   #compass-fit-widget-content {
     display: flex;
-    align-items: center;
-    gap: var(--spacing-mm-xl);
+    flex-direction: column;
+    gap: var(--spacing-mm-l);
   }
 
   .listArticleBlock__figure {
     position: relative;
-    flex-shrink: 0;
-    width: 179px;
-    height: 127px;
+    width: 100%;
+    aspect-ratio: 330 / 220;
 
     img {
       width: 100%;
@@ -48,10 +47,8 @@
 
   .listArticleBlock__content {
     display: flex;
-    min-width: 0;
-    flex: 1;
     flex-direction: column;
-    gap: 1px;
+    gap: var(--spacing-mm-l);
 
     /* Title */
     h2 {
@@ -61,22 +58,56 @@
       -webkit-line-clamp: 2;
       color: var(--color-mm-neutral-800);
       font-family: var(--font-mm-sans);
-      font-size: var(--text-mm-h5);
-      font-weight: var(--text-mm-h5--font-weight);
-      line-height: var(--text-mm-h5--line-height);
+      font-size: var(--text-mm-subtitle);
+      font-weight: var(--text-mm-subtitle--font-weight);
+      line-height: var(--text-mm-subtitle--line-height);
     }
 
-    /* Description */
     p {
       display: -webkit-box;
       overflow: hidden;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
-      color: var(--color-mm-neutral-500);
-      font-family: var(--font-mm-body);
-      font-size: var(--text-mm-body-s);
-      font-weight: var(--text-mm-body-s--font-weight);
-      line-height: var(--text-mm-body-s--line-height);
+      color: #a1a1a1;
+      font-family: var(--font-mm-sans);
+      font-size: var(--text-mm-caption-l);
+      font-weight: var(--text-mm-caption-l--font-weight);
+      line-height: var(--text-mm-caption-l--line-height);
+    }
+  }
+
+  @media (width >= theme(--breakpoint-sm)) {
+    #compass-fit-widget-content {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--spacing-mm-xl);
+    }
+
+    .listArticleBlock__figure {
+      width: 179px;
+      height: 127px;
+      flex-shrink: 0;
+      aspect-ratio: auto;
+    }
+
+    .listArticleBlock__content {
+      min-width: 0;
+      flex: 1;
+      gap: 1px;
+
+      h2 {
+        font-size: var(--text-mm-h5);
+        font-weight: var(--text-mm-h5--font-weight);
+        line-height: var(--text-mm-h5--line-height);
+      }
+
+      p {
+        color: var(--color-mm-neutral-500);
+        font-family: var(--font-mm-body);
+        font-size: var(--text-mm-body-s);
+        font-weight: var(--text-mm-body-s--font-weight);
+        line-height: var(--text-mm-body-s--line-height);
+      }
     }
   }
 }
