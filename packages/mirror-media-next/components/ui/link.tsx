@@ -1,25 +1,32 @@
 import type { ComponentPropsWithoutRef } from 'react'
 import NextLink from 'next/link'
+import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/components/cn'
 
-type LinkVariant = 'default' | 'muted' | 'button'
+// Use cn(linkVariants(...), className) when external classes may override a variant.
+const linkVariants = cva(
+  'font-mm-sans underline-offset-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
+  {
+    variants: {
+      variant: {
+        default:
+          'text-mm-body2 text-mm-base-700 hover:text-mm-second-600 hover:underline',
+        muted:
+          'text-mm-body2 text-mm-neutral-600 hover:text-mm-base-700 hover:underline',
+        plain: 'hover:underline',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+)
 
-type LinkProps = ComponentPropsWithoutRef<typeof NextLink> & {
-  variant?: LinkVariant
-}
+type LinkVariant = NonNullable<VariantProps<typeof linkVariants>['variant']>
 
-const baseLinkClass =
-  'font-mm-sans underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid'
-
-const variantClassByName = {
-  default:
-    'text-mm-body2 text-mm-base-700 hover:text-mm-second-600 hover:underline',
-  muted:
-    'text-mm-body2 text-mm-neutral-600 hover:text-mm-base-700 hover:underline',
-  button:
-    'inline-flex h-8 min-w-25 items-center justify-center rounded-mm-s bg-mm-base-700 px-mm-l text-mm-subtitle text-mm-neutral-0 transition-colors hover:bg-mm-base-500',
-} satisfies Record<LinkVariant, string>
+type LinkProps = ComponentPropsWithoutRef<typeof NextLink> &
+  VariantProps<typeof linkVariants>
 
 export function Link({
   children,
@@ -28,13 +35,11 @@ export function Link({
   ...props
 }: LinkProps) {
   return (
-    <NextLink
-      className={cn(baseLinkClass, variantClassByName[variant], className)}
-      {...props}
-    >
+    <NextLink className={cn(linkVariants({ variant }), className)} {...props}>
       {children}
     </NextLink>
   )
 }
 
+export { linkVariants }
 export type { LinkProps, LinkVariant }
