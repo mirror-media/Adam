@@ -96,3 +96,20 @@ declare module '@readr-media/react-image' {
 
   export default function Image(props: ImageProps): JSX.Element
 }
+
+declare module 'swiper' {
+  export const Autoplay: unknown
+  export const Navigation: unknown
+
+  export class Swiper {
+    slideNext(): void
+    slidePrev(): void
+  }
+}
+
+declare module 'swiper/react' {
+  import type { ComponentType, ReactNode } from 'react'
+
+  export const Swiper: ComponentType<Record<string, unknown>>
+  export const SwiperSlide: ComponentType<{ children?: ReactNode }>
+}
