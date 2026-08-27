@@ -6,9 +6,13 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import type { Swiper as SwiperInstance } from 'swiper'
-import { A11y, Autoplay } from 'swiper'
+import { A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
+import {
+  CAROUSEL_TRANSITION_MS,
+  useCarouselTicker,
+} from '@/components/common/carousel-ticker'
 import { Button } from '@/components/ui/button'
 import { Typography } from '@/components/ui/typography'
 
@@ -21,12 +25,15 @@ type EditorChoiceCarouselProps = {
   articles: HomepageArticle[]
 }
 
-const AUTOPLAY_INTERVAL_MS = 5000
-
 function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [swiper, setSwiper] = useState<SwiperInstance | null>(null)
   const shouldLoop = articles.length > 1
+  const { carouselRef, interactionProps } = useCarouselTicker<HTMLElement>({
+    isActive: shouldLoop,
+    onTick: () => swiper?.slideNext(),
+    skipWhenOffscreen: true,
+  })
 
   if (!articles.length) return null
 
@@ -39,17 +46,11 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
 
   return (
     <section
+      {...interactionProps}
       aria-label="編輯精選"
       aria-roledescription="carousel"
       className="relative w-full overflow-hidden bg-mm-neutral-0 md:bg-mm-neutral-800"
-      onBlurCapture={(event) => {
-        if (shouldLoop && !event.currentTarget.contains(event.relatedTarget)) {
-          swiper?.autoplay.start()
-        }
-      }}
-      onFocusCapture={() => {
-        if (shouldLoop) swiper?.autoplay.stop()
-      }}
+      ref={carouselRef}
       onKeyDownCapture={(event) => {
         if (!(event.target instanceof HTMLButtonElement)) return
 
@@ -69,22 +70,13 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
             slideLabelMessage: '{{index}} / {{slidesLength}}',
           }}
           allowTouchMove={shouldLoop}
-          autoplay={
-            shouldLoop
-              ? {
-                  delay: AUTOPLAY_INTERVAL_MS,
-                  disableOnInteraction: false,
-                  pauseOnMouseEnter: true,
-                }
-              : false
-          }
-          className="size-full"
+          className="size-full [--swiper-wrapper-transition-timing-function:ease-in-out]"
           loop={shouldLoop}
-          modules={[A11y, Autoplay]}
+          modules={[A11y]}
           onRealIndexChange={(instance) => setActiveIndex(instance.realIndex)}
           onSwiper={setSwiper}
           slidesPerView={1}
-          speed={300}
+          speed={CAROUSEL_TRANSITION_MS}
         >
           {articles.map((article, index) => (
             <SwiperSlide

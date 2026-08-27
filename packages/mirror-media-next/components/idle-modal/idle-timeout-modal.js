@@ -9,6 +9,7 @@ import { IDLE_MODAL_LINK } from '../../constants'
 import { CUSTOMER_SERVICE_INFOS } from '../../constants/footer'
 import useClickOutside from '../../hooks/useClickOutside'
 import { getActiveOrderSection } from '../../utils'
+import { useCarouselTickerPause } from '../common/carousel-ticker'
 
 import PopularNewsItem from './popular-news-item'
 
@@ -126,6 +127,7 @@ const InfoTitle = styled.span`
  */
 const IdleTimeoutModal = () => {
   const [isIdle, setIsIdle] = useState(false)
+  const [isDialogViewport, setIsDialogViewport] = useState(false)
   /**
    * @type {[ArticleDataContainSectionsWithOrdered[], React.Dispatch<ArticleDataContainSectionsWithOrdered[]>]}
    */
@@ -135,6 +137,23 @@ const IdleTimeoutModal = () => {
   useClickOutside(modalRef, () => {
     handleClose()
   })
+
+  useEffect(() => {
+    const dialogViewportQuery = window.matchMedia('(min-width: 768px)')
+    const syncDialogViewport = () => {
+      setIsDialogViewport(dialogViewportQuery.matches)
+    }
+
+    syncDialogViewport()
+    dialogViewportQuery.addEventListener('change', syncDialogViewport)
+
+    return () => {
+      dialogViewportQuery.removeEventListener('change', syncDialogViewport)
+    }
+  }, [])
+
+  const isDialogOpen = isIdle && isDialogViewport
+  useCarouselTickerPause(isDialogOpen)
 
   useEffect(() => {
     let timeout
@@ -197,7 +216,7 @@ const IdleTimeoutModal = () => {
   }
 
   return (
-    isIdle && (
+    isDialogOpen && (
       <Background>
         <ModalWrapper ref={modalRef}>
           <Image

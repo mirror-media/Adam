@@ -1,17 +1,17 @@
-import type { MouseEvent } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
+import {
+  CAROUSEL_TRANSITION_MS,
+  useCarouselTicker,
+} from '@/components/common/carousel-ticker'
 import type { ShellFlashNews } from '@/utils/api'
 
 /** PM contract: 32 characters, then a space and an ellipsis. */
 function truncate(title: string) {
   return title.length > 32 ? `${title.slice(0, 32)} …` : title
 }
-
-const HOLD_MS = 6000
-const TURN_MS = 1000
 
 /**
  * The cube's edge. Faces sit half of it from the axis, and the cube is pushed
@@ -33,42 +33,21 @@ type FlashNewsProps = {
 function FlashNews({ items }: FlashNewsProps) {
   const [index, setIndex] = useState(0)
   const [turning, setTurning] = useState(false)
-  // Bumped on every manual advance so the auto interval restarts from the tap
-  // rather than firing whatever was left of the previous hold.
-  const [cycle, setCycle] = useState(0)
   // Only manual advances are announced. Autoplay stays silent so the strip does
   // not talk over the reader every few seconds.
   const [announcement, setAnnouncement] = useState('')
-  const stripRef = useRef<HTMLSpanElement>(null)
+  const { carouselRef, interactionProps } = useCarouselTicker<HTMLSpanElement>({
+    isActive: items.length > 1,
+    onTick: () => {
+      if (!turning) setTurning(true)
+    },
+    skipWhenOffscreen: true,
+  })
 
   useEffect(() => {
     setIndex(0)
     setTurning(false)
   }, [items])
-
-  useEffect(() => {
-    if (items.length <= 1) {
-      return
-    }
-
-    const intervalId = window.setInterval(() => {
-      // Let the strip answer for itself rather than mirroring pointer and
-      // keyboard state into flags that can fall out of step. `:hover` only
-      // counts on devices that really hover: touch browsers leave it stuck on
-      // the last thing tapped, which would stop the strip for good.
-      const hoverCapable = window.matchMedia('(hover: hover)').matches
-      const restingOnStrip = hoverCapable
-        ? ':hover, :focus-within'
-        : ':focus-within'
-
-      if (stripRef.current?.matches(restingOnStrip)) {
-        return
-      }
-      setTurning(true)
-    }, HOLD_MS)
-
-    return () => window.clearInterval(intervalId)
-  }, [cycle, items.length])
 
   useEffect(() => {
     if (!turning) {
@@ -80,29 +59,20 @@ function FlashNews({ items }: FlashNewsProps) {
     const timeoutId = window.setTimeout(() => {
       setIndex((currentIndex) => (currentIndex + 1) % items.length)
       setTurning(false)
-    }, TURN_MS)
+    }, CAROUSEL_TRANSITION_MS)
 
     return () => window.clearTimeout(timeoutId)
   }, [turning, items.length])
 
-  function advance(event: MouseEvent<HTMLButtonElement>) {
+  function advance() {
     // Ignore taps mid-turn: the face the reader is aiming at is still moving.
     if (items.length <= 1 || turning) {
       return
     }
 
-    // A tap parks focus on the button, and a touch browser keeps it there, so
-    // `:focus-within` would hold the strip still for the rest of the visit.
-    // Keyboard activation reports `detail === 0` and keeps its focus; a pointer
-    // hands it back, and on desktop `:hover` still covers the pause.
-    if (event.detail > 0) {
-      event.currentTarget.blur()
-    }
-
     // The face rolling in is the one the reader asked for, so it can be named
     // now rather than after the turn settles.
     setAnnouncement(truncate(items[(index + 1) % items.length].title))
-    setCycle((currentCycle) => currentCycle + 1)
     setTurning(true)
   }
 
@@ -120,8 +90,9 @@ function FlashNews({ items }: FlashNewsProps) {
   // item rotating away once the reader can see the one rotating in.
   return (
     <span
+      {...interactionProps}
       className="flex min-w-0 flex-1 items-center font-mm-body text-mm-body-m"
-      ref={stripRef}
+      ref={carouselRef}
     >
       <strong className="shrink-0 font-mm-sans">
         {/*
@@ -147,10 +118,13 @@ function FlashNews({ items }: FlashNewsProps) {
           className={cn(
             'relative block h-full transform-3d',
             turning &&
-              'transition-transform duration-1000 ease-in-out motion-reduce:transition-none'
+              'transition-transform ease-in-out motion-reduce:transition-none'
           )}
           style={{
             transform: `translateZ(-${HALF}px) rotateX(${turning ? 90 : 0}deg)`,
+            transitionDuration: turning
+              ? `${CAROUSEL_TRANSITION_MS}ms`
+              : undefined,
           }}
         >
           <NextLink
