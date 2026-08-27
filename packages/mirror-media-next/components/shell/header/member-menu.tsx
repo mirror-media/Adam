@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Link } from '@/components/ui/link'
 import { logout, useMembership } from '@/context/membership'
 import { useAppDispatch } from '@/hooks/useRedux'
 import { loginActions } from '@/slice/login-slice'
@@ -25,12 +26,13 @@ function MemberMenu() {
 
   if (!isLoggedIn) {
     return (
-      <NextLink
-        className="GTM-header-login shrink-0 rounded-mm-xs font-mm-sans text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900 transition-colors outline-none hover:text-mm-base-500 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid"
+      <Link
+        className="GTM-header-login shrink-0 rounded-mm-xs text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900"
         href={getLoginHref(router)}
+        variant="plain"
       >
         登入
-      </NextLink>
+      </Link>
     )
   }
 

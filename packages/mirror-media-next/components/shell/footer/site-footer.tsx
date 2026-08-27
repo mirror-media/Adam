@@ -3,10 +3,11 @@ import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
 import {
-  shellBrandLinkOnDarkClass,
+  shellBracketBrandLinkOnDarkClass,
+  shellBracketTextLinkOnDarkClass,
   shellIconLinkOnDarkClass,
-  shellTextLinkClass,
 } from '@/components/shell/link-styles'
+import { linkVariants } from '@/components/ui/link'
 import {
   FACEBOOK_LINK,
   FOOTER_PROMOTION_LINKS,
@@ -64,9 +65,10 @@ const socialLinks = [
   },
 ]
 
-/** Small print and the support address: blue with a standing rule, white on hover. */
-const footnoteLinkClass =
-  'rounded-mm-xs text-mm-second-400 underline underline-offset-2 outline-none transition-colors hover:text-mm-neutral-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
+const footnoteLinkClass = cn(
+  linkVariants({ variant: 'plain' }),
+  'rounded-mm-xs text-mm-second-400 underline-offset-2 focus-visible:outline-mm-neutral-0'
+)
 
 function SiteFooter() {
   return (
@@ -82,7 +84,7 @@ function SiteFooter() {
           >
             {promotionLinks.map((link) => (
               <NextLink
-                className={shellTextLinkClass}
+                className={shellBracketTextLinkOnDarkClass}
                 href={link.href}
                 key={link.name}
                 rel="noopener noreferrer"
@@ -97,7 +99,7 @@ function SiteFooter() {
             <div className="flex items-center gap-9 md:gap-mm-3xl">
               <NextLink
                 aria-label="READr"
-                className={cn(shellBrandLinkOnDarkClass, '-mx-1 px-1')}
+                className={cn(shellBracketBrandLinkOnDarkClass, '-mx-1 px-1')}
                 href="https://www.readr.tw/"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -114,7 +116,7 @@ function SiteFooter() {
                 aria-label={MESH_LINK.title}
                 // Its artwork runs closer to the edge of its own artboard than
                 // READr's, so the rules need a step more room here.
-                className={cn(shellBrandLinkOnDarkClass, '-mx-2 px-2')}
+                className={cn(shellBracketBrandLinkOnDarkClass, '-mx-2 px-2')}
                 href={MESH_LINK.href}
                 rel="noopener noreferrer"
                 target="_blank"

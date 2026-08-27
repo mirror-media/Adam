@@ -3,6 +3,11 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 import { XIcon } from 'lucide-react'
 
+import { cn } from '@/components/cn'
+import {
+  shellBracketTextLinkOnDarkClass,
+  shellBrandLinkClass,
+} from '@/components/shell/link-styles'
 import {
   Accordion,
   AccordionContent,
@@ -31,6 +36,12 @@ type MobileMenuProps = {
   navigation: ShellNavigationItem[]
   topics: Topics
 }
+
+const mobilePrimaryLinkClass =
+  'relative outline-none after:absolute after:inset-x-[10px] after:bottom-1 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-mm-neutral-0 after:transition-transform after:duration-150 after:content-[""] hover:text-mm-neutral-0 hover:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid motion-reduce:after:transition-none'
+
+const mobileTextLinkOnDarkClass =
+  'rounded-mm-xs no-underline outline-none transition-colors hover:text-mm-neutral-0 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
 
 /**
  * Figma renders the disclosure indicator as a solid triangle that points
@@ -77,7 +88,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
         />
       </SheetTrigger>
       <SheetContent
-        className="w-full max-w-none gap-0 overflow-hidden border-0 bg-mm-base-600 p-0 data-[side=left]:w-full sm:max-w-none data-[side=left]:sm:max-w-none"
+        className="w-full max-w-none gap-0 overflow-hidden border-0 bg-mm-base-600 p-0 focus-visible:outline-mm-neutral-0 data-[side=left]:w-full sm:max-w-none data-[side=left]:sm:max-w-none"
         closeLabel="關閉主選單"
         showCloseButton={false}
         side="left"
@@ -87,7 +98,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
           render={
             <Button
               aria-label="關閉主選單"
-              className="absolute top-mm-3xl right-mm-xl z-10 size-7 rounded-full bg-mm-base-500 p-0 text-mm-neutral-100 hover:bg-mm-base-400 hover:text-mm-neutral-100 md:right-mm-4xl"
+              className="absolute top-mm-3xl right-mm-xl z-10 size-7 rounded-full bg-mm-base-500 p-0 text-mm-neutral-100 hover:bg-mm-base-400 hover:text-mm-neutral-100 focus-visible:outline-mm-neutral-0 md:right-mm-4xl"
               size="icon-sm"
               variant="ghost"
             />
@@ -109,11 +120,11 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
             <nav
               aria-label="專題推薦"
               ref={topicStripRef}
-              className="mt-mm-m flex [scrollbar-width:none] gap-mm-xl overflow-x-auto font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="-mx-mm-m mt-mm-m flex [scrollbar-width:none] gap-mm-xl overflow-x-auto px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {visibleTopics.map((topic) => (
                 <NextLink
-                  className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+                  className={shellBracketTextLinkOnDarkClass}
                   href={`/topic/${topic.slug}`}
                   key={topic.id}
                   onClick={closeMenu}
@@ -122,7 +133,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                 </NextLink>
               ))}
               <NextLink
-                className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+                className={shellBracketTextLinkOnDarkClass}
                 href="/section/topic"
                 onClick={closeMenu}
               >
@@ -148,17 +159,25 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                   value={item.slug}
                 >
                   <AccordionTrigger
-                    className="items-center rounded-mm-m bg-mm-base-500 p-[10px] text-mm-h5 text-mm-neutral-0 hover:text-mm-neutral-0 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+                    className={cn(
+                      'items-center rounded-mm-m bg-mm-base-500 p-[10px] text-mm-h5 text-mm-neutral-0',
+                      mobilePrimaryLinkClass
+                    )}
                     icon={<AccordionCaret />}
                   >
                     {item.name}
                   </AccordionTrigger>
-                  <AccordionContent className="flex flex-wrap gap-x-mm-2xl gap-y-mm-l px-mm-2xl pt-mm-l pb-0 [&_a]:text-mm-body-m [&_a]:text-mm-base-100 [&_a]:no-underline [&_a]:hover:text-mm-neutral-0">
-                    <NextLink href={item.href} onClick={closeMenu}>
+                  <AccordionContent className="flex flex-wrap gap-x-mm-2xl gap-y-mm-l px-mm-2xl pt-mm-l pb-0 [&_a]:text-mm-body-m [&_a]:text-mm-base-100">
+                    <NextLink
+                      className={mobileTextLinkOnDarkClass}
+                      href={item.href}
+                      onClick={closeMenu}
+                    >
                       全部
                     </NextLink>
                     {item.categories.map((category) => (
                       <NextLink
+                        className={mobileTextLinkOnDarkClass}
                         href={category.href}
                         key={category.slug}
                         onClick={closeMenu}
@@ -170,7 +189,10 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                 </AccordionItem>
               ) : (
                 <NextLink
-                  className="flex items-center rounded-mm-m bg-mm-base-500 p-[10px] font-mm-sans text-mm-h5 text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+                  className={cn(
+                    'flex items-center rounded-mm-m bg-mm-base-500 p-[10px] font-mm-sans text-mm-h5 text-mm-neutral-0',
+                    mobilePrimaryLinkClass
+                  )}
                   href={item.href}
                   key={item.slug}
                   onClick={closeMenu}
@@ -188,7 +210,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
         >
           {shellUtilityLinks.map((link) => (
             <NextLink
-              className="rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+              className={mobileTextLinkOnDarkClass}
               href={link.href}
               key={link.label}
               onClick={closeMenu}
@@ -204,6 +226,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
           {shellPartnerLinks.map((link) => (
             <NextLink
               aria-label={link.label}
+              className={shellBrandLinkClass}
               href={link.href}
               key={link.label}
               rel="noopener noreferrer"

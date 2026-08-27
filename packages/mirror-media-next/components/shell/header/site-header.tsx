@@ -5,8 +5,8 @@ import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
 import {
+  shellBracketTextLinkOnDarkClass,
   shellBrandLinkClass,
-  shellTextLinkClass,
 } from '@/components/shell/link-styles'
 import { ENV } from '@/config/index.mjs'
 import type {
@@ -196,14 +196,17 @@ function SiteHeader({
               >
                 {visibleTopics.map((topic) => (
                   <NextLink
-                    className={shellTextLinkClass}
+                    className={shellBracketTextLinkOnDarkClass}
                     href={`/topic/${topic.slug}`}
                     key={topic.id}
                   >
                     {topic.name}
                   </NextLink>
                 ))}
-                <NextLink className={shellTextLinkClass} href="/section/topic">
+                <NextLink
+                  className={shellBracketTextLinkOnDarkClass}
+                  href="/section/topic"
+                >
                   更多
                 </NextLink>
               </nav>
@@ -343,7 +346,7 @@ function SiteHeader({
                 <div className="lg:hidden" key={`compact-${item.slug}`}>
                   <NextLink
                     className={cn(
-                      'rounded-mm-xs font-mm-sans text-mm-h5 text-mm-neutral-800 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
+                      'rounded-mm-xs font-mm-sans text-mm-h5 text-mm-neutral-800 outline-none hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
                       activeNavigationSlug === item.slug &&
                         'text-mm-base-500 md:text-mm-neutral-800 md:underline md:underline-offset-4'
                     )}
