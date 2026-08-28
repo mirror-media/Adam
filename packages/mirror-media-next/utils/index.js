@@ -5,7 +5,8 @@ import utc from 'dayjs/plugin/utc'
 import { GCP_PROJECT_ID } from '../config/index.mjs'
 
 /**
- * @typedef {import('../apollo/fragments/section').Section[]} Sections
+ * @typedef {{ id?: string | null, name?: string | null, slug?: string | null, state?: string | null } | null} SectionLike
+ * @typedef {SectionLike[]} Sections
  */
 /**
  * @typedef {import('../apollo/fragments/category').Category} Category
@@ -252,8 +253,8 @@ const getNumberWithCommas = (num) => {
 /**
  * Return sections that are in `active` state and sorted.
  *
- * @param {Sections} sections
- * @param {Sections} sectionsInInputOrder
+ * @param {Sections | null | undefined} sections
+ * @param {Sections | null | undefined} sectionsInInputOrder
  * @return {Sections}
  */
 const getActiveOrderSection = (sections, sectionsInInputOrder) => {
@@ -264,7 +265,7 @@ const getActiveOrderSection = (sections, sectionsInInputOrder) => {
    * Need to filter state of `sectionsInInputOrder` to match the results of sections.
    */
   const activeSectionsOrder = Array.isArray(sectionsInInputOrder)
-    ? sectionsInInputOrder.filter((section) => section.state === 'active')
+    ? sectionsInInputOrder.filter((section) => section?.state === 'active')
     : []
 
   /**
@@ -273,7 +274,7 @@ const getActiveOrderSection = (sections, sectionsInInputOrder) => {
    * filter `state` status of `sections` again.
    * */
   const activeSections = Array.isArray(sections)
-    ? sections.filter((section) => section.state === 'active')
+    ? sections.filter((section) => section?.state === 'active')
     : []
 
   if (activeSectionsOrder.length > 0) {

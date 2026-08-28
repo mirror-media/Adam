@@ -22,14 +22,13 @@ import { processSettledResult } from '@/utils/response-processor'
 import type {
   StoryFlashNewsData,
   StoryHeaderData,
-  StoryLayoutType,
   StoryPost,
   StoryPostQueryResult,
 } from './story-types'
 
 export function getStoryLayoutType(
   articleStyle: StoryPostQueryResult['style']
-): StoryLayoutType {
+) {
   if (articleStyle === 'wide') {
     return 'style-wide'
   } else if (articleStyle === 'photography') {

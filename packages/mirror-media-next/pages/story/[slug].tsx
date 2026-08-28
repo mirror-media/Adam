@@ -4,21 +4,27 @@ import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
-import styled from 'styled-components'
 
 import FullScreenAds from '@/components/ads/full-screen-ads'
+import GptAd from '@/components/ads/gpt/gpt-ad'
+import GPTFloatingAd from '@/components/ads/gpt/gpt-floating-ad'
+import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
+import {
+  GPT_Placeholder,
+  GPT_Placeholder_Aside,
+} from '@/components/ads/gpt/gpt-placeholder'
 import Layout from '@/components/shared/layout'
 import UserBehaviorLogger from '@/components/shared/user-behavior-logger'
 import WineWarning from '@/components/shared/wine-warning'
-import StoryNormalStyle from '@/components/story/normal'
-import AdultOnlyWarning from '@/components/story/shared/adult-only-warning'
+import { ArticleSummary } from '@/components/shell/article/post-summary'
+import { ThemeElement } from '@/components/shell/article/theme-element'
+import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
 import { generateJsonLdsData } from '@/components/story/shared/json-lds-data'
 import JsonLdsScript from '@/components/story/shared/json-lds-script'
 import StoryHead from '@/components/story/shared/story-head'
-import {
-  ENV,
-  // TEST_GPT_AD_FEATURE_TOGGLE,
-} from '@/config/index.mjs'
+import { Link, Typography } from '@/components/ui'
+import { ENV } from '@/config/index.mjs'
+import { useDisplayAd } from '@/hooks/useDisplayAd'
 import {
   fetchStoryHeaderAndFlashNewsData,
   fetchStoryPost,
@@ -37,10 +43,12 @@ import Skeleton from '@/public/images-next/skeleton.png'
 import type { StoryDataLayer } from '@/types/dataLayer'
 import {
   convertDraftToText,
+  getActiveOrderSection,
   getCategoryOfWineSlug,
   getLogTraceObject,
   getResizedUrl,
 } from '@/utils'
+import { getSectionGPTPageKey } from '@/utils/ad'
 import { setPageCache } from '@/utils/cache-setting'
 import { buildStoryDataLayer } from '@/utils/gtm/build-data-layer'
 import { logGqlError } from '@/utils/log/shared'
@@ -52,14 +60,66 @@ import {
 
 const { hasContentInRawContentBlock } = MirrorMedia
 
-const StoryWideStyle = dynamic(() => import('@/components/story/wide'))
+const classNameForGTM = 'GTM-story-page-view'
+
+const AdultOnlyWarning = dynamic(
+  () => import('@/components/story/shared/adult-only-warning')
+)
+const StoryWideStyle = dynamic(() => import('@/components/story/wide'), {
+  loading: () => (
+    <div className="fixed mx-auto my-0 h-full w-full">
+      <Image
+        src={Skeleton}
+        alt="loading..."
+        width={20}
+        height={20}
+        className="mx-auto my-0"
+      />
+    </div>
+  ),
+})
 const StoryPhotographyStyle = dynamic(
-  () => import('@/components/story/photography')
+  () => import('@/components/story/photography'),
+  {
+    loading: () => (
+      <div className="fixed mx-auto my-0 h-full w-full">
+        <Image
+          src={Skeleton}
+          alt="loading..."
+          width={20}
+          height={20}
+          className="mx-auto my-0"
+        />
+      </div>
+    ),
+  }
+)
+const PostLayout = dynamic(
+  () => import('@/components/shell/article/post-layout'),
+  {
+    loading: () => (
+      <div className="fixed mx-auto my-0 h-full w-full">
+        <Image
+          src={Skeleton}
+          alt="loading..."
+          width={20}
+          height={20}
+          className="mx-auto my-0"
+        />
+      </div>
+    ),
+  }
 )
 const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
   ssr: false,
 })
-// import DevGptAd from '../../components/story/dev-gpt-ad'
+const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
+
+const DableAd = dynamic(() => import('@/components/common/dable-ad'), {
+  ssr: false,
+})
 
 type StoryPageProps = {
   postData: StoryPost
@@ -70,17 +130,6 @@ type StoryPageProps = {
   jsonLdData: object[]
   dataLayer: StoryDataLayer
 }
-
-const Loading = styled.div`
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  position: fixed;
-
-  img {
-    margin: 0 auto;
-  }
-`
 
 export default function Story({
   postData,
@@ -105,6 +154,10 @@ export default function Story({
     isLoaded: true,
   }
 
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd(
+    hiddenAdvertised ?? false
+  )
+
   const allRelatedStories = useLoadMoreRelatedStories(
     slug ?? '',
     initialRelatedStories
@@ -118,61 +171,21 @@ export default function Story({
       .join(',')
   }, [writers])
 
-  const renderStoryLayout = () => {
-    /**
-     * Because GA is currently unable to send custom event, we use gtm className to collect custom page-view.
-     */
-    const classNameForGTM = 'GTM-story-page-view'
-    switch (storyLayoutType) {
-      case 'style-normal':
-        return (
-          <StoryNormalStyle
-            postData={postData}
-            postContent={postContent}
-            headerData={headerData}
-            flashNewsData={flashNewsData}
-            classNameForGTM={classNameForGTM}
-            allRelatedStories={allRelatedStories}
-          />
-        )
-      case 'style-wide':
-        return (
-          <StoryWideStyle
-            postData={postData}
-            postContent={postContent}
-            classNameForGTM={classNameForGTM}
-            allRelatedStories={allRelatedStories}
-          />
-        )
-      case 'style-photography':
-        return (
-          <StoryPhotographyStyle
-            postData={postData}
-            postContent={postContent}
-            classNameForGTM={classNameForGTM}
-            allRelatedStories={allRelatedStories}
-          />
-        )
-      default:
-        return (
-          <StoryNormalStyle
-            postData={postData}
-            postContent={postContent}
-            headerData={headerData}
-            flashNewsData={flashNewsData}
-            classNameForGTM={classNameForGTM}
-            allRelatedStories={allRelatedStories}
-          />
-        )
-    }
-  }
-  const storyLayoutJsx = renderStoryLayout()
   const nonNullCategories = (categories ?? []).filter(
     (category): category is NonNullable<typeof category> => category != null
   )
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
   const noCategoryOfWineSlug =
     getCategoryOfWineSlug(nonNullCategories).length === 0
+
+  // Ads are keyed by the story's own section (matching StoryNormalStyle),
+  // not by any partner concept — Post has no `partner` field.
+  const sectionsWithOrdered = getActiveOrderSection(
+    postData.sections,
+    postData.sectionsInInputOrder
+  )
+  const [section] = sectionsWithOrdered
+  const pageKeyForGptAd = getSectionGPTPageKey(section?.slug ?? '')
 
   return (
     <>
@@ -195,23 +208,212 @@ export default function Story({
           pageType: 'story',
           pageSlug: slug ?? '',
         }}
-        header={{ type: 'empty' }}
-        footer={{ type: 'empty' }}
+        header={{
+          type: 'default-with-flash-news',
+          data: {
+            sectionsData: headerData.sectionsData,
+            topicsData: headerData.topicsData,
+            flashNewsData: flashNewsData,
+          },
+        }}
+        footer={{ type: 'default' }}
       >
         <MisoPageView productIds={`story_${slug ?? ''}`} />
         <UserBehaviorLogger writers={writersInString} />
-        {!storyLayoutJsx && (
-          <Loading>
-            <Image src={Skeleton} alt="loading..."></Image>
-          </Loading>
+        {shouldShowAd && (
+          <GPT_Placeholder
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
+            <GptAd
+              pageKey={pageKeyForGptAd}
+              adKey="HD"
+              className="h-auto w-full"
+            />
+          </GPT_Placeholder>
         )}
-        {storyLayoutJsx}
+        {storyLayoutType === 'style-normal' && (
+          <>
+            <PostLayout
+              {...postData}
+              renderAdInContent={() => (
+                <GptAd
+                  pageKey={pageKeyForGptAd}
+                  adKey="PC_AT1"
+                  className="h-auto w-full"
+                />
+              )}
+              renderAside={(summary) => (
+                <>
+                  <GPT_Placeholder_Aside
+                    shouldShowAd={shouldShowAd}
+                    isLogInProcessFinished={isLogInProcessFinished}
+                  >
+                    <GptAd
+                      pageKey={pageKeyForGptAd}
+                      adKey="PC_R1"
+                      className="hidden xl:mx-auto xl:block xl:h-auto xl:w-full"
+                    />
+                  </GPT_Placeholder_Aside>
+                  {summary && Array.isArray(summary) && summary.length > 0 && (
+                    <ArticleSummary items={summary} />
+                  )}
+                  <GPT_Placeholder_Aside
+                    shouldShowAd={shouldShowAd}
+                    isLogInProcessFinished={isLogInProcessFinished}
+                  >
+                    <GptAd
+                      pageKey={pageKeyForGptAd}
+                      adKey="PC_R2"
+                      className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
+                    />
+                  </GPT_Placeholder_Aside>
+                  <div className="flex justify-center">
+                    <Link href="https://google.com/preferences/source?q=mirrormedia.mg">
+                      <Image
+                        width={320}
+                        height={100}
+                        src="/images-next/story/gnews-gif.gif"
+                        alt="google-news"
+                      />
+                    </Link>
+                  </div>
+                  <FbPagePlugin
+                    facebookPagePluginSetting={{ 'data-width': 424 }}
+                  />
+                </>
+              )}
+              renderNextUp={() => (
+                <>
+                  <ThemeElement
+                    as="span"
+                    theme="accent"
+                    className="inline-flex rounded-t-lg px-3 py-1"
+                  >
+                    <Typography
+                      as="span"
+                      variant="subtitle"
+                      className="text-mm-neutral-100"
+                    >
+                      延伸閱讀
+                    </Typography>
+                  </ThemeElement>
+                  <ThemeElement
+                    as="ul"
+                    theme="post"
+                    className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2"
+                  >
+                    {allRelatedStories.map((postItem) => (
+                      <li
+                        key={postItem.slug}
+                        className="border-b border-b-black py-4 last:border-0 md:odd:pr-6 md:nth-last-[-n+2]:border-b-0"
+                      >
+                        <Link
+                          href={`/story/${postItem.slug}`}
+                          className="grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]"
+                        >
+                          <picture className="relative block aspect-4/3">
+                            <Image
+                              fill
+                              className="object-cover"
+                              src={
+                                postItem.heroImage?.resizedWebp?.original ??
+                                '/images-next/default-og-img.png'
+                              }
+                              alt={postItem.title ?? ''}
+                              loading="lazy"
+                            />
+                          </picture>
+                          <Typography
+                            as="div"
+                            variant="h6"
+                            className="line-clamp-3 text-mm-base-700"
+                          >
+                            {postItem.title}
+                          </Typography>
+                        </Link>
+                      </li>
+                    ))}
+                  </ThemeElement>
+                </>
+              )}
+              renderDable={() => (
+                <>
+                  {shouldShowAd && (
+                    <>
+                      <div className="hidden xl:flex xl:min-h-62.5 xl:w-full xl:items-center xl:justify-between xl:pb-4">
+                        <GPTAd
+                          adKey="PC_E1"
+                          pageKey={pageKeyForGptAd}
+                          className="hidden h-auto w-full xl:m-0 xl:block"
+                        />
+                        <GPTAd
+                          adKey="PC_E2"
+                          pageKey={pageKeyForGptAd}
+                          className="hidden h-auto w-full xl:m-0 xl:block"
+                        />
+                      </div>
+                      <DableAd breakpoint="xl" className="mx-2 md:mx-0" />
+                    </>
+                  )}
+                </>
+              )}
+            />
+
+            {shouldShowAd && (
+              <GPTAd
+                pageKey={pageKeyForGptAd}
+                adKey="MB_AT3"
+                className="mx-[-20px] block h-auto w-full min-[336px]:mx-auto xl:hidden"
+              />
+            )}
+            {shouldShowAd && (
+              <GptAd
+                pageKey={pageKeyForGptAd}
+                adKey="MB_E1"
+                className="mx-auto my-6 block h-auto w-full xl:hidden"
+              />
+            )}
+            {shouldShowAd && section?.slug === 'carandwatch' && (
+              <GPTFloatingAd pageKey={pageKeyForGptAd} />
+            )}
+          </>
+        )}
+        {storyLayoutType === 'style-photography' && (
+          <StoryPhotographyStyle
+            postData={postData}
+            postContent={postContent}
+            classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
+          />
+        )}
+        {storyLayoutType === 'style-wide' && (
+          <StoryWideStyle
+            postData={postData}
+            postContent={postContent}
+            classNameForGTM={classNameForGTM}
+            allRelatedStories={allRelatedStories}
+          />
+        )}
+
         <WineWarning categories={nonNullCategories} />
-        <AdultOnlyWarning isAdult={isAdult ?? false} />
+        {isAdult && <AdultOnlyWarning isAdult={true} />}
         {noCategoryOfWineSlug && (
           <FullScreenAds hiddenAdvertised={hiddenAdvertised ?? false} />
         )}
-        {/* {TEST_GPT_AD_FEATURE_TOGGLE === 'on' && <DevGptAd />} */}
+        {shouldShowAd && (
+          <GptAd
+            pageKey={pageKeyForGptAd}
+            adKey="FT"
+            className="mx-auto my-5"
+          />
+        )}
+        {shouldShowAd && noCategoryOfWineSlug && (
+          <GPTMbStAd
+            pageKey={pageKeyForGptAd}
+            className="fixed right-0 bottom-0 left-0 z-2000 mx-auto block h-auto w-full xl:hidden"
+          />
+        )}
       </Layout>
       <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
     </>
