@@ -1,13 +1,14 @@
 import { z } from 'zod'
 
 import type { FetchCategorySectionsQuery } from '@/apollo/__generated__/content/graphql'
-import type { ListingPost } from '@/apollo/fragments/post'
 import {
   URL_STATIC_NEWS_CATEGORY_INFO,
   URL_STATIC_NEWS_CATEGORY_POSTS,
 } from '@/config/index.mjs'
+import { toImageSet } from '@/modules/list-article/list-article-data'
+import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import { fetchStaticJsonByUrl } from '@/utils/api'
-import { monitorZodSafeParse } from '@/utils/zod-monitor'
+import { logZodMonitorFailure, monitorZodSafeParse } from '@/utils/zod-monitor'
 
 import type { CategorySummary } from './category-types'
 
@@ -98,6 +99,96 @@ const newsCategoryPostsSchema = z.object({
   }),
 })
 
+const imageSetSchema = z.record(z.string()).nullish()
+
+/**
+ * 這份 JSON 是同一組 GraphQL 查詢的 dump，形狀跟查詢結果幾乎一樣，多了 `type`
+ * （區分 story / external）和 `__typename` 之類的欄位。
+ */
+const newsCategoryPostSchema = z.object({
+  brief: z
+    .union([
+      z.literal('DbNull'),
+      z.object({
+        blocks: z.array(z.object({ text: z.string().optional() })).optional(),
+      }),
+    ])
+    .nullish(),
+  heroImage: z
+    .object({
+      resized: imageSetSchema,
+      resizedWebp: imageSetSchema,
+    })
+    .nullish(),
+  id: z.string().min(1),
+  publishedDate: z.string().nullish(),
+  sections: z.array(z.object({ name: z.string().nullish() })).nullish(),
+  slug: z.string().nullish(),
+  title: z.string().nullish(),
+  type: z.string().nullish(),
+})
+
+/**
+ * 一筆壞掉的文章只掉自己，不會讓整頁變成空的
+ */
+function toArticleListItems(
+  items: unknown[],
+  boundary: string
+): ArticleListItemData[] {
+  const articles: ArticleListItemData[] = []
+  const invalidIssues: z.ZodIssue[] = []
+  let invalidItemCount = 0
+
+  items.forEach((item, index) => {
+    const itemResult = newsCategoryPostSchema.safeParse(item)
+
+    if (!itemResult.success) {
+      invalidItemCount += 1
+      invalidIssues.push(
+        ...itemResult.error.issues.map((issue) => ({
+          ...issue,
+          path: [index, ...issue.path],
+        }))
+      )
+      return
+    }
+
+    const post = itemResult.data
+
+    articles.push({
+      brief: post.brief ?? null,
+      heroImage: post.heroImage
+        ? {
+            resized: toImageSet(post.heroImage.resized),
+            resizedWebp: toImageSet(post.heroImage.resizedWebp),
+          }
+        : null,
+      id: post.id,
+      publishedDate: post.publishedDate ?? '',
+      sections: (post.sections ?? []).map((section) => ({
+        name: section.name ?? '',
+      })),
+      slug: post.slug ?? '',
+      title: post.title ?? '',
+      type: post.type ?? undefined,
+    })
+  })
+
+  if (invalidIssues.length > 0) {
+    logZodMonitorFailure({
+      boundary,
+      schemaName: 'newsCategoryPostSchema',
+      error: new z.ZodError(invalidIssues),
+      debugPayload: {
+        invalidItemCount,
+        totalItemCount: items.length,
+      },
+    })
+  }
+
+  return articles
+}
+
 /**
  * Reads one page out of the pre-generated JSON files. Failures resolve to an
  * empty list: server side that becomes a 404, and the infinite scroll on the
@@ -106,16 +197,17 @@ const newsCategoryPostsSchema = z.object({
 async function fetchNewsCategoryPostsJSON(
   page = 1,
   take = 24
-): Promise<{ items: ListingPost[]; counts: number }> {
+): Promise<{ items: ArticleListItemData[]; counts: number }> {
   const takePerJson = POSTS_PER_JSON / take
   const jsonFileOrder = Math.ceil(page / takePerJson)
   const jsonUrl = `${URL_STATIC_NEWS_CATEGORY_POSTS}_${jsonFileOrder}.json`
+  const boundary = 'gcs-static-json:latest_content_category_news'
 
   try {
     const response = await fetchStaticJsonByUrl<unknown>(jsonUrl)
 
     const result = monitorZodSafeParse(newsCategoryPostsSchema, response.data, {
-      boundary: 'gcs-static-json:latest_content_category_news',
+      boundary,
       schemaName: 'newsCategoryPostsSchema',
     })
 
@@ -130,11 +222,9 @@ async function fetchNewsCategoryPostsJSON(
     )
 
     return {
-      // The posts are not validated, so what the page renders is asserted here.
       items:
         jsonFileOrder <= LAST_JSON_FILE_ORDER
-          ? // TODO: ListingPost 與目前 json 回傳的格式不完全相容，但在顯示上沒有問題，後續要找時間處理
-            (pageItems as ListingPost[])
+          ? toArticleListItems(pageItems, boundary)
           : [],
       counts:
         result.data.posts.counts.posts + result.data.posts.counts.externals,

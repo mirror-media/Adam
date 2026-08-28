@@ -1,8 +1,9 @@
 import Image from 'next/legacy/image'
 
-import type { ListingPost } from '@/apollo/fragments/post'
 import InfiniteScrollList from '@/components/infinite-scroll-list'
 import { ArticleList } from '@/modules/list-article/components/article-list'
+import { toArticleListItemData } from '@/modules/list-article/list-article-data'
+import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import LoadingPage from '@/public/images-next/loading_page.gif'
 import {
   fetchPostsByCategorySlug,
@@ -17,7 +18,7 @@ type CategoryArticlesProps = {
   from?: string
   isNewsCategory: boolean
   isPremium: boolean
-  posts: ListingPost[]
+  posts: ArticleListItemData[]
   postsCount: number
   renderPageSize: number
 }
@@ -48,7 +49,7 @@ export default function CategoryArticles({
           take,
           skip
         )
-        return (data.posts ?? []) as unknown as ListingPost[]
+        return (data.posts ?? []).map(toArticleListItemData)
       }
 
       if (isNewsCategory) {
@@ -57,7 +58,7 @@ export default function CategoryArticles({
       }
 
       const { data } = await fetchPostsByCategorySlug(category.slug, take, skip)
-      return (data.posts ?? []) as unknown as ListingPost[]
+      return (data.posts ?? []).map(toArticleListItemData)
     } catch (error) {
       // [to-do]: use beacon api to log error on gcs
       console.error(error)
@@ -89,7 +90,7 @@ export default function CategoryArticles({
           // `InfiniteScrollList` declares its render list as `Object[]`, a
           // JSDoc type in untyped JavaScript. Correcting it is a separate
           // change.
-          renderList={renderList as ListingPost[]}
+          renderList={renderList as ArticleListItemData[]}
           section={category.sections[0]}
         />
       )}

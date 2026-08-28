@@ -1,7 +1,6 @@
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 
-import type { ListingPost } from '@/apollo/fragments/post'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import {
@@ -25,6 +24,11 @@ import {
 } from '@/modules/category/category-data'
 import type { CategorySummary } from '@/modules/category/category-types'
 import CategoryArticles from '@/modules/category/components/category-articles'
+import {
+  type ArticleListItemSource,
+  toArticleListItemData,
+} from '@/modules/list-article/list-article-data'
+import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import { getCategoryOfWineSlug, getLogTraceObject } from '@/utils'
 import { getSectionGPTPageKey } from '@/utils/ad'
 import type { ShellHeaderData } from '@/utils/api'
@@ -52,7 +56,7 @@ type CategoryPageProps = {
   headerData: ShellHeaderData
   isNewsCategory: boolean
   isPremium: boolean
-  posts: ListingPost[]
+  posts: ArticleListItemData[]
   postsCount: number
 }
 
@@ -245,18 +249,22 @@ export const getServerSideProps = (async ({ query, req, res }) => {
 
   // A premium category is served from GraphQL even when it is the news
   // category, so this branch comes first.
-  async function fetchCategoryPosts(): Promise<[number, ListingPost[]]> {
+  async function fetchCategoryPosts(): Promise<
+    [number, ArticleListItemData[]]
+  > {
     if (isPremium) {
       const [postsResponse] = await Promise.allSettled([
         fetchPremiumPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
       ])
 
-      return processSettledResult(
+      const [postsCount, posts] = processSettledResult(
         postsResponse,
-        getPostsAndPostscountFromGqlData<ListingPost>,
+        getPostsAndPostscountFromGqlData<ArticleListItemSource>,
         `Error occurs while getting premium post data in category page (categorySlug: ${categorySlug})`,
         globalLogFields
       )
+
+      return [postsCount, posts.map(toArticleListItemData)]
     }
 
     if (isNewsCategory) {
@@ -269,12 +277,14 @@ export const getServerSideProps = (async ({ query, req, res }) => {
       fetchPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
     ])
 
-    return processSettledResult(
+    const [postsCount, posts] = processSettledResult(
       postsResponse,
-      getPostsAndPostscountFromGqlData<ListingPost>,
+      getPostsAndPostscountFromGqlData<ArticleListItemSource>,
       `Error occurs while getting post data in category page (categorySlug: ${categorySlug})`,
       globalLogFields
     )
+
+    return [postsCount, posts.map(toArticleListItemData)]
   }
 
   const [headerData, [postsCount, posts]] = await Promise.all([
