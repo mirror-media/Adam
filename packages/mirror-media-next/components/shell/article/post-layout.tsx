@@ -7,6 +7,7 @@ import { SITE_URL } from '@/config/index.mjs'
 import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 
 import { Blocks, renderTextWithLinks } from './blocks'
+import { CopyLinkButton } from './copy-link-button'
 import { IconLink } from './icon-link'
 import NextResponsiveImage from './next-responsive-image'
 import { PublicDate } from './public-date'
@@ -102,7 +103,7 @@ export default function PostLayout(props: PostLayoutProps) {
     ? 'marketing'
     : 'post'
 
-  const canonicalUrl = `${SITE_URL}/story/${slug}`
+  const canonicalUrl = `https://${SITE_URL}/story/${slug}`
   const mainCategory = sections?.[0]
   const subCategories = categories?.[0]
 
@@ -234,12 +235,24 @@ export default function PostLayout(props: PostLayoutProps) {
               className="scale-70 transform invert-100"
             />
           </IconLink>
-          <IconLink
-            href={canonicalUrl}
-            src="/images/link-logo.svg"
-            alt="link-logo"
-            className="GTM-share-link"
-          />
+          <CopyLinkButton
+            renderContent={() => (
+              <ThemeElement
+                as="span"
+                theme="accent"
+                className="rounded-lg px-4 py-2 text-mm-neutral-100 md:text-xl"
+              >
+                已複製連結
+              </ThemeElement>
+            )}
+          >
+            <NextImage
+              width={28}
+              height={28}
+              src="/images/link-logo.svg"
+              alt="link-logo"
+            />
+          </CopyLinkButton>
         </div>
         <figure className="order-5 col-span-full">
           <picture className="relative block aspect-3/2">
