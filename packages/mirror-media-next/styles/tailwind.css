@@ -3,6 +3,14 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
+/*
+ * Styles for third-party markup we do not author. See the file for why. Kept
+ * out of a layer: MicroAd injects its own unlayered <style>, which would win
+ * over any layered rule regardless of specificity.
+ */
+@import '../modules/list-article/components/micro-ad.css';
+@import '../modules/aside/components/pop-in-ad.css';
+
 @theme {
   /* Keep Tailwind's default breakpoint names and values, normalized to px. */
   --breakpoint-*: initial;
@@ -151,6 +159,18 @@
 
 @layer theme {
   :root {
+    /*
+     * Tailwind inlines breakpoints into the media queries it generates, so
+     * nothing references the `@theme` values above and they get dropped from
+     * the output. Referencing them here keeps them, and gives
+     * `hooks/use-breakpoint.ts` a name to read at runtime.
+     */
+    --mm-breakpoint-sm: var(--breakpoint-sm);
+    --mm-breakpoint-md: var(--breakpoint-md);
+    --mm-breakpoint-lg: var(--breakpoint-lg);
+    --mm-breakpoint-xl: var(--breakpoint-xl);
+    --mm-breakpoint-2xl: var(--breakpoint-2xl);
+
     --mm-color-surface: var(--color-mm-neutral-0);
     --mm-color-surface-muted: var(--color-mm-neutral-50);
     --mm-color-surface-subtle: var(--color-mm-neutral-100);
@@ -176,6 +196,7 @@
 
 @source '../pages';
 @source '../components';
+@source '../modules';
 @source '../hooks';
 @source '../context';
 @source '../store';
