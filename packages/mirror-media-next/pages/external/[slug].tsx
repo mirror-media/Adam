@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import NextImage from 'next/image'
 import { useRouter } from 'next/router'
 
 import FullScreenAds from '@/components/ads/full-screen-ads'
@@ -18,10 +17,12 @@ import JsonLdsScript from '@/components/external/shared/json-lds-script'
 import Layout from '@/components/shared/layout'
 import { ExternalLayout } from '@/components/shell/article/external-layout'
 import { NextUpPosts } from '@/components/shell/article/next-up-posts'
-import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
-import { Link } from '@/components/ui'
 import { ENV, SITE_URL } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
+import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
+import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
+import { LatestArticles } from '@/modules/aside/components/latest-articles'
+import { PopularArticles } from '@/modules/aside/components/popular-articles'
 import {
   fetchExternalHeaderAndFlashNewsData,
   fetchExternalPost,
@@ -200,6 +201,7 @@ export default function External({
                   className="hidden xl:mx-auto xl:block xl:h-auto xl:w-full"
                 />
               </GPT_Placeholder_Aside>
+              <LatestArticles sectionSlug="news" />
               <GPT_Placeholder_Aside
                 shouldShowAd={shouldShowAd}
                 isLogInProcessFinished={isLogInProcessFinished}
@@ -210,17 +212,9 @@ export default function External({
                   className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
                 />
               </GPT_Placeholder_Aside>
-              <div className="flex justify-center">
-                <Link href="https://google.com/preferences/source?q=mirrormedia.mg">
-                  <NextImage
-                    width={320}
-                    height={100}
-                    src="/images-next/story/gnews-gif.gif"
-                    alt="google-news"
-                  />
-                </Link>
-              </div>
-              <FbPagePlugin facebookPagePluginSetting={{ 'data-width': 424 }} />
+              <PopularArticles />
+              <GoogleNewsFollow />
+              <FbPagePlugin width={424} />
             </>
           )}
           renderNextUp={() => <NextUpPosts items={allRelatedStories} />}

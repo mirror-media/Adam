@@ -19,13 +19,15 @@ import WineWarning from '@/components/shared/wine-warning'
 import ArticleQuestions from '@/components/shell/article/article-questions'
 import { NextUpPosts } from '@/components/shell/article/next-up-posts'
 import { ArticleSummary } from '@/components/shell/article/post-summary'
-import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
 import { generateJsonLdsData } from '@/components/story/shared/json-lds-data'
 import JsonLdsScript from '@/components/story/shared/json-lds-script'
 import StoryHead from '@/components/story/shared/story-head'
-import { Link } from '@/components/ui'
 import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
+import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
+import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
+import { LatestArticles } from '@/modules/aside/components/latest-articles'
+import { PopularArticles } from '@/modules/aside/components/popular-articles'
 import {
   fetchStoryHeaderAndFlashNewsData,
   fetchStoryPost,
@@ -258,6 +260,7 @@ export default function Story({
                   {summary && Array.isArray(summary) && summary.length > 0 && (
                     <ArticleSummary items={summary} />
                   )}
+                  <LatestArticles sectionSlug={section?.slug ?? 'news'} />
                   <GPT_Placeholder_Aside
                     shouldShowAd={shouldShowAd}
                     isLogInProcessFinished={isLogInProcessFinished}
@@ -268,23 +271,13 @@ export default function Story({
                       className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
                     />
                   </GPT_Placeholder_Aside>
+                  <PopularArticles />
                   <ArticleQuestions
                     auto_faq={postData.auto_faq}
                     faqs_algo={postData.faqs_algo}
                   />
-                  <div className="flex justify-center">
-                    <Link href="https://google.com/preferences/source?q=mirrormedia.mg">
-                      <NextImage
-                        width={320}
-                        height={100}
-                        src="/images-next/story/gnews-gif.gif"
-                        alt="google-news"
-                      />
-                    </Link>
-                  </div>
-                  <FbPagePlugin
-                    facebookPagePluginSetting={{ 'data-width': 424 }}
-                  />
+                  <GoogleNewsFollow />
+                  <FbPagePlugin width={424} />
                 </>
               )}
               renderNextUp={() => <NextUpPosts items={restOfRelativeStories} />}
