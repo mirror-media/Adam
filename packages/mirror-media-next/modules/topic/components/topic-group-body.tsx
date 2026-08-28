@@ -23,7 +23,7 @@ function TopicGroupBody({ topic }: TopicGroupBodyProps) {
   const tagSections = getTopicGroupSections(topic)
 
   return (
-    <div className="groupList mx-auto flex w-full max-w-[1180px] flex-col px-mm-xl pb-mm-3xl">
+    <div className="groupList w-full">
       <div className="flex w-full flex-col">
         {tagSections.map(({ tag, taggedPosts }, index) => (
           <section
@@ -40,7 +40,7 @@ function TopicGroupBody({ topic }: TopicGroupBodyProps) {
             >
               {tag.name}
             </Typography>
-            <TopicCardGrid className="groupArticles w-full pb-mm-3xl md:pb-mm-5xl">
+            <TopicCardGrid className="groupArticles w-full max-w-7xl flex-col pb-mm-3xl">
               {taggedPosts.map((item) => (
                 <TopicArticleCard item={item} key={item.id} />
               ))}
@@ -49,7 +49,7 @@ function TopicGroupBody({ topic }: TopicGroupBodyProps) {
         ))}
       </div>
       {shouldShowAd && dfp ? (
-        <div className="mx-auto my-mm-3xl w-full max-w-[970px]">
+        <div className="mx-auto my-mm-3xl w-full max-w-242.5">
           <GPTAd adUnit={dfp} />
         </div>
       ) : null}

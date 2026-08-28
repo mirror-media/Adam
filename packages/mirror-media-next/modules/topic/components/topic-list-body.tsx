@@ -27,7 +27,7 @@ type TopicArticleGridProps = {
 
 function TopicArticleGrid({ articles }: TopicArticleGridProps) {
   return (
-    <TopicCardGrid>
+    <TopicCardGrid className="w-full">
       {articles.map((item) => (
         <TopicArticleCard item={item} key={item.id} />
       ))}
@@ -85,11 +85,11 @@ function TopicFeaturedList({
   }
 
   return (
-    <div className="flex flex-col items-center gap-mm-5xl">
+    <div className="flex w-full flex-col items-center gap-mm-5xl px-5">
       <TopicArticleGrid articles={renderPosts} />
       {showMore ? (
         <Button
-          className="showMoreButton w-full max-w-[714px] rounded-mm-m px-2.5 py-2.5 text-mm-h5 hover:bg-mm-neutral-100 hover:text-mm-neutral-600"
+          className="showMoreButton w-full max-w-85 rounded-mm-m px-2.5 py-2.5 text-mm-h5 hover:bg-mm-neutral-100 hover:text-mm-neutral-600 md:max-w-150 xl:max-w-178.5"
           isLoading={loading}
           onClick={handleLoadMore}
           size="sm"
@@ -147,20 +147,22 @@ function TopicNonFeaturedList({
   }
 
   return (
-    <InfiniteScrollList
-      fetchCount={Math.ceil(postsCount / renderPageSize)}
-      fetchListInPage={fetchTopicPostsFromPage}
-      loader={
-        <div className="flex justify-center py-mm-3xl xl:py-mm-6xl" key={0}>
-          <Spinner className="size-8 text-mm-base-500" />
-        </div>
-      }
-      renderAmount={renderPageSize}
-    >
-      {(renderList) => (
-        <TopicArticleGrid articles={renderList as TopicArticle[]} />
-      )}
-    </InfiniteScrollList>
+    <div className="w-full">
+      <InfiniteScrollList
+        fetchCount={Math.ceil(postsCount / renderPageSize)}
+        fetchListInPage={fetchTopicPostsFromPage}
+        loader={
+          <div className="flex justify-center py-mm-3xl xl:py-mm-6xl" key={0}>
+            <Spinner className="size-8 text-mm-base-500" />
+          </div>
+        }
+        renderAmount={renderPageSize}
+      >
+        {(renderList) => (
+          <TopicArticleGrid articles={renderList as TopicArticle[]} />
+        )}
+      </InfiniteScrollList>
+    </div>
   )
 }
 
@@ -190,7 +192,7 @@ function TopicListBody({
     : totalPostsCount > featuredPostsCount
 
   return (
-    <div className="mx-auto flex w-full max-w-[1180px] flex-col items-center gap-mm-5xl px-mm-xl pb-mm-5xl">
+    <div className="mx-auto flex w-full max-w-7xl flex-col items-center gap-mm-5xl pb-mm-5xl xl:px-0">
       <TopicFeaturedList
         featuredPostsCount={featuredPostsCount}
         initialPosts={initialPosts}
@@ -198,7 +200,7 @@ function TopicListBody({
         topicSlug={topicSlug}
       />
       {shouldShowAd && dfp ? (
-        <div className="w-full max-w-[970px]">
+        <div className="w-full max-w-242.5">
           <GPTAd adUnit={dfp} />
         </div>
       ) : null}

@@ -19,12 +19,12 @@ function TopicIndexCard({ item }: TopicIndexCardProps) {
 
   return (
     <NextLink
-      className="flex flex-col gap-mm-m"
+      className="mx-auto flex w-full max-w-82.5 flex-col gap-mm-m md:mx-0 md:w-70 md:max-w-70 md:shrink-0"
       href={`/topic/${item.slug}?from=topic_list`}
       rel="noreferrer"
       target="_blank"
     >
-      <div className="relative h-[186px] w-full overflow-hidden rounded-mm-m [&_img]:rounded-mm-m">
+      <div className="relative h-46.5 max-h-46.5 w-full overflow-hidden rounded-mm-m [&_img]:rounded-mm-m">
         <Image
           alt={item.name}
           defaultImage="/images-next/default-og-img.png"

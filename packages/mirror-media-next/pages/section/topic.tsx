@@ -43,13 +43,13 @@ function SectionTopicPage({
     <>
       <CustomHead title="精選專區" />
       <PageShell headerData={headerData}>
-        <main className="mx-auto w-full max-w-[1180px] px-mm-xl pb-mm-5xl">
+        <main className="mx-auto w-full max-w-7xl pb-mm-5xl xl:px-0">
           <GPT_Placeholder
             isLogInProcessFinished={isLogInProcessFinished}
             shouldShowAd={shouldShowAd}
           >
             {shouldShowAd ? (
-              <div className="mx-auto w-full max-w-[970px]">
+              <div className="mx-auto w-full max-w-242.5">
                 <GPTAd adKey="HD" pageKey="other" />
               </div>
             ) : (
@@ -58,7 +58,7 @@ function SectionTopicPage({
           </GPT_Placeholder>
           <Typography
             as="h1"
-            className="mt-mm-3xl mb-mm-2xl text-mm-base-300"
+            className="mt-mm-3xl mb-mm-2xl px-5 text-mm-base-300 md:max-xl:px-23.5 lg:px-12.5"
             variant="h3"
           >
             精選專區

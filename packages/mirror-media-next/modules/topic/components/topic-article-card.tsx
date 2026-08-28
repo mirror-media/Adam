@@ -22,12 +22,12 @@ function TopicArticleCard({ item }: TopicArticleCardProps) {
 
   return (
     <NextLink
-      className="itemWrapper flex flex-col gap-mm-m"
+      className="itemWrapper mx-auto flex w-full max-w-82.5 flex-col gap-mm-m md:mx-0 md:w-70 md:max-w-70 md:shrink-0"
       href={`/story/${item.slug}?from=topic_list`}
       rel="noreferrer"
       target="_blank"
     >
-      <div className="imageContainer relative h-[186px] w-full overflow-hidden rounded-mm-m [&_img]:rounded-mm-m">
+      <div className="imageContainer relative h-55 max-h-55 w-full overflow-hidden rounded-mm-m md:h-46.5 md:max-h-46.5 [&_img]:rounded-mm-m">
         <Image
           alt={item.title}
           defaultImage="/images-next/default-og-img.png"

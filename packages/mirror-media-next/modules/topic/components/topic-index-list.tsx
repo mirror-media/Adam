@@ -51,7 +51,7 @@ function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
         })}
       </TopicCardGrid>
       {shouldShowAd ? (
-        <div className="mx-auto my-mm-3xl w-full max-w-[970px]">
+        <div className="mx-auto my-mm-3xl w-full max-w-242.5">
           <GPTAd adKey="FT" pageKey="other" />
         </div>
       ) : null}

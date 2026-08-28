@@ -10,7 +10,7 @@ function TopicCardGrid({ children, className }: TopicCardGridProps) {
   return (
     <div
       className={cn(
-        'itemContainer grid grid-cols-1 gap-mm-2xl md:grid-cols-2 xl:grid-cols-4',
+        'itemContainer mx-auto flex w-full flex-col gap-mm-2xl md:flex-row md:flex-wrap md:items-start md:justify-start md:max-xl:px-23 lg:px-12.5',
         className
       )}
     >
