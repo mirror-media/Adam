@@ -7,11 +7,11 @@ import { cn } from '@/components/cn'
 import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 
+import { HOMEPAGE_DESKTOP_MEDIA_QUERY } from '../homepage-constants'
+
 const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
-
-const HOMEPAGE_GPT_PC_MEDIA_QUERY = '(min-width: 1280px)'
 
 type HomepageAdProps = {
   placement: 'secondary' | 'top'
@@ -48,7 +48,7 @@ function HomepageAd({ placement, wrapperClassName }: HomepageAdProps) {
   const canShowPreview = ENV !== 'prod'
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(HOMEPAGE_GPT_PC_MEDIA_QUERY)
+    const mediaQuery = window.matchMedia(HOMEPAGE_DESKTOP_MEDIA_QUERY)
     const updateDevice = () => setDevice(mediaQuery.matches ? 'PC' : 'MB')
     updateDevice()
     mediaQuery.addEventListener('change', updateDevice)

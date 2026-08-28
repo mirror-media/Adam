@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Typography } from '@/components/ui/typography'
 
+import { HOMEPAGE_DESKTOP_MEDIA_QUERY } from '../homepage-constants'
 import type { HomepageVideo } from '../homepage-types'
 
 import { CarouselIndicator } from './carousel-indicator'
@@ -31,7 +32,6 @@ type HomepageYouTubePlayer = {
   pauseVideo: () => void
 }
 
-const PROMO_VIDEO_DESKTOP_MEDIA_QUERY = '(min-width: 1280px)'
 const YOUTUBE_PLAYER_OPTIONS = {
   height: '100%',
   playerVars: {
@@ -92,7 +92,7 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
   const videosPerGroupRef = useRef(1)
 
   useEffect(() => {
-    const desktop = window.matchMedia(PROMO_VIDEO_DESKTOP_MEDIA_QUERY)
+    const desktop = window.matchMedia(HOMEPAGE_DESKTOP_MEDIA_QUERY)
     const updateVideosPerGroup = () => {
       const nextVideosPerGroup = desktop.matches ? 2 : 1
       const previousVideosPerGroup = videosPerGroupRef.current
