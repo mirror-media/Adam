@@ -3,13 +3,13 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants'
 import { toTaipeiISOString } from '../../../utils/index'
 
 /**
- * @typedef {import('../../../apollo/fragments/external').External} External
+ * @typedef {import('../../../modules/external/external-types').ExternalPost} ExternalPost
  * @typedef {'/external/' | '/external/amp/'} CurrentPage
  */
 
 /**
  *
- * @param {External} external
+ * @param {ExternalPost} external
  * @param {CurrentPage} currentPage
  * @returns {Object[]}
  */

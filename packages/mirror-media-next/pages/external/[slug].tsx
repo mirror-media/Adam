@@ -1,0 +1,339 @@
+//TODO: add component to add html head dynamically, not jus write head in every pag
+import { useEffect, useState } from 'react'
+import type { GetServerSideProps } from 'next'
+import dynamic from 'next/dynamic'
+import Head from 'next/head'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
+
+import FullScreenAds from '@/components/ads/full-screen-ads'
+import GptAd from '@/components/ads/gpt/gpt-ad'
+import { GPT_Placeholder_Aside } from '@/components/ads/gpt/gpt-placeholder'
+import DableAd from '@/components/common/dable-ad'
+import generateJsonLdsData from '@/components/external/shared/json-lds-data'
+import JsonLdsScript from '@/components/external/shared/json-lds-script'
+import Layout from '@/components/shared/layout'
+import { ExternalLayout } from '@/components/shell/article/external-layout'
+import { ThemeElement } from '@/components/shell/article/theme-element'
+import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
+import { Link, Typography } from '@/components/ui'
+import { ENV, SITE_URL } from '@/config/index.mjs'
+import { useDisplayAd } from '@/hooks/useDisplayAd'
+import {
+  fetchExternalHeaderAndFlashNewsData,
+  fetchExternalPost,
+} from '@/modules/external/external-data'
+import type {
+  ExternalHeaderData,
+  ExternalPost,
+} from '@/modules/external/external-types'
+import {
+  fetchAdditionalExternalRelatedStories,
+  initializeExternalRelatedStories,
+} from '@/modules/external/related-stories-client'
+import type { StoryDataLayer } from '@/types/dataLayer'
+import { getLogTraceObject } from '@/utils'
+import { getPageKeyByPartnerShowOnIndex } from '@/utils/ad'
+import { setPageCache } from '@/utils/cache-setting'
+import { buildExternalDataLayer } from '@/utils/gtm/build-data-layer'
+import { toTaipeiISOString } from '@/utils/index'
+
+const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
+  ssr: false,
+})
+
+type ExternalPageProps = {
+  external: ExternalPost
+  headerData: ExternalHeaderData
+  jsonLdData: object[]
+  dataLayer: StoryDataLayer
+}
+
+export default function External({
+  external,
+  headerData,
+  jsonLdData,
+}: ExternalPageProps) {
+  const router = useRouter()
+  const { slug } = router.query
+  const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
+  const [allRelatedStories, setAllRelatedStories] = useState(
+    initializeExternalRelatedStories(external.relateds)
+  )
+
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
+  const pageKeyForGptAd = getPageKeyByPartnerShowOnIndex(
+    external.partner?.showOnIndex ?? false
+  )
+
+  const robots = 'index, max-image-preview:large'
+
+  useEffect(() => {
+    // Wait for page to be fully rendered before setting up miso API calls
+    const setupScrollHandler = () => {
+      const handleScroll = async () => {
+        const formattedStories = await fetchAdditionalExternalRelatedStories(
+          external.slug ?? '',
+          10
+        )
+        setAllRelatedStories((prev) => [...prev, ...formattedStories])
+      }
+
+      window.addEventListener('scroll', handleScroll, { once: true })
+      return () => window.removeEventListener('scroll', handleScroll)
+    }
+
+    // Execute after page is fully loaded to avoid blocking TTFB
+    if (document.readyState === 'complete') {
+      // Page already loaded, setup immediately
+      setupScrollHandler()
+    } else {
+      // Wait for page to finish loading
+      window.addEventListener('load', setupScrollHandler, { once: true })
+    }
+
+    return () => {
+      window.removeEventListener('load', setupScrollHandler)
+    }
+  }, [external.slug])
+
+  const pubDate = (
+    <meta
+      name="pubdate"
+      property="article:published_time"
+      itemProp="datePublished"
+      content={toTaipeiISOString(external?.publishedDate)}
+      key="article:published_time"
+    />
+  )
+
+  const lastMod = (
+    <meta
+      name="lastmod"
+      property="article:modified_time"
+      itemProp="dateModified"
+      content={toTaipeiISOString(external?.updatedAt)}
+      key="article:modified_time"
+    />
+  )
+
+  const authorName = external?.partner?.name
+    ? external?.partner.name
+    : external?.extend_byline || ''
+
+  return (
+    <>
+      <Head>
+        <meta name="robots" content={robots} key="robots" />
+        <meta
+          property="dable:item_id"
+          content={Array.isArray(slug) ? slug?.[0] : slug}
+          key="dable:item_id"
+        />
+        <meta
+          property="og:slug"
+          content={Array.isArray(slug) ? slug?.[0] : slug}
+          key="og:slug"
+        />
+        <link rel="amphtml" href={ampUrl} key="amphtml" />
+        {external?.publishedDate && pubDate}
+        {external?.updatedAt && lastMod}
+        {authorName && (
+          <>
+            <meta name="author" content={authorName} key="author" />
+            <meta
+              property="article:author"
+              content={authorName}
+              key="article:author"
+            />
+          </>
+        )}
+        <meta
+          name="publisher"
+          itemProp="publisher"
+          content="鏡週刊 Mirror Media"
+          key="publisher"
+        />
+      </Head>
+      <Layout
+        head={{
+          title: `${external?.title}`,
+          imageUrl: external?.thumb ?? undefined,
+          pageType: 'external',
+          pageSlug: `${slug}`,
+          description: external?.brief ?? undefined,
+        }}
+        header={{
+          type: 'default-with-flash-news',
+          data: headerData,
+        }}
+        footer={{ type: 'default' }}
+      >
+        <MisoPageView productIds={`external_${slug}`} />
+        <ExternalLayout
+          {...external}
+          allRelatedStories={allRelatedStories}
+          renderAside={() => (
+            <>
+              <GPT_Placeholder_Aside
+                shouldShowAd={shouldShowAd}
+                isLogInProcessFinished={isLogInProcessFinished}
+              >
+                <GptAd
+                  pageKey={pageKeyForGptAd}
+                  adKey="PC_R1"
+                  className="hidden xl:mx-auto xl:block xl:h-auto xl:w-full"
+                />
+              </GPT_Placeholder_Aside>
+              <GPT_Placeholder_Aside
+                shouldShowAd={shouldShowAd}
+                isLogInProcessFinished={isLogInProcessFinished}
+              >
+                <GptAd
+                  pageKey={pageKeyForGptAd}
+                  adKey="PC_R2"
+                  className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
+                />
+              </GPT_Placeholder_Aside>
+              <div className="flex justify-center">
+                <Link href="https://google.com/preferences/source?q=mirrormedia.mg">
+                  <Image
+                    width={320}
+                    height={100}
+                    src="/images-next/story/gnews-gif.gif"
+                    alt="google-news"
+                  />
+                </Link>
+              </div>
+              <FbPagePlugin facebookPagePluginSetting={{ 'data-width': 424 }} />
+            </>
+          )}
+          renderNextUp={() => (
+            <>
+              <ThemeElement
+                as="span"
+                theme="accent"
+                className="inline-flex rounded-t-lg px-3 py-1"
+              >
+                <Typography
+                  as="span"
+                  variant="subtitle"
+                  className="text-mm-neutral-100"
+                >
+                  延伸閱讀
+                </Typography>
+              </ThemeElement>
+              <ThemeElement
+                as="ul"
+                theme="post"
+                className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2"
+              >
+                {allRelatedStories.map((postItem) => (
+                  <li
+                    key={postItem.slug}
+                    className="border-b border-b-black py-4 last:border-0 md:odd:pr-6 md:nth-last-[-n+2]:border-b-0"
+                  >
+                    <Link
+                      href={`/story/${postItem.slug}`}
+                      className="grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]"
+                    >
+                      <picture className="relative block aspect-4/3">
+                        <Image
+                          fill
+                          className="object-cover"
+                          src={
+                            postItem.heroImage?.resizedWebp?.original ??
+                            '/images-next/default-og-img.png'
+                          }
+                          alt={postItem.title ?? ''}
+                          loading="lazy"
+                        />
+                      </picture>
+                      <Typography
+                        as="div"
+                        variant="h6"
+                        className="line-clamp-3 text-mm-base-700"
+                      >
+                        {postItem.title}
+                      </Typography>
+                    </Link>
+                  </li>
+                ))}
+              </ThemeElement>
+            </>
+          )}
+          renderDable={() => (
+            <>
+              {shouldShowAd && (
+                <>
+                  <div className="hidden xl:flex xl:min-h-62.5 xl:w-full xl:items-center xl:justify-between xl:pb-4">
+                    <GptAd
+                      adKey="PC_E1"
+                      pageKey={pageKeyForGptAd}
+                      className="hidden h-auto w-full xl:m-0 xl:block"
+                    />
+                    <GptAd
+                      adKey="PC_E2"
+                      pageKey={pageKeyForGptAd}
+                      className="hidden h-auto w-full xl:m-0 xl:block"
+                    />
+                  </div>
+                  <DableAd breakpoint="xl" className="mx-2 md:mx-0" />
+                </>
+              )}
+            </>
+          )}
+        />
+        <FullScreenAds />
+      </Layout>
+      <JsonLdsScript jsonLdData={jsonLdData} />
+    </>
+  )
+}
+
+export const getServerSideProps: GetServerSideProps<
+  ExternalPageProps,
+  { slug: string }
+> = async ({ params, req, res }) => {
+  if (ENV === 'prod') {
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 300,
+        sharedCacheTime: 300,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
+  } else {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+  }
+
+  if (!params?.slug) {
+    return { notFound: true }
+  }
+  const { slug } = params
+  const globalLogFields: Record<string, unknown> = { ...getLogTraceObject(req) }
+
+  const [external, { sectionsData, topicsData, flashNewsData }] =
+    await Promise.all([
+      fetchExternalPost(slug, globalLogFields),
+      fetchExternalHeaderAndFlashNewsData(slug, globalLogFields),
+    ])
+
+  if (!external) {
+    return { notFound: true }
+  }
+
+  const jsonLdData = generateJsonLdsData(external, '/external/')
+
+  return {
+    props: {
+      external,
+      headerData: { sectionsData, topicsData, flashNewsData },
+      jsonLdData,
+      dataLayer: buildExternalDataLayer(external),
+    },
+  }
+}

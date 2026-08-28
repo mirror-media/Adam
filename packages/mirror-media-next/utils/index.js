@@ -87,7 +87,7 @@ function getSectionNameGql(sections = [], partner) {
 /**
   * Converts a UTC timestamp string to a Taipei time ISO 8601 string.
   * 
-  * @param {string} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
+  * @param {string | null | undefined} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
   * @returns {string | undefined} The ISO 8601 string in Taipei time
   (e.g., "2025-10-16T01:11:00+08:00"), or undefined if the input is invalid.
    */
