@@ -1,9 +1,11 @@
 import Image from 'next/image'
+import Script from 'next/script'
 import { Accordion } from '@base-ui/react'
 import { ChevronLeft } from 'lucide-react'
 
 import { ThemeElement } from '@/components/shell/article/theme-element'
 import { Typography } from '@/components/ui'
+import { generateFaqJsonLd } from '@/modules/story/story-json-ld'
 import type { StoryPost } from '@/modules/story/story-types'
 
 export default function ArticleQuestions({
@@ -66,6 +68,13 @@ export default function ArticleQuestions({
           </Accordion.Item>
         ))}
       </Accordion.Root>
+      <Script
+        id="faq-json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateFaqJsonLd(faqs_algo)),
+        }}
+      />
     </section>
   )
 }

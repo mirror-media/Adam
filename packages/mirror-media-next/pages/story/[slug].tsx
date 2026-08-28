@@ -359,7 +359,7 @@ export default function Story({
           />
         )}
       </Layout>
-      <JsonLdsScript jsonLdData={jsonLdData}></JsonLdsScript>
+      <JsonLdsScript jsonLdData={jsonLdData} />
     </>
   )
 }
