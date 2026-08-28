@@ -267,6 +267,8 @@ export const post = graphql(`
     tags_algo {
       ...aiTag
     }
+    auto_faq
+    faqs_algo
     heroVideo {
       ...heroVideo
     }

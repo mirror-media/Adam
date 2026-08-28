@@ -154,6 +154,8 @@ fragment StoryPost on Post {
   tags_algo {
     ...StoryAiTag
   }
+  auto_faq
+  faqs_algo
   heroVideo {
     ...StoryHeroVideo
   }

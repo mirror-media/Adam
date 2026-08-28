@@ -1,25 +1,13 @@
 export default {}
 
 /**
- * @typedef {Object} Draft
- * @property {DraftBlock[]} blocks
- * @property {Object} entityMap
+ * @typedef {import('draft-js').RawDraftContentState} Draft
  */
 
 /**
- * @typedef {Object} DraftBlock
- * @property {Object} data
- * @property {Number} depth
- * @property {Array} entityRanges
- * @property {Array} inlineStyleRanges
- * @property {String} key
- * @property {String} text
- * @property {String} type
+ * @typedef {import('draft-js').RawDraftContentBlock} DraftBlock
  */
 
 /**
- * @typedef {Object} EntityMap
- * @property {Object} data
- * @property {String} type
- * @property {String} mutability
+ * @typedef {import('draft-js').RawDraftEntity} EntityMap
  */

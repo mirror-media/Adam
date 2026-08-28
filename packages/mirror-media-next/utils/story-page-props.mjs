@@ -94,8 +94,8 @@ function normalizeRelatedStory(related) {
 }
 
 /**
- * @param {Record<string, any>} postData
- * @returns {Record<string, any>[]}
+ * @param {import('@/modules/story/story-types').StoryPost} postData
+ * @returns {import('@/modules/story/story-types').RelatedStory[]}
  */
 export function getInitialRelatedStories(postData) {
   const relatedsWithOrdered =
@@ -114,8 +114,8 @@ export function getInitialRelatedStories(postData) {
 }
 
 /**
- * @param {Record<string, any>} postData
- * @returns {Record<string, any>}
+ * @param {import('@/modules/story/story-types').StoryPost} postData
+ * @returns {import('@/modules/story/story-types').StoryPost}
  */
 export function serializeStoryPostDataForClient(postData) {
   const clientPostData = compactClientPayload(postData)

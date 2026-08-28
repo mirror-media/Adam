@@ -5,7 +5,8 @@ import utc from 'dayjs/plugin/utc'
 import { GCP_PROJECT_ID } from '../config/index.mjs'
 
 /**
- * @typedef {import('../apollo/fragments/section').Section[]} Sections
+ * @typedef {{ id?: string | null, name?: string | null, slug?: string | null, state?: string | null } | null} SectionLike
+ * @typedef {SectionLike[]} Sections
  */
 /**
  * @typedef {import('../apollo/fragments/category').Category} Category
@@ -86,7 +87,7 @@ function getSectionNameGql(sections = [], partner) {
 /**
   * Converts a UTC timestamp string to a Taipei time ISO 8601 string.
   * 
-  * @param {string} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
+  * @param {string | null | undefined} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
   * @returns {string | undefined} The ISO 8601 string in Taipei time
   (e.g., "2025-10-16T01:11:00+08:00"), or undefined if the input is invalid.
    */
@@ -186,8 +187,8 @@ const getMagazineHrefFromSlug = (slug) => {
 
 /**
  * array of categories with the slug 'wine' or 'wine1'.
- * @param {Pick<Category, 'id' | 'name' | 'slug'>[]} categories - certain category information
- * @returns {Pick<Category, 'id' | 'name' | 'slug'>[] | []}
+ * @param {{ slug: string | null }[]} categories - certain category information
+ * @returns {{ slug: string | null }[] | []}
  */
 const getCategoryOfWineSlug = (categories) => {
   if (Array.isArray(categories)) {
@@ -228,7 +229,7 @@ const convertDraftToText = (rawContentBlock) => {
  * Skip w480 to prevent image size minimum 200 x 200.
  * It's recommended for using images which is at least 1200 * 630 pixels on high resolution devices, so we use w1600 at first.
  * @see https://developers.facebook.com/docs/sharing/webmasters/images
- * @param {import('../apollo/fragments/photo').Resized | undefined | null} resized
+ * @param {Partial<Record<keyof import('../apollo/fragments/photo').Resized, string | null>> | undefined | null} resized
  * @returns {string | undefined}
  */
 const getResizedUrl = (resized) => {
@@ -252,8 +253,8 @@ const getNumberWithCommas = (num) => {
 /**
  * Return sections that are in `active` state and sorted.
  *
- * @param {Sections} sections
- * @param {Sections} sectionsInInputOrder
+ * @param {Sections | null | undefined} sections
+ * @param {Sections | null | undefined} sectionsInInputOrder
  * @return {Sections}
  */
 const getActiveOrderSection = (sections, sectionsInInputOrder) => {
@@ -264,7 +265,7 @@ const getActiveOrderSection = (sections, sectionsInInputOrder) => {
    * Need to filter state of `sectionsInInputOrder` to match the results of sections.
    */
   const activeSectionsOrder = Array.isArray(sectionsInInputOrder)
-    ? sectionsInInputOrder.filter((section) => section.state === 'active')
+    ? sectionsInInputOrder.filter((section) => section?.state === 'active')
     : []
 
   /**
@@ -273,7 +274,7 @@ const getActiveOrderSection = (sections, sectionsInInputOrder) => {
    * filter `state` status of `sections` again.
    * */
   const activeSections = Array.isArray(sections)
-    ? sections.filter((section) => section.state === 'active')
+    ? sections.filter((section) => section?.state === 'active')
     : []
 
   if (activeSectionsOrder.length > 0) {
