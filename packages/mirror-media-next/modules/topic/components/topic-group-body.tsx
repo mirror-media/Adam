@@ -35,7 +35,7 @@ function TopicGroupBody({ topic }: TopicGroupBodyProps) {
               </div>
             ) : null}
             <Typography
-              as="h2"
+              as="h3"
               className="py-mm-3xl text-center text-mm-neutral-800 md:py-mm-5xl"
               variant="h3"
             >

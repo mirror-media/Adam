@@ -85,7 +85,7 @@ function TopicFeaturedList({
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-mm-5xl px-5">
+    <div className="flex w-full flex-col items-center gap-mm-5xl">
       <TopicArticleGrid articles={renderPosts} />
       {showMore ? (
         <Button
