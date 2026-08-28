@@ -93,6 +93,7 @@ typings/
 .next/
 .next-dev/
 .next-analyze/
+/packages/mirror-media-next/next-env.d.ts
 out/
 packages/mirror-media-next/public/storybook/
 packages/mirror-media-next/public/_storybook/
