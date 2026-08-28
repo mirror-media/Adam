@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import Image from 'next/image'
+import NextImage from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import ExternalArticleContent from '@/components/external/external-article-content'
@@ -11,6 +12,7 @@ import type {
 } from '@/modules/external/external-types'
 import { getCreditsHtml, getExternalSectionTitle } from '@/utils/external'
 
+import { CopyLinkButton } from './copy-link-button'
 import { IconLink } from './icon-link'
 import { PublicDate } from './public-date'
 import { ThemeElement } from './theme-element'
@@ -107,7 +109,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
 
   return (
     <div className="grid max-w-7xl pt-4 md:grid-cols-12 xl:mx-auto xl:gap-x-14">
-      <article className="col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
+      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
         <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start lg:col-span-2">
           <Link href="/">
             <Typography
@@ -144,7 +146,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           publishedDate={publishedDate}
           updatedAt={updatedAt}
         />
-        <div className="order-4 col-span-full mr-2 flex justify-end gap-x-3 md:col-start-7 xl:col-start-6">
+        <div className="sticky top-27 z-1 order-4 col-span-full flex justify-end gap-x-3 bg-white p-2 md:static md:col-start-7 md:py-0 xl:col-start-6">
           <IconLink
             href="https://google.com/preferences/source?q=mirrormedia.mg"
             className="flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
@@ -192,11 +194,24 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               className="scale-70 transform invert-100"
             />
           </IconLink>
-          <IconLink
-            href={canonicalUrl}
-            src="/images/link-logo.svg"
-            alt="link-logo"
-          />
+          <CopyLinkButton
+            renderContent={() => (
+              <ThemeElement
+                as="span"
+                theme="accent"
+                className="rounded-lg px-4 py-2 text-mm-neutral-100 md:text-xl"
+              >
+                已複製連結
+              </ThemeElement>
+            )}
+          >
+            <NextImage
+              width={28}
+              height={28}
+              src="/images/link-logo.svg"
+              alt="link-logo"
+            />
+          </CopyLinkButton>
         </div>
         {partner?.showThumb && thumb && (
           <figure className="order-5 col-span-full">

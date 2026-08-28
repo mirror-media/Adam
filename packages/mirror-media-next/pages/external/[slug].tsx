@@ -174,18 +174,19 @@ export default function External({
         footer={{ type: 'default' }}
       >
         <MisoPageView productIds={`external_${slug}`} />
-        {shouldShowAd && (
-          <GPT_Placeholder
-            shouldShowAd={shouldShowAd}
-            isLogInProcessFinished={isLogInProcessFinished}
-          >
+
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
+          {shouldShowAd && (
             <GptAd
               pageKey={pageKeyForGptAd}
               adKey="HD"
               className="h-auto w-full"
             />
-          </GPT_Placeholder>
-        )}
+          )}
+        </GPT_Placeholder>
         <ExternalLayout
           {...external}
           allRelatedStories={allRelatedStories}

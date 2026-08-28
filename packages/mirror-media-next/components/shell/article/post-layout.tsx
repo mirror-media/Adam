@@ -124,7 +124,7 @@ export default function PostLayout(props: PostLayoutProps) {
 
   return (
     <div className="grid max-w-7xl pt-4 md:grid-cols-12 xl:mx-auto xl:gap-x-14">
-      <article className="col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
+      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
         {!isAdvertised && categories && Array.isArray(categories) && (
           <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start lg:col-span-2">
             <Link href="/">
@@ -185,7 +185,7 @@ export default function PostLayout(props: PostLayoutProps) {
           publishedDate={publishedDate}
           updatedAt={updatedAt}
         />
-        <div className="order-4 col-span-full mr-2 flex justify-end gap-x-3 md:col-start-7 xl:col-start-6">
+        <div className="sticky top-27 z-1 order-4 col-span-full flex justify-end gap-x-3 bg-white p-2 md:static md:col-start-7 md:py-0 xl:col-start-6">
           <IconLink
             href="https://google.com/preferences/source?q=mirrormedia.mg"
             className="GTM-click-preferred-source flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"

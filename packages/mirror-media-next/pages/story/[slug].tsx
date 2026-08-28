@@ -221,29 +221,37 @@ export default function Story({
       >
         <MisoPageView productIds={`story_${slug ?? ''}`} />
         <UserBehaviorLogger writers={writersInString} />
-        {shouldShowAd && (
-          <GPT_Placeholder
-            shouldShowAd={shouldShowAd}
-            isLogInProcessFinished={isLogInProcessFinished}
-          >
+        <GPT_Placeholder
+          shouldShowAd={shouldShowAd}
+          isLogInProcessFinished={isLogInProcessFinished}
+        >
+          {shouldShowAd && (
             <GptAd
               pageKey={pageKeyForGptAd}
               adKey="HD"
               className="h-auto w-full"
             />
-          </GPT_Placeholder>
-        )}
+          )}
+        </GPT_Placeholder>
+
         {storyLayoutType === 'style-normal' && (
           <>
             <PostLayout
               {...postData}
               relativeStory={firstRelativeStory}
               renderAdInContent={() => (
-                <GptAd
-                  pageKey={pageKeyForGptAd}
-                  adKey="PC_AT1"
-                  className="h-auto w-full"
-                />
+                <GPT_Placeholder
+                  shouldShowAd={shouldShowAd}
+                  isLogInProcessFinished={isLogInProcessFinished}
+                >
+                  {shouldShowAd && (
+                    <GptAd
+                      pageKey={pageKeyForGptAd}
+                      adKey="PC_AT1"
+                      className="h-auto w-full"
+                    />
+                  )}
+                </GPT_Placeholder>
               )}
               renderAside={(summary) => (
                 <>
@@ -251,11 +259,13 @@ export default function Story({
                     shouldShowAd={shouldShowAd}
                     isLogInProcessFinished={isLogInProcessFinished}
                   >
-                    <GptAd
-                      pageKey={pageKeyForGptAd}
-                      adKey="PC_R1"
-                      className="hidden xl:mx-auto xl:block xl:h-auto xl:w-full"
-                    />
+                    {shouldShowAd && (
+                      <GptAd
+                        pageKey={pageKeyForGptAd}
+                        adKey="PC_R1"
+                        className="hidden xl:mx-auto xl:block xl:h-auto xl:w-full"
+                      />
+                    )}
                   </GPT_Placeholder_Aside>
                   {summary && Array.isArray(summary) && summary.length > 0 && (
                     <ArticleSummary items={summary} />
@@ -265,11 +275,13 @@ export default function Story({
                     shouldShowAd={shouldShowAd}
                     isLogInProcessFinished={isLogInProcessFinished}
                   >
-                    <GptAd
-                      pageKey={pageKeyForGptAd}
-                      adKey="PC_R2"
-                      className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
-                    />
+                    {shouldShowAd && (
+                      <GptAd
+                        pageKey={pageKeyForGptAd}
+                        adKey="PC_R2"
+                        className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
+                      />
+                    )}
                   </GPT_Placeholder_Aside>
                   <PopularArticles />
                   <ArticleQuestions
