@@ -186,8 +186,8 @@ const getMagazineHrefFromSlug = (slug) => {
 
 /**
  * array of categories with the slug 'wine' or 'wine1'.
- * @param {Pick<Category, 'id' | 'name' | 'slug'>[]} categories - certain category information
- * @returns {Pick<Category, 'id' | 'name' | 'slug'>[] | []}
+ * @param {{ slug: string | null }[]} categories - certain category information
+ * @returns {{ slug: string | null }[] | []}
  */
 const getCategoryOfWineSlug = (categories) => {
   if (Array.isArray(categories)) {
@@ -228,7 +228,7 @@ const convertDraftToText = (rawContentBlock) => {
  * Skip w480 to prevent image size minimum 200 x 200.
  * It's recommended for using images which is at least 1200 * 630 pixels on high resolution devices, so we use w1600 at first.
  * @see https://developers.facebook.com/docs/sharing/webmasters/images
- * @param {import('../apollo/fragments/photo').Resized | undefined | null} resized
+ * @param {Partial<Record<keyof import('../apollo/fragments/photo').Resized, string | null>> | undefined | null} resized
  * @returns {string | undefined}
  */
 const getResizedUrl = (resized) => {

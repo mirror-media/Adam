@@ -1,13 +1,36 @@
+import type { RawDraftContentState } from 'draft-js'
+
+import type { FetchStoryPostBySlugQuery as ContentFetchStoryPostBySlugQuery } from '@/apollo/__generated__/content/graphql'
+import type { FetchStoryPostBySlugQuery as StoryFetchStoryPostBySlugQuery } from '@/apollo/__generated__/story/graphql'
 import type { Resized } from '@/apollo/fragments/photo'
-import type { Post, Related } from '@/apollo/fragments/post'
+import type { Related } from '@/apollo/fragments/post'
 import type { HeadersData, Topics } from '@/utils/api'
 
-export type PostData = Post
+// The raw shape GraphQL actually returns for either endpoint, straight from
+// codegen — content and story schemas are queried with the same fields but
+// produce distinct generated types.
+export type StoryPostQueryResult =
+  | NonNullable<ContentFetchStoryPostBySlugQuery['post']>
+  | NonNullable<StoryFetchStoryPostBySlugQuery['post']>
+
+// The view type the story capability works with: `brief`/`content` narrowed
+// from GraphQL's untyped `Json` scalar to real draft-js content (see
+// fetchStoryPost's type guard). `Post` (the schema type) also has
+// `trimmedContent`/`isFeatured`, but this query doesn't select either —
+// they're the AMP query's and the listing fragment's fields respectively —
+// and nothing in the story render tree reads them, so they're left out
+// rather than faked in. Every other field's nullability matches the
+// GraphQL schema exactly as codegen reports it — nothing here is asserted
+// past what the response actually guarantees.
+export type StoryPost = StoryPostQueryResult & {
+  brief: RawDraftContentState
+  content: RawDraftContentState
+}
 
 // This page only ever renders full (non-trimmed) content.
 export type PostContent = {
   type: 'fullContent'
-  data: Pick<PostData, 'content'>['content']
+  data: RawDraftContentState
   isLoaded: boolean
 }
 
@@ -31,7 +54,7 @@ export type RelatedStory = Omit<Related, 'heroImage'> & {
   type: 'story' | 'external'
 }
 
-export type StoryFlashNewsData = Pick<PostData, 'id' | 'slug' | 'title'>[]
+export type StoryFlashNewsData = { id: string; slug: string; title: string }[]
 
 export type StoryHeaderData = {
   sectionsData: HeadersData

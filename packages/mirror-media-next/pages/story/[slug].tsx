@@ -6,7 +6,6 @@ import Image from 'next/image'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import styled from 'styled-components'
 
-import type { Related } from '@/apollo/fragments/post'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import Layout from '@/components/shared/layout'
 import UserBehaviorLogger from '@/components/shared/user-behavior-logger'
@@ -27,11 +26,11 @@ import {
 } from '@/modules/story/story-data'
 import type {
   PostContent,
-  PostData,
   RelatedStory,
   StoryFlashNewsData,
   StoryHeaderData,
   StoryLayoutType,
+  StoryPost,
 } from '@/modules/story/story-types'
 import { useLoadMoreRelatedStories } from '@/modules/story/use-load-more-related-stories'
 import Skeleton from '@/public/images-next/skeleton.png'
@@ -63,7 +62,7 @@ const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
 // import DevGptAd from '../../components/story/dev-gpt-ad'
 
 type StoryPageProps = {
-  postData: PostData
+  postData: StoryPost
   initialRelatedStories: RelatedStory[]
   headerData: StoryHeaderData
   flashNewsData: StoryFlashNewsData
@@ -92,12 +91,12 @@ export default function Story({
   jsonLdData,
 }: StoryPageProps) {
   const {
-    title = '',
-    slug = '',
-    isAdult = false,
-    categories = [],
-    content = null,
-    hiddenAdvertised = false,
+    title,
+    slug,
+    isAdult,
+    categories,
+    content,
+    hiddenAdvertised,
     writers,
   } = postData
   const postContent: PostContent = {
@@ -107,19 +106,14 @@ export default function Story({
   }
 
   const allRelatedStories = useLoadMoreRelatedStories(
-    slug,
+    slug ?? '',
     initialRelatedStories
   )
-  // The legacy per-style components declare `Related[]` for this prop, but
-  // actually forward it to child components whose real prop type is the
-  // broader `Relateds` shape (extra `url`/`type` fields, partial heroImage)
-  // — this loosely-typed boundary predates the TS port.
-  const relatedStoriesForLayout = allRelatedStories as unknown as Related[]
 
   const writersInString = useMemo(() => {
     return (writers ?? [])
       .map((writer) => {
-        return writer.name
+        return writer?.name ?? ''
       })
       .join(',')
   }, [writers])
@@ -138,7 +132,7 @@ export default function Story({
             headerData={headerData}
             flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
-            allRelatedStories={relatedStoriesForLayout}
+            allRelatedStories={allRelatedStories}
           />
         )
       case 'style-wide':
@@ -147,7 +141,7 @@ export default function Story({
             postData={postData}
             postContent={postContent}
             classNameForGTM={classNameForGTM}
-            allRelatedStories={relatedStoriesForLayout}
+            allRelatedStories={allRelatedStories}
           />
         )
       case 'style-photography':
@@ -156,7 +150,7 @@ export default function Story({
             postData={postData}
             postContent={postContent}
             classNameForGTM={classNameForGTM}
-            allRelatedStories={relatedStoriesForLayout}
+            allRelatedStories={allRelatedStories}
           />
         )
       default:
@@ -167,26 +161,30 @@ export default function Story({
             headerData={headerData}
             flashNewsData={flashNewsData}
             classNameForGTM={classNameForGTM}
-            allRelatedStories={relatedStoriesForLayout}
+            allRelatedStories={allRelatedStories}
           />
         )
     }
   }
   const storyLayoutJsx = renderStoryLayout()
+  const nonNullCategories = (categories ?? []).filter(
+    (category): category is NonNullable<typeof category> => category != null
+  )
   //If no wine category, then should show gpt ST ad, otherwise, then should not show gpt ST ad.
-  const noCategoryOfWineSlug = getCategoryOfWineSlug(categories).length === 0
+  const noCategoryOfWineSlug =
+    getCategoryOfWineSlug(nonNullCategories).length === 0
 
   return (
     <>
       <StoryHead postData={postData} />
       <Layout
         head={{
-          title: `${title}`,
-          ogTitle: postData.og_title,
+          title: `${title ?? ''}`,
+          ogTitle: postData.og_title ?? undefined,
           description:
             convertDraftToText(postData.brief) ||
             convertDraftToText(postData.content),
-          ogDescription: postData.og_description,
+          ogDescription: postData.og_description ?? undefined,
           imageUrl:
             getResizedUrl(postData.heroImage?.resized) ||
             getResizedUrl(postData.og_image?.resized),
@@ -195,12 +193,12 @@ export default function Story({
             getResizedUrl(postData.heroImage?.resized),
           skipCanonical: true,
           pageType: 'story',
-          pageSlug: slug,
+          pageSlug: slug ?? '',
         }}
         header={{ type: 'empty' }}
         footer={{ type: 'empty' }}
       >
-        <MisoPageView productIds={`story_${slug}`} />
+        <MisoPageView productIds={`story_${slug ?? ''}`} />
         <UserBehaviorLogger writers={writersInString} />
         {!storyLayoutJsx && (
           <Loading>
@@ -208,10 +206,10 @@ export default function Story({
           </Loading>
         )}
         {storyLayoutJsx}
-        <WineWarning categories={categories} />
-        <AdultOnlyWarning isAdult={isAdult} />
+        <WineWarning categories={nonNullCategories} />
+        <AdultOnlyWarning isAdult={isAdult ?? false} />
         {noCategoryOfWineSlug && (
-          <FullScreenAds hiddenAdvertised={hiddenAdvertised} />
+          <FullScreenAds hiddenAdvertised={hiddenAdvertised ?? false} />
         )}
         {/* {TEST_GPT_AD_FEATURE_TOGGLE === 'on' && <DevGptAd />} */}
       </Layout>
@@ -239,7 +237,10 @@ export const getServerSideProps: GetServerSideProps<
     setPageCache(res, { cachePolicy: 'no-store' }, req.url)
   }
 
-  const { slug } = params as { slug: string }
+  if (!params?.slug) {
+    return { notFound: true }
+  }
+  const { slug } = params
   const globalLogFields: Record<string, unknown> = { ...getLogTraceObject(req) }
 
   try {
@@ -300,19 +301,12 @@ export const getServerSideProps: GetServerSideProps<
     }
 
     const jsonLdData = generateJsonLdsData(postData, '/story/')
-    // Both helpers are untyped legacy `.mjs` utilities (see README data
-    // contracts); their output is trusted the same way the GraphQL
-    // response above is, rather than re-validated at this boundary.
-    const initialRelatedStories = getInitialRelatedStories(
-      postData
-    ) as unknown as RelatedStory[]
-    const clientPostData = serializeStoryPostDataForClient(
-      postData
-    ) as unknown as PostData
+    const initialRelatedStories = getInitialRelatedStories(postData)
+    const clientStoryPost = serializeStoryPostDataForClient(postData)
 
     return {
       props: {
-        postData: clientPostData,
+        postData: clientStoryPost,
         initialRelatedStories,
         flashNewsData,
         headerData,
@@ -323,7 +317,7 @@ export const getServerSideProps: GetServerSideProps<
     }
   } catch (err) {
     logGqlError(
-      err as Error,
+      err instanceof Error ? err : new Error(String(err)),
       `Error occurs while getting data in story page (slug: ${slug})`,
       globalLogFields
     )

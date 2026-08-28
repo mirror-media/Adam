@@ -2,6 +2,7 @@
 // (Node `fs`), so only import this from the page's GSSP, never from
 // client-rendered code — see `related-stories-client.ts` for that.
 import axios from 'axios'
+import type { RawDraftContentState } from 'draft-js'
 
 import client, { getStoryClient } from '@/apollo/apollo-client'
 import {
@@ -19,14 +20,15 @@ import { logAxiosError } from '@/utils/log/shared'
 import { processSettledResult } from '@/utils/response-processor'
 
 import type {
-  PostData,
   StoryFlashNewsData,
   StoryHeaderData,
   StoryLayoutType,
+  StoryPost,
+  StoryPostQueryResult,
 } from './story-types'
 
 export function getStoryLayoutType(
-  articleStyle: PostData['style']
+  articleStyle: StoryPostQueryResult['style']
 ): StoryLayoutType {
   if (articleStyle === 'wide') {
     return 'style-wide'
@@ -36,30 +38,65 @@ export function getStoryLayoutType(
   return 'style-normal'
 }
 
-export async function fetchStoryPost(slug: string): Promise<PostData | null> {
-  const storyEndpointClient = IS_PREVIEW_MODE
-    ? null
-    : getStoryClient(STORY_GQL_ENDPOINT)
-  const storyClient = storyEndpointClient || client
+export async function getStoryPostBySlug(
+  slug: string,
+  options?: { preview?: boolean }
+) {
+  if (options?.preview) {
+    return client.query({
+      query: fetchContentStoryPostBySlug,
+      variables: { slug },
+    })
+  }
 
-  const result = await storyClient.query({
-    query: storyEndpointClient
-      ? fetchStoryPostBySlug
-      : fetchContentStoryPostBySlug,
+  const storyClient = getStoryClient(STORY_GQL_ENDPOINT)
+  if (!storyClient) {
+    return client.query({
+      query: fetchContentStoryPostBySlug,
+      variables: { slug },
+    })
+  }
+
+  return storyClient.query({
+    query: fetchStoryPostBySlug,
     variables: { slug },
   })
+}
 
-  const postData = result?.data?.post
+const EMPTY_DRAFT_CONTENT: RawDraftContentState = { blocks: [], entityMap: {} }
+
+// GraphQL's `Json` scalar has no shape at all (see codegen.ts's `scalars`
+// config — it maps to `unknown`), so `brief`/`content` are the one part of
+// the response codegen can't type-check for us. Narrow them for real
+// against @types/draft-js's RawDraftContentState instead of trusting an
+// assertion, the way every other field on the response can be.
+function isRawDraftContentState(value: unknown): value is RawDraftContentState {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    Array.isArray((value as { blocks?: unknown }).blocks) &&
+    typeof (value as { entityMap?: unknown }).entityMap === 'object' &&
+    (value as { entityMap?: unknown }).entityMap !== null
+  )
+}
+
+function toDraftContentState(value: unknown): RawDraftContentState {
+  return isRawDraftContentState(value) ? value : EMPTY_DRAFT_CONTENT
+}
+
+export async function fetchStoryPost(slug: string): Promise<StoryPost | null> {
+  const result = await getStoryPostBySlug(slug, { preview: IS_PREVIEW_MODE })
+  const postData = result.data?.post
 
   if (!postData) {
     return null
   }
 
-  // The GraphQL schema is the server-enforced contract (see README data
-  // contracts), so we trust its shape here instead of re-validating it;
-  // the generated query type is looser (nullable scalars) than the
-  // story capability's view type, hence the `unknown` bridge.
-  return postData as unknown as PostData
+  return {
+    ...postData,
+    brief: toDraftContentState(postData.brief),
+    content: toDraftContentState(postData.content),
+  }
 }
 
 async function fetchStoryFlashNewsData(): Promise<{

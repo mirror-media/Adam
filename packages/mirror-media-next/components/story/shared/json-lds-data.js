@@ -4,7 +4,7 @@ import { toTaipeiISOString } from '../../../utils/index'
 import { extractArticleBody } from '../../../utils/story'
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Post } PostData
+ * @typedef {import('../../../modules/story/story-types').StoryPost} PostData
  */
 
 /**
