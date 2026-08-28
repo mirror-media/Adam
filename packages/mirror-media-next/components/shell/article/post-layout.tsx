@@ -6,7 +6,7 @@ import { Badge, Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
 import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 
-import { Blocks } from './blocks'
+import { Blocks, renderTextWithLinks } from './blocks'
 import { IconLink } from './icon-link'
 import NextResponsiveImage from './next-responsive-image'
 import { PublicDate } from './public-date'
@@ -332,7 +332,7 @@ export default function PostLayout(props: PostLayoutProps) {
               variant="body-l"
               className="text-mm-neutral-600"
             >
-              {block?.text}
+              {renderTextWithLinks(block, brief.entityMap)}
             </Typography>
           ))}
         </ThemeElement>
@@ -352,7 +352,7 @@ export default function PostLayout(props: PostLayoutProps) {
                       variant="body-l"
                       className="mx-2 scroll-m-20 md:mx-0"
                     >
-                      {block?.text}
+                      {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
                     <div className="mx-2 scroll-m-20 md:mx-0">
                       <ThemeElement className="inline rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-mm-neutral-100">
@@ -389,7 +389,7 @@ export default function PostLayout(props: PostLayoutProps) {
                       variant="body-l"
                       className="mx-2 scroll-m-20 md:mx-0"
                     >
-                      {block?.text}
+                      {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
                     {renderAdInContent?.()}
                   </>
@@ -403,7 +403,7 @@ export default function PostLayout(props: PostLayoutProps) {
                     relatedsTwo={relatedsTwo}
                     className="mx-2 scroll-m-20 md:mx-0"
                   >
-                    {block?.text}
+                    {renderTextWithLinks(block, content.entityMap)}
                   </RelativePosts>
                 )
               }
@@ -415,7 +415,7 @@ export default function PostLayout(props: PostLayoutProps) {
                   variant="body-l"
                   className="mx-2 scroll-m-20 md:mx-0"
                 >
-                  {block?.text}
+                  {renderTextWithLinks(block, content.entityMap)}
                 </Typography>
               )
             }}
