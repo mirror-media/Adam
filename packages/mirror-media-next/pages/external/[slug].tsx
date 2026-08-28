@@ -3,20 +3,23 @@ import { useEffect, useState } from 'react'
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { useRouter } from 'next/router'
 
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GptAd from '@/components/ads/gpt/gpt-ad'
-import { GPT_Placeholder_Aside } from '@/components/ads/gpt/gpt-placeholder'
+import {
+  GPT_Placeholder,
+  GPT_Placeholder_Aside,
+} from '@/components/ads/gpt/gpt-placeholder'
 import DableAd from '@/components/common/dable-ad'
 import generateJsonLdsData from '@/components/external/shared/json-lds-data'
 import JsonLdsScript from '@/components/external/shared/json-lds-script'
 import Layout from '@/components/shared/layout'
 import { ExternalLayout } from '@/components/shell/article/external-layout'
-import { ThemeElement } from '@/components/shell/article/theme-element'
+import { NextUpPosts } from '@/components/shell/article/next-up-posts'
 import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
-import { Link, Typography } from '@/components/ui'
+import { Link } from '@/components/ui'
 import { ENV, SITE_URL } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import {
@@ -170,6 +173,18 @@ export default function External({
         footer={{ type: 'default' }}
       >
         <MisoPageView productIds={`external_${slug}`} />
+        {shouldShowAd && (
+          <GPT_Placeholder
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
+            <GptAd
+              pageKey={pageKeyForGptAd}
+              adKey="HD"
+              className="h-auto w-full"
+            />
+          </GPT_Placeholder>
+        )}
         <ExternalLayout
           {...external}
           allRelatedStories={allRelatedStories}
@@ -197,7 +212,7 @@ export default function External({
               </GPT_Placeholder_Aside>
               <div className="flex justify-center">
                 <Link href="https://google.com/preferences/source?q=mirrormedia.mg">
-                  <Image
+                  <NextImage
                     width={320}
                     height={100}
                     src="/images-next/story/gnews-gif.gif"
@@ -208,60 +223,7 @@ export default function External({
               <FbPagePlugin facebookPagePluginSetting={{ 'data-width': 424 }} />
             </>
           )}
-          renderNextUp={() => (
-            <>
-              <ThemeElement
-                as="span"
-                theme="accent"
-                className="inline-flex rounded-t-lg px-3 py-1"
-              >
-                <Typography
-                  as="span"
-                  variant="subtitle"
-                  className="text-mm-neutral-100"
-                >
-                  延伸閱讀
-                </Typography>
-              </ThemeElement>
-              <ThemeElement
-                as="ul"
-                theme="post"
-                className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2"
-              >
-                {allRelatedStories.map((postItem) => (
-                  <li
-                    key={postItem.slug}
-                    className="border-b border-b-black py-4 last:border-0 md:odd:pr-6 md:nth-last-[-n+2]:border-b-0"
-                  >
-                    <Link
-                      href={`/story/${postItem.slug}`}
-                      className="grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]"
-                    >
-                      <picture className="relative block aspect-4/3">
-                        <Image
-                          fill
-                          className="object-cover"
-                          src={
-                            postItem.heroImage?.resizedWebp?.original ??
-                            '/images-next/default-og-img.png'
-                          }
-                          alt={postItem.title ?? ''}
-                          loading="lazy"
-                        />
-                      </picture>
-                      <Typography
-                        as="div"
-                        variant="h6"
-                        className="line-clamp-3 text-mm-base-700"
-                      >
-                        {postItem.title}
-                      </Typography>
-                    </Link>
-                  </li>
-                ))}
-              </ThemeElement>
-            </>
-          )}
+          renderNextUp={() => <NextUpPosts items={allRelatedStories} />}
           renderDable={() => (
             <>
               {shouldShowAd && (

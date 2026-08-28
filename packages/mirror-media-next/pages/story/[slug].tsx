@@ -4,7 +4,6 @@ import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 import NextImage from 'next/image'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
-import ReadrImage from '@readr-media/react-image'
 
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GptAd from '@/components/ads/gpt/gpt-ad'
@@ -14,18 +13,17 @@ import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '@/components/ads/gpt/gpt-placeholder'
-import { cn } from '@/components/cn'
 import Layout from '@/components/shared/layout'
 import UserBehaviorLogger from '@/components/shared/user-behavior-logger'
 import WineWarning from '@/components/shared/wine-warning'
 import ArticleQuestions from '@/components/shell/article/article-questions'
+import { NextUpPosts } from '@/components/shell/article/next-up-posts'
 import { ArticleSummary } from '@/components/shell/article/post-summary'
-import { ThemeElement } from '@/components/shell/article/theme-element'
 import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
 import { generateJsonLdsData } from '@/components/story/shared/json-lds-data'
 import JsonLdsScript from '@/components/story/shared/json-lds-script'
 import StoryHead from '@/components/story/shared/story-head'
-import { Link, Typography } from '@/components/ui'
+import { Link } from '@/components/ui'
 import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import {
@@ -289,72 +287,7 @@ export default function Story({
                   />
                 </>
               )}
-              renderNextUp={() => (
-                <>
-                  <ThemeElement
-                    as="span"
-                    theme="accent"
-                    className="inline rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-mm-neutral-100"
-                  >
-                    <Typography
-                      as="span"
-                      variant="subtitle"
-                      className="text-mm-neutral-100"
-                    >
-                      延伸閱讀
-                    </Typography>
-                  </ThemeElement>
-                  <ThemeElement
-                    as="ul"
-                    theme="post"
-                    className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2"
-                  >
-                    {restOfRelativeStories.map((postItem) => (
-                      <li
-                        key={postItem.slug}
-                        className={cn(
-                          'border-b border-b-black py-4 last:border-0 md:odd:pr-6',
-                          {
-                            'md:nth-last-[-n+2]:border-b-0':
-                              restOfRelativeStories.length % 2 === 0,
-                            'md:last:border-b-0':
-                              restOfRelativeStories.length % 2 === 1,
-                          }
-                        )}
-                      >
-                        <Link
-                          href={`/story/${postItem.slug}?from=referral_bottom`}
-                          className="grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]"
-                        >
-                          <div className="relative">
-                            <picture className="relative block aspect-4/3">
-                              <ReadrImage
-                                className="object-cover"
-                                images={{
-                                  original:
-                                    postItem.heroImage?.resizedWebp?.original ??
-                                    '/images-next/default-og-img.png',
-                                }}
-                                loadingImage="/images-next/loading.gif"
-                                defaultImage="/images-next/default-og-img.png"
-                                alt={postItem.title ?? ''}
-                                loading="lazy"
-                              />
-                            </picture>
-                          </div>
-                          <Typography
-                            as="div"
-                            variant="h6"
-                            className="line-clamp-3 text-mm-base-700"
-                          >
-                            {postItem.title}
-                          </Typography>
-                        </Link>
-                      </li>
-                    ))}
-                  </ThemeElement>
-                </>
-              )}
+              renderNextUp={() => <NextUpPosts items={restOfRelativeStories} />}
               renderDable={() => (
                 <>
                   {shouldShowAd && (

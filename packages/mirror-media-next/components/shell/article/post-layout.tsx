@@ -1,6 +1,5 @@
-import { Fragment, ReactNode, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import NextImage from 'next/image'
-import ReadrImage from '@readr-media/react-image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
@@ -9,6 +8,7 @@ import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 
 import { Blocks } from './blocks'
 import { IconLink } from './icon-link'
+import NextResponsiveImage from './next-responsive-image'
 import { PublicDate } from './public-date'
 import { RelativePostLink } from './relative-post-link'
 import { type ElementVariantProps, ThemeElement } from './theme-element'
@@ -135,29 +135,29 @@ export default function PostLayout(props: PostLayoutProps) {
                 首頁
               </Typography>
             </Link>
-            {mainCategory && (
-              <Fragment>
-                <span className="text-mm-base-500">／</span>
-                <Link
-                  className="text-sm font-bold text-mm-base-500"
-                  href={`/category/${mainCategory?.slug}`}
-                >
-                  <Typography
-                    as="span"
-                    variant="subtitle"
-                    className="text-mm-base-500"
-                  >
-                    {mainCategory.name}
-                  </Typography>
-                </Link>
-              </Fragment>
-            )}
+
+            <span className="text-mm-base-500">／</span>
+            <Link
+              className="text-sm font-bold text-mm-base-500"
+              href={`/category/${mainCategory?.slug ?? 'news'}`}
+              target="_blank"
+            >
+              <Typography
+                as="span"
+                variant="subtitle"
+                className="text-mm-base-500"
+              >
+                {mainCategory?.name || '最新'}
+              </Typography>
+            </Link>
+
             {subCategories && (
-              <Fragment>
+              <>
                 <span className="text-mm-base-500">／</span>
                 <Link
                   className="text-sm font-bold text-mm-base-500"
                   href={`/category/${subCategories?.slug}`}
+                  target="_blank"
                 >
                   <Typography
                     as="span"
@@ -167,7 +167,7 @@ export default function PostLayout(props: PostLayoutProps) {
                     {subCategories?.name}
                   </Typography>
                 </Link>
-              </Fragment>
+              </>
             )}
           </div>
         )}
@@ -187,8 +187,7 @@ export default function PostLayout(props: PostLayoutProps) {
         <div className="order-4 col-span-full mr-2 flex justify-end gap-x-3 md:col-start-7 xl:col-start-6">
           <IconLink
             href="https://google.com/preferences/source?q=mirrormedia.mg"
-            className="flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
-            data-gtm-preferred-source-name
+            className="GTM-click-preferred-source flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
           >
             <NextImage
               width={14}
@@ -198,7 +197,7 @@ export default function PostLayout(props: PostLayoutProps) {
             />
             <ThemeElement
               as="span"
-              className="hidden w-13 text-[0.5rem] font-medium md:block"
+              className="GTM-click-preferred-source hidden w-13 text-[0.5rem] font-medium md:block"
             >
               加入為Google 偏好來源
             </ThemeElement>
@@ -209,7 +208,7 @@ export default function PostLayout(props: PostLayoutProps) {
             alt="facebook-logo"
             rel="noopener noreferrer"
             target="_blank"
-            data-gtm-share-facebook
+            className="GTM-share-facebook"
           />
           <IconLink
             href={`https://social-plugins.line.me/lineit/share?url=${canonicalUrl}`}
@@ -217,16 +216,15 @@ export default function PostLayout(props: PostLayoutProps) {
             alt="line-logo"
             rel="noopener noreferrer"
             target="_blank"
-            data-gtm-share-line
+            className="GTM-share-line"
           />
           <IconLink
             href={`https://www.threads.com/intent/post?url=${encodeURIComponent(
               canonicalUrl
             )}`}
-            className="rounded-full bg-black"
+            className="GTM-share-threads rounded-full bg-black"
             rel="noopener noreferrer"
             target="_blank"
-            data-gtm-share-threads
           >
             <NextImage
               width={28}
@@ -240,19 +238,34 @@ export default function PostLayout(props: PostLayoutProps) {
             href={canonicalUrl}
             src="/images/link-logo.svg"
             alt="link-logo"
-            data-gtm-share-link
+            className="GTM-share-link"
           />
         </div>
         <figure className="order-5 col-span-full">
           <picture className="relative block aspect-3/2">
-            <ReadrImage
+            <NextResponsiveImage
+              fill
+              className="aspect-4/3 object-cover"
+              placeholder="blur"
+              blurDataURL="/images-next/loading.gif"
+              src={
+                typeof heroImage?.resized?.original === 'string'
+                  ? heroImage?.resized?.original?.replace(
+                      /\.(jpg|png)$/i,
+                      '.webP'
+                    )
+                  : '/images-next/default-og-img.png'
+              }
+              sizes="(max-width: 768px) 50vw, 30vw"
+              srcSet={[480, 800]}
               alt={heroCaption ?? title ?? ''}
               priority
-              images={{
-                original: heroImage?.resized?.original ?? '',
-              }}
-              loadingImage="/images-next/loading.gif"
-              defaultImage="/images-next/default-og-img.png"
+              fallback={
+                typeof heroImage?.resized?.original === 'string'
+                  ? heroImage?.resized?.original
+                  : '/images-next/default-og-img.png'
+              }
+              errorImage="/images-next/default-og-img.png"
             />
           </picture>
           {heroCaption && (
@@ -351,7 +364,9 @@ export default function PostLayout(props: PostLayoutProps) {
                           延伸閱讀
                         </Typography>
                       </ThemeElement>
-                      <Link href={`/story/${relativeStory.slug}`}>
+                      <Link
+                        href={`/story/${relativeStory.slug}?from=referral_contents`}
+                      >
                         <ThemeElement
                           className="rounded-md rounded-tl-none p-2 text-lg font-bold text-mm-neutral-700 decoration-mm-neutral-700"
                           as="div"
@@ -488,7 +503,10 @@ export default function PostLayout(props: PostLayoutProps) {
         >
           鏡週刊掌握趨勢，領先一步：
           從國際大事到生活小確幸，我們確保您不錯過任何一個重要瞬間，誠摯邀請您
-          <Link href="/" className="text-lg text-mm-second-200 underline">
+          <Link
+            href="https://www.mirrormedia.mg/login?destination=https%3A%2F%2Fwww.mirrormedia.mg%2Fmagazine"
+            className="text-lg text-mm-second-200 underline"
+          >
             立即加入閱讀
           </Link>
           。

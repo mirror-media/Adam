@@ -31,7 +31,7 @@ export default function ArticleQuestions({
           FAQ
         </Typography>
       </div>
-      <Accordion.Root defaultValue={['item-1']}>
+      <Accordion.Root>
         {faqs_algo.faqs.map((faq, index) => (
           <Accordion.Item
             key={`faq-${index}`}

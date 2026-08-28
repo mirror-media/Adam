@@ -9,11 +9,7 @@ import type {
   ExternalPost,
   ExternalRelatedStory,
 } from '@/modules/external/external-types'
-import {
-  getCreditsHtml,
-  getExternalPartnerColor,
-  getExternalSectionTitle,
-} from '@/utils/external'
+import { getCreditsHtml, getExternalSectionTitle } from '@/utils/external'
 
 import { IconLink } from './icon-link'
 import { PublicDate } from './public-date'
@@ -86,7 +82,6 @@ export function ExternalLayout(props: ExternalLayoutProps) {
   const canonicalUrl = `${SITE_URL}/external/${slug}`
 
   const sectionTitle = getExternalSectionTitle(partner)
-  const partnerColor = getExternalPartnerColor(partner)
   const displayTags = [...(tags ?? []), ...(tags_algo ?? [])]
   const credits = extend_byline ?? ''
 
@@ -113,27 +108,29 @@ export function ExternalLayout(props: ExternalLayoutProps) {
   return (
     <div className="grid max-w-7xl pt-4 md:grid-cols-12 xl:mx-auto xl:gap-x-14">
       <article className="col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
-        {sectionTitle && (
-          <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start lg:col-span-2">
-            <Link href="/">
-              <Typography
-                as="span"
-                variant="subtitle"
-                className="text-mm-base-500"
-              >
-                首頁
-              </Typography>
-            </Link>
-            <span className="text-mm-base-500">／</span>
+        <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start lg:col-span-2">
+          <Link href="/">
             <Typography
               as="span"
               variant="subtitle"
-              style={{ color: partnerColor }}
+              className="text-mm-base-500"
             >
-              {sectionTitle}
+              首頁
             </Typography>
-          </div>
-        )}
+          </Link>
+          {sectionTitle && (
+            <>
+              <span className="text-mm-base-500">／</span>
+              <Typography
+                as="span"
+                variant="subtitle"
+                className="text-mm-base-700"
+              >
+                {sectionTitle}
+              </Typography>
+            </>
+          )}
+        </div>
 
         <Typography
           as="h1"
@@ -160,7 +157,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             />
             <ThemeElement
               as="span"
-              className="hidden w-13 text-[0.5rem] font-medium md:block"
+              className="GTM-click-preferred-source hidden w-13 text-[0.5rem] font-medium md:block"
             >
               加入為Google 偏好來源
             </ThemeElement>
@@ -337,7 +334,10 @@ export function ExternalLayout(props: ExternalLayoutProps) {
         >
           鏡週刊掌握趨勢，領先一步：
           從國際大事到生活小確幸，我們確保您不錯過任何一個重要瞬間，誠摯邀請您
-          <Link href="/" className="text-lg text-mm-second-200 underline">
+          <Link
+            href="https://www.mirrormedia.mg/login?destination=https%3A%2F%2Fwww.mirrormedia.mg%2Fmagazine"
+            className="text-lg text-mm-second-200 underline"
+          >
             立即加入閱讀
           </Link>
           。
