@@ -58,7 +58,7 @@ function SectionTopicPage({
           </GPT_Placeholder>
           <Typography
             as="h1"
-            className="mt-mm-3xl mb-mm-2xl px-5 text-mm-base-300 md:max-xl:px-23.5 lg:px-12.5"
+            className="mx-auto mt-mm-3xl mb-mm-2xl w-full max-w-82.5 text-mm-base-300 md:max-w-none md:max-xl:px-23 lg:px-12.5"
             variant="h3"
           >
             精選專區

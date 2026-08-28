@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic'
 
-import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { getTopicGroupSections } from '@/modules/topic/topic-data'
@@ -27,12 +26,14 @@ function TopicGroupBody({ topic }: TopicGroupBodyProps) {
       <div className="flex w-full flex-col">
         {tagSections.map(({ tag, taggedPosts }, index) => (
           <section
-            className={cn(
-              `groupListBlockContainer tag-${tag.slug} flex flex-col items-center`,
-              index > 0 && 'border-t-2 border-mm-neutral-800'
-            )}
+            className={`groupListBlockContainer tag-${tag.slug} flex flex-col items-center`}
             key={tag.id}
           >
+            {index > 0 ? (
+              <div className="mx-auto w-full max-w-82.5 md:max-w-7xl md:max-xl:px-23 lg:px-12.5">
+                <div className="w-full border-t-2 border-mm-neutral-800" />
+              </div>
+            ) : null}
             <Typography
               as="h2"
               className="py-mm-3xl text-center text-mm-neutral-800 md:py-mm-5xl"

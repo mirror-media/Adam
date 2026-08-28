@@ -18,7 +18,7 @@ function TopicHero({ slideshowImages, topic }: TopicHeroProps) {
   const backgroundUrl = getTopicHeroBackgroundUrl(topic)
   return (
     <div
-      className="topic relative mb-mm-4xl block h-auto w-full bg-cover bg-center bg-no-repeat pt-[56.25%] md:pt-[36.56%] xl:pt-[25%]"
+      className="topic relative mb-mm-4xl aspect-5/2 max-h-full w-full max-w-full bg-cover bg-center bg-no-repeat lg:aspect-16/5"
       style={
         backgroundUrl ? { backgroundImage: `url(${backgroundUrl})` } : undefined
       }
