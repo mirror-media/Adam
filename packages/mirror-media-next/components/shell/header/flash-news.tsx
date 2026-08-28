@@ -83,8 +83,11 @@ function FlashNews({ items }: FlashNewsProps) {
     return <span aria-hidden="true" />
   }
 
+  // The face fills the strip until `lg`, where the topic links move in beside
+  // it and a full-width face would leave blank but tappable space running up to
+  // them. It falls back to its own text there, with a floor to stay hittable.
   const faceClassName =
-    'absolute inset-0 truncate rounded-mm-xs leading-8 backface-hidden outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
+    'absolute inset-0 max-w-full truncate rounded-mm-xs leading-8 backface-hidden outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid lg:right-auto lg:min-w-60'
 
   // One link per face: a single link around the cube would still point at the
   // item rotating away once the reader can see the one rotating in.
