@@ -8,6 +8,7 @@ import type { HomepageViewModel } from '../homepage-types'
 
 import { CategoryLatestGrid } from './category-latest-grid'
 import { EditorChoiceCarousel } from './editor-choice-carousel'
+import { GoogleNewsFollow } from './google-news-follow'
 import { HeadlineList } from './headline-list'
 import { HomepageAd } from './homepage-ad'
 import { MoreNews } from './more-news'
@@ -343,7 +344,7 @@ function Homepage({ data }: HomepageProps) {
           ref={sidebarColumnRef}
         >
           <aside
-            aria-label="首頁新聞排行榜"
+            aria-label="首頁側欄"
             className="contents xl:sticky xl:flex xl:w-full xl:min-w-0 xl:[scrollbar-width:thin] xl:[scrollbar-color:transparent_transparent] xl:[scrollbar-gutter:stable] xl:flex-col xl:gap-mm-5xl xl:overflow-x-hidden xl:overflow-y-scroll xl:overscroll-contain xl:pr-mm-m xl:[&::-webkit-scrollbar]:w-1 xl:[&::-webkit-scrollbar-thumb]:rounded-full xl:[&::-webkit-scrollbar-thumb]:[background-color:var(--homepage-sidebar-thumb,transparent)] xl:[&::-webkit-scrollbar-track]:bg-transparent"
             ref={sidebarRef}
           >
@@ -355,13 +356,14 @@ function Homepage({ data }: HomepageProps) {
             />
             <HeadlineList
               articles={data.popularNews}
-              className="order-5 col-span-full mx-auto w-[calc(100%-32px)] md:order-2 md:col-span-1 md:mx-0 md:w-[332px] md:justify-self-start xl:order-0 xl:w-full xl:justify-self-auto"
+              className="order-5 col-span-full mx-auto w-[calc(100%-32px)] md:order-2 md:col-span-1 md:mx-0 md:w-[332px] md:justify-self-start xl:order-2 xl:w-full xl:justify-self-auto"
               title="熱門新聞"
               titleId="homepage-popular-news-title"
             />
+            <GoogleNewsFollow className="order-6 col-span-full mx-auto md:order-5 xl:order-1" />
             <HeadlineList
               articles={data.forumNews}
-              className={`${singleColumnContentClass} order-9 col-span-full md:order-8 xl:order-0`}
+              className={`${singleColumnContentClass} order-9 col-span-full md:order-8 xl:order-3`}
               title="論壇新聞"
               titleId="homepage-forum-news-title"
             />
