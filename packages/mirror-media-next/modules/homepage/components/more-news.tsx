@@ -12,6 +12,7 @@ import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { getMicroAdUnitId, needInsertMicroAdAfter } from '@/utils/ad'
 
 import { fetchMoreHomepageNews } from '../homepage-client-data'
+import { HOMEPAGE_DESKTOP_MEDIA_QUERY } from '../homepage-constants'
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
@@ -32,7 +33,11 @@ type MoreNewsProps = {
   excludedKeys: string[]
   initialArticles: HomepageArticle[]
   initialHasMore: boolean
+  onBeforeAppend?: () => void
 }
+
+const focusViewportTop = 64
+const minimumVisibleFocusHeight = 40
 
 function formatPublishedDate(value: string): string {
   const date = new Date(value)
@@ -58,6 +63,7 @@ function MoreNews({
   excludedKeys,
   initialArticles,
   initialHasMore,
+  onBeforeAppend,
 }: MoreNewsProps) {
   const [articles, setArticles] = useState(initialArticles)
   const [device, setDevice] = useState<'MB' | 'PC'>('MB')
@@ -95,12 +101,16 @@ function MoreNews({
     if (focusArticleKey) {
       const article = firstAppendedArticleRef.current
       if (article) {
-        // Skip the focus auto-scroll only while the article is on screen (it
-        // replaces the button); if the reader has moved away, let the browser
-        // reveal the focus as usual.
-        const { top } = article.getBoundingClientRect()
-        const isOnScreen = top >= 0 && top < window.innerHeight
-        article.focus({ preventScroll: isOnScreen })
+        // Suppress auto-scroll only while a meaningful part of the article is
+        // visible below the fixed shell; otherwise let the browser reveal it.
+        const { bottom, top } = article.getBoundingClientRect()
+        const visibleHeight =
+          Math.min(bottom, window.innerHeight) - Math.max(top, focusViewportTop)
+        article.focus({
+          preventScroll:
+            window.matchMedia(HOMEPAGE_DESKTOP_MEDIA_QUERY).matches &&
+            visibleHeight >= minimumVisibleFocusHeight,
+        })
       }
       return
     }
@@ -132,6 +142,7 @@ function MoreNews({
       )
 
       nextFileNumberRef.current = result.nextFileNumber
+      if (result.articles.length) onBeforeAppend?.()
       setArticles((current) => current.concat(result.articles))
       setHasMore(result.hasMore)
       setFocusArticleKey(result.articles[0]?.key ?? null)
@@ -165,7 +176,10 @@ function MoreNews({
   }
 
   return (
-    <section aria-labelledby="more-news-title">
+    <section
+      aria-labelledby="more-news-title"
+      className="[overflow-anchor:none]"
+    >
       <SectionTitle id="more-news-title">更多新聞</SectionTitle>
 
       <div className="mt-mm-3xl grid grid-cols-1 gap-y-mm-3xl md:grid-cols-2 md:gap-x-mm-5xl md:gap-y-mm-2xl xl:grid-cols-3 xl:gap-x-mm-l">

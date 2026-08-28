@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 
+import { HOMEPAGE_DESKTOP_MEDIA_QUERY } from '../homepage-constants'
 import type { HomepageViewModel } from '../homepage-types'
 
 import { CategoryLatestGrid } from './category-latest-grid'
@@ -21,9 +22,15 @@ type HomepageProps = {
   data: HomepageViewModel
 }
 
+type DetachedSidebarSnapshot = {
+  bottom: number
+  columnHeight: number
+  hasObservedGrowth: boolean
+  height: number
+}
+
 const singleColumnContentClass =
   'mx-auto w-[calc(100%-32px)] md:w-[704px] xl:mx-0 xl:w-full'
-const desktopMediaQuery = '(min-width: 1280px)'
 // 48px fixed shell navigation row + 16px gap; same gap above the viewport floor.
 const sidebarPinnedTop = 64
 const sidebarBottomGap = 16
@@ -33,41 +40,68 @@ const sidebarBottomGap = 16
 // and window mode (top 64px, viewport-bound height, own scrollbar). JS swaps
 // modes only while the box is parked and both modes paint the same pixels,
 // and walks the thumb back to zero as the page returns to the anchor. Inline
-// top/height are inert below xl, where the aside is display: contents.
+// top/height are inert below xl, where the aside is display: contents. Load
+// more freezes the rendered window only across the grid-height commit, then
+// hands position back to sticky while safe height growth stays scroll-bound.
 function Homepage({ data }: HomepageProps) {
   const sidebarColumnRef = useRef<HTMLDivElement | null>(null)
   const sidebarRef = useRef<HTMLElement | null>(null)
+  const detachSidebarForContentGrowthRef = useRef<() => void>(() => {})
 
   useLayoutEffect(() => {
     const column = sidebarColumnRef.current
     const sidebar = sidebarRef.current
     if (!column || !sidebar) return
 
-    const desktop = window.matchMedia(desktopMediaQuery)
+    const desktop = window.matchMedia(HOMEPAGE_DESKTOP_MEDIA_QUERY)
     let frame = 0
     let isPinned = false
     let pinnedHeight = 0
-    let prevColumnTop = 0
-    let prevSidebarTop = 0
+    let prevViewportHeight = window.innerHeight
+    let prevWindowScrollY = window.scrollY
+    let detachedSidebar: DetachedSidebarSnapshot | null = null
+    let shouldSyncPinnedHeight = false
 
-    function update() {
+    function hideScrollbar() {
+      if (!sidebar) return
+      sidebar.style.removeProperty('scrollbar-color')
+      sidebar.style.removeProperty('--homepage-sidebar-thumb')
+    }
+
+    function clearDetachedPosition() {
+      if (!sidebar) return
+      sidebar.style.position = ''
+      sidebar.style.left = ''
+      sidebar.style.width = ''
+      detachedSidebar = null
+    }
+
+    function update(syncPinnedHeight = false) {
       // Re-narrowed: the outer guard does not reach the hoisted declaration.
       if (!column || !sidebar) return
 
+      const viewportHeight = window.innerHeight
+      const viewportChanged = viewportHeight !== prevViewportHeight
+      prevViewportHeight = viewportHeight
+      const pageOffset = window.scrollY
+      const previousPageOffset = prevWindowScrollY
+      const pageScrollDelta = Math.abs(previousPageOffset - pageOffset)
+      const upwardPageDelta = Math.max(0, previousPageOffset - pageOffset)
+      prevWindowScrollY = pageOffset
+
       if (!desktop.matches) {
+        clearDetachedPosition()
         isPinned = false
         sidebar.style.top = ''
         sidebar.style.height = ''
-        sidebar.style.removeProperty('scrollbar-color')
-        sidebar.style.removeProperty('--homepage-sidebar-thumb')
+        hideScrollbar()
         column.style.minHeight = ''
         return
       }
 
       const flowHeight = sidebar.scrollHeight
-      const windowHeight =
-        window.innerHeight - sidebarPinnedTop - sidebarBottomGap
-      const flowTop = window.innerHeight - sidebarBottomGap - flowHeight
+      const windowHeight = viewportHeight - sidebarPinnedTop - sidebarBottomGap
+      const flowTop = viewportHeight - sidebarBottomGap - flowHeight
 
       // Window mode must not shrink the grid row.
       const nextMinHeight = `${flowHeight}px`
@@ -76,18 +110,51 @@ function Homepage({ data }: HomepageProps) {
       }
 
       if (flowHeight <= windowHeight) {
+        clearDetachedPosition()
         isPinned = false
         sidebar.style.top = ''
         sidebar.style.height = ''
-        sidebar.style.removeProperty('scrollbar-color')
-        sidebar.style.removeProperty('--homepage-sidebar-thumb')
+        hideScrollbar()
         return
       }
 
       const columnRect = column.getBoundingClientRect()
       const columnTop = columnRect.top
-      const columnDelta = columnTop - prevColumnTop
-      prevColumnTop = columnTop
+
+      if (detachedSidebar) {
+        if (columnRect.height > detachedSidebar.columnHeight + 0.5) {
+          detachedSidebar.hasObservedGrowth = true
+        }
+
+        const canReattachWithoutPush =
+          detachedSidebar.hasObservedGrowth &&
+          columnRect.bottom >= detachedSidebar.bottom - 0.5
+        if (canReattachWithoutPush) {
+          pinnedHeight = detachedSidebar.height
+          clearDetachedPosition()
+          sidebar.style.top = `${sidebarPinnedTop}px`
+          sidebar.style.height = `${pinnedHeight}px`
+        } else {
+          const bound = Math.max(0, sidebarPinnedTop - columnTop)
+          if (sidebar.scrollTop > bound && upwardPageDelta > 0) {
+            const step =
+              previousPageOffset > 0
+                ? upwardPageDelta *
+                  Math.max(1, sidebar.scrollTop / previousPageOffset)
+                : sidebar.scrollTop
+            sidebar.scrollTop = Math.max(bound, sidebar.scrollTop - step)
+          }
+
+          if (columnTop >= sidebarPinnedTop && sidebar.scrollTop <= 0) {
+            clearDetachedPosition()
+            isPinned = false
+            sidebar.style.top = `${flowTop}px`
+            sidebar.style.height = ''
+            hideScrollbar()
+          }
+          return
+        }
+      }
 
       if (!isPinned) {
         const nextTop = `${flowTop}px`
@@ -100,7 +167,6 @@ function Homepage({ data }: HomepageProps) {
             0,
             Math.min(windowHeight, columnRect.bottom - sidebarPinnedTop)
           )
-          prevSidebarTop = sidebarPinnedTop
           sidebar.style.top = `${sidebarPinnedTop}px`
           sidebar.style.height = `${pinnedHeight}px`
           sidebar.style.setProperty(
@@ -116,31 +182,25 @@ function Homepage({ data }: HomepageProps) {
         return
       }
 
-      // The grid bottom pushes the pinned window up natively at the footer, so
-      // scroll tracking there stays on the compositor with no per-frame JS
-      // writes. When the grid grows under a pushed window while the page is
-      // still ("看更多"), the relaxing push would snap the box down: cancel it
-      // in the same frame by shrinking the window from its top edge and
-      // advancing scrollTop — the bottom edge and every visible row stay put —
-      // then let the height grow back with page scrolling, capped so regrowth
-      // never re-pushes on its own.
-      const sidebarTop = sidebar.getBoundingClientRect().top
-      const pushRelax = sidebarTop - prevSidebarTop
-      prevSidebarTop = sidebarTop
-      if (Math.abs(columnDelta) < 0.5 && pushRelax > 0.5) {
-        pinnedHeight = Math.max(0, pinnedHeight - pushRelax)
+      const targetHeight = Math.max(
+        0,
+        Math.min(windowHeight, columnRect.bottom - sidebarPinnedTop)
+      )
+      if (syncPinnedHeight || viewportChanged) {
+        pinnedHeight = targetHeight
         sidebar.style.height = `${pinnedHeight}px`
-        sidebar.scrollTop += pushRelax
-      } else {
-        const targetHeight = Math.max(
+      } else if (targetHeight > pinnedHeight) {
+        const availableScrollBelow = Math.max(
           0,
-          Math.min(windowHeight, columnRect.bottom - sidebarPinnedTop)
+          sidebar.scrollHeight - sidebar.clientHeight - sidebar.scrollTop
         )
-        if (targetHeight > pinnedHeight) {
-          pinnedHeight = Math.min(
-            targetHeight,
-            pinnedHeight + Math.abs(columnDelta)
-          )
+        const heightGrowth = Math.min(
+          pageScrollDelta,
+          targetHeight - pinnedHeight,
+          availableScrollBelow
+        )
+        if (heightGrowth > 0) {
+          pinnedHeight += heightGrowth
           sidebar.style.height = `${pinnedHeight}px`
         }
       }
@@ -154,32 +214,33 @@ function Homepage({ data }: HomepageProps) {
         isPinned = false
         sidebar.style.top = `${flowTop}px`
         sidebar.style.height = ''
-        sidebar.style.removeProperty('scrollbar-color')
-        sidebar.style.removeProperty('--homepage-sidebar-thumb')
+        hideScrollbar()
         return
       }
 
-      const upwardDelta = Math.max(0, columnDelta)
-      if (sidebar.scrollTop > bound && upwardDelta > 0) {
-        const pageOffset = window.scrollY
+      if (sidebar.scrollTop > bound && upwardPageDelta > 0) {
         const step =
-          pageOffset > 0
-            ? upwardDelta * Math.max(1, sidebar.scrollTop / pageOffset)
+          previousPageOffset > 0
+            ? upwardPageDelta *
+              Math.max(1, sidebar.scrollTop / previousPageOffset)
             : sidebar.scrollTop
         sidebar.scrollTop = Math.max(bound, sidebar.scrollTop - step)
       }
     }
 
-    function requestUpdate() {
+    function requestUpdate(syncPinnedHeight = false) {
+      if (syncPinnedHeight) shouldSyncPinnedHeight = true
       if (frame !== 0) return
 
       frame = window.requestAnimationFrame(() => {
         frame = 0
-        update()
+        const shouldSync = shouldSyncPinnedHeight
+        shouldSyncPinnedHeight = false
+        update(shouldSync)
       })
     }
 
-    const resizeObserver = new ResizeObserver(requestUpdate)
+    const resizeObserver = new ResizeObserver(() => update())
     resizeObserver.observe(column)
     resizeObserver.observe(sidebar)
     function handleSidebarScroll() {
@@ -187,19 +248,57 @@ function Homepage({ data }: HomepageProps) {
       if (sidebar && sidebar.scrollTop <= 0) requestUpdate()
     }
 
-    window.addEventListener('scroll', requestUpdate, { passive: true })
+    const handleWindowScroll = () => requestUpdate()
+    window.addEventListener('scroll', handleWindowScroll, { passive: true })
     sidebar.addEventListener('scroll', handleSidebarScroll, { passive: true })
-    window.addEventListener('resize', requestUpdate)
-    desktop.addEventListener('change', requestUpdate)
+    const handleViewportResize = () => {
+      if (detachedSidebar) {
+        clearDetachedPosition()
+        isPinned = false
+        sidebar.style.top = ''
+        sidebar.style.height = ''
+      }
+      requestUpdate(true)
+    }
+    window.addEventListener('resize', handleViewportResize)
+    desktop.addEventListener('change', handleViewportResize)
+    detachSidebarForContentGrowthRef.current = () => {
+      if (!desktop.matches || !isPinned || !column || !sidebar) return
+      if (detachedSidebar) return
+
+      const columnRect = column.getBoundingClientRect()
+      const sidebarRect = sidebar.getBoundingClientRect()
+      if (columnRect.bottom > sidebarRect.bottom + 0.5) return
+
+      const hiddenTop = Math.max(0, sidebarPinnedTop - sidebarRect.top)
+      const detachedHeight = sidebarRect.height - hiddenTop
+      if (detachedHeight <= 0) return
+
+      const previousScrollTop = sidebar.scrollTop
+      detachedSidebar = {
+        bottom: sidebarRect.bottom,
+        columnHeight: columnRect.height,
+        hasObservedGrowth: false,
+        height: detachedHeight,
+      }
+      sidebar.style.position = 'fixed'
+      sidebar.style.top = `${sidebarRect.top + hiddenTop}px`
+      sidebar.style.left = `${sidebarRect.left}px`
+      sidebar.style.width = `${sidebarRect.width}px`
+      sidebar.style.height = `${detachedHeight}px`
+      sidebar.scrollTop = previousScrollTop + hiddenTop
+    }
+
     update()
 
     return () => {
       if (frame !== 0) window.cancelAnimationFrame(frame)
+      detachSidebarForContentGrowthRef.current = () => {}
       resizeObserver.disconnect()
-      window.removeEventListener('scroll', requestUpdate)
+      window.removeEventListener('scroll', handleWindowScroll)
       sidebar.removeEventListener('scroll', handleSidebarScroll)
-      window.removeEventListener('resize', requestUpdate)
-      desktop.removeEventListener('change', requestUpdate)
+      window.removeEventListener('resize', handleViewportResize)
+      desktop.removeEventListener('change', handleViewportResize)
     }
   }, [])
 
@@ -234,6 +333,7 @@ function Homepage({ data }: HomepageProps) {
               excludedKeys={data.latestNews.map((article) => article.key)}
               initialArticles={data.moreNews}
               initialHasMore={data.hasMoreNews}
+              onBeforeAppend={() => detachSidebarForContentGrowthRef.current()}
             />
           </div>
         </div>
