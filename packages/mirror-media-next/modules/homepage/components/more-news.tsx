@@ -93,7 +93,15 @@ function MoreNews({
     }
 
     if (focusArticleKey) {
-      firstAppendedArticleRef.current?.focus()
+      const article = firstAppendedArticleRef.current
+      if (article) {
+        // Skip the focus auto-scroll only while the article is on screen (it
+        // replaces the button); if the reader has moved away, let the browser
+        // reveal the focus as usual.
+        const { top } = article.getBoundingClientRect()
+        const isOnScreen = top >= 0 && top < window.innerHeight
+        article.focus({ preventScroll: isOnScreen })
+      }
       return
     }
 
