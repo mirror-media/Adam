@@ -1,14 +1,16 @@
-import { Fragment, useMemo } from 'react'
-import Image from 'next/image'
+import { Fragment, ReactNode, useMemo } from 'react'
+import NextImage from 'next/image'
+import ReadrImage from '@readr-media/react-image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
-import { StoryPost } from '@/modules/story/story-types'
+import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 
 import { Blocks } from './blocks'
 import { IconLink } from './icon-link'
 import { PublicDate } from './public-date'
+import { RelativePostLink } from './relative-post-link'
 import { type ElementVariantProps, ThemeElement } from './theme-element'
 
 type PostLayoutProps = Pick<
@@ -34,7 +36,9 @@ type PostLayoutProps = Pick<
   | 'relatedsOne'
   | 'relatedsTwo'
   | 'slug'
+  | 'sections'
 > & {
+  relativeStory: RelatedStory
   renderAside?: (summary: string[]) => React.ReactNode
   renderDable?: () => React.ReactNode
   renderNextUp?: () => React.ReactNode
@@ -67,6 +71,7 @@ const actionList = [
 export default function PostLayout(props: PostLayoutProps) {
   const {
     categories,
+    sections,
     title,
     isAdvertised,
     publishedDate,
@@ -86,15 +91,20 @@ export default function PostLayout(props: PostLayoutProps) {
     relatedsOne,
     relatedsTwo,
     slug,
+    relativeStory,
     renderAdInContent,
     renderAside,
     renderNextUp,
     renderDable,
   } = props
 
-  const theme: ElementVariantProps['theme'] = 'post'
+  const theme: ElementVariantProps['theme'] = isAdvertised
+    ? 'marketing'
+    : 'post'
 
   const canonicalUrl = `${SITE_URL}/story/${slug}`
+  const mainCategory = sections?.[0]
+  const subCategories = categories?.[0]
 
   const summary = useMemo(() => {
     return content.blocks
@@ -125,25 +135,39 @@ export default function PostLayout(props: PostLayoutProps) {
                 首頁
               </Typography>
             </Link>
-            {categories?.map(
-              (category, index) =>
-                category?.name && (
-                  <Fragment key={`category-${index}`}>
-                    <span className="text-mm-base-500">／</span>
-                    <Link
-                      className="text-sm font-bold text-mm-base-500"
-                      href={`/category/${category?.slug}`}
-                    >
-                      <Typography
-                        as="span"
-                        variant="subtitle"
-                        className="text-mm-base-500"
-                      >
-                        {category.name}
-                      </Typography>
-                    </Link>
-                  </Fragment>
-                )
+            {mainCategory && (
+              <Fragment>
+                <span className="text-mm-base-500">／</span>
+                <Link
+                  className="text-sm font-bold text-mm-base-500"
+                  href={`/category/${mainCategory?.slug}`}
+                >
+                  <Typography
+                    as="span"
+                    variant="subtitle"
+                    className="text-mm-base-500"
+                  >
+                    {mainCategory.name}
+                  </Typography>
+                </Link>
+              </Fragment>
+            )}
+            {subCategories && (
+              <Fragment>
+                <span className="text-mm-base-500">／</span>
+                <Link
+                  className="text-sm font-bold text-mm-base-500"
+                  href={`/category/${subCategories?.slug}`}
+                >
+                  <Typography
+                    as="span"
+                    variant="subtitle"
+                    className="text-mm-base-500"
+                  >
+                    {subCategories?.name}
+                  </Typography>
+                </Link>
+              </Fragment>
             )}
           </div>
         )}
@@ -164,8 +188,9 @@ export default function PostLayout(props: PostLayoutProps) {
           <IconLink
             href="https://google.com/preferences/source?q=mirrormedia.mg"
             className="flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
+            data-gtm-preferred-source-name
           >
-            <Image
+            <NextImage
               width={14}
               height={14}
               src="/images/google-logo.svg"
@@ -184,6 +209,7 @@ export default function PostLayout(props: PostLayoutProps) {
             alt="facebook-logo"
             rel="noopener noreferrer"
             target="_blank"
+            data-gtm-share-facebook
           />
           <IconLink
             href={`https://social-plugins.line.me/lineit/share?url=${canonicalUrl}`}
@@ -191,6 +217,7 @@ export default function PostLayout(props: PostLayoutProps) {
             alt="line-logo"
             rel="noopener noreferrer"
             target="_blank"
+            data-gtm-share-line
           />
           <IconLink
             href={`https://www.threads.com/intent/post?url=${encodeURIComponent(
@@ -199,8 +226,9 @@ export default function PostLayout(props: PostLayoutProps) {
             className="rounded-full bg-black"
             rel="noopener noreferrer"
             target="_blank"
+            data-gtm-share-threads
           >
-            <Image
+            <NextImage
               width={28}
               height={28}
               src="/images/threads-logo.svg"
@@ -212,18 +240,19 @@ export default function PostLayout(props: PostLayoutProps) {
             href={canonicalUrl}
             src="/images/link-logo.svg"
             alt="link-logo"
+            data-gtm-share-link
           />
         </div>
         <figure className="order-5 col-span-full">
-          <picture className="relative block aspect-video">
-            <Image
-              fill
-              src={
-                heroImage?.resized?.original ??
-                '/images-next/default-og-img.png'
-              }
+          <picture className="relative block aspect-3/2">
+            <ReadrImage
               alt={heroCaption ?? title ?? ''}
-              fetchPriority="high"
+              priority
+              images={{
+                original: heroImage?.resized?.original ?? '',
+              }}
+              loadingImage="/images-next/loading.gif"
+              defaultImage="/images-next/default-og-img.png"
             />
           </picture>
           {heroCaption && (
@@ -284,7 +313,12 @@ export default function PostLayout(props: PostLayoutProps) {
           theme={theme}
         >
           {brief.blocks.map((block, index) => (
-            <Typography key={`brief-${index}`} as="p" variant="body-l">
+            <Typography
+              key={`brief-${index}`}
+              as="p"
+              variant="body-l"
+              className="text-mm-neutral-600"
+            >
               {block?.text}
             </Typography>
           ))}
@@ -292,11 +326,84 @@ export default function PostLayout(props: PostLayoutProps) {
         <div className="order-8 col-span-full flex flex-col gap-y-7 md:gap-y-8">
           <Blocks
             className="mx-2 scroll-m-20 md:mx-0"
-            contents={content.blocks}
-            relatedsOne={relatedsOne}
-            relatedsTwo={relatedsTwo}
-            theme="post"
-            renderAdInContent={renderAdInContent}
+            contents={content}
+            renderPostInContent={(block, paragraphCount) => {
+              if (!block?.text) return null
+
+              if (paragraphCount === 2 && relativeStory) {
+                return (
+                  <>
+                    <Typography
+                      key={`content-${paragraphCount}`}
+                      as="p"
+                      variant="body-l"
+                      className="mx-2 scroll-m-20 md:mx-0"
+                    >
+                      {block?.text}
+                    </Typography>
+                    <div className="mx-2 scroll-m-20 md:mx-0">
+                      <ThemeElement className="inline rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-mm-neutral-100">
+                        <Typography
+                          as="span"
+                          variant="subtitle"
+                          className="text-mm-neutral-100"
+                        >
+                          延伸閱讀
+                        </Typography>
+                      </ThemeElement>
+                      <Link href={`/story/${relativeStory.slug}`}>
+                        <ThemeElement
+                          className="rounded-md rounded-tl-none p-2 text-lg font-bold text-mm-neutral-700 decoration-mm-neutral-700"
+                          as="div"
+                          theme="post"
+                        >
+                          {relativeStory.title}
+                        </ThemeElement>
+                      </Link>
+                    </div>
+                  </>
+                )
+              }
+
+              if (paragraphCount === 3) {
+                return (
+                  <>
+                    <Typography
+                      key={`content-${paragraphCount}`}
+                      as="p"
+                      variant="body-l"
+                      className="mx-2 scroll-m-20 md:mx-0"
+                    >
+                      {block?.text}
+                    </Typography>
+                    {renderAdInContent?.()}
+                  </>
+                )
+              }
+
+              if (paragraphCount === 4) {
+                return (
+                  <RelativePosts
+                    relatedsOne={relatedsOne}
+                    relatedsTwo={relatedsTwo}
+                    className="mx-2 scroll-m-20 md:mx-0"
+                  >
+                    {block?.text}
+                  </RelativePosts>
+                )
+              }
+
+              return (
+                <Typography
+                  key={`content-${paragraphCount}`}
+                  as="p"
+                  variant="body-l"
+                  className="mx-2 scroll-m-20 md:mx-0"
+                >
+                  {block?.text}
+                </Typography>
+              )
+            }}
           />
         </div>
         <div className="order-9 col-span-full mx-8 flex flex-wrap gap-2">
@@ -355,11 +462,12 @@ export default function PostLayout(props: PostLayoutProps) {
                   rel="noreferrer noopener"
                   className="flex items-center gap-x-2"
                 >
-                  <Image
+                  <NextImage
                     width={32}
                     height={32}
                     src={item.resource}
                     alt={item.label}
+                    loading="lazy"
                   />
                   <Typography
                     as="span"
@@ -392,5 +500,79 @@ export default function PostLayout(props: PostLayoutProps) {
         {renderAside?.(summary)}
       </aside>
     </div>
+  )
+}
+
+function RelativePosts({
+  children,
+  className,
+  relatedsOne,
+  relatedsTwo,
+}: {
+  children: ReactNode
+  className?: string
+  relatedsOne: StoryPost['relatedsOne']
+  relatedsTwo: StoryPost['relatedsTwo']
+}) {
+  if (relatedsOne && relatedsTwo) {
+    return (
+      <>
+        <Typography as="p" variant="body-l" className={className}>
+          {children}
+        </Typography>
+        <RelativePostLink
+          className="flex bg-mm-base-700"
+          type="prev"
+          href={`/story/${relatedsOne?.slug}`}
+        >
+          上一篇
+        </RelativePostLink>
+        <RelativePostLink
+          className="flex bg-mm-base-700"
+          type="next"
+          href={`/story/${relatedsTwo?.slug}`}
+        >
+          下一篇
+        </RelativePostLink>
+      </>
+    )
+  }
+  if (relatedsOne) {
+    return (
+      <>
+        <Typography as="p" variant="body-l" className={className}>
+          {children}
+        </Typography>
+        <RelativePostLink
+          type="prev"
+          className="flex bg-mm-base-700"
+          href={`/story/${relatedsOne?.slug}`}
+        >
+          上一篇
+        </RelativePostLink>
+      </>
+    )
+  }
+  if (relatedsTwo) {
+    return (
+      <>
+        <Typography as="p" variant="body-l" className={className}>
+          {children}
+        </Typography>
+        <RelativePostLink
+          type="next"
+          className="flex bg-mm-base-700"
+          href={`/story/${relatedsTwo?.slug}`}
+        >
+          下一篇
+        </RelativePostLink>
+      </>
+    )
+  }
+
+  return (
+    <Typography as="p" variant="body-l" className={className}>
+      {children}
+    </Typography>
   )
 }

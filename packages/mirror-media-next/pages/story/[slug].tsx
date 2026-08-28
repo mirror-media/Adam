@@ -2,8 +2,9 @@
 import { useMemo } from 'react'
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
+import ReadrImage from '@readr-media/react-image'
 
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GptAd from '@/components/ads/gpt/gpt-ad'
@@ -13,9 +14,11 @@ import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '@/components/ads/gpt/gpt-placeholder'
+import { cn } from '@/components/cn'
 import Layout from '@/components/shared/layout'
 import UserBehaviorLogger from '@/components/shared/user-behavior-logger'
 import WineWarning from '@/components/shared/wine-warning'
+import ArticleQuestions from '@/components/shell/article/article-questions'
 import { ArticleSummary } from '@/components/shell/article/post-summary'
 import { ThemeElement } from '@/components/shell/article/theme-element'
 import FbPagePlugin from '@/components/story/normal/fb-page-plugin'
@@ -68,7 +71,7 @@ const AdultOnlyWarning = dynamic(
 const StoryWideStyle = dynamic(() => import('@/components/story/wide'), {
   loading: () => (
     <div className="fixed mx-auto my-0 h-full w-full">
-      <Image
+      <NextImage
         src={Skeleton}
         alt="loading..."
         width={20}
@@ -83,7 +86,7 @@ const StoryPhotographyStyle = dynamic(
   {
     loading: () => (
       <div className="fixed mx-auto my-0 h-full w-full">
-        <Image
+        <NextImage
           src={Skeleton}
           alt="loading..."
           width={20}
@@ -99,7 +102,7 @@ const PostLayout = dynamic(
   {
     loading: () => (
       <div className="fixed mx-auto my-0 h-full w-full">
-        <Image
+        <NextImage
           src={Skeleton}
           alt="loading..."
           width={20}
@@ -111,9 +114,6 @@ const PostLayout = dynamic(
   }
 )
 const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
-  ssr: false,
-})
-const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 
@@ -162,6 +162,7 @@ export default function Story({
     slug ?? '',
     initialRelatedStories
   )
+  const [firstRelativeStory, ...restOfRelativeStories] = allRelatedStories
 
   const writersInString = useMemo(() => {
     return (writers ?? [])
@@ -236,6 +237,7 @@ export default function Story({
           <>
             <PostLayout
               {...postData}
+              relativeStory={firstRelativeStory}
               renderAdInContent={() => (
                 <GptAd
                   pageKey={pageKeyForGptAd}
@@ -268,9 +270,13 @@ export default function Story({
                       className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
                     />
                   </GPT_Placeholder_Aside>
+                  <ArticleQuestions
+                    auto_faq={postData.auto_faq}
+                    faqs_algo={postData.faqs_algo}
+                  />
                   <div className="flex justify-center">
                     <Link href="https://google.com/preferences/source?q=mirrormedia.mg">
-                      <Image
+                      <NextImage
                         width={320}
                         height={100}
                         src="/images-next/story/gnews-gif.gif"
@@ -288,7 +294,7 @@ export default function Story({
                   <ThemeElement
                     as="span"
                     theme="accent"
-                    className="inline-flex rounded-t-lg px-3 py-1"
+                    className="inline rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-mm-neutral-100"
                   >
                     <Typography
                       as="span"
@@ -303,27 +309,39 @@ export default function Story({
                     theme="post"
                     className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2"
                   >
-                    {allRelatedStories.map((postItem) => (
+                    {restOfRelativeStories.map((postItem) => (
                       <li
                         key={postItem.slug}
-                        className="border-b border-b-black py-4 last:border-0 md:odd:pr-6 md:nth-last-[-n+2]:border-b-0"
+                        className={cn(
+                          'border-b border-b-black py-4 last:border-0 md:odd:pr-6',
+                          {
+                            'md:nth-last-[-n+2]:border-b-0':
+                              restOfRelativeStories.length % 2 === 0,
+                            'md:last:border-b-0':
+                              restOfRelativeStories.length % 2 === 1,
+                          }
+                        )}
                       >
                         <Link
-                          href={`/story/${postItem.slug}`}
+                          href={`/story/${postItem.slug}?from=referral_bottom`}
                           className="grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]"
                         >
-                          <picture className="relative block aspect-4/3">
-                            <Image
-                              fill
-                              className="object-cover"
-                              src={
-                                postItem.heroImage?.resizedWebp?.original ??
-                                '/images-next/default-og-img.png'
-                              }
-                              alt={postItem.title ?? ''}
-                              loading="lazy"
-                            />
-                          </picture>
+                          <div className="relative">
+                            <picture className="relative block aspect-4/3">
+                              <ReadrImage
+                                className="object-cover"
+                                images={{
+                                  original:
+                                    postItem.heroImage?.resizedWebp?.original ??
+                                    '/images-next/default-og-img.png',
+                                }}
+                                loadingImage="/images-next/loading.gif"
+                                defaultImage="/images-next/default-og-img.png"
+                                alt={postItem.title ?? ''}
+                                loading="lazy"
+                              />
+                            </picture>
+                          </div>
                           <Typography
                             as="div"
                             variant="h6"
@@ -342,12 +360,12 @@ export default function Story({
                   {shouldShowAd && (
                     <>
                       <div className="hidden xl:flex xl:min-h-62.5 xl:w-full xl:items-center xl:justify-between xl:pb-4">
-                        <GPTAd
+                        <GptAd
                           adKey="PC_E1"
                           pageKey={pageKeyForGptAd}
                           className="hidden h-auto w-full xl:m-0 xl:block"
                         />
-                        <GPTAd
+                        <GptAd
                           adKey="PC_E2"
                           pageKey={pageKeyForGptAd}
                           className="hidden h-auto w-full xl:m-0 xl:block"
@@ -361,7 +379,7 @@ export default function Story({
             />
 
             {shouldShowAd && (
-              <GPTAd
+              <GptAd
                 pageKey={pageKeyForGptAd}
                 adKey="MB_AT3"
                 className="mx-[-20px] block h-auto w-full min-[336px]:mx-auto xl:hidden"
@@ -453,7 +471,7 @@ export const getServerSideProps: GetServerSideProps<
     }
     const { style } = postData
     /**
-     * If post style is 'projects' or 'campaign', redirect to certain route.
+     * If post style is 'projects' or '', redirect to certain route.
      *
      * There is no `/projects` or `/campaign` pages in mirror-media-next, when user enter path `/projects/_slug` or `/campaign`,
      * Load balancer hosted by Google Cloud Platform will help us to get page content of project or campaign page.

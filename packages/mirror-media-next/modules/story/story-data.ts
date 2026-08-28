@@ -20,6 +20,7 @@ import { logAxiosError } from '@/utils/log/shared'
 import { processSettledResult } from '@/utils/response-processor'
 
 import type {
+  FaqsAlgo,
   StoryFlashNewsData,
   StoryHeaderData,
   StoryPost,
@@ -83,6 +84,22 @@ function toDraftContentState(value: unknown): RawDraftContentState {
   return isRawDraftContentState(value) ? value : EMPTY_DRAFT_CONTENT
 }
 
+// `faqs_algo` is `null` whenever a post has no auto-generated FAQ (most
+// posts), so unlike `brief`/`content` there's no meaningful empty default to
+// fall back to — an unrecognized shape is treated the same as "no FAQ".
+function isFaqsAlgo(value: unknown): value is FaqsAlgo {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    Array.isArray((value as { faqs?: unknown }).faqs) &&
+    typeof (value as { generated_at?: unknown }).generated_at === 'string'
+  )
+}
+
+function toFaqsAlgo(value: unknown): FaqsAlgo | null {
+  return isFaqsAlgo(value) ? value : null
+}
+
 export async function fetchStoryPost(slug: string): Promise<StoryPost | null> {
   const result = await getStoryPostBySlug(slug, { preview: IS_PREVIEW_MODE })
   const postData = result.data?.post
@@ -95,6 +112,7 @@ export async function fetchStoryPost(slug: string): Promise<StoryPost | null> {
     ...postData,
     brief: toDraftContentState(postData.brief),
     content: toDraftContentState(postData.content),
+    faqs_algo: toFaqsAlgo(postData.faqs_algo),
   }
 }
 

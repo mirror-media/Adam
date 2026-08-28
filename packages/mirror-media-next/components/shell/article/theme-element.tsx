@@ -8,7 +8,7 @@ const containerVariants = cva('', {
   variants: {
     theme: {
       accent: 'bg-mm-base-700 text-mm-neutral-0',
-      topic: 'bg-mm-neutral-200',
+      marketing: 'bg-mm-neutral-200',
       post: 'bg-mm-second-100',
       default: '',
     },

@@ -13,18 +13,26 @@ export type StoryPostQueryResult =
   | NonNullable<ContentFetchStoryPostBySlugQuery['post']>
   | NonNullable<StoryFetchStoryPostBySlugQuery['post']>
 
+// `faqs_algo`'s real shape, confirmed against live data from a post with
+// `auto_faq: true` — GraphQL only types it as the untyped `Json` scalar.
+export type FaqsAlgo = {
+  faqs: { question: string; answer: string; score: number }[]
+  generated_at: string
+}
+
 // The view type the story capability works with: `brief`/`content` narrowed
-// from GraphQL's untyped `Json` scalar to real draft-js content (see
-// fetchStoryPost's type guard). `Post` (the schema type) also has
-// `trimmedContent`/`isFeatured`, but this query doesn't select either —
-// they're the AMP query's and the listing fragment's fields respectively —
-// and nothing in the story render tree reads them, so they're left out
-// rather than faked in. Every other field's nullability matches the
-// GraphQL schema exactly as codegen reports it — nothing here is asserted
-// past what the response actually guarantees.
+// from GraphQL's untyped `Json` scalar to real draft-js content, and
+// `faqs_algo` narrowed to its real shape (see fetchStoryPost's type guards).
+// `Post` (the schema type) also has `trimmedContent`/`isFeatured`, but this
+// query doesn't select either — they're the AMP query's and the listing
+// fragment's fields respectively — and nothing in the story render tree
+// reads them, so they're left out rather than faked in. Every other field's
+// nullability matches the GraphQL schema exactly as codegen reports it —
+// nothing here is asserted past what the response actually guarantees.
 export type StoryPost = StoryPostQueryResult & {
   brief: RawDraftContentState
   content: RawDraftContentState
+  faqs_algo: FaqsAlgo | null
 }
 
 // This page only ever renders full (non-trimmed) content.
