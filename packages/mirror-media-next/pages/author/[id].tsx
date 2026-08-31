@@ -17,8 +17,6 @@ import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
 import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
 import { LatestArticles } from '@/modules/aside/components/latest-articles'
 import { PopularArticles } from '@/modules/aside/components/popular-articles'
-import { toAuthorSummary } from '@/modules/author/author-data'
-import type { AuthorSummary } from '@/modules/author/author-types'
 import AuthorArticles from '@/modules/author/components/author-articles'
 import {
   type ArticleListItemSource,
@@ -41,7 +39,7 @@ const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
 const RENDER_PAGE_SIZE = 12
 
 type AuthorPageProps = {
-  author: AuthorSummary
+  author: { id: string; name: string }
   dataLayer: ReturnType<typeof buildSingleCatDataLayer>
   headerData: ShellHeaderData
   posts: ArticleListItemData[]
@@ -188,9 +186,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
     throw new Error('fetch author failed')
   }
 
-  const author = toAuthorSummary(authorData.contact)
-
-  if (!author) {
+  if (!authorData.contact) {
     console.log(
       JSON.stringify({
         severity: 'WARNING',
@@ -199,6 +195,11 @@ export const getServerSideProps = (async ({ query, req, res }) => {
       })
     )
     return { notFound: true }
+  }
+
+  const author = {
+    id: authorData.contact.id,
+    name: authorData.contact.name ?? '',
   }
 
   const [postsCount, postsResult] = processSettledResult(
