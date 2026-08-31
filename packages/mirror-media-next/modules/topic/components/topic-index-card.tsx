@@ -12,7 +12,6 @@ type TopicIndexCardProps = {
 
 function TopicIndexCard({ item }: TopicIndexCardProps) {
   const images = getTopicIndexCardImages(item)
-  const brief = item.brief?.blocks?.[0]?.text
   const createdAt = item.createdAt
     ? transformTimeData(item.createdAt, 'dot')
     : undefined
@@ -36,21 +35,12 @@ function TopicIndexCard({ item }: TopicIndexCardProps) {
       </div>
       <div className="flex flex-col gap-mm-m">
         <Typography
-          as="p"
+          as="h2"
           className="line-clamp-2 text-mm-neutral-800"
           variant="subtitle"
         >
           {item.name}
         </Typography>
-        {brief ? (
-          <Typography
-            as="p"
-            className="line-clamp-3 text-mm-neutral-500"
-            variant="body-s"
-          >
-            {brief}
-          </Typography>
-        ) : null}
         {createdAt ? (
           <Typography
             as="time"
