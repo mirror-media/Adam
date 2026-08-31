@@ -52,11 +52,14 @@ async function fetchMoreHomepageNews(
       availableArticles.push(article)
     })
 
-    if (availableArticles.length > HOMEPAGE_MORE_NEWS_BATCH_SIZE) {
+    if (availableArticles.length >= HOMEPAGE_MORE_NEWS_BATCH_SIZE) {
+      const hasOverflow =
+        availableArticles.length > HOMEPAGE_MORE_NEWS_BATCH_SIZE
+
       return {
         articles: availableArticles.slice(0, HOMEPAGE_MORE_NEWS_BATCH_SIZE),
-        hasMore: true,
-        nextFileNumber: fileNumber,
+        hasMore: hasOverflow || fileNumber < HOMEPAGE_LATEST_NEWS_FILE_COUNT,
+        nextFileNumber: hasOverflow ? fileNumber : fileNumber + 1,
       }
     }
 

@@ -162,17 +162,6 @@ function MoreNews({
     }
   }
 
-  if (!articles.length) {
-    return (
-      <section aria-labelledby="more-news-title">
-        <SectionTitle id="more-news-title">更多新聞</SectionTitle>
-        <Typography className="mt-mm-3xl text-center text-mm-neutral-600">
-          目前沒有更多新聞。
-        </Typography>
-      </section>
-    )
-  }
-
   return (
     <section
       aria-labelledby="more-news-title"
@@ -180,74 +169,80 @@ function MoreNews({
     >
       <SectionTitle id="more-news-title">更多新聞</SectionTitle>
 
-      <div className="mt-mm-3xl grid grid-cols-1 gap-y-mm-3xl md:grid-cols-2 md:gap-x-mm-5xl md:gap-y-mm-2xl xl:grid-cols-3 xl:gap-x-mm-l">
-        {articles.map((article, index) => {
-          const microAdUnitId = getMicroAdUnitId(index, 'HOME', device)
+      {articles.length > 0 ? (
+        <div className="mt-mm-3xl grid grid-cols-1 gap-y-mm-3xl md:grid-cols-2 md:gap-x-mm-5xl md:gap-y-mm-2xl xl:grid-cols-3 xl:gap-x-mm-l">
+          {articles.map((article, index) => {
+            const microAdUnitId = getMicroAdUnitId(index, 'HOME', device)
 
-          return (
-            <Fragment key={article.key}>
-              <article className="h-full min-w-0">
-                <NextLink
-                  className={cn(
-                    'GTM-homepage-latest-list group flex h-full flex-col',
-                    homepageCardHoverClass,
-                    homepageCardLinkFocusClass
-                  )}
-                  href={article.href}
-                  ref={
-                    article.key === focusArticleKey
-                      ? firstAppendedArticleRef
-                      : undefined
-                  }
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <span className="relative block aspect-3/2 w-full overflow-hidden bg-mm-neutral-100">
-                    <ArticleImage
-                      alt={article.title}
-                      sizes="(min-width: 1280px) 235px, (min-width: 768px) 332px, calc(100vw - 32px)"
-                      src={article.imageUrl}
-                    />
-                    {article.sectionName && (
-                      <span className="absolute top-0 left-0 rounded-br-mm-xs bg-mm-base-600 px-mm-l py-[3px] font-mm-sans text-mm-subtitle text-mm-second-100">
-                        {article.sectionName}
-                      </span>
+            return (
+              <Fragment key={article.key}>
+                <article className="h-full min-w-0">
+                  <NextLink
+                    className={cn(
+                      'GTM-homepage-latest-list group flex h-full flex-col',
+                      homepageCardHoverClass,
+                      homepageCardLinkFocusClass
                     )}
-                  </span>
-                  <Typography
-                    as="h3"
-                    className="mt-mm-m line-clamp-2 min-h-[2.6em] text-mm-neutral-800 group-hover:underline md:mt-mm-l"
-                    variant="subtitle"
+                    href={article.href}
+                    ref={
+                      article.key === focusArticleKey
+                        ? firstAppendedArticleRef
+                        : undefined
+                    }
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
-                    {article.title}
-                  </Typography>
-                  {article.publishedDate && (
+                    <span className="relative block aspect-3/2 w-full overflow-hidden bg-mm-neutral-100">
+                      <ArticleImage
+                        alt={article.title}
+                        sizes="(min-width: 1280px) 235px, (min-width: 768px) 332px, calc(100vw - 32px)"
+                        src={article.imageUrl}
+                      />
+                      {article.sectionName && (
+                        <span className="absolute top-0 left-0 rounded-br-mm-xs bg-mm-base-600 px-mm-l py-[3px] font-mm-sans text-mm-subtitle text-mm-second-100">
+                          {article.sectionName}
+                        </span>
+                      )}
+                    </span>
                     <Typography
-                      as="time"
-                      className="mt-mm-m block text-mm-neutral-400 md:mt-mm-l"
-                      dateTime={article.publishedDate}
-                      variant="caption-l"
+                      as="h3"
+                      className="mt-mm-m line-clamp-2 min-h-[2.6em] text-mm-neutral-800 group-hover:underline md:mt-mm-l"
+                      variant="subtitle"
                     >
-                      {formatPublishedDate(article.publishedDate)}
+                      {article.title}
                     </Typography>
-                  )}
-                </NextLink>
-              </article>
+                    {article.publishedDate && (
+                      <Typography
+                        as="time"
+                        className="mt-mm-m block text-mm-neutral-400 md:mt-mm-l"
+                        dateTime={article.publishedDate}
+                        variant="caption-l"
+                      >
+                        {formatPublishedDate(article.publishedDate)}
+                      </Typography>
+                    )}
+                  </NextLink>
+                </article>
 
-              {shouldShowAd &&
-                needInsertMicroAdAfter(index) &&
-                microAdUnitId && (
-                  <div
-                    className="min-w-0 overflow-hidden"
-                    data-homepage-micro-ad
-                  >
-                    <MicroAd microAdType="HOME" unitId={microAdUnitId} />
-                  </div>
-                )}
-            </Fragment>
-          )
-        })}
-      </div>
+                {shouldShowAd &&
+                  needInsertMicroAdAfter(index) &&
+                  microAdUnitId && (
+                    <div
+                      className="min-w-0 overflow-hidden"
+                      data-homepage-micro-ad
+                    >
+                      <MicroAd microAdType="HOME" unitId={microAdUnitId} />
+                    </div>
+                  )}
+              </Fragment>
+            )
+          })}
+        </div>
+      ) : !hasMore ? (
+        <Typography className="mt-mm-3xl text-center text-mm-neutral-600">
+          目前沒有更多新聞。
+        </Typography>
+      ) : null}
 
       {hasMore && (
         <Button
