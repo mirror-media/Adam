@@ -50,7 +50,7 @@ function TopicArticleCard({ item, variant = 'list' }: TopicArticleCardProps) {
         <Typography
           as="h2"
           className="itemTitle line-clamp-2 text-mm-neutral-800"
-          variant="subtitle"
+          variant="h5"
         >
           {item.title}
         </Typography>
