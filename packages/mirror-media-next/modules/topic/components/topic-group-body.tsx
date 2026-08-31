@@ -43,7 +43,7 @@ function TopicGroupBody({ topic }: TopicGroupBodyProps) {
             </Typography>
             <TopicCardGrid className="groupArticles w-full max-w-7xl flex-col pb-mm-3xl">
               {taggedPosts.map((item) => (
-                <TopicArticleCard item={item} key={item.id} />
+                <TopicArticleCard item={item} key={item.id} variant="group" />
               ))}
             </TopicCardGrid>
           </section>

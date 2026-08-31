@@ -24,7 +24,7 @@ function TopicIndexCard({ item }: TopicIndexCardProps) {
       rel="noreferrer"
       target="_blank"
     >
-      <div className="relative h-46.5 max-h-46.5 w-full overflow-hidden rounded-mm-m [&_img]:rounded-mm-m">
+      <div className="relative h-46.5 max-h-46.5 w-full overflow-hidden">
         <Image
           alt={item.name}
           defaultImage="/images-next/default-og-img.png"

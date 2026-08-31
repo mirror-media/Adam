@@ -1,6 +1,7 @@
 import NextLink from 'next/link'
 import Image from '@readr-media/react-image'
 
+import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
 import { toTopicImageSet } from '@/modules/topic/topic-data'
 import type { TopicArticle } from '@/modules/topic/topic-types'
@@ -10,9 +11,10 @@ import { TopicSectionBadge } from './topic-card-grid'
 
 type TopicArticleCardProps = {
   item: TopicArticle
+  variant?: 'list' | 'group'
 }
 
-function TopicArticleCard({ item }: TopicArticleCardProps) {
+function TopicArticleCard({ item, variant = 'list' }: TopicArticleCardProps) {
   const section = item.sections.find(
     (itemSection) => itemSection.slug !== 'member'
   )
@@ -27,7 +29,12 @@ function TopicArticleCard({ item }: TopicArticleCardProps) {
       rel="noreferrer"
       target="_blank"
     >
-      <div className="imageContainer relative h-55 max-h-55 w-full overflow-hidden rounded-mm-m md:h-46.5 md:max-h-46.5 [&_img]:rounded-mm-m">
+      <div
+        className={cn(
+          'imageContainer relative h-55 max-h-55 w-full overflow-hidden md:h-46.5 md:max-h-46.5',
+          variant === 'group' && 'rounded-mm-m [&_img]:rounded-mm-m'
+        )}
+      >
         <Image
           alt={item.title}
           defaultImage="/images-next/default-og-img.png"

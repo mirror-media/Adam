@@ -44,7 +44,9 @@ function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
             <Fragment key={item.id}>
               <TopicIndexCard item={item} />
               {shouldShowAd && needInsertMicroAdAfter(index) && unitId ? (
-                <StyledMicroAd microAdType="LISTING" unitId={unitId} />
+                <div className="mx-auto w-full max-w-82.5 min-w-0 overflow-hidden md:mx-0 md:w-70 md:max-w-70 md:shrink-0">
+                  <StyledMicroAd microAdType="LISTING" unitId={unitId} />
+                </div>
               ) : null}
             </Fragment>
           )
