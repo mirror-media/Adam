@@ -253,7 +253,7 @@ function MoreNews({
 
       {hasMore && (
         <Button
-          className="mt-mm-3xl w-full rounded-mm-m py-0 text-mm-h5"
+          className="mt-mm-3xl w-full py-0 text-mm-h5"
           isLoading={isLoading}
           onClick={handleLoadMore}
           ref={loadMoreButtonRef}

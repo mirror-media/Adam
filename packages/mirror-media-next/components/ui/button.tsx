@@ -11,7 +11,7 @@ const buttonVariants = cva(
         default:
           'rounded-mm-s bg-mm-base-700 text-mm-neutral-0 hover:bg-mm-base-500',
         outline:
-          'rounded-mm-full border-mm-neutral-300 bg-mm-neutral-50 text-mm-neutral-400 hover:bg-mm-neutral-200 hover:text-mm-second-600',
+          'rounded-mm-m border-mm-neutral-300 bg-mm-neutral-50 text-mm-neutral-400 hover:border-mm-second-700 hover:bg-mm-second-700 hover:text-mm-neutral-0',
         secondary:
           'rounded-mm-s bg-mm-second-500 text-mm-neutral-0 hover:bg-mm-second-400',
         destructive:
