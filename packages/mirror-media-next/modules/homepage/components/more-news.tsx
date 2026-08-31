@@ -1,5 +1,3 @@
-'use client'
-
 import { Fragment, useEffect, useRef, useState } from 'react'
 import dynamic from 'next/dynamic'
 import NextLink from 'next/link'
