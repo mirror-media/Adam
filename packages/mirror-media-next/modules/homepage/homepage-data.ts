@@ -17,8 +17,13 @@ import { fetchPostsBySectionSlug } from '@/utils/api/section'
 import { processSettledResult } from '@/utils/response-processor'
 
 import {
+  HOMEPAGE_CATEGORY_ARTICLE_COUNT,
+  HOMEPAGE_EDITOR_CHOICE_COUNT,
+  HOMEPAGE_FORUM_NEWS_COUNT,
   HOMEPAGE_LATEST_NEWS_COUNT,
   HOMEPAGE_MORE_NEWS_BATCH_SIZE,
+  HOMEPAGE_POPULAR_NEWS_COUNT,
+  HOMEPAGE_PROMO_VIDEO_COUNT,
 } from './homepage-constants'
 import {
   normalizeGraphqlPosts,
@@ -70,7 +75,7 @@ async function fetchHomepagePopularNews(): Promise<HomepageArticle[]> {
     throw new Error('Homepage popular news schema validation failed')
   }
 
-  return parsed.slice(0, 8)
+  return parsed.slice(0, HOMEPAGE_POPULAR_NEWS_COUNT)
 }
 
 async function fetchHomepageForumNews(
@@ -83,7 +88,7 @@ async function fetchHomepageForumNews(
     )
     const parsed = parseForumHeadlines(response.data)
 
-    if (parsed !== null) return parsed.slice(0, 8)
+    if (parsed !== null) return parsed.slice(0, HOMEPAGE_FORUM_NEWS_COUNT)
   } catch (error) {
     console.warn(
       JSON.stringify({
@@ -98,13 +103,16 @@ async function fetchHomepageForumNews(
 
   const response = await client.query<FetchLatestPublishedExternalsQuery>({
     query: fetchLatestPublishedExternals,
-    variables: { partnerSlug: 'dailycolumn', take: 8 },
+    variables: {
+      partnerSlug: 'dailycolumn',
+      take: HOMEPAGE_FORUM_NEWS_COUNT,
+    },
   })
   const parsed = parseForumHeadlines({
     externals: response.data.externals ?? [],
   })
 
-  return (parsed ?? []).slice(0, 8)
+  return (parsed ?? []).slice(0, HOMEPAGE_FORUM_NEWS_COUNT)
 }
 
 async function fetchHomepagePromoVideos(
@@ -117,7 +125,7 @@ async function fetchHomepagePromoVideos(
     )
     const parsed = parsePromoteVideos(response.data)
 
-    if (parsed !== null) return parsed.slice(0, 10)
+    if (parsed !== null) return parsed.slice(0, HOMEPAGE_PROMO_VIDEO_COUNT)
   } catch (error) {
     console.warn(
       JSON.stringify({
@@ -132,13 +140,16 @@ async function fetchHomepagePromoVideos(
 
   const response = await client.query<FetchPromoteVideosQuery>({
     query: fetchPromoteVideos,
-    variables: { orderBy: [{ order: 'asc' }], take: 10 },
+    variables: {
+      orderBy: [{ order: 'asc' }],
+      take: HOMEPAGE_PROMO_VIDEO_COUNT,
+    },
   })
   const parsed = parsePromoteVideos({
     promoteVideos: response.data.promoteVideos ?? [],
   })
 
-  return (parsed ?? []).slice(0, 10)
+  return (parsed ?? []).slice(0, HOMEPAGE_PROMO_VIDEO_COUNT)
 }
 
 async function fetchHomepageCategories(
@@ -146,10 +157,17 @@ async function fetchHomepageCategories(
 ): Promise<HomepageCategory[]> {
   const responses = await Promise.allSettled(
     CATEGORY_CONFIG.map(async (category) => {
-      const response = await fetchPostsBySectionSlug(category.slug, 3, 0)
+      const response = await fetchPostsBySectionSlug(
+        category.slug,
+        HOMEPAGE_CATEGORY_ARTICLE_COUNT,
+        0
+      )
       return {
         ...category,
-        articles: normalizeGraphqlPosts(response.data.posts).slice(0, 3),
+        articles: normalizeGraphqlPosts(response.data.posts).slice(
+          0,
+          HOMEPAGE_CATEGORY_ARTICLE_COUNT
+        ),
       }
     })
   )
@@ -224,7 +242,8 @@ async function fetchHomepageData(
 
   return {
     categories,
-    editorChoices: postData?.choices.slice(0, 10) ?? [],
+    editorChoices:
+      postData?.choices.slice(0, HOMEPAGE_EDITOR_CHOICE_COUNT) ?? [],
     forumNews,
     hasMoreNews,
     latestNews: latestArticles.slice(0, HOMEPAGE_LATEST_NEWS_COUNT),
