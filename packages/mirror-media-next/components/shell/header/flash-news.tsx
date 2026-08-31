@@ -87,7 +87,7 @@ function FlashNews({ items }: FlashNewsProps) {
   // it and a full-width face would leave blank but tappable space running up to
   // them. It falls back to its own text there, with a floor to stay hittable.
   const faceClassName =
-    'absolute inset-0 max-w-full truncate rounded-mm-xs leading-8 backface-hidden outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid lg:right-auto lg:min-w-60'
+    'absolute inset-0 max-w-full truncate rounded-mm-xs leading-8 underline-offset-4 backface-hidden outline-none hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid lg:right-auto lg:min-w-60'
 
   // One link per face: a single link around the cube would still point at the
   // item rotating away once the reader can see the one rotating in.
@@ -104,7 +104,7 @@ function FlashNews({ items }: FlashNewsProps) {
         */}
         <button
           aria-label="看下一則快訊"
-          className="rounded-mm-xs py-mm-s outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid enabled:cursor-pointer enabled:hover:underline enabled:hover:underline-offset-4"
+          className="-mx-mm-s rounded-mm-xs px-mm-s py-mm-s transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid enabled:cursor-pointer enabled:hover:bg-mm-neutral-0/10 enabled:active:bg-mm-neutral-0/15 motion-reduce:transition-none"
           disabled={items.length <= 1}
           onClick={advance}
           type="button"
