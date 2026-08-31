@@ -274,7 +274,7 @@ function SiteHeader({
                     110×50
                   </div>
                   <div
-                    className="hidden h-[30px] w-30 shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[120px]:only:flex @min-[242px]:flex"
+                    className="hidden h-[30px] w-30 shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[242px]:flex"
                     data-slot="header-ad-slot"
                   >
                     120×30
