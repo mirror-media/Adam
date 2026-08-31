@@ -351,6 +351,7 @@ function Homepage({ data }: HomepageProps) {
               className="order-2 col-span-full mx-auto w-[calc(100%-32px)] md:col-span-1 md:mx-0 md:w-[332px] md:justify-self-end xl:order-0 xl:w-full xl:justify-self-auto"
               title="最新新聞"
               titleId="homepage-latest-news-title"
+              trackingClassName="GTM-homepage-latest-list"
             />
             <HeadlineList
               articles={data.popularNews}

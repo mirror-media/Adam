@@ -17,6 +17,7 @@ type HeadlineListProps = {
   className?: string
   title: string
   titleId: string
+  trackingClassName?: string
 }
 
 function HeadlineList({
@@ -24,6 +25,7 @@ function HeadlineList({
   className,
   title,
   titleId,
+  trackingClassName,
 }: HeadlineListProps) {
   if (!articles.length) return null
 
@@ -40,7 +42,8 @@ function HeadlineList({
               className={cn(
                 'group grid min-h-16 grid-cols-[96px_minmax(0,1fr)] items-center gap-mm-m xl:gap-mm-l',
                 homepageCardHoverClass,
-                homepageCardLinkFocusClass
+                homepageCardLinkFocusClass,
+                trackingClassName
               )}
               href={article.href}
               rel="noopener noreferrer"
