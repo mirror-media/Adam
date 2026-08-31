@@ -22,12 +22,10 @@ const ImageWrapper = styled.div`
 const rightArrow = '/images-next/right-arrow.svg'
 
 /**
- * @typedef {Pick<import('../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
- */
-
-/**
- * @typedef {(import('../../apollo/fragments/post').Related & {
- *  id: string, slug: string, title: string, heroImage: HeroImage, url: string, type: 'story' | 'external'})[]
+ * `heroImage` is intentionally untyped: this component never reads it, and
+ * consumers pass shapes that differ across GraphQL- and MISO-sourced relateds.
+ * @typedef {(Omit<import('../../apollo/fragments/post').Related, 'heroImage'> & {
+ *  id: string, slug: string, title: string, heroImage: unknown, url: string, type: 'story' | 'external'})[]
  * } Relateds
  */
 

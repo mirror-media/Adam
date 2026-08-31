@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from 'react'
+import { Fragment, ReactNode, useMemo } from 'react'
 import NextImage from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
@@ -34,10 +34,9 @@ type PostLayoutProps = Pick<
   | 'brief'
   | 'content'
   | 'tags'
-  | 'relatedsOne'
-  | 'relatedsTwo'
   | 'slug'
   | 'sections'
+  | 'relateds'
 > & {
   relativeStory: RelatedStory
   renderAside?: (summary: string[]) => React.ReactNode
@@ -89,8 +88,7 @@ export default function PostLayout(props: PostLayoutProps) {
     brief,
     content,
     tags,
-    relatedsOne,
-    relatedsTwo,
+    relateds,
     slug,
     relativeStory,
     renderAdInContent,
@@ -123,10 +121,10 @@ export default function PostLayout(props: PostLayoutProps) {
   }, [content])
 
   return (
-    <div className="grid max-w-7xl pt-4 md:grid-cols-12 xl:mx-auto xl:gap-x-14">
-      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
+    <div className="grid max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
+      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 xl:col-span-12">
         {!isAdvertised && categories && Array.isArray(categories) && (
-          <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start lg:col-span-2">
+          <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start xl:col-span-3">
             <Link href="/">
               <Typography
                 as="span"
@@ -140,7 +138,7 @@ export default function PostLayout(props: PostLayoutProps) {
             <span className="text-mm-base-500">／</span>
             <Link
               className="text-sm font-bold text-mm-base-500"
-              href={`/category/${mainCategory?.slug ?? 'news'}`}
+              href={`/section/${mainCategory?.slug ?? 'news'}`}
               target="_blank"
             >
               <Typography
@@ -176,16 +174,16 @@ export default function PostLayout(props: PostLayoutProps) {
         <Typography
           as="h1"
           variant="h1"
-          className="order-2 col-span-full md:order-3"
+          className="order-2 col-span-full px-2 md:order-3 md:px-0"
         >
           {title}
         </Typography>
         <PublicDate
-          className="order-3 col-span-full ml-2 md:col-span-6 xl:col-span-5"
+          className="order-3 col-span-full ml-2 md:col-span-6 xl:col-span-7"
           publishedDate={publishedDate}
           updatedAt={updatedAt}
         />
-        <div className="sticky top-27 z-1 order-4 col-span-full flex justify-end gap-x-3 bg-white p-2 md:static md:col-start-7 md:py-0 xl:col-start-6">
+        <div className="sticky top-27 z-1 order-4 col-span-full flex justify-around gap-x-3 bg-white p-2 md:static md:col-start-8 md:justify-end md:py-0">
           <IconLink
             href="https://google.com/preferences/source?q=mirrormedia.mg"
             className="GTM-click-preferred-source flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
@@ -240,7 +238,7 @@ export default function PostLayout(props: PostLayoutProps) {
               <ThemeElement
                 as="span"
                 theme="accent"
-                className="rounded-lg px-4 py-2 text-mm-neutral-100 md:text-xl"
+                className="GTM-share-link rounded-lg px-4 py-2 text-mm-neutral-100 md:text-xl"
               >
                 已複製連結
               </ThemeElement>
@@ -291,64 +289,39 @@ export default function PostLayout(props: PostLayoutProps) {
             </Typography>
           )}
         </figure>
-        <section className="order-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-9 pb-5 md:order-2 md:col-span-3 md:col-end-0 md:justify-start md:py-0 lg:py-0">
-          {writers && Array.isArray(writers) && writers.length > 0 && (
-            <Typography as="span" variant="subtitle" className="line-clamp-1">
-              文｜{writers.map((writer) => writer?.name).join(' ')}
-            </Typography>
-          )}
-          {photographers &&
-            Array.isArray(photographers) &&
-            photographers.length > 0 && (
-              <Typography as="span" variant="subtitle" className="line-clamp-1">
-                攝影｜
-                {photographers
-                  ?.map((photographer) => photographer?.name ?? '')
-                  .join(' ')}
-              </Typography>
-            )}
-          {camera_man && Array.isArray(camera_man) && camera_man.length > 0 && (
-            <Typography as="span" variant="subtitle" className="line-clamp-1">
-              影音｜{camera_man.map((person) => person?.name ?? '').join(' ')}
-            </Typography>
-          )}
-          {designers && Array.isArray(designers) && designers.length > 0 && (
-            <Typography as="span" variant="subtitle" className="line-clamp-1">
-              設計｜{designers.map((person) => person?.name ?? '').join(' ')}
-            </Typography>
-          )}
-          {engineers && Array.isArray(engineers) && engineers.length > 0 && (
-            <Typography as="span" variant="subtitle" className="line-clamp-1">
-              工程｜{engineers.map((person) => person?.name ?? '').join(' ')}
-            </Typography>
-          )}
-          {vocals && Array.isArray(vocals) && vocals.length > 0 && (
-            <Typography as="span" variant="subtitle" className="line-clamp-1">
-              主播｜{vocals.map((person) => person?.name ?? '').join(' ')}
-            </Typography>
-          )}
+        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-9 pb-5 md:order-2 md:col-span-9 md:col-end-0 md:justify-start md:py-0 lg:py-0">
+          <CreditNames label="文" creditPeoples={writers} />
+          <CreditNames label="攝影" creditPeoples={photographers} />
+          <CreditNames label="影音" creditPeoples={camera_man} />
+          <CreditNames label="設計" creditPeoples={designers} />
+          <CreditNames label="工程" creditPeoples={engineers} />
+          <CreditNames label="主播" creditPeoples={vocals} />
           {!!extend_byline && (
             <Typography as="span" variant="subtitle" className="line-clamp-1">
               協力｜{extend_byline}
             </Typography>
           )}
         </section>
-        <ThemeElement
-          className="order-7 col-span-full mx-2 rounded-md px-2.5 py-4 md:mx-0"
-          as="blockquote"
-          theme={theme}
-        >
-          {brief.blocks.map((block, index) => (
-            <Typography
-              key={`brief-${index}`}
-              as="p"
-              variant="body-l"
-              className="text-mm-neutral-600"
+        {brief?.blocks &&
+          brief?.blocks.length > 0 &&
+          brief?.blocks[0].text.trim().length > 0 && (
+            <ThemeElement
+              className="order-7 col-span-full mx-2 rounded-md px-6 py-4 md:mx-0"
+              as="blockquote"
+              theme={theme}
             >
-              {renderTextWithLinks(block, brief.entityMap)}
-            </Typography>
-          ))}
-        </ThemeElement>
+              {brief.blocks.map((block, index) => (
+                <Typography
+                  key={`brief-${index}`}
+                  as="p"
+                  variant="body-l"
+                  className="text-mm-neutral-600"
+                >
+                  {renderTextWithLinks(block, brief.entityMap)}
+                </Typography>
+              ))}
+            </ThemeElement>
+          )}
         <div className="order-8 col-span-full flex flex-col gap-y-7 md:gap-y-8">
           <Blocks
             className="mx-2 scroll-m-20 md:mx-0"
@@ -411,13 +384,14 @@ export default function PostLayout(props: PostLayoutProps) {
 
               if (paragraphCount === 4) {
                 return (
-                  <RelativePosts
-                    relatedsOne={relatedsOne}
-                    relatedsTwo={relatedsTwo}
-                    className="mx-2 scroll-m-20 md:mx-0"
-                  >
-                    {renderTextWithLinks(block, content.entityMap)}
-                  </RelativePosts>
+                  <>
+                    <RelativePosts
+                      relateds={relateds}
+                      className="mx-2 scroll-m-20 md:mx-0"
+                    >
+                      {renderTextWithLinks(block, content.entityMap)}
+                    </RelativePosts>
+                  </>
                 )
               }
 
@@ -481,7 +455,7 @@ export default function PostLayout(props: PostLayoutProps) {
               </Typography>
             </Link>
           </div>
-          <ul className="flex justify-around space-x-3 md:col-span-6 md:col-start-7 md:space-x-4 xl:col-span-6 xl:col-start-8">
+          <ul className="flex justify-around space-x-3 md:col-span-6 md:col-start-7 md:space-x-4 xl:col-span-6 xl:col-start-7">
             {actionList.map((item) => (
               <li key={item.label}>
                 <IconLink
@@ -527,75 +501,113 @@ export default function PostLayout(props: PostLayoutProps) {
         <div className="order-13 col-span-full">{renderDable?.()}</div>
       </article>
 
-      <aside className="hidden gap-y-4 md:mr-6 xl:col-span-4 xl:mr-10 xl:block xl:space-y-6 2xl:mr-0">
+      <aside className="hidden max-w-106 gap-y-4 xl:mr-0 xl:block xl:space-y-6">
         {renderAside?.(summary)}
       </aside>
     </div>
   )
 }
 
+type CreditPerson = { id: string | null; name: string | null } | null
+
+function CreditNames({
+  label,
+  creditPeoples,
+}: {
+  label: string
+  creditPeoples: CreditPerson[] | null | undefined
+}) {
+  const namedPeople = (creditPeoples ?? []).filter(
+    (person): person is { id: string; name: string } =>
+      !!person?.id && !!person?.name
+  )
+  if (namedPeople.length === 0) return null
+
+  return (
+    <Typography as="span" variant="subtitle" className="line-clamp-1">
+      {label}｜
+      {namedPeople.map((person, index) => (
+        <Fragment key={person.id}>
+          {index > 0 && ' '}
+          <Link
+            href={`/author/${person.id}`}
+            target="_blank"
+            rel="noreferrer"
+            variant="muted"
+            className="text-mm-subtitle"
+          >
+            {person.name}
+          </Link>
+        </Fragment>
+      ))}
+    </Typography>
+  )
+}
+
 function RelativePosts({
   children,
   className,
-  relatedsOne,
-  relatedsTwo,
+  relateds,
 }: {
   children: ReactNode
   className?: string
-  relatedsOne: StoryPost['relatedsOne']
-  relatedsTwo: StoryPost['relatedsTwo']
+  relateds: StoryPost['relateds']
 }) {
-  if (relatedsOne && relatedsTwo) {
+  if (!relateds) return children
+
+  if (relateds[0] && relateds[1]) {
+    return (
+      <>
+        <Typography as="p" variant="body-l" className={className}>
+          {children}
+        </Typography>
+        <div className="mx-2 space-y-2">
+          <RelativePostLink
+            className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
+            type="next"
+            href={`/story/${relateds[0]?.slug}?from=story_updown`}
+          >
+            {relateds[0]?.title}
+          </RelativePostLink>
+          <RelativePostLink
+            className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
+            type="prev"
+            href={`/story/${relateds[1]?.slug}?from=story_updown`}
+          >
+            {relateds[1]?.title}
+          </RelativePostLink>
+        </div>
+      </>
+    )
+  }
+  if (relateds[0]) {
     return (
       <>
         <Typography as="p" variant="body-l" className={className}>
           {children}
         </Typography>
         <RelativePostLink
-          className="flex bg-mm-base-700"
-          type="prev"
-          href={`/story/${relatedsOne?.slug}`}
-        >
-          上一篇
-        </RelativePostLink>
-        <RelativePostLink
-          className="flex bg-mm-base-700"
+          className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="next"
-          href={`/story/${relatedsTwo?.slug}`}
+          href={`/story/${relateds[0]?.slug}?from=story_updown`}
         >
-          下一篇
+          {relateds[0]?.title}
         </RelativePostLink>
       </>
     )
   }
-  if (relatedsOne) {
+  if (relateds[1]) {
     return (
       <>
         <Typography as="p" variant="body-l" className={className}>
           {children}
         </Typography>
         <RelativePostLink
+          className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="prev"
-          className="flex bg-mm-base-700"
-          href={`/story/${relatedsOne?.slug}`}
+          href={`/story/${relateds[1]?.slug}?from=story_updown`}
         >
-          上一篇
-        </RelativePostLink>
-      </>
-    )
-  }
-  if (relatedsTwo) {
-    return (
-      <>
-        <Typography as="p" variant="body-l" className={className}>
-          {children}
-        </Typography>
-        <RelativePostLink
-          type="next"
-          className="flex bg-mm-base-700"
-          href={`/story/${relatedsTwo?.slug}`}
-        >
-          下一篇
+          {relateds[1]?.title}
         </RelativePostLink>
       </>
     )

@@ -56,12 +56,12 @@ export function NextUpPosts({
       <ThemeElement
         as="ul"
         theme="post"
-        className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2 md:gap-x-6"
+        className="rounded-lg rounded-tl-none p-2.5 md:grid md:grid-cols-2 md:gap-x-6 xl:px-6"
       >
         {items.map((postItem) => (
           <li key={postItem.id} className="border-b border-b-black py-4">
             <Link
-              href={`/story/${postItem.slug}?from=referral_contents`}
+              href={`/story/${postItem.slug}?from=referral_bottom`}
               target="_blank"
               className={cn(
                 'grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]',
