@@ -16,6 +16,7 @@ const RULE =
 
 type DesktopNavigationFlyoutProps = {
   item: ShellNavigationItem
+  open: boolean
 }
 
 /** Figma 子類別 renders dates as `2022.10.06 21:22`. */
@@ -55,7 +56,7 @@ function formatPostDate(isoDate: string) {
  * Article data comes from the menu sections static file, joined to the
  * navigation by section slug in ./navigation.
  */
-function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
+function DesktopNavigationFlyout({ item, open }: DesktopNavigationFlyoutProps) {
   const posts = item.posts
   const listRef = useRef<HTMLElement | null>(null)
 
@@ -83,9 +84,16 @@ function DesktopNavigationFlyout({ item }: DesktopNavigationFlyoutProps) {
 
   return (
     <div
-      className="absolute inset-x-0 top-full z-(--mm-z-shell-header) hidden bg-mm-neutral-800 text-mm-neutral-0 lg:block"
+      aria-hidden={!open}
+      className={cn(
+        'absolute inset-x-0 top-full z-(--mm-z-shell-header) hidden overflow-hidden bg-mm-neutral-800 text-mm-neutral-0 transition-[max-height] motion-reduce:transition-none lg:block',
+        open
+          ? 'max-h-62 duration-200 ease-out'
+          : 'pointer-events-none max-h-0 duration-150 ease-in'
+      )}
       data-slot="navigation-flyout"
       id="site-header-navigation-flyout"
+      inert={!open}
       ref={panelRef}
     >
       <div className="mx-auto flex h-62 w-full max-w-7xl items-center gap-mm-3xl px-mm-2xl">

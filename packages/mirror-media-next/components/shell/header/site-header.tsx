@@ -65,6 +65,9 @@ function SiteHeader({
   const [showStickyControls, setShowStickyControls] = useState(false)
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
+  const [renderedFlyoutSlug, setRenderedFlyoutSlug] = useState<string | null>(
+    null
+  )
   const navigationRegionRef = useRef<HTMLDivElement | null>(null)
   const flashNewsRowRef = useRef<HTMLDivElement | null>(null)
   const stickyOffsetsRef = useRef({ compact: 0, desktop: 0 })
@@ -73,6 +76,10 @@ function SiteHeader({
   const openFlyoutItem = navigation.find(
     (item) => item.slug === openFlyoutSlug && item.categories.length > 0
   )
+  const renderedFlyoutItem =
+    navigation.find(
+      (item) => item.slug === renderedFlyoutSlug && item.categories.length > 0
+    ) ?? navigation.find((item) => item.categories.length > 0)
   const visibleTopics = topicsData.slice(0, 7)
   const flashNews = flashNewsData ?? []
   const hasFlashNewsRow = flashNews.length > 0 || visibleTopics.length > 0
@@ -168,6 +175,13 @@ function SiteHeader({
   }, [openFlyoutSlug])
 
   function openFlyoutFromPointerOrFocus(slug: string) {
+    const item = navigation.find((entry) => entry.slug === slug)
+    if (!item || item.categories.length === 0) {
+      setOpenFlyoutSlug(null)
+      return
+    }
+
+    setRenderedFlyoutSlug(slug)
     setOpenFlyoutSlug(slug)
   }
 
@@ -392,7 +406,12 @@ function SiteHeader({
             </nav>
           </div>
 
-          {openFlyoutItem && <DesktopNavigationFlyout item={openFlyoutItem} />}
+          {renderedFlyoutItem && (
+            <DesktopNavigationFlyout
+              item={renderedFlyoutItem}
+              open={Boolean(openFlyoutItem)}
+            />
+          )}
         </div>
       </div>
 
