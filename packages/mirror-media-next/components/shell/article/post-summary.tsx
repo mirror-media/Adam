@@ -14,7 +14,7 @@ export function ArticleSummary({ items }: ArticleSummaryProps) {
   const [isOpen, setIsOpen] = useState(true)
 
   return (
-    <div className="space-y-4">
+    <div className="w-106 space-y-4">
       <ThemeElement
         as="button"
         type="button"

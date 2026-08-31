@@ -167,7 +167,7 @@ export function Blocks({
           if (entity.type === 'image') {
             return (
               <figure key={`content-${index}`} className={className}>
-                <picture className="relative block aspect-3/2">
+                <picture className="relative block aspect-4/3">
                   <Image
                     src={entity.data.resized.original}
                     alt={entity.data.desc ?? ''}

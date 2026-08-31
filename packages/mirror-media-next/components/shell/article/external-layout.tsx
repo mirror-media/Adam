@@ -3,7 +3,6 @@ import Image from 'next/image'
 import NextImage from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
-import ExternalArticleContent from '@/components/external/external-article-content'
 import { Badge, Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
 import type {
@@ -13,6 +12,7 @@ import type {
 import { getCreditsHtml, getExternalSectionTitle } from '@/utils/external'
 
 import { CopyLinkButton } from './copy-link-button'
+import ExternalArticleContent from './external-article-content'
 import { IconLink } from './icon-link'
 import { PublicDate } from './public-date'
 import { ThemeElement } from './theme-element'
@@ -108,9 +108,9 @@ export function ExternalLayout(props: ExternalLayoutProps) {
   }, [content])
 
   return (
-    <div className="grid max-w-7xl pt-4 md:grid-cols-12 xl:mx-auto xl:gap-x-14">
-      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 md:mx-6 xl:col-span-8 xl:mr-0 xl:ml-10 2xl:ml-0">
-        <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start lg:col-span-2">
+    <div className="grid max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
+      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 xl:col-span-12">
+        <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start xl:col-span-3">
           <Link href="/">
             <Typography
               as="span"
@@ -123,13 +123,19 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           {sectionTitle && (
             <>
               <span className="text-mm-base-500">／</span>
-              <Typography
-                as="span"
-                variant="subtitle"
-                className="text-mm-base-700"
+              <Link
+                className="text-sm font-bold text-mm-base-500"
+                href={`/section/${partner?.showOnIndex ? 'news' : 'life'}`}
+                target="_blank"
               >
-                {sectionTitle}
-              </Typography>
+                <Typography
+                  as="span"
+                  variant="subtitle"
+                  className="text-mm-base-700"
+                >
+                  {sectionTitle}
+                </Typography>
+              </Link>
             </>
           )}
         </div>
@@ -137,7 +143,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
         <Typography
           as="h1"
           variant="h1"
-          className="order-2 col-span-full md:order-3"
+          className="order-2 col-span-full px-2 md:order-3 md:px-0"
         >
           {title}
         </Typography>
@@ -146,7 +152,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           publishedDate={publishedDate}
           updatedAt={updatedAt}
         />
-        <div className="sticky top-27 z-1 order-4 col-span-full flex justify-end gap-x-3 bg-white p-2 md:static md:col-start-7 md:py-0 xl:col-start-6">
+        <div className="sticky top-27 z-1 order-4 col-span-full flex justify-around gap-x-3 bg-white p-2 md:static md:col-start-8 md:justify-end md:py-0">
           <IconLink
             href="https://google.com/preferences/source?q=mirrormedia.mg"
             className="flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
@@ -170,6 +176,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             alt="facebook-logo"
             rel="noopener noreferrer"
             target="_blank"
+            className="GTM-share-facebook"
           />
           <IconLink
             href={`https://social-plugins.line.me/lineit/share?url=${canonicalUrl}`}
@@ -177,12 +184,13 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             alt="line-logo"
             rel="noopener noreferrer"
             target="_blank"
+            className="GTM-share-line"
           />
           <IconLink
             href={`https://www.threads.com/intent/post?url=${encodeURIComponent(
               canonicalUrl
             )}`}
-            className="rounded-full bg-black"
+            className="GTM-share-threads rounded-full bg-black"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -199,7 +207,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               <ThemeElement
                 as="span"
                 theme="accent"
-                className="rounded-lg px-4 py-2 text-mm-neutral-100 md:text-xl"
+                className="GTM-share-link rounded-lg px-4 py-2 text-mm-neutral-100 md:text-xl"
               >
                 已複製連結
               </ThemeElement>
@@ -235,7 +243,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           </figure>
         )}
         {credits.length > 0 && (
-          <section className="order-6 flex items-center justify-center pt-9 pb-5 md:order-2 md:col-span-3 md:justify-start md:py-0 lg:py-0">
+          <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-9 pb-5 md:order-2 md:col-span-9 md:col-end-0 md:justify-start md:py-0 lg:py-0">
             <Typography as="span" variant="subtitle" className="line-clamp-1">
               文｜
               {partner?.slug ? (
@@ -262,7 +270,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             <div dangerouslySetInnerHTML={{ __html: brief }} />
           </ThemeElement>
         )}
-        <div className="order-8 col-span-full flex flex-col gap-y-7 md:gap-y-8">
+        <div className="order-8 col-span-full mx-2 flex flex-col gap-y-7 md:mx-0 md:gap-y-8">
           <ExternalArticleContent
             content={updatedContent}
             allRelatedStories={allRelatedStories}
@@ -345,7 +353,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
         <ThemeElement
           as="section"
           theme="accent"
-          className="order-12 col-span-full rounded-lg p-8 pb-10 text-lg"
+          className="order-12 col-span-full mx-2 rounded-lg p-8 pb-10 text-lg md:mx-0"
         >
           鏡週刊掌握趨勢，領先一步：
           從國際大事到生活小確幸，我們確保您不錯過任何一個重要瞬間，誠摯邀請您
@@ -360,7 +368,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
         <div className="order-13 col-span-full">{renderDable?.()}</div>
       </article>
 
-      <aside className="hidden gap-y-4 md:mr-6 xl:col-span-4 xl:mr-10 xl:block xl:space-y-6 2xl:mr-0">
+      <aside className="hidden gap-y-4 xl:block xl:space-y-6 2xl:mr-0">
         {renderAside?.(summary)}
       </aside>
     </div>
