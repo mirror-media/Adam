@@ -292,8 +292,7 @@ function SiteHeader({
           <div className="hidden shrink-0 items-center gap-mm-2xl lg:flex">
             <nav
               aria-label="合作品牌"
-              // Figma 661:8400 gives this row a shared 28px height with the
-              // lockups centred at their own sizes.
+              // Keep each lockup centred at its own size within the 28px row.
               className="flex h-7 items-center gap-mm-2xl"
             >
               {shellPartnerLinks.map((link) => (

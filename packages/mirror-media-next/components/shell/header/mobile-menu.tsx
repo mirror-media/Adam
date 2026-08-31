@@ -43,11 +43,7 @@ const mobilePrimaryLinkClass =
 const mobileTextLinkOnDarkClass =
   'rounded-mm-xs no-underline outline-none transition-colors hover:text-mm-neutral-0 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
 
-/**
- * Figma renders the disclosure indicator as a solid triangle that points
- * left when collapsed and down when expanded, so the shell supplies its own
- * icon instead of the primitive's default chevrons.
- */
+/** Use a solid triangle that points left when collapsed and down when open. */
 function AccordionCaret() {
   return (
     <svg
@@ -147,9 +143,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
           aria-label="主要分類"
           className="min-h-0 flex-1 [scrollbar-color:rgb(0_0_0/0.32)_transparent] overflow-y-auto px-10 py-mm-3xl md:px-11 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-black/30 [&::-webkit-scrollbar-track]:bg-transparent"
         >
-          {/* Figma insets these rows by 10px, which is off the project's 4px
-              grid. It is kept rather than snapped: 12px would add 4px to each
-              of the ten rows and shift the menu's vertical rhythm. */}
+          {/* Keep the 10px inset; snapping ten rows to 12px changes the menu height. */}
           <Accordion className="gap-mm-xl">
             {navigation.map((item) =>
               item.categories.length > 0 ? (
