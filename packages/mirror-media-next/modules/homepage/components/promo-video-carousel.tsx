@@ -203,11 +203,11 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
             <SwiperSlide key={group.map((video) => video.id).join('-')}>
               <ol className="grid grid-cols-1 gap-mm-m xl:grid-cols-2 xl:gap-mm-3xl">
                 {group.map((video, index) => (
-                  <li
-                    aria-label={`第 ${groupIndex * videosPerGroup + index + 1} 則，共 ${videos.length} 則`}
-                    className="min-w-0"
-                    key={video.id}
-                  >
+                  <li className="min-w-0" key={video.id}>
+                    <span className="sr-only">
+                      第 {groupIndex * videosPerGroup + index + 1} 則，共{' '}
+                      {videos.length} 則
+                    </span>
                     <div className="relative aspect-video w-full overflow-hidden bg-black">
                       {initializedVideoIds.has(video.id) ? (
                         <>
