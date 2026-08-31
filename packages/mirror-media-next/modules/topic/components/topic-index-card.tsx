@@ -37,7 +37,7 @@ function TopicIndexCard({ item }: TopicIndexCardProps) {
         <Typography
           as="h2"
           className="line-clamp-2 text-mm-neutral-800"
-          variant="subtitle"
+          variant="h5"
         >
           {item.name}
         </Typography>
