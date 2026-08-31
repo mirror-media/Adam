@@ -76,10 +76,10 @@ function SiteHeader({
   const openFlyoutItem = navigation.find(
     (item) => item.slug === openFlyoutSlug && item.categories.length > 0
   )
-  const renderedFlyoutItem =
-    navigation.find(
-      (item) => item.slug === renderedFlyoutSlug && item.categories.length > 0
-    ) ?? navigation.find((item) => item.categories.length > 0)
+  const renderedFlyoutItem = navigation.find(
+    (item) => item.slug === renderedFlyoutSlug && item.categories.length > 0
+  )
+  const hasFlyoutItems = navigation.some((item) => item.categories.length > 0)
   const visibleTopics = topicsData.slice(0, 7)
   const flashNews = flashNewsData ?? []
   const hasFlashNewsRow = flashNews.length > 0 || visibleTopics.length > 0
@@ -406,7 +406,7 @@ function SiteHeader({
             </nav>
           </div>
 
-          {renderedFlyoutItem && (
+          {hasFlyoutItems && (
             <DesktopNavigationFlyout
               item={renderedFlyoutItem}
               open={Boolean(openFlyoutItem)}
