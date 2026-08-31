@@ -38,7 +38,7 @@ type MobileMenuProps = {
 }
 
 const mobilePrimaryLinkClass =
-  'relative outline-none after:absolute after:inset-x-[10px] after:bottom-1 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-mm-neutral-0 after:transition-transform after:duration-150 after:content-[""] hover:text-mm-neutral-0 hover:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid motion-reduce:after:transition-none'
+  'relative outline-none after:absolute after:inset-x-[10px] after:bottom-1 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-mm-neutral-0 after:transition-transform after:duration-150 after:content-[""] hover:text-mm-neutral-0 hover:after:scale-x-100 active:after:scale-x-100 aria-expanded:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid motion-reduce:after:transition-none'
 
 const mobileTextLinkOnDarkClass =
   'rounded-mm-xs no-underline outline-none transition-colors hover:text-mm-neutral-0 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
