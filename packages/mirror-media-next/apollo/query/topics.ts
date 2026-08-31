@@ -96,4 +96,38 @@ const fetchTopicPostCount = graphql(`
   }
 `)
 
-export { fetchStoryTopics, fetchTopic, fetchTopicPostCount, fetchTopics }
+const fetchTopicSeoPosts = graphql(`
+  query fetchTopicSeoPosts(
+    $topicFilter: TopicWhereInput!
+    $postsFilter: PostWhereInput!
+    $postsTake: Int
+    $postsSkip: Int!
+  ) {
+    topics(where: $topicFilter) {
+      posts(
+        where: $postsFilter
+        orderBy: [{ publishedDate: desc }, { id: desc }]
+        take: $postsTake
+        skip: $postsSkip
+      ) {
+        slug
+        title
+        publishedDate
+        updatedAt
+        heroImage {
+          resized {
+            w800
+          }
+        }
+      }
+    }
+  }
+`)
+
+export {
+  fetchStoryTopics,
+  fetchTopic,
+  fetchTopicPostCount,
+  fetchTopics,
+  fetchTopicSeoPosts,
+}
