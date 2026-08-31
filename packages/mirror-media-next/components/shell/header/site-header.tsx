@@ -17,7 +17,11 @@ import type {
 } from '@/utils/api'
 
 import { FlashNews } from './flash-news'
-import { navLinkClassName, navLinkRuleOnHover } from './nav-link'
+import {
+  navLinkClassName,
+  navLinkRuleAlways,
+  navLinkRuleOnHover,
+} from './nav-link'
 import {
   createShellNavigation,
   shellPartnerLinks,
@@ -346,9 +350,10 @@ function SiteHeader({
                 <div className="lg:hidden" key={`compact-${item.slug}`}>
                   <NextLink
                     className={cn(
-                      'rounded-mm-xs font-mm-sans text-mm-h5 text-mm-neutral-800 outline-none hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
-                      activeNavigationSlug === item.slug &&
-                        'text-mm-base-500 md:text-mm-neutral-800 md:underline md:underline-offset-4'
+                      navLinkClassName,
+                      activeNavigationSlug === item.slug
+                        ? navLinkRuleAlways
+                        : navLinkRuleOnHover
                     )}
                     href={item.href}
                   >
