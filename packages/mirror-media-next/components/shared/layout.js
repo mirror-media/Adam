@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic'
 
 import GDPRNotification from '../gdpr'
-import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
 import { BackToTop } from '../shell/back-to-top'
+import { IdleTimeoutModal } from '../shell/idle-timeout-modal/idle-timeout-modal'
 import { LegacyLayoutAdapter } from '../shell/legacy-layout-adapter'
 
 import CustomHead from './custom-head'

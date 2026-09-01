@@ -93,7 +93,7 @@ const ResponsivePortal = dynamic(() => import('../shared/client-side-portal'), {
  */
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Post } PostData
+ * @typedef {import('../../../modules/story/story-types').StoryPost} PostData
  */
 
 /**
@@ -515,7 +515,7 @@ const StyledGPTAd_PC_E2 = styled(GPTAd)`
  * @param {any} param.headerData
  * @param {FlashNewsData} param.flashNewsData
  * @param {string} [param.classNameForGTM]
- * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
+ * @param {import('../../../modules/story/story-types').RelatedStory[]} [param.allRelatedStories]
  * @returns {import('react').JSX.Element}
  */
 export default function StoryNormalStyle({

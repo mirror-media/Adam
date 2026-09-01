@@ -19,18 +19,20 @@ dayjs.extend(timezone)
 
 type Named = {
   name?: string | null
-  state?: string
+  state?: string | null
 }
 
-function firstActiveName(
-  items?: Named[] | null,
-  itemsInInputOrder?: Named[] | null
-) {
+// GraphQL list fields can carry `null` entries (see codegen.ts / the
+// schema's nullable list items), so every list here tolerates them the
+// same way `writers.map((writer) => writer?.name)` below already does.
+type NamedList = (Named | null)[] | null
+
+function firstActiveName(items?: NamedList, itemsInInputOrder?: NamedList) {
   const ordered = (itemsInInputOrder ?? []).filter(
-    (item) => item.state === 'active'
+    (item) => item?.state === 'active'
   )
   const fallback = (items ?? []).filter(
-    (item) => !item.state || item.state === 'active'
+    (item) => !item?.state || item.state === 'active'
   )
 
   return (ordered[0] ?? fallback[0])?.name ?? ''
@@ -40,13 +42,13 @@ type StorySource = {
   title?: string | null
   slug?: string | null
   publishedDate?: string | null
-  writers?: Named[] | null
-  writersInInputOrder?: Named[] | null
-  tags?: Named[] | null
-  sections?: Named[] | null
-  sectionsInInputOrder?: Named[] | null
-  categories?: Named[] | null
-  categoriesInInputOrder?: Named[] | null
+  writers?: NamedList
+  writersInInputOrder?: NamedList
+  tags?: NamedList
+  sections?: NamedList
+  sectionsInInputOrder?: NamedList
+  categories?: NamedList
+  categoriesInInputOrder?: NamedList
 }
 
 type ExternalSource = {
@@ -55,7 +57,9 @@ type ExternalSource = {
   publishedDate?: string | null
   extend_byline?: string | null
   partner?: { name?: string | null } | null
-  tags?: Named[] | null
+  tags?: NamedList
+  sections?: NamedList
+  categories?: NamedList
 }
 
 function joinComma(values: Array<string | null | undefined>): string {
@@ -166,7 +170,7 @@ export function buildExternalDataLayer(
     content_author:
       external.extend_byline || external.partner?.name || '鏡週刊',
     content_tag: joinComma((external.tags ?? []).map((tag) => tag?.name)),
-    cat_0: '',
-    cat_1: '',
+    cat_0: firstActiveName(external.sections),
+    cat_1: firstActiveName(external.categories),
   }
 }

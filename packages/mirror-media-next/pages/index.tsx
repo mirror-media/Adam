@@ -17,7 +17,7 @@ export default function HomePage({
   return (
     <>
       <CustomHead />
-      <PageShell headerData={headerData}>
+      <PageShell headerData={headerData} pauseCarouselTickerOnIdle>
         <Homepage data={homepageData} />
       </PageShell>
     </>

@@ -8,5 +8,6 @@ declare module 'swiper' {
 
   export const A11y: SwiperModule
   export const Autoplay: SwiperModule
+  export const Navigation: SwiperModule
   export default Swiper
 }
