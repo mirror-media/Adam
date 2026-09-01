@@ -233,7 +233,6 @@ export default function Story({
             />
           )}
         </GPT_Placeholder>
-
         {storyLayoutType === 'style-normal' && (
           <>
             <PostLayout
@@ -271,25 +270,27 @@ export default function Story({
                     <ArticleSummary items={summary} />
                   )}
                   <LatestArticles sectionSlug={section?.slug ?? 'news'} />
-                  <GPT_Placeholder_Aside
-                    shouldShowAd={shouldShowAd}
-                    isLogInProcessFinished={isLogInProcessFinished}
-                  >
-                    {shouldShowAd && (
-                      <GptAd
-                        pageKey={pageKeyForGptAd}
-                        adKey="PC_R2"
-                        className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
-                      />
-                    )}
-                  </GPT_Placeholder_Aside>
-                  <PopularArticles />
-                  <ArticleQuestions
-                    auto_faq={postData.auto_faq}
-                    faqs_algo={postData.faqs_algo}
-                  />
-                  <GoogleNewsFollow />
-                  <FbPagePlugin width={424} />
+                  <div className="sticky top-12 space-y-6">
+                    <GPT_Placeholder_Aside
+                      shouldShowAd={shouldShowAd}
+                      isLogInProcessFinished={isLogInProcessFinished}
+                    >
+                      {shouldShowAd && (
+                        <GptAd
+                          pageKey={pageKeyForGptAd}
+                          adKey="PC_R2"
+                          className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
+                        />
+                      )}
+                    </GPT_Placeholder_Aside>
+                    <PopularArticles />
+                    <ArticleQuestions
+                      auto_faq={postData.auto_faq}
+                      faqs_algo={postData.faqs_algo}
+                    />
+                    <GoogleNewsFollow />
+                    <FbPagePlugin width={424} />
+                  </div>
                 </>
               )}
               renderNextUp={() => <NextUpPosts items={restOfRelativeStories} />}
@@ -351,7 +352,6 @@ export default function Story({
             allRelatedStories={allRelatedStories}
           />
         )}
-
         <WineWarning categories={nonNullCategories} />
         {isAdult && <AdultOnlyWarning isAdult={true} />}
         {noCategoryOfWineSlug && (

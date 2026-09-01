@@ -120,7 +120,6 @@ export function getInitialRelatedStories(postData) {
 export function serializeStoryPostDataForClient(postData) {
   const clientPostData = compactClientPayload(postData)
 
-  delete clientPostData.relateds
   delete clientPostData.relatedsInInputOrder
   delete clientPostData.relatedsOne
   delete clientPostData.relatedsTwo

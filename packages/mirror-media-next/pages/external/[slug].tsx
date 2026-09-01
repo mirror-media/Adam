@@ -203,19 +203,21 @@ export default function External({
                 />
               </GPT_Placeholder_Aside>
               <LatestArticles sectionSlug="news" />
-              <GPT_Placeholder_Aside
-                shouldShowAd={shouldShowAd}
-                isLogInProcessFinished={isLogInProcessFinished}
-              >
-                <GptAd
-                  pageKey={pageKeyForGptAd}
-                  adKey="PC_R2"
-                  className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
-                />
-              </GPT_Placeholder_Aside>
-              <PopularArticles />
-              <GoogleNewsFollow />
-              <FbPagePlugin width={424} />
+              <div className="sticky top-12 space-y-6">
+                <GPT_Placeholder_Aside
+                  shouldShowAd={shouldShowAd}
+                  isLogInProcessFinished={isLogInProcessFinished}
+                >
+                  <GptAd
+                    pageKey={pageKeyForGptAd}
+                    adKey="PC_R2"
+                    className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
+                  />
+                </GPT_Placeholder_Aside>
+                <PopularArticles />
+                <GoogleNewsFollow />
+                <FbPagePlugin width={424} />
+              </div>
             </>
           )}
           renderNextUp={() => <NextUpPosts items={allRelatedStories} />}

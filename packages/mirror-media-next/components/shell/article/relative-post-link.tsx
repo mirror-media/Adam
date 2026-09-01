@@ -21,8 +21,8 @@ export function RelativePostLink({ children, type = 'prev', ...props }: Props) {
       )}
       <span
         className={cn('py-2', {
-          'mr-3 ml-1': type === 'prev',
-          'mr-1 ml-3': type === 'next',
+          'mr-3 ml-1 pl-5 md:mr-auto': type === 'prev',
+          'mr-1 ml-3 pr-5 md:ml-auto': type === 'next',
         })}
       >
         {children}
