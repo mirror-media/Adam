@@ -146,11 +146,12 @@ function MoreNews({
       setFocusArticleKey(result.articles[0]?.key ?? null)
       shouldFocusEndStatusRef.current =
         !result.articles.length && !result.hasMore
-      setStatusAnnouncement(
-        result.articles.length
-          ? `已載入 ${result.articles.length} 則新聞。`
-          : '目前沒有更多新聞。'
-      )
+      const announcements: string[] = []
+      if (result.articles.length) {
+        announcements.push(`已載入 ${result.articles.length} 則新聞。`)
+      }
+      if (!result.hasMore) announcements.push('目前沒有更多新聞。')
+      setStatusAnnouncement(announcements.join(' '))
     } catch (error) {
       console.error(error)
       shouldFocusEndStatusRef.current = false
@@ -261,7 +262,7 @@ function MoreNews({
 
       <span
         aria-live="polite"
-        className="block h-0 overflow-hidden outline-none"
+        className="sr-only"
         ref={endStatusRef}
         role="status"
         tabIndex={-1}
