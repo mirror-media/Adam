@@ -46,8 +46,12 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
               target="_blank"
               rel="noreferrer"
             >
-              <div className="space-y-3">
-                <picture className="relative block aspect-4/3 w-full">
+              <div className="relative space-y-2">
+                <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">
+                  {item.sectionsInInputOrder?.[0].name ||
+                    item.sections?.[0].name}
+                </div>
+                <picture className="relative block aspect-23/15 w-full">
                   <Image
                     images={item?.heroImage?.resized}
                     alt={item.title}
@@ -57,7 +61,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                 </picture>
                 <Typography
                   variant="subtitle"
-                  className="line-clamp-3 max-h-mm-6xl min-h-mm-6xl text-mm-base-700"
+                  className="line-clamp-3 max-h-[56px] min-h-[56px] text-mm-base-700"
                 >
                   {item.title}
                 </Typography>
