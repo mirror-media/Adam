@@ -86,7 +86,7 @@ function IdleTimeoutModal() {
               <hr className="border-4 border-mm-base-400" />
             </div>
             <div className="space-y-3.5 pt-3">
-              <ul className="grid grid-cols-2 gap-x-7 gap-y-3 xl:flex xl:flex-wrap">
+              <ul className="grid grid-cols-2 gap-x-7 gap-y-3 xl:flex xl:flex-wrap xl:gap-x-4">
                 {IDLE_MODAL_LINK.map((link, index) => {
                   return (
                     <a
@@ -104,7 +104,7 @@ function IdleTimeoutModal() {
                 })}
               </ul>
 
-              <div className="xl:flex xl:gap-x-3">
+              <div className="xl:flex xl:gap-x-2">
                 {CUSTOMER_SERVICE_INFOS.map((item, index) => {
                   return (
                     <div
@@ -117,7 +117,7 @@ function IdleTimeoutModal() {
                       <Typography
                         as="span"
                         variant="caption-s"
-                        className="text-mm-base-700"
+                        className="text-xs text-mm-base-700"
                       >
                         {item.title} {item.description}
                       </Typography>
