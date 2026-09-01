@@ -34,14 +34,11 @@ const singleColumnContentClass =
 const sidebarPinnedTop = 64
 const sidebarBottomGap = 16
 
-// Desktop sidebar scrolling. Position is native sticky in both modes: flow
-// mode (natural height, negative top parks the bottom on the viewport floor)
-// and window mode (top 64px, viewport-bound height, own scrollbar). JS swaps
-// modes only while the box is parked and both modes paint the same pixels,
-// and walks the thumb back to zero as the page returns to the anchor. Inline
-// top/height are inert below xl, where the aside is display: contents. Load
-// more freezes the rendered window only across the grid-height commit, then
-// hands position back to sticky while safe height growth stays scroll-bound.
+// Desktop sidebar positioning. Flow mode keeps the natural height and parks
+// the bottom on the viewport floor. Window mode clips the same content without
+// exposing a nested scroll surface; its programmatic offset follows page
+// scrolling only. Load more briefly detaches the painted window across the
+// grid-height commit, then safely hands position back to native sticky.
 function Homepage({ data }: HomepageProps) {
   const sidebarColumnRef = useRef<HTMLDivElement | null>(null)
   const sidebarRef = useRef<HTMLElement | null>(null)
@@ -60,12 +57,6 @@ function Homepage({ data }: HomepageProps) {
     let prevWindowScrollY = window.scrollY
     let detachedSidebar: DetachedSidebarSnapshot | null = null
     let shouldSyncPinnedHeight = false
-
-    function hideScrollbar() {
-      if (!sidebar) return
-      sidebar.style.removeProperty('scrollbar-color')
-      sidebar.style.removeProperty('--homepage-sidebar-thumb')
-    }
 
     function clearDetachedPosition() {
       if (!sidebar) return
@@ -93,7 +84,6 @@ function Homepage({ data }: HomepageProps) {
         isPinned = false
         sidebar.style.top = ''
         sidebar.style.height = ''
-        hideScrollbar()
         column.style.minHeight = ''
         return
       }
@@ -113,7 +103,6 @@ function Homepage({ data }: HomepageProps) {
         isPinned = false
         sidebar.style.top = ''
         sidebar.style.height = ''
-        hideScrollbar()
         return
       }
 
@@ -149,7 +138,6 @@ function Homepage({ data }: HomepageProps) {
             isPinned = false
             sidebar.style.top = `${flowTop}px`
             sidebar.style.height = ''
-            hideScrollbar()
           }
           return
         }
@@ -168,14 +156,6 @@ function Homepage({ data }: HomepageProps) {
           )
           sidebar.style.top = `${sidebarPinnedTop}px`
           sidebar.style.height = `${pinnedHeight}px`
-          sidebar.style.setProperty(
-            'scrollbar-color',
-            'rgb(0 0 0 / 0.15) transparent'
-          )
-          sidebar.style.setProperty(
-            '--homepage-sidebar-thumb',
-            'rgb(0 0 0 / 0.15)'
-          )
           sidebar.scrollTop = sidebar.scrollHeight
         }
         return
@@ -213,7 +193,6 @@ function Homepage({ data }: HomepageProps) {
         isPinned = false
         sidebar.style.top = `${flowTop}px`
         sidebar.style.height = ''
-        hideScrollbar()
         return
       }
 
@@ -243,7 +222,7 @@ function Homepage({ data }: HomepageProps) {
     resizeObserver.observe(column)
     resizeObserver.observe(sidebar)
     function handleSidebarScroll() {
-      // Only the release check cares about direct sidebar scrolling.
+      // Programmatic scroll updates can complete the sticky release.
       if (sidebar && sidebar.scrollTop <= 0) requestUpdate()
     }
 
@@ -343,7 +322,7 @@ function Homepage({ data }: HomepageProps) {
         >
           <aside
             aria-label="首頁側欄"
-            className="contents xl:sticky xl:flex xl:w-full xl:min-w-0 xl:[scrollbar-width:thin] xl:[scrollbar-color:transparent_transparent] xl:[scrollbar-gutter:stable] xl:flex-col xl:gap-mm-5xl xl:overflow-x-hidden xl:overflow-y-scroll xl:overscroll-contain xl:pr-mm-m xl:[&::-webkit-scrollbar]:w-1 xl:[&::-webkit-scrollbar-thumb]:rounded-full xl:[&::-webkit-scrollbar-thumb]:[background-color:var(--homepage-sidebar-thumb,transparent)] xl:[&::-webkit-scrollbar-track]:bg-transparent"
+            className="contents xl:sticky xl:flex xl:w-full xl:min-w-0 xl:flex-col xl:gap-mm-5xl xl:overflow-hidden"
             ref={sidebarRef}
           >
             <HeadlineList
