@@ -45,6 +45,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
               href={`/story/${item.slug}?from=idlepage`}
               target="_blank"
               rel="noreferrer"
+              className="GTM-idle-window-click-popular-list"
             >
               <div className="relative space-y-2">
                 <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">

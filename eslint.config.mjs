@@ -30,6 +30,8 @@ export default [
       '**/node_modules/**',
       '**/.yalc/**',
       '**/.next/**',
+      '**/.next-dev/**',
+      '**/.next-analyze/**',
       '**/dist/**',
       '**/__generated__/**',
       '**/next-env.d.ts',

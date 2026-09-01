@@ -4,6 +4,8 @@ import { cn } from '@/components/cn'
 
 type ApplicationShellProps = ComponentPropsWithoutRef<'div'> & {
   children: ReactNode
+  /** Fixed page-level chrome, rendered outside the content flow. */
+  floatingAction?: ReactNode
   footer: ReactNode
   globalModal?: ReactNode
   header: ReactNode
@@ -13,6 +15,7 @@ type ApplicationShellProps = ComponentPropsWithoutRef<'div'> & {
 function ApplicationShell({
   children,
   className,
+  floatingAction,
   footer,
   globalModal,
   header,
@@ -35,6 +38,7 @@ function ApplicationShell({
       </div>
       {privacyNotice}
       {footer}
+      {floatingAction}
     </div>
   )
 }

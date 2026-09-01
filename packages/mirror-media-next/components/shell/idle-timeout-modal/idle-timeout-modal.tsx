@@ -5,6 +5,7 @@ import axios from 'axios'
 
 import type { PopularNewsApiPost } from '@/apollo/fragments/post'
 import { cn } from '@/components/cn'
+import { useCarouselTickerPause } from '@/components/common/carousel-ticker'
 import { PopularNewsItem } from '@/components/shell/idle-timeout-modal/popular-news-item'
 import { Typography } from '@/components/ui'
 import { API_TIMEOUT, URL_STATIC_POPULAR_NEWS } from '@/config/index.mjs'
@@ -15,14 +16,22 @@ import useClickOutside from '@/hooks/useClickOutside'
 
 const IDLE_TIMEOUT = 2 * 60 * 1000 // 2 minutes in milliseconds
 
+type IdleTimeoutModalProps = {
+  pauseCarouselTicker?: boolean
+}
+
 /**
  * IdleTimeoutModal Component
  * This modal appears after the user has been idle for a specified amount of time.
  */
-function IdleTimeoutModal() {
+function IdleTimeoutModal({
+  pauseCarouselTicker = false,
+}: IdleTimeoutModalProps) {
   const [isIdle, setIsIdle] = useIdleTimeout(IDLE_TIMEOUT)
   const [popularNews, setPopularNews] = useState<PopularNewsApiPost[]>([])
   const modalRef = useRef<HTMLDivElement>(null)
+  useCarouselTickerPause(pauseCarouselTicker && isIdle)
+
   useClickOutside(modalRef, () => {
     handleClose()
   })

@@ -4,6 +4,11 @@ import Image from 'next/image'
 import NextLink from 'next/link'
 
 import { cn } from '@/components/cn'
+import {
+  shellBracketTextLinkOnDarkClass,
+  shellBrandLinkClass,
+} from '@/components/shell/link-styles'
+import { ENV } from '@/config/index.mjs'
 import type {
   HeadersDataSection,
   ShellFlashNews,
@@ -12,7 +17,11 @@ import type {
 } from '@/utils/api'
 
 import { FlashNews } from './flash-news'
-import { navLinkClassName, navLinkRuleOnHover } from './nav-link'
+import {
+  navLinkClassName,
+  navLinkRuleAlways,
+  navLinkRuleOnHover,
+} from './nav-link'
 import {
   createShellNavigation,
   shellPartnerLinks,
@@ -56,6 +65,9 @@ function SiteHeader({
   const [showStickyControls, setShowStickyControls] = useState(false)
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
+  const [renderedFlyoutSlug, setRenderedFlyoutSlug] = useState<string | null>(
+    null
+  )
   const navigationRegionRef = useRef<HTMLDivElement | null>(null)
   const flashNewsRowRef = useRef<HTMLDivElement | null>(null)
   const stickyOffsetsRef = useRef({ compact: 0, desktop: 0 })
@@ -64,6 +76,10 @@ function SiteHeader({
   const openFlyoutItem = navigation.find(
     (item) => item.slug === openFlyoutSlug && item.categories.length > 0
   )
+  const renderedFlyoutItem = navigation.find(
+    (item) => item.slug === renderedFlyoutSlug && item.categories.length > 0
+  )
+  const hasFlyoutItems = navigation.some((item) => item.categories.length > 0)
   const visibleTopics = topicsData.slice(0, 7)
   const flashNews = flashNewsData ?? []
   const hasFlashNewsRow = flashNews.length > 0 || visibleTopics.length > 0
@@ -159,6 +175,13 @@ function SiteHeader({
   }, [openFlyoutSlug])
 
   function openFlyoutFromPointerOrFocus(slug: string) {
+    const item = navigation.find((entry) => entry.slug === slug)
+    if (!item || item.categories.length === 0) {
+      setOpenFlyoutSlug(null)
+      return
+    }
+
+    setRenderedFlyoutSlug(slug)
     setOpenFlyoutSlug(slug)
   }
 
@@ -183,14 +206,27 @@ function SiteHeader({
             {visibleTopics.length > 0 && (
               <nav
                 aria-label="專題推薦"
-                className="hidden min-w-0 gap-mm-xl overflow-hidden font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 lg:flex"
+                // The row clips its overflow, and each link's hover rules sit
+                // just outside its margin box, so the first and last would be
+                // cut off. Widen the padding box and take the width back out of
+                // the layout again.
+                className="-mx-mm-m hidden min-w-0 gap-mm-xl overflow-hidden px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 lg:flex"
               >
                 {visibleTopics.map((topic) => (
-                  <NextLink href={`/topic/${topic.slug}`} key={topic.id}>
+                  <NextLink
+                    className={shellBracketTextLinkOnDarkClass}
+                    href={`/topic/${topic.slug}`}
+                    key={topic.id}
+                  >
                     {topic.name}
                   </NextLink>
                 ))}
-                <NextLink href="/section/topic">更多</NextLink>
+                <NextLink
+                  className={shellBracketTextLinkOnDarkClass}
+                  href="/section/topic"
+                >
+                  更多
+                </NextLink>
               </nav>
             )}
           </div>
@@ -207,19 +243,18 @@ function SiteHeader({
         )}
       >
         <div
-          className="mx-auto flex h-15 w-full max-w-7xl items-center justify-between px-mm-2xl"
+          className="mx-auto flex h-15 w-full max-w-7xl items-center gap-mm-2xl px-mm-2xl"
           ref={logoRowRef}
         >
-          <div className="flex items-center gap-mm-4xl">
+          <div className="flex min-w-0 flex-1 items-center gap-mm-4xl">
             <NextLink
               aria-label="回到鏡週刊首頁"
-              className="GTM-header-logo rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500"
+              className={cn('GTM-header-logo shrink-0', shellBrandLinkClass)}
               href="/"
             >
               <Image
                 alt="鏡週刊 Mirror Media"
-                // The asset's intrinsic size is 108x46; Figma's 107x45.235 is a
-                // placement artefact, so render it unscaled.
+                // Keep the logo at its intrinsic size.
                 className="h-auto w-27"
                 height={46}
                 priority
@@ -228,40 +263,42 @@ function SiteHeader({
               />
             </NextLink>
 
-            {/* Figma 661:8400 places two ad slots next to the logo. These are
-                sized placeholders only; the real ad integration is out of scope
-                for this round. */}
-            <div className="hidden items-center gap-mm-l lg:flex">
-              <div
-                className="flex h-[50px] w-[110px] items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
-                data-slot="header-ad-slot"
-              >
-                110×50
+            {ENV !== 'prod' && (
+              <div className="@container min-w-0 flex-1">
+                {/* Show each preview slot only when it fits. */}
+                <div className="flex items-center gap-mm-l">
+                  <div
+                    className="hidden h-[50px] w-[110px] shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[110px]:flex"
+                    data-slot="header-ad-slot"
+                  >
+                    110×50
+                  </div>
+                  <div
+                    className="hidden h-[30px] w-30 shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[242px]:flex"
+                    data-slot="header-ad-slot"
+                  >
+                    120×30
+                  </div>
+                </div>
               </div>
-              <div
-                className="flex h-[30px] w-30 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800"
-                data-slot="header-ad-slot"
-              >
-                120×30
-              </div>
-            </div>
+            )}
           </div>
 
-          <div className="flex items-center gap-mm-l lg:hidden">
+          <div className="flex shrink-0 items-center gap-mm-l lg:hidden">
             <MemberMenu />
             <MobileMenu navigation={navigation} topics={topicsData} />
           </div>
 
-          <div className="hidden min-w-0 items-center gap-mm-2xl lg:flex">
+          <div className="hidden shrink-0 items-center gap-mm-2xl lg:flex">
             <nav
               aria-label="合作品牌"
-              // Figma 661:8400 gives this row a shared 28px height with the
-              // lockups centred at their own sizes.
+              // Keep each lockup centred at its own size within the 28px row.
               className="flex h-7 items-center gap-mm-2xl"
             >
               {shellPartnerLinks.map((link) => (
                 <NextLink
                   aria-label={link.label}
+                  className={shellBrandLinkClass}
                   href={link.href}
                   key={link.label}
                   rel="noopener noreferrer"
@@ -302,7 +339,10 @@ function SiteHeader({
             {showStickyControls && (
               <NextLink
                 aria-label="回到鏡週刊首頁"
-                className="GTM-header-logo hidden shrink-0 rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 lg:block"
+                className={cn(
+                  'GTM-header-logo hidden shrink-0 lg:block',
+                  shellBrandLinkClass
+                )}
                 href="/"
               >
                 <Image
@@ -317,15 +357,16 @@ function SiteHeader({
             <nav
               aria-label="主要分類"
               ref={categoryStripRef}
-              className="flex min-w-0 flex-1 [scrollbar-width:none] items-center gap-mm-2xl overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] lg:gap-[clamp(1rem,6.25vw-3rem,2rem)] [&::-webkit-scrollbar]:hidden"
+              className="flex min-w-0 flex-1 [scrollbar-width:none] items-center gap-mm-2xl overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] md:justify-between lg:justify-start lg:gap-[clamp(1rem,6.25vw-3rem,2rem)] [&::-webkit-scrollbar]:hidden"
             >
               {navigation.map((item) => (
                 <div className="lg:hidden" key={`compact-${item.slug}`}>
                   <NextLink
                     className={cn(
-                      'rounded-mm-xs font-mm-sans text-mm-h5 text-mm-neutral-800 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500',
-                      activeNavigationSlug === item.slug &&
-                        'text-mm-base-500 md:text-mm-neutral-800 md:underline md:underline-offset-4'
+                      navLinkClassName,
+                      activeNavigationSlug === item.slug
+                        ? navLinkRuleAlways
+                        : navLinkRuleOnHover
                     )}
                     href={item.href}
                   >
@@ -364,7 +405,12 @@ function SiteHeader({
             </nav>
           </div>
 
-          {openFlyoutItem && <DesktopNavigationFlyout item={openFlyoutItem} />}
+          {hasFlyoutItems && (
+            <DesktopNavigationFlyout
+              item={renderedFlyoutItem}
+              open={Boolean(openFlyoutItem)}
+            />
+          )}
         </div>
       </div>
 

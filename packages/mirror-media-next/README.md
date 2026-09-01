@@ -117,8 +117,15 @@ docker run --rm -e PROXY_AMP=true -p 3000:3000 mirror-media-next
 ```text
 packages/mirror-media-next/
 ├── pages/                              # Next.js routes, GSSP, route composition and policy
+│   ├── index.tsx                       # Homepage route composition
 │   └── podcasts/index.tsx              # Podcast route composition
 ├── modules/                            # Business capabilities, shallow by default
+│   ├── homepage/
+│   │   ├── homepage-types.ts           # Homepage-owned view-model types
+│   │   ├── homepage-data.ts            # Server data aggregation
+│   │   ├── homepage-client-data.ts     # Browser load-more boundary
+│   │   ├── homepage-static-json.schema.ts
+│   │   └── components/                 # Homepage-owned UI
 │   └── podcast/
 │       ├── podcast-types.ts            # Podcast-owned view-model types
 │       ├── podcast-data.ts             # Fetch, validate and normalize Podcast data
@@ -131,7 +138,8 @@ packages/mirror-media-next/
 │           └── podcast-modal.tsx
 ├── components/
 │   ├── ui/                             # Domain-neutral design-system primitives
-│   ├── common/                         # Domain-neutral composed UI proven by unrelated consumers
+│   ├── common/                         # Proven domain-neutral composed UI/controllers
+│   │   └── carousel-ticker.tsx         # Shared carousel cadence and pause coordination
 │   └── shell/                          # Application Layout/Header/Footer ownership
 ├── apollo/                             # GraphQL clients, sources, and generated output
 ├── axios/                              # Existing HTTP compatibility wrapper
@@ -189,16 +197,16 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 
 ### Ownership and placement（所有權與放置規則）
 
-| 位置                                                     | 責任                                                                        |
-| -------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `pages/**`                                               | Next.js route exports、GSSP、cache／redirect／404、SEO 與頁面組合           |
-| `modules/<capability>/`                                  | 能力擁有的 types、data、logic、components 與 hooks；預設保持扁平            |
-| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                  |
-| `components/common/**`                                   | 無領域、由 primitives 組成且經不相關 consumers 證明可重用的 UI／controller  |
-| `components/shell/**`                                    | Layout、Header、Footer 等 application shell（應用外殼）                     |
-| `components/shared/**`、`components/<legacy-feature>/**` | Legacy compatibility（舊版相容）路徑；不新增 ownership，consumer 歸零後刪除 |
-| `utils/**`、`hooks/**`                                   | 真正跨能力且符合執行環境的共用工具／hooks；單一能力內容回到最近 module      |
-| `type/**`、`types/**`                                    | `type/` 不再新增；`types/` 只放 ambient declarations（環境宣告）            |
+| 位置                                                     | 責任                                                                                    |
+| -------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `pages/**`                                               | Next.js route exports、GSSP、cache／redirect／404、SEO 與頁面組合                       |
+| `modules/<capability>/`                                  | 能力擁有的 types、data、logic、components 與 hooks；預設保持扁平                        |
+| `components/ui/**`                                       | 採 shadcn conventions（shadcn 慣例）的無領域、低階基礎元件                              |
+| `components/common/**`                                   | 無領域且經不相關 consumers 證明可重用的 composed UI（組合式介面）／controller（控制器） |
+| `components/shell/**`                                    | Layout、Header、Footer 等 application shell（應用外殼）                                 |
+| `components/shared/**`、`components/<legacy-feature>/**` | Legacy compatibility（舊版相容）路徑；不新增 ownership，consumer 歸零後刪除             |
+| `utils/**`、`hooks/**`                                   | 真正跨能力且符合執行環境的共用工具／hooks；單一能力內容回到最近 module                  |
+| `type/**`、`types/**`                                    | `type/` 不再新增；`types/` 只放 ambient declarations（環境宣告）                        |
 
 `components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。
 新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
@@ -221,7 +229,7 @@ React component（React 元件）是呈現單位，不是 ownership 類別；`co
 2. **責任是所有適用 routes 共同的外框、全域導覽呈現或 slot order（插槽順序）**：放 `components/shell/**`。
 3. **責任包含業務實體、規則、資料語意、狀態轉換或 use case**：放 `modules/<capability>/**`；一個或多個 consumers 都不改變此 ownership，也不另建 `modules/shared/`。
 4. **責任是無領域、低階的 design-system contract（設計系統契約）**：放 `components/ui/**`。
-5. **責任無領域、由 UI primitives 組成，且不相關 consumers 已證明需要相同的呈現責任**：放 `components/common/**`。
+5. **責任無領域，且不相關 consumers 已證明需要相同的 composed UI（組合式介面）或 controller（控制器）責任**：放 `components/common/**`。
 6. **仍無法判斷**：留在目前最明確的 owner boundary（所有權邊界）並提出 ownership review；不得先放入 `shared`／`common`、建立空 module 或複製第二份。
 
 若同一個元件同時符合 shell 與 capability、route 與 capability 等多項責任，不以前後順序掩蓋混合 ownership；先拆開責任，或在建立 public contract 前完成 architecture review（架構審查）。

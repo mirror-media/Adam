@@ -1,6 +1,6 @@
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
-import { CircleUserRoundIcon } from 'lucide-react'
+import { UserIcon } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Link } from '@/components/ui/link'
 import { logout, useMembership } from '@/context/membership'
 import { useAppDispatch } from '@/hooks/useRedux'
 import { loginActions } from '@/slice/login-slice'
@@ -25,12 +26,13 @@ function MemberMenu() {
 
   if (!isLoggedIn) {
     return (
-      <NextLink
-        className="GTM-header-login shrink-0 rounded-mm-xs font-mm-sans text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500"
+      <Link
+        className="GTM-header-login shrink-0 rounded-mm-xs text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900"
         href={getLoginHref(router)}
+        variant="plain"
       >
         登入
-      </NextLink>
+      </Link>
     )
   }
 
@@ -40,13 +42,13 @@ function MemberMenu() {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger
         aria-label="開啟會員選單"
         className="GTM-header-login"
         render={<Button size="icon-sm" variant="ghost" />}
       >
-        <CircleUserRoundIcon aria-hidden="true" className="size-7" />
+        <UserIcon aria-hidden="true" className="size-5" />
       </DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuPositioner align="end">

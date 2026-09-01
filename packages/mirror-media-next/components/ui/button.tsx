@@ -4,14 +4,14 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/components/cn'
 
 const buttonVariants = cva(
-  'inline-flex shrink-0 cursor-pointer items-center justify-center border border-transparent font-mm-sans text-mm-subtitle whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-second-500 focus-visible:outline-solid active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  'inline-flex shrink-0 cursor-pointer items-center justify-center border border-transparent font-mm-sans text-mm-subtitle whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
   {
     variants: {
       variant: {
         default:
           'rounded-mm-s bg-mm-base-700 text-mm-neutral-0 hover:bg-mm-base-500',
         outline:
-          'rounded-mm-full border-mm-neutral-300 bg-mm-neutral-50 text-mm-neutral-400 hover:bg-mm-neutral-200 hover:text-mm-second-600',
+          'rounded-mm-m border-mm-neutral-300 bg-mm-neutral-50 text-mm-neutral-400 hover:border-mm-second-700 hover:bg-mm-second-700 hover:text-mm-neutral-0',
         secondary:
           'rounded-mm-s bg-mm-second-500 text-mm-neutral-0 hover:bg-mm-second-400',
         destructive:

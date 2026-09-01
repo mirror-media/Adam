@@ -11,6 +11,7 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import { StyleSheetManager, ThemeProvider } from 'styled-components'
 
 import client from '../apollo/apollo-client'
+import { CarouselTickerProvider } from '../components/common/carousel-ticker'
 import ErrorBoundary from '../components/shared/error-boundary'
 import ErrorPage from '../components/shared/error-page'
 import UserBehaviorLogger from '../components/shared/user-behavior-logger'
@@ -121,40 +122,42 @@ function MyApp({ Component, pageProps }) {
           <Provider store={store}>
             <StyleSheetManager {...styleSheetManagerProps}>
               <ThemeProvider theme={theme}>
-                {/* some script may need member type to decide render or not,
-           make sure the WholeSiteScript component is placed inside contextProvider or other provider  */}
-                <WholeSiteScript />
-                {/* Since user behavior log need member info, make sure the
-            UserBehaviorLogger component is placed inside contextProvider or
-            other provider */}
-                {/* Story page has its own UserBehaviorLogger.
-            In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
-                {!isStoryPage && <UserBehaviorLogger />}
-                {/* Catches errors thrown while rendering the page on the client,
-                    which would otherwise surface as a blank "Application error"
-                    page. */}
-                <ErrorBoundary
-                  boundary="mainpage"
-                  resetKey={router.asPath}
-                  fallback={
-                    <ErrorPage
-                      message="oops 發生了一些問題"
-                      showRetry
-                      showGoHome
-                    />
-                  }
-                >
-                  <Component {...pageProps} />
-                </ErrorBoundary>
-                {/* Sits outside the page boundary above, so this is the only
-                    thing catching it: without it, a failure in this secondary
-                    widget would take down the whole app. No fallback props, so it just
-                    disappears. */}
-                {!isAmpPage && (
-                  <ErrorBoundary boundary="promote-topic">
-                    <PromoteTopic />
+                <CarouselTickerProvider>
+                  {/* some script may need member type to decide render or not,
+             make sure the WholeSiteScript component is placed inside contextProvider or other provider  */}
+                  <WholeSiteScript />
+                  {/* Since user behavior log need member info, make sure the
+              UserBehaviorLogger component is placed inside contextProvider or
+              other provider */}
+                  {/* Story page has its own UserBehaviorLogger.
+              In order to avoiding send log repeatedly, make sure not add UserBehaviorLogger components here when at story page. */}
+                  {!isStoryPage && <UserBehaviorLogger />}
+                  {/* Catches errors thrown while rendering the page on the client,
+                      which would otherwise surface as a blank "Application error"
+                      page. */}
+                  <ErrorBoundary
+                    boundary="mainpage"
+                    resetKey={router.asPath}
+                    fallback={
+                      <ErrorPage
+                        message="oops 發生了一些問題"
+                        showRetry
+                        showGoHome
+                      />
+                    }
+                  >
+                    <Component {...pageProps} />
                   </ErrorBoundary>
-                )}
+                  {/* Sits outside the page boundary above, so this is the only
+                      thing catching it: without it, a failure in this secondary
+                      widget would take down the whole app. No fallback props, so it just
+                      disappears. */}
+                  {!isAmpPage && (
+                    <ErrorBoundary boundary="promote-topic">
+                      <PromoteTopic />
+                    </ErrorBoundary>
+                  )}
+                </CarouselTickerProvider>
               </ThemeProvider>
             </StyleSheetManager>
           </Provider>
