@@ -20,7 +20,7 @@ function TopicIndexCard({ item }: TopicIndexCardProps) {
   return (
     <NextLink
       className="mx-auto flex w-full max-w-82.5 flex-col gap-mm-m md:mx-0 md:w-70 md:max-w-70 md:shrink-0"
-      href={`/topic/${item.slug}?from=topic_list`}
+      href={`/topic/${item.slug}`}
       rel="noreferrer"
       target="_blank"
     >
