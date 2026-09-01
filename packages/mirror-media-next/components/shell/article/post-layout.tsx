@@ -123,8 +123,8 @@ export default function PostLayout(props: PostLayoutProps) {
   return (
     <div className="grid max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
       <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 xl:col-span-12">
-        {!isAdvertised && categories && Array.isArray(categories) && (
-          <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start xl:col-span-3">
+        {categories && Array.isArray(categories) && (
+          <div className="order-1 col-span-full flex items-center justify-center md:col-span-4 md:justify-start">
             <Link href="/">
               <Typography
                 as="span"
@@ -210,7 +210,7 @@ export default function PostLayout(props: PostLayoutProps) {
             className="GTM-share-facebook"
           />
           <IconLink
-            href={`https://social-plugins.line.me/lineit/share?url=${canonicalUrl}`}
+            href={`https://social-plugins.line.me/lineit/share?u=${canonicalUrl}`}
             src="/images/line-logo.svg"
             alt="line-logo"
             rel="noopener noreferrer"
@@ -218,7 +218,7 @@ export default function PostLayout(props: PostLayoutProps) {
             className="GTM-share-line"
           />
           <IconLink
-            href={`https://www.threads.com/intent/post?url=${encodeURIComponent(
+            href={`https://www.threads.com/intent/post?u=${encodeURIComponent(
               canonicalUrl
             )}`}
             className="GTM-share-threads rounded-full bg-black"
@@ -289,7 +289,7 @@ export default function PostLayout(props: PostLayoutProps) {
             </Typography>
           )}
         </figure>
-        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-9 pb-5 md:order-2 md:col-span-9 md:col-end-0 md:justify-start md:py-0 lg:py-0">
+        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-9 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0">
           <CreditNames label="文" creditPeoples={writers} />
           <CreditNames label="攝影" creditPeoples={photographers} />
           <CreditNames label="影音" creditPeoples={camera_man} />
@@ -331,24 +331,13 @@ export default function PostLayout(props: PostLayoutProps) {
 
               if (paragraphCount === 2 && relativeStory) {
                 return (
-                  <>
-                    <Typography
-                      key={`content-${paragraphCount}`}
-                      as="p"
-                      variant="body-l"
-                      className="mx-2 scroll-m-20 md:mx-0"
-                    >
+                  <Fragment key={`paragraph-${paragraphCount}`}>
+                    <Typography as="p" variant="body-l" className="mx-2">
                       {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
                     <div className="mx-2 scroll-m-20 md:mx-0">
-                      <ThemeElement className="inline rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-mm-neutral-100">
-                        <Typography
-                          as="span"
-                          variant="subtitle"
-                          className="text-mm-neutral-100"
-                        >
-                          延伸閱讀
-                        </Typography>
+                      <ThemeElement className="w-fit rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-sm text-mm-neutral-100">
+                        延伸閱讀
                       </ThemeElement>
                       <Link
                         href={`/story/${relativeStory.slug}?from=referral_contents`}
@@ -362,45 +351,40 @@ export default function PostLayout(props: PostLayoutProps) {
                         </ThemeElement>
                       </Link>
                     </div>
-                  </>
+                  </Fragment>
                 )
               }
 
               if (paragraphCount === 3) {
                 return (
-                  <>
-                    <Typography
-                      key={`content-${paragraphCount}`}
-                      as="p"
-                      variant="body-l"
-                      className="mx-2 scroll-m-20 md:mx-0"
-                    >
+                  <Fragment key={`paragraph-${paragraphCount}`}>
+                    <Typography as="p" variant="body-l" className="mx-2">
                       {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
                     {renderAdInContent?.()}
-                  </>
+                  </Fragment>
                 )
               }
 
               if (paragraphCount === 4) {
                 return (
-                  <>
+                  <Fragment key={`paragraph-${paragraphCount}`}>
                     <RelativePosts
                       relateds={relateds}
                       className="mx-2 scroll-m-20 md:mx-0"
                     >
                       {renderTextWithLinks(block, content.entityMap)}
                     </RelativePosts>
-                  </>
+                  </Fragment>
                 )
               }
 
               return (
                 <Typography
-                  key={`content-${paragraphCount}`}
+                  key={`paragraph-${paragraphCount}`}
                   as="p"
                   variant="body-l"
-                  className="mx-2 scroll-m-20 md:mx-0"
+                  className="mx-2"
                 >
                   {renderTextWithLinks(block, content.entityMap)}
                 </Typography>
@@ -501,7 +485,7 @@ export default function PostLayout(props: PostLayoutProps) {
         <div className="order-13 col-span-full">{renderDable?.()}</div>
       </article>
 
-      <aside className="hidden max-w-106 gap-y-4 xl:mr-0 xl:block xl:space-y-6">
+      <aside className="hidden max-w-106 gap-y-4 xl:relative xl:mr-0 xl:block xl:space-y-6">
         {renderAside?.(summary)}
       </aside>
     </div>
@@ -561,7 +545,7 @@ function RelativePosts({
         <Typography as="p" variant="body-l" className={className}>
           {children}
         </Typography>
-        <div className="mx-2 space-y-2">
+        <div className="mx-2 mt-6 space-y-2">
           <RelativePostLink
             className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
             type="next"

@@ -81,7 +81,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
     renderNextUp,
   } = props
 
-  const canonicalUrl = `${SITE_URL}/external/${slug}`
+  const canonicalUrl = `https://${SITE_URL}/external/${slug}`
 
   const sectionTitle = getExternalSectionTitle(partner)
   const displayTags = [...(tags ?? []), ...(tags_algo ?? [])]
@@ -179,7 +179,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             className="GTM-share-facebook"
           />
           <IconLink
-            href={`https://social-plugins.line.me/lineit/share?url=${canonicalUrl}`}
+            href={`https://social-plugins.line.me/lineit/share?u=${canonicalUrl}`}
             src="/images/line-logo.svg"
             alt="line-logo"
             rel="noopener noreferrer"
@@ -187,7 +187,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             className="GTM-share-line"
           />
           <IconLink
-            href={`https://www.threads.com/intent/post?url=${encodeURIComponent(
+            href={`https://www.threads.com/intent/post?u=${encodeURIComponent(
               canonicalUrl
             )}`}
             className="GTM-share-threads rounded-full bg-black"
@@ -368,7 +368,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
         <div className="order-13 col-span-full">{renderDable?.()}</div>
       </article>
 
-      <aside className="hidden gap-y-4 xl:block xl:space-y-6 2xl:mr-0">
+      <aside className="relative hidden gap-y-4 xl:block xl:space-y-6 2xl:mr-0">
         {renderAside?.(summary)}
       </aside>
     </div>
