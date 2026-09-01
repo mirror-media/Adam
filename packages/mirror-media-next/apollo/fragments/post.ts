@@ -39,6 +39,32 @@ export type AsideListingPost = {
   heroImage: Photo | null
 }
 
+export type AsideListingPostWithOrderedSections = AsideListingPost & {
+  sectionsWithOrdered: AsideListingPost['sectionsInInputOrder']
+}
+
+/**
+ * Raw shape returned by the popular-news static JSON feed
+ * (config's `URL_STATIC_POPULAR_NEWS`), read by the idle-timeout modal.
+ * This is a GCS static JSON endpoint with no server-enforced contract, so
+ * this type is a hand-verified snapshot of the payload, not GraphQL-derived,
+ * and can drift without a build-time error. Verified against
+ * https://v3-statics-dev.mirrormedia.mg/files/json/popular.json: when
+ * present, `heroImage` only carries `id`/`resized`/`resizedWebp` — unlike
+ * the GraphQL `Photo` type, it has no `name` or `imageFile`.
+ */
+export type PopularNewsApiPost = {
+  id: string
+  slug: string
+  title: string
+  state: PostState
+  style: Post['style']
+  publishedDate: string
+  sections: Section[]
+  sectionsInInputOrder: Section[]
+  heroImage: Pick<Photo, 'id' | 'resized' | 'resizedWebp'> | null
+}
+
 export type TopicPost = {
   id: string // Unique post ID
   slug: string // Post slug

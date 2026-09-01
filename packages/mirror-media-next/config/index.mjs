@@ -318,7 +318,7 @@ switch (ENV) {
     URL_STATIC_TOPICS = `http://localhost:8080/json/header_topics.json`
     URL_STATIC_POST_FLASH_NEWS = `http://localhost:8080/json/header_posts.json`
     URL_STATIC_POST_EXTERNAL = `http://localhost:8080/json/post_external`
-    URL_STATIC_POPULAR_NEWS = `http://localhost:8080/json/popular.json`
+    URL_STATIC_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/popular.json`
     URL_STATIC_404_POPULAR_NEWS = `http://localhost:8080/json/404_popular.json`
     URL_STATIC_HEADER_HEADERS = `http://localhost:8080/json/header_headers.json`
     URL_STATIC_MENU_SECTIONS = `https://${STATIC_FILE_DOMAIN}/json/menu_sections_latest.json`

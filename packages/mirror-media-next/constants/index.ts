@@ -60,9 +60,15 @@ const AD_LINK = {
   href: 'https://www.mirrormedia.mg/story/ad1018001/',
 }
 
+const AI_GUIDANCE_LINK = {
+  name: 'ai-guidance',
+  title: 'AI使用準則',
+  href: 'https://www.mirrormedia.mg/story/ad1018001/',
+}
+
 const DOWNLOAD_APP_LINK = {
   name: 'download',
-  title: '下載APP',
+  title: 'APP下載',
   href: 'https://www.mirrormedia.mg/story/20161228corpmkt001/',
 }
 
@@ -101,9 +107,9 @@ const IDLE_MODAL_LINK = [
   PAPER_MAGAZINE_LINK,
   MAGAZINE_LINK,
   AUTH_LINK,
-  // 活動專區？
-  DOWNLOAD_APP_LINK,
   MEDIA_DISCIPLINE_LINK,
+  AI_GUIDANCE_LINK,
+  DOWNLOAD_APP_LINK,
 ]
 
 const MIRRORVOICE_LINK = {

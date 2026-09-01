@@ -1,9 +1,8 @@
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
-/**
- * @typedef {import('../../type/theme').Theme} Theme
- */
+import type { AsideListingPostWithOrderedSections } from '../../apollo/fragments/post'
+import { color } from '../../styles/theme/color'
 
 const LinkWrapper = styled.a`
   display: flex;
@@ -19,7 +18,7 @@ const FigureCaption = styled.div`
   justify-content: space-between;
 `
 
-const Label = styled.span`
+const Label = styled.span<{ labelColor: string }>`
   display: flex;
   width: fit-content;
   height: fit-content;
@@ -28,21 +27,7 @@ const Label = styled.span`
   color: white;
   font-size: 14px;
   font-weight: 300;
-  background-color: ${
-    /**
-     * @param {Object} props
-     * @param {String} props.sectionSlug
-     * @param {Theme} [props.theme]
-     */
-    ({ sectionSlug, theme }) => {
-      if (sectionSlug === 'external') {
-        return theme.color.sectionsColor['news']
-      }
-      return sectionSlug && theme.color.sectionsColor[sectionSlug]
-        ? theme.color.sectionsColor[sectionSlug]
-        : theme.color.brandColor.lightBlue
-    }
-  };
+  background-color: ${({ labelColor }) => labelColor};
 `
 
 const Title = styled.h3`
@@ -59,16 +44,15 @@ const Title = styled.h3`
   overflow: hidden;
 `
 
-/** @typedef {import('../../apollo/fragments/post').AsideListingPost} ArticleData */
-/** @typedef {ArticleData & {sectionsWithOrdered: ArticleData["sectionsInInputOrder"]} } ArticleDataContainSectionsWithOrdered */
-/**
- *
- * @param {Object} props
- * @param {ArticleDataContainSectionsWithOrdered} props.item
- * @returns {import('react').JSX.Element}
- */
-export default function PopularNewsItem({ item }) {
+type PopularNewsItemProps = {
+  item: AsideListingPostWithOrderedSections
+}
+
+export default function PopularNewsItem({ item }: PopularNewsItemProps) {
   const firstSection = item.sectionsWithOrdered?.[0] || item.sections?.[0]
+  const sectionSlug = firstSection?.slug
+  const labelColor = color.getSectionLabelColor(sectionSlug)
+
   return (
     <LinkWrapper
       href={`/story/${item.slug}`}
@@ -85,8 +69,8 @@ export default function PopularNewsItem({ item }) {
       />
 
       <FigureCaption>
-        {firstSection?.slug ? (
-          <Label sectionSlug={firstSection.slug}>{firstSection.name}</Label>
+        {sectionSlug ? (
+          <Label labelColor={labelColor}>{firstSection.name}</Label>
         ) : (
           <div />
         )}

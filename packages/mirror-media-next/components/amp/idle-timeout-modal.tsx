@@ -1,20 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import axios from 'axios'
 import styled from 'styled-components'
 
+import type {
+  AsideListingPostWithOrderedSections,
+  PopularNewsApiPost,
+} from '../../apollo/fragments/post'
 import { API_TIMEOUT, URL_STATIC_POPULAR_NEWS } from '../../config/index.mjs'
-import { Z_INDEX } from '../../constants'
-import { IDLE_MODAL_LINK } from '../../constants'
+import { IDLE_MODAL_LINK, Z_INDEX } from '../../constants'
 import { CUSTOMER_SERVICE_INFOS } from '../../constants/footer'
+import { useIdleTimeout } from '../../hooks/use-idle-timeout'
 import useClickOutside from '../../hooks/useClickOutside'
+import type { Theme } from '../../type/theme'
 import { getActiveOrderSection } from '../../utils'
 
 import PopularNewsItem from './popular-news-item'
 
 const Background = styled.section`
   display: none;
-  ${({ theme }) => theme.breakpoint.md} {
+  ${({ theme }) => (theme as Theme).breakpoint.md} {
     position: fixed;
     top: 0;
     left: 0;
@@ -116,52 +121,26 @@ const InfoTitle = styled.span`
   margin-right: 5px;
 `
 
-/** @typedef {import('../../apollo/fragments/post').AsideListingPost} ArticleData */
-
-/** @typedef {ArticleData & {sectionsWithOrdered: ArticleData["sectionsInInputOrder"]} } ArticleDataContainSectionsWithOrdered */
+const IDLE_TIMEOUT = 2 * 60 * 1000 // 2 minutes in milliseconds
 
 /**
  * IdleTimeoutModal Component
  * This modal appears after the user has been idle for a specified amount of time.
+ *
+ * AMP-only copy: kept on styled-components (not Tailwind) because AMP routes
+ * intentionally stay outside the Tailwind-based V4 shell import graph. See
+ * `components/amp/amp-layout.tsx`. The V4 shell uses
+ * `components/shell/idle-timeout-modal/idle-timeout-modal.tsx` instead.
  */
-const IdleTimeoutModal = () => {
-  const [isIdle, setIsIdle] = useState(false)
-  /**
-   * @type {[ArticleDataContainSectionsWithOrdered[], React.Dispatch<ArticleDataContainSectionsWithOrdered[]>]}
-   */
-  const [popularNews, setPopularNews] = useState([])
-  const idleTimeout = 2 * 60 * 1000 // 2 minutes in milliseconds
-  const modalRef = useRef(null)
+export default function IdleTimeoutModal() {
+  const [isIdle, setIsIdle] = useIdleTimeout(IDLE_TIMEOUT)
+  const [popularNews, setPopularNews] = useState<
+    AsideListingPostWithOrderedSections[]
+  >([])
+  const modalRef = useRef<HTMLDivElement>(null)
   useClickOutside(modalRef, () => {
     handleClose()
   })
-
-  useEffect(() => {
-    let timeout
-
-    const handleActivity = () => {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => setIsIdle(true), idleTimeout)
-    }
-
-    // Set timeout on component mount
-    timeout = setTimeout(() => setIsIdle(true), idleTimeout)
-
-    // Add event listeners to reset the timer on user activity
-    window.addEventListener('mousemove', handleActivity)
-    window.addEventListener('keypress', handleActivity)
-    window.addEventListener('scroll', handleActivity)
-    window.addEventListener('click', handleActivity)
-
-    // Clean up event listeners and timeout on component unmount
-    return () => {
-      clearTimeout(timeout)
-      window.removeEventListener('mousemove', handleActivity)
-      window.removeEventListener('keypress', handleActivity)
-      window.removeEventListener('scroll', handleActivity)
-      window.removeEventListener('click', handleActivity)
-    }
-  }, [idleTimeout])
 
   useEffect(() => {
     if (popularNews.length) return
@@ -172,16 +151,19 @@ const IdleTimeoutModal = () => {
     })
       .then((res) => {
         if (res && res.data) {
-          /**
-           * @type {ArticleDataContainSectionsWithOrdered[]}
-           */
-          const data = res.data
-            .map((post) => {
+          const data: AsideListingPostWithOrderedSections[] = res.data
+            .map((post: PopularNewsApiPost) => {
               const sectionsWithOrdered = getActiveOrderSection(
                 post.sections,
                 post.sectionsInInputOrder
               )
-              return { sectionsWithOrdered, ...post }
+              // popular.json's heroImage omits `name`/`imageFile` present
+              // on the GraphQL Photo type; only `resized` is read
+              // downstream, so this narrower shape is safe to widen here.
+              return {
+                sectionsWithOrdered,
+                ...post,
+              } as unknown as AsideListingPostWithOrderedSections
             })
             .slice(0, 6)
           setPopularNews(data)
@@ -190,6 +172,8 @@ const IdleTimeoutModal = () => {
       .catch((error) => {
         console.error('Error fetching popular news:', error)
       })
+    // Fetch once on mount; `popularNews.length` is only read as a guard.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleClose = () => {
@@ -266,5 +250,3 @@ const IdleTimeoutModal = () => {
     )
   )
 }
-
-export default IdleTimeoutModal

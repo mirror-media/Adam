@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 
 import GDPRNotification from '../gdpr'
-import IdleTimeoutModal from '../idle-modal/idle-timeout-modal'
 import CustomHead from '../shared/custom-head'
+
+import IdleTimeoutModal from './idle-timeout-modal'
 
 type AmpLayoutProps = {
   children: ReactNode

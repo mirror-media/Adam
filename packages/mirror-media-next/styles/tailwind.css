@@ -155,6 +155,7 @@
   --mm-z-shell-overlay: 2500;
   --mm-z-shell-overlay-content: 2501;
   --mm-z-shell-popover: 2600;
+  --mm-z-shell-top: 10000;
 }
 
 @layer theme {
