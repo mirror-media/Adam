@@ -58,6 +58,8 @@ type ExternalSource = {
   extend_byline?: string | null
   partner?: { name?: string | null } | null
   tags?: NamedList
+  sections?: NamedList
+  categories?: NamedList
 }
 
 function joinComma(values: Array<string | null | undefined>): string {
@@ -168,7 +170,7 @@ export function buildExternalDataLayer(
     content_author:
       external.extend_byline || external.partner?.name || '鏡週刊',
     content_tag: joinComma((external.tags ?? []).map((tag) => tag?.name)),
-    cat_0: '',
-    cat_1: '',
+    cat_0: firstActiveName(external.sections),
+    cat_1: firstActiveName(external.categories),
   }
 }

@@ -23,6 +23,11 @@ export function getPageTypeFromPathname(
     return 'story'
   }
 
+  // 精選專區與專題內頁同一套 topic_event；其餘 /section/ 才是 cate_event
+  if (pathname === '/section/topic' || pathname.startsWith('/topic/')) {
+    return 'topic'
+  }
+
   if (
     pathname.startsWith('/section/') ||
     pathname.startsWith('/category/') ||
@@ -41,10 +46,6 @@ export function getPageTypeFromPathname(
 
   if (pathname.startsWith('/author/') || pathname.startsWith('/externals/')) {
     return 'author'
-  }
-
-  if (pathname.startsWith('/topic/')) {
-    return 'topic'
   }
 
   return undefined
