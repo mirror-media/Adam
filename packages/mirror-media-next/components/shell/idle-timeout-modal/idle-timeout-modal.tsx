@@ -57,7 +57,7 @@ function IdleTimeoutModal() {
         <Dialog.Backdrop className="fixed top-0 left-0 z-(--mm-z-shell-top) h-screen w-screen bg-black/50" />
         <Dialog.Viewport className="fixed top-1/2 left-1/2 z-(--mm-z-shell-top) w-full -translate-x-1/2 -translate-y-1/2">
           <Dialog.Popup>
-            <div className="mx-auto w-full max-w-90 bg-white px-4 py-6 xl:max-w-200 xl:px-21.5 xl:pt-13">
+            <div className="mx-auto w-full max-w-90 bg-white px-4 py-6 xl:max-w-200 xl:scale-[clamp(70%,calc(100vh/768px*100%),100%)] xl:px-21.5 xl:pt-13">
               <div className="relative">
                 <div className="flex flex-col gap-y-3 pb-3 xl:flex-row xl:justify-between xl:pb-0">
                   <Image
