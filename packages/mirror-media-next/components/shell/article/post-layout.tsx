@@ -1,4 +1,4 @@
-import { Fragment, ReactNode, useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 import NextImage from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
@@ -122,8 +122,8 @@ export default function PostLayout(props: PostLayoutProps) {
   }, [content])
 
   return (
-    <div className="grid max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
-      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 xl:col-span-12">
+    <div className="max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
+      <article className="relative grid-cols-subgrid space-y-7 gap-x-0 xl:col-span-12 xl:grid">
         {categories && Array.isArray(categories) && (
           <div className="order-1 col-span-full flex items-center justify-center md:col-span-4 md:justify-start">
             <Link href="/">
@@ -370,12 +370,14 @@ export default function PostLayout(props: PostLayoutProps) {
               if (paragraphCount === 4) {
                 return (
                   <Fragment key={`paragraph-${paragraphCount}`}>
-                    <RelativePosts
-                      relateds={relateds}
-                      className="mx-2 scroll-m-20 md:mx-0"
+                    <Typography
+                      as="p"
+                      variant="body-l"
+                      className="mx-2 scroll-m-20 md:mx-0 xl:hidden"
                     >
                       {renderTextWithLinks(block, content.entityMap)}
-                    </RelativePosts>
+                    </Typography>
+                    <RelativePosts relateds={relateds} />
                   </Fragment>
                 )
               }
@@ -471,7 +473,7 @@ export default function PostLayout(props: PostLayoutProps) {
         <ThemeElement
           as="section"
           theme="accent"
-          className="order-12 col-span-full rounded-lg p-8 pb-10 text-lg"
+          className="order-12 col-span-full mx-2 rounded-lg p-8 pb-10 text-lg md:mx-0"
         >
           鏡週刊掌握趨勢，領先一步：
           從國際大事到生活小確幸，我們確保您不錯過任何一個重要瞬間，誠摯邀請您
@@ -529,48 +531,12 @@ function CreditNames({
   )
 }
 
-function RelativePosts({
-  children,
-  className,
-  relateds,
-}: {
-  children: ReactNode
-  className?: string
-  relateds: StoryPost['relateds']
-}) {
-  if (!relateds) return children
+function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
+  if (!relateds) return null
 
   if (relateds[0] && relateds[1]) {
     return (
-      <>
-        <Typography as="p" variant="body-l" className={className}>
-          {children}
-        </Typography>
-        <div className="mx-2 mt-6 space-y-2">
-          <RelativePostLink
-            className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
-            type="next"
-            href={`/story/${relateds[0]?.slug}?from=story_updown`}
-          >
-            {relateds[0]?.title}
-          </RelativePostLink>
-          <RelativePostLink
-            className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
-            type="prev"
-            href={`/story/${relateds[1]?.slug}?from=story_updown`}
-          >
-            {relateds[1]?.title}
-          </RelativePostLink>
-        </div>
-      </>
-    )
-  }
-  if (relateds[0]) {
-    return (
-      <>
-        <Typography as="p" variant="body-l" className={className}>
-          {children}
-        </Typography>
+      <div className="mx-2 mt-6 space-y-2 xl:hidden">
         <RelativePostLink
           className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="next"
@@ -578,15 +544,6 @@ function RelativePosts({
         >
           {relateds[0]?.title}
         </RelativePostLink>
-      </>
-    )
-  }
-  if (relateds[1]) {
-    return (
-      <>
-        <Typography as="p" variant="body-l" className={className}>
-          {children}
-        </Typography>
         <RelativePostLink
           className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="prev"
@@ -594,13 +551,31 @@ function RelativePosts({
         >
           {relateds[1]?.title}
         </RelativePostLink>
-      </>
+      </div>
+    )
+  }
+  if (relateds[0]) {
+    return (
+      <RelativePostLink
+        className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100 xl:hidden"
+        type="next"
+        href={`/story/${relateds[0]?.slug}?from=story_updown`}
+      >
+        {relateds[0]?.title}
+      </RelativePostLink>
+    )
+  }
+  if (relateds[1]) {
+    return (
+      <RelativePostLink
+        className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100 xl:hidden"
+        type="prev"
+        href={`/story/${relateds[1]?.slug}?from=story_updown`}
+      >
+        {relateds[1]?.title}
+      </RelativePostLink>
     )
   }
 
-  return (
-    <Typography as="p" variant="body-l" className={className}>
-      {children}
-    </Typography>
-  )
+  return null
 }

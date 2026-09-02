@@ -100,7 +100,7 @@ export function NextUpPosts({
                 />
               </picture>
               <Typography
-                as="div"
+                as="h2"
                 variant="h6"
                 className="line-clamp-3 text-mm-base-700"
               >

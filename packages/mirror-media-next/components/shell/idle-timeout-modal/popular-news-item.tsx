@@ -39,9 +39,56 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
 
   if (isDesktop) {
     return (
-      <div className="grid grid-cols-3 gap-x-13 gap-y-7 py-11">
+      <div className="grid grid-cols-3 gap-x-13 gap-y-7 py-6">
         {items.map((item, index) => (
           <div key={index}>
+            <Link
+              href={`/story/${item.slug}?from=idlepage`}
+              target="_blank"
+              rel="noreferrer"
+              className="GTM-idle-window-click-popular-list"
+            >
+              <div className="relative space-y-2">
+                <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">
+                  {item.sectionsInInputOrder?.[0].name ||
+                    item.sections?.[0].name}
+                </div>
+                <picture className="relative block aspect-video w-full">
+                  <Image
+                    images={item?.heroImage?.resized}
+                    alt={item.title}
+                    loadingImage="/images-next/loading.gif"
+                    defaultImage={DEFAULT_OG_IMAGE_URL}
+                  />
+                </picture>
+                <Typography
+                  variant="subtitle"
+                  className="line-clamp-3 max-h-14 min-h-14 text-base text-mm-neutral-800"
+                >
+                  {item.title}
+                </Typography>
+              </div>
+            </Link>
+            <Typography
+              variant="caption-l"
+              className="pointer-events-none text-mm-neutral-400"
+            >
+              {dayjs(item.publishedDate).format('YYYY.MM.DD HH:mm')}
+            </Typography>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="embla_viewport overflow-hidden" ref={emblaRef}>
+      <div className="embla__container flex touch-pan-y touch-pinch-zoom">
+        {items.map((item, index) => (
+          <div
+            key={index}
+            className="embla__slide min-w-0 shrink-0 grow-0 basis-full px-10.25"
+          >
             <Link
               href={`/story/${item.slug}?from=idlepage`}
               target="_blank"
@@ -62,55 +109,20 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                   />
                 </picture>
                 <Typography
+                  as="h2"
                   variant="subtitle"
-                  className="line-clamp-3 max-h-[56px] min-h-[56px] text-mm-base-700"
+                  className="line-clamp-3 max-h-14 min-h-14 text-base text-mm-neutral-800"
                 >
                   {item.title}
                 </Typography>
-                <Typography variant="caption-l" className="text-mm-neutral-400">
-                  {dayjs(item.publishedDate).format('YYYY.MM.DD HH:mm')}
-                </Typography>
               </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  return (
-    <div className="embla_viewport overflow-hidden" ref={emblaRef}>
-      <div className="embla__container flex touch-pan-y touch-pinch-zoom">
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="embla__slide min-w-0 shrink-0 grow-0 basis-full"
-          >
-            <Link
-              href={`/story/${item.slug}?from=idlepage`}
-              target="_blank"
-              rel="noreferrer"
-              className="GTM-idle-window-click-popular-list flex"
-            >
-              <div className="space-y-2">
-                <picture className="relative block aspect-4/3 w-full">
-                  <Image
-                    images={item?.heroImage?.resized}
-                    alt={item.title}
-                    loadingImage="/images-next/loading.gif"
-                    defaultImage={DEFAULT_OG_IMAGE_URL}
-                  />
-                </picture>
-                <Typography
-                  variant="subtitle"
-                  className="line-clamp-3 text-mm-base-700"
-                >
-                  {item.title}
-                </Typography>
-                <Typography variant="caption-l" className="text-mm-neutral-400">
-                  {dayjs(item.publishedDate).format('YYYY.MM.DD HH:mm')}
-                </Typography>
-              </div>
+              <Typography
+                as="div"
+                variant="caption-l"
+                className="text-mm-neutral-400"
+              >
+                {dayjs(item.publishedDate).format('YYYY.MM.DD HH:mm')}
+              </Typography>
             </Link>
           </div>
         ))}

@@ -3,7 +3,8 @@
 /**
  * 頁型識別。
  * URL 對應：/external/ → story；/section/、/premiumsection/ → category
- * （/section/topic 精選專區除外，走 topic）；/externals/ → author。
+ * （/section/topic 精選專區除外，走 topic）；/externals/ → author；
+ * /podcasts/ → podcast。
  * 對不上的路徑（/login、/magazine 等）不套用 PageType。
  */
 export type PageType =
@@ -14,9 +15,10 @@ export type PageType =
   | 'author'
   | 'search'
   | 'story'
+  | 'podcast'
   | '404'
 
-/** 觸發時的位置類別（固定 8 值） */
+/** 觸發時的位置類別 */
 export type EventCategory =
   | 'story_event' // /story/、/external/
   | 'cate_event' // /section/（不含 /section/topic）、/category/、/premiumsection/
@@ -26,6 +28,7 @@ export type EventCategory =
   | 'e404_event' // 404
   | 'author_event' // /author/、/externals/
   | 'topic_event' // /topic/、/section/topic（精選專區）
+  | 'podcast_event' // /podcasts/
 
 export const PAGE_TYPE_TO_EVENT_CATEGORY: Record<PageType, EventCategory> = {
   story: 'story_event',
@@ -35,6 +38,7 @@ export const PAGE_TYPE_TO_EVENT_CATEGORY: Record<PageType, EventCategory> = {
   search: 'search_event',
   author: 'author_event',
   topic: 'topic_event',
+  podcast: 'podcast_event',
   '404': 'e404_event',
 }
 
@@ -135,7 +139,15 @@ export type InteractionEvent =
   | ({ event: 'view_page_finished' } & StoryEventFields)
   | ({ event: 'view_content_finished' } & StoryEventFields)
 
-export type DataLayerEvent = InteractionEvent
+/**
+ * 頁級 page view。與 GTM 內建 page_view（All Pages / History Change）並存，
+ * 不要在 GA4 映射成 `page_view`。
+ */
+export type PageViewEvent = {
+  event: 'mm_page_view'
+}
+
+export type DataLayerEvent = InteractionEvent | PageViewEvent
 
 /** GTM 維度欄位（CSR 換頁時用來清掉上一頁殘留） */
 export const DATA_LAYER_DIMENSION_KEYS = [

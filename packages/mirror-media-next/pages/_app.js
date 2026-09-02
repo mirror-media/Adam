@@ -61,23 +61,17 @@ function MyApp({ Component, pageProps }) {
   // that AMP treats as invalid `<template>` tags.
   const isAmpPage = useAmp()
   // Frozen on the first render: GoogleTagManager inlines this into the same
-  // script as `gtm.start`, which only runs once per full page load. Subsequent
-  // CSR navigations go through pushDataLayer below instead.
+  // script as `gtm.start`, which only runs once per full page load. First load
+  // and CSR navigations also send `mm_page_view` via pushDataLayer below.
   const initialDataLayer = compactDataLayer(
     resolvePageDataLayer(router.pathname, router.asPath, pageProps.dataLayer)
   )
   const ssrDataLayerRef = useRef(
     Object.keys(initialDataLayer).length > 0 ? initialDataLayer : undefined
   )
-  const isFirstLoadRef = useRef(true)
 
   useEffect(() => {
     if (isAmpPage) {
-      return
-    }
-
-    if (isFirstLoadRef.current) {
-      isFirstLoadRef.current = false
       return
     }
 

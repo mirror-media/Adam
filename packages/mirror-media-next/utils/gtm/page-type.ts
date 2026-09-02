@@ -48,6 +48,10 @@ export function getPageTypeFromPathname(
     return 'author'
   }
 
+  if (pathname === '/podcasts') {
+    return 'podcast'
+  }
+
   return undefined
 }
 
