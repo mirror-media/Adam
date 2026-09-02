@@ -1,0 +1,239 @@
+import type { GetServerSideProps } from 'next'
+import dynamic from 'next/dynamic'
+
+import FullScreenAds from '@/components/ads/full-screen-ads'
+import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
+import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
+import CustomHead from '@/components/shared/custom-head'
+import { PageShell } from '@/components/shell/page-shell'
+import { Typography } from '@/components/ui/typography'
+import { ENV } from '@/config/index.mjs'
+import { useDisplayAd } from '@/hooks/useDisplayAd'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
+import {
+  type ArticleListItemSource,
+  toArticleListItemData,
+} from '@/modules/list-article/list-article-data'
+import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
+import { fetchColumnSectionPostsJSON } from '@/modules/section/column-data'
+import ColumnList from '@/modules/section/components/column-list'
+import SectionArticles from '@/modules/section/components/section-articles'
+import { getLogTraceObject } from '@/utils'
+import { getSectionGPTPageKey } from '@/utils/ad'
+import type { ShellHeaderData } from '@/utils/api'
+import { fetchShellHeaderData } from '@/utils/api'
+import {
+  fetchPostsBySectionSlug,
+  fetchSectionBySectionSlug,
+} from '@/utils/api/section'
+import { setPageCache } from '@/utils/cache-setting'
+import { getPostsAndPostscountFromGqlData } from '@/utils/data-process'
+import { buildSingleCatDataLayer } from '@/utils/gtm/build-data-layer'
+import { processSettledResult } from '@/utils/response-processor'
+
+const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
+
+const RENDER_PAGE_SIZE = 12
+
+const SECTION_SLUG = 'column'
+
+type ColumnPageProps = {
+  dataLayer: ReturnType<typeof buildSingleCatDataLayer>
+  filterPostIds: string[]
+  gqlPostsCount: number
+  headerData: ShellHeaderData
+  posts: ArticleListItemData[]
+  section: { name: string; slug: string }
+}
+
+export default function ColumnPage({
+  filterPostIds,
+  gqlPostsCount,
+  headerData,
+  posts,
+  section,
+}: ColumnPageProps) {
+  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
+
+  const gptPageKey = getSectionGPTPageKey(section.slug)
+
+  return (
+    <>
+      <CustomHead title={`${section.name}`} />
+      <PageShell
+        headerData={{ ...headerData, activeNavigationSlug: section.slug }}
+      >
+        <ListPageMain>
+          <GPT_Placeholder
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
+            {shouldShowAd && (
+              <GPTAd
+                adKey="HD"
+                className="h-auto w-full"
+                pageKey={gptPageKey}
+              />
+            )}
+          </GPT_Placeholder>
+
+          {section.name && (
+            <Typography
+              as="h1"
+              variant="h3"
+              className="mt-mm-2xl mb-mm-2xl text-mm-base-700 sm:ml-mm-xl md:mx-0 md:mb-mm-3xl xl:mt-mm-3xl xl:mb-mm-l"
+            >
+              {section.name}
+            </Typography>
+          )}
+
+          <div className="flex md:gap-10 xl:gap-6.5">
+            {/* The sidebar is gone below lg, so the column centres itself. */}
+            <div className="mx-auto w-[calc(100%-464px)] max-w-187.5 flex-1 lg:mx-0">
+              {gqlPostsCount === posts.length ? (
+                <SectionArticles
+                  from="cate_list"
+                  posts={posts}
+                  postsCount={posts.length}
+                  renderPageSize={RENDER_PAGE_SIZE}
+                  section={section}
+                />
+              ) : (
+                <ColumnList
+                  filterPostIds={filterPostIds}
+                  from="cate_list"
+                  gqlPostsCount={gqlPostsCount}
+                  posts={posts}
+                  renderPageSize={RENDER_PAGE_SIZE}
+                  section={section}
+                />
+              )}
+            </div>
+
+            <ListAsideColumn pageKey={gptPageKey} sectionSlug={section.slug} />
+          </div>
+
+          {shouldShowAd && (
+            // Above the shell header (--mm-z-shell-header, 1000) and below its
+            // overlays, matching the legacy Z_INDEX.coverHeader this ad used.
+            <GPTMbStAd
+              className="fixed inset-x-0 bottom-0 z-[2000] mx-auto h-auto max-h-[50px] w-full max-w-[320px] xl:hidden"
+              pageKey={gptPageKey}
+            />
+          )}
+          {shouldShowAd && <FullScreenAds />}
+        </ListPageMain>
+      </PageShell>
+    </>
+  )
+}
+
+export const getServerSideProps = (async ({ req, res }) => {
+  if (ENV === 'prod') {
+    setPageCache(
+      res,
+      {
+        cachePolicy: 'max-age',
+        cacheTime: 600,
+        sharedCacheTime: 600,
+        staleWhileRevalidate: 3600,
+      },
+      req.url
+    )
+  } else {
+    setPageCache(res, { cachePolicy: 'no-store' }, req.url)
+  }
+
+  const globalLogFields: Record<string, unknown> = {
+    ...getLogTraceObject(req),
+  }
+
+  const [headerData, jsonPosts, [sectionResponse]] = await Promise.all([
+    fetchShellHeaderData({
+      includeFlashNews: true,
+      logFields: globalLogFields,
+    }),
+    fetchColumnSectionPostsJSON(),
+    Promise.allSettled([fetchSectionBySectionSlug(SECTION_SLUG)]),
+  ])
+
+  // 只有 story 需要去重，external 不會出現在下面那支 GraphQL 查詢的結果裡。
+  const filterPostIds = jsonPosts
+    .filter((post) => post.type === 'story')
+    .map((post) => post.id)
+
+  /**
+   * JSON 已經有東西時只要總數、不要資料，所以 take 是 0；分頁由 `ColumnList` 從
+   * 第二頁接手。
+   */
+  const [postsResponse] = await Promise.allSettled([
+    fetchPostsBySectionSlug(
+      SECTION_SLUG,
+      jsonPosts.length ? 0 : RENDER_PAGE_SIZE * 2,
+      0,
+      { id: { notIn: filterPostIds } }
+    ),
+  ])
+
+  const [gqlPostsCount, gqlPostsResult] = processSettledResult(
+    postsResponse,
+    getPostsAndPostscountFromGqlData<ArticleListItemSource>,
+    `Error occurs while getting posts in section page (sectionSlug: ${SECTION_SLUG})`,
+    globalLogFields
+  )
+
+  const posts = [...jsonPosts, ...gqlPostsResult.map(toArticleListItemData)]
+
+  if (posts.length === 0) {
+    // fetchPost return empty array -> 404
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `fetch post of sectionSlug ${SECTION_SLUG} return empty posts, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
+
+  const sectionData = processSettledResult(
+    sectionResponse,
+    (gqlData) => gqlData?.data,
+    `Error occurs while getting section data in section page (sectionSlug: ${SECTION_SLUG})`,
+    globalLogFields
+  )
+
+  if (!sectionData) {
+    throw new Error('fetch section failed')
+  }
+
+  if (sectionData.section?.state !== 'active') {
+    console.log(
+      JSON.stringify({
+        severity: 'WARNING',
+        message: `sectionSlug '${SECTION_SLUG}' is inactive, redirect to 404`,
+        globalLogFields,
+      })
+    )
+    return { notFound: true }
+  }
+
+  const section = {
+    name: sectionData.section.name ?? '',
+    slug: sectionData.section.slug ?? '',
+  }
+
+  return {
+    props: {
+      dataLayer: buildSingleCatDataLayer(section.name),
+      filterPostIds,
+      gqlPostsCount,
+      headerData,
+      posts,
+      section,
+    },
+  }
+}) satisfies GetServerSideProps<ColumnPageProps>

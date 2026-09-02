@@ -5,59 +5,34 @@ import { ArticleList } from '@/modules/list-article/components/article-list'
 import { toArticleListItemData } from '@/modules/list-article/list-article-data'
 import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import LoadingPage from '@/public/images-next/loading_page.gif'
-import {
-  fetchPostsByCategorySlug,
-  fetchPremiumPostsByCategorySlug,
-} from '@/utils/api/category'
+import { fetchPostsByAuthorId } from '@/utils/api/author'
 
-import { fetchNewsCategoryPostsJSON } from '../category-data'
-import type { CategorySummary } from '../category-types'
-
-type CategoryArticlesProps = {
-  category: CategorySummary
+type AuthorArticlesProps = {
+  authorId: string
   from?: string
-  isNewsCategory: boolean
-  isPremium: boolean
   posts: ArticleListItemData[]
   postsCount: number
   renderPageSize: number
 }
 
-export default function CategoryArticles({
-  category,
+export default function AuthorArticles({
+  authorId,
   from,
-  isNewsCategory,
-  isPremium,
   posts,
   postsCount,
   renderPageSize,
-}: CategoryArticlesProps) {
+}: AuthorArticlesProps) {
   const fetchPageSize = renderPageSize * 2
 
   async function fetchPostsFromPage(page: number) {
-    if (!category?.slug) {
+    if (!authorId) {
       return
     }
 
-    const take = fetchPageSize
-    const skip = (page - 1) * take
-
     try {
-      if (isPremium) {
-        const { data } = await fetchPremiumPostsByCategorySlug(
-          category.slug,
-          take,
-          skip
-        )
-        return (data.posts ?? []).map(toArticleListItemData)
-      }
-
-      if (isNewsCategory) {
-        const { items } = await fetchNewsCategoryPostsJSON(page, take)
-        return items
-      }
-
-      const { data } = await fetchPostsByCategorySlug(category.slug, take, skip)
+      const take = fetchPageSize
+      const skip = (page - 1) * take
+      const { data } = await fetchPostsByAuthorId(authorId, take, skip)
       return (data.posts ?? []).map(toArticleListItemData)
     } catch (error) {
       // [to-do]: use beacon api to log error on gcs
@@ -77,12 +52,14 @@ export default function CategoryArticles({
 
   return (
     <InfiniteScrollList
+      // `InfiniteScrollList` seeds its state from `initialList` on mount only,
+      // so moving to another author has to remount it.
+      key={authorId}
       initialList={posts}
       renderAmount={renderPageSize}
       fetchCount={Math.ceil(postsCount / fetchPageSize)}
       fetchListInPage={fetchPostsFromPage}
       loader={loader}
-      key={category.slug}
     >
       {(renderList) => (
         <ArticleList
@@ -91,7 +68,6 @@ export default function CategoryArticles({
           // JSDoc type in untyped JavaScript. Correcting it is a separate
           // change.
           renderList={renderList as ArticleListItemData[]}
-          section={category.sections[0]}
         />
       )}
     </InfiniteScrollList>

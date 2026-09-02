@@ -86,7 +86,7 @@ function getSectionNameGql(sections = [], partner) {
 
 /**
   * Converts a UTC timestamp string to a Taipei time ISO 8601 string.
-  * 
+  *
   * @param {string | null | undefined} utcTimeStamp - The UTC timestamp (e.g., "2025-10-15T17:11:00Z").
   * @returns {string | undefined} The ISO 8601 string in Taipei time
   (e.g., "2025-10-16T01:11:00+08:00"), or undefined if the input is invalid.
@@ -175,8 +175,8 @@ const sortArrayWithOtherArrayId = (arrayNeedToSort, arraySortReference) => {
 
 /**
 Get the magazine href from a given slug.
-@param {string} slug 
-@returns {string} 
+@param {string} slug
+@returns {string}
 */
 const getMagazineHrefFromSlug = (slug) => {
   const issue = slug.match(/\d+/)[0]
@@ -367,6 +367,17 @@ const isCompanyEmail = (email) => {
  */
 const getLoginHref = (router) => {
   const pathname = router.pathname
+
+  // 404 是 auto-export 頁，SSR 的 asPath 被 Next 固定成 /404，client 端則是使用者真正打的網址，
+  // asPath 會造成 hydration mismatch。登入後導回一個不存在的網址，本來就沒意義，所以固定回首頁。
+  if (pathname === '/404') {
+    return {
+      pathname: '/login',
+      query: {
+        destination: '/',
+      },
+    }
+  }
 
   if (pathname === '/login') {
     const queryParam = router.query

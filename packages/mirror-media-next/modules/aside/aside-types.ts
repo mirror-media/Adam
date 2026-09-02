@@ -21,10 +21,7 @@ export type AsideArticle = {
   id: string
   slug: string
   title: string
-  /**
-   // TODO: 這邊是因為 latest json 沒有給 publishDate，所以先設 optional
-   */
-  publishedDate?: string
+  publishedDate: string
   style?: string
   heroImage?: AsideArticleImage | null
 }

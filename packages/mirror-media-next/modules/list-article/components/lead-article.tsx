@@ -1,16 +1,17 @@
 import Image from '@readr-media/react-image'
 
-import type { ListingPost } from '@/apollo/fragments/post'
 import { cn } from '@/components/cn'
 import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
 import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { transformTimeDataIntoDotFormat } from '@/utils'
 
+import type { ArticleListItemData } from '../list-article-types'
+
 type LeadArticleProps = {
   className?: string
   from?: string
-  item: ListingPost
+  item: ArticleListItemData
   priority?: boolean
 }
 

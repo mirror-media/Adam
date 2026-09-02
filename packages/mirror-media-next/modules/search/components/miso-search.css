@@ -1,0 +1,448 @@
+/*
+ * Miso SDK 會自己注入未分層的 <style>，未分層的規則勝過任何 @layer，所以這份樣式
+ * 也必須不進 layer——它在 styles/tailwind.css 是用不帶 layer() 的 @import 掛進去的。
+ * 用 Tailwind utility 蓋不過來，因為 utility 全在 @layer utilities 裡。
+ *
+ * 這裡只管 Miso 自己畫的外框（搜尋框、answer box、排序、結果資訊）。列表列的樣式
+ * 由我們自己的 product template 用 Tailwind class 產生，不在這裡。
+ */
+.mm-miso-search {
+  /* input 框 */
+  .miso-hybrid-search-combo__question {
+    padding: 12px 20px !important;
+    background: #EAEAEA;
+    display: block;
+    @media (min-width: 768px) {
+      padding: 20px 0 !important; 
+      background: rgba(0, 0, 0, 0);
+    }
+    .miso-hybrid-search-combo__query-container {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      @media (min-width: 768px) {
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      @media (min-width: 1200px) {
+        max-width: 1024px;
+      }
+    }
+    miso-query {
+      border: 0;
+    }
+    .miso-search-box {
+      border: 0;
+    }
+    .miso-search-box__input-group {
+      border-radius: 7px;
+      border: 1px solid #DDD;
+      background: #F5F5F5;
+      box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
+      align-items: center;
+      @media (min-width: 768px) {
+        border-radius: 4px;
+        border: 0.5px solid #DDD;
+        background: #F5F5F5;
+        box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
+        
+      }
+      &::before {
+        content: '';
+        display: block;
+        width: 32px;
+        height: 32px;
+        background: url('/images-next/search-logo.svg');
+        margin-left: 12px;
+      }
+
+      .miso-search-box__input {
+        background: rgba(0, 0, 0, 0);
+        color: #9C9C9C;
+        font-family: "PingFang TC";
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 200%;
+      }
+      .miso-search-box__button {
+        background: rgba(0, 0, 0, 0);
+        display: flex;
+        outline: none !important;
+        &::before {
+          content: '';
+          width: 30px;
+          height: 27px;
+          background: url('/images-next/search-button.svg');
+        }
+        svg {
+          display: none;
+        }
+      }
+    }
+  }
+
+  /* ask 區塊 */
+  .miso-hybrid-search-combo__answer {
+    padding: 0 22px !important;
+    border: 0;
+    @media (min-width: 768px) {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 !important;
+    }
+    @media (min-width: 1200px) {
+      max-width: 1024px;
+    }
+
+    .miso-hybrid-search-combo__answer-box {
+      border: 0;
+      box-shadow: none;
+
+      .miso-hybrid-search-combo__answer-box-inner {
+        max-height: inherit;
+        border: 0;
+      }
+
+      .miso-hybrid-search-combo__phrase {
+        font-size: 0;
+        margin-bottom: 20px;
+        miso-question {
+          display: block;
+          color: #1D9FB8;
+          text-align: center;
+          font-feature-settings: 'liga' off, 'clig' off;
+          font-family: "PingFang TC";
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 600;
+          line-height: 115%; /* 32.2px */
+          letter-spacing: 0.5px;
+          padding-bottom: 32px;
+          border-bottom: 1px solid black;
+
+          &::before {
+            content: '你想找的是';
+            color: #1D9FB8;
+            text-align: center;
+            font-family: "PingFang TC";
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 150%;
+            display: block;
+            margin-bottom: 27px;
+          }
+
+
+          @media (min-width: 768px) {
+            display: flex;
+            border: 0;
+            font-size: 28px;
+            padding-bottom: 0;
+            align-items: center;
+            &:before {
+              margin-right: 28px;
+            }
+            &:after {
+              content: '';
+              flex: 1;
+              margin-left: 56px;
+              border-top: 1px solid black;
+              transform: translate(0, 50%)
+            }
+          }
+          @media (min-width: 1200px) {
+            &:before {
+              margin-right: 36px;
+            }
+            &:after {
+              margin-left: 60px;
+            }
+          }
+        }
+      }
+
+      .miso-typewriter, .miso-typewriter * {
+        color: #000 !important;
+        font-family: "PingFang TC";
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 200%; 
+        a::before {
+          color: #1D9FB8;
+        }
+      }
+
+      .miso-feedback {
+        display: none;
+      }
+    }
+
+    /* source 文章 */
+    .miso-hybrid-search-combo__sources-container {
+      padding: 24px;
+      margin-top: 20px;
+      max-height: 200px;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+      position: relative;
+      z-index: 10;
+      @media (min-width: 768px) {
+        margin-top: 24px;
+      }
+
+      h3 {
+        display: none;
+      }
+
+      .miso-list__list {
+        display: flex;
+        flex-direction: row;
+        overflow: scroll;
+        gap: 16px;
+        flex-wrap: nowrap;
+        @media (min-width: 768px) {
+          gap: 48px;
+        }
+
+        .miso-list__item {
+          border: 0;
+          display: flex;
+          &:not(:first-child) {
+            &:before {
+              content: '';
+              width: 1px;
+              height: 100%;
+              display: block;
+              background: #000;
+              transform: translate(-8px, 0);
+              @media (min-width: 768px) {
+                transform: translate(-24px, 0);
+              }
+            }
+          }
+
+          mark {
+            display: none;
+          }
+
+          .miso-list__item-body {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 8px !important;
+
+            @media (min-width: 768px) {
+              gap: 10px !important;
+            }
+
+            .miso-list__item-cover-image-container {
+              width: 76px;
+              height: 52px !important;
+              margin-top: 32px;
+            }
+
+            .miso-list__item-index {
+              color: #1D9FB8;
+            }
+
+            .miso-list__item-title {
+              height: auto;
+            }
+
+            .miso-list__item-info-container {
+              flex-direction: column-reverse;
+              flex: 1;
+              width: 132px;
+              margin-right: 4px;
+              justify-content: flex-end;
+              @media (min-width: 768px) {
+                margin-right: 2px;
+              }
+
+              .miso-list__item-date {
+                color: #61B8C6;
+                font-family: "PingFang TC";
+                font-size: 14px;
+                font-weight: 400;
+                line-height: 14px;
+                margin-bottom: 8px;
+              }
+
+              .miso-list__item-title {
+                color: #000;
+                font-feature-settings: 'liga' off, 'clig' off;
+                font-family: "PingFang TC";
+                font-size: 16px;
+                -webkit-line-clamp: 5;
+                padding: 0;
+                margin: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .miso-hybrid-search-combo__answer-box-toggle-container {
+      display: none;
+    }
+  }
+
+  /* result 上方 */
+  .miso-hybrid-search-combo__search-results-info {
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: center !important;
+    flex-direction: column;
+    .miso-hybrid-search-combo__keywords-phrase {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      margin-bottom: 16px;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      @media (min-width: 1200px) {
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      miso-keywords {
+        display: block;
+        color: black;
+        font-family: "PingFang TC";
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%; /* 27px */
+        @media (min-width: 1200px) {
+          font-size: 24px;
+        }
+      }
+      &::before {
+        content: '關於';
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        margin-right: .5rem;
+      }
+      &::after {
+        content: '的搜尋結果';
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 150%;
+        margin-left: .5rem;
+      }
+    }
+    .miso-hybrid-search-combo__total-phrase {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      @media (min-width: 1200px) {
+        align-items: start;
+        width: 100%;
+      }
+      miso-total {
+        color: #1D9FB8;
+        font-family: "PingFang TC";
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 14px; /* 87.5% */
+        @media (min-width: 1200px) {
+          font-size: 16px;
+        }
+        &::after {
+          content: " 篇";
+        }
+        &::before {
+          content: "共有 ";
+        }
+      }
+
+    }
+  }
+
+  .miso-hybrid-search-combo__search-results-filters__right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (min-width: 1200px) {
+      justify-content: flex-end;
+      margin-top: -40px;
+    }
+    .miso-hybrid-search-combo__search-results-filters__sort-header {
+      font-size: 0; /* 把原字整體隱藏掉 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      &::before {
+        content: '排序依';
+        display: block;
+        color: #000;
+        font-family: "PingFang TC";
+        font-size: 14px;
+        line-height: 14px; /* 100% */
+      }
+    }
+    miso-sort {
+      display: flex;
+      z-index: 100;
+      .miso-select {
+        border: 0;
+        width: fit-content;
+
+        .miso-select__button {
+          border: 0;
+          color: #1D9FB8;
+          outline: 0 !important;
+        }
+
+        &.open {
+          .miso-select__button:after {
+            transform: rotate(180deg);
+          }
+          .miso-select__options {
+            display: flex;
+            width: 88px;
+            padding: 12px 9px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            border: 1px solid #9D9D9D;
+            background: #FFF;
+            border-radius: 0;
+            .miso-select__option {
+              transition: 0.5s;
+              &::before {
+                content: none;
+              }
+              &.selected {
+                color: #1D9FB8;
+              }
+              &:hover {
+                color: #1D9FB8;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+
+  /* result 區域 */
+  .miso-hybrid-search-combo__search-results {
+    padding: 0 !important;
+    @media (min-width: 768px) {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    @media (min-width: 1200px) {
+      max-width: 1024px;
+    }
+  }
+  .miso-hybrid-search-combo__search-results-container {
+    padding: 0 !important;
+
+  }
+}
