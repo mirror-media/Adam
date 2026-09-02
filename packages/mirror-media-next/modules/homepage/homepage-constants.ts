@@ -1,4 +1,3 @@
-const HOMEPAGE_DEFAULT_IMAGE_URL = '/images-next/default-og-img.png'
 // Must match Tailwind's xl breakpoint for homepage layout behavior.
 const HOMEPAGE_DESKTOP_MEDIA_QUERY = '(min-width: 1280px)'
 const HOMEPAGE_CATEGORY_ARTICLE_COUNT = 3
@@ -12,7 +11,6 @@ const HOMEPAGE_PROMO_VIDEO_COUNT = 10
 
 export {
   HOMEPAGE_CATEGORY_ARTICLE_COUNT,
-  HOMEPAGE_DEFAULT_IMAGE_URL,
   HOMEPAGE_DESKTOP_MEDIA_QUERY,
   HOMEPAGE_EDITOR_CHOICE_COUNT,
   HOMEPAGE_FORUM_NEWS_COUNT,

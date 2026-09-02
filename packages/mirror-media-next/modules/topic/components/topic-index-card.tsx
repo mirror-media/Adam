@@ -2,6 +2,7 @@ import NextLink from 'next/link'
 import Image from '@readr-media/react-image'
 
 import { Typography } from '@/components/ui/typography'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { getTopicIndexCardImages } from '@/modules/topic/topic-data'
 import type { TopicIndexItem } from '@/modules/topic/topic-types'
 import { transformTimeData } from '@/utils'
@@ -26,7 +27,7 @@ function TopicIndexCard({ item }: TopicIndexCardProps) {
       <div className="relative h-46.5 max-h-46.5 w-full overflow-hidden">
         <Image
           alt={item.name}
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           images={images}
           loadingImage="/images-next/loading.gif"
           objectFit="cover"

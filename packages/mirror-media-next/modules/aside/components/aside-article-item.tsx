@@ -2,6 +2,7 @@ import Image from '@readr-media/react-image'
 
 import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { getArticleHref, transformTimeDataIntoDotFormat } from '@/utils'
 
 import type { ArticleStyle, AsideArticle } from '../aside-types'
@@ -37,7 +38,7 @@ export function AsideArticleItem({ article, from }: AsideArticleItemProps) {
           imagesWebP={article.heroImage?.resizedWebp}
           alt={article.title}
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           rwd={{ mobile: '400px', tablet: '400px', desktop: '400px' }}
         />
       </div>

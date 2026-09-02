@@ -4,6 +4,7 @@ import type { ListingPost } from '@/apollo/fragments/post'
 import { cn } from '@/components/cn'
 import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { transformTimeDataIntoDotFormat } from '@/utils'
 
 type LeadArticleProps = {
@@ -43,7 +44,7 @@ export function LeadArticle({
           imagesWebP={item.heroImage?.resizedWebp}
           alt={item.title}
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           rwd={{ mobile: '400px', tablet: '400px', desktop: '400px' }}
           priority={priority}
         />

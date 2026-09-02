@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
+
 const HeroWrapper = styled.div`
   margin-top: 20px;
   width: 100%;
@@ -95,7 +97,7 @@ export default function AmpHero({
               src={
                 heroImage?.resized?.original
                   ? heroImage?.resized?.original
-                  : '/images-next/default-og-img.png'
+                  : DEFAULT_OG_IMAGE_URL
               }
               alt={imageAlt}
               layout="fill"
@@ -108,7 +110,7 @@ export default function AmpHero({
       <HeroWrapper>
         {/** @ts-ignore */}
         <amp-img
-          src="/images-next/default-og-img.png"
+          src={DEFAULT_OG_IMAGE_URL}
           alt={imageAlt}
           layout="fill"
         ></amp-img>

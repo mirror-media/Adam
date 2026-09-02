@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
+
 const HeroWrapper = styled.div`
   margin-top: 20px;
   width: 100%;
@@ -23,7 +25,7 @@ const HeroWrapper = styled.div`
  * @returns {import('react').JSX.Element}
  */
 export default function AmpHero({ thumb, title = '' }) {
-  const imageSrc = thumb || '/images-next/default-og-img.png'
+  const imageSrc = thumb || DEFAULT_OG_IMAGE_URL
   const imageAlt = title
 
   return (

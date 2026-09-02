@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 import type { FetchPostsQuery } from '@/apollo/__generated__/content/graphql'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { getArticleHref } from '@/utils'
 import { extractYouTubeId } from '@/utils/youtube'
 import { logZodMonitorFailure, monitorZodSafeParse } from '@/utils/zod-monitor'
 
-import { HOMEPAGE_DEFAULT_IMAGE_URL } from './homepage-constants'
 import type { HomepageArticle, HomepageVideo } from './homepage-types'
 
 const namedSlugSchema = z
@@ -122,7 +122,7 @@ function getPartnerSlug(partner: RawHomepageArticle['partner']): string {
 
 function getImageUrl(heroImage: RawHomepageArticle['heroImage']): string {
   if (typeof heroImage === 'string') {
-    return heroImage.trim() || HOMEPAGE_DEFAULT_IMAGE_URL
+    return heroImage.trim() || DEFAULT_OG_IMAGE_URL
   }
 
   return (
@@ -132,7 +132,7 @@ function getImageUrl(heroImage: RawHomepageArticle['heroImage']): string {
     heroImage?.resized?.w800?.trim() ||
     heroImage?.resized?.w480?.trim() ||
     heroImage?.resized?.original?.trim() ||
-    HOMEPAGE_DEFAULT_IMAGE_URL
+    DEFAULT_OG_IMAGE_URL
   )
 }
 
@@ -274,7 +274,7 @@ function parseForumHeadlines(input: unknown): HomepageArticle[] | null {
       href: getArticleHref(itemResult.data.slug, 'article', {
         slug: 'dailycolumn',
       }),
-      imageUrl: HOMEPAGE_DEFAULT_IMAGE_URL,
+      imageUrl: DEFAULT_OG_IMAGE_URL,
       key: `external:daily-column:${itemResult.data.slug}`,
       publishedDate: itemResult.data.publishedDate?.trim() || '',
       sectionName: '論壇',
@@ -331,7 +331,7 @@ function normalizeGraphqlPosts(posts: GraphqlPost[] | null): HomepageArticle[] {
       post.heroImage?.resized?.w800 ||
       post.heroImage?.resized?.w480 ||
       post.heroImage?.resized?.original ||
-      HOMEPAGE_DEFAULT_IMAGE_URL
+      DEFAULT_OG_IMAGE_URL
 
     return [
       {

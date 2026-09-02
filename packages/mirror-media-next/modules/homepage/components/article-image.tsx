@@ -2,8 +2,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 
 import { cn } from '@/components/cn'
-
-import { HOMEPAGE_DEFAULT_IMAGE_URL } from '../homepage-constants'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 
 type ArticleImageProps = {
   alt: string
@@ -20,10 +19,10 @@ function ArticleImage({
   sizes,
   src,
 }: ArticleImageProps) {
-  const resolvedSrc = src || HOMEPAGE_DEFAULT_IMAGE_URL
+  const resolvedSrc = src || DEFAULT_OG_IMAGE_URL
   const [failedSrc, setFailedSrc] = useState<string | null>(null)
   const imageSrc =
-    failedSrc === resolvedSrc ? HOMEPAGE_DEFAULT_IMAGE_URL : resolvedSrc
+    failedSrc === resolvedSrc ? DEFAULT_OG_IMAGE_URL : resolvedSrc
 
   return (
     <Image

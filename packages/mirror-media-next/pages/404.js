@@ -9,6 +9,7 @@ import Layout from '../components/shared/layout'
 import { LegacyHeaderAdapter } from '../components/shell/legacy-layout-adapter'
 import { URL_STATIC_404_POPULAR_NEWS } from '../config/index.mjs'
 import { API_TIMEOUT } from '../config/index.mjs'
+import { DEFAULT_OG_IMAGE_URL } from '../constants'
 import { fetchHeaderDataInDefaultPageLayout } from '../utils/api'
 /** @typedef {import('../apollo/fragments/post').AsideListingPost & {brief: import('../apollo/fragments/post').Post['brief']} } ArticleDataWithBrief */
 /**
@@ -247,7 +248,7 @@ export default function Custom404() {
                 <HeroImgWrapper>
                   <CustomImage
                     loadingImage="/images-next/loading.gif"
-                    defaultImage="/images-next/default-og-img.png"
+                    defaultImage={DEFAULT_OG_IMAGE_URL}
                     images={post.heroImage?.resized}
                     imagesWebP={post.heroImage?.resizedWebp}
                     rwd={{

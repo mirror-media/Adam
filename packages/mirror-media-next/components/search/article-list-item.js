@@ -2,6 +2,7 @@ import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
 // import gtag from '../utils/programmable-search/gtag'
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import { transformTimeData } from '../../utils'
 
 const ItemWrapper = styled.a`
@@ -161,7 +162,7 @@ export default function ArticleListItem({ item, index }) {
           images={{ original: renderedItem.image }}
           alt={renderedItem.title}
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
         />
         {renderedItem.sectionSlug && (
           <ItemSection sectionSlug={renderedItem.sectionSlug}>

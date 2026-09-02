@@ -4,6 +4,7 @@ import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 
 import { Blocks, renderTextWithLinks } from './blocks'
@@ -265,7 +266,7 @@ export default function PostLayout(props: PostLayoutProps) {
                       /\.(jpg|png)$/i,
                       '.webP'
                     )
-                  : '/images-next/default-og-img.png'
+                  : DEFAULT_OG_IMAGE_URL
               }
               sizes="(max-width: 768px) 50vw, 30vw"
               srcSet={[480, 800]}
@@ -274,9 +275,9 @@ export default function PostLayout(props: PostLayoutProps) {
               fallback={
                 typeof heroImage?.resized?.original === 'string'
                   ? heroImage?.resized?.original
-                  : '/images-next/default-og-img.png'
+                  : DEFAULT_OG_IMAGE_URL
               }
-              errorImage="/images-next/default-og-img.png"
+              errorImage={DEFAULT_OG_IMAGE_URL}
             />
           </picture>
           {heroCaption && (

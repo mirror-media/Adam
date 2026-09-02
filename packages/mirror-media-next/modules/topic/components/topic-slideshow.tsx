@@ -10,6 +10,7 @@ import type { Swiper as SwiperClass } from 'swiper'
 import { Autoplay, Navigation } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { toTopicImageSet } from '@/modules/topic/topic-data'
 import type { TopicSlideshowImage } from '@/modules/topic/topic-types'
 
@@ -73,7 +74,7 @@ function TopicSlideshow({ images }: TopicSlideshowProps) {
               >
                 <CustomImage
                   alt={item.name ?? ''}
-                  defaultImage="/images-next/default-og-img.png"
+                  defaultImage={DEFAULT_OG_IMAGE_URL}
                   images={toTopicImageSet(item.resized)}
                   imagesWebP={toTopicImageSet(item.resizedWebp)}
                   loadingImage="/images-next/loading@4x.gif"
@@ -89,7 +90,7 @@ function TopicSlideshow({ images }: TopicSlideshowProps) {
             ) : (
               <CustomImage
                 alt={item.name ?? ''}
-                defaultImage="/images-next/default-og-img.png"
+                defaultImage={DEFAULT_OG_IMAGE_URL}
                 images={toTopicImageSet(item.resized)}
                 imagesWebP={toTopicImageSet(item.resizedWebp)}
                 loadingImage="/images-next/loading@4x.gif"
