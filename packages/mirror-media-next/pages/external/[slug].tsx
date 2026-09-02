@@ -47,6 +47,7 @@ const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
 })
 
 type ExternalPageProps = {
+  query: Record<string, string | string[] | undefined> | null
   external: ExternalPost
   headerData: ExternalHeaderData
   jsonLdData: object[]
@@ -54,6 +55,7 @@ type ExternalPageProps = {
 }
 
 export default function External({
+  query,
   external,
   headerData,
   jsonLdData,
@@ -161,6 +163,7 @@ export default function External({
       </Head>
       <Layout
         head={{
+          robotsMetaContent: query?.from ? 'noindex' : undefined,
           title: `${external?.title}`,
           imageUrl: external?.thumb ?? undefined,
           pageType: 'external',
@@ -253,7 +256,7 @@ export default function External({
 export const getServerSideProps: GetServerSideProps<
   ExternalPageProps,
   { slug: string }
-> = async ({ params, req, res }) => {
+> = async ({ params, query, req, res }) => {
   if (ENV === 'prod') {
     setPageCache(
       res,
@@ -289,6 +292,7 @@ export const getServerSideProps: GetServerSideProps<
 
   return {
     props: {
+      query,
       external,
       headerData: { sectionsData, topicsData, flashNewsData },
       jsonLdData,
