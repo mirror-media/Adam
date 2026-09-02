@@ -32,13 +32,22 @@ const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
 
 const RENDER_PAGE_SIZE = 12
 
-/** 由最新前三篇文章標題組成 description，以 [、] 區隔 */
+const DESCRIPTION_MAX_LENGTH = 110
+
+/**
+ * 由最新前三篇文章標題組成 description，以 [、] 區隔。超過 110 字元就截斷並補上刪節
+ * 號，所以最長 113 字元。
+ */
 function getTagDescriptionFromLatestPosts(posts: ArticleListItemData[]) {
-  return posts
+  const description = posts
     .slice(0, 3)
     .map((post) => post.title.trim())
     .filter(Boolean)
     .join('、')
+
+  return description.length <= DESCRIPTION_MAX_LENGTH
+    ? description
+    : `${description.slice(0, DESCRIPTION_MAX_LENGTH)}...`
 }
 
 type TagPageProps = {
@@ -57,14 +66,15 @@ export default function TagPage({
 }: TagPageProps) {
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
 
-  const metaDescription = getTagDescriptionFromLatestPosts(posts)
+  const latestTitles = getTagDescriptionFromLatestPosts(posts)
+  const metaDescription = `搜尋${tag.name}共找到${postsCount}篇新聞－鏡週刊 Mirror Media。最新發佈${tag.name}：${latestTitles}`
 
   return (
     <>
       <CustomHead
         title={`${tag.name}｜關鍵字`}
-        description={metaDescription || undefined}
-        ogDescription={metaDescription || undefined}
+        description={metaDescription}
+        ogDescription={metaDescription}
         robotsMetaContent={
           postsCount < 5 ? 'noindex' : 'index, max-image-preview:large'
         }

@@ -96,7 +96,7 @@ export default function CategoryPage({
 
   return (
     <>
-      <CustomHead title={`${category.name}分類報導`} />
+      <CustomHead title={`${category.name}`} />
       <PageShell
         headerData={{ ...headerData, activeNavigationSlug: sectionSlug }}
       >
