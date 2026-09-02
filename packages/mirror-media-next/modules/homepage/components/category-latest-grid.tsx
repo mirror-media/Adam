@@ -7,10 +7,7 @@ import { Typography } from '@/components/ui/typography'
 import type { HomepageCategory } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
-import {
-  homepageCardHoverClass,
-  homepageCardLinkFocusClass,
-} from './homepage-card-styles'
+import { homepageCardLinkFocusClass } from './homepage-card-styles'
 
 type CategoryLatestGridProps = {
   categories: HomepageCategory[]
@@ -31,10 +28,7 @@ function CategoryLatestGrid({ categories }: CategoryLatestGridProps) {
 
           return (
             <article
-              className={cn(
-                'flex min-h-[340px] flex-col',
-                homepageCardHoverClass
-              )}
+              className="flex min-h-[340px] flex-col"
               key={category.slug}
             >
               <Typography
