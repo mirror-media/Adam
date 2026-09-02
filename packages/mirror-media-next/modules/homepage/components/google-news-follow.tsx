@@ -15,7 +15,9 @@ function GoogleNewsFollow({ className }: GoogleNewsFollowProps) {
     <Link
       aria-label="將鏡週刊設為 Google 搜尋的偏好來源"
       className={cn(
-        'block w-[300px] shrink-0 rounded-mm-xs hover:no-underline',
+        // Desktop runs the card across the whole sidebar column; the narrower
+        // sizes keep the artwork at its drawn width.
+        'block w-[300px] shrink-0 rounded-mm-xs hover:no-underline xl:w-full',
         className
       )}
       href={GOOGLE_PREFERRED_SOURCE_URL}
