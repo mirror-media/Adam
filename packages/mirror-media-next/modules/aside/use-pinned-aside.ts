@@ -8,10 +8,7 @@ import useWindowDimensions from '@/hooks/use-window-dimensions'
  *
  * 用 `position: sticky` 搭配算出來的 `top`，值是「視窗高度減側邊欄高度再減底部留白」。
  * 側邊欄比視窗高的時候這是負值——負的 `top` 允許元素上緣超出畫面上方那麼多，效果等同
- * 於下緣貼齊視窗底部，但不必依賴 containing block 的下緣。
- *
- * sticky 的移動行程來自外層的 wrapper：它是 flex item，會被 `align-items: stretch`
- * 拉成整列高度，側邊欄在它裡面才有空間可以黏。
+ * 於下緣貼齊視窗底部。
  *
  * `lg` 以下側邊欄不顯示，這裡回傳 `undefined`——沒有 `top` 的 sticky 不會作用，而且
  * 連 `ResizeObserver` 都不會建立。

@@ -13,7 +13,7 @@ import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { SITE_DESCRIPTION } from '@/constants'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { AsideColumn } from '@/modules/aside/components/aside-column'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import PartnerArticles from '@/modules/externals/components/partner-articles'
 import { toExternalListItemData } from '@/modules/externals/externals-data'
 import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
@@ -114,7 +114,7 @@ export default function ExternalPartnerPage({
               />
             </div>
 
-            <AsideColumn pageKey={gptPageKey} sectionSlug={section.slug} />
+            <ListAsideColumn pageKey={gptPageKey} sectionSlug={section.slug} />
           </div>
 
           {shouldShowAd && (

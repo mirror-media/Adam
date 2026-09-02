@@ -10,7 +10,7 @@ import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { SITE_DESCRIPTION } from '@/constants'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { AsideColumn } from '@/modules/aside/components/aside-column'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import AuthorArticles from '@/modules/author/components/author-articles'
 import {
   type ArticleListItemSource,
@@ -89,7 +89,7 @@ export default function AuthorPage({
               />
             </div>
 
-            <AsideColumn pageKey="other" sectionSlug="" />
+            <ListAsideColumn pageKey="other" sectionSlug="" />
           </div>
 
           {shouldShowAd && (

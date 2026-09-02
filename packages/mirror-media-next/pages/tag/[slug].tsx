@@ -9,7 +9,7 @@ import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { AsideColumn } from '@/modules/aside/components/aside-column'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import {
   type ArticleListItemSource,
   toArticleListItemData,
@@ -102,7 +102,7 @@ export default function TagPage({
               />
             </div>
 
-            <AsideColumn pageKey="other" sectionSlug="" />
+            <ListAsideColumn pageKey="other" sectionSlug="" />
           </div>
 
           {shouldShowAd && (

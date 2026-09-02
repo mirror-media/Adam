@@ -5,7 +5,7 @@ import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { ENV } from '@/config/index.mjs'
 import { SITE_DESCRIPTION } from '@/constants'
-import { AsideColumn } from '@/modules/aside/components/aside-column'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import { getLogTraceObject } from '@/utils'
 import type { ShellHeaderData } from '@/utils/api'
 import { fetchShellHeaderData } from '@/utils/api'
@@ -44,7 +44,7 @@ export default function SearchPage({
               <MisoSearch searchTerms={searchTerms} />
             </div>
 
-            <AsideColumn pageKey="other" sectionSlug="" />
+            <ListAsideColumn pageKey="other" sectionSlug="" />
           </div>
         </main>
       </PageShell>

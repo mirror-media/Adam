@@ -10,7 +10,7 @@ import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV, SITE_URL } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { AsideColumn } from '@/modules/aside/components/aside-column'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import {
   fetchNewsCategoryInfo,
   fetchNewsCategoryPostsJSON,
@@ -138,7 +138,7 @@ export default function CategoryPage({
               />
             </div>
 
-            <AsideColumn pageKey={GptPageKey} sectionSlug={sectionSlug} />
+            <ListAsideColumn pageKey={GptPageKey} sectionSlug={sectionSlug} />
           </div>
 
           {shouldShowAd && isNotWineCategory ? (

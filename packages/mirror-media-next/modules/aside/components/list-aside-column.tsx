@@ -14,7 +14,7 @@ const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
 
-type AsideColumnProps = {
+type ListAsideColumnProps = {
   /** GPT 的 pageKey。沒有所屬 section 的頁面用 `'other'`。 */
   pageKey: string
   /** 空字串時，最新文章會 fallback 到新聞列表。 */
@@ -27,7 +27,10 @@ type AsideColumnProps = {
  * `lg` 以下整塊不顯示，所以手機不會打最新文章與熱門文章那兩支 API。外層那個 div 不是
  * 多餘的：它是 flex item、會被拉成整列高度，sticky 的移動行程來自它。
  */
-export function AsideColumn({ pageKey, sectionSlug }: AsideColumnProps) {
+export function ListAsideColumn({
+  pageKey,
+  sectionSlug,
+}: ListAsideColumnProps) {
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
   const { asideRef, top } = usePinnedAside()
 
