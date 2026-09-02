@@ -16,6 +16,7 @@ import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import PartnerArticles from '@/modules/externals/components/partner-articles'
 import { toExternalListItemData } from '@/modules/externals/externals-data'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
 import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import { getLogTraceObject } from '@/utils'
 import { getPageKeyByPartnerShowOnIndex } from '@/utils/ad'
@@ -77,7 +78,7 @@ export default function ExternalPartnerPage({
         description={`${partner.name}共發表${externalsCount}篇文章，${SITE_DESCRIPTION}${partner.name}最新發佈相關新聞：${externals[0]?.title}`}
       />
       <PageShell headerData={headerData}>
-        <main className="mx-auto w-full max-w-7xl px-10">
+        <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -126,7 +127,7 @@ export default function ExternalPartnerPage({
             />
           )}
           {shouldShowAd && <FullScreenAds />}
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )

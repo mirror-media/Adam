@@ -12,6 +12,7 @@ import { SITE_DESCRIPTION } from '@/constants'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import AuthorArticles from '@/modules/author/components/author-articles'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
 import {
   type ArticleListItemSource,
   toArticleListItemData,
@@ -57,7 +58,7 @@ export default function AuthorPage({
         robotsMetaContent={posts.length <= 3 ? 'noindex, nofollow' : undefined}
       />
       <PageShell headerData={headerData}>
-        <main className="mx-auto w-full max-w-7xl px-10">
+        <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -101,7 +102,7 @@ export default function AuthorPage({
             />
           )}
           {shouldShowAd && <FullScreenAds />}
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )

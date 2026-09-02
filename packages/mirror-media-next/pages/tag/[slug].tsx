@@ -10,6 +10,7 @@ import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
 import {
   type ArticleListItemSource,
   toArticleListItemData,
@@ -70,7 +71,7 @@ export default function TagPage({
         skipCanonical={postsCount < 5}
       />
       <PageShell headerData={headerData}>
-        <main className="mx-auto w-full max-w-7xl px-10">
+        <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -114,7 +115,7 @@ export default function TagPage({
             />
           )}
           {shouldShowAd && <FullScreenAds />}
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )

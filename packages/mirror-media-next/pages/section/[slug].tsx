@@ -10,6 +10,7 @@ import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
 import {
   type ArticleListItemSource,
   toArticleListItemData,
@@ -59,7 +60,7 @@ export default function SectionPage({
       <PageShell
         headerData={{ ...headerData, activeNavigationSlug: section.slug }}
       >
-        <main className="mx-auto w-full max-w-7xl px-10">
+        <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -106,7 +107,7 @@ export default function SectionPage({
             />
           )}
           {shouldShowAd && <FullScreenAds />}
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )

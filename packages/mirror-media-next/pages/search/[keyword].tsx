@@ -6,6 +6,7 @@ import { PageShell } from '@/components/shell/page-shell'
 import { ENV } from '@/config/index.mjs'
 import { SITE_DESCRIPTION } from '@/constants'
 import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
 import { getLogTraceObject } from '@/utils'
 import type { ShellHeaderData } from '@/utils/api'
 import { fetchShellHeaderData } from '@/utils/api'
@@ -38,7 +39,7 @@ export default function SearchPage({
         }
       />
       <PageShell headerData={headerData}>
-        <main className="mx-auto w-full max-w-7xl px-10 pt-20">
+        <ListPageMain className="pt-20">
           <div className="flex md:gap-10 xl:gap-6.5">
             <div className="mx-auto w-[calc(100%-464px)] max-w-187.5 flex-1 lg:mx-0">
               <MisoSearch searchTerms={searchTerms} />
@@ -46,7 +47,7 @@ export default function SearchPage({
 
             <ListAsideColumn pageKey="other" sectionSlug="" />
           </div>
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )

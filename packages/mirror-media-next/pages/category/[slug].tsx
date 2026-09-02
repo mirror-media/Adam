@@ -18,6 +18,7 @@ import {
 } from '@/modules/category/category-data'
 import type { CategorySummary } from '@/modules/category/category-types'
 import CategoryArticles from '@/modules/category/components/category-articles'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
 import {
   type ArticleListItemSource,
   toArticleListItemData,
@@ -103,7 +104,7 @@ export default function CategoryPage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <main className="mx-auto w-full max-w-7xl px-10 pb-10 md:pb-mm-6xl">
+        <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -151,7 +152,7 @@ export default function CategoryPage({
           ) : null}
           <WineWarning categories={[category]} />
           {isNotWineCategory && <FullScreenAds />}
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )
