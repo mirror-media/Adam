@@ -5,59 +5,41 @@ import { ArticleList } from '@/modules/list-article/components/article-list'
 import { toArticleListItemData } from '@/modules/list-article/list-article-data'
 import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import LoadingPage from '@/public/images-next/loading_page.gif'
-import {
-  fetchPostsByCategorySlug,
-  fetchPremiumPostsByCategorySlug,
-} from '@/utils/api/category'
+import { fetchPostsBySectionSlug } from '@/utils/api/section'
 
-import { fetchNewsCategoryPostsJSON } from '../category-data'
-import type { CategorySummary } from '../category-types'
-
-type CategoryArticlesProps = {
-  category: CategorySummary
+type ColumnListProps = {
+  filterPostIds?: string[]
   from?: string
-  isNewsCategory: boolean
-  isPremium: boolean
+  gqlPostsCount: number
   posts: ArticleListItemData[]
-  postsCount: number
   renderPageSize: number
+  section: { name: string; slug: string }
 }
 
-export default function CategoryArticles({
-  category,
+export default function ColumnList({
+  filterPostIds = [],
   from,
-  isNewsCategory,
-  isPremium,
+  gqlPostsCount,
   posts,
-  postsCount,
   renderPageSize,
-}: CategoryArticlesProps) {
+  section,
+}: ColumnListProps) {
   const fetchPageSize = renderPageSize * 2
-
   async function fetchPostsFromPage(page: number) {
-    if (!category?.slug) {
+    if (!section.slug) {
       return
     }
 
-    const take = fetchPageSize
-    const skip = (page - 1) * take
-
     try {
-      if (isPremium) {
-        const { data } = await fetchPremiumPostsByCategorySlug(
-          category.slug,
-          take,
-          skip
-        )
-        return (data.posts ?? []).map(toArticleListItemData)
-      }
-
-      if (isNewsCategory) {
-        const { items } = await fetchNewsCategoryPostsJSON(page, take)
-        return items
-      }
-
-      const { data } = await fetchPostsByCategorySlug(category.slug, take, skip)
+      const take = fetchPageSize
+      // 第一頁是 JSON 排好的那批，所以 GraphQL 的分頁從第二頁才開始、skip 從 0 起算。
+      const skip = (page - 2) * take
+      const { data } = await fetchPostsBySectionSlug(
+        section.slug,
+        take,
+        skip,
+        filterPostIds.length > 0 ? { id: { notIn: filterPostIds } } : {}
+      )
       return (data.posts ?? []).map(toArticleListItemData)
     } catch (error) {
       // [to-do]: use beacon api to log error on gcs
@@ -79,10 +61,10 @@ export default function CategoryArticles({
     <InfiniteScrollList
       initialList={posts}
       renderAmount={renderPageSize}
-      fetchCount={Math.ceil(postsCount / fetchPageSize)}
+      // 多的那一頁是 JSON 那批。
+      fetchCount={Math.ceil(gqlPostsCount / fetchPageSize) + 1}
       fetchListInPage={fetchPostsFromPage}
       loader={loader}
-      key={category.slug}
     >
       {(renderList) => (
         <ArticleList
@@ -91,7 +73,7 @@ export default function CategoryArticles({
           // JSDoc type in untyped JavaScript. Correcting it is a separate
           // change.
           renderList={renderList as ArticleListItemData[]}
-          section={category.sections[0]}
+          section={section}
         />
       )}
     </InfiniteScrollList>

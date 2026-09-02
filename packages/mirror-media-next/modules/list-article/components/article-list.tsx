@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
 import dynamic from 'next/dynamic'
 
-import type { ListingPost } from '@/apollo/fragments/post'
 import { useBreakpoint } from '@/hooks/use-breakpoint'
 import useWindowDimensions from '@/hooks/use-window-dimensions'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
@@ -11,7 +10,10 @@ import {
   needInsertMicroAdAfter,
 } from '@/utils/ad'
 
-import type { ArticleListSection } from '../list-article-types'
+import type {
+  ArticleListItemData,
+  ArticleListSection,
+} from '../list-article-types'
 
 import { ArticleListItem } from './article-list-item'
 import { LeadArticle } from './lead-article'
@@ -27,7 +29,7 @@ const MicroAd = dynamic(
 
 type ArticleListProps = {
   from?: string
-  renderList: ListingPost[]
+  renderList: ArticleListItemData[]
   section?: ArticleListSection
 }
 
@@ -116,7 +118,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
           />
         )}
 
-        <div className="space-y-mm-2xl">
+        <div className="mt-mm-2xl space-y-mm-2xl">
           {renderListWithoutAd.map((item) => (
             <ArticleListItem key={item.id} from={from} item={item} />
           ))}

@@ -13,8 +13,7 @@ const asideArticleSchema: z.ZodType<AsideArticle> = z.object({
   id: z.string().min(1),
   slug: z.string().min(1),
   title: z.string(),
-  // TODO: 這邊是因為 latest json 沒有給 publishDate，所以先設 optional
-  publishedDate: z.string().optional(),
+  publishedDate: z.string(),
   style: z.string().optional(),
   heroImage: z
     .object({

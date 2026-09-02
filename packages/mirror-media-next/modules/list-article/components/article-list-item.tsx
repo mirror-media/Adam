@@ -1,13 +1,14 @@
 import Image from '@readr-media/react-image'
 
-import type { ListingPost } from '@/apollo/fragments/post'
 import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
 import { transformTimeDataIntoDotFormat } from '@/utils'
 
+import type { ArticleListItemData } from '../list-article-types'
+
 type ArticleListItemProps = {
   from?: string
-  item: ListingPost
+  item: ArticleListItemData
   priority?: boolean
 }
 
@@ -71,7 +72,7 @@ export function ArticleListItem({
           variant="body-s"
           className="hidden text-mm-neutral-500 sm:line-clamp-2"
         >
-          {item.brief?.blocks?.[0]?.text}
+          {item.brief !== 'DbNull' && item.brief?.blocks?.[0]?.text}
         </Typography>
       </div>
     </Link>

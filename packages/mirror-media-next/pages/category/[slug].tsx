@@ -1,23 +1,16 @@
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 
-import type { ListingPost } from '@/apollo/fragments/post'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
-import {
-  GPT_Placeholder,
-  GPT_Placeholder_Aside,
-} from '@/components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
 import CustomHead from '@/components/shared/custom-head'
 import WineWarning from '@/components/shared/wine-warning'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV, SITE_URL } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
-import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
-import { LatestArticles } from '@/modules/aside/components/latest-articles'
-import { PopularArticles } from '@/modules/aside/components/popular-articles'
+import { ListAsideColumn } from '@/modules/aside/components/list-aside-column'
 import {
   fetchNewsCategoryInfo,
   fetchNewsCategoryPostsJSON,
@@ -25,6 +18,12 @@ import {
 } from '@/modules/category/category-data'
 import type { CategorySummary } from '@/modules/category/category-types'
 import CategoryArticles from '@/modules/category/components/category-articles'
+import { ListPageMain } from '@/modules/list-article/components/list-page-main'
+import {
+  type ArticleListItemSource,
+  toArticleListItemData,
+} from '@/modules/list-article/list-article-data'
+import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
 import { getCategoryOfWineSlug, getLogTraceObject } from '@/utils'
 import { getSectionGPTPageKey } from '@/utils/ad'
 import type { ShellHeaderData } from '@/utils/api'
@@ -52,7 +51,7 @@ type CategoryPageProps = {
   headerData: ShellHeaderData
   isNewsCategory: boolean
   isPremium: boolean
-  posts: ListingPost[]
+  posts: ArticleListItemData[]
   postsCount: number
 }
 
@@ -97,7 +96,7 @@ export default function CategoryPage({
 
   return (
     <>
-      <CustomHead title={`${category.name}分類報導`} />
+      <CustomHead title={`${category.name}`} />
       <PageShell
         headerData={{ ...headerData, activeNavigationSlug: sectionSlug }}
       >
@@ -105,7 +104,7 @@ export default function CategoryPage({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <main className="mx-auto w-full max-w-7xl px-10 pb-10 md:pb-mm-6xl">
+        <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
             isLogInProcessFinished={isLogInProcessFinished}
@@ -140,24 +139,7 @@ export default function CategoryPage({
               />
             </div>
 
-            <aside className="hidden w-full max-w-106 shrink-0 flex-col gap-mm-4xl lg:flex">
-              <LatestArticles sectionSlug={sectionSlug} />
-              <GPT_Placeholder_Aside
-                shouldShowAd={shouldShowAd}
-                isLogInProcessFinished={isLogInProcessFinished}
-              >
-                {shouldShowAd && (
-                  <GPTAd
-                    adKey="PC_R2"
-                    className="mx-auto h-auto w-full"
-                    pageKey={GptPageKey}
-                  />
-                )}
-              </GPT_Placeholder_Aside>
-              <PopularArticles />
-              <GoogleNewsFollow />
-              <FbPagePlugin />
-            </aside>
+            <ListAsideColumn pageKey={GptPageKey} sectionSlug={sectionSlug} />
           </div>
 
           {shouldShowAd && isNotWineCategory ? (
@@ -170,7 +152,7 @@ export default function CategoryPage({
           ) : null}
           <WineWarning categories={[category]} />
           {isNotWineCategory && <FullScreenAds />}
-        </main>
+        </ListPageMain>
       </PageShell>
     </>
   )
@@ -245,18 +227,22 @@ export const getServerSideProps = (async ({ query, req, res }) => {
 
   // A premium category is served from GraphQL even when it is the news
   // category, so this branch comes first.
-  async function fetchCategoryPosts(): Promise<[number, ListingPost[]]> {
+  async function fetchCategoryPosts(): Promise<
+    [number, ArticleListItemData[]]
+  > {
     if (isPremium) {
       const [postsResponse] = await Promise.allSettled([
         fetchPremiumPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
       ])
 
-      return processSettledResult(
+      const [postsCount, posts] = processSettledResult(
         postsResponse,
-        getPostsAndPostscountFromGqlData<ListingPost>,
+        getPostsAndPostscountFromGqlData<ArticleListItemSource>,
         `Error occurs while getting premium post data in category page (categorySlug: ${categorySlug})`,
         globalLogFields
       )
+
+      return [postsCount, posts.map(toArticleListItemData)]
     }
 
     if (isNewsCategory) {
@@ -269,12 +255,14 @@ export const getServerSideProps = (async ({ query, req, res }) => {
       fetchPostsByCategorySlug(categorySlug, RENDER_PAGE_SIZE * 2, 0),
     ])
 
-    return processSettledResult(
+    const [postsCount, posts] = processSettledResult(
       postsResponse,
-      getPostsAndPostscountFromGqlData<ListingPost>,
+      getPostsAndPostscountFromGqlData<ArticleListItemSource>,
       `Error occurs while getting post data in category page (categorySlug: ${categorySlug})`,
       globalLogFields
     )
+
+    return [postsCount, posts.map(toArticleListItemData)]
   }
 
   const [headerData, [postsCount, posts]] = await Promise.all([

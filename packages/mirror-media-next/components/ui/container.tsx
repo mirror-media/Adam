@@ -1,12 +1,14 @@
-import type { HTMLAttributes } from 'react'
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react'
 
 import { cn } from '@/components/cn'
 
 type ContainerSize = 'mobile' | 'tablet' | 'desktop' | 'full'
 
-type ContainerProps = HTMLAttributes<HTMLDivElement> & {
+type ContainerProps<TElement extends ElementType> = {
+  as?: TElement
+  children?: ReactNode
   size?: ContainerSize
-}
+} & Omit<ComponentPropsWithoutRef<TElement>, 'as' | 'children'>
 
 const sizeClassByName = {
   mobile: 'max-w-[375px]',
@@ -15,14 +17,17 @@ const sizeClassByName = {
   full: 'max-w-none',
 } satisfies Record<ContainerSize, string>
 
-export function Container({
+export function Container<TElement extends ElementType = 'div'>({
+  as,
   children,
   className,
   size = 'desktop',
   ...props
-}: ContainerProps) {
+}: ContainerProps<TElement>) {
+  const Component = as ?? 'div'
+
   return (
-    <div
+    <Component
       className={cn(
         'mx-auto w-full px-mm-xl md:px-mm-3xl',
         sizeClassByName[size],
@@ -31,7 +36,7 @@ export function Container({
       {...props}
     >
       {children}
-    </div>
+    </Component>
   )
 }
 
