@@ -108,8 +108,8 @@ export function ExternalLayout(props: ExternalLayoutProps) {
   }, [content])
 
   return (
-    <div className="grid max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
-      <article className="relative col-span-full grid grid-cols-subgrid gap-x-0 gap-y-7 xl:col-span-12">
+    <div className="max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
+      <article className="relative grid-cols-subgrid space-y-7 gap-x-0 xl:col-span-12 xl:grid">
         <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start xl:col-span-3">
           <Link href="/">
             <Typography
