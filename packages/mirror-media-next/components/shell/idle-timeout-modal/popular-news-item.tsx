@@ -45,6 +45,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
               href={`/story/${item.slug}?from=idlepage`}
               target="_blank"
               rel="noreferrer"
+              className="GTM-idle-window-click-popular-list"
             >
               <div className="relative space-y-2">
                 <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">
@@ -61,7 +62,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                 </picture>
                 <Typography
                   variant="subtitle"
-                  className="line-clamp-3 max-h-14 min-h-14 text-mm-neutral-800"
+                  className="line-clamp-3 max-h-14 min-h-14 text-base text-mm-neutral-800"
                 >
                   {item.title}
                 </Typography>
@@ -91,7 +92,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
               href={`/story/${item.slug}?from=idlepage`}
               target="_blank"
               rel="noreferrer"
-              className="GTM-idle-window-click-popular-list flex"
+              className="GTM-idle-window-click-popular-list"
             >
               <div className="relative space-y-2">
                 <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">
@@ -109,7 +110,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                 <Typography
                   as="h2"
                   variant="subtitle"
-                  className="line-clamp-3 max-h-14 min-h-14 text-mm-neutral-800"
+                  className="line-clamp-3 max-h-14 min-h-14 text-base text-mm-neutral-800"
                 >
                   {item.title}
                 </Typography>
