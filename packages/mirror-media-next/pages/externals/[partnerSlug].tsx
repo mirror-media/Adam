@@ -6,20 +6,14 @@ import { fetchExternalCounts } from '@/apollo/query/externals'
 import { fetchPartnerBySlug } from '@/apollo/query/partner'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
-import {
-  GPT_Placeholder,
-  GPT_Placeholder_Aside,
-} from '@/components/ads/gpt/gpt-placeholder'
+import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
 import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
 import { SITE_DESCRIPTION } from '@/constants'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
-import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
-import { LatestArticles } from '@/modules/aside/components/latest-articles'
-import { PopularArticles } from '@/modules/aside/components/popular-articles'
+import { AsideColumn } from '@/modules/aside/components/aside-column'
 import PartnerArticles from '@/modules/externals/components/partner-articles'
 import { toExternalListItemData } from '@/modules/externals/externals-data'
 import type { ArticleListItemData } from '@/modules/list-article/list-article-types'
@@ -120,24 +114,7 @@ export default function ExternalPartnerPage({
               />
             </div>
 
-            <aside className="hidden w-full max-w-106 shrink-0 flex-col gap-mm-4xl lg:flex">
-              <LatestArticles sectionSlug={section.slug} />
-              <GPT_Placeholder_Aside
-                shouldShowAd={shouldShowAd}
-                isLogInProcessFinished={isLogInProcessFinished}
-              >
-                {shouldShowAd && (
-                  <GPTAd
-                    adKey="PC_R2"
-                    className="mx-auto h-auto w-full"
-                    pageKey={gptPageKey}
-                  />
-                )}
-              </GPT_Placeholder_Aside>
-              <PopularArticles />
-              <GoogleNewsFollow />
-              <FbPagePlugin />
-            </aside>
+            <AsideColumn pageKey={gptPageKey} sectionSlug={section.slug} />
           </div>
 
           {shouldShowAd && (
