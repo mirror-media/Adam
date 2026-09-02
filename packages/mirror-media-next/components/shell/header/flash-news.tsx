@@ -132,7 +132,7 @@ function FlashNews({ items }: FlashNewsProps) {
         >
           <NextLink
             className={faceClassName}
-            href={`/story/${current.slug}`}
+            href={`/story/${current.slug}?from=redpush`}
             style={{ transform: `translateZ(${HALF}px)` }}
           >
             {truncate(current.title)}
@@ -140,7 +140,7 @@ function FlashNews({ items }: FlashNewsProps) {
           <NextLink
             aria-hidden="true"
             className={faceClassName}
-            href={`/story/${incoming.slug}`}
+            href={`/story/${incoming.slug}?from=redpush`}
             style={{ transform: `rotateX(-90deg) translateZ(${HALF}px)` }}
             tabIndex={-1}
           >

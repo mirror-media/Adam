@@ -2,7 +2,12 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 
 import { SITE_URL } from '../../config/index.mjs'
-import { FB_APP_ID, FB_PAGE_ID, SITE_TITLE } from '../../constants'
+import {
+  DEFAULT_OG_IMAGE_URL,
+  FB_APP_ID,
+  FB_PAGE_ID,
+  SITE_TITLE,
+} from '../../constants'
 
 /**
  * @typedef {Object} OGProperties
@@ -91,17 +96,15 @@ export default function CustomHead({
     image: {
       width: '1200',
       height: '630',
-      type: 'image/png',
-      url: imageUrl ?? `https://${SITE_URL}/images-next/default-og-img.png`,
+      type: 'image/jpeg',
+      url: imageUrl ?? `https://${SITE_URL}${DEFAULT_OG_IMAGE_URL}`,
     },
     ogImage: {
       width: '1200',
       height: '630',
-      type: 'image/png',
+      type: 'image/jpeg',
       url:
-        ogImageUrl ||
-        imageUrl ||
-        `https://${SITE_URL}/images-next/default-og-img.png`,
+        ogImageUrl || imageUrl || `https://${SITE_URL}${DEFAULT_OG_IMAGE_URL}`,
     },
     card: 'summary_large_image',
     fbAppId: FB_APP_ID,

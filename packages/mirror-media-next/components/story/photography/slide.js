@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
+
 const SlideContainer = styled.div`
   width: 100%;
   height: 100vh;
@@ -125,7 +127,7 @@ const Slide = ({ photoData, isTransparent, handleCaptionClick }) => {
           photoData?.data.resized?.w1200 ||
           photoData?.data.resized?.w800 ||
           photoData?.data.resized?.w480 ||
-          '/images-next/default-og-img.png'
+          DEFAULT_OG_IMAGE_URL
         }
         alt={photoData.data.desc}
       />

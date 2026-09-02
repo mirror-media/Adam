@@ -1,5 +1,9 @@
 import { SITE_URL } from '../../../config/index.mjs'
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants/index'
+import {
+  DEFAULT_OG_IMAGE_URL,
+  SITE_DESCRIPTION,
+  SITE_TITLE,
+} from '../../../constants/index'
 import { toTaipeiISOString } from '../../../utils/index'
 import { extractArticleBody } from '../../../utils/story'
 
@@ -47,7 +51,7 @@ export const generateJsonLdsData = (postData, currentPage) => {
   const imageUrl =
     postData.og_image?.resized?.original ||
     postData.heroImage?.resized?.original ||
-    `https://${SITE_URL}/images-next/default-og-img.png`
+    `https://${SITE_URL}${DEFAULT_OG_IMAGE_URL}`
   //first NewArticle
   const jsonLdNewsArticle = {
     '@context': 'https://schema.org',

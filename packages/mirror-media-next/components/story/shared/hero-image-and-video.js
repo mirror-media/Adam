@@ -1,6 +1,7 @@
 import CustomImage from '@readr-media/react-image'
 import styled, { css } from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
@@ -196,7 +197,7 @@ export default function HeroImageAndVideo({
         <CustomImage
           images={heroImage.resized}
           imagesWebP={heroImage.resizedWebp}
-          defaultImage={'/images-next/default-og-img.png'}
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           alt={heroCaption ? heroCaption : title}
           objectFit={'cover'}
           width={'100%'}

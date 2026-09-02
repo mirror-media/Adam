@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { transformTimeDataIntoDotFormat } from '@/utils'
 
 import type { MisoLayout, MisoProduct } from './search-types'
@@ -30,7 +31,7 @@ export function renderProduct(
       <div class="relative mb-mm-l aspect-[330/220] w-full overflow-hidden sm:mb-0 sm:aspect-auto sm:h-[127px] sm:w-[179px] sm:shrink-0">
         <img
           class="h-full w-full object-cover"
-          src="${product.cover_image ?? '/images-next/default-og-img.png'}"
+          src="${product.cover_image ?? DEFAULT_OG_IMAGE_URL}"
           alt="${product.title}"
           loading="lazy"
         />

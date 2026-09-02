@@ -3,6 +3,7 @@ import Image from '@readr-media/react-image'
 
 import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { toTopicImageSet } from '@/modules/topic/topic-data'
 import type { TopicArticle } from '@/modules/topic/topic-types'
 import { transformTimeData } from '@/utils'
@@ -37,7 +38,7 @@ function TopicArticleCard({ item, variant = 'list' }: TopicArticleCardProps) {
       >
         <Image
           alt={item.title}
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           images={toTopicImageSet(item.heroImage?.resized)}
           imagesWebP={toTopicImageSet(item.heroImage?.resizedWebp)}
           loadingImage="/images-next/loading.gif"

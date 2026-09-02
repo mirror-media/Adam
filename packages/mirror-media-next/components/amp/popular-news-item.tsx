@@ -2,6 +2,7 @@ import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
 import type { AsideListingPostWithOrderedSections } from '../../apollo/fragments/post'
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import { color } from '../../styles/theme/color'
 
 const LinkWrapper = styled.a`
@@ -63,7 +64,7 @@ export default function PopularNewsItem({ item }: PopularNewsItemProps) {
         images={item?.heroImage?.resized}
         alt={item.title}
         loadingImage={'/images-next/loading.gif'}
-        defaultImage={'/images-next/default-og-img.png'}
+        defaultImage={DEFAULT_OG_IMAGE_URL}
         width={160}
         height={106}
       />

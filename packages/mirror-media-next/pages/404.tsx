@@ -10,6 +10,7 @@ import { ApplicationShell } from '@/components/shell/application-shell'
 import { SiteHeader } from '@/components/shell/header/site-header'
 import { IdleTimeoutModal } from '@/components/shell/idle-timeout-modal/idle-timeout-modal'
 import { API_TIMEOUT, URL_STATIC_404_POPULAR_NEWS } from '@/config/index.mjs'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import type { ShellHeaderData } from '@/utils/api'
 import { fetchShellHeaderData } from '@/utils/api'
 
@@ -130,7 +131,7 @@ export default function Custom404() {
                   <div className="h-[139px] w-[284px] overflow-hidden rounded-[53px] xl:h-[159px] xl:w-[323px]">
                     <CustomImage
                       loadingImage="/images-next/loading.gif"
-                      defaultImage="/images-next/default-og-img.png"
+                      defaultImage={DEFAULT_OG_IMAGE_URL}
                       images={post.heroImage?.resized}
                       imagesWebP={post.heroImage?.resizedWebp}
                       rwd={{

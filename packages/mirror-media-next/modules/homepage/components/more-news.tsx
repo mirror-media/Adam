@@ -184,7 +184,7 @@ function MoreNews({
                       homepageCardHoverClass,
                       homepageCardLinkFocusClass
                     )}
-                    href={article.href}
+                    href={`${article.href}?from=index_list_news`}
                     ref={
                       article.key === focusArticleKey
                         ? firstAppendedArticleRef
@@ -200,15 +200,15 @@ function MoreNews({
                         src={article.imageUrl}
                       />
                       {article.sectionName && (
-                        <span className="absolute top-0 left-0 rounded-br-mm-xs bg-mm-base-600 px-mm-l py-[3px] font-mm-sans text-mm-subtitle text-mm-second-100">
+                        <span className="absolute top-0 left-0 flex h-6 items-center rounded-br-mm-xs bg-mm-base-600 px-mm-l font-mm-sans text-mm-subtitle text-mm-second-100">
                           {article.sectionName}
                         </span>
                       )}
                     </span>
                     <Typography
                       as="h3"
-                      className="mt-mm-m line-clamp-2 min-h-[2.6em] text-mm-neutral-800 group-hover:underline md:mt-mm-l"
-                      variant="subtitle"
+                      className="mt-mm-m line-clamp-2 min-h-[3em] text-mm-neutral-800 group-hover:underline md:mt-mm-l"
+                      variant="h6"
                     >
                       {article.title}
                     </Typography>

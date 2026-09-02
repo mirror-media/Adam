@@ -1,6 +1,7 @@
 const SITE_TITLE = '鏡週刊 Mirror Media'
 const SITE_DESCRIPTION =
   '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
+const DEFAULT_OG_IMAGE_URL = '/images-next/default-og-img.jpg'
 const MESH_URL = 'https://www.mmesh.news/'
 
 const LINE_LINK = {
@@ -196,6 +197,7 @@ const FB_APP_ID = '175313259598308'
 const FB_PAGE_ID = '1855418728011324'
 
 export {
+  DEFAULT_OG_IMAGE_URL,
   EMAIL_LINK,
   FACEBOOK_LINK,
   FB_APP_ID,

@@ -7,10 +7,7 @@ import { Typography } from '@/components/ui/typography'
 import type { HomepageCategory } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
-import {
-  homepageCardHoverClass,
-  homepageCardLinkFocusClass,
-} from './homepage-card-styles'
+import { homepageCardLinkFocusClass } from './homepage-card-styles'
 
 type CategoryLatestGridProps = {
   categories: HomepageCategory[]
@@ -31,15 +28,12 @@ function CategoryLatestGrid({ categories }: CategoryLatestGridProps) {
 
           return (
             <article
-              className={cn(
-                'flex min-h-[340px] flex-col',
-                homepageCardHoverClass
-              )}
+              className="flex min-h-[340px] flex-col"
               key={category.slug}
             >
               <Typography
                 as="h2"
-                className="w-fit rounded-mm-xs bg-mm-base-600 px-mm-l py-[3px] text-mm-second-100"
+                className="flex h-6 w-fit items-center rounded-mm-xs bg-mm-base-600 px-mm-l text-mm-second-100"
                 variant="subtitle"
               >
                 {category.name}
@@ -52,7 +46,7 @@ function CategoryLatestGrid({ categories }: CategoryLatestGridProps) {
                       'group grid grid-cols-[108px_minmax(0,1fr)] gap-mm-3xl',
                       homepageCardLinkFocusClass
                     )}
-                    href={featuredArticle.href}
+                    href={`${featuredArticle.href}?from=index_cate_news`}
                   >
                     <span className="relative block h-[77px] w-[108px] overflow-hidden bg-mm-neutral-100">
                       <ArticleImage
@@ -74,7 +68,7 @@ function CategoryLatestGrid({ categories }: CategoryLatestGridProps) {
                 {otherArticles.slice(0, 2).map((article) => (
                   <NextLink
                     className={cn('group block', homepageCardLinkFocusClass)}
-                    href={article.href}
+                    href={`${article.href}?from=index_cate_news`}
                     key={article.key}
                   >
                     <Typography

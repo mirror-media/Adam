@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { cn } from '@/components/cn'
 import { ThemeElement } from '@/components/shell/article/theme-element'
 import { Typography } from '@/components/ui'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { MICRO_AD_UNITS } from '@/constants/ads'
 import useMediaQuery from '@/hooks/use-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
@@ -84,7 +85,7 @@ export function NextUpPosts({
                           /\.(jpg|png)$/i,
                           '.webP'
                         )
-                      : '/images-next/default-og-img.png'
+                      : DEFAULT_OG_IMAGE_URL
                   }
                   sizes="(max-width: 768px) 50vw, 30vw"
                   srcSet={[480, 800]}
@@ -93,9 +94,9 @@ export function NextUpPosts({
                   fallback={
                     typeof postItem.heroImage?.resized?.original === 'string'
                       ? postItem.heroImage?.resized?.original
-                      : '/images-next/default-og-img.png'
+                      : DEFAULT_OG_IMAGE_URL
                   }
-                  errorImage="/images-next/default-og-img.png"
+                  errorImage={DEFAULT_OG_IMAGE_URL}
                 />
               </picture>
               <Typography

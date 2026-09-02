@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import ReadingSvg from '../../public/images-next/magazine-online.svg'
 import {
   getMagazineHrefFromSlug,
@@ -187,7 +188,7 @@ export default function MagazineWeeklys({ weeklys }) {
                 images={magazine.coverPhoto?.resized}
                 imagesWebP={magazine.coverPhoto?.resizedWebp}
                 loadingImage="/images-next/loading.gif"
-                defaultImage="/images-next/default-og-img.png"
+                defaultImage={DEFAULT_OG_IMAGE_URL}
                 alt={magazine.title}
                 rwd={{ mobile: '132px', tablet: '144px', default: '100%' }}
               />

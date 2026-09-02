@@ -10,6 +10,7 @@
  */
 @import '../modules/list-article/components/micro-ad.css';
 @import '../modules/aside/components/pop-in-ad.css';
+@import '../modules/homepage/components/pop-in-ad.css';
 @import '../modules/search/components/miso-search.css';
 
 @theme {

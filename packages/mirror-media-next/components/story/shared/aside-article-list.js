@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
 import { getArticleHref } from '../../../utils'
 
 /**
@@ -299,7 +300,7 @@ export default function AsideArticleList({
                 imagesWebP={item?.heroImage?.resizedWebp}
                 alt={item.title}
                 loadingImage={'/images-next/loading.gif'}
-                defaultImage={'/images-next/default-og-img.png'}
+                defaultImage={DEFAULT_OG_IMAGE_URL}
                 rwd={{ mobile: '276px', tablet: '266px', desktop: '120px' }}
               />
             </Link>

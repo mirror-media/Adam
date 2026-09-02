@@ -7,6 +7,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import type { PopularNewsApiPost } from '@/apollo/fragments/post'
 import { cn } from '@/components/cn'
 import { Link, Typography } from '@/components/ui'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import useMediaQuery from '@/hooks/use-media-query'
 
 type PopularNewsItemProps = {
@@ -57,7 +58,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                     images={item?.heroImage?.resized}
                     alt={item.title}
                     loadingImage="/images-next/loading.gif"
-                    defaultImage="/images-next/default-og-img.png"
+                    defaultImage={DEFAULT_OG_IMAGE_URL}
                   />
                 </picture>
                 <Typography
@@ -104,7 +105,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                     images={item?.heroImage?.resized}
                     alt={item.title}
                     loadingImage="/images-next/loading.gif"
-                    defaultImage="/images-next/default-og-img.png"
+                    defaultImage={DEFAULT_OG_IMAGE_URL}
                   />
                 </picture>
                 <Typography

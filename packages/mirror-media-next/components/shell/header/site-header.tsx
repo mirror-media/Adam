@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import NextLink from 'next/link'
@@ -9,6 +15,7 @@ import {
   shellBrandLinkClass,
 } from '@/components/shell/link-styles'
 import { ENV } from '@/config/index.mjs'
+import { useDisplayAd } from '@/hooks/useDisplayAd'
 import type {
   HeadersDataSection,
   ShellFlashNews,
@@ -46,6 +53,9 @@ const DesktopNavigationFlyout = dynamic(() =>
 const MobileMenu = dynamic(() =>
   import('./mobile-menu').then((module) => module.MobileMenu)
 )
+const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
+  ssr: false,
+})
 
 type SiteHeaderProps = {
   activeNavigationSlug?: string
@@ -55,6 +65,8 @@ type SiteHeaderProps = {
   topicsData: Topics
 }
 
+type HeaderAdStatus = 'empty' | 'filled' | 'pending'
+
 function SiteHeader({
   activeNavigationSlug,
   flashNewsData,
@@ -62,6 +74,9 @@ function SiteHeader({
   sectionPostsData,
   topicsData,
 }: SiteHeaderProps) {
+  const { shouldShowAd } = useDisplayAd()
+  const [headerAdStatus, setHeaderAdStatus] =
+    useState<HeaderAdStatus>('pending')
   const [showStickyControls, setShowStickyControls] = useState(false)
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
@@ -83,6 +98,16 @@ function SiteHeader({
   const visibleTopics = topicsData.slice(0, 7)
   const flashNews = flashNewsData ?? []
   const hasFlashNewsRow = flashNews.length > 0 || visibleTopics.length > 0
+  const shouldShowHeaderAdPreview =
+    ENV !== 'prod' && (!shouldShowAd || headerAdStatus !== 'filled')
+
+  const handleHeaderAdRenderEnded = useCallback(
+    (event: googletag.events.SlotRenderEndedEvent) =>
+      setHeaderAdStatus(event.isEmpty ? 'empty' : 'filled'),
+    []
+  )
+
+  useEffect(() => setHeaderAdStatus('pending'), [shouldShowAd])
 
   // Measured while nothing is fixed or hidden yet: reading the live values once
   // the header sticks would feed that state back into the threshold producing it.
@@ -263,25 +288,39 @@ function SiteHeader({
               />
             </NextLink>
 
-            {ENV !== 'prod' && (
-              <div className="@container min-w-0 flex-1">
-                {/* Show each preview slot only when it fits. */}
-                <div className="flex items-center gap-mm-l">
+            <div className="@container min-w-0 flex-1">
+              {/* The real slot is environment-independent; only the second
+                  preview slot is excluded from production. */}
+              <div className="flex items-center gap-mm-l">
+                {(shouldShowAd || ENV !== 'prod') && (
                   <div
-                    className="hidden h-[50px] w-[110px] shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[110px]:flex"
+                    className="relative hidden h-[50px] w-[110px] shrink-0 items-center justify-center @min-[110px]:flex"
                     data-slot="header-ad-slot"
                   >
-                    110×50
+                    {shouldShowAd && (
+                      <GPTAd
+                        adKey="RWD_LOGO"
+                        onSlotRenderEnded={handleHeaderAdRenderEnded}
+                        pageKey="global"
+                      />
+                    )}
+                    {shouldShowHeaderAdPreview && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800">
+                        110×50
+                      </div>
+                    )}
                   </div>
+                )}
+                {ENV !== 'prod' && (
                   <div
                     className="hidden h-[30px] w-30 shrink-0 items-center justify-center bg-mm-error-100 font-mm-sans text-mm-caption-s text-mm-neutral-800 @min-[242px]:flex"
                     data-slot="header-ad-slot"
                   >
                     120×30
                   </div>
-                </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
 
           <div className="flex shrink-0 items-center gap-mm-l lg:hidden">

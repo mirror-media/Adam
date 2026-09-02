@@ -6,6 +6,7 @@ import {
   fetchTopicSeoPosts,
 } from '@/apollo/query/topics'
 import { SITE_URL, STORY_GQL_ENDPOINT } from '@/config/index.mjs'
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { sortArrayWithOtherArrayId, toTaipeiISOString } from '@/utils'
 import { parseUrl } from '@/utils/topic'
 
@@ -481,7 +482,7 @@ function buildTopicSeo(
     parseUrl(topic.style ?? '') ||
     undefined
   const lastmod = pickLatestTimestamp(seoPosts)
-  const defaultImage = `https://${SITE_URL}/images-next/default-og-img.png`
+  const defaultImage = `https://${SITE_URL}${DEFAULT_OG_IMAGE_URL}`
 
   return {
     title: `精選專區 / ${topic.name}`,

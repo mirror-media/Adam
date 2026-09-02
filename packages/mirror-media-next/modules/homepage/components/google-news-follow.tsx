@@ -3,8 +3,8 @@ import Image from 'next/image'
 import { cn } from '@/components/cn'
 import { Link } from '@/components/ui/link'
 
-const GOOGLE_NEWS_PUBLICATION_URL =
-  'https://news.google.com/publications/CAAqKQgKIiNDQklTRkFnTWFoQUtEbTFwY25KdmNtMWxaR2xoTG0xbktBQVAB'
+const GOOGLE_PREFERRED_SOURCE_URL =
+  'https://www.google.com/preferences/source?q=mirrormedia.mg'
 
 type GoogleNewsFollowProps = {
   className?: string
@@ -13,12 +13,14 @@ type GoogleNewsFollowProps = {
 function GoogleNewsFollow({ className }: GoogleNewsFollowProps) {
   return (
     <Link
-      aria-label="在 Google News 將鏡週刊設為偏好來源"
+      aria-label="將鏡週刊設為 Google 搜尋的偏好來源"
       className={cn(
-        'block w-[300px] shrink-0 rounded-mm-xs hover:no-underline',
+        // Desktop runs the card across the whole sidebar column; the narrower
+        // sizes keep the artwork at its drawn width.
+        'block w-[300px] shrink-0 rounded-mm-xs hover:no-underline xl:w-full',
         className
       )}
-      href={GOOGLE_NEWS_PUBLICATION_URL}
+      href={GOOGLE_PREFERRED_SOURCE_URL}
       rel="noopener noreferrer"
       target="_blank"
       variant="plain"

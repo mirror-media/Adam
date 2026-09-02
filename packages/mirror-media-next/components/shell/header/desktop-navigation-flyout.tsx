@@ -111,7 +111,7 @@ function DesktopNavigationFlyout({ item, open }: DesktopNavigationFlyoutProps) {
                     and the panel height and divider are placed against it. */}
                 <Image
                   alt=""
-                  className="h-[146px] w-55 shrink-0 bg-mm-neutral-0 object-cover"
+                  className="h-[146px] w-55 shrink-0 object-cover"
                   height={146}
                   src={post.heroImage}
                   width={220}

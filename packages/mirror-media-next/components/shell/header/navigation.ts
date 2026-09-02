@@ -1,7 +1,5 @@
+import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import type { HeadersDataSection, ShellSectionPosts } from '@/utils/api'
-
-/** Stand-in for posts published without artwork; the feed sends null. */
-const FALLBACK_HERO_IMAGE = '/images-next/default-og-img.png'
 
 type ShellNavigationCategory = {
   href: string
@@ -126,7 +124,7 @@ function createShellNavigation(
       // The feed's post_url points at the environment that produced the file, so
       // the href is rebuilt here to keep the reader in this one.
       posts: (sectionPosts[section.slug] ?? []).slice(0, 2).map((post) => ({
-        heroImage: post.heroImage ?? FALLBACK_HERO_IMAGE,
+        heroImage: post.heroImage ?? DEFAULT_OG_IMAGE_URL,
         href: `/story/${post.slug}`,
         publishedDate: post.publishedDate,
         title: post.title,
