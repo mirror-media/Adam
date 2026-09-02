@@ -139,7 +139,15 @@ export type InteractionEvent =
   | ({ event: 'view_page_finished' } & StoryEventFields)
   | ({ event: 'view_content_finished' } & StoryEventFields)
 
-export type DataLayerEvent = InteractionEvent
+/**
+ * 頁級 page view。與 GTM 內建 page_view（All Pages / History Change）並存，
+ * 不要在 GA4 映射成 `page_view`。
+ */
+export type PageViewEvent = {
+  event: 'mm_page_view'
+}
+
+export type DataLayerEvent = InteractionEvent | PageViewEvent
 
 /** GTM 維度欄位（CSR 換頁時用來清掉上一頁殘留） */
 export const DATA_LAYER_DIMENSION_KEYS = [
