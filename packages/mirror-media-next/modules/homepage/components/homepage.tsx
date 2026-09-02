@@ -337,6 +337,7 @@ function Homepage({ data }: HomepageProps) {
               className="order-5 col-span-full mx-auto w-[calc(100%-32px)] md:order-2 md:col-span-1 md:mx-0 md:w-[332px] md:justify-self-start xl:order-2 xl:w-full xl:justify-self-auto"
               title="熱門新聞"
               titleId="homepage-popular-news-title"
+              withPopInAds
             />
             <GoogleNewsFollow className="order-6 col-span-full mx-auto md:order-5 xl:order-1" />
             <HeadlineList
