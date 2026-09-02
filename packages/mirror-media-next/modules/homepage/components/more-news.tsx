@@ -184,7 +184,7 @@ function MoreNews({
                       homepageCardHoverClass,
                       homepageCardLinkFocusClass
                     )}
-                    href={article.href}
+                    href={`${article.href}?from=index_list_news`}
                     ref={
                       article.key === focusArticleKey
                         ? firstAppendedArticleRef

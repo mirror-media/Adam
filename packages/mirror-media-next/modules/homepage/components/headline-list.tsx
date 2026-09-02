@@ -26,6 +26,7 @@ type HeadlineListProps = {
   title: string
   titleId: string
   trackingClassName?: string
+  trackingFrom?: string
   withPopInAds?: boolean
 }
 
@@ -35,6 +36,7 @@ function HeadlineList({
   title,
   titleId,
   trackingClassName,
+  trackingFrom,
   withPopInAds = false,
 }: HeadlineListProps) {
   const { shouldShowAd } = useDisplayAd()
@@ -61,7 +63,9 @@ function HeadlineList({
                     homepageCardLinkFocusClass,
                     trackingClassName
                   )}
-                  href={article.href}
+                  href={`${article.href}${
+                    trackingFrom ? `?from=${trackingFrom}` : ''
+                  }`}
                   rel="noopener noreferrer"
                   target="_blank"
                 >
