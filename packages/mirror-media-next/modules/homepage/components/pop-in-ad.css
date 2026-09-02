@@ -13,15 +13,31 @@
  * its own geometry. This one matches the homepage headline row — a 96x64
  * thumbnail against a two-line title, on the grey ground the design gives the
  * sponsored rows.
+ *
+ * The row holds its height from the first paint so a late ad cannot push the
+ * list around, but the grey ground hangs off the container PopIn injects: an
+ * empty slot reserves its space against the page's own white rather than
+ * showing a grey block for an ad that has not arrived, or may never arrive —
+ * PopIn reports neither a request nor a no-fill, so the two look alike.
+ *
+ * The height is fixed rather than a floor. The rules below already size the
+ * thumbnail and clamp the title to the row, but they only cover the markup
+ * PopIn sends today; a wrapper or margin added on the vendor's side would grow
+ * a `min-height` box and shift the list. Anything past the row is clipped
+ * instead.
  */
 .mm-pop-in-ad-homepage-hot {
   display: block;
   width: 100%;
-  /* Hold the row's height before PopIn fills the container. */
-  min-height: 64px;
-  background-color: var(--color-mm-neutral-100);
+  height: 64px;
+  overflow: hidden;
 
   #_popIn_hot {
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    background-color: var(--color-mm-neutral-100);
+
     ._popIn_recommend_article {
       position: relative;
       display: flex;
@@ -74,24 +90,10 @@
       }
     }
 
-    /* The 特企 label, over the thumbnail's top-left like the card badges. */
+    /* The design marks the sponsored rows with the grey ground alone, so
+       PopIn's own 特企 chip is dropped rather than restyled. */
     ._popIn_label {
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: flex;
-      height: 20px;
-      align-items: center;
-      justify-content: center;
-      padding: 0 var(--spacing-mm-m) !important;
-      border-bottom-right-radius: var(--radius-mm-xs);
-      background-color: var(--color-mm-neutral-200);
-      color: var(--color-mm-second-700);
-      font-family: var(--font-mm-sans);
-      font-size: var(--text-mm-subtitle);
-      font-weight: var(--text-mm-subtitle--font-weight);
-      line-height: 1;
-      white-space: nowrap;
+      display: none !important;
     }
   }
 }

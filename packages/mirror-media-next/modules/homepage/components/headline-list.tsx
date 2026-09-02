@@ -39,7 +39,11 @@ function HeadlineList({
   trackingFrom,
   withPopInAds = false,
 }: HeadlineListProps) {
-  const { shouldShowAd } = useDisplayAd()
+  const { isLogInProcessFinished, shouldShowAd } = useDisplayAd()
+  // An ad-free member is the one case where the slot is known to stay empty for
+  // good, so it is dropped once the member check answers. Everyone else keeps
+  // the reserved row: it covers the load window, and a no-fill is silent.
+  const keepsAdSlot = !isLogInProcessFinished || shouldShowAd
 
   if (!articles.length) return null
 
@@ -48,8 +52,10 @@ function HeadlineList({
       <SectionTitle id={titleId}>{title}</SectionTitle>
       <ol className="mt-mm-xl xl:mt-mm-l">
         {articles.slice(0, 8).map((article, index) => {
+          // The slot is decided on the server so the row holds its height from
+          // the first paint; only the ad inside it waits for the member check.
           const popInId =
-            withPopInAds && shouldShowAd && needInsertPopInAdAfter(index)
+            withPopInAds && keepsAdSlot && needInsertPopInAdAfter(index)
               ? getPopInId(index)
               : null
 
@@ -86,10 +92,9 @@ function HeadlineList({
                   className="min-w-0 overflow-hidden border-t border-mm-neutral-300 py-mm-m"
                   data-homepage-pop-in-ad
                 >
-                  <PopInAd
-                    className="mm-pop-in-ad-homepage-hot"
-                    popInId={popInId}
-                  />
+                  <div className="mm-pop-in-ad-homepage-hot">
+                    {shouldShowAd && <PopInAd popInId={popInId} />}
+                  </div>
                 </li>
               )}
             </Fragment>
