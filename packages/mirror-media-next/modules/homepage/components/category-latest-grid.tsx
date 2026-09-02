@@ -33,7 +33,7 @@ function CategoryLatestGrid({ categories }: CategoryLatestGridProps) {
             >
               <Typography
                 as="h2"
-                className="w-fit rounded-mm-xs bg-mm-base-600 px-mm-l py-[3px] text-mm-second-100"
+                className="flex h-6 w-fit items-center rounded-mm-xs bg-mm-base-600 px-mm-l text-mm-second-100"
                 variant="subtitle"
               >
                 {category.name}
