@@ -16,6 +16,7 @@ type PopularNewsItemProps = {
 
 export function PopularNewsItem({ items }: PopularNewsItemProps) {
   const isDesktop = useMediaQuery('(min-width: 1280px)')
+
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
   const [selectedSnap, setSelectedSnap] = useState(0)
@@ -63,7 +64,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                 </picture>
                 <Typography
                   variant="subtitle"
-                  className="line-clamp-3 max-h-14 min-h-14 text-base text-mm-neutral-800"
+                  className="line-clamp-2 max-h-12 min-h-12 text-base text-mm-neutral-800"
                 >
                   {item.title}
                 </Typography>
@@ -111,7 +112,7 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
                 <Typography
                   as="h2"
                   variant="subtitle"
-                  className="line-clamp-3 max-h-14 min-h-14 text-base text-mm-neutral-800"
+                  className="line-clamp-2 max-h-12 min-h-12 text-base text-mm-neutral-800"
                 >
                   {item.title}
                 </Typography>
