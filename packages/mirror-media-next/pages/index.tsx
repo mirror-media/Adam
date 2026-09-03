@@ -44,10 +44,7 @@ export const getServerSideProps = (async ({ req, res }) => {
     ...getLogTraceObject(req),
   }
   const [headerData, homepageData] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     fetchHomepageData(globalLogFields),
   ])
 

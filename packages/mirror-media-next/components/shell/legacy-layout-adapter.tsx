@@ -8,14 +8,17 @@ import type {
   Topics,
 } from '@/utils/api'
 
-import { SiteFooter } from './footer/site-footer'
+import type { SiteHeaderProps } from './header/site-header'
 import { SiteHeader } from './header/site-header'
+import { PageShell } from './page-shell'
 
-type LegacyHeaderType = 'default' | 'default-with-flash-news' | 'empty'
+type LegacyHeaderType = 'default' | 'default-with-flash-news'
 
 type LegacyHeaderData = {
   activeNavigationSlug?: string
   flashNewsData?: ShellFlashNews[]
+  navigationData?: HeadersDataSection[]
+  sectionPostsData?: ShellSectionPosts
   sectionsData?: HeadersData
   topicsData?: Topics
 }
@@ -25,16 +28,11 @@ type LegacyHeaderConfig = {
   type: LegacyHeaderType
 }
 
-type LegacyFooterConfig = {
-  type: 'default' | 'empty'
-}
-
 type LegacyLayoutAdapterProps = {
   children: ReactNode
-  footer: LegacyFooterConfig
-  globalModal?: ReactNode
   header: LegacyHeaderConfig
-  privacyNotice?: ReactNode
+  withFooter?: boolean
+  withIdleTimeout?: boolean
 }
 
 type LegacyHeaderAdapterProps = {
@@ -55,47 +53,41 @@ function getSectionPostsData(
   )
 }
 
-function LegacyHeaderAdapter({ header }: LegacyHeaderAdapterProps) {
+function getShellHeaderData(header: LegacyHeaderConfig): SiteHeaderProps {
   const headerData = header.data ?? {}
+  const navigationData =
+    headerData.navigationData ??
+    (headerData.sectionsData ?? []).filter(isHeaderSection)
 
-  if (header.type === 'empty') {
-    return null
+  return {
+    activeNavigationSlug: headerData.activeNavigationSlug,
+    flashNewsData: headerData.flashNewsData ?? [],
+    navigationData,
+    sectionPostsData:
+      headerData.sectionPostsData ?? getSectionPostsData(navigationData),
+    topicsData: headerData.topicsData ?? [],
   }
+}
 
-  const navigationData = (headerData.sectionsData ?? []).filter(isHeaderSection)
-
+function LegacyHeaderAdapter({ header }: LegacyHeaderAdapterProps) {
   // D18 resolves every non-AMP shared Header consumer to the same V4 SiteHeader.
-  return (
-    <SiteHeader
-      activeNavigationSlug={headerData.activeNavigationSlug}
-      flashNewsData={headerData.flashNewsData}
-      navigationData={navigationData}
-      sectionPostsData={getSectionPostsData(navigationData)}
-      topicsData={headerData.topicsData ?? []}
-    />
-  )
+  return <SiteHeader {...getShellHeaderData(header)} />
 }
 
 function LegacyLayoutAdapter({
   children,
-  footer,
-  globalModal,
   header,
-  privacyNotice,
+  withFooter = true,
+  withIdleTimeout = true,
 }: LegacyLayoutAdapterProps) {
-  const hasHeader = header.type !== 'empty'
-  const hasFooter = footer.type !== 'empty'
-
-  // Preserve the V3 Layout's bare DOM flow while replacing only its shared
-  // Header and Footer. New route bodies can adopt ApplicationShell directly.
   return (
-    <>
-      {hasHeader ? <LegacyHeaderAdapter header={header} /> : null}
-      {globalModal}
+    <PageShell
+      headerData={getShellHeaderData(header)}
+      withFooter={withFooter}
+      withIdleTimeout={withIdleTimeout}
+    >
       {children}
-      {privacyNotice}
-      {hasFooter ? <SiteFooter /> : null}
-    </>
+    </PageShell>
   )
 }
 

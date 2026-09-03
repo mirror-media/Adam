@@ -30,15 +30,18 @@ const Hr = styled.hr`
  * @param {PageProps} props
  * @returns {React.ReactNode}
  */
-function OneYearSubscription({ sectionsData = [], topicsData = [] }) {
+function OneYearSubscription({
+  flashNewsData = [],
+  sectionsData = [],
+  topicsData = [],
+}) {
   return (
     <Layout
       head={{ title: `訂閱一年方案` }}
       header={{
         type: 'default',
-        data: { sectionsData: sectionsData, topicsData },
+        data: { flashNewsData, sectionsData, topicsData },
       }}
-      footer={{ type: 'default' }}
     >
       <Page>
         <Steps activeStep={2} />
@@ -64,7 +67,7 @@ export async function getServerSideProps({ req, res }) {
     fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in papermag/1 page',
@@ -75,6 +78,7 @@ export async function getServerSideProps({ req, res }) {
     props: {
       sectionsData,
       topicsData,
+      flashNewsData,
     },
   }
 }

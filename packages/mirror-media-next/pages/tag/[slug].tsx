@@ -154,10 +154,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
   }
 
   const [headerData, [tagResponse, postsResponse]] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     Promise.allSettled([
       fetchTagByTagSlug(tagSlug),
       fetchPostsByTagSlug(tagSlug, RENDER_PAGE_SIZE * 2, 0),

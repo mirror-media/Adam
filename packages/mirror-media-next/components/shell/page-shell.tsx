@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 
 import GDPRNotification from '@/components/gdpr'
 
-import { ApplicationShell } from './application-shell'
 import { BackToTop } from './back-to-top'
 import { SiteFooter } from './footer/site-footer'
 import type { SiteHeaderProps } from './header/site-header'
@@ -13,6 +12,7 @@ type PageShellProps = {
   children: ReactNode
   headerData: SiteHeaderProps
   pauseCarouselTickerOnIdle?: boolean
+  withFooter?: boolean
   withIdleTimeout?: boolean
 }
 
@@ -20,22 +20,28 @@ function PageShell({
   children,
   headerData,
   pauseCarouselTickerOnIdle = false,
+  withFooter = true,
   withIdleTimeout = true,
 }: PageShellProps) {
   return (
-    <ApplicationShell
-      floatingAction={<BackToTop />}
-      footer={<SiteFooter />}
-      globalModal={
-        withIdleTimeout ? (
-          <IdleTimeoutModal pauseCarouselTicker={pauseCarouselTickerOnIdle} />
-        ) : undefined
-      }
-      header={<SiteHeader {...headerData} />}
-      privacyNotice={<GDPRNotification />}
+    <div
+      className="flex min-h-dvh w-full flex-col"
+      data-slot="application-shell"
     >
-      {children}
-    </ApplicationShell>
+      <SiteHeader {...headerData} />
+      {withIdleTimeout ? (
+        <IdleTimeoutModal pauseCarouselTicker={pauseCarouselTickerOnIdle} />
+      ) : undefined}
+      <div
+        className="flex min-w-0 flex-1 flex-col"
+        data-slot="application-shell-content"
+      >
+        {children}
+      </div>
+      <GDPRNotification />
+      {withFooter ? <SiteFooter /> : null}
+      <BackToTop />
+    </div>
   )
 }
 

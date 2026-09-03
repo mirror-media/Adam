@@ -160,10 +160,7 @@ export const getServerSideProps = (async ({ params, req, res }) => {
 
   const [headerData, [externalsResponse, countResponse, partnerResponse]] =
     await Promise.all([
-      fetchShellHeaderData({
-        includeFlashNews: true,
-        logFields: globalLogFields,
-      }),
+      fetchShellHeaderData({ logFields: globalLogFields }),
       Promise.allSettled([
         fetchExternalsByPartnerSlug(1, RENDER_PAGE_SIZE, partnerSlug),
         client.query({

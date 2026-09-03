@@ -141,10 +141,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
   }
 
   const [headerData, [authorResponse, postsResponse]] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     Promise.allSettled([
       fetchAuthorByAuthorId(authorId),
       fetchPostsByAuthorId(authorId, RENDER_PAGE_SIZE * 2, 0),

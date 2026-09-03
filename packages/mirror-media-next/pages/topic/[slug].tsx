@@ -99,10 +99,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
   }
 
   const [headerData, viewModel] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     loadTopicPage(topicSlug).catch((error: unknown) => {
       logGenericError(
         error,

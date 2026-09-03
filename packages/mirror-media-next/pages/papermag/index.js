@@ -82,7 +82,12 @@ const AnnouncementContent = styled.p`
  * @param {PageProps} props
  * @returns {React.ReactNode}
  */
-function PaperMag({ sectionsData = [], topicsData = [], announcements = [] }) {
+function PaperMag({
+  announcements = [],
+  flashNewsData = [],
+  sectionsData = [],
+  topicsData = [],
+}) {
   const hasAnnouncement = announcements.length > 0
 
   return (
@@ -90,9 +95,8 @@ function PaperMag({ sectionsData = [], topicsData = [], announcements = [] }) {
       head={{ title: `訂閱紙本雜誌` }}
       header={{
         type: 'default',
-        data: { sectionsData: sectionsData, topicsData },
+        data: { flashNewsData, sectionsData, topicsData },
       }}
-      footer={{ type: 'default' }}
     >
       <Page>
         <Steps activeStep={1} />
@@ -133,7 +137,7 @@ export async function getServerSideProps({ req, res }) {
     fetchAnnouncementsByScope([ANNOUNCEMENT_SCOPE.PAPER_MAG]),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     headerResponse,
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in papermag page',
@@ -156,6 +160,7 @@ export async function getServerSideProps({ req, res }) {
     props: {
       sectionsData,
       topicsData,
+      flashNewsData,
       announcements,
     },
   }

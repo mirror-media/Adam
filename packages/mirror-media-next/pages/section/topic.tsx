@@ -102,10 +102,7 @@ export const getServerSideProps = (async ({ req, res }) => {
     ...getLogTraceObject(req),
   }
   const [headerData, topicListResponse] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     Promise.allSettled([
       loadPublishedTopicList(TOPIC_INDEX_FETCH_PAGE_SIZE, 0),
     ]),

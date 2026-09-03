@@ -13,16 +13,13 @@ import { setPageCache } from '../utils/cache-setting'
  * @returns {import('react').JSX.Element}
  */
 export default function SlotPage({ headerData = {} }) {
-  const { sectionsData = [], topicsData = [] } = headerData
-
   return (
     <Layout
       head={{ title: `拉霸機測試` }}
       header={{
         type: 'default',
-        data: { sectionsData: sectionsData, topicsData },
+        data: headerData,
       }}
-      footer={{ type: 'default' }}
     >
       <Slot />
     </Layout>

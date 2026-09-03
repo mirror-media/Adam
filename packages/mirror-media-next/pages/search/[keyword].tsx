@@ -77,10 +77,7 @@ export const getServerSideProps = (async ({ params, req, res }) => {
     ...getLogTraceObject(req),
   }
 
-  const headerData = await fetchShellHeaderData({
-    includeFlashNews: true,
-    logFields: globalLogFields,
-  })
+  const headerData = await fetchShellHeaderData({ logFields: globalLogFields })
 
   return {
     props: {

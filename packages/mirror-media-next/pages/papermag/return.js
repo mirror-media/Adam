@@ -158,6 +158,7 @@ function parseRequestBody(req) {
  * @returns {React.ReactNode}
  */
 export default function Return({
+  flashNewsData = [],
   sectionsData = [],
   topicsData = [],
   orderData,
@@ -170,9 +171,8 @@ export default function Return({
       head={{ title: `紙本雜誌訂閱結果` }}
       header={{
         type: 'default',
-        data: { sectionsData: sectionsData, topicsData },
+        data: { flashNewsData, sectionsData, topicsData },
       }}
-      footer={{ type: 'default' }}
     >
       <>
         <Steps activeStep={3} />
@@ -198,7 +198,7 @@ export async function getServerSideProps({ query, req, res }) {
     fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in papermag/return page',
@@ -210,7 +210,13 @@ export async function getServerSideProps({ query, req, res }) {
 
   if (query && Object.prototype.hasOwnProperty.call(query, 'order-fail')) {
     return {
-      props: { sectionsData, topicsData, orderStatus, orderData },
+      props: {
+        flashNewsData,
+        sectionsData,
+        topicsData,
+        orderStatus,
+        orderData,
+      },
     }
   } else if (req.method !== 'POST') {
     return {
@@ -299,6 +305,7 @@ export async function getServerSideProps({ query, req, res }) {
 
   return {
     props: {
+      flashNewsData,
       sectionsData,
       topicsData,
       orderData,

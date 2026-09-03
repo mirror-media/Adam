@@ -63,7 +63,11 @@ const Title = styled.h2`
 /**
  * @param {PageProps} props
  */
-export default function Magazine({ sectionsData = [], topicsData = [] }) {
+export default function Magazine({
+  flashNewsData = [],
+  sectionsData = [],
+  topicsData = [],
+}) {
   useMembershipRequired()
   const [specials, setSpecials] = useState([])
   const [weeklys, setWeeklys] = useState([])
@@ -145,9 +149,8 @@ export default function Magazine({ sectionsData = [], topicsData = [] }) {
       head={{ title: `動態雜誌` }}
       header={{
         type: 'default',
-        data: { sectionsData, topicsData },
+        data: { flashNewsData, sectionsData, topicsData },
       }}
-      footer={{ type: 'default' }}
     >
       {canViewPremiumContent ? (
         <Page>
@@ -204,7 +207,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
     fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting V4 header data in magazine list page',
@@ -215,6 +218,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
     props: {
       sectionsData,
       topicsData,
+      flashNewsData,
     },
   }
 })

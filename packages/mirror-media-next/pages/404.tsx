@@ -4,11 +4,8 @@ import CustomImage from '@readr-media/react-image'
 import axios from 'axios'
 
 import type { AsideListingPost, Post } from '@/apollo/fragments/post'
-import GDPRNotification from '@/components/gdpr'
 import CustomHead from '@/components/shared/custom-head'
-import { ApplicationShell } from '@/components/shell/application-shell'
-import { SiteHeader } from '@/components/shell/header/site-header'
-import { IdleTimeoutModal } from '@/components/shell/idle-timeout-modal/idle-timeout-modal'
+import { PageShell } from '@/components/shell/page-shell'
 import { API_TIMEOUT, URL_STATIC_404_POPULAR_NEWS } from '@/config/index.mjs'
 import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import type { ShellHeaderData } from '@/utils/api'
@@ -23,9 +20,6 @@ const emptyHeaderData: ShellHeaderData = {
   topicsData: [],
 }
 
-/**
- * 用 `ApplicationShell` 而不是 `PageShell`，是為了維持這頁原本就沒有 footer 的樣子。
- */
 export default function Custom404() {
   const [popularNews, setPopularNews] = useState<PopularNewsPost[]>([])
   const [headerData, setHeaderData] = useState<ShellHeaderData>(emptyHeaderData)
@@ -89,12 +83,7 @@ export default function Custom404() {
   return (
     <>
       <CustomHead title="找不到頁面" />
-      <ApplicationShell
-        footer={null}
-        globalModal={<IdleTimeoutModal />}
-        header={<SiteHeader {...headerData} />}
-        privacyNotice={<GDPRNotification />}
-      >
+      <PageShell headerData={headerData}>
         <main className="flex flex-col items-center pb-[46px]">
           <div className="flex w-65 flex-col items-center border-b border-black py-[58px]">
             <h1 className="text-[128px] leading-[128px] font-normal text-mm-base-500">
@@ -153,7 +142,7 @@ export default function Custom404() {
             ))}
           </div>
         </main>
-      </ApplicationShell>
+      </PageShell>
     </>
   )
 }

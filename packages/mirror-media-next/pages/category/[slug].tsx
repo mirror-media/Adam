@@ -266,10 +266,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
   }
 
   const [headerData, [postsCount, posts]] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     fetchCategoryPosts(),
   ])
 
