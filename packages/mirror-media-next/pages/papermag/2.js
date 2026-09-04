@@ -37,7 +37,10 @@ function TwoYearsSubscription({
 }) {
   return (
     <Layout
-      head={{ title: `訂閱二年方案` }}
+      head={{
+        title: `訂閱二年方案`,
+        robotsMetaContent: 'noindex',
+      }}
       header={{
         type: 'default',
         data: { flashNewsData, sectionsData, topicsData },

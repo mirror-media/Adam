@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
@@ -71,16 +70,16 @@ export default function TagPage({
 
   return (
     <>
-      <CustomHead
-        title={`${tag.name}｜關鍵字`}
-        description={metaDescription}
-        ogDescription={metaDescription}
-        robotsMetaContent={
-          postsCount < 5 ? 'noindex' : 'index, max-image-preview:large'
-        }
-        skipCanonical={postsCount < 5}
-      />
-      <PageShell headerData={headerData}>
+      <PageShell
+        head={{
+          title: `${tag.name} - 關鍵字`,
+          description: metaDescription,
+          ogDescription: metaDescription,
+          robotsMetaContent: postsCount < 5 ? 'noindex' : undefined,
+          skipCanonical: postsCount < 5,
+        }}
+        headerData={headerData}
+      >
         <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}

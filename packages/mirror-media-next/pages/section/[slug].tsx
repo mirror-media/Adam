@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
@@ -56,8 +55,8 @@ export default function SectionPage({
 
   return (
     <>
-      <CustomHead title={section.name} />
       <PageShell
+        head={{ title: section.name }}
         headerData={{ ...headerData, activeNavigationSlug: section.slug }}
       >
         <ListPageMain>

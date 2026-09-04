@@ -168,7 +168,10 @@ export default function Return({
 
   return (
     <Layout
-      head={{ title: `紙本雜誌訂閱結果` }}
+      head={{
+        title: `紙本雜誌訂閱結果`,
+        robotsMetaContent: 'noindex',
+      }}
       header={{
         type: 'default',
         data: { flashNewsData, sectionsData, topicsData },

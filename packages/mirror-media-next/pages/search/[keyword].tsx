@@ -1,7 +1,6 @@
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { ENV } from '@/config/index.mjs'
 import { SITE_DESCRIPTION } from '@/constants'
@@ -30,15 +29,15 @@ export default function SearchPage({
 }: SearchPageProps) {
   return (
     <>
-      <CustomHead
-        title={`${searchTerms}｜新聞搜尋`}
-        description={
-          searchTerms
+      <PageShell
+        head={{
+          title: `${searchTerms} - 新聞搜尋`,
+          description: searchTerms
             ? `關於${searchTerms}的搜尋結果，${SITE_DESCRIPTION}`
-            : undefined
-        }
-      />
-      <PageShell headerData={headerData}>
+            : undefined,
+        }}
+        headerData={headerData}
+      >
         <ListPageMain className="pt-20">
           <div className="flex md:gap-10 xl:gap-6.5">
             <div className="mx-auto w-[calc(100%-464px)] max-w-187.5 flex-1 lg:mx-0">

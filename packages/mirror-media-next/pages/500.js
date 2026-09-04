@@ -4,7 +4,7 @@ import ErrorPage from '../components/shared/error-page'
 export default function Custom500() {
   return (
     <>
-      <CustomHead title="網頁無法正常運作" />
+      <CustomHead title="網頁無法正常運作" robotsMetaContent="noindex" />
       <ErrorPage code="500" message="這個網頁無法正常運作" />
     </>
   )

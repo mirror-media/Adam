@@ -14,7 +14,6 @@ import {
 import DableAd from '@/components/common/dable-ad'
 import generateJsonLdsData from '@/components/external/shared/json-lds-data'
 import JsonLdsScript from '@/components/external/shared/json-lds-script'
-import CustomHead from '@/components/shared/custom-head'
 import { ExternalLayout } from '@/components/shell/article/external-layout'
 import { NextUpPosts } from '@/components/shell/article/next-up-posts'
 import { PageShell } from '@/components/shell/page-shell'
@@ -158,15 +157,17 @@ export default function External({
           key="publisher"
         />
       </Head>
-      <CustomHead
-        robotsMetaContent={query?.from ? 'noindex' : undefined}
-        title={`${external?.title}`}
-        imageUrl={external?.thumb ?? undefined}
-        pageType="external"
-        pageSlug={`${slug}`}
-        description={external?.brief ?? undefined}
-      />
-      <PageShell headerData={headerData}>
+      <PageShell
+        head={{
+          robotsMetaContent: query?.from ? 'noindex' : null,
+          title: `${external?.title}`,
+          imageUrl: external?.thumb ?? undefined,
+          pageType: 'external',
+          pageSlug: `${slug}`,
+          description: external?.brief ?? undefined,
+        }}
+        headerData={headerData}
+      >
         <MisoPageView productIds={`external_${slug}`} />
 
         <GPT_Placeholder

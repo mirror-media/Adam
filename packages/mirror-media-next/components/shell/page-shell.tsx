@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react'
+import type { ComponentProps, ReactNode } from 'react'
 
 import GDPRNotification from '@/components/gdpr'
+import CustomHead from '@/components/shared/custom-head'
 
 import { BackToTop } from './back-to-top'
 import { SiteFooter } from './footer/site-footer'
@@ -11,6 +12,7 @@ import { IdleTimeoutModal } from './idle-timeout-modal/idle-timeout-modal'
 type PageShellProps = {
   children: ReactNode
   headerData: SiteHeaderProps
+  head?: ComponentProps<typeof CustomHead>
   pauseCarouselTickerOnIdle?: boolean
   withFooter?: boolean
   withIdleTimeout?: boolean
@@ -19,29 +21,33 @@ type PageShellProps = {
 function PageShell({
   children,
   headerData,
+  head,
   pauseCarouselTickerOnIdle = false,
   withFooter = true,
   withIdleTimeout = true,
 }: PageShellProps) {
   return (
-    <div
-      className="flex min-h-dvh w-full flex-col"
-      data-slot="application-shell"
-    >
-      <SiteHeader {...headerData} />
-      {withIdleTimeout ? (
-        <IdleTimeoutModal pauseCarouselTicker={pauseCarouselTickerOnIdle} />
-      ) : undefined}
+    <>
+      <CustomHead {...head} />
       <div
-        className="flex min-w-0 flex-1 flex-col"
-        data-slot="application-shell-content"
+        className="flex min-h-dvh w-full flex-col"
+        data-slot="application-shell"
       >
-        {children}
+        <SiteHeader {...headerData} />
+        {withIdleTimeout ? (
+          <IdleTimeoutModal pauseCarouselTicker={pauseCarouselTickerOnIdle} />
+        ) : undefined}
+        <div
+          className="flex min-w-0 flex-1 flex-col"
+          data-slot="application-shell-content"
+        >
+          {children}
+        </div>
+        <GDPRNotification />
+        {withFooter ? <SiteFooter /> : null}
+        <BackToTop />
       </div>
-      <GDPRNotification />
-      {withFooter ? <SiteFooter /> : null}
-      <BackToTop />
-    </div>
+    </>
   )
 }
 

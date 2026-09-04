@@ -13,7 +13,6 @@ import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '@/components/ads/gpt/gpt-placeholder'
-import CustomHead from '@/components/shared/custom-head'
 import UserBehaviorLogger from '@/components/shared/user-behavior-logger'
 import WineWarning from '@/components/shared/wine-warning'
 import ArticleQuestions from '@/components/shell/article/article-questions'
@@ -188,28 +187,27 @@ export default function Story({
   return (
     <>
       <StoryHead postData={postData} />
-      <CustomHead
-        robotsMetaContent={query?.from ? 'noindex' : undefined}
-        title={`${title ?? ''}`}
-        ogTitle={postData.og_title ?? undefined}
-        description={
-          convertDraftToText(postData.brief) ||
-          convertDraftToText(postData.content)
-        }
-        ogDescription={postData.og_description ?? undefined}
-        imageUrl={
-          getResizedUrl(postData.heroImage?.resized) ||
-          getResizedUrl(postData.og_image?.resized)
-        }
-        ogImageUrl={
-          getResizedUrl(postData.og_image?.resized) ||
-          getResizedUrl(postData.heroImage?.resized)
-        }
-        skipCanonical={true}
-        pageType="story"
-        pageSlug={slug ?? ''}
-      />
-      <PageShell headerData={headerData}>
+      <PageShell
+        head={{
+          robotsMetaContent: query?.from ? 'noindex' : null,
+          title: `${title ?? ''}`,
+          ogTitle: postData.og_title ?? undefined,
+          description:
+            convertDraftToText(postData.brief) ||
+            convertDraftToText(postData.content),
+          ogDescription: postData.og_description ?? undefined,
+          imageUrl:
+            getResizedUrl(postData.heroImage?.resized) ||
+            getResizedUrl(postData.og_image?.resized),
+          ogImageUrl:
+            getResizedUrl(postData.og_image?.resized) ||
+            getResizedUrl(postData.heroImage?.resized),
+          skipCanonical: true,
+          pageType: 'story',
+          pageSlug: slug ?? '',
+        }}
+        headerData={headerData}
+      >
         <MisoPageView productIds={`story_${slug ?? ''}`} />
         <UserBehaviorLogger writers={writersInString} />
         <GPT_Placeholder

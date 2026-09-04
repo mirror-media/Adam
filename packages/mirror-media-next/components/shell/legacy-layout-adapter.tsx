@@ -10,6 +10,7 @@ import type {
 
 import type { SiteHeaderProps } from './header/site-header'
 import { SiteHeader } from './header/site-header'
+import type { PageShellProps } from './page-shell'
 import { PageShell } from './page-shell'
 
 type LegacyHeaderType = 'default' | 'default-with-flash-news'
@@ -31,6 +32,7 @@ type LegacyHeaderConfig = {
 type LegacyLayoutAdapterProps = {
   children: ReactNode
   header: LegacyHeaderConfig
+  head?: PageShellProps['head']
   withFooter?: boolean
   withIdleTimeout?: boolean
 }
@@ -77,12 +79,14 @@ function LegacyHeaderAdapter({ header }: LegacyHeaderAdapterProps) {
 function LegacyLayoutAdapter({
   children,
   header,
+  head,
   withFooter = true,
   withIdleTimeout = true,
 }: LegacyLayoutAdapterProps) {
   return (
     <PageShell
       headerData={getShellHeaderData(header)}
+      head={head}
       withFooter={withFooter}
       withIdleTimeout={withIdleTimeout}
     >

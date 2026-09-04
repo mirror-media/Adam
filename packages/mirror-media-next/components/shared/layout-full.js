@@ -1,7 +1,5 @@
 import { LegacyLayoutAdapter } from '../shell/legacy-layout-adapter'
 
-import CustomHead from './custom-head'
-
 /**
  * @typedef {Object} Header
  * @property {'default' | 'default-with-flash-news'} type
@@ -23,17 +21,15 @@ export default function LayoutFull({
   children,
 }) {
   return (
-    <>
-      <CustomHead
-        title={head?.title}
-        description={head?.description}
-        imageUrl={head?.imageUrl}
-        skipCanonical={head?.skipCanonical}
-        robotsMetaContent={head?.robotsMetaContent}
-      />
-      <LegacyLayoutAdapter header={header} withIdleTimeout={withIdleTimeout}>
-        {children}
-      </LegacyLayoutAdapter>
-    </>
+    <LegacyLayoutAdapter
+      head={{
+        ...head,
+        robotsMetaContent: head?.robotsMetaContent ?? 'noindex, nofollow',
+      }}
+      header={header}
+      withIdleTimeout={withIdleTimeout}
+    >
+      {children}
+    </LegacyLayoutAdapter>
   )
 }
