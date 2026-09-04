@@ -89,7 +89,7 @@ function TopicFeaturedList({
       <TopicArticleGrid articles={renderPosts} />
       {showMore ? (
         <Button
-          className="showMoreButton w-full max-w-85 rounded-mm-m px-2.5 py-2.5 text-mm-h5 hover:bg-mm-neutral-100 hover:text-mm-neutral-600 md:max-w-150 xl:max-w-178.5"
+          className="showMoreButton w-full max-w-85 rounded-mm-m px-2.5 py-2.5 text-mm-h5 md:max-w-150 xl:max-w-178.5"
           isLoading={loading}
           onClick={handleLoadMore}
           size="sm"
