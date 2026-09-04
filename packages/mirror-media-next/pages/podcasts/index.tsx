@@ -4,7 +4,6 @@ import type { GetServerSideProps } from 'next'
 import AudioPlayer from '@/components/podcast/audio-player'
 import Dropdown from '@/components/podcast/author-select-dropdown'
 import PodcastList from '@/components/podcast/podcast-list'
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
@@ -73,8 +72,7 @@ export default function PodcastPage({
 
   return (
     <>
-      <CustomHead title="Podcasts" />
-      <PageShell headerData={headerData}>
+      <PageShell head={{ title: 'Podcasts' }} headerData={headerData}>
         <main className="mx-auto w-full legacy-md:w-[516px] legacy-xl:w-[1024px]">
           <div className="flex w-full items-center justify-between px-mm-xl py-[15px] legacy-md:px-0 legacy-md:py-mm-2xl">
             <Typography
@@ -125,10 +123,7 @@ export const getServerSideProps = (async ({ req, res }) => {
     ...getLogTraceObject(req),
   }
   const [headerData, [podcastResponse]] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     Promise.allSettled([fetchPodcastList()]),
   ])
 

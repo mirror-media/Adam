@@ -76,10 +76,7 @@ export default function PasswordChangeSuccess({ headerData }) {
   }, [router])
 
   return (
-    <LayoutFull
-      header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
-    >
+    <LayoutFull header={{ type: 'default', data: headerData }}>
       <Container>
         <Main>
           <FormWrapper>
@@ -115,7 +112,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in password change success page',
@@ -124,7 +121,7 @@ export async function getServerSideProps({ req, res }) {
 
   return {
     props: {
-      headerData: { sectionsData, topicsData },
+      headerData: { flashNewsData, sectionsData, topicsData },
     },
   }
 }

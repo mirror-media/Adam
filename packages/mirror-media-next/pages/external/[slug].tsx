@@ -14,23 +14,17 @@ import {
 import DableAd from '@/components/common/dable-ad'
 import generateJsonLdsData from '@/components/external/shared/json-lds-data'
 import JsonLdsScript from '@/components/external/shared/json-lds-script'
-import Layout from '@/components/shared/layout'
 import { ExternalLayout } from '@/components/shell/article/external-layout'
 import { NextUpPosts } from '@/components/shell/article/next-up-posts'
+import { PageShell } from '@/components/shell/page-shell'
 import { ENV, SITE_URL } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
 import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
 import { LatestArticles } from '@/modules/aside/components/latest-articles'
 import { PopularArticles } from '@/modules/aside/components/popular-articles'
-import {
-  fetchExternalHeaderAndFlashNewsData,
-  fetchExternalPost,
-} from '@/modules/external/external-data'
-import type {
-  ExternalHeaderData,
-  ExternalPost,
-} from '@/modules/external/external-types'
+import { fetchExternalPost } from '@/modules/external/external-data'
+import type { ExternalPost } from '@/modules/external/external-types'
 import {
   fetchAdditionalExternalRelatedStories,
   initializeExternalRelatedStories,
@@ -38,6 +32,8 @@ import {
 import type { StoryDataLayer } from '@/types/dataLayer'
 import { getLogTraceObject } from '@/utils'
 import { getPageKeyByPartnerShowOnIndex } from '@/utils/ad'
+import type { ShellHeaderData } from '@/utils/api'
+import { fetchShellHeaderData } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
 import { buildExternalDataLayer } from '@/utils/gtm/build-data-layer'
 import { toTaipeiISOString } from '@/utils/index'
@@ -49,7 +45,7 @@ const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
 type ExternalPageProps = {
   query: Record<string, string | string[] | undefined> | null
   external: ExternalPost
-  headerData: ExternalHeaderData
+  headerData: ShellHeaderData
   jsonLdData: object[]
   dataLayer: StoryDataLayer
 }
@@ -161,20 +157,16 @@ export default function External({
           key="publisher"
         />
       </Head>
-      <Layout
+      <PageShell
         head={{
-          robotsMetaContent: query?.from ? 'noindex' : undefined,
+          robotsMetaContent: query?.from ? 'noindex' : null,
           title: `${external?.title}`,
           imageUrl: external?.thumb ?? undefined,
           pageType: 'external',
           pageSlug: `${slug}`,
           description: external?.brief ?? undefined,
         }}
-        header={{
-          type: 'default-with-flash-news',
-          data: headerData,
-        }}
-        footer={{ type: 'default' }}
+        headerData={headerData}
       >
         <MisoPageView productIds={`external_${slug}`} />
 
@@ -247,7 +239,7 @@ export default function External({
           )}
         />
         <FullScreenAds />
-      </Layout>
+      </PageShell>
       <JsonLdsScript jsonLdData={jsonLdData} />
     </>
   )
@@ -278,11 +270,10 @@ export const getServerSideProps: GetServerSideProps<
   const { slug } = params
   const globalLogFields: Record<string, unknown> = { ...getLogTraceObject(req) }
 
-  const [external, { sectionsData, topicsData, flashNewsData }] =
-    await Promise.all([
-      fetchExternalPost(slug, globalLogFields),
-      fetchExternalHeaderAndFlashNewsData(slug, globalLogFields),
-    ])
+  const [external, headerData] = await Promise.all([
+    fetchExternalPost(slug, globalLogFields),
+    fetchShellHeaderData({ logFields: globalLogFields }),
+  ])
 
   if (!external) {
     return { notFound: true }
@@ -294,7 +285,7 @@ export const getServerSideProps: GetServerSideProps<
     props: {
       query,
       external,
-      headerData: { sectionsData, topicsData, flashNewsData },
+      headerData,
       jsonLdData,
       dataLayer: buildExternalDataLayer(external),
     },

@@ -155,7 +155,6 @@ export default function Login({ headerData, isWebview }) {
     <LayoutFull
       head={{ robotsMetaContent: 'noindex, nofollow', skipCanonical: true }}
       header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
     >
       <Container>{isWebview ? <WebviewHint /> : jsx}</Container>
     </LayoutFull>
@@ -178,7 +177,7 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(async ({
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in login page',
@@ -190,7 +189,7 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(async ({
   return {
     props: {
       isWebview: isInAppBrowser(userAgent),
-      headerData: { sectionsData, topicsData },
+      headerData: { flashNewsData, sectionsData, topicsData },
     },
   }
 })

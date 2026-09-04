@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from 'next'
 
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { ENV } from '@/config/index.mjs'
 import { Homepage } from '@/modules/homepage/components/homepage'
@@ -16,7 +15,6 @@ export default function HomePage({
 }: HomepagePageProps) {
   return (
     <>
-      <CustomHead />
       <PageShell headerData={headerData} pauseCarouselTickerOnIdle>
         <Homepage data={homepageData} />
       </PageShell>
@@ -44,10 +42,7 @@ export const getServerSideProps = (async ({ req, res }) => {
     ...getLogTraceObject(req),
   }
   const [headerData, homepageData] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     fetchHomepageData(globalLogFields),
   ])
 

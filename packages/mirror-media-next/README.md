@@ -211,13 +211,13 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 `components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。
 新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
 
-`components/shell/` 有三種組合入口：
+`PageShell` 是 `components/shell/` 唯一的頁面外殼組合入口，也是一般非 AMP UI routes（使用者介面路由）的標準入口。它直接擁有 application shell（應用外殼）的 flex／`min-h-dvh` 結構與 slot order（插槽順序），固定組合 `CustomHead`、`SiteHeader`、`GDPRNotification` 與 `BackToTop`，預設加入 `SiteFooter` 與 `IdleTimeoutModal`。route-specific metadata（路由專屬中繼資料）透過 `head` prop（屬性）傳入；route 只有在補充文章時間、AMP link 或 JSON-LD 等特殊標籤時才另外使用 `next/head`，不應再自行 render `CustomHead`。只有已確認需保留原畫面的頁面才可使用 `withFooter={false}` 或 `withIdleTimeout={false}`；route 不應自行建立另一套 shell variant（外殼變體）。AMP routes 維持獨立 `components/amp/amp-layout`；`pages/500.js` 是不依賴資料與 shell 的靜態錯誤後備，兩者都不使用 `PageShell`，並直接組合 `CustomHead`。`_app.js` 也必須在 `/500` 排除 client-only `PromoteTopic`（僅用戶端專題推薦），避免錯誤畫面重新引入內容請求。
 
-- `PageShell` 是新頁面的標準入口，固定組合 `SiteHeader`、`SiteFooter` 與 `GDPRNotification`，並預設加入 `IdleTimeoutModal`。只有已確認不使用 Idle modal 的頁面才傳入 `withIdleTimeout={false}`。
-- `ApplicationShell` 是較低階的結構入口，只固定 slot order；標準組合無法涵蓋的特殊頁面才直接使用。
-- `LegacyLayoutAdapter` 只服務仍由 `Layout`／`LayoutFull` 擁有的既有頁面，保留原本的裸 DOM flow。遷移 route body 前不得只為統一寫法改用 `PageShell`。
+`CustomHead` 提供站台預設的 `<meta name="robots" content="index, max-image-preview:large">` 與預設分享圖片；特殊頁面可透過 `robotsMetaContent` 覆寫，傳入 `null` 則代表該 route 的另一個 `Head` 負責 robots 規則。帳號流程與 404／500 必須明確使用 `noindex`，不可落回公開頁面的預設值。
 
-`PageShell` 與 `ApplicationShell` 都不在 render path 自行取得 Header data；Pages Router route 的 server data boundary 必須呼叫 `fetchShellHeaderData()`，再以 serializable props 傳入。Flash news 維持 opt-in，active navigation 仍由 route 提供。
+`components/shared/layout.js`、`components/shared/layout-full.js` 與 `LegacyLayoutAdapter` 只保留既有 JavaScript routes 的 compatibility facade（相容介面），render path（渲染路徑）同樣委派給 `PageShell`，不再保留裸 DOM flow、premium header 或 empty shell 分支；consumer（使用端）遷移完畢後刪除。
+
+`PageShell` 不在 render path 自行取得 Header data；使用它的 Pages Router route 必須在所屬 data boundary（資料邊界）呼叫 `fetchShellHeaderData()`，再以 serializable props（可序列化屬性）傳入。`fetchShellHeaderData()` 固定取得 flash news（快訊），不提供 opt-in；active navigation（作用中導覽）仍由 route 提供。仍使用 legacy header fetcher（舊頁首資料函式）的 compatibility routes 也必須把 `flashNewsData` 傳入 facade。500 的靜態錯誤後備不取任何 shell data，因此不受此契約約束。
 
 ### Component placement guide（元件放置指南）
 

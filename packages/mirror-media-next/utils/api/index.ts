@@ -11,7 +11,6 @@ import {
   URL_STATIC_HEADER_HEADERS,
   URL_STATIC_MENU_SECTIONS,
   URL_STATIC_POST_FLASH_NEWS,
-  URL_STATIC_PREMIUM_SECTIONS,
   URL_STATIC_TOPICS,
 } from '../../config/index.mjs'
 import type { AnnouncementScopeValue } from '../../constants/announcement'
@@ -136,10 +135,6 @@ type MenuSectionsStaticJsonResponse = {
   }[]
 }
 
-type PremiumSectionsStaticJsonResponse = {
-  sections?: HeadersData
-}
-
 // Fetches static JSON by URL. Tries local GCS FUSE first, then falls back to HTTP via axios.
 const fetchStaticJsonByUrl = async <T>(
   requestUrl: string,
@@ -183,6 +178,7 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
   let sectionsData: HeadersData = []
   let topicsData: Topics = []
   let sectionPostsData: ShellSectionPosts = {}
+  let flashNewsData: ShellFlashNews[] = []
 
   try {
     const responses = await Promise.allSettled([
@@ -191,6 +187,7 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
       ),
       fetchStaticJsonByUrl<TopicsStaticJsonResponse>(URL_STATIC_TOPICS),
       fetchShellSectionPosts({ onError: 'empty' }),
+      fetchShellFlashNews(),
     ])
 
     const sectionsResult =
@@ -205,13 +202,15 @@ const fetchHeaderDataInDefaultPageLayout = async () => {
 
     sectionPostsData =
       responses[2].status === 'fulfilled' ? responses[2].value : {}
+    flashNewsData =
+      responses[3].status === 'fulfilled' ? responses[3].value : []
     sectionsData = sectionsData.map((item) =>
       item.type === 'section'
         ? { ...item, posts: sectionPostsData[item.slug] ?? [] }
         : item
     )
 
-    return { sectionsData, topicsData }
+    return { flashNewsData, sectionsData, topicsData }
   } catch (err) {
     errorLogger(err)
   }
@@ -300,16 +299,13 @@ const fetchShellTopicsData = async (): Promise<Topics> => {
 }
 
 type FetchShellHeaderDataOptions = {
-  includeFlashNews?: boolean
   logFields?: Record<string, unknown>
 }
 
 /**
  * Collects the serializable data consumed by the standard page shell.
- * Flash news remains opt-in because existing routes do not all own that variant.
  */
 const fetchShellHeaderData = async ({
-  includeFlashNews = false,
   logFields,
 }: FetchShellHeaderDataOptions = {}): Promise<ShellHeaderData> => {
   const [
@@ -321,9 +317,7 @@ const fetchShellHeaderData = async ({
     fetchShellNavigationData(),
     fetchShellTopicsData(),
     fetchShellSectionPosts(),
-    includeFlashNews
-      ? fetchShellFlashNews()
-      : Promise.resolve<ShellFlashNews[]>([]),
+    fetchShellFlashNews(),
   ])
 
   return {
@@ -354,22 +348,6 @@ const fetchShellHeaderData = async ({
   }
 }
 
-const fetchHeaderDataInPremiumPageLayout = async () => {
-  let sectionsData: HeadersData = []
-  try {
-    const response =
-      await fetchStaticJsonByUrl<PremiumSectionsStaticJsonResponse>(
-        URL_STATIC_PREMIUM_SECTIONS
-      )
-    sectionsData = Array.isArray(response.data.sections)
-      ? response.data.sections
-      : []
-    return { sectionsData }
-  } catch (err) {
-    errorLogger(err)
-  }
-}
-
 // Fetch announcements filtered by input scope array.
 const fetchAnnouncementsByScope = (scope?: AnnouncementScopeValue[]) => {
   const queryScope = Array.isArray(scope) ? [...scope] : []
@@ -389,7 +367,6 @@ const fetchAnnouncementsByScope = (scope?: AnnouncementScopeValue[]) => {
 export {
   fetchAnnouncementsByScope,
   fetchHeaderDataInDefaultPageLayout,
-  fetchHeaderDataInPremiumPageLayout,
   fetchShellFlashNews,
   fetchShellHeaderData,
   fetchShellNavigationData,

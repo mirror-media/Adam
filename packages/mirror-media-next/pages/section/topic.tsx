@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
@@ -41,8 +40,7 @@ function SectionTopicPage({
 
   return (
     <>
-      <CustomHead title="精選專區" />
-      <PageShell headerData={headerData}>
+      <PageShell head={{ title: '精選專區' }} headerData={headerData}>
         <main className="mx-auto w-full max-w-7xl pb-mm-5xl xl:px-0">
           <GPT_Placeholder
             isLogInProcessFinished={isLogInProcessFinished}
@@ -102,10 +100,7 @@ export const getServerSideProps = (async ({ req, res }) => {
     ...getLogTraceObject(req),
   }
   const [headerData, topicListResponse] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     Promise.allSettled([
       loadPublishedTopicList(TOPIC_INDEX_FETCH_PAGE_SIZE, 0),
     ]),

@@ -7,7 +7,6 @@ import { fetchPartnerBySlug } from '@/apollo/query/partner'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
-import CustomHead from '@/components/shared/custom-head'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
 import { ENV } from '@/config/index.mjs'
@@ -73,11 +72,13 @@ export default function ExternalPartnerPage({
 
   return (
     <>
-      <CustomHead
-        title={`${partner.name}｜文章列表`}
-        description={`${partner.name}共發表${externalsCount}篇文章，${SITE_DESCRIPTION}${partner.name}最新發佈相關新聞：${externals[0]?.title}`}
-      />
-      <PageShell headerData={headerData}>
+      <PageShell
+        head={{
+          title: `${partner.name} - 文章列表`,
+          description: `${partner.name}共發表${externalsCount}篇文章，${SITE_DESCRIPTION}${partner.name}最新發佈相關新聞：${externals[0]?.title}`,
+        }}
+        headerData={headerData}
+      >
         <ListPageMain>
           <GPT_Placeholder
             shouldShowAd={shouldShowAd}
@@ -160,10 +161,7 @@ export const getServerSideProps = (async ({ params, req, res }) => {
 
   const [headerData, [externalsResponse, countResponse, partnerResponse]] =
     await Promise.all([
-      fetchShellHeaderData({
-        includeFlashNews: true,
-        logFields: globalLogFields,
-      }),
+      fetchShellHeaderData({ logFields: globalLogFields }),
       Promise.allSettled([
         fetchExternalsByPartnerSlug(1, RENDER_PAGE_SIZE, partnerSlug),
         client.query({

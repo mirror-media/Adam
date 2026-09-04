@@ -13,12 +13,12 @@ import {
   GPT_Placeholder,
   GPT_Placeholder_Aside,
 } from '@/components/ads/gpt/gpt-placeholder'
-import Layout from '@/components/shared/layout'
 import UserBehaviorLogger from '@/components/shared/user-behavior-logger'
 import WineWarning from '@/components/shared/wine-warning'
 import ArticleQuestions from '@/components/shell/article/article-questions'
 import { NextUpPosts } from '@/components/shell/article/next-up-posts'
 import { ArticleSummary } from '@/components/shell/article/post-summary'
+import { PageShell } from '@/components/shell/page-shell'
 import { generateJsonLdsData } from '@/components/story/shared/json-lds-data'
 import JsonLdsScript from '@/components/story/shared/json-lds-script'
 import StoryHead from '@/components/story/shared/story-head'
@@ -28,16 +28,10 @@ import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
 import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
 import { LatestArticles } from '@/modules/aside/components/latest-articles'
 import { PopularArticles } from '@/modules/aside/components/popular-articles'
-import {
-  fetchStoryHeaderAndFlashNewsData,
-  fetchStoryPost,
-  getStoryLayoutType,
-} from '@/modules/story/story-data'
+import { fetchStoryPost, getStoryLayoutType } from '@/modules/story/story-data'
 import type {
   PostContent,
   RelatedStory,
-  StoryFlashNewsData,
-  StoryHeaderData,
   StoryLayoutType,
   StoryPost,
 } from '@/modules/story/story-types'
@@ -52,6 +46,8 @@ import {
   getResizedUrl,
 } from '@/utils'
 import { getSectionGPTPageKey } from '@/utils/ad'
+import type { ShellHeaderData } from '@/utils/api'
+import { fetchShellHeaderData } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
 import { buildStoryDataLayer } from '@/utils/gtm/build-data-layer'
 import { logGqlError } from '@/utils/log/shared'
@@ -125,8 +121,7 @@ type StoryPageProps = {
   query: Record<string, string | string[] | undefined> | null
   postData: StoryPost
   initialRelatedStories: RelatedStory[]
-  headerData: StoryHeaderData
-  flashNewsData: StoryFlashNewsData
+  headerData: ShellHeaderData
   storyLayoutType: StoryLayoutType
   jsonLdData: object[]
   dataLayer: StoryDataLayer
@@ -137,7 +132,6 @@ export default function Story({
   postData,
   initialRelatedStories = [],
   headerData,
-  flashNewsData,
   storyLayoutType,
   jsonLdData,
 }: StoryPageProps) {
@@ -193,9 +187,9 @@ export default function Story({
   return (
     <>
       <StoryHead postData={postData} />
-      <Layout
+      <PageShell
         head={{
-          robotsMetaContent: query?.from ? 'noindex' : undefined,
+          robotsMetaContent: query?.from ? 'noindex' : null,
           title: `${title ?? ''}`,
           ogTitle: postData.og_title ?? undefined,
           description:
@@ -212,15 +206,7 @@ export default function Story({
           pageType: 'story',
           pageSlug: slug ?? '',
         }}
-        header={{
-          type: 'default-with-flash-news',
-          data: {
-            sectionsData: headerData.sectionsData,
-            topicsData: headerData.topicsData,
-            flashNewsData: flashNewsData,
-          },
-        }}
-        footer={{ type: 'default' }}
+        headerData={headerData}
       >
         <MisoPageView productIds={`story_${slug ?? ''}`} />
         <UserBehaviorLogger writers={writersInString} />
@@ -373,7 +359,7 @@ export default function Story({
             className="fixed right-0 bottom-0 left-0 z-2000 mx-auto block h-auto w-full xl:hidden"
           />
         )}
-      </Layout>
+      </PageShell>
       <JsonLdsScript jsonLdData={jsonLdData} />
     </>
   )
@@ -449,17 +435,9 @@ export const getServerSideProps: GetServerSideProps<
     }
 
     const storyLayoutType = getStoryLayoutType(style)
-    let headerData: StoryHeaderData = { sectionsData: [], topicsData: [] }
-    let flashNewsData: StoryFlashNewsData = []
-    const shouldFetchDefaultHeaderData = storyLayoutType === 'style-normal'
-    if (shouldFetchDefaultHeaderData) {
-      const result = await fetchStoryHeaderAndFlashNewsData(
-        slug,
-        globalLogFields
-      )
-      headerData = result.headerData
-      flashNewsData = result.flashNewsData
-    }
+    const headerData = await fetchShellHeaderData({
+      logFields: globalLogFields,
+    })
 
     const jsonLdData = generateJsonLdsData(postData, '/story/')
     const initialRelatedStories = getInitialRelatedStories(postData)
@@ -470,7 +448,6 @@ export const getServerSideProps: GetServerSideProps<
         query,
         postData: clientStoryPost,
         initialRelatedStories,
-        flashNewsData,
         headerData,
         storyLayoutType,
         jsonLdData,
