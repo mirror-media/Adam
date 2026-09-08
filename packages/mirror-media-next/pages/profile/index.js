@@ -96,7 +96,6 @@ export default function Profile({ headerData, signInProvider }) {
         type: 'default',
         data: headerData,
       }}
-      footer={{ type: 'default' }}
     >
       {savedStatus === MODE.FORM && (
         <Page>
@@ -142,7 +141,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in profile page',
@@ -152,7 +151,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
   return {
     props: {
       signInProvider: signInProvider,
-      headerData: { sectionsData, topicsData },
+      headerData: { flashNewsData, sectionsData, topicsData },
     },
   }
 })

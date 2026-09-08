@@ -1,7 +1,6 @@
 import type { GetServerSideProps } from 'next'
 import Head from 'next/head'
 
-import CustomHead from '@/components/shared/custom-head'
 import WineWarning from '@/components/shared/wine-warning'
 import { PageShell } from '@/components/shell/page-shell'
 import SlotAndBanner from '@/components/slot/slot-and-banner'
@@ -27,11 +26,6 @@ function TopicPage({ headerData, viewModel }: TopicPageProps) {
 
   return (
     <>
-      <CustomHead
-        description={seo.description ?? undefined}
-        imageUrl={seo.imageUrl ?? undefined}
-        title={seo.title}
-      />
       <Head>
         {seo.pubdate ? (
           <meta
@@ -56,7 +50,14 @@ function TopicPage({ headerData, viewModel }: TopicPageProps) {
           type="application/ld+json"
         />
       </Head>
-      <PageShell headerData={headerData}>
+      <PageShell
+        head={{
+          description: seo.description ?? undefined,
+          imageUrl: seo.imageUrl ?? undefined,
+          title: seo.title,
+        }}
+        headerData={headerData}
+      >
         <TopicPageBody
           layoutKind={layoutKind}
           slideshowImages={slideshowImages}
@@ -99,10 +100,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
   }
 
   const [headerData, viewModel] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     loadTopicPage(topicSlug).catch((error: unknown) => {
       logGenericError(
         error,

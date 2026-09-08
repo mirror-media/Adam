@@ -4,9 +4,11 @@ import { useRouter } from 'next/router'
 import { SITE_URL } from '../../config/index.mjs'
 import {
   DEFAULT_OG_IMAGE_URL,
+  DEFAULT_ROBOTS_META_CONTENT,
   FB_APP_ID,
   FB_PAGE_ID,
   SITE_TITLE,
+  TWITTER_SITE_HANDLE,
 } from '../../constants'
 
 /**
@@ -35,17 +37,15 @@ import {
  */
 
 /**
- * Create canonical link based on router.asPath
- * Since '/story' page and '/story/amp' page has special logic on creating canonical link,
- * we decide not handle canonical link on these page.
+ * Create a clean absolute URL based on router.asPath.
  * @param {string} routerAsPath
- * @return {null | React.ReactNode}
+ * @return {string}
  */
-const createCanonicalLink = (routerAsPath) => {
+const createCleanUrl = (routerAsPath) => {
   const url = new URL(routerAsPath, 'https://' + SITE_URL)
   url.search = '' //remove query params in url
 
-  return <link rel="canonical" href={url.toString()} key="canonical" />
+  return url.toString()
 }
 
 /**
@@ -59,7 +59,7 @@ const createCanonicalLink = (routerAsPath) => {
  * @property {boolean} [skipCanonical] - flag to indicates whether the canonical should be added here
  * @property {'story' | 'external'} [pageType] - pageType for search result navigation in App
  * @property {string} [pageSlug] - set pageSlug with pageType. This is also for search result navigation in App
- * @property {string} [robotsMetaContent] - content for the robots meta tag, e.g. 'noindex, nofollow', controlling search engine indexing and crawling
+ * @property {string | null} [robotsMetaContent] - content for the robots meta tag. Pass null when another Head instance owns the tag.
  */
 
 /**
@@ -76,12 +76,13 @@ export default function CustomHead({
   imageUrl,
   pageType,
   pageSlug,
-  robotsMetaContent,
+  robotsMetaContent = DEFAULT_ROBOTS_META_CONTENT,
 }) {
   const router = useRouter()
-  const canonicalLink = skipCanonical
-    ? null
-    : createCanonicalLink(router.asPath)
+  const cleanUrl = createCleanUrl(router.asPath)
+  const canonicalLink = skipCanonical ? null : (
+    <link rel="canonical" href={cleanUrl} key="canonical" />
+  )
   /** @type {OGProperties} */
   const siteInformation = {
     title: title ? `${title} - ${SITE_TITLE}` : SITE_TITLE,
@@ -91,7 +92,7 @@ export default function CustomHead({
       '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。',
     ogDescription,
     site_name: SITE_TITLE,
-    url: SITE_URL + router.asPath,
+    url: cleanUrl,
     type: 'website',
     image: {
       width: '1200',
@@ -143,7 +144,7 @@ export default function CustomHead({
         content={siteInformation.ogTitle || siteInformation.title}
         key="og:title"
       />
-      <meta property="og:url" content={'https://' + siteInformation.url} />
+      <meta property="og:url" content={siteInformation.url} key="og:url" />
       <meta property="og:type" content={siteInformation.type} key="og:type" />
       <meta
         property="og:description"
@@ -200,6 +201,11 @@ export default function CustomHead({
         key="twitter:card"
       />
       <meta
+        name="twitter:site"
+        content={TWITTER_SITE_HANDLE}
+        key="twitter:site"
+      />
+      <meta
         name="twitter:url"
         content={siteInformation.url}
         key="twitter:url"
@@ -219,9 +225,9 @@ export default function CustomHead({
           {/* These metatags are for search result usage */}
           <meta name="page-type" content={pageType} />
           <meta name="page-slug" content={pageSlug} />
-          <meta name="image" content={siteInformation?.image?.url} />
         </>
       )}
+      <meta name="image" content={siteInformation.image.url} key="image" />
     </Head>
   )
 }

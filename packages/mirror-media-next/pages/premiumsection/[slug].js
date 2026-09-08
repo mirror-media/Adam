@@ -11,16 +11,13 @@ import { SECTION_IDS } from '../../constants/index'
 import { Z_INDEX } from '../../constants/index'
 import { useDisplayAd } from '../../hooks/useDisplayAd'
 import { getLogTraceObject } from '../../utils'
-import { fetchHeaderDataInPremiumPageLayout } from '../../utils/api'
+import { fetchShellHeaderData } from '../../utils/api'
 import {
   fetchPremiumPostsBySectionSlug,
   fetchSectionBySectionSlug,
 } from '../../utils/api/premiumsection'
 import { setPageCache } from '../../utils/cache-setting'
-import {
-  getPostsAndPostscountFromGqlData,
-  getSectionFromPremiumHeaderData,
-} from '../../utils/data-process'
+import { getPostsAndPostscountFromGqlData } from '../../utils/data-process'
 import { buildSingleCatDataLayer } from '../../utils/gtm/build-data-layer'
 import { processSettledResult } from '../../utils/response-processor'
 
@@ -133,8 +130,7 @@ export default function Section({ postsCount, posts, section, headerData }) {
   return (
     <Layout
       head={{ title: `${sectionName}分類報導` }}
-      header={{ type: 'premium', data: headerData }}
-      footer={{ type: 'default' }}
+      header={{ type: 'default', data: headerData }}
     >
       <SectionContainer>
         <GPT_Placeholder
@@ -185,16 +181,22 @@ export async function getServerSideProps({ query, req, res }) {
   const globalLogFields = getLogTraceObject(req)
 
   const responses = await Promise.allSettled([
-    fetchHeaderDataInPremiumPageLayout(),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     fetchPremiumPostsBySectionSlug(sectionSlug, RENDER_PAGE_SIZE * 2, 0),
     fetchSectionBySectionSlug(sectionSlug),
   ])
 
   // handle header data
-  const sectionsData = processSettledResult(
+  const headerData = processSettledResult(
     responses[0],
-    getSectionFromPremiumHeaderData,
-    `Error occurs while getting premium header data in premiumsection page (sectionSlug: ${sectionSlug})`,
+    (data) =>
+      data ?? {
+        flashNewsData: [],
+        navigationData: [],
+        sectionPostsData: {},
+        topicsData: [],
+      },
+    `Error occurs while getting shell header data in premiumsection page (sectionSlug: ${sectionSlug})`,
     globalLogFields
   )
 
@@ -239,7 +241,7 @@ export async function getServerSideProps({ query, req, res }) {
     postsCount,
     posts,
     section,
-    headerData: { sectionsData },
+    headerData,
     dataLayer: buildSingleCatDataLayer(section.name || ''),
   }
 

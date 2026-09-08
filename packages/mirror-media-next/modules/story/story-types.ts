@@ -4,7 +4,6 @@ import type { FetchStoryPostBySlugQuery as ContentFetchStoryPostBySlugQuery } fr
 import type { FetchStoryPostBySlugQuery as StoryFetchStoryPostBySlugQuery } from '@/apollo/__generated__/story/graphql'
 import type { Resized } from '@/apollo/fragments/photo'
 import type { Related } from '@/apollo/fragments/post'
-import type { HeadersData, Topics } from '@/utils/api'
 
 // The raw shape GraphQL actually returns for either endpoint, straight from
 // codegen — content and story schemas are queried with the same fields but
@@ -60,11 +59,4 @@ export type RelatedStory = Omit<Related, 'heroImage'> & {
   } | null
   url: string
   type: 'story' | 'external'
-}
-
-export type StoryFlashNewsData = { id: string; slug: string; title: string }[]
-
-export type StoryHeaderData = {
-  sectionsData: HeadersData
-  topicsData: Topics
 }

@@ -10,10 +10,7 @@ import { getPopInId, needInsertPopInAdAfter } from '@/utils/ad'
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
-import {
-  homepageCardHoverClass,
-  homepageCardLinkFocusClass,
-} from './homepage-card-styles'
+import { homepageCardLinkFocusClass } from './homepage-card-styles'
 import { SectionTitle } from './section-title'
 
 const PopInAd = dynamic(() => import('@/components/ads/pop-in/pop-in-ad'), {
@@ -65,7 +62,6 @@ function HeadlineList({
                 <NextLink
                   className={cn(
                     'group grid min-h-16 grid-cols-[96px_minmax(0,1fr)] items-center gap-mm-m xl:gap-mm-l',
-                    homepageCardHoverClass,
                     homepageCardLinkFocusClass,
                     trackingClassName
                   )}

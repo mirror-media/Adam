@@ -14,10 +14,7 @@ import { HOMEPAGE_DESKTOP_MEDIA_QUERY } from '../homepage-constants'
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
-import {
-  homepageCardHoverClass,
-  homepageCardLinkFocusClass,
-} from './homepage-card-styles'
+import { homepageCardLinkFocusClass } from './homepage-card-styles'
 import { SectionTitle } from './section-title'
 
 const MicroAd = dynamic(
@@ -181,7 +178,6 @@ function MoreNews({
                   <NextLink
                     className={cn(
                       'GTM-homepage-latest-list group flex h-full flex-col',
-                      homepageCardHoverClass,
                       homepageCardLinkFocusClass
                     )}
                     href={`${article.href}?from=index_list_news`}

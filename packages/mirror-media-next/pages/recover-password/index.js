@@ -194,10 +194,7 @@ export default function Login({ emailData, headerData }) {
   }, [avoidSpamCooldown])
 
   return (
-    <LayoutFull
-      header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
-    >
+    <LayoutFull header={{ type: 'default', data: headerData }}>
       <Container>
         <Main>
           <FormWrapper>
@@ -260,7 +257,7 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(async ({
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in recover password page',
@@ -271,6 +268,7 @@ export const getServerSideProps = redirectToDestinationWhileAuthed()(async ({
     props: {
       emailData,
       headerData: {
+        flashNewsData,
         sectionsData,
         topicsData,
       },

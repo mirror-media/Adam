@@ -63,6 +63,7 @@ function Homepage({ data }: HomepageProps) {
       sidebar.style.position = ''
       sidebar.style.left = ''
       sidebar.style.width = ''
+      sidebar.style.marginInline = ''
       detachedSidebar = null
     }
 
@@ -263,6 +264,9 @@ function Homepage({ data }: HomepageProps) {
       sidebar.style.top = `${sidebarRect.top + hiddenTop}px`
       sidebar.style.left = `${sidebarRect.left}px`
       sidebar.style.width = `${sidebarRect.width}px`
+      // Fixed positioning uses the measured border box; neutralize the
+      // layout-only negative margin so it is not applied a second time.
+      sidebar.style.marginInline = '0'
       sidebar.style.height = `${detachedHeight}px`
       sidebar.scrollTop = previousScrollTop + hiddenTop
     }
@@ -322,7 +326,7 @@ function Homepage({ data }: HomepageProps) {
         >
           <aside
             aria-label="首頁側欄"
-            className="contents xl:sticky xl:flex xl:w-full xl:min-w-0 xl:flex-col xl:gap-mm-5xl xl:overflow-hidden"
+            className="contents xl:sticky xl:-mx-mm-m xl:flex xl:w-auto xl:min-w-0 xl:flex-col xl:gap-mm-5xl xl:overflow-hidden xl:px-mm-m"
             ref={sidebarRef}
           >
             <HeadlineList

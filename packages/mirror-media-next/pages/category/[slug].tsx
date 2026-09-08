@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic'
 import FullScreenAds from '@/components/ads/full-screen-ads'
 import GPTMbStAd from '@/components/ads/gpt/gpt-mb-st-ad'
 import { GPT_Placeholder } from '@/components/ads/gpt/gpt-placeholder'
-import CustomHead from '@/components/shared/custom-head'
 import WineWarning from '@/components/shared/wine-warning'
 import { PageShell } from '@/components/shell/page-shell'
 import { Typography } from '@/components/ui/typography'
@@ -96,8 +95,8 @@ export default function CategoryPage({
 
   return (
     <>
-      <CustomHead title={`${category.name}`} />
       <PageShell
+        head={{ title: `${category.name}` }}
         headerData={{ ...headerData, activeNavigationSlug: sectionSlug }}
       >
         <script
@@ -266,10 +265,7 @@ export const getServerSideProps = (async ({ query, req, res }) => {
   }
 
   const [headerData, [postsCount, posts]] = await Promise.all([
-    fetchShellHeaderData({
-      includeFlashNews: true,
-      logFields: globalLogFields,
-    }),
+    fetchShellHeaderData({ logFields: globalLogFields }),
     fetchCategoryPosts(),
   ])
 

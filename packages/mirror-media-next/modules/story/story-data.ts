@@ -1,7 +1,3 @@
-// GetServerSideProps-only: pulls in `utils/server-side-only/fetch-static-json`
-// (Node `fs`), so only import this from the page's GSSP, never from
-// client-rendered code — see `related-stories-client.ts` for that.
-import axios from 'axios'
 import type { RawDraftContentState } from 'draft-js'
 
 import client, { getStoryClient } from '@/apollo/apollo-client'
@@ -9,23 +5,9 @@ import {
   fetchContentStoryPostBySlug,
   fetchStoryPostBySlug,
 } from '@/apollo/query/posts'
-import {
-  API_TIMEOUT,
-  IS_PREVIEW_MODE,
-  STORY_GQL_ENDPOINT,
-  URL_STATIC_POST_FLASH_NEWS,
-} from '@/config/index.mjs'
-import { fetchHeaderDataInDefaultPageLayout } from '@/utils/api'
-import { logAxiosError } from '@/utils/log/shared'
-import { processSettledResult } from '@/utils/response-processor'
+import { IS_PREVIEW_MODE, STORY_GQL_ENDPOINT } from '@/config/index.mjs'
 
-import type {
-  FaqsAlgo,
-  StoryFlashNewsData,
-  StoryHeaderData,
-  StoryPost,
-  StoryPostQueryResult,
-} from './story-types'
+import type { FaqsAlgo, StoryPost, StoryPostQueryResult } from './story-types'
 
 export function getStoryLayoutType(
   articleStyle: StoryPostQueryResult['style']
@@ -113,61 +95,5 @@ export async function fetchStoryPost(slug: string): Promise<StoryPost | null> {
     brief: toDraftContentState(postData.brief),
     content: toDraftContentState(postData.content),
     faqs_algo: toFaqsAlgo(postData.faqs_algo),
-  }
-}
-
-async function fetchStoryFlashNewsData(): Promise<{
-  data: { posts?: StoryFlashNewsData }
-}> {
-  try {
-    const mod = await import('@/utils/server-side-only/fetch-static-json')
-    return await mod.fetchStaticJsonOnServer<{ posts: StoryFlashNewsData }>(
-      URL_STATIC_POST_FLASH_NEWS,
-      API_TIMEOUT
-    )
-  } catch {
-    return axios<{ posts: StoryFlashNewsData }>({
-      method: 'get',
-      url: URL_STATIC_POST_FLASH_NEWS,
-      timeout: API_TIMEOUT,
-    })
-  }
-}
-
-export async function fetchStoryHeaderAndFlashNewsData(
-  slug: string,
-  logFields: Record<string, unknown>
-): Promise<{ headerData: StoryHeaderData; flashNewsData: StoryFlashNewsData }> {
-  try {
-    const responses = await Promise.allSettled([
-      fetchStoryFlashNewsData(),
-      fetchHeaderDataInDefaultPageLayout(),
-    ])
-
-    const flashNewsData = processSettledResult(
-      responses[0],
-      (response) => response?.data?.posts ?? [],
-      'Error occurs while getting flash news in story page',
-      logFields
-    )
-
-    const headerData = processSettledResult(
-      responses[1],
-      (data) => data ?? { sectionsData: [], topicsData: [] },
-      'Error occurs while getting sectionsData and topicsData in story page',
-      logFields
-    )
-
-    return { headerData, flashNewsData }
-  } catch (err) {
-    logAxiosError(
-      err as Error,
-      `Error occurs while getting header data in story page (slug: ${slug})`,
-      logFields
-    )
-    return {
-      headerData: { sectionsData: [], topicsData: [] },
-      flashNewsData: [],
-    }
   }
 }

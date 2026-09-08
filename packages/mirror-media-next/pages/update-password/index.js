@@ -48,10 +48,7 @@ export default function UpdatePassword({ headerData }) {
   useMembershipRequired()
 
   return (
-    <LayoutFull
-      header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
-    >
+    <LayoutFull header={{ type: 'default', data: headerData }}>
       <Container>
         <Main>
           <FormWrapper>
@@ -91,7 +88,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in update password page',
@@ -100,7 +97,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
 
   return {
     props: {
-      headerData: { sectionsData, topicsData },
+      headerData: { flashNewsData, sectionsData, topicsData },
     },
   }
 })

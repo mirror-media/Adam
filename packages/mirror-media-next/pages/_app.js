@@ -55,6 +55,7 @@ function MyApp({ Component, pageProps }) {
   const router = useRouter()
   const { pathname } = router
   const isStoryPage = pathname.startsWith('/story/')
+  const isServerErrorPage = pathname === '/500'
 
   // Skip this client-only dynamic widget on AMP pages because Next.js may emit
   // React fallback markers (e.g. `<template data-dgst="DYNAMIC_SERVER_USAGE">`)
@@ -146,7 +147,7 @@ function MyApp({ Component, pageProps }) {
                       thing catching it: without it, a failure in this secondary
                       widget would take down the whole app. No fallback props, so it just
                       disappears. */}
-                  {!isAmpPage && (
+                  {!isAmpPage && !isServerErrorPage && (
                     <ErrorBoundary boundary="promote-topic">
                       <PromoteTopic />
                     </ErrorBoundary>

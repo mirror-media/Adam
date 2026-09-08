@@ -108,7 +108,6 @@ export default function WarmLife({
     <Layout
       head={{ title: `${WARMLIFE_DEFAULT_TITLE}相關報導` }}
       header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
     >
       <WarmLifeContainer>
         <GPT_Placeholder
@@ -172,7 +171,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in externals warmlife page',
@@ -207,7 +206,7 @@ export async function getServerSideProps({ req, res }) {
   const props = {
     warmLifeData,
     warmLifeDataCount,
-    headerData: { sectionsData, topicsData },
+    headerData: { flashNewsData, sectionsData, topicsData },
   }
 
   return { props }
