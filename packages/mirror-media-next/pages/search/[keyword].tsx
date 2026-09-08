@@ -53,7 +53,7 @@ export default function SearchPage({
     <>
       <PageShell
         head={{
-          title: `${searchTerms} - 新聞搜尋`,
+          title: `${searchTerms} 新聞搜尋`,
           description: metaDescription,
           ogDescription: metaDescription,
         }}

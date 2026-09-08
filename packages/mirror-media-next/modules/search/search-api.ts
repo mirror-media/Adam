@@ -1,13 +1,8 @@
 import { z } from 'zod'
 
-import { MISO_ENDPOINTS } from '@/config/index.mjs'
+import { API_TIMEOUT, MISO_ENDPOINTS } from '@/config/index.mjs'
 import { buildMisoUrl, misoFetch } from '@/utils/miso'
 import { monitorZodSafeParse } from '@/utils/zod-monitor'
-
-/**
- * miso api 的回應中位數 822ms、最慢量到 1754ms，用 prod 的 API_TIMEOUT（1500）會有約一成的關鍵字取不到值。
- */
-const TIMEOUT = 3000
 
 export type SearchMeta = {
   latestTitle: string
@@ -46,8 +41,9 @@ export async function fetchSearchMeta(
          */
         order_by: 'published_at',
         anonymous_id: 'mirrormedia_search_meta',
+        answer: false,
       },
-      AbortSignal.timeout(TIMEOUT)
+      AbortSignal.timeout(API_TIMEOUT)
     )
 
     if (!response.ok) {
