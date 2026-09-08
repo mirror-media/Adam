@@ -95,13 +95,6 @@
     }
 
     .miso-hybrid-search-combo__answer-box {
-      /*
-       * 不顯示 AI 回答區（question / answer / feedback / sources 都在這塊裡面）。
-       * 只能藏 UI：hybrid search 的 query() 是走 answer 這條流程，ask API 還是會打。
-       * 底下的樣式先留著，之後要開回來就把這行拿掉。
-       */
-      display: none !important;
-
       border: 0;
       box-shadow: none;
 
@@ -218,6 +211,7 @@
         .miso-list__item {
           border: 0;
           display: flex;
+          margin: 0px !important;
           &:not(:first-child) {
             &:before {
               content: '';
