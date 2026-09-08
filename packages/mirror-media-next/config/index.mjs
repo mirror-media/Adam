@@ -17,6 +17,7 @@ const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
 const MISO_API_BASE_URL = 'https://api.askmiso.com'
 const MISO_ENDPOINTS = {
   relatedStories: `${MISO_API_BASE_URL}/v1/recommendation/product_to_products`,
+  search: `${MISO_API_BASE_URL}/v1/ask/search`,
 }
 
 // should be applied in preview mode
