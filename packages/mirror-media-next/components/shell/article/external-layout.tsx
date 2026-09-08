@@ -143,7 +143,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
         <Typography
           as="h1"
           variant="h1"
-          className="order-2 col-span-full px-2 md:order-3 md:px-0"
+          className="order-2 col-span-full mb-3 px-2 md:order-3 md:mb-4 md:px-0"
         >
           {title}
         </Typography>
