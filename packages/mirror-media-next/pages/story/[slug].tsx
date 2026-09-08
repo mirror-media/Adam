@@ -299,7 +299,10 @@ export default function Story({
                           className="hidden h-auto w-full xl:m-0 xl:block"
                         />
                       </div>
-                      <DableAd breakpoint="xl" className="mx-2 md:mx-0" />
+                      <DableAd
+                        breakpoint="xl"
+                        className="mx-2 md:mx-0 md:min-h-260"
+                      />
                     </>
                   )}
                 </>
