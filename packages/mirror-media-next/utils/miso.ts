@@ -17,7 +17,8 @@ const formatStoryId = (storySlug: string, storyType: string): string => {
 
 const misoFetch = async (
   url: URL,
-  body: Record<string, unknown>
+  body: Record<string, unknown>,
+  signal?: AbortSignal
 ): Promise<Response> => {
   return fetch(url.toString(), {
     method: body ? 'POST' : 'GET',
@@ -26,6 +27,7 @@ const misoFetch = async (
     },
     ...(body && { body: JSON.stringify(body) }),
     cache: 'no-cache',
+    signal,
   })
 }
 

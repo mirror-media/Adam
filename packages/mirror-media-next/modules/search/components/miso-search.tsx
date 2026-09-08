@@ -68,6 +68,10 @@ export default function MisoSearch({ searchTerms }: MisoSearchProps) {
             query: {
               placeholder: 'Ask anything!',
             },
+            keywords: {
+              raw: false,
+              tag: 'h1',
+            },
             products: [
               'list',
               {

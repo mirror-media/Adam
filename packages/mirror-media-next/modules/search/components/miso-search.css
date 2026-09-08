@@ -10,10 +10,10 @@
   /* input 框 */
   .miso-hybrid-search-combo__question {
     padding: 12px 20px !important;
-    background: #EAEAEA;
+    background: #eaeaea;
     display: block;
     @media (min-width: 768px) {
-      padding: 20px 0 !important; 
+      padding: 20px 0 !important;
       background: rgba(0, 0, 0, 0);
     }
     .miso-hybrid-search-combo__query-container {
@@ -37,16 +37,15 @@
     }
     .miso-search-box__input-group {
       border-radius: 7px;
-      border: 1px solid #DDD;
-      background: #F5F5F5;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
       box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
       align-items: center;
       @media (min-width: 768px) {
         border-radius: 4px;
-        border: 0.5px solid #DDD;
-        background: #F5F5F5;
+        border: 0.5px solid #ddd;
+        background: #f5f5f5;
         box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.05) inset;
-        
       }
       &::before {
         content: '';
@@ -59,8 +58,8 @@
 
       .miso-search-box__input {
         background: rgba(0, 0, 0, 0);
-        color: #9C9C9C;
-        font-family: "PingFang TC";
+        color: #9c9c9c;
+        font-family: 'PingFang TC';
         font-size: 16px;
         font-weight: 500;
         line-height: 200%;
@@ -96,6 +95,13 @@
     }
 
     .miso-hybrid-search-combo__answer-box {
+      /*
+       * 不顯示 AI 回答區（question / answer / feedback / sources 都在這塊裡面）。
+       * 只能藏 UI：hybrid search 的 query() 是走 answer 這條流程，ask API 還是會打。
+       * 底下的樣式先留著，之後要開回來就把這行拿掉。
+       */
+      display: none !important;
+
       border: 0;
       box-shadow: none;
 
@@ -109,10 +115,12 @@
         margin-bottom: 20px;
         miso-question {
           display: block;
-          color: #1D9FB8;
+          color: #1d9fb8;
           text-align: center;
-          font-feature-settings: 'liga' off, 'clig' off;
-          font-family: "PingFang TC";
+          font-feature-settings:
+            'liga' off,
+            'clig' off;
+          font-family: 'PingFang TC';
           font-size: 28px;
           font-style: normal;
           font-weight: 600;
@@ -123,9 +131,9 @@
 
           &::before {
             content: '你想找的是';
-            color: #1D9FB8;
+            color: #1d9fb8;
             text-align: center;
-            font-family: "PingFang TC";
+            font-family: 'PingFang TC';
             font-size: 18px;
             font-style: normal;
             font-weight: 500;
@@ -133,7 +141,6 @@
             display: block;
             margin-bottom: 27px;
           }
-
 
           @media (min-width: 768px) {
             display: flex;
@@ -149,7 +156,7 @@
               flex: 1;
               margin-left: 56px;
               border-top: 1px solid black;
-              transform: translate(0, 50%)
+              transform: translate(0, 50%);
             }
           }
           @media (min-width: 1200px) {
@@ -163,15 +170,16 @@
         }
       }
 
-      .miso-typewriter, .miso-typewriter * {
+      .miso-typewriter,
+      .miso-typewriter * {
         color: #000 !important;
-        font-family: "PingFang TC";
+        font-family: 'PingFang TC';
         font-size: 18px;
         font-style: normal;
         font-weight: 400;
-        line-height: 200%; 
+        line-height: 200%;
         a::before {
-          color: #1D9FB8;
+          color: #1d9fb8;
         }
       }
 
@@ -244,7 +252,7 @@
             }
 
             .miso-list__item-index {
-              color: #1D9FB8;
+              color: #1d9fb8;
             }
 
             .miso-list__item-title {
@@ -262,8 +270,8 @@
               }
 
               .miso-list__item-date {
-                color: #61B8C6;
-                font-family: "PingFang TC";
+                color: #61b8c6;
+                font-family: 'PingFang TC';
                 font-size: 14px;
                 font-weight: 400;
                 line-height: 14px;
@@ -272,8 +280,10 @@
 
               .miso-list__item-title {
                 color: #000;
-                font-feature-settings: 'liga' off, 'clig' off;
-                font-family: "PingFang TC";
+                font-feature-settings:
+                  'liga' off,
+                  'clig' off;
+                font-family: 'PingFang TC';
                 font-size: 16px;
                 -webkit-line-clamp: 5;
                 padding: 0;
@@ -310,12 +320,17 @@
       miso-keywords {
         display: block;
         color: black;
-        font-family: "PingFang TC";
+        font-family: 'PingFang TC';
         font-size: 18px;
         font-weight: 500;
         line-height: 150%; /* 27px */
         @media (min-width: 1200px) {
           font-size: 24px;
+        }
+        h1 {
+          margin: 0;
+          font-size: inherit;
+          font-weight: inherit;
         }
       }
       &::before {
@@ -323,14 +338,14 @@
         font-size: 18px;
         font-weight: 500;
         line-height: 150%;
-        margin-right: .5rem;
+        margin-right: 0.5rem;
       }
       &::after {
         content: '的搜尋結果';
         font-size: 18px;
         font-weight: 500;
         line-height: 150%;
-        margin-left: .5rem;
+        margin-left: 0.5rem;
       }
     }
     .miso-hybrid-search-combo__total-phrase {
@@ -343,8 +358,8 @@
         width: 100%;
       }
       miso-total {
-        color: #1D9FB8;
-        font-family: "PingFang TC";
+        color: #1d9fb8;
+        font-family: 'PingFang TC';
         font-size: 14px;
         font-weight: 600;
         line-height: 14px; /* 87.5% */
@@ -352,13 +367,12 @@
           font-size: 16px;
         }
         &::after {
-          content: " 篇";
+          content: ' 篇';
         }
         &::before {
-          content: "共有 ";
+          content: '共有 ';
         }
       }
-
     }
   }
 
@@ -379,7 +393,7 @@
         content: '排序依';
         display: block;
         color: #000;
-        font-family: "PingFang TC";
+        font-family: 'PingFang TC';
         font-size: 14px;
         line-height: 14px; /* 100% */
       }
@@ -393,7 +407,7 @@
 
         .miso-select__button {
           border: 0;
-          color: #1D9FB8;
+          color: #1d9fb8;
           outline: 0 !important;
         }
 
@@ -408,8 +422,8 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 16px;
-            border: 1px solid #9D9D9D;
-            background: #FFF;
+            border: 1px solid #9d9d9d;
+            background: #fff;
             border-radius: 0;
             .miso-select__option {
               transition: 0.5s;
@@ -417,10 +431,10 @@
                 content: none;
               }
               &.selected {
-                color: #1D9FB8;
+                color: #1d9fb8;
               }
               &:hover {
-                color: #1D9FB8;
+                color: #1d9fb8;
               }
             }
           }
@@ -428,7 +442,6 @@
       }
     }
   }
-  
 
   /* result 區域 */
   .miso-hybrid-search-combo__search-results {
@@ -443,6 +456,5 @@
   }
   .miso-hybrid-search-combo__search-results-container {
     padding: 0 !important;
-
   }
 }
