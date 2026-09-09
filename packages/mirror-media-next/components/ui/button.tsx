@@ -4,18 +4,17 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/components/cn'
 
 const buttonVariants = cva(
-  'inline-flex shrink-0 cursor-pointer items-center justify-center border border-transparent font-mm-sans text-mm-subtitle whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  'inline-flex shrink-0 cursor-pointer items-center justify-center border border-transparent font-mm-sans text-mm-subtitle whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-all-black focus-visible:outline-solid active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
   {
     variants: {
       variant: {
-        default:
-          'rounded-mm-s bg-mm-base-700 text-mm-neutral-0 hover:bg-mm-base-500',
+        default: 'rounded-mm-s bg-mm-base-700 text-white hover:bg-mm-base-500',
         outline:
-          'rounded-mm-m border-mm-neutral-300 bg-mm-neutral-50 text-mm-neutral-400 hover:border-mm-second-700 hover:bg-mm-second-700 hover:text-mm-neutral-0',
+          'rounded-mm-m border-mm-neutral-300 bg-mm-off-white text-mm-neutral-400 hover:border-mm-second-700 hover:bg-mm-second-700 hover:text-white',
         secondary:
-          'rounded-mm-s bg-mm-second-500 text-mm-neutral-0 hover:bg-mm-second-400',
+          'rounded-mm-s bg-mm-second-500 text-white hover:bg-mm-second-400',
         destructive:
-          'rounded-mm-s bg-mm-error-500 text-mm-neutral-0 hover:bg-mm-error-600 focus-visible:outline-mm-error-500',
+          'rounded-mm-s bg-mm-error-500 text-white hover:bg-mm-error-600 focus-visible:outline-mm-error-500',
         ghost:
           'rounded-mm-s bg-transparent text-mm-neutral-700 hover:bg-mm-neutral-100',
         link: 'h-auto rounded-none p-0 text-mm-base-500 underline-offset-4 hover:underline',

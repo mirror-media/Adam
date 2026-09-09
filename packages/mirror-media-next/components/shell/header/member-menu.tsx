@@ -27,7 +27,7 @@ function MemberMenu() {
   if (!isLoggedIn) {
     return (
       <Link
-        className="GTM-header-login shrink-0 rounded-mm-xs text-mm-body-s font-bold whitespace-nowrap text-mm-neutral-900"
+        className="GTM-header-login shrink-0 rounded-mm-xs text-mm-body-s font-bold whitespace-nowrap text-mm-all-black"
         href={getLoginHref(router)}
         variant="plain"
       >

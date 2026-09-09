@@ -43,7 +43,7 @@ function VideoThumbnail({ onPlay, video }: VideoThumbnailProps) {
   return (
     <button
       aria-label={`播放影片：${video.title}`}
-      className="group relative block size-full cursor-pointer border-0 bg-black p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+      className="group relative block size-full cursor-pointer border-0 bg-black p-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-solid"
       onClick={onPlay}
       type="button"
     >
@@ -60,7 +60,7 @@ function VideoThumbnail({ onPlay, video }: VideoThumbnailProps) {
       />
       <span
         aria-hidden="true"
-        className="absolute inset-0 m-auto grid size-12 place-items-center rounded-mm-full bg-mm-base-500 text-mm-neutral-0 shadow-md transition-colors group-hover:bg-mm-base-400"
+        className="absolute inset-0 m-auto grid size-12 place-items-center rounded-mm-full bg-mm-base-500 text-white shadow-md transition-colors group-hover:bg-mm-base-400"
       >
         <PlayIcon className="relative left-px size-6 fill-current" />
       </span>
@@ -230,7 +230,7 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
                             <div className="absolute inset-0 grid place-items-center bg-black">
                               <Spinner
                                 aria-label={`正在載入影片：${video.title}`}
-                                className="size-8 text-mm-neutral-0"
+                                className="size-8 text-white"
                               />
                             </div>
                           )}
@@ -253,7 +253,7 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
           <>
             <Button
               aria-label={`上一${videosPerGroup === 1 ? '則' : '組'}最新影音`}
-              className="absolute inset-y-0 -left-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:-left-10 xl:-left-3"
+              className="absolute inset-y-0 -left-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 focus-visible:outline-white active:not-aria-[haspopup]:translate-y-0 md:-left-10 xl:-left-3"
               onClick={selectPrevious}
               size="icon-sm"
               type="button"
@@ -263,7 +263,7 @@ function PromoVideoCarousel({ videos }: PromoVideoCarouselProps) {
             </Button>
             <Button
               aria-label={`下一${videosPerGroup === 1 ? '則' : '組'}最新影音`}
-              className="absolute inset-y-0 -right-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:-right-10 xl:-right-3"
+              className="absolute inset-y-0 -right-1 z-10 my-auto grid size-7 place-items-center bg-mm-base-500 p-0 hover:bg-mm-base-400 focus-visible:outline-white active:not-aria-[haspopup]:translate-y-0 md:-right-10 xl:-right-3"
               onClick={selectNext}
               size="icon-sm"
               type="button"

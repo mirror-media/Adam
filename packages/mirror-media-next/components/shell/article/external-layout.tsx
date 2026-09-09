@@ -301,10 +301,10 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               rel="noopener noreferrer"
               className="inline-flex items-center gap-x-1 rounded-full border-mm-base-700 bg-mm-base-700 px-3 py-2 hover:bg-mm-base-600"
             >
-              <CircleDollarSignIcon className="size-4 text-mm-neutral-0" />
+              <CircleDollarSignIcon className="size-4 text-white" />
               <Typography
                 as="span"
-                className="text-sm leading-none font-normal text-mm-neutral-0"
+                className="text-sm leading-none font-normal text-white"
               >
                 贊助本文
               </Typography>
@@ -317,7 +317,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             >
               <Typography
                 as="span"
-                className="items-center gap-x-1 rounded-full border-mm-second-700 bg-mm-second-700 px-3 py-2 text-sm leading-[1.125] font-normal text-mm-neutral-0 hover:bg-mm-second-600"
+                className="items-center gap-x-1 rounded-full border-mm-second-700 bg-mm-second-700 px-3 py-2 text-sm leading-[1.125] font-normal text-white hover:bg-mm-second-600"
               >
                 加入訂閱會員
               </Typography>

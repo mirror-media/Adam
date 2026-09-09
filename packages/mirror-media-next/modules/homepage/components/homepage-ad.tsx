@@ -31,7 +31,7 @@ function HomepageAdPlaceholder({
           : 'h-[250px] w-[300px] xl:h-[90px] xl:w-[728px]'
       )}
     >
-      <span className="border border-mm-neutral-300 bg-mm-neutral-50 px-mm-l py-mm-m font-mm-sans text-mm-caption-l">
+      <span className="border border-mm-neutral-300 bg-mm-off-white px-mm-l py-mm-m font-mm-sans text-mm-caption-l">
         廣告
       </span>
     </div>

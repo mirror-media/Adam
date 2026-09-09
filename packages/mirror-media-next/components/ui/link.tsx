@@ -6,7 +6,7 @@ import { cn } from '@/components/cn'
 
 // Use cn(linkVariants(...), className) when external classes may override a variant.
 const linkVariants = cva(
-  'font-mm-sans underline-offset-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid',
+  'font-mm-sans underline-offset-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-all-black focus-visible:outline-solid',
   {
     variants: {
       variant: {

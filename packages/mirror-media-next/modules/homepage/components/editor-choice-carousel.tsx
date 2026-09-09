@@ -47,7 +47,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
       {...interactionProps}
       aria-label="編輯精選"
       aria-roledescription="carousel"
-      className="relative w-full overflow-hidden bg-mm-neutral-0 md:bg-mm-neutral-800"
+      className="relative w-full overflow-hidden bg-white md:bg-mm-neutral-800"
       ref={carouselRef}
       onKeyDownCapture={(event) => {
         if (!(event.target instanceof HTMLButtonElement)) return
@@ -78,12 +78,12 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
         >
           {articles.map((article, index) => (
             <SwiperSlide
-              className="relative size-full bg-mm-neutral-0"
+              className="relative size-full bg-white"
               key={article.key}
             >
               <NextLink
                 aria-label={`編輯精選第 ${index + 1} 則，共 ${articles.length} 則：${article.title}`}
-                className="GTM-editorchoice-list absolute inset-0 block outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-mm-neutral-0 focus-visible:outline-solid"
+                className="GTM-editorchoice-list absolute inset-0 block outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white focus-visible:outline-solid"
                 href={`${article.href}?from=main_index`}
                 rel="noopener noreferrer"
                 target="_blank"
@@ -100,7 +100,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
                 />
                 <Typography
                   as="h2"
-                  className="absolute right-mm-xl bottom-mm-xl left-mm-xl line-clamp-2 text-mm-neutral-0 md:right-13 md:bottom-16 md:left-13 md:text-mm-h2 xl:right-9 xl:bottom-12 xl:left-9"
+                  className="absolute right-mm-xl bottom-mm-xl left-mm-xl line-clamp-2 text-white md:right-13 md:bottom-16 md:left-13 md:text-mm-h2 xl:right-9 xl:bottom-12 xl:left-9"
                   variant="h5"
                 >
                   {article.title}
@@ -112,7 +112,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
 
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute top-mm-xl left-mm-xl z-10 rounded-mm-m bg-mm-neutral-0 px-mm-l py-mm-s font-mm-sans text-mm-subtitle text-mm-second-700 md:top-mm-3xl md:left-mm-3xl xl:top-mm-l xl:left-mm-xl"
+          className="pointer-events-none absolute top-mm-xl left-mm-xl z-10 rounded-mm-m bg-white px-mm-l py-mm-s font-mm-sans text-mm-subtitle text-mm-second-700 md:top-mm-3xl md:left-mm-3xl xl:top-mm-l xl:left-mm-xl"
         >
           編輯精選
         </span>
@@ -121,7 +121,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
           <>
             <Button
               aria-label="上一則編輯精選"
-              className="absolute inset-y-0 left-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:left-mm-xl"
+              className="absolute inset-y-0 left-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 focus-visible:outline-white active:not-aria-[haspopup]:translate-y-0 md:left-mm-xl"
               onClick={selectPrevious}
               size="icon-sm"
               type="button"
@@ -131,7 +131,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
             </Button>
             <Button
               aria-label="下一則編輯精選"
-              className="absolute inset-y-0 right-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 focus-visible:outline-mm-neutral-0 active:not-aria-[haspopup]:translate-y-0 md:right-mm-xl"
+              className="absolute inset-y-0 right-mm-m z-10 my-auto grid size-7 place-items-center bg-black/65 p-0 focus-visible:outline-white active:not-aria-[haspopup]:translate-y-0 md:right-mm-xl"
               onClick={selectNext}
               size="icon-sm"
               type="button"

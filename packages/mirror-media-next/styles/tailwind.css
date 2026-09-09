@@ -36,7 +36,9 @@
     'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei',
     sans-serif;
 
-  --color-mm-neutral-900: #0b0b0b;
+  --color-mm-all-black: #0b0b0b;
+  --color-mm-off-white: #fcfcfc;
+
   --color-mm-neutral-800: #131313;
   --color-mm-neutral-700: #3a3a3a;
   --color-mm-neutral-600: #5e5e5e;
@@ -45,8 +47,6 @@
   --color-mm-neutral-300: #cacaca;
   --color-mm-neutral-200: #eaeaea;
   --color-mm-neutral-100: #f0f0f0;
-  --color-mm-neutral-50: #fcfcfc;
-  --color-mm-neutral-0: #ffffff;
 
   --color-mm-base-700: #013958;
   --color-mm-base-600: #054567;
@@ -174,10 +174,10 @@
     --mm-breakpoint-xl: var(--breakpoint-xl);
     --mm-breakpoint-2xl: var(--breakpoint-2xl);
 
-    --mm-color-surface: var(--color-mm-neutral-0);
-    --mm-color-surface-muted: var(--color-mm-neutral-50);
+    --mm-color-surface: var(--color-white);
+    --mm-color-surface-muted: var(--color-mm-off-white);
     --mm-color-surface-subtle: var(--color-mm-neutral-100);
-    --mm-color-text: var(--color-mm-neutral-900);
+    --mm-color-text: var(--color-mm-all-black);
     --mm-color-text-muted: var(--color-mm-neutral-600);
     --mm-color-text-subtle: var(--color-mm-neutral-500);
     --mm-color-border: var(--color-mm-neutral-300);

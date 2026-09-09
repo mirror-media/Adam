@@ -41,7 +41,7 @@ function DropdownMenuPopup({
   return (
     <DropdownMenuPrimitive.Popup
       className={cn(
-        'min-w-36 origin-(--transform-origin) rounded-mm-m border border-mm-neutral-300 bg-mm-neutral-0 p-mm-s font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg transition-[transform,scale,opacity] duration-150 outline-none data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0',
+        'min-w-36 origin-(--transform-origin) rounded-mm-m border border-mm-neutral-300 bg-white p-mm-s font-mm-sans text-mm-body2 text-mm-all-black shadow-lg transition-[transform,scale,opacity] duration-150 outline-none data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0',
         className
       )}
       data-slot="dropdown-menu-popup"
