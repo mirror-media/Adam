@@ -7,7 +7,7 @@ import { cn } from '@/components/cn'
 const containerVariants = cva('', {
   variants: {
     theme: {
-      accent: 'bg-mm-base-700 text-mm-neutral-0',
+      accent: 'bg-mm-base-700 text-white',
       marketing: 'bg-mm-neutral-200',
       post: 'bg-mm-second-100',
       default: '',

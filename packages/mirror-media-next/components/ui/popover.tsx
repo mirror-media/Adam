@@ -33,7 +33,7 @@ function PopoverPopup({ className, ...props }: PopoverPrimitive.Popup.Props) {
   return (
     <PopoverPrimitive.Popup
       className={cn(
-        'origin-(--transform-origin) rounded-mm-m border border-mm-neutral-300 bg-mm-neutral-0 p-mm-l font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg transition-[transform,scale,opacity] duration-150 outline-none data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0',
+        'origin-(--transform-origin) rounded-mm-m border border-mm-neutral-300 bg-white p-mm-l font-mm-sans text-mm-body2 text-mm-all-black shadow-lg transition-[transform,scale,opacity] duration-150 outline-none data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0',
         className
       )}
       data-slot="popover-popup"

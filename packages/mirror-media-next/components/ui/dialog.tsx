@@ -28,7 +28,7 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Backdrop
       className={cn(
-        'fixed inset-0 isolate z-(--mm-z-shell-overlay) bg-mm-neutral-900/40 supports-backdrop-filter:backdrop-blur-xs',
+        'fixed inset-0 isolate z-(--mm-z-shell-overlay) bg-mm-all-black/40 supports-backdrop-filter:backdrop-blur-xs',
         className
       )}
       data-slot="dialog-overlay"
@@ -54,7 +54,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         className={cn(
-          'fixed top-1/2 left-1/2 z-(--mm-z-shell-overlay-content) grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-mm-xl overflow-y-auto rounded-mm-l border border-mm-neutral-300 bg-mm-neutral-0 p-mm-xl font-mm-sans text-mm-body2 text-mm-neutral-900 shadow-lg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid sm:max-w-120',
+          'fixed top-1/2 left-1/2 z-(--mm-z-shell-overlay-content) grid max-h-[calc(100dvh-2rem)] w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-mm-xl overflow-y-auto rounded-mm-l border border-mm-neutral-300 bg-white p-mm-xl font-mm-sans text-mm-body2 text-mm-all-black shadow-lg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-all-black focus-visible:outline-solid sm:max-w-120',
           className
         )}
         data-slot="dialog-content"
@@ -104,7 +104,7 @@ function DialogFooter({
   return (
     <div
       className={cn(
-        '-mx-mm-xl -mb-mm-xl flex flex-col-reverse gap-mm-m rounded-b-mm-l border-t border-mm-neutral-300 bg-mm-neutral-50 p-mm-xl sm:flex-row sm:justify-end',
+        '-mx-mm-xl -mb-mm-xl flex flex-col-reverse gap-mm-m rounded-b-mm-l border-t border-mm-neutral-300 bg-mm-off-white p-mm-xl sm:flex-row sm:justify-end',
         className
       )}
       data-slot="dialog-footer"
@@ -123,7 +123,7 @@ function DialogFooter({
 function DialogTitle({ className, ...props }: DialogPrimitive.Title.Props) {
   return (
     <DialogPrimitive.Title
-      className={cn('font-mm-sans text-mm-h6 text-mm-neutral-900', className)}
+      className={cn('font-mm-sans text-mm-h6 text-mm-all-black', className)}
       data-slot="dialog-title"
       {...props}
     />

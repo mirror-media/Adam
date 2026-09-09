@@ -212,7 +212,7 @@ function SiteHeader({
 
   return (
     <header
-      className="relative z-(--mm-z-shell-header) bg-mm-neutral-0"
+      className="relative z-(--mm-z-shell-header) bg-white"
       data-slot="site-header"
     >
       {(flashNews.length > 0 || visibleTopics.length > 0) && (
@@ -235,7 +235,7 @@ function SiteHeader({
                 // just outside its margin box, so the first and last would be
                 // cut off. Widen the padding box and take the width back out of
                 // the layout again.
-                className="-mx-mm-m hidden min-w-0 gap-mm-xl overflow-hidden px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 lg:flex"
+                className="-mx-mm-m hidden min-w-0 gap-mm-xl overflow-hidden px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-white lg:flex"
               >
                 {visibleTopics.map((topic) => (
                   <NextLink
@@ -260,7 +260,7 @@ function SiteHeader({
 
       <div
         className={cn(
-          'bg-mm-neutral-0',
+          'bg-white',
           // Compact shell (<lg) sticks logo row + category row together;
           // desktop keeps only the category row fixed, see below.
           showStickyControls &&
@@ -363,7 +363,7 @@ function SiteHeader({
 
         <div
           className={cn(
-            'relative z-(--mm-z-shell-header) flex h-12 w-full items-center border-b border-mm-neutral-200 bg-mm-neutral-0',
+            'relative z-(--mm-z-shell-header) flex h-12 w-full items-center border-b border-mm-neutral-200 bg-white',
             showStickyControls && 'lg:fixed lg:inset-x-0 lg:top-0'
           )}
           onMouseLeave={() => {

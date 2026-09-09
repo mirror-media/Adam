@@ -70,7 +70,7 @@ export function Typography<TElement extends ElementType = 'p'>({
   return (
     <Component
       className={cn(
-        'm-0 text-mm-neutral-900',
+        'm-0 text-mm-all-black',
         typographyClassByVariant[variant],
         className
       )}

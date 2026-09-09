@@ -54,7 +54,7 @@ export default function ArticleQuestions({
               <ThemeElement
                 as="div"
                 theme="marketing"
-                className="bg-mm-neutral-50 p-2.5"
+                className="bg-mm-off-white p-2.5"
               >
                 <Typography
                   as="div"

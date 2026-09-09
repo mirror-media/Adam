@@ -16,12 +16,12 @@ const surfaceClasses: Record<
 > = {
   dark: {
     active: 'bg-mm-neutral-100',
-    focus: 'focus-visible:outline-mm-neutral-0',
+    focus: 'focus-visible:outline-white',
     inactive: 'bg-mm-neutral-500',
   },
   light: {
     active: 'bg-mm-base-500',
-    focus: 'focus-visible:outline-mm-neutral-900',
+    focus: 'focus-visible:outline-mm-all-black',
     inactive: 'bg-mm-neutral-300',
   },
 }

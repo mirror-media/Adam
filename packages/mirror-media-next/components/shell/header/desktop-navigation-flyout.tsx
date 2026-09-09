@@ -12,7 +12,7 @@ import type { ShellNavigationItem } from './navigation'
  * use: a 388px card and a four-character label do not want the same gap.
  */
 const RULE =
-  'after:absolute after:inset-x-0 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-mm-neutral-0 after:transition-transform after:duration-150 after:content-[""] motion-reduce:after:transition-none'
+  'after:absolute after:inset-x-0 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-white after:transition-transform after:duration-150 after:content-[""] motion-reduce:after:transition-none'
 
 type DesktopNavigationFlyoutProps = {
   item?: ShellNavigationItem
@@ -75,7 +75,7 @@ function DesktopNavigationFlyout({ item, open }: DesktopNavigationFlyoutProps) {
     <div
       aria-hidden={!open}
       className={cn(
-        'absolute inset-x-0 top-full z-(--mm-z-shell-header) hidden overflow-hidden bg-mm-neutral-800 text-mm-neutral-0 transition-[max-height] motion-reduce:transition-none lg:block',
+        'absolute inset-x-0 top-full z-(--mm-z-shell-header) hidden overflow-hidden bg-mm-neutral-800 text-white transition-[max-height] motion-reduce:transition-none lg:block',
         open
           ? 'max-h-62 duration-200 ease-out'
           : 'pointer-events-none max-h-0 duration-150 ease-in'
@@ -99,7 +99,7 @@ function DesktopNavigationFlyout({ item, open }: DesktopNavigationFlyoutProps) {
             {item.posts.map((post) => (
               <NextLink
                 className={cn(
-                  'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid',
+                  'relative flex gap-mm-xl rounded-mm-xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-solid',
                   RULE,
                   'after:-bottom-3 hover:after:scale-x-100'
                 )}
@@ -118,7 +118,7 @@ function DesktopNavigationFlyout({ item, open }: DesktopNavigationFlyoutProps) {
                 />
                 {/* Snap the measured 150px title box to the 4px grid. */}
                 <div className="flex w-38 flex-col justify-between">
-                  <span className="line-clamp-3 font-mm-sans text-mm-h6 text-mm-neutral-0">
+                  <span className="line-clamp-3 font-mm-sans text-mm-h6 text-white">
                     {post.title}
                   </span>
                   <time
@@ -148,7 +148,7 @@ function DesktopNavigationFlyout({ item, open }: DesktopNavigationFlyoutProps) {
               {item.categories.map((category) => (
                 <NextLink
                   className={cn(
-                    'relative w-fit justify-self-center rounded-mm-xs pb-1 font-mm-sans text-mm-h6 whitespace-nowrap text-mm-neutral-0 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid',
+                    'relative w-fit justify-self-center rounded-mm-xs pb-1 font-mm-sans text-mm-h6 whitespace-nowrap text-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-solid',
                     RULE,
                     'after:bottom-0 hover:after:scale-x-100'
                   )}

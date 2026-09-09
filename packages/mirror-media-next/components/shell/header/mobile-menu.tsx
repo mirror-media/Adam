@@ -38,17 +38,17 @@ type MobileMenuProps = {
 }
 
 const mobilePrimaryLinkClass =
-  'relative outline-none after:absolute after:inset-x-[10px] after:bottom-1 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-mm-neutral-0 after:transition-transform after:duration-150 after:content-[""] hover:text-mm-neutral-0 hover:after:scale-x-100 active:after:scale-x-100 aria-expanded:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid motion-reduce:after:transition-none'
+  'relative outline-none after:absolute after:inset-x-[10px] after:bottom-1 after:h-mm-sx after:origin-left after:scale-x-0 after:rounded-full after:bg-white after:transition-transform after:duration-150 after:content-[""] hover:text-white hover:after:scale-x-100 active:after:scale-x-100 aria-expanded:after:scale-x-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-solid motion-reduce:after:transition-none'
 
 const mobileTextLinkOnDarkClass =
-  'rounded-mm-xs no-underline outline-none transition-colors hover:text-mm-neutral-0 hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-0 focus-visible:outline-solid'
+  'rounded-mm-xs no-underline outline-none transition-colors hover:text-white hover:underline hover:underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-solid'
 
 /** Use a solid triangle that points left when collapsed and down when open. */
 function AccordionCaret() {
   return (
     <svg
       aria-hidden="true"
-      className="ml-auto size-3 shrink-0 -rotate-90 text-mm-neutral-0 transition-transform group-aria-expanded/accordion-trigger:rotate-180"
+      className="ml-auto size-3 shrink-0 -rotate-90 text-white transition-transform group-aria-expanded/accordion-trigger:rotate-180"
       data-slot="accordion-trigger-icon"
       fill="currentColor"
       viewBox="0 0 12 12"
@@ -84,7 +84,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
         />
       </SheetTrigger>
       <SheetContent
-        className="w-full max-w-none gap-0 overflow-hidden border-0 bg-mm-base-600 p-0 focus-visible:outline-mm-neutral-0 data-[side=left]:w-full sm:max-w-none data-[side=left]:sm:max-w-none"
+        className="w-full max-w-none gap-0 overflow-hidden border-0 bg-mm-base-600 p-0 focus-visible:outline-white data-[side=left]:w-full sm:max-w-none data-[side=left]:sm:max-w-none"
         closeLabel="關閉主選單"
         showCloseButton={false}
         side="left"
@@ -94,7 +94,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
           render={
             <Button
               aria-label="關閉主選單"
-              className="absolute top-mm-3xl right-mm-xl z-10 size-7 rounded-full bg-mm-base-500 p-0 text-mm-neutral-100 hover:bg-mm-base-400 hover:text-mm-neutral-100 focus-visible:outline-mm-neutral-0 md:right-mm-4xl"
+              className="absolute top-mm-3xl right-mm-xl z-10 size-7 rounded-full bg-mm-base-500 p-0 text-mm-neutral-100 hover:bg-mm-base-400 hover:text-mm-neutral-100 focus-visible:outline-white md:right-mm-4xl"
               size="icon-sm"
               variant="ghost"
             />
@@ -116,7 +116,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
             <nav
               aria-label="專題推薦"
               ref={topicStripRef}
-              className="-mx-mm-m mt-mm-m flex [scrollbar-width:none] gap-mm-xl overflow-x-auto px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-mm-neutral-0 [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="-mx-mm-m mt-mm-m flex [scrollbar-width:none] gap-mm-xl overflow-x-auto px-mm-m font-mm-body text-mm-body2 whitespace-nowrap text-white [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {visibleTopics.map((topic) => (
                 <NextLink
@@ -154,7 +154,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
                 >
                   <AccordionTrigger
                     className={cn(
-                      'items-center rounded-mm-m bg-mm-base-500 p-[10px] text-mm-h5 text-mm-neutral-0',
+                      'items-center rounded-mm-m bg-mm-base-500 p-[10px] text-mm-h5 text-white',
                       mobilePrimaryLinkClass
                     )}
                     icon={<AccordionCaret />}
@@ -184,7 +184,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
               ) : (
                 <NextLink
                   className={cn(
-                    'flex items-center rounded-mm-m bg-mm-base-500 p-[10px] font-mm-sans text-mm-h5 text-mm-neutral-0',
+                    'flex items-center rounded-mm-m bg-mm-base-500 p-[10px] font-mm-sans text-mm-h5 text-white',
                     mobilePrimaryLinkClass
                   )}
                   href={item.href}
@@ -216,7 +216,7 @@ function MobileMenu({ navigation, topics }: MobileMenuProps) {
           ))}
         </nav>
 
-        <div className="flex items-center justify-center gap-mm-2xl bg-mm-neutral-0 px-mm-xl py-mm-xl">
+        <div className="flex items-center justify-center gap-mm-2xl bg-white px-mm-xl py-mm-xl">
           {shellPartnerLinks.map((link) => (
             <NextLink
               aria-label={link.label}

@@ -5,18 +5,18 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/components/cn'
 
 const badgeVariants = cva(
-  'inline-flex h-6 w-fit shrink-0 items-center justify-center gap-mm-s overflow-hidden rounded-mm-full border px-mm-l py-mm-s font-mm-sans text-mm-caption-s whitespace-nowrap transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-neutral-900 focus-visible:outline-solid [&>svg]:pointer-events-none [&>svg]:size-3',
+  'inline-flex h-6 w-fit shrink-0 items-center justify-center gap-mm-s overflow-hidden rounded-mm-full border px-mm-l py-mm-s font-mm-sans text-mm-caption-s whitespace-nowrap transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-mm-all-black focus-visible:outline-solid [&>svg]:pointer-events-none [&>svg]:size-3',
   {
     variants: {
       variant: {
         outline:
-          'border-mm-base-500 bg-mm-neutral-0 text-mm-base-500 hover:bg-mm-base-100',
+          'border-mm-base-500 bg-white text-mm-base-500 hover:bg-mm-base-100',
         'outline-muted':
           'border-mm-base-500 bg-mm-neutral-100 text-mm-base-500 hover:bg-mm-neutral-100',
         'solid-base':
-          'border-mm-base-700 bg-mm-base-700 text-mm-neutral-0 hover:bg-mm-base-600',
+          'border-mm-base-700 bg-mm-base-700 text-white hover:bg-mm-base-600',
         'solid-second':
-          'border-mm-second-700 bg-mm-second-700 text-mm-neutral-0 hover:bg-mm-second-600',
+          'border-mm-second-700 bg-mm-second-700 text-white hover:bg-mm-second-600',
       },
     },
     defaultVariants: {

@@ -58,7 +58,7 @@ function ShellSearch({
       {compact && (
         <Button
           aria-label="送出搜尋"
-          className="focus-visible:outline-mm-neutral-0"
+          className="focus-visible:outline-white"
           size="icon"
           type="submit"
           variant="icon-search"

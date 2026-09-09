@@ -67,13 +67,13 @@ const socialLinks = [
 
 const footnoteLinkClass = cn(
   linkVariants({ variant: 'plain' }),
-  'rounded-mm-xs text-mm-second-400 underline-offset-2 focus-visible:outline-mm-neutral-0'
+  'rounded-mm-xs text-mm-second-400 underline-offset-2 focus-visible:outline-white'
 )
 
 function SiteFooter() {
   return (
     <footer
-      className="bg-mm-base-700 px-mm-xl py-12 font-mm-sans text-mm-neutral-0"
+      className="bg-mm-base-700 px-mm-xl py-12 font-mm-sans text-white"
       data-slot="site-footer"
     >
       <div className="mx-auto flex w-full max-w-266 flex-col items-center gap-7">

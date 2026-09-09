@@ -10,7 +10,7 @@ const preview: Preview = {
   decorators: [
     (Story): ReactNode => (
       <ThemeProvider theme={theme}>
-        <div className="min-h-screen bg-mm-neutral-0 p-mm-4xl text-mm-neutral-900">
+        <div className="min-h-screen bg-white p-mm-4xl text-mm-all-black">
           <Story />
         </div>
       </ThemeProvider>
