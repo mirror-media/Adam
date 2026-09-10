@@ -16,9 +16,11 @@ type TopicArticleCardProps = {
 }
 
 function TopicArticleCard({ item, variant = 'list' }: TopicArticleCardProps) {
-  const section = item.sections.find(
-    (itemSection) => itemSection.slug !== 'member'
-  )
+  const section =
+    item.sections.length === 1
+      ? item.sections[0]
+      : item.sections.find((itemSection) => itemSection.slug !== 'marketing')
+
   const publishedDate = item.publishedDate
     ? transformTimeData(item.publishedDate, 'dot')
     : undefined
