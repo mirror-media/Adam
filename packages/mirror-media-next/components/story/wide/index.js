@@ -23,7 +23,7 @@ import SupportMirrorMediaBanner from '../shared/support-mirrormedia-banner'
 import Header from './header'
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Post} PostData
+ * @typedef {import('../../../modules/story/story-types').StoryPost} PostData
  */
 
 /**
@@ -122,7 +122,7 @@ const BriefWrapper = styled.div`
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
  * @param {string} [param.classNameForGTM]
- * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
+ * @param {import('../../../modules/story/story-types').RelatedStory[]} [param.allRelatedStories]
  * @returns {React.ReactNode}
  */
 export default function StoryWideStyle({

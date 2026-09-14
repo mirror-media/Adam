@@ -47,7 +47,7 @@ const TestBtnWrapper = styled.div`
  * @param {Object[]} props.topicsData
  * @return {import('react').JSX.Element}
  */
-function Subscribe({ sectionsData = [], topicsData = [] }) {
+function Subscribe({ flashNewsData = [], sectionsData = [], topicsData = [] }) {
   const [memberType, setMemberType] = useState('nonMember') // Default to non-member plan
   const router = useRouter()
 
@@ -64,9 +64,8 @@ function Subscribe({ sectionsData = [], topicsData = [] }) {
       head={{ title: `會員方案選擇` }}
       header={{
         type: 'default',
-        data: { sectionsData: sectionsData, topicsData },
+        data: { flashNewsData, sectionsData, topicsData },
       }}
-      footer={{ type: 'default' }}
     >
       <Page>
         {/* Conditionally render the Steps component */}
@@ -123,7 +122,7 @@ export async function getServerSideProps({ req, res }) {
     fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in subscribe page',
@@ -134,6 +133,7 @@ export async function getServerSideProps({ req, res }) {
     props: {
       sectionsData,
       topicsData,
+      flashNewsData,
     },
   }
 }

@@ -6,6 +6,7 @@ import client from '../../../apollo/apollo-client'
 import { fetchWeeklys } from '../../../apollo/query/magazines'
 import Layout from '../../../components/shared/layout'
 import { getLogTraceObject } from '../../../utils'
+import { fetchShellHeaderData } from '../../../utils/api'
 import { setPageCache } from '../../../utils/cache-setting'
 import { processSettledResult } from '../../../utils/response-processor'
 import redirectToLoginWhileUnauthed from '../../../utils/server-side-only/redirect-to-login-while-unauthed'
@@ -14,16 +15,14 @@ const Page = styled.div`
   padding: 0;
 
   iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 9999;
+    display: block;
+    width: 100%;
+    height: 100dvh;
+    border: 0;
   }
 `
 
-export default function BookBIssuePublish({ weeklys }) {
+export default function BookBIssuePublish({ headerData, weeklys }) {
   const router = useRouter()
   const { book, issue } = router.query
   const issueString = Array.isArray(issue) ? issue.join('') : issue
@@ -46,8 +45,8 @@ export default function BookBIssuePublish({ weeklys }) {
   return (
     <Layout
       head={{ title: `動態雜誌 ${issueString.split('-')[0]}` }}
-      header={{ type: 'empty' }}
-      footer={{ type: 'empty' }}
+      header={{ type: 'default', data: headerData }}
+      withFooter={false}
     >
       <Page>
         <iframe
@@ -73,13 +72,27 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
   const { issue } = params
 
   const responses = await Promise.allSettled([
+    fetchShellHeaderData({ logFields: globalLogFields }),
     client.query({
       query: fetchWeeklys,
     }),
   ])
 
-  const weeklys = processSettledResult(
+  const headerData = processSettledResult(
     responses[0],
+    (data) =>
+      data ?? {
+        flashNewsData: [],
+        navigationData: [],
+        sectionPostsData: {},
+        topicsData: [],
+      },
+    `Error occurs while getting shell header data in magazine page (issue: ${issue})`,
+    globalLogFields
+  )
+
+  const weeklys = processSettledResult(
+    responses[1],
     (
       /** @type {import('@apollo/client').ApolloQueryResult<any> | undefined} */ gqlData
     ) => {
@@ -91,6 +104,7 @@ export const getServerSideProps = redirectToLoginWhileUnauthed()(async ({
 
   return {
     props: {
+      headerData,
       weeklys,
     },
   }

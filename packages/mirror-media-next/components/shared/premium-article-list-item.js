@@ -1,6 +1,7 @@
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import { transformTimeDataIntoSlashFormat } from '../../utils'
 
 /**
@@ -129,7 +130,7 @@ export default function PremiumArticleListItem({ item, section, priority }) {
           imagesWebP={item.heroImage?.resizedWebp}
           alt={item.title}
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           rwd={{ desktop: '320px' }}
           priority={priority}
         />

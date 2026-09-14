@@ -2,7 +2,7 @@ import Image from 'next/image'
 import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
 
-import defaultImage from '../../../public/images-next/default-og-img.png'
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp' | "imageFile">} HeroImage
  */
@@ -129,7 +129,7 @@ export default function HeroImageAndVideo({
           <CustomImage
             images={heroImage.resized}
             imagesWebP={heroImage.resizedWebp}
-            defaultImage={'/images-next/default-og-img.png'}
+            defaultImage={DEFAULT_OG_IMAGE_URL}
             alt={heroCaption ? heroCaption : title}
             objectFit={'contain'}
             priority
@@ -139,7 +139,12 @@ export default function HeroImageAndVideo({
       )
     }
     return (
-      <Image src={defaultImage} alt={heroCaption ? heroCaption : title}></Image>
+      <Image
+        src={DEFAULT_OG_IMAGE_URL}
+        alt={heroCaption ? heroCaption : title}
+        height={630}
+        width={1200}
+      ></Image>
     )
   }
   const shouldShowHeroCaption =

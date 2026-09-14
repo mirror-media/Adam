@@ -27,7 +27,10 @@ function transformStringToDraft(id = '', text = '') {
 }
 
 /**
- * @typedef {import('../apollo/fragments/partner').Partner} Partner
+ * GraphQL's `partner` fields are nullable end-to-end (unlike the hand-rolled
+ * `Partner` type in apollo/fragments/partner.ts, which declares them
+ * required) — this is the shape these two functions actually receive.
+ * @typedef {{ slug?: string | null, showOnIndex?: boolean | null } | null} PartnerLike
  */
 
 /**
@@ -35,7 +38,7 @@ function transformStringToDraft(id = '', text = '') {
  * If the partner's property `showOnIndex` in true, then title be `時事`.
  * If not, then title should be `生活`.
  *
- * @param {Partner | null} partner
+ * @param {PartnerLike} partner
  * @returns {string | undefined}
  */
 function getExternalSectionTitle(partner) {
@@ -55,7 +58,7 @@ function getExternalSectionTitle(partner) {
  * If the partner's property `showOnIndex` in true, then title color should be `#61B8C6`, which is section color of `news`.
  * If not, then title color should be `#2ECDA7`, which is section color of `life`.
  *
- * @param {Partner | null} partner
+ * @param {PartnerLike} partner
  * @returns {string | undefined}
  */
 function getExternalPartnerColor(partner) {

@@ -33,6 +33,8 @@ export default {}
  * @property {String} sectionsColor.external
  * @property {String} sectionsColor.mirrorcolumn
  * @property {String} sectionsColor.life
+ *
+ * @property {function(string=): string} getSectionLabelColor
  */
 
 /**

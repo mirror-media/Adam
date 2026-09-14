@@ -47,10 +47,11 @@ function getAdFullKey(device, adKey) {
  * @param {string} pageKey
  * @param {string} adKey
  * @param {number} width
+ * @param {'PC' | 'MB'} [deviceOverride]
  * @returns {GPTAdData | undefined}
  */
-function getAdData(pageKey, adKey, width) {
-  const device = getDevice(width)
+function getAdData(pageKey, adKey, width, deviceOverride) {
+  const device = deviceOverride || getDevice(width)
   const adFullKey = getAdFullKey(device, adKey)
   const adData = GPT_UNITS[pageKey][adFullKey]
   if (!adData && pageKey !== SECTION_IDS.member) {
@@ -75,10 +76,11 @@ function getAdUnitPath(adUnit) {
  * @param {string} pageKey - key to access GPT_UNITS first layer
  * @param {string} adKey - key to access GPT_UNITS second layer, might need to complete with device
  * @param {number} width - browser width
+ * @param {'PC' | 'MB'} [deviceOverride]
  * @returns {GPTAdSlotParam}
  */
-export function getAdSlotParam(pageKey, adKey, width) {
-  const adData = getAdData(pageKey, adKey, width)
+export function getAdSlotParam(pageKey, adKey, width, deviceOverride) {
+  const adData = getAdData(pageKey, adKey, width, deviceOverride)
   if (!adData) {
     return
   }

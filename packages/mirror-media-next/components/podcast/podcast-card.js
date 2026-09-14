@@ -3,6 +3,8 @@ import CustomImage from '@readr-media/react-image'
 import dayjs from 'dayjs'
 import styled, { css, keyframes } from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
+
 import PodcastModal from './podcast-modal'
 
 const CardContainer = styled.li`
@@ -207,7 +209,7 @@ export default function PodcastCard({
       <ImageWrapper>
         <CustomImage
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           images={customImageObject}
           rwd={{
             mobile: '284px',
