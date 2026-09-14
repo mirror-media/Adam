@@ -19,15 +19,18 @@ export function FbPagePlugin({ width = 424 }: FbPagePluginProps) {
         src={FB_SDK_URL}
         strategy="lazyOnload"
         nonce="SMSY4ynQ"
+        onReady={() => {
+          window.FB?.XFBML.parse()
+        }}
       />
-      <section className="hidden w-full text-center md:block">
+      <section className="hidden text-center md:block">
         {/*
          * TODO: 每個用到 FB plugin 的元件都各自渲染一份 `#fb-root`，同一頁出現兩份就會 id 重複，
          * 之後可思考到 `_document` 統一處理。目前放在 section 內是為了不讓它佔掉 <aside> 的一個 flex item。
          */}
         <div id="fb-root" />
         <div
-          className="fb-page"
+          className="fb-page w-full"
           data-href={FB_PAGE_URL}
           data-tabs="timeline"
           data-small-header={false}
