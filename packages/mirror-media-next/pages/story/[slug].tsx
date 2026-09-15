@@ -272,7 +272,7 @@ export default function Story({
                         />
                       )}
                     </GPT_Placeholder_Aside>
-                    <PopularArticles />
+                    <PopularArticles placement="article" />
                     <ArticleQuestions
                       auto_faq={postData.auto_faq}
                       faqs_algo={postData.faqs_algo}
@@ -282,7 +282,12 @@ export default function Story({
                   </div>
                 </>
               )}
-              renderNextUp={() => <NextUpPosts items={restOfRelativeStories} />}
+              renderNextUp={() => (
+                <NextUpPosts
+                  hiddenAdvertised={hiddenAdvertised ?? false}
+                  items={restOfRelativeStories}
+                />
+              )}
               renderDable={() => (
                 <>
                   {shouldShowAd && (
