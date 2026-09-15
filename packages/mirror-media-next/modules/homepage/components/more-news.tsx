@@ -1,13 +1,18 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
 import NextLink from 'next/link'
 
+import { AD_MEDIA_QUERIES } from '@/components/ads/ad-breakpoints'
+import { CompassFitAd } from '@/components/ads/compass-fit/compass-fit-ad'
+import {
+  COMPASS_FIT_UNITS,
+  getCompassFitSlotIndex,
+} from '@/components/ads/compass-fit/compass-fit-config'
 import { cn } from '@/components/cn'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Typography } from '@/components/ui/typography'
+import { useResolvedMediaQuery } from '@/hooks/use-resolved-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { getMicroAdUnitId, needInsertMicroAdAfter } from '@/utils/ad'
 
 import { fetchMoreHomepageNews } from '../homepage-client-data'
 import { HOMEPAGE_DESKTOP_MEDIA_QUERY } from '../homepage-constants'
@@ -16,13 +21,6 @@ import type { HomepageArticle } from '../homepage-types'
 import { ArticleImage } from './article-image'
 import { homepageCardLinkFocusClass } from './homepage-card-styles'
 import { SectionTitle } from './section-title'
-
-const MicroAd = dynamic(
-  () => import('@/components/ads/micro-ad/micro-ad-with-label-homepage'),
-  { ssr: false }
-)
-
-const LEGACY_HOME_MICRO_AD_PC_MEDIA_QUERY = '(min-width: 768px)'
 
 type MoreNewsProps = {
   excludedKeys: string[]
@@ -61,7 +59,6 @@ function MoreNews({
   onBeforeAppend,
 }: MoreNewsProps) {
   const [articles, setArticles] = useState(initialArticles)
-  const [device, setDevice] = useState<'MB' | 'PC'>('MB')
   const [errorMessage, setErrorMessage] = useState('')
   const [focusArticleKey, setFocusArticleKey] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(initialHasMore)
@@ -75,14 +72,9 @@ function MoreNews({
   const shouldFocusEndStatusRef = useRef(false)
   const shouldRestoreFocusRef = useRef(false)
   const { shouldShowAd } = useDisplayAd()
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(LEGACY_HOME_MICRO_AD_PC_MEDIA_QUERY)
-    const updateDevice = () => setDevice(mediaQuery.matches ? 'PC' : 'MB')
-    updateDevice()
-    mediaQuery.addEventListener('change', updateDevice)
-    return () => mediaQuery.removeEventListener('change', updateDevice)
-  }, [])
+  const isHomepagePc = useResolvedMediaQuery(
+    AD_MEDIA_QUERIES.homepageCompassFitPc
+  )
 
   useEffect(() => {
     if (isLoading) return
@@ -170,7 +162,13 @@ function MoreNews({
       {articles.length > 0 ? (
         <div className="mt-mm-3xl grid grid-cols-1 gap-y-mm-3xl md:grid-cols-2 md:gap-x-mm-5xl md:gap-y-mm-2xl xl:grid-cols-3 xl:gap-x-mm-l">
           {articles.map((article, index) => {
-            const microAdUnitId = getMicroAdUnitId(index, 'HOME', device)
+            const slotIndex = getCompassFitSlotIndex(index)
+            const unitId =
+              slotIndex === null || isHomepagePc === null
+                ? null
+                : COMPASS_FIT_UNITS.homepage[isHomepagePc ? 'PC' : 'MB'][
+                    slotIndex
+                  ]
 
             return (
               <Fragment key={article.key}>
@@ -221,16 +219,9 @@ function MoreNews({
                   </NextLink>
                 </article>
 
-                {shouldShowAd &&
-                  needInsertMicroAdAfter(index) &&
-                  microAdUnitId && (
-                    <div
-                      className="min-w-0 overflow-hidden"
-                      data-homepage-micro-ad
-                    >
-                      <MicroAd microAdType="HOME" unitId={microAdUnitId} />
-                    </div>
-                  )}
+                {slotIndex !== null && (
+                  <CompassFitAd enabled={shouldShowAd} unitId={unitId} />
+                )}
               </Fragment>
             )
           })}

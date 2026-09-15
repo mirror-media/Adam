@@ -1,21 +1,18 @@
 import { Fragment } from 'react'
-import dynamic from 'next/dynamic'
 import NextLink from 'next/link'
 
+import { AD_SLOT_LAYOUTS } from '@/components/ads/ad-slot-layouts'
+import { PrismAdSlot } from '@/components/ads/prism/prism-ad-slot'
+import { PRISM_SIDE_PLACEMENTS } from '@/components/ads/prism/prism-config'
 import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { getPopInId, needInsertPopInAdAfter } from '@/utils/ad'
 
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
 import { homepageCardLinkFocusClass } from './homepage-card-styles'
 import { SectionTitle } from './section-title'
-
-const PopInAd = dynamic(() => import('@/components/ads/pop-in/pop-in-ad'), {
-  ssr: false,
-})
 
 type HeadlineListProps = {
   articles: HomepageArticle[]
@@ -24,7 +21,7 @@ type HeadlineListProps = {
   titleId: string
   trackingClassName?: string
   trackingFrom?: string
-  withPopInAds?: boolean
+  withPrismAds?: boolean
 }
 
 function HeadlineList({
@@ -34,13 +31,9 @@ function HeadlineList({
   titleId,
   trackingClassName,
   trackingFrom,
-  withPopInAds = false,
+  withPrismAds = false,
 }: HeadlineListProps) {
-  const { isLogInProcessFinished, shouldShowAd } = useDisplayAd()
-  // An ad-free member is the one case where the slot is known to stay empty for
-  // good, so it is dropped once the member check answers. Everyone else keeps
-  // the reserved row: it covers the load window, and a no-fill is silent.
-  const keepsAdSlot = !isLogInProcessFinished || shouldShowAd
+  const { shouldShowAd } = useDisplayAd()
 
   if (!articles.length) return null
 
@@ -49,12 +42,12 @@ function HeadlineList({
       <SectionTitle id={titleId}>{title}</SectionTitle>
       <ol className="mt-mm-xl xl:mt-mm-l">
         {articles.slice(0, 8).map((article, index) => {
-          // The slot is decided on the server so the row holds its height from
-          // the first paint; only the ad inside it waits for the member check.
-          const popInId =
-            withPopInAds && keepsAdSlot && needInsertPopInAdAfter(index)
-              ? getPopInId(index)
-              : null
+          const prismPlacement =
+            index === 1
+              ? PRISM_SIDE_PLACEMENTS.homepage[0]
+              : index === 2
+                ? PRISM_SIDE_PLACEMENTS.homepage[1]
+                : null
 
           return (
             <Fragment key={article.key}>
@@ -83,14 +76,15 @@ function HeadlineList({
                   </Typography>
                 </NextLink>
               </li>
-              {popInId && (
-                <li
-                  className="min-w-0 overflow-hidden border-t border-mm-neutral-300 py-mm-m"
-                  data-homepage-pop-in-ad
-                >
-                  <div className="mm-pop-in-ad-homepage-hot">
-                    {shouldShowAd && <PopInAd popInId={popInId} />}
-                  </div>
+              {withPrismAds && prismPlacement && (
+                <li className="border-t border-mm-neutral-300 py-mm-m">
+                  <PrismAdSlot
+                    className={
+                      AD_SLOT_LAYOUTS.prism.homepageHeadlineRow.className
+                    }
+                    enabled={shouldShowAd}
+                    placement={prismPlacement}
+                  />
                 </li>
               )}
             </Fragment>
