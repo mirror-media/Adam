@@ -7,7 +7,7 @@ import {
   COMPASS_FIT_UNITS,
   getCompassFitSlotIndex,
 } from '@/components/ads/compass-fit/compass-fit-config'
-import { useResolvedMediaQuery } from '@/hooks/use-resolved-media-query'
+import useMediaQuery from '@/hooks/use-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '@/utils/ad'
 
@@ -31,7 +31,8 @@ type ArticleListProps = {
 
 export function ArticleList({ from, renderList, section }: ArticleListProps) {
   const { shouldShowAd } = useDisplayAd()
-  const isSmUp = useResolvedMediaQuery(AD_MEDIA_QUERIES.listingLayoutSm)
+  const { isMediaQueryResolved: isListingViewportResolved, matches: isSmUp } =
+    useMediaQuery(AD_MEDIA_QUERIES.listingLayoutSm)
 
   /**
    * 這個元件會被共用於 author/tag/category 列表頁
@@ -65,7 +66,11 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
               {mobileSlotIndex !== null && (
                 <CompassFitAd
                   className="sm:hidden"
-                  enabled={shouldShowAd && isSmUp === false}
+                  enabled={
+                    shouldShowAd &&
+                    isListingViewportResolved &&
+                    isSmUp === false
+                  }
                   unitId={COMPASS_FIT_UNITS.listing[mobileSlotIndex]}
                 />
               )}
@@ -86,14 +91,22 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
                 {mobileSlotIndex !== null && (
                   <CompassFitAd
                     className="sm:hidden"
-                    enabled={shouldShowAd && isSmUp === false}
+                    enabled={
+                      shouldShowAd &&
+                      isListingViewportResolved &&
+                      isSmUp === false
+                    }
                     unitId={COMPASS_FIT_UNITS.listing[mobileSlotIndex]}
                   />
                 )}
                 {nonMobileSlotIndex !== null && (
                   <CompassFitAd
                     className="hidden sm:block"
-                    enabled={shouldShowAd && isSmUp === true}
+                    enabled={
+                      shouldShowAd &&
+                      isListingViewportResolved &&
+                      isSmUp === true
+                    }
                     unitId={COMPASS_FIT_UNITS.listing[nonMobileSlotIndex]}
                   />
                 )}

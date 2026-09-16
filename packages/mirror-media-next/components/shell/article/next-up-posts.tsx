@@ -12,7 +12,7 @@ import { cn } from '@/components/cn'
 import { ThemeElement } from '@/components/shell/article/theme-element'
 import { Typography } from '@/components/ui'
 import { DEFAULT_OG_IMAGE_URL } from '@/constants'
-import { useResolvedMediaQuery } from '@/hooks/use-resolved-media-query'
+import useMediaQuery from '@/hooks/use-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import type { ExternalRelatedStory } from '@/modules/external/external-types'
 
@@ -25,9 +25,10 @@ export function NextUpPosts({
   items: ExternalRelatedStory[]
   hiddenAdvertised?: boolean
 }) {
-  const isArticlePc = useResolvedMediaQuery(
-    AD_MEDIA_QUERIES.articleCompassFitPc
-  )
+  const {
+    isMediaQueryResolved: isArticleViewportResolved,
+    matches: isArticlePc,
+  } = useMediaQuery(AD_MEDIA_QUERIES.articleCompassFitPc)
   const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
 
   if (items.length === 0) return null
@@ -105,12 +106,11 @@ export function NextUpPosts({
         {!hiddenAdvertised && (
           <>
             {COMPASS_FIT_ARTICLE_SLOT_INDEXES.map((slotIndex) => {
-              const unitId =
-                isArticlePc === null
-                  ? null
-                  : COMPASS_FIT_UNITS.article[isArticlePc ? 'PC' : 'MB'][
-                      slotIndex
-                    ]
+              const unitId = !isArticleViewportResolved
+                ? null
+                : COMPASS_FIT_UNITS.article[isArticlePc ? 'PC' : 'MB'][
+                    slotIndex
+                  ]
 
               return (
                 <li className="min-w-0 py-4" key={`compass-fit-${slotIndex}`}>

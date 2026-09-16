@@ -15,7 +15,7 @@ type PopularNewsItemProps = {
 }
 
 export function PopularNewsItem({ items }: PopularNewsItemProps) {
-  const isDesktop = useMediaQuery('(min-width: 1280px)')
+  const { matches: isDesktop } = useMediaQuery('(min-width: 1280px)')
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([])

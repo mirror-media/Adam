@@ -11,7 +11,7 @@ import { cn } from '@/components/cn'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { Typography } from '@/components/ui/typography'
-import { useResolvedMediaQuery } from '@/hooks/use-resolved-media-query'
+import useMediaQuery from '@/hooks/use-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 
 import { fetchMoreHomepageNews } from '../homepage-client-data'
@@ -72,9 +72,10 @@ function MoreNews({
   const shouldFocusEndStatusRef = useRef(false)
   const shouldRestoreFocusRef = useRef(false)
   const { shouldShowAd } = useDisplayAd()
-  const isHomepagePc = useResolvedMediaQuery(
-    AD_MEDIA_QUERIES.homepageCompassFitPc
-  )
+  const {
+    isMediaQueryResolved: isHomepageViewportResolved,
+    matches: isHomepagePc,
+  } = useMediaQuery(AD_MEDIA_QUERIES.homepageCompassFitPc)
 
   useEffect(() => {
     if (isLoading) return
@@ -164,7 +165,7 @@ function MoreNews({
           {articles.map((article, index) => {
             const slotIndex = getCompassFitSlotIndex(index)
             const unitId =
-              slotIndex === null || isHomepagePc === null
+              slotIndex === null || !isHomepageViewportResolved
                 ? null
                 : COMPASS_FIT_UNITS.homepage[isHomepagePc ? 'PC' : 'MB'][
                     slotIndex
