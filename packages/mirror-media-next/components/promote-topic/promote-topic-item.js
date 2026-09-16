@@ -1,6 +1,8 @@
 import CustomImage from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
+
 const Card = styled.a`
   display: block;
   width: 100%;
@@ -76,7 +78,7 @@ export default function PromoteTopicItem({ topic }) {
           images={images}
           imagesWebP={imagesWebP}
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           rwd={{
             mobile: '124px',
             tablet: '124px',

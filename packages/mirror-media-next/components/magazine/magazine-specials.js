@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import DownloadSvg from '../../public/images-next/magazine-download-icon.svg'
 import { transformTimeDataIntoSlashFormat } from '../../utils/index'
 
@@ -170,7 +171,7 @@ export default function MagazineSpecials({ specials }) {
                 images={magazine.coverPhoto?.resized}
                 imagesWebP={magazine.coverPhoto?.resizedWebp}
                 loadingImage="/images-next/loading.gif"
-                defaultImage="/images-next/default-og-img.png"
+                defaultImage={DEFAULT_OG_IMAGE_URL}
                 alt={magazine.title}
                 rwd={{ mobile: '132px', tablet: '144px', default: '100%' }}
               />

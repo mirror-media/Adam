@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
@@ -112,7 +113,7 @@ export default function RelatedPosts({ relateds = [] }) {
                       tablet: '87px',
                       laptop: '135px',
                     }}
-                    defaultImage={'/images-next/default-og-img.png'}
+                    defaultImage={DEFAULT_OG_IMAGE_URL}
                     loadingImage={'/images-next/loading.gif'}
                   />
                 </ImageWrapper>

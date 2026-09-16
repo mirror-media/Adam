@@ -18,7 +18,7 @@ import DevGptAd from '../dev-gpt-ad'
  */
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Post } PostData
+ * @typedef {import('../../../modules/story/story-types').StoryPost} PostData
  */
 
 /**

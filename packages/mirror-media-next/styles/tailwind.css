@@ -3,6 +3,16 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
+/*
+ * Styles for third-party markup we do not author. See the file for why. Kept
+ * out of a layer: MicroAd injects its own unlayered <style>, which would win
+ * over any layered rule regardless of specificity.
+ */
+@import '../modules/list-article/components/micro-ad.css';
+@import '../modules/aside/components/pop-in-ad.css';
+@import '../modules/homepage/components/pop-in-ad.css';
+@import '../modules/search/components/miso-search.css';
+
 @theme {
   /* Keep Tailwind's default breakpoint names and values, normalized to px. */
   --breakpoint-*: initial;
@@ -19,12 +29,16 @@
   --breakpoint-legacy-xl: 1200px;
   --breakpoint-legacy-xxl: 1440px;
 
-  --font-mm-sans: 'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC',
-    'Microsoft JhengHei', sans-serif;
-  --font-mm-body: 'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC',
-    'Microsoft JhengHei', sans-serif;
+  --font-mm-sans:
+    'Noto Sans TC', 'Noto Sans CJK TC', 'PingFang TC', 'Microsoft JhengHei',
+    sans-serif;
+  --font-mm-body:
+    'Noto Sans CJK TC', 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei',
+    sans-serif;
 
-  --color-mm-neutral-900: #0b0b0b;
+  --color-mm-all-black: #0b0b0b;
+  --color-mm-off-white: #fcfcfc;
+
   --color-mm-neutral-800: #131313;
   --color-mm-neutral-700: #3a3a3a;
   --color-mm-neutral-600: #5e5e5e;
@@ -33,8 +47,6 @@
   --color-mm-neutral-300: #cacaca;
   --color-mm-neutral-200: #eaeaea;
   --color-mm-neutral-100: #f0f0f0;
-  --color-mm-neutral-50: #fcfcfc;
-  --color-mm-neutral-0: #ffffff;
 
   --color-mm-base-700: #013958;
   --color-mm-base-600: #054567;
@@ -134,14 +146,38 @@
   --text-mm-caption-s--line-height: 1.5;
   --text-mm-caption-s--letter-spacing: 0;
   --text-mm-caption-s--font-weight: 500;
+
+  /*
+   * V4 shell stacking order, consumed as z-(--mm-z-*). They clear the legacy
+   * styled-components scale in constants/index.ts, where shadcn's default
+   * z-50/z-51 would sit under PromoteTopic (500) and headers (1000), and stay
+   * under Z_INDEX.top (10000) so global dialogs keep winning.
+   */
+  --mm-z-shell-header: 1000;
+  --mm-z-shell-overlay: 2500;
+  --mm-z-shell-overlay-content: 2501;
+  --mm-z-shell-popover: 2600;
+  --mm-z-shell-top: 10000;
 }
 
 @layer theme {
   :root {
-    --mm-color-surface: var(--color-mm-neutral-0);
-    --mm-color-surface-muted: var(--color-mm-neutral-50);
+    /*
+     * Tailwind inlines breakpoints into the media queries it generates, so
+     * nothing references the `@theme` values above and they get dropped from
+     * the output. Referencing them here keeps them, and gives
+     * `hooks/use-breakpoint.ts` a name to read at runtime.
+     */
+    --mm-breakpoint-sm: var(--breakpoint-sm);
+    --mm-breakpoint-md: var(--breakpoint-md);
+    --mm-breakpoint-lg: var(--breakpoint-lg);
+    --mm-breakpoint-xl: var(--breakpoint-xl);
+    --mm-breakpoint-2xl: var(--breakpoint-2xl);
+
+    --mm-color-surface: var(--color-white);
+    --mm-color-surface-muted: var(--color-mm-off-white);
     --mm-color-surface-subtle: var(--color-mm-neutral-100);
-    --mm-color-text: var(--color-mm-neutral-900);
+    --mm-color-text: var(--color-mm-all-black);
     --mm-color-text-muted: var(--color-mm-neutral-600);
     --mm-color-text-subtle: var(--color-mm-neutral-500);
     --mm-color-border: var(--color-mm-neutral-300);
@@ -161,14 +197,16 @@
  * They are preserved so implementation matches the current design file.
  */
 
-@source "../pages";
-@source "../components";
-@source "../hooks";
-@source "../context";
-@source "../store";
-@source "../lib";
-@source "../constants";
+@source '../pages';
+@source '../components';
+@source '../modules';
+@source '../hooks';
+@source '../context';
+@source '../store';
+@source '../lib';
+@source '../constants';
 
-@source not "../pages/story/amp";
-@source not "../pages/external/amp";
-@source not "../components/amp";
+@source not '../pages/story/amp';
+@source not '../pages/external/amp';
+@source not '../components/amp';
+@source not '../modules/*/amp';

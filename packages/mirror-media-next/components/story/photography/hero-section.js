@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
+
 /**
  * @param {Object} props
  * @param {string} props.imageUrl
@@ -150,7 +152,7 @@ export default function HeroSection({
         heroImage?.resized?.w1200 ||
         heroImage?.resized?.w800 ||
         heroImage?.resized?.w480 ||
-        '/images-next/default-og-img.png'
+        DEFAULT_OG_IMAGE_URL
       }
       isIOS={isIOSDevice}
     >

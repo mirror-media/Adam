@@ -1,15 +1,19 @@
 import { SITE_URL } from '../../../config/index.mjs'
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../../constants'
+import {
+  DEFAULT_OG_IMAGE_URL,
+  SITE_DESCRIPTION,
+  SITE_TITLE,
+} from '../../../constants'
 import { toTaipeiISOString } from '../../../utils/index'
 
 /**
- * @typedef {import('../../../apollo/fragments/external').External} External
+ * @typedef {import('../../../modules/external/external-types').ExternalPost} ExternalPost
  * @typedef {'/external/' | '/external/amp/'} CurrentPage
  */
 
 /**
  *
- * @param {External} external
+ * @param {ExternalPost} external
  * @param {CurrentPage} currentPage
  * @returns {Object[]}
  */
@@ -26,7 +30,7 @@ const generateJsonLdsData = (external, currentPage) => {
   } = external
 
   const pageUrl = `https://${SITE_URL}${currentPage}${slug}`
-  const imageUrl = thumb || `https://${SITE_URL}/images-next/default-og-img.png`
+  const imageUrl = thumb || `https://${SITE_URL}${DEFAULT_OG_IMAGE_URL}`
   const logoUrl = `https://${SITE_URL}/images-next/logo.png`
 
   const authorName = partner?.name ? partner.name : extend_byline || ''

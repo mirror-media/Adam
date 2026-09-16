@@ -45,6 +45,11 @@ const fetchContentStoryPostBySlug = graphql(`
       relatedsTwo {
         ...relatedPost
       }
+      relateds {
+        id
+        slug
+        title
+      }
     }
   }
 `)

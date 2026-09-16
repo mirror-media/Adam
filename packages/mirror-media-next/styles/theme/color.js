@@ -20,4 +20,19 @@ const sectionsColor = {
   mirrorcolumn: '#B79479',
   life: '#2ECDA7',
 }
-export const color = { brandColor, sectionsColor }
+/**
+ * Resolve the label background color for a post's first section.
+ * `external` posts are labeled with the `news` section's color, and
+ * unrecognized slugs fall back to the brand's light blue.
+ *
+ * @param {string} [sectionSlug]
+ * @returns {string}
+ */
+const getSectionLabelColor = (sectionSlug) => {
+  if (sectionSlug === 'external') return sectionsColor.news
+  return sectionSlug && sectionsColor[sectionSlug]
+    ? sectionsColor[sectionSlug]
+    : brandColor.lightBlue
+}
+
+export const color = { brandColor, sectionsColor, getSectionLabelColor }

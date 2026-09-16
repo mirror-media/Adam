@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../../constants'
 import { defaultSerifFontFamily } from '../../../styles/shared-style'
 /**
  * @typedef {Pick<import('../../../apollo/fragments/post').HeroImage ,'id' | 'resized' | 'resizedWebp'>} HeroImage
@@ -157,7 +158,7 @@ export default function RelatedArticleList({ relateds }) {
                 }}
                 width={'100%'}
                 height={'100%'}
-                defaultImage={'/images-next/default-og-img.png'}
+                defaultImage={DEFAULT_OG_IMAGE_URL}
                 loadingImage={'/images-next/loading.gif'}
               />
             </Link>
