@@ -11,11 +11,22 @@ export const COMPASS_FIT_UNITS = {
 } as const
 
 export const COMPASS_FIT_INSERT_AFTER_INDEXES = [1, 3, 5] as const
+export const COMPASS_FIT_HOMEPAGE_ITEM_INDEXES = [2, 5, 8] as const
 export const COMPASS_FIT_ARTICLE_SLOT_INDEXES = [0, 1, 2, 3] as const
 
 export function getCompassFitSlotIndex(articleIndex: number): number | null {
   const slotIndex = COMPASS_FIT_INSERT_AFTER_INDEXES.findIndex(
     (index) => index === articleIndex
+  )
+
+  return slotIndex === -1 ? null : slotIndex
+}
+
+export function getHomepageCompassFitSlotIndex(
+  itemIndex: number
+): number | null {
+  const slotIndex = COMPASS_FIT_HOMEPAGE_ITEM_INDEXES.findIndex(
+    (index) => index === itemIndex
   )
 
   return slotIndex === -1 ? null : slotIndex
