@@ -2,11 +2,13 @@ import { Fragment } from 'react'
 import dynamic from 'next/dynamic'
 
 import { AD_MEDIA_QUERIES } from '@/components/ads/ad-breakpoints'
+import { AD_SLOT_LAYOUTS } from '@/components/ads/ad-slot-layouts'
 import { CompassFitAd } from '@/components/ads/compass-fit/compass-fit-ad'
 import {
   COMPASS_FIT_UNITS,
   getCompassFitSlotIndex,
 } from '@/components/ads/compass-fit/compass-fit-config'
+import { cn } from '@/components/cn'
 import useMediaQuery from '@/hooks/use-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '@/utils/ad'
@@ -27,6 +29,35 @@ type ArticleListProps = {
   from?: string
   renderList: ArticleListItemData[]
   section?: ArticleListSection
+}
+
+type ListingMobileCompassFitSlotProps = {
+  enabled: boolean
+  unitId: string
+}
+
+function ListingMobileCompassFitSlot({
+  enabled,
+  unitId,
+}: ListingMobileCompassFitSlotProps) {
+  return (
+    <div className="relative min-w-0 sm:hidden">
+      {/*
+        Match the responsive article geometry: a 3:2 image, two subtitle
+        lines (37px), title margins (24px), and one caption line (21px).
+      */}
+      <div aria-hidden="true" className="invisible">
+        <div className="aspect-[330/220] w-full" />
+        <div className="mt-mm-l mb-mm-l h-[37px]" />
+        <div className="h-[21px]" />
+      </div>
+      <CompassFitAd
+        className="absolute inset-0 h-full"
+        enabled={enabled}
+        unitId={unitId}
+      />
+    </div>
+  )
 }
 
 export function ArticleList({ from, renderList, section }: ArticleListProps) {
@@ -64,8 +95,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
                 priority={index === 0}
               />
               {mobileSlotIndex !== null && (
-                <CompassFitAd
-                  className="sm:hidden"
+                <ListingMobileCompassFitSlot
                   enabled={
                     shouldShowAd &&
                     isListingViewportResolved &&
@@ -89,8 +119,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
               <Fragment key={item.id}>
                 <ArticleListItem from={from} item={item} />
                 {mobileSlotIndex !== null && (
-                  <CompassFitAd
-                    className="sm:hidden"
+                  <ListingMobileCompassFitSlot
                     enabled={
                       shouldShowAd &&
                       isListingViewportResolved &&
@@ -101,7 +130,10 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
                 )}
                 {nonMobileSlotIndex !== null && (
                   <CompassFitAd
-                    className="hidden sm:block"
+                    className={cn(
+                      'hidden sm:block',
+                      AD_SLOT_LAYOUTS.compassFit.listingNonMobileRow.className
+                    )}
                     enabled={
                       shouldShowAd &&
                       isListingViewportResolved &&

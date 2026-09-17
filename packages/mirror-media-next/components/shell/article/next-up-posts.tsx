@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { AD_MEDIA_QUERIES } from '@/components/ads/ad-breakpoints'
+import { AD_SLOT_LAYOUTS } from '@/components/ads/ad-slot-layouts'
 import { CompassFitAd } from '@/components/ads/compass-fit/compass-fit-ad'
 import {
   COMPASS_FIT_ARTICLE_SLOT_INDEXES,
@@ -114,12 +115,19 @@ export function NextUpPosts({
 
               return (
                 <li className="min-w-0 py-4" key={`compass-fit-${slotIndex}`}>
-                  <CompassFitAd enabled={shouldShowAd} unitId={unitId} />
+                  <CompassFitAd
+                    className={
+                      AD_SLOT_LAYOUTS.compassFit.articleFurtherRow.className
+                    }
+                    enabled={shouldShowAd}
+                    unitId={unitId}
+                  />
                 </li>
               )
             })}
             <li className="min-w-0 py-4">
               <PrismAdSlot
+                className={AD_SLOT_LAYOUTS.prism.articleFurtherRow.className}
                 enabled={shouldShowAd}
                 placement={PRISM_ARTICLE_FURTHER_PLACEMENT}
               />

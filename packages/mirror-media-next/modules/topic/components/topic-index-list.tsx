@@ -1,11 +1,13 @@
 import { Fragment } from 'react'
 import dynamic from 'next/dynamic'
 
+import { AD_SLOT_LAYOUTS } from '@/components/ads/ad-slot-layouts'
 import { CompassFitAd } from '@/components/ads/compass-fit/compass-fit-ad'
 import {
   COMPASS_FIT_UNITS,
   getCompassFitSlotIndex,
 } from '@/components/ads/compass-fit/compass-fit-config'
+import { cn } from '@/components/cn'
 import InfiniteScrollList from '@/components/infinite-scroll-list'
 import { Spinner } from '@/components/ui/spinner'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
@@ -42,7 +44,10 @@ function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
               <TopicIndexCard item={item} />
               {slotIndex !== null ? (
                 <CompassFitAd
-                  className="mx-auto w-full max-w-82.5 md:mx-0 md:w-70 md:max-w-70 md:shrink-0"
+                  className={cn(
+                    'mx-auto w-full max-w-82.5 md:mx-0 md:w-70 md:max-w-70 md:shrink-0',
+                    AD_SLOT_LAYOUTS.compassFit.topicCard.className
+                  )}
                   enabled={shouldShowAd}
                   unitId={COMPASS_FIT_UNITS.listing[slotIndex]}
                 />
