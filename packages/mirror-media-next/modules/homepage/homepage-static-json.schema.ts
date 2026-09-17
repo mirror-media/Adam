@@ -94,6 +94,7 @@ const forumHeadlineInputSchema = z
     id: z.string().min(1),
     publishedDate: z.string().nullish(),
     slug: z.string().min(1),
+    thumb: z.string().nullish(),
     title: z.string().min(1),
   })
   .passthrough()
@@ -274,7 +275,7 @@ function parseForumHeadlines(input: unknown): HomepageArticle[] | null {
       href: getArticleHref(itemResult.data.slug, 'article', {
         slug: 'dailycolumn',
       }),
-      imageUrl: DEFAULT_OG_IMAGE_URL,
+      imageUrl: itemResult.data.thumb?.trim() || DEFAULT_OG_IMAGE_URL,
       key: `external:daily-column:${itemResult.data.slug}`,
       publishedDate: itemResult.data.publishedDate?.trim() || '',
       sectionName: '論壇',
