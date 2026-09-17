@@ -343,7 +343,7 @@ function Homepage({ data }: HomepageProps) {
               title="熱門新聞"
               titleId="homepage-popular-news-title"
               trackingFrom="cate_hotnews"
-              withPopInAds
+              withPrismAds
             />
             <GoogleNewsFollow className="order-6 col-span-full mx-auto md:order-5 xl:order-1" />
             <HeadlineList
