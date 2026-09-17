@@ -44,10 +44,10 @@ function IdleTimeoutModal({
       timeout: API_TIMEOUT,
     })
       .then((res) => {
-        if (res && res.data) {
-          const data: PopularNewsApiPost[] = res.data.slice(0, 6)
-          setPopularNews(data)
-        }
+        if (!Array.isArray(res?.data)) return
+
+        const data: PopularNewsApiPost[] = res.data.slice(0, 6)
+        setPopularNews(data)
       })
       .catch((error) => {
         console.error('Error fetching popular news:', error)
@@ -91,7 +91,9 @@ function IdleTimeoutModal({
                   onClick={handleClose}
                 />
 
-                <PopularNewsItem items={popularNews} />
+                {popularNews.length ? (
+                  <PopularNewsItem items={popularNews} />
+                ) : null}
 
                 <hr className="border-4 border-mm-base-400" />
               </div>

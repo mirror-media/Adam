@@ -51,8 +51,8 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
             >
               <div className="relative space-y-2">
                 <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">
-                  {item.sectionsInInputOrder?.[0].name ||
-                    item.sections?.[0].name}
+                  {item.sectionsInInputOrder?.[0]?.name ||
+                    item.sections?.[0]?.name}
                 </div>
                 <picture className="relative block aspect-video w-full">
                   <Image
@@ -98,8 +98,8 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
             >
               <div className="relative space-y-2">
                 <div className="absolute top-0 z-1 bg-mm-base-600 px-2.5 py-1 text-mm-second-100">
-                  {item.sectionsInInputOrder?.[0].name ||
-                    item.sections?.[0].name}
+                  {item.sectionsInInputOrder?.[0]?.name ||
+                    item.sections?.[0]?.name}
                 </div>
                 <picture className="relative block aspect-23/15 w-full">
                   <Image

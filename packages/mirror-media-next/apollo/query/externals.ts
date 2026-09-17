@@ -43,6 +43,7 @@ const fetchLatestPublishedExternals = graphql(`
       id
       title
       slug
+      thumb
       updatedAt
       publishedDate
     }

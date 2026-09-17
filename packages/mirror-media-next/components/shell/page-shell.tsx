@@ -2,6 +2,7 @@ import type { ComponentProps, ReactNode } from 'react'
 
 import GDPRNotification from '@/components/gdpr'
 import CustomHead from '@/components/shared/custom-head'
+import ErrorBoundary from '@/components/shared/error-boundary'
 
 import { BackToTop } from './back-to-top'
 import { SiteFooter } from './footer/site-footer'
@@ -35,7 +36,9 @@ function PageShell({
       >
         <SiteHeader {...headerData} />
         {withIdleTimeout ? (
-          <IdleTimeoutModal pauseCarouselTicker={pauseCarouselTickerOnIdle} />
+          <ErrorBoundary boundary="idle-timeout-modal">
+            <IdleTimeoutModal pauseCarouselTicker={pauseCarouselTickerOnIdle} />
+          </ErrorBoundary>
         ) : undefined}
         <div
           className="flex min-w-0 flex-1 flex-col"
