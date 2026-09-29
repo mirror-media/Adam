@@ -7,6 +7,7 @@ import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 
+import { HOMEPAGE_POPULAR_NEWS_COUNT } from '../homepage-constants'
 import type { HomepageArticle } from '../homepage-types'
 
 import { ArticleImage } from './article-image'
@@ -55,8 +56,13 @@ function HeadlineList({
   const listItems: HeadlineListItem[] = []
 
   if (reservesPrismAds) {
-    // Ads count toward the fixed eight rows, so articles 7 and 8 are omitted.
-    for (let itemIndex = 0; itemIndex < articles.length; itemIndex += 1) {
+    let articleIndex = 0
+
+    for (
+      let itemIndex = 0;
+      itemIndex < HOMEPAGE_POPULAR_NEWS_COUNT;
+      itemIndex += 1
+    ) {
       const slotIndex = homepagePrismItemIndexes.findIndex(
         (adIndex) => adIndex === itemIndex
       )
@@ -70,18 +76,16 @@ function HeadlineList({
         continue
       }
 
-      const precedingAdCount = homepagePrismItemIndexes.filter(
-        (adIndex) => adIndex < itemIndex
-      ).length
-      const article = articles[itemIndex - precedingAdCount]
+      const article = articles[articleIndex]
 
-      if (article) {
-        listItems.push({
-          article,
-          itemKey: `homepage-popular-${itemIndex}`,
-          type: 'article',
-        })
-      }
+      if (!article) break
+
+      listItems.push({
+        article,
+        itemKey: `homepage-popular-${itemIndex}`,
+        type: 'article',
+      })
+      articleIndex += 1
     }
   } else {
     articles.forEach((article, index) => {
