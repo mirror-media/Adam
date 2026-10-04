@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import ExternalEmbedCodeBlock from './external-embed-code-block'
 const { draftEditorCssExternal } = MirrorMedia
 import ArticleRightArrow from '../../components/shared/article-right-arrow'
+import { Typography } from '../ui'
 
 const Wrapper = styled.section`
   margin-top: 32px;
@@ -57,7 +58,14 @@ export default function ExternalArticleContent({
         if (iframeRegex.test(part)) {
           return <ExternalEmbedCodeBlock embedCode={part} key={index} />
         }
-        return <div dangerouslySetInnerHTML={{ __html: part }} key={index} />
+        return (
+          <Typography
+            as="div"
+            variant="body-l"
+            dangerouslySetInnerHTML={{ __html: part }}
+            key={index}
+          />
+        )
       })}
 
       {hasFirstRelatedArticle && (

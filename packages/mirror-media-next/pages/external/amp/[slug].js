@@ -10,10 +10,10 @@ import AmpGptStickyAd from '../../../components/amp/amp-ads/amp-gpt-sticky-ad'
 import Taboola from '../../../components/amp/amp-ads/taboola-ad'
 import AmpFooter from '../../../components/amp/amp-footer'
 import AmpHeader from '../../../components/amp/amp-header'
+import Layout from '../../../components/amp/amp-layout'
 import AmpMain from '../../../components/amp/external/amp-main'
 import generateJsonLdsData from '../../../components/external/shared/json-lds-data'
 import JsonLdsScript from '../../../components/external/shared/json-lds-script'
-import Layout from '../../../components/shared/layout'
 import { ENV, GA_MEASUREMENT_ID, SITE_URL } from '../../../config/index.mjs'
 import { getLogTraceObject } from '../../../utils'
 import { transformHtmlIntoAmpHtml } from '../../../utils/amp-html'
@@ -93,8 +93,6 @@ export default function External({ external, jsonLdData }) {
           imageUrl: thumb,
           skipCanonical: true,
         }}
-        header={{ type: 'empty' }}
-        footer={{ type: 'empty' }}
       >
         <>
           {/* @ts-ignore */}

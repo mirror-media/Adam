@@ -3,19 +3,31 @@ import { Logging } from '@google-cloud/logging'
 import requestIp from 'request-ip'
 
 import {
+  ENV,
   GCP_PROJECT_ID,
   GCP_STACKDRIVER_LOG_NAME,
 } from '../../config/index.mjs'
 import { monitorLoggingRequestBody } from '../../utils/api/logging.schema'
 
-const loggingClient = new Logging({
-  projectId: GCP_PROJECT_ID,
-})
+const loggingClient =
+  ENV === 'local'
+    ? null
+    : new Logging({
+        projectId: GCP_PROJECT_ID,
+      })
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
     res.send({ msg: 'Received.' })
     monitorLoggingRequestBody('tracking', req.body)
+
+    if (!loggingClient) {
+      return
+    }
+
     const query = req.body
     const log = loggingClient.log(GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
@@ -24,7 +36,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     query.clientInfo.ip = clientIp
 
     const entry = log.entry(metadata, query)
-    log.write(entry)
+    await log.write(entry)
   } catch (error) {
     console.error(
       JSON.stringify({

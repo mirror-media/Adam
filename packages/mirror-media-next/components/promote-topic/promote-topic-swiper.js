@@ -3,11 +3,15 @@ import 'swiper/css/pagination'
 
 import { useState } from 'react'
 import styled from 'styled-components'
-import { Autoplay, Pagination } from 'swiper'
+import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { Z_INDEX } from '../../constants/index'
 import CloseIcon from '../../public/images-next/close.svg'
+import {
+  CAROUSEL_TRANSITION_MS,
+  useCarouselTicker,
+} from '../common/carousel-ticker'
 
 import PromoteTopicItem from './promote-topic-item'
 
@@ -94,13 +98,17 @@ const CloseButton = styled.button`
  */
 export default function PromoteTopicSwiper({ list }) {
   const [shouldShow, setShouldShow] = useState(true)
+  const [swiper, setSwiper] = useState(null)
+  const shouldLoop = list.length > 1
+  const { carouselRef, interactionProps } = useCarouselTicker({
+    isActive: shouldShow && shouldLoop,
+    onTick: () => swiper?.slideNext(),
+  })
 
   if (!shouldShow || !list.length) return null
 
-  const shouldLoop = list.length > 1
-
   return (
-    <Wrapper>
+    <Wrapper ref={carouselRef} {...interactionProps}>
       <CloseButton
         type="button"
         aria-label="關閉推薦專題"
@@ -109,7 +117,10 @@ export default function PromoteTopicSwiper({ list }) {
         <CloseIcon />
       </CloseButton>
       <Swiper
-        modules={[Autoplay, Pagination]}
+        allowTouchMove={shouldLoop}
+        className="[--swiper-wrapper-transition-timing-function:ease-in-out]"
+        modules={[Pagination]}
+        onSwiper={setSwiper}
         pagination={
           shouldLoop
             ? {
@@ -119,15 +130,8 @@ export default function PromoteTopicSwiper({ list }) {
         }
         slidesPerView={1}
         resistanceRatio={0}
-        autoplay={
-          shouldLoop
-            ? {
-                delay: 10000,
-                disableOnInteraction: false,
-              }
-            : false
-        }
         rewind={shouldLoop}
+        speed={CAROUSEL_TRANSITION_MS}
       >
         {list.map((topic) => (
           <SwiperSlide key={topic.id}>

@@ -1,6 +1,7 @@
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import { transformTimeDataIntoDotFormat } from '../../utils'
 import {
   getExternalPartnerColor,
@@ -137,7 +138,7 @@ export default function ExternalListItem({ item }) {
           images={IMAGES_URL}
           alt={title}
           loadingImage="/images-next/loading.gif"
-          defaultImage="/images-next/default-og-img.png"
+          defaultImage={DEFAULT_OG_IMAGE_URL}
           rwd={{ tablet: '320px', desktop: '220px' }}
         />
         {partner && (

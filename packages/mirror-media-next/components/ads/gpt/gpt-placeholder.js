@@ -140,7 +140,7 @@ const ContainerAside = styled.div(
 /**
  * @param {Object} props
  * @param {Rwd} [props.rwd]
- * @param {import('react').JSX.Element} props.children
+ * @param {import('react').ReactNode} props.children
  * @param {DisplayAt} [props.displayAt='all']
  * @param {boolean} [props.shouldShowAd=true]
  * @param {boolean} [props.isLogInProcessFinished=false]
@@ -167,7 +167,7 @@ function GPT_Placeholder({
 /**
  * Aside Placeholder
  * @param {Object} props
- * @param {import('react').JSX.Element} props.children
+ * @param {import('react').ReactNode} props.children
  * @param {boolean} [props.shouldShowAd=true]
  * @param {boolean} [props.isLogInProcessFinished=false]
  * @returns {import('react').JSX.Element}

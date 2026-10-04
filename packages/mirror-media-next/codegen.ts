@@ -21,6 +21,7 @@ const config: CodegenConfig = {
       ],
       preset: 'client',
       presetConfig: {
+        fragmentMasking: false,
         gqlTagName: 'graphql',
       },
       config: {
@@ -36,6 +37,7 @@ const config: CodegenConfig = {
       ],
       preset: 'client',
       presetConfig: {
+        fragmentMasking: false,
         gqlTagName: 'graphql',
       },
       config: {
@@ -47,6 +49,7 @@ const config: CodegenConfig = {
       documents: ['apollo/codegen-documents/story.graphql'],
       preset: 'client',
       presetConfig: {
+        fragmentMasking: false,
         gqlTagName: 'graphql',
       },
       config: {

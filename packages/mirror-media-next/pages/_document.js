@@ -5,6 +5,9 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document'
 import Script from 'next/script'
 import { ServerStyleSheet } from 'styled-components'
+
+import { GTM_AUTH, GTM_ID, GTM_PREVIEW } from '../config/index.mjs'
+import { getGtmNoscriptSrc } from '../utils/gtm/noscript-src'
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet()
@@ -33,6 +36,12 @@ export default class MyDocument extends Document {
   }
 
   render() {
+    const gtmNoscriptSrc = getGtmNoscriptSrc(
+      GTM_ID,
+      GTM_AUTH || undefined,
+      GTM_PREVIEW || undefined
+    )
+
     return (
       <Html lang="zh-Hant">
         <Head>
@@ -74,6 +83,15 @@ export default class MyDocument extends Document {
         </Head>
 
         <body>
+          <noscript>
+            <iframe
+              title="GTM Noscript"
+              src={gtmNoscriptSrc}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            />
+          </noscript>
           <Main />
 
           <NextScript />

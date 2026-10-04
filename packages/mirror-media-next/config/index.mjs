@@ -17,6 +17,7 @@ const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
 const MISO_API_BASE_URL = 'https://api.askmiso.com'
 const MISO_ENDPOINTS = {
   relatedStories: `${MISO_API_BASE_URL}/v1/recommendation/product_to_products`,
+  search: `${MISO_API_BASE_URL}/v1/ask/search`,
 }
 
 // should be applied in preview mode
@@ -37,15 +38,24 @@ let DRAFT_RENDERER_FEATURE_TOGGLE = 'off'
 let LOGIN_PAGE_FEATURE_TOGGLE = 'off'
 let TEST_GPT_AD_FEATURE_TOGGLE = 'off'
 let URL_STATIC_PREMIUM_SECTIONS = ''
-let URL_STATIC_NORMAL_SECTIONS = ''
 let URL_STATIC_TOPICS = ''
 let URL_STATIC_POST_FLASH_NEWS = ''
 let URL_STATIC_POST_EXTERNAL = ''
 let URL_STATIC_HEADER_HEADERS = ''
+// Served from /json/, like the podcast list and promote topics, rather than the
+// /files/json/ prefix the header statics use. Confirmed against the bucket:
+// /files/json/menu_sections_latest.json is a 404.
+//
+// Built from STATIC_FILE_DOMAIN in every environment, local included, so a new
+// environment only has to set that domain. There is no mock for it; local reads
+// the dev bucket the same way the podcast list and promote topics do.
+let URL_STATIC_MENU_SECTIONS = ''
 let URL_STATIC_PODCAST_LIST = ''
 let DONATION_PAGE_URL = ''
 let GA_MEASUREMENT_ID = ''
 let GTM_ID = ''
+let GTM_AUTH = ''
+let GTM_PREVIEW = ''
 let URL_STATIC_POPULAR_NEWS = ''
 let URL_STATIC_404_POPULAR_NEWS = ''
 let NEWEBPAY_PAPERMAG_API_URL = ''
@@ -87,13 +97,13 @@ switch (ENV) {
     // WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://api.mirrormedia.mg/youtube`
     URL_STATIC_PREMIUM_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_member.json`
-    URL_STATIC_NORMAL_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_sections.json`
     URL_STATIC_TOPICS = `https://${STATIC_FILE_DOMAIN}/files/json/header_topics.json`
     URL_STATIC_POST_FLASH_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/header_posts.json`
     URL_STATIC_POST_EXTERNAL = `https://${STATIC_FILE_DOMAIN}/files/json/post_external`
     URL_STATIC_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/popular.json`
     URL_STATIC_404_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/404_popular.json`
     URL_STATIC_HEADER_HEADERS = `https://${STATIC_FILE_DOMAIN}/files/json/header_headers.json`
+    URL_STATIC_MENU_SECTIONS = `https://${STATIC_FILE_DOMAIN}/json/menu_sections_latest.json`
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
@@ -121,6 +131,8 @@ switch (ENV) {
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-341XFN0675'
     GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = ''
+    GTM_PREVIEW = ''
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
 
     GPT_MODE = 'prod'
@@ -158,13 +170,13 @@ switch (ENV) {
     STATIC_FILE_DOMAIN = 'v3-statics-staging.mirrormedia.mg'
 
     URL_STATIC_PREMIUM_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_member.json`
-    URL_STATIC_NORMAL_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_sections.json`
     URL_STATIC_TOPICS = `https://${STATIC_FILE_DOMAIN}/files/json/header_topics.json`
     URL_STATIC_POST_FLASH_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/header_posts.json`
     URL_STATIC_POST_EXTERNAL = `https://${STATIC_FILE_DOMAIN}/files/json/post_external`
     URL_STATIC_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/popular.json`
     URL_STATIC_404_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/404_popular.json`
     URL_STATIC_HEADER_HEADERS = `https://${STATIC_FILE_DOMAIN}/files/json/header_headers.json`
+    URL_STATIC_MENU_SECTIONS = `https://${STATIC_FILE_DOMAIN}/json/menu_sections_latest.json`
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
@@ -190,7 +202,9 @@ switch (ENV) {
     TEST_GPT_AD_FEATURE_TOGGLE = 'off'
     DONATION_PAGE_URL = 'https://mirrormedia.oen.tw/'
     GA_MEASUREMENT_ID = 'G-32D7P3MJ8B'
-    GTM_ID = 'GTM-KVDZ27K'
+    GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = 'dP0ngxsSIQu1WL3StB9JxA'
+    GTM_PREVIEW = 'env-568'
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     GPT_MODE = 'prod'
 
@@ -226,13 +240,13 @@ switch (ENV) {
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://api.mirrormedia.mg/youtube`
     STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
     URL_STATIC_PREMIUM_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_member.json`
-    URL_STATIC_NORMAL_SECTIONS = `https://${STATIC_FILE_DOMAIN}/files/json/header_sections.json`
     URL_STATIC_TOPICS = `https://${STATIC_FILE_DOMAIN}/files/json/header_topics.json`
     URL_STATIC_POST_FLASH_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/header_posts.json`
     URL_STATIC_POST_EXTERNAL = `https://${STATIC_FILE_DOMAIN}/files/json/post_external`
     URL_STATIC_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/popular.json`
     URL_STATIC_404_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/404_popular.json`
     URL_STATIC_HEADER_HEADERS = `https://${STATIC_FILE_DOMAIN}/files/json/header_headers.json`
+    URL_STATIC_MENU_SECTIONS = `https://${STATIC_FILE_DOMAIN}/json/menu_sections_latest.json`
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `https://${STATIC_FILE_DOMAIN}/files/json/sections`
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
@@ -254,7 +268,9 @@ switch (ENV) {
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
-    GTM_ID = 'GTM-PBNLSMX'
+    GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = 'xyFHWcr3RoNXEgOn9JWPFA'
+    GTM_PREVIEW = 'env-567'
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     ACCESS_SUBSCRIBE_FEATURE_TOGGLE = 'on'
     DRAFT_RENDERER_FEATURE_TOGGLE = 'on'
@@ -300,13 +316,13 @@ switch (ENV) {
     TEST_GPT_AD_FEATURE_TOGGLE = 'on'
     ENABLE_NON_PREMIUM_OPEN_ARTICLE_MODE = true
     URL_STATIC_PREMIUM_SECTIONS = `http://localhost:8080/json/header_member.json`
-    URL_STATIC_NORMAL_SECTIONS = `http://localhost:8080/json/header_sections.json`
     URL_STATIC_TOPICS = `http://localhost:8080/json/header_topics.json`
     URL_STATIC_POST_FLASH_NEWS = `http://localhost:8080/json/header_posts.json`
     URL_STATIC_POST_EXTERNAL = `http://localhost:8080/json/post_external`
-    URL_STATIC_POPULAR_NEWS = `http://localhost:8080/json/popular.json`
+    URL_STATIC_POPULAR_NEWS = `https://${STATIC_FILE_DOMAIN}/files/json/popular.json`
     URL_STATIC_404_POPULAR_NEWS = `http://localhost:8080/json/404_popular.json`
     URL_STATIC_HEADER_HEADERS = `http://localhost:8080/json/header_headers.json`
+    URL_STATIC_MENU_SECTIONS = `https://${STATIC_FILE_DOMAIN}/json/menu_sections_latest.json`
     URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION = `http://localhost:8080/json/sections`
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
@@ -326,7 +342,9 @@ switch (ENV) {
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'
-    GTM_ID = 'GTM-PBNLSMX'
+    GTM_ID = 'GTM-NCH86SP'
+    GTM_AUTH = 'xyFHWcr3RoNXEgOn9JWPFA'
+    GTM_PREVIEW = 'env-567'
     GPT_MODE = 'dev'
     FIREBASE_AUTH_DOMAIN = 'mirrormediaapptest.firebaseapp.com'
     ACTION_CODE_SETTING = {
@@ -370,7 +388,9 @@ export {
   GOOGLE_SHEETS_CLIENT_ID,
   GOOGLE_SHEETS_PRIVATE_KEY,
   GPT_MODE,
+  GTM_AUTH,
   GTM_ID,
+  GTM_PREVIEW,
   IS_PREVIEW_MODE,
   LOGIN_PAGE_FEATURE_TOGGLE,
   MISO_API_BASE_URL,
@@ -389,9 +409,9 @@ export {
   URL_STATIC_DAILY_COLUMN_HEADLINES,
   URL_STATIC_HEADER_HEADERS,
   URL_STATIC_LATEST_NEWS_IN_CERTAIN_SECTION,
+  URL_STATIC_MENU_SECTIONS,
   URL_STATIC_NEWS_CATEGORY_INFO,
   URL_STATIC_NEWS_CATEGORY_POSTS,
-  URL_STATIC_NORMAL_SECTIONS,
   URL_STATIC_PODCAST_LIST,
   URL_STATIC_POPULAR_NEWS,
   URL_STATIC_POST_EXTERNAL,

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import DraftRenderBlock from '../shared/draft-renderer-block'
 const { getContentTextBlocks } = MirrorMedia
-import Footer from '../../shared/footer'
+import { SiteFooter } from '../../shell/footer/site-footer'
 
 import HeroSection from './hero-section'
 import { ArrowDown } from './icons'
@@ -128,7 +128,7 @@ const ArrowButton = styled.button`
 `
 
 /**
- * @typedef {import('../../../apollo/fragments/post').Post} PostData
+ * @typedef {import('../../../modules/story/story-types').StoryPost} PostData
  */
 
 /**
@@ -144,7 +144,7 @@ const ArrowButton = styled.button`
  * @param {PostData} param.postData
  * @param {PostContent} param.postContent
  * @param {string} [param.classNameForGTM]
- * @param {import('../../../apollo/fragments/post').Related[]} [param.allRelatedStories]
+ * @param {import('../../../modules/story/story-types').RelatedStory[]} [param.allRelatedStories]
  * @returns
  */
 
@@ -290,7 +290,7 @@ export default function StoryPhotographyStyle({
           <Credits credits={credits}></Credits>
         </ContentContainer>
         <RelatedPosts relateds={allRelatedStories} />
-        <Footer footerType="default" />
+        <SiteFooter />
       </Page>
     </Main>
   )

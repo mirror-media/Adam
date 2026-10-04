@@ -1,8 +1,10 @@
 import { graphql } from '../__generated__/content'
 
 import type { Tag as AiTag } from './ai-tag'
+import type { Category } from './category'
 import type { Partner as PartnerData } from './partner'
 import type { Related } from './post'
+import type { Section } from './section'
 import type { Tag } from './tag'
 
 export type Partner = PartnerData
@@ -27,6 +29,8 @@ export type GenericExternal = {
   relateds: Related[] // Articles selected by CMS users
   tags: Tag[]
   tags_algo: AiTag[]
+  sections: Pick<Section, 'id' | 'name' | 'slug' | 'state'>[]
+  categories: Pick<Category, 'id' | 'name' | 'slug' | 'state'>[]
 }
 
 export type ListingExternal = Pick<
@@ -50,6 +54,8 @@ export type External = Pick<
   | 'relateds'
   | 'tags'
   | 'tags_algo'
+  | 'sections'
+  | 'categories'
 >
 
 export const listingExternal = graphql(`
@@ -91,6 +97,12 @@ export const external = graphql(`
     }
     tags_algo {
       ...aiTag
+    }
+    sections(where: { state: { equals: "active" } }) {
+      ...section
+    }
+    categories(where: { state: { equals: "active" } }) {
+      ...category
     }
   }
 `)

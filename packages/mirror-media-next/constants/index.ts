@@ -1,6 +1,8 @@
 const SITE_TITLE = '鏡週刊 Mirror Media'
 const SITE_DESCRIPTION =
   '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
+const DEFAULT_OG_IMAGE_URL = '/images-next/default-og-img.jpg'
+const DEFAULT_ROBOTS_META_CONTENT = 'index, max-image-preview:large'
 const MESH_URL = 'https://www.mmesh.news/'
 
 const LINE_LINK = {
@@ -60,9 +62,15 @@ const AD_LINK = {
   href: 'https://www.mirrormedia.mg/story/ad1018001/',
 }
 
+const AI_GUIDANCE_LINK = {
+  name: 'ai-guidance',
+  title: 'AI使用準則',
+  href: 'https://www.mirrormedia.mg/story/ad1018001/',
+}
+
 const DOWNLOAD_APP_LINK = {
   name: 'download',
-  title: '下載APP',
+  title: 'APP下載',
   href: 'https://www.mirrormedia.mg/story/20161228corpmkt001/',
 }
 
@@ -101,9 +109,9 @@ const IDLE_MODAL_LINK = [
   PAPER_MAGAZINE_LINK,
   MAGAZINE_LINK,
   AUTH_LINK,
-  // 活動專區？
-  DOWNLOAD_APP_LINK,
   MEDIA_DISCIPLINE_LINK,
+  AI_GUIDANCE_LINK,
+  DOWNLOAD_APP_LINK,
 ]
 
 const MIRRORVOICE_LINK = {
@@ -156,6 +164,13 @@ const SUB_BRAND_LINKS = [MIRRORVOICE_LINK, MIRRORFICTION_LINK, MESH_LINK]
 const SHARE_URL_FACEBOOK = 'https://www.facebook.com/share.php?u='
 const SHARE_URL_LINE = 'https://social-plugins.line.me/lineit/share?url='
 
+/**
+ * Legacy stacking scale, used by the styled-components era components.
+ *
+ * The V4 shell and the shadcn primitives under components/ui keep their layers
+ * as --mm-z-shell-* in styles/tailwind.css, slotted into this scale rather than
+ * above it, and below `top` so global dialogs (IdleTimeoutModal) keep winning.
+ */
 const Z_INDEX = {
   top: 10000,
   coverHeader: 2000,
@@ -181,8 +196,11 @@ const SECTION_IDS = {
 
 const FB_APP_ID = '175313259598308'
 const FB_PAGE_ID = '1855418728011324'
+const TWITTER_SITE_HANDLE = '@mirrormediatw'
 
 export {
+  DEFAULT_OG_IMAGE_URL,
+  DEFAULT_ROBOTS_META_CONTENT,
   EMAIL_LINK,
   FACEBOOK_LINK,
   FB_APP_ID,
@@ -191,6 +209,7 @@ export {
   IDLE_MODAL_LINK,
   INSTAGRAM_LINK,
   LINE_LINK,
+  MESH_LINK,
   PROMOTION_LINKS,
   RSS_LINK,
   SECTION_IDS,
@@ -200,6 +219,7 @@ export {
   SITE_TITLE,
   SOCIAL_MEDIA_LINKS,
   SUB_BRAND_LINKS,
+  TWITTER_SITE_HANDLE,
   WEIBO_LINK,
   Z_INDEX,
 }

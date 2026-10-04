@@ -1,6 +1,9 @@
 /**
  * @typedef {Object} MisoProduct
  * @property {string} product_id
+ * @property {string} [title]
+ * @property {string} [url]
+ * @property {string} [cover_image]
  * @property {boolean} [_boosted]
  * @property {Array<any>} _order_by
  */

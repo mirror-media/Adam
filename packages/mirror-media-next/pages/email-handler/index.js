@@ -56,10 +56,7 @@ export default function EmailHandler({ mode, headerData }) {
   const jsx = getBodyByMode()
 
   return (
-    <LayoutFull
-      header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
-    >
+    <LayoutFull header={{ type: 'default', data: headerData }}>
       <Container>{jsx}</Container>
     </LayoutFull>
   )
@@ -92,7 +89,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in email-handler',
@@ -102,7 +99,7 @@ export const getServerSideProps = async ({ req, res, query }) => {
   return {
     props: {
       mode: /** @type {RESET_PASSWORD | VERIFY_EMAIL} */ (mode),
-      headerData: { sectionsData, topicsData },
+      headerData: { flashNewsData, sectionsData, topicsData },
     },
   }
 }

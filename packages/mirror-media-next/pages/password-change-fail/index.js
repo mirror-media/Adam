@@ -58,10 +58,7 @@ export default function PasswordChangeFail({ headerData }) {
   }
 
   return (
-    <LayoutFull
-      header={{ type: 'default', data: headerData }}
-      footer={{ type: 'default' }}
-    >
+    <LayoutFull header={{ type: 'default', data: headerData }}>
       <Container>
         <GenericFailed primaryText="請回上一頁重試" onBack={onBack} />
       </Container>
@@ -86,7 +83,7 @@ export async function getServerSideProps({ req, res }) {
   ])
 
   // handle header data
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in password change failed page',
@@ -95,7 +92,7 @@ export async function getServerSideProps({ req, res }) {
 
   return {
     props: {
-      headerData: { sectionsData, topicsData },
+      headerData: { flashNewsData, sectionsData, topicsData },
     },
   }
 }

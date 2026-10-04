@@ -23,6 +23,7 @@ const withBundleAnalyzer =
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   basePath: SITE_BASE_PATH,
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   reactStrictMode: true,
   compiler: {
     styledComponents: {

@@ -53,12 +53,17 @@ const client = new ApolloClient({
 })
 
 /**
+ * @typedef {import('@apollo/client').NormalizedCacheObject} NormalizedCacheObject
+ * @type {ApolloClient<NormalizedCacheObject> | null}
+ */
+let storyClientInstance = null
+
+/**
  * Get or create a singleton ApolloClient instance for STORY_GQL_ENDPOINT.
  * This avoids creating a new client instance on every request.
  * @param {string} endpoint - The GraphQL endpoint URL
- * @returns {ApolloClient | null} - The ApolloClient instance, or null if endpoint is not provided
+ * @returns {ApolloClient<NormalizedCacheObject> | null} - The ApolloClient instance, or null if endpoint is not provided
  */
-let storyClientInstance = null
 export function getStoryClient(endpoint) {
   if (!endpoint || typeof window !== 'undefined') {
     return null

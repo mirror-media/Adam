@@ -46,13 +46,15 @@ const Ad = styled.div`
 
 /**
  * @typedef {function(googletag.events.SlotRequestedEvent):void} GoogleTagEventHandler
+ * @typedef {function(googletag.events.SlotRenderEndedEvent):void} GoogleTagRenderEndedEventHandler
  *
  * @typedef {object} GPTAdProps
  * @property {string} [pageKey] - key to access GPT_UNITS first layer
  * @property {string} [adKey] - key to access GPT_UNITS second layer, might need to complete with device
  * @property {string} [adUnit]
+ * @property {'PC' | 'MB'} [device]
  * @property {GoogleTagEventHandler} [onSlotRequested] - callback when slotRequested event occurs
- * @property {GoogleTagEventHandler} [onSlotRenderEnded] - callback when slotRenderEnded event occurs
+ * @property {GoogleTagRenderEndedEventHandler} [onSlotRenderEnded] - callback when slotRenderEnded event occurs
  * @property {string} [className] - for styled-component method to add styles
  *
  
@@ -64,6 +66,7 @@ const GPTAdRoot = ({
   pageKey,
   adKey,
   adUnit,
+  device,
   onSlotRequested,
   onSlotRenderEnded,
   className,
@@ -79,7 +82,7 @@ const GPTAdRoot = ({
     if (pageKey && adKey) {
       // built-in ad unit
       const width = window.innerWidth
-      const adSlotParam = getAdSlotParam(pageKey, adKey, width)
+      const adSlotParam = getAdSlotParam(pageKey, adKey, width, device)
       if (!adSlotParam) {
         return
       }
@@ -105,7 +108,7 @@ const GPTAdRoot = ({
     setAdSize(newAdSize)
     setAdWidth(newAdWidth)
     setAdUnitPath(newAdUnitPath)
-  }, [adKey, pageKey, adUnit])
+  }, [adKey, pageKey, adUnit, device])
 
   useEffect(() => {
     if (adDivId && adWidth && window.googletag) {
@@ -155,7 +158,7 @@ const GPTAdRoot = ({
 
         window.googletag?.cmd?.push(() => {
           window.googletag?.destroySlots([adSlot])
-          if (onSlotRenderEnded) {
+          if (onSlotRequested) {
             pubads?.removeEventListener('slotRequested', handleOnSlotRequested)
           }
           if (onSlotRenderEnded) {
@@ -184,6 +187,7 @@ export default function GptAd({
   pageKey,
   adKey,
   adUnit,
+  device,
   onSlotRequested,
   onSlotRenderEnded,
   className,
@@ -207,7 +211,7 @@ export default function GptAd({
     if (!width || !isValidAd) {
       return
     }
-    const isDesktopWidth = width >= mediaSize.xl // 1200 px
+    const isDesktopWidth = device ? device === 'PC' : width >= mediaSize.xl
     if (isBuildInAdUnit) {
       switch (true) {
         case adKey?.includes('MB'):
@@ -224,7 +228,7 @@ export default function GptAd({
       setShouldAd(true)
       return
     }
-  }, [adKey, pageKey, isBuildInAdUnit, isCustomAdUnit, isValidAd])
+  }, [adKey, device, pageKey, isBuildInAdUnit, isCustomAdUnit, isValidAd])
   return (
     <>
       {shouldShowAd && isValidAd ? (
@@ -233,6 +237,7 @@ export default function GptAd({
           pageKey={pageKey}
           adKey={adKey}
           adUnit={adUnit}
+          device={device}
           onSlotRenderEnded={onSlotRenderEnded}
           onSlotRequested={onSlotRequested}
         ></GPTAdRoot>

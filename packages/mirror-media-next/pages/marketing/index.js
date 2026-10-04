@@ -46,15 +46,14 @@ const Text = styled.div`
  * @param {Object[]} props.topicsData
  * @return {import('react').JSX.Element}
  */
-function Subscribe({ sectionsData = [], topicsData = [] }) {
+function Subscribe({ flashNewsData = [], sectionsData = [], topicsData = [] }) {
   return (
     <Layout
       head={{ title: `VIP或團體訂購` }}
       header={{
         type: 'default',
-        data: { sectionsData: sectionsData, topicsData },
+        data: { flashNewsData, sectionsData, topicsData },
       }}
-      footer={{ type: 'default' }}
     >
       <PageWrapper>
         <BlankCard>
@@ -85,7 +84,7 @@ export async function getServerSideProps({ req, res }) {
     fetchHeaderDataInDefaultPageLayout(),
   ])
 
-  const [sectionsData, topicsData] = processSettledResult(
+  const [sectionsData, topicsData, flashNewsData] = processSettledResult(
     responses[0],
     getSectionAndTopicFromDefaultHeaderData,
     'Error occurs while getting header data in marketing page',
@@ -96,6 +95,7 @@ export async function getServerSideProps({ req, res }) {
     props: {
       sectionsData,
       topicsData,
+      flashNewsData,
     },
   }
 }

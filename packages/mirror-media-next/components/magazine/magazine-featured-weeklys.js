@@ -2,6 +2,7 @@ import Link from 'next/link'
 import Image from '@readr-media/react-image'
 import styled from 'styled-components'
 
+import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 import ReadingSvg from '../../public/images-next/magazine-online.svg'
 import { getMagazineHrefFromSlug } from '../../utils/index'
 
@@ -150,7 +151,7 @@ export default function MagazineFeatures({ features }) {
               <Image
                 images={magazine.coverPhoto?.resized}
                 loadingImage="/images-next/loading.gif"
-                defaultImage="/images-next/default-og-img.png"
+                defaultImage={DEFAULT_OG_IMAGE_URL}
                 alt={magazine.title}
                 rwd={{ tablet: '160px', desktop: '200px', default: '100%' }}
               />
