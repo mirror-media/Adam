@@ -361,7 +361,7 @@ export default function PostLayout(props: PostLayoutProps) {
                     <Typography
                       as="p"
                       variant="body-l"
-                      className="mx-2 scroll-m-20 md:mx-0 xl:hidden"
+                      className="mx-2 scroll-m-20 md:mx-0"
                     >
                       {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
