@@ -10,7 +10,6 @@ import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 import { Blocks, renderTextWithLinks } from './blocks'
 import { CopyLinkButton } from './copy-link-button'
 import { IconLink } from './icon-link'
-import NextResponsiveImage from './next-responsive-image'
 import { PublicDate } from './public-date'
 import { RelativePostLink } from './relative-post-link'
 import { type ElementVariantProps, ThemeElement } from './theme-element'
@@ -255,11 +254,8 @@ export default function PostLayout(props: PostLayoutProps) {
         </div>
         <figure className="order-5 col-span-full">
           <picture className="relative block aspect-3/2">
-            <NextResponsiveImage
-              fill
-              className="aspect-4/3 object-cover"
-              placeholder="blur"
-              blurDataURL="/images-next/loading.gif"
+            <img
+              className="h-auto w-full object-cover"
               src={
                 typeof heroImage?.resized?.original === 'string'
                   ? heroImage?.resized?.original?.replace(
@@ -269,15 +265,7 @@ export default function PostLayout(props: PostLayoutProps) {
                   : DEFAULT_OG_IMAGE_URL
               }
               sizes="(max-width: 768px) 50vw, 30vw"
-              srcSet={[480, 800]}
               alt={heroCaption ?? title ?? ''}
-              priority
-              fallback={
-                typeof heroImage?.resized?.original === 'string'
-                  ? heroImage?.resized?.original
-                  : DEFAULT_OG_IMAGE_URL
-              }
-              errorImage={DEFAULT_OG_IMAGE_URL}
             />
           </picture>
           {heroCaption && (
