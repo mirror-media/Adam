@@ -1,5 +1,6 @@
 import type { RawDraftContentState } from 'draft-js'
 
+import { cn } from '@/components/cn'
 import { Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
 
@@ -84,6 +85,17 @@ type BlocksProps = {
   renderAdInContent?: () => React.ReactNode
 }
 
+const listTagByBlockType = {
+  'unordered-list-item': 'ul',
+  'ordered-list-item': 'ol',
+} as const
+
+type ListBlockType = keyof typeof listTagByBlockType
+
+function isListBlockType(type: string | undefined): type is ListBlockType {
+  return type === 'unordered-list-item' || type === 'ordered-list-item'
+}
+
 export function Blocks({
   contents,
   className,
@@ -91,12 +103,47 @@ export function Blocks({
 }: BlocksProps) {
   let paragraphCount = 0
   let headingCount = 0
+  const nodes: React.ReactNode[] = []
+  const { blocks, entityMap } = contents
 
-  return contents.blocks.map((block, index) => {
+  let index = 0
+  while (index < blocks.length) {
+    const block = blocks[index]
+
+    if (isListBlockType(block?.type)) {
+      const listType = block.type
+      const listStartIndex = index
+      const items: React.ReactNode[] = []
+
+      while (index < blocks.length && blocks[index]?.type === listType) {
+        items.push(
+          <Typography key={`list-item-${index}`} as="li" variant="body-l">
+            {renderTextWithLinks(blocks[index], entityMap)}
+          </Typography>
+        )
+        index = index + 1
+      }
+
+      const ListTag = listTagByBlockType[listType]
+      nodes.push(
+        <ListTag
+          key={`list-${listStartIndex}`}
+          className={cn(
+            listType === 'ordered-list-item' ? 'list-decimal' : 'list-disc',
+            'space-y-1 pl-5',
+            className
+          )}
+        >
+          {items}
+        </ListTag>
+      )
+      continue
+    }
+
     switch (block?.type) {
       case 'header-two':
         headingCount = headingCount + 1
-        return (
+        nodes.push(
           <Typography
             key={`heading-${headingCount}`}
             id={`heading-${headingCount}`}
@@ -107,9 +154,10 @@ export function Blocks({
             {block?.text}
           </Typography>
         )
+        break
       case 'header-three':
         headingCount = headingCount + 1
-        return (
+        nodes.push(
           <Typography
             key={`heading-${headingCount}`}
             id={`heading-${headingCount}`}
@@ -120,9 +168,10 @@ export function Blocks({
             {block?.text}
           </Typography>
         )
+        break
       case 'header-four':
         headingCount = headingCount + 1
-        return (
+        nodes.push(
           <Typography
             key={`heading-${headingCount}`}
             id={`heading-${headingCount}`}
@@ -133,9 +182,10 @@ export function Blocks({
             {block?.text}
           </Typography>
         )
+        break
       case 'header-five':
         headingCount = headingCount + 1
-        return (
+        nodes.push(
           <Typography
             key={`heading-${headingCount}`}
             id={`heading-${headingCount}`}
@@ -146,9 +196,10 @@ export function Blocks({
             {block?.text}
           </Typography>
         )
+        break
       case 'header-six':
         headingCount = headingCount + 1
-        return (
+        nodes.push(
           <Typography
             key={`heading-${headingCount}`}
             id={`heading-${headingCount}`}
@@ -159,58 +210,64 @@ export function Blocks({
             {block?.text}
           </Typography>
         )
+        break
       case 'atomic':
-        return block.entityRanges.map((entityRange) => {
-          const entity = contents.entityMap[entityRange.key]
+        nodes.push(
+          block.entityRanges.map((entityRange) => {
+            const entity = entityMap[entityRange.key]
 
-          if (entity.type === 'image') {
-            return (
-              <figure key={`content-${index}`} className={className}>
-                <picture className="block">
-                  <img
-                    src={entity.data.resized.original}
-                    alt={entity.data.desc ?? ''}
-                    width="100%"
-                    height="auto"
-                    loading="lazy"
-                  />
-                </picture>
+            if (entity.type === 'image') {
+              return (
+                <figure key={`content-${index}`} className={className}>
+                  <picture className="block">
+                    <img
+                      src={entity.data.resized.original}
+                      alt={entity.data.desc ?? ''}
+                      width="100%"
+                      height="auto"
+                      loading="lazy"
+                    />
+                  </picture>
 
-                {entity.data.desc && (
-                  <Typography
-                    as="figcaption"
-                    variant="caption-l"
-                    className="pt-2 text-center text-mm-neutral-500 md:text-start"
-                  >
-                    {entity.data.desc}
-                  </Typography>
-                )}
-              </figure>
-            )
-          }
+                  {entity.data.desc && (
+                    <Typography
+                      as="figcaption"
+                      variant="caption-l"
+                      className="pt-2 text-center text-mm-neutral-500 md:text-start"
+                    >
+                      {entity.data.desc}
+                    </Typography>
+                  )}
+                </figure>
+              )
+            }
 
-          if (entity.type === 'YOUTUBE') {
-            return (
-              <iframe
-                key={entity.data.youtubeId}
-                title={entity.data.description}
-                src={'https://www.youtube.com/embed/' + entity.data.youtubeId}
-                className="aspect-video"
-                allowFullScreen
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              />
-            )
-          }
+            if (entity.type === 'YOUTUBE') {
+              return (
+                <iframe
+                  key={entity.data.youtubeId}
+                  title={entity.data.description}
+                  src={'https://www.youtube.com/embed/' + entity.data.youtubeId}
+                  className="aspect-video"
+                  allowFullScreen
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                />
+              )
+            }
 
-          return null
-        })
+            return null
+          })
+        )
+        break
       case 'unstyled':
         paragraphCount = paragraphCount + 1
-
-        return renderPostInContent?.(block, paragraphCount)
-
+        nodes.push(renderPostInContent?.(block, paragraphCount))
+        break
       default:
-        return null
+        nodes.push(null)
     }
-  })
+    index = index + 1
+  }
+
+  return nodes
 }
