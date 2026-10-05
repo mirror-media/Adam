@@ -282,9 +282,7 @@ export default function Story({
                   </div>
                 </>
               )}
-              renderNextUp={() => (
-                <NextUpPosts type="story" items={restOfRelativeStories} />
-              )}
+              renderNextUp={() => <NextUpPosts items={restOfRelativeStories} />}
               renderDable={() => (
                 <>
                   {shouldShowAd && (
