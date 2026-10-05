@@ -1,5 +1,6 @@
 import { Fragment, useMemo } from 'react'
 import NextImage from 'next/image'
+import type { RawDraftContentState } from 'draft-js'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
@@ -13,6 +14,28 @@ import { IconLink } from './icon-link'
 import { PublicDate } from './public-date'
 import { RelativePostLink } from './relative-post-link'
 import { type ElementVariantProps, ThemeElement } from './theme-element'
+
+/** 手機文中廣告只接在第 1、第 5 段有文字的內文後面。 */
+const MB_AD_AFTER_TEXT_PARAGRAPH = {
+  1: 'MB_AT1',
+  5: 'MB_AT2',
+} as const
+
+type MbInContentAdKey =
+  (typeof MB_AD_AFTER_TEXT_PARAGRAPH)[keyof typeof MB_AD_AFTER_TEXT_PARAGRAPH]
+
+function getTextParagraphOrdinals(blocks: RawDraftContentState['blocks']) {
+  const ordinalByKey = new Map<string, number>()
+  let count = 0
+
+  for (const block of blocks) {
+    if (block.type !== 'unstyled' || block.text.trim().length === 0) continue
+    count += 1
+    ordinalByKey.set(block.key, count)
+  }
+
+  return { ordinalByKey, count }
+}
 
 type PostLayoutProps = Pick<
   StoryPost,
@@ -43,6 +66,8 @@ type PostLayoutProps = Pick<
   renderDable?: () => React.ReactNode
   renderNextUp?: () => React.ReactNode
   renderAdInContent?: () => React.ReactNode
+  renderMbAdInContent?: (adKey: MbInContentAdKey) => React.ReactNode
+  renderAdBelowRelated?: () => React.ReactNode
 }
 
 const actionList = [
@@ -92,6 +117,8 @@ export default function PostLayout(props: PostLayoutProps) {
     slug,
     relativeStory,
     renderAdInContent,
+    renderMbAdInContent,
+    renderAdBelowRelated,
     renderAside,
     renderNextUp,
     renderDable,
@@ -104,6 +131,11 @@ export default function PostLayout(props: PostLayoutProps) {
   const canonicalUrl = `https://${SITE_URL}/story/${slug}`
   const mainCategory = sections?.[0]
   const subCategories = categories?.[0]
+
+  const textParagraphs = useMemo(
+    () => getTextParagraphOrdinals(content.blocks),
+    [content.blocks]
+  )
 
   const summary = useMemo(() => {
     return content.blocks
@@ -318,16 +350,34 @@ export default function PostLayout(props: PostLayoutProps) {
             renderPostInContent={(block, paragraphCount) => {
               if (!block?.text) return null
 
-              if (paragraphCount === 2 && relativeStory) {
-                return (
-                  <Fragment key={`paragraph-${paragraphCount}`}>
-                    <Typography
-                      as="p"
-                      variant="body-l"
-                      className="mx-2 md:mx-0"
-                    >
-                      {renderTextWithLinks(block, content.entityMap)}
-                    </Typography>
+              const textOrdinal = textParagraphs.ordinalByKey.get(block.key)
+              const adKey =
+                textOrdinal === 1 || textOrdinal === 5
+                  ? MB_AD_AFTER_TEXT_PARAGRAPH[textOrdinal]
+                  : undefined
+              // 下一段沒有文字就不出現（後面還有 unstyled 文字段落才渲染）。
+              const mobileAd =
+                adKey &&
+                textOrdinal != null &&
+                textOrdinal < textParagraphs.count
+                  ? renderMbAdInContent?.(adKey)
+                  : null
+
+              return (
+                <Fragment key={`paragraph-${paragraphCount}`}>
+                  <Typography
+                    as="p"
+                    variant="body-l"
+                    className={
+                      paragraphCount === 4
+                        ? 'mx-2 scroll-m-20 md:mx-0'
+                        : 'mx-2 md:mx-0'
+                    }
+                  >
+                    {renderTextWithLinks(block, content.entityMap)}
+                  </Typography>
+                  {mobileAd}
+                  {paragraphCount === 2 && relativeStory && (
                     <div className="mx-2 scroll-m-20 md:mx-0">
                       <ThemeElement className="w-fit rounded-md rounded-b-none bg-mm-second-700 px-3 pt-1 text-sm text-mm-neutral-100">
                         延伸閱讀
@@ -344,49 +394,12 @@ export default function PostLayout(props: PostLayoutProps) {
                         </ThemeElement>
                       </Link>
                     </div>
-                  </Fragment>
-                )
-              }
-
-              if (paragraphCount === 3) {
-                return (
-                  <Fragment key={`paragraph-${paragraphCount}`}>
-                    <Typography
-                      as="p"
-                      variant="body-l"
-                      className="mx-2 md:mx-0"
-                    >
-                      {renderTextWithLinks(block, content.entityMap)}
-                    </Typography>
-                    {renderAdInContent?.()}
-                  </Fragment>
-                )
-              }
-
-              if (paragraphCount === 4) {
-                return (
-                  <Fragment key={`paragraph-${paragraphCount}`}>
-                    <Typography
-                      as="p"
-                      variant="body-l"
-                      className="mx-2 scroll-m-20 md:mx-0"
-                    >
-                      {renderTextWithLinks(block, content.entityMap)}
-                    </Typography>
+                  )}
+                  {paragraphCount === 3 && renderAdInContent?.()}
+                  {paragraphCount === 4 && (
                     <RelativePosts relateds={relateds} />
-                  </Fragment>
-                )
-              }
-
-              return (
-                <Typography
-                  key={`paragraph-${paragraphCount}`}
-                  as="p"
-                  variant="body-l"
-                  className="mx-2 md:mx-0"
-                >
-                  {renderTextWithLinks(block, content.entityMap)}
-                </Typography>
+                  )}
+                </Fragment>
               )
             }}
           />
@@ -408,6 +421,7 @@ export default function PostLayout(props: PostLayoutProps) {
             {renderNextUp()}
           </section>
         )}
+        {renderAdBelowRelated?.()}
         <div className="order-11 col-span-full grid gap-y-5 md:grid-cols-12">
           <div className="flex items-center justify-center gap-x-3 md:col-span-4 md:justify-start">
             <Link
