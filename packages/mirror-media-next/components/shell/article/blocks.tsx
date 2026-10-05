@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import type { RawDraftContentState } from 'draft-js'
 
 import { Link, Typography } from '@/components/ui'
@@ -167,11 +166,13 @@ export function Blocks({
           if (entity.type === 'image') {
             return (
               <figure key={`content-${index}`} className={className}>
-                <picture className="relative block aspect-4/3">
-                  <Image
+                <picture className="block">
+                  <img
                     src={entity.data.resized.original}
                     alt={entity.data.desc ?? ''}
-                    fill
+                    width="100%"
+                    height="auto"
+                    loading="lazy"
                   />
                 </picture>
 
