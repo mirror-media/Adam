@@ -241,6 +241,24 @@ export default function Story({
                   )}
                 </GPT_Placeholder>
               )}
+              renderMbAdInContent={(adKey) =>
+                shouldShowAd ? (
+                  <GptAd
+                    pageKey={pageKeyForGptAd}
+                    adKey={adKey}
+                    className="mt-8 h-auto w-full"
+                  />
+                ) : null
+              }
+              renderAdBelowRelated={() =>
+                shouldShowAd ? (
+                  <GptAd
+                    pageKey={pageKeyForGptAd}
+                    adKey="MB_AT3"
+                    className="order-10 col-span-full mx-[-20px] block h-auto w-full min-[336px]:mx-auto xl:hidden"
+                  />
+                ) : null
+              }
               renderAside={(summary) => (
                 <>
                   <GPT_Placeholder_Aside
@@ -309,13 +327,6 @@ export default function Story({
               )}
             />
 
-            {shouldShowAd && (
-              <GptAd
-                pageKey={pageKeyForGptAd}
-                adKey="MB_AT3"
-                className="mx-[-20px] block h-auto w-full min-[336px]:mx-auto xl:hidden"
-              />
-            )}
             {shouldShowAd && (
               <GptAd
                 pageKey={pageKeyForGptAd}
