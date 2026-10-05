@@ -142,7 +142,7 @@ export default function PremiumArticleListItem({ item, section, priority }) {
       </ImageContainer>
       <ItemDetail>
         <ItemTitle>{item.title}</ItemTitle>
-        <ItemBrief>{item.brief?.blocks[0]?.text}</ItemBrief>
+        <ItemBrief>{item.brief?.blocks?.[0]?.text}</ItemBrief>
         <ItemDate>
           {transformTimeDataIntoSlashFormat(item.publishedDate)}
         </ItemDate>
