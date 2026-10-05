@@ -278,7 +278,7 @@ export default function PostLayout(props: PostLayoutProps) {
             </Typography>
           )}
         </figure>
-        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pt-9 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0">
+        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0 lg:pt-9">
           <CreditNames label="文" creditPeoples={writers} />
           <CreditNames label="攝影" creditPeoples={photographers} />
           <CreditNames label="影音" creditPeoples={camera_man} />
@@ -321,7 +321,11 @@ export default function PostLayout(props: PostLayoutProps) {
               if (paragraphCount === 2 && relativeStory) {
                 return (
                   <Fragment key={`paragraph-${paragraphCount}`}>
-                    <Typography as="p" variant="body-l" className="mx-2">
+                    <Typography
+                      as="p"
+                      variant="body-l"
+                      className="mx-2 md:mx-0"
+                    >
                       {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
                     <div className="mx-2 scroll-m-20 md:mx-0">
@@ -347,7 +351,11 @@ export default function PostLayout(props: PostLayoutProps) {
               if (paragraphCount === 3) {
                 return (
                   <Fragment key={`paragraph-${paragraphCount}`}>
-                    <Typography as="p" variant="body-l" className="mx-2">
+                    <Typography
+                      as="p"
+                      variant="body-l"
+                      className="mx-2 md:mx-0"
+                    >
                       {renderTextWithLinks(block, content.entityMap)}
                     </Typography>
                     {renderAdInContent?.()}
@@ -375,7 +383,7 @@ export default function PostLayout(props: PostLayoutProps) {
                   key={`paragraph-${paragraphCount}`}
                   as="p"
                   variant="body-l"
-                  className="mx-2"
+                  className="mx-2 md:mx-0"
                 >
                   {renderTextWithLinks(block, content.entityMap)}
                 </Typography>
