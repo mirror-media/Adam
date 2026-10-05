@@ -215,7 +215,9 @@ export default function External({
               </div>
             </>
           )}
-          renderNextUp={() => <NextUpPosts items={allRelatedStories} />}
+          renderNextUp={() => (
+            <NextUpPosts type="external" items={allRelatedStories} />
+          )}
           renderDable={() => (
             <>
               {shouldShowAd && (

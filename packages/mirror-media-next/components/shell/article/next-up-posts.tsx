@@ -27,9 +27,11 @@ const PopInAdInRelatedList = dynamic(
 )
 
 export function NextUpPosts({
+  type,
   items,
   hiddenAdvertised = false,
 }: {
+  type: 'external' | 'story'
   items: ExternalRelatedStory[]
   hiddenAdvertised?: boolean
 }) {
@@ -62,7 +64,7 @@ export function NextUpPosts({
         {items.map((postItem) => (
           <li key={postItem.id} className="border-b border-b-black py-4">
             <Link
-              href={`/story/${postItem.slug}?from=referral_bottom`}
+              href={`/${type}/${postItem.slug}?from=referral_bottom`}
               target="_blank"
               className={cn(
                 'grid grid-cols-[90px_1fr] items-center gap-x-4 md:grid-cols-[96px_1fr]',
