@@ -221,7 +221,31 @@ export function Blocks({
                 <figure key={`content-${index}`} className={className}>
                   <picture className="block">
                     <img
-                      src={entity.data.resized.original}
+                      srcSet={
+                        entity.data.resized
+                          ? Object.entries(entity.data.resized)
+                              .filter(
+                                ([key, value]) =>
+                                  !['original', '__typename'].includes(key) &&
+                                  Boolean(value)
+                              )
+                              .sort(
+                                (a, b) =>
+                                  parseInt(a[0].replace('w', '')) -
+                                  parseInt(b[0].replace('w', ''))
+                              )
+                              .map(
+                                ([key, value]) =>
+                                  `${value} ${key.replace('w', '')}w`
+                              )
+                              .join(',')
+                          : undefined
+                      }
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      src={
+                        entity.data.resized?.w2400 ??
+                        entity.data.resized?.original
+                      }
                       alt={entity.data.desc ?? ''}
                       width="100%"
                       height="auto"
