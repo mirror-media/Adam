@@ -256,16 +256,36 @@ export default function PostLayout(props: PostLayoutProps) {
           <picture className="relative block aspect-3/2">
             <img
               className="h-auto w-full object-cover"
-              src={
-                typeof heroImage?.resized?.original === 'string'
-                  ? heroImage?.resized?.original?.replace(
-                      /\.(jpg|png)$/i,
-                      '.webP'
-                    )
-                  : DEFAULT_OG_IMAGE_URL
+              srcSet={
+                heroImage?.resized
+                  ? Object.entries(heroImage.resized)
+                      .filter(
+                        ([key, value]) =>
+                          !['original', '__typename'].includes(key) &&
+                          Boolean(value)
+                      )
+                      .sort(
+                        (a, b) =>
+                          parseInt(a[0].replace('w', '')) -
+                          parseInt(b[0].replace('w', ''))
+                      )
+                      .map(
+                        ([key, value]) => `${value} ${key.replace('w', '')}w`
+                      )
+                      .join(',')
+                  : undefined
               }
-              sizes="(max-width: 768px) 50vw, 30vw"
+              sizes="(min-width: 768px) 50vw, 100vw"
+              src={
+                typeof heroImage?.resized?.w2400 === 'string'
+                  ? heroImage.resized.w2400
+                  : typeof heroImage?.resized?.original === 'string'
+                    ? heroImage.resized.original
+                    : DEFAULT_OG_IMAGE_URL
+              }
               alt={heroCaption ?? title ?? ''}
+              width="100%"
+              height="auto"
             />
           </picture>
           {heroCaption && (
