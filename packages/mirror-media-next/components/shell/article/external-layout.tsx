@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import Image from 'next/image'
-import NextImage from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
@@ -213,7 +212,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               </ThemeElement>
             )}
           >
-            <NextImage
+            <Image
               width={28}
               height={28}
               src="/images/link-logo.svg"
