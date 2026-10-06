@@ -28,48 +28,80 @@ function isInternalUrl(url: string): boolean {
 
 /**
  * Renders a block's text with inline `LINK` entities (draft-js
- * `entityRanges`) turned into actual links, since `entityRanges` only carry
- * offset/length into `block.text` and the entity data (e.g. the url) lives
- * in `entityMap` keyed by `entityRanges[].key`.
+ * `entityRanges`) turned into actual links and `BOLD` inline style ranges
+ * turned into `<strong>`. `entityRanges`/`inlineStyleRanges` only carry
+ * offset/length into `block.text` (entity data, e.g. the url, lives in
+ * `entityMap` keyed by `entityRanges[].key`), and the two kinds of ranges
+ * can overlap (e.g. bolded link text), so the text is split at every
+ * boundary from either set before rendering each segment.
  */
 export function renderTextWithLinks(
   block: RawDraftContentState['blocks'][0],
-  entityMap: RawDraftContentState['entityMap']
+  entityMap: RawDraftContentState['entityMap'],
+  linkClassName?: string
 ): React.ReactNode {
   const linkRanges = block.entityRanges
     .filter((range) => entityMap[range.key]?.type === 'LINK')
     .sort((a, b) => a.offset - b.offset)
 
-  if (linkRanges.length === 0) return block.text
+  const boldRanges = (block.inlineStyleRanges ?? [])
+    .filter((range) => range.style === 'BOLD')
+    .sort((a, b) => a.offset - b.offset)
+
+  if (linkRanges.length === 0 && boldRanges.length === 0) return block.text
+
+  const breakpoints = new Set([0, block.text.length])
+  for (const range of [...linkRanges, ...boldRanges]) {
+    breakpoints.add(range.offset)
+    breakpoints.add(range.offset + range.length)
+  }
+  const sortedBreakpoints = Array.from(breakpoints).sort((a, b) => a - b)
+
+  const covers = <T extends { offset: number; length: number }>(
+    ranges: T[],
+    start: number,
+    end: number
+  ) =>
+    ranges.find(
+      (range) => range.offset <= start && range.offset + range.length >= end
+    )
 
   const nodes: React.ReactNode[] = []
-  let cursor = 0
 
-  linkRanges.forEach((range, index) => {
-    if (range.offset > cursor) {
-      nodes.push(block.text.slice(cursor, range.offset))
+  for (let i = 0; i < sortedBreakpoints.length - 1; i++) {
+    const start = sortedBreakpoints[i]
+    const end = sortedBreakpoints[i + 1]
+    if (start === end) continue
+
+    const text = block.text.slice(start, end)
+    const linkRange = covers(linkRanges, start, end)
+    const isBold = Boolean(covers(boldRanges, start, end))
+    const content = isBold ? (
+      <strong key={`bold-${start}`}>{text}</strong>
+    ) : (
+      text
+    )
+
+    if (!linkRange) {
+      nodes.push(content)
+      continue
     }
-    const url = entityMap[range.key].data.url
+
+    const url = entityMap[linkRange.key].data.url
     const isInternalLink = isInternalUrl(url)
     const href = isInternalLink ? `${url}?from=referral_bottom` : url
 
     nodes.push(
       <Link
-        key={`link-${index}`}
+        key={`link-${start}`}
         href={href}
         target="_blank"
         rel={isInternalLink ? 'noopener' : 'noreferrer noopener'}
-        className="font-mm-body text-mm-body-l"
+        className={cn('font-mm-body text-mm-body-l', linkClassName)}
       >
-        {block.text.slice(range.offset, range.offset + range.length)}
+        {content}
       </Link>
     )
-
-    cursor = range.offset + range.length
-  })
-
-  if (cursor < block.text.length) {
-    nodes.push(block.text.slice(cursor))
   }
 
   return nodes
@@ -221,7 +253,31 @@ export function Blocks({
                 <figure key={`content-${index}`} className={className}>
                   <picture className="block">
                     <img
-                      src={entity.data.resized.original}
+                      srcSet={
+                        entity.data.resized
+                          ? Object.entries(entity.data.resized)
+                              .filter(
+                                ([key, value]) =>
+                                  !['original', '__typename'].includes(key) &&
+                                  Boolean(value)
+                              )
+                              .sort(
+                                (a, b) =>
+                                  parseInt(a[0].replace('w', '')) -
+                                  parseInt(b[0].replace('w', ''))
+                              )
+                              .map(
+                                ([key, value]) =>
+                                  `${value} ${key.replace('w', '')}w`
+                              )
+                              .join(',')
+                          : undefined
+                      }
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      src={
+                        entity.data.resized?.w2400 ??
+                        entity.data.resized?.original
+                      }
                       alt={entity.data.desc ?? ''}
                       width="100%"
                       height="auto"
@@ -239,6 +295,42 @@ export function Blocks({
                     </Typography>
                   )}
                 </figure>
+              )
+            }
+
+            if (entity.type === 'INFOBOX') {
+              const infoboxContent = entity.data.rawContentState as
+                | RawDraftContentState
+                | undefined
+
+              return (
+                <div
+                  key={`content-${index}`}
+                  className={cn(
+                    'my-8 rounded-md bg-[#054f77] px-7.5 py-8',
+                    className
+                  )}
+                >
+                  {entity.data.title && (
+                    <Typography as="p" variant="h2" className="mb-2 text-white">
+                      {entity.data.title}
+                    </Typography>
+                  )}
+                  {infoboxContent?.blocks.map((infoboxBlock, blockIndex) => (
+                    <Typography
+                      key={`infobox-${index}-${blockIndex}`}
+                      as="p"
+                      variant="body-l"
+                      className="text-[#e1e5e9]"
+                    >
+                      {renderTextWithLinks(
+                        infoboxBlock,
+                        infoboxContent.entityMap,
+                        'text-[#3b82f6] underline'
+                      )}
+                    </Typography>
+                  ))}
+                </div>
               )
             }
 

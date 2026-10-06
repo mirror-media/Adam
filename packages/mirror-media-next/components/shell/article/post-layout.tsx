@@ -288,16 +288,36 @@ export default function PostLayout(props: PostLayoutProps) {
           <picture className="relative block aspect-3/2">
             <img
               className="h-auto w-full object-cover"
-              src={
-                typeof heroImage?.resized?.original === 'string'
-                  ? heroImage?.resized?.original?.replace(
-                      /\.(jpg|png)$/i,
-                      '.webP'
-                    )
-                  : DEFAULT_OG_IMAGE_URL
+              srcSet={
+                heroImage?.resized
+                  ? Object.entries(heroImage.resized)
+                      .filter(
+                        ([key, value]) =>
+                          !['original', '__typename'].includes(key) &&
+                          Boolean(value)
+                      )
+                      .sort(
+                        (a, b) =>
+                          parseInt(a[0].replace('w', '')) -
+                          parseInt(b[0].replace('w', ''))
+                      )
+                      .map(
+                        ([key, value]) => `${value} ${key.replace('w', '')}w`
+                      )
+                      .join(',')
+                  : undefined
               }
-              sizes="(max-width: 768px) 50vw, 30vw"
+              sizes="(min-width: 768px) 50vw, 100vw"
+              src={
+                typeof heroImage?.resized?.w2400 === 'string'
+                  ? heroImage.resized.w2400
+                  : typeof heroImage?.resized?.original === 'string'
+                    ? heroImage.resized.original
+                    : DEFAULT_OG_IMAGE_URL
+              }
               alt={heroCaption ?? title ?? ''}
+              width="100%"
+              height="auto"
             />
           </picture>
           {heroCaption && (
@@ -310,7 +330,7 @@ export default function PostLayout(props: PostLayoutProps) {
             </Typography>
           )}
         </figure>
-        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0 lg:pt-9">
+        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0">
           <CreditNames label="文" creditPeoples={writers} />
           <CreditNames label="攝影" creditPeoples={photographers} />
           <CreditNames label="影音" creditPeoples={camera_man} />

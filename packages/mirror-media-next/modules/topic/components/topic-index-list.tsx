@@ -1,13 +1,19 @@
 import { Fragment } from 'react'
 import dynamic from 'next/dynamic'
 
+import { AD_SLOT_LAYOUTS } from '@/components/ads/ad-slot-layouts'
+import { CompassFitAd } from '@/components/ads/compass-fit/compass-fit-ad'
+import {
+  COMPASS_FIT_UNITS,
+  getCompassFitSlotIndex,
+} from '@/components/ads/compass-fit/compass-fit-config'
+import { cn } from '@/components/cn'
 import InfiniteScrollList from '@/components/infinite-scroll-list'
 import { Spinner } from '@/components/ui/spinner'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { fetchTopicList, toTopicIndexItem } from '@/modules/topic/topic-data'
 import type { TopicIndexItem } from '@/modules/topic/topic-types'
 import { TOPIC_INDEX_FETCH_PAGE_SIZE } from '@/modules/topic/topic-types'
-import { getMicroAdUnitId, needInsertMicroAdAfter } from '@/utils/ad'
 
 import { TopicCardGrid } from './topic-card-grid'
 import { TopicIndexCard } from './topic-index-card'
@@ -15,13 +21,6 @@ import { TopicIndexCard } from './topic-index-card'
 const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
   ssr: false,
 })
-
-const StyledMicroAd = dynamic(
-  () => import('@/components/ads/micro-ad/micro-ad-with-label'),
-  {
-    ssr: false,
-  }
-)
 
 type TopicIndexListProps = {
   renderPageSize: number
@@ -31,22 +30,27 @@ type TopicIndexListProps = {
 
 function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
   const { shouldShowAd } = useDisplayAd()
-  const withAd = shouldShowAd ? items.slice(0, 9) : items.slice(0, 12)
-  const afterAd = shouldShowAd ? items.slice(9) : items.slice(12)
+  const withAd = items.slice(0, 9)
+  const afterAd = items.slice(9)
 
   return (
     <>
       <TopicCardGrid>
         {withAd.map((item, index) => {
-          const unitId = getMicroAdUnitId(index, 'LISTING', 'RWD')
+          const slotIndex = getCompassFitSlotIndex(index)
 
           return (
             <Fragment key={item.id}>
               <TopicIndexCard item={item} />
-              {shouldShowAd && needInsertMicroAdAfter(index) && unitId ? (
-                <div className="mx-auto w-full max-w-82.5 min-w-0 overflow-hidden md:mx-0 md:w-70 md:max-w-70 md:shrink-0">
-                  <StyledMicroAd microAdType="LISTING" unitId={unitId} />
-                </div>
+              {slotIndex !== null ? (
+                <CompassFitAd
+                  className={cn(
+                    'mx-auto w-full max-w-82.5 md:mx-0 md:w-70 md:max-w-70 md:shrink-0',
+                    AD_SLOT_LAYOUTS.compassFit.topicCard.className
+                  )}
+                  enabled={shouldShowAd}
+                  unitId={COMPASS_FIT_UNITS.listing[slotIndex]}
+                />
               ) : null}
             </Fragment>
           )
