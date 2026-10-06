@@ -228,6 +228,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
                 src={thumb}
                 alt={thumbCaption ?? title ?? ''}
                 fetchPriority="high"
+                unoptimized
               />
             </picture>
             {thumbCaption && (
