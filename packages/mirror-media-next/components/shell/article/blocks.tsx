@@ -37,7 +37,8 @@ function isInternalUrl(url: string): boolean {
  */
 export function renderTextWithLinks(
   block: RawDraftContentState['blocks'][0],
-  entityMap: RawDraftContentState['entityMap']
+  entityMap: RawDraftContentState['entityMap'],
+  linkClassName?: string
 ): React.ReactNode {
   const linkRanges = block.entityRanges
     .filter((range) => entityMap[range.key]?.type === 'LINK')
@@ -96,7 +97,7 @@ export function renderTextWithLinks(
         href={href}
         target="_blank"
         rel={isInternalLink ? 'noopener' : 'noreferrer noopener'}
-        className="font-mm-body text-mm-body-l"
+        className={cn('font-mm-body text-mm-body-l', linkClassName)}
       >
         {content}
       </Link>
@@ -294,6 +295,42 @@ export function Blocks({
                     </Typography>
                   )}
                 </figure>
+              )
+            }
+
+            if (entity.type === 'INFOBOX') {
+              const infoboxContent = entity.data.rawContentState as
+                | RawDraftContentState
+                | undefined
+
+              return (
+                <div
+                  key={`content-${index}`}
+                  className={cn(
+                    'my-8 rounded-md bg-[#054f77] px-7.5 py-8',
+                    className
+                  )}
+                >
+                  {entity.data.title && (
+                    <Typography as="p" variant="h2" className="mb-2 text-white">
+                      {entity.data.title}
+                    </Typography>
+                  )}
+                  {infoboxContent?.blocks.map((infoboxBlock, blockIndex) => (
+                    <Typography
+                      key={`infobox-${index}-${blockIndex}`}
+                      as="p"
+                      variant="body-l"
+                      className="text-[#e1e5e9]"
+                    >
+                      {renderTextWithLinks(
+                        infoboxBlock,
+                        infoboxContent.entityMap,
+                        'text-[#3b82f6] underline'
+                      )}
+                    </Typography>
+                  ))}
+                </div>
               )
             }
 
