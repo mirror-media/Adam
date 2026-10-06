@@ -53,6 +53,7 @@ function VideoThumbnail({ onPlay, video }: VideoThumbnailProps) {
         fill
         sizes="(min-width: 1280px) 340px, (min-width: 768px) 600px, calc(100vw - 64px)"
         src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+        unoptimized
       />
       <span
         aria-hidden="true"
