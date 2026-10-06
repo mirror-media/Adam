@@ -209,7 +209,7 @@ export default function External({
                     className="hidden xl:mx-auto xl:my-5 xl:block xl:h-auto xl:w-full"
                   />
                 </GPT_Placeholder_Aside>
-                <PopularArticles />
+                <PopularArticles placement="article" />
                 <GoogleNewsFollow />
                 <FbPagePlugin width={424} />
               </div>

@@ -1,17 +1,17 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import dynamic from 'next/dynamic'
 
+import { AD_SLOT_LAYOUTS } from '@/components/ads/ad-slot-layouts'
+import { PrismAdSlot } from '@/components/ads/prism/prism-ad-slot'
+import {
+  PRISM_SIDE_PLACEMENTS,
+  type PrismAsidePlacementContext,
+} from '@/components/ads/prism/prism-config'
 import { Typography } from '@/components/ui/typography'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-import { getPopInId, needInsertPopInAdAfter } from '@/utils/ad'
 
 import type { AsideArticle } from '../aside-types'
 
 import { AsideArticleItem } from './aside-article-item'
-
-const PopInAd = dynamic(() => import('@/components/ads/pop-in/pop-in-ad'), {
-  ssr: false,
-})
 
 type AsideArticleListProps = {
   articles?: AsideArticle[]
@@ -21,18 +21,18 @@ type AsideArticleListProps = {
    */
   fetchFunc?: () => Promise<AsideArticle[]>
   from?: string
+  prismPlacement?: PrismAsidePlacementContext
   renderAmount?: number
   title: string
-  withPopInAd?: boolean
 }
 
 export function AsideArticleList({
   articles = [],
   fetchFunc,
   from,
+  prismPlacement,
   renderAmount = 6,
   title,
-  withPopInAd = false,
 }: AsideArticleListProps) {
   const { shouldShowAd } = useDisplayAd()
 
@@ -71,6 +71,10 @@ export function AsideArticleList({
   }, [fetchFunc])
 
   const renderedArticles = fetchFunc ? fetchedArticles : articles
+  const adSlotCount = prismPlacement ? 2 : 0
+  const reservedRowCount = renderAmount + adSlotCount
+  const reservedGapCount = Math.max(reservedRowCount - 1, 0)
+  const reservedRowHeight = AD_SLOT_LAYOUTS.prism.asideArticleRow.heightPx
 
   return (
     <section className="w-full" ref={wrapperRef}>
@@ -84,26 +88,31 @@ export function AsideArticleList({
 
       {/*
         Reserving the height keeps the page from jumping when a lazily fetched
-        list arrives. A row is as tall as its image, which `AsideArticleItem`
-        fixes at 114px; the rest is this container's own padding and gaps.
+        list arrives. Article rows and the current Prism contract both reserve
+        114px; the rest is this container's own padding and gaps.
       */}
       <div
         className="space-y-mm-2xl bg-mm-neutral-100 px-[21px] pt-mm-5xl pb-mm-2xl"
         style={{
-          minHeight: `calc(var(--spacing-mm-5xl) + var(--spacing-mm-2xl) + ${renderAmount} * 114px + ${renderAmount - 1} * var(--spacing-mm-2xl))`,
+          minHeight: `calc(var(--spacing-mm-5xl) + var(--spacing-mm-2xl) + ${reservedRowCount} * ${reservedRowHeight}px + ${reservedGapCount} * var(--spacing-mm-2xl))`,
         }}
       >
         {renderedArticles.slice(0, renderAmount).map((article, index) => {
-          const popInId =
-            withPopInAd && shouldShowAd && needInsertPopInAdAfter(index)
-              ? getPopInId(index)
+          const prismPlacementIndex = index === 1 ? 0 : index === 2 ? 1 : null
+          const slot =
+            prismPlacement && prismPlacementIndex !== null
+              ? PRISM_SIDE_PLACEMENTS[prismPlacement][prismPlacementIndex]
               : null
 
           return (
             <Fragment key={article.id}>
               <AsideArticleItem article={article} from={from} />
-              {popInId && (
-                <PopInAd popInId={popInId} className="mm-pop-in-ad-hot" />
+              {slot && (
+                <PrismAdSlot
+                  className={AD_SLOT_LAYOUTS.prism.asideArticleRow.className}
+                  enabled={shouldShowAd}
+                  placement={slot}
+                />
               )}
             </Fragment>
           )

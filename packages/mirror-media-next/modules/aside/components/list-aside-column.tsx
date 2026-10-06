@@ -54,7 +54,7 @@ export function ListAsideColumn({
             />
           )}
         </GPT_Placeholder_Aside>
-        <PopularArticles />
+        <PopularArticles placement="list" />
         <GoogleNewsFollow />
         <FbPagePlugin />
       </aside>
