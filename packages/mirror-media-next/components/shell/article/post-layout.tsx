@@ -330,7 +330,7 @@ export default function PostLayout(props: PostLayoutProps) {
             </Typography>
           )}
         </figure>
-        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0 lg:pt-9">
+        <section className="order-6 col-span-full flex flex-wrap items-center justify-center gap-x-3 gap-y-2 pb-5 md:order-2 md:col-span-8 md:col-end-0 md:justify-start md:py-0 lg:py-0">
           <CreditNames label="文" creditPeoples={writers} />
           <CreditNames label="攝影" creditPeoples={photographers} />
           <CreditNames label="影音" creditPeoples={camera_man} />
