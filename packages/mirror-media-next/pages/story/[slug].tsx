@@ -229,6 +229,17 @@ export default function Story({
               relativeStory={firstRelativeStory}
               renderAdInContent={() => (
                 <GPT_Placeholder
+                  displayAt="desktop"
+                  rwd={{
+                    mobile: { width: '100%', height: 'auto', margin: '0' },
+                    tablet: { width: '100%', height: 'auto', margin: '0' },
+                    // 內文欄比預設 970px 窄，用滿寬才能把 640px 素材置中
+                    desktop: {
+                      width: '100%',
+                      height: 'auto',
+                      margin: '32px auto',
+                    },
+                  }}
                   shouldShowAd={shouldShowAd}
                   isLogInProcessFinished={isLogInProcessFinished}
                 >
@@ -236,7 +247,7 @@ export default function Story({
                     <GptAd
                       pageKey={pageKeyForGptAd}
                       adKey="PC_AT1"
-                      className="h-auto w-full"
+                      className="mx-auto block h-auto w-fit"
                     />
                   )}
                 </GPT_Placeholder>
