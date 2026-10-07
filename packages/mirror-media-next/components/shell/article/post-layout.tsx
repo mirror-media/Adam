@@ -432,7 +432,7 @@ export default function PostLayout(props: PostLayoutProps) {
               target="_blank"
               rel="noreferrer"
             >
-              <Badge>{tag?.name}</Badge>
+              <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
           ))}
         </div>
