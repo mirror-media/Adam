@@ -4,6 +4,8 @@ import { cn } from '@/components/cn'
 import { Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
 
+import { EmbeddedCode } from './blocks-components/embedded-code'
+
 /**
  * CMS-authored content always links to the production domain regardless of
  * which environment is currently serving the page, so this checks against
@@ -343,6 +345,17 @@ export function Blocks({
                   className="aspect-video"
                   allowFullScreen
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                />
+              )
+            }
+
+            if (entity.type === 'EMBEDDEDCODE') {
+              return (
+                <EmbeddedCode
+                  key={`content-${index}`}
+                  embeddedCode={entity.data.embeddedCode}
+                  caption={entity.data.caption}
+                  className={className}
                 />
               )
             }
