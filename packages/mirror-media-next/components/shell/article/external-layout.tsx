@@ -284,7 +284,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               target="_blank"
               rel="noreferrer"
             >
-              <Badge>{tag?.name}</Badge>
+              <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
           ))}
         </div>

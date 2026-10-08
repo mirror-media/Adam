@@ -42,7 +42,7 @@ export function renderProduct(
           : ''
       }
       <div>
-        <h2 class="m-0 font-mm-sans text-mm-subtitle mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-1 sm:text-mm-h5">${
+        <h2 class="m-0 font-mm-sans text-mm-h5 mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-1">${
           product.title
         }</h2>
         <span class="m-0 font-mm-sans text-mm-caption-l block text-[#a1a1a1] sm:text-mm-caption-s sm:text-mm-neutral-700">${
