@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
-import { SITE_URL } from '@/config/index.mjs'
+import { SITE_BASE_PATH, SITE_URL } from '@/config/index.mjs'
 import type {
   ExternalPost,
   ExternalRelatedStory,
@@ -39,22 +39,22 @@ type ExternalLayoutProps = Pick<
 
 const actionList = [
   {
-    resource: '/images/sns-line.svg',
+    resource: `${SITE_BASE_PATH}/images/sns-line.svg`,
     label: '加入',
     href: 'https://lin.ee/dkD1s4q',
   },
   {
-    resource: '/images/sns-ig.svg',
+    resource: `${SITE_BASE_PATH}/images/sns-ig.svg`,
     label: '追蹤',
     href: 'https://www.instagram.com/mirror_media/',
   },
   {
-    resource: '/images/yt.svg',
+    resource: `${SITE_BASE_PATH}/images/yt.svg`,
     label: '訂閱',
     href: 'https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw?sub_confirmation=1',
   },
   {
-    resource: '/images/sns-mm.png',
+    resource: `${SITE_BASE_PATH}/images/sns-mm.png`,
     label: '下載',
     href: 'https://www.mirrormedia.mg/story/20161228corpmkt001/?utm_source=magzine&utm_campaign=mm_app_download&utm_medium=qrcode',
   },
@@ -159,7 +159,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             <Image
               width={14}
               height={14}
-              src="/images/google-logo.svg"
+              src={`${SITE_BASE_PATH}/images/google-logo.svg`}
               alt="google-logo"
             />
             <ThemeElement
@@ -171,7 +171,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           </IconLink>
           <IconLink
             href={`https://www.facebook.com/share.php?u=${canonicalUrl}`}
-            src="/images/fb-logo.svg"
+            src={`${SITE_BASE_PATH}/images/fb-logo.svg`}
             alt="facebook-logo"
             rel="noopener noreferrer"
             target="_blank"
@@ -179,7 +179,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           />
           <IconLink
             href={`https://social-plugins.line.me/lineit/share?u=${canonicalUrl}`}
-            src="/images/line-logo.svg"
+            src={`${SITE_BASE_PATH}/images/line-logo.svg`}
             alt="line-logo"
             rel="noopener noreferrer"
             target="_blank"
@@ -196,7 +196,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             <Image
               width={28}
               height={28}
-              src="/images/threads-logo.svg"
+              src={`${SITE_BASE_PATH}/images/threads-logo.svg`}
               alt="threads-logo"
               className="scale-70 transform invert-100"
             />
@@ -215,7 +215,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             <Image
               width={28}
               height={28}
-              src="/images/link-logo.svg"
+              src={`${SITE_BASE_PATH}/images/link-logo.svg`}
               alt="link-logo"
             />
           </CopyLinkButton>
