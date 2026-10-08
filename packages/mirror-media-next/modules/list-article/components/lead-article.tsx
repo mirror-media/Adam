@@ -63,8 +63,8 @@ export function LeadArticle({
 
       <Typography
         as="h2"
-        variant="subtitle"
-        className="mt-mm-l mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-0 sm:text-mm-h5 sm:text-[rgba(0,0,0,0.87)]"
+        variant="h5"
+        className="mt-mm-l mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-0 sm:text-[rgba(0,0,0,0.87)]"
       >
         {item.title}
       </Typography>

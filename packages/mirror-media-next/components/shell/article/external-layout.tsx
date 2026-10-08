@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import Image from 'next/image'
-import NextImage from 'next/image'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
@@ -108,7 +107,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
   }, [content])
 
   return (
-    <div className="max-w-7xl pt-4 md:mx-6 md:grid-cols-12 xl:mx-auto xl:grid xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
+    <div className="max-w-7xl pt-4 md:mx-6 md:grid-cols-12 lg:px-10 xl:mx-auto xl:grid xl:grid-cols-[repeat(12,minmax(0,1fr))_424px] xl:gap-x-14">
       <article className="relative grid-cols-subgrid space-y-7 gap-x-0 xl:col-span-12 xl:grid xl:grid-rows-[repeat(5,min-content)_auto]">
         <div className="order-1 col-span-full flex items-center justify-center md:col-span-3 md:justify-start xl:col-span-3">
           <Link href="/">
@@ -213,7 +212,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               </ThemeElement>
             )}
           >
-            <NextImage
+            <Image
               width={28}
               height={28}
               src="/images/link-logo.svg"
@@ -229,6 +228,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
                 src={thumb}
                 alt={thumbCaption ?? title ?? ''}
                 fetchPriority="high"
+                unoptimized
               />
             </picture>
             {thumbCaption && (
@@ -284,7 +284,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               target="_blank"
               rel="noreferrer"
             >
-              <Badge>{tag?.name}</Badge>
+              <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
           ))}
         </div>
