@@ -1,3 +1,5 @@
+import { Fragment } from 'react'
+import MirrorMedia from '@mirrormedia/lilith-draft-renderer/lib/website/mirrormedia'
 import type { RawDraftContentState } from 'draft-js'
 
 import { cn } from '@/components/cn'
@@ -5,6 +7,7 @@ import { Link, Typography } from '@/components/ui'
 import { SITE_URL } from '@/config/index.mjs'
 
 import { EmbeddedCode } from './blocks-components/embedded-code'
+import { LilithAtomicBlock } from './blocks-components/lilith-atomic-block'
 
 /**
  * CMS-authored content always links to the production domain regardless of
@@ -30,62 +33,117 @@ function isInternalUrl(url: string): boolean {
 
 /**
  * Renders a block's text with inline `LINK` entities (draft-js
- * `entityRanges`) turned into actual links and `BOLD` inline style ranges
- * turned into `<strong>`. `entityRanges`/`inlineStyleRanges` only carry
- * offset/length into `block.text` (entity data, e.g. the url, lives in
- * `entityMap` keyed by `entityRanges[].key`), and the two kinds of ranges
- * can overlap (e.g. bolded link text), so the text is split at every
- * boundary from either set before rendering each segment.
+ * `entityRanges`) turned into actual links and inline style ranges turned
+ * into markup: the draft-js built-ins (`BOLD`, `ITALIC`, `UNDERLINE`,
+ * `STRIKETHROUGH`, `CODE`) plus the CMS's `FONT_COLOR_<color>` /
+ * `BACKGROUND_COLOR_<color>` custom styles, matching what lilith's
+ * `DraftRenderer` supports. `ANNOTATION` entities are rendered through
+ * lilith's annotation component too. `entityRanges`/`inlineStyleRanges` only
+ * carry offset/length into `block.text` (entity data, e.g. the url, lives in
+ * `entityMap` keyed by `entityRanges[].key`), and ranges can overlap (e.g.
+ * bolded italic link text), so the text is split at every boundary from
+ * either set before rendering each segment.
  */
 export function renderTextWithLinks(
   block: RawDraftContentState['blocks'][0],
   entityMap: RawDraftContentState['entityMap'],
   linkClassName?: string
 ): React.ReactNode {
-  const linkRanges = block.entityRanges
-    .filter((range) => entityMap[range.key]?.type === 'LINK')
-    .sort((a, b) => a.offset - b.offset)
+  const linkRanges = block.entityRanges.filter(
+    (range) => entityMap[range.key]?.type === 'LINK'
+  )
+  const annotationRanges = block.entityRanges.filter(
+    (range) => entityMap[range.key]?.type === 'ANNOTATION'
+  )
+  const styleRanges = block.inlineStyleRanges ?? []
 
-  const boldRanges = (block.inlineStyleRanges ?? [])
-    .filter((range) => range.style === 'BOLD')
-    .sort((a, b) => a.offset - b.offset)
-
-  if (linkRanges.length === 0 && boldRanges.length === 0) return block.text
+  if (
+    linkRanges.length === 0 &&
+    annotationRanges.length === 0 &&
+    styleRanges.length === 0
+  ) {
+    return block.text
+  }
 
   const breakpoints = new Set([0, block.text.length])
-  for (const range of [...linkRanges, ...boldRanges]) {
+  for (const range of [...linkRanges, ...annotationRanges, ...styleRanges]) {
     breakpoints.add(range.offset)
     breakpoints.add(range.offset + range.length)
   }
+
   const sortedBreakpoints = Array.from(breakpoints).sort((a, b) => a - b)
-
-  const covers = <T extends { offset: number; length: number }>(
-    ranges: T[],
-    start: number,
-    end: number
-  ) =>
-    ranges.find(
-      (range) => range.offset <= start && range.offset + range.length >= end
-    )
-
   const nodes: React.ReactNode[] = []
+  // Style boundaries can split one annotation into several segments, but it
+  // needs a single toggle icon, so its segments are collected here and
+  // wrapped once the annotation's range ends.
+  let annotationSegments: React.ReactNode[] = []
 
   for (let i = 0; i < sortedBreakpoints.length - 1; i++) {
     const start = sortedBreakpoints[i]
     const end = sortedBreakpoints[i + 1]
     if (start === end) continue
 
-    const text = block.text.slice(start, end)
-    const linkRange = covers(linkRanges, start, end)
-    const isBold = Boolean(covers(boldRanges, start, end))
-    const content = isBold ? (
-      <strong key={`bold-${start}`}>{text}</strong>
-    ) : (
-      text
-    )
+    const isCovering = (range: { offset: number; length: number }) =>
+      range.offset <= start && range.offset + range.length >= end
+    const linkRange = linkRanges.find(isCovering)
+    const annotationRange = annotationRanges.find(isCovering)
+    // Custom styles like `FONT_COLOR_#fff` fall outside draft-js's
+    // `DraftInlineStyleType` union, hence the widening to `string`.
+    const styles = styleRanges
+      .filter(isCovering)
+      .map((range) => range.style as string)
+
+    let content: React.ReactNode = block.text.slice(start, end)
+    if (styles.includes('CODE')) {
+      content = <code className="bg-black/5 p-0.5 font-mono">{content}</code>
+    }
+    if (styles.includes('STRIKETHROUGH')) content = <s>{content}</s>
+    if (styles.includes('UNDERLINE')) content = <u>{content}</u>
+    if (styles.includes('ITALIC')) content = <em>{content}</em>
+    if (styles.includes('BOLD')) content = <strong>{content}</strong>
+
+    const color = styles
+      .find((style) => style.startsWith('FONT_COLOR_'))
+      ?.slice('FONT_COLOR_'.length)
+    const backgroundColor = styles
+      .find((style) => style.startsWith('BACKGROUND_COLOR_'))
+      ?.slice('BACKGROUND_COLOR_'.length)
+    if (color || backgroundColor) {
+      content = <span style={{ color, backgroundColor }}>{content}</span>
+    }
+
+    // A character carries at most one draft-js entity, so an annotated
+    // segment is never also a link.
+    if (annotationRange) {
+      annotationSegments.push(
+        <Fragment key={`text-${start}`}>{content}</Fragment>
+      )
+      if (end === annotationRange.offset + annotationRange.length) {
+        // lilith's annotation component (what the legacy story page gets via
+        // `DraftRenderer`), with only the draft-js method it calls shimmed,
+        // so `entityKey` is unused. Its expanded body is a `<div>` inside the
+        // paragraph's `<p>`, which React flags in dev; `PostLayout` only
+        // renders on the client, so the DOM is kept as built.
+        const { component: AnnotationBlock, props } =
+          MirrorMedia.entityDecorators.annotationDecorator('normal')
+        const { data } = entityMap[annotationRange.key]
+        nodes.push(
+          <AnnotationBlock
+            key={`annotation-${annotationRange.offset}`}
+            {...props}
+            entityKey="0"
+            contentState={{ getEntity: () => ({ getData: () => data }) }}
+          >
+            {annotationSegments}
+          </AnnotationBlock>
+        )
+        annotationSegments = []
+      }
+      continue
+    }
 
     if (!linkRange) {
-      nodes.push(content)
+      nodes.push(<Fragment key={`text-${start}`}>{content}</Fragment>)
       continue
     }
 
@@ -360,7 +418,9 @@ export function Blocks({
               )
             }
 
-            return null
+            return (
+              <LilithAtomicBlock key={`content-${index}`} entity={entity} />
+            )
           })
         )
         break
