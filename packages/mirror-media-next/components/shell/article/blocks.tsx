@@ -418,9 +418,7 @@ export function Blocks({
               )
             }
 
-            return (
-              <LilithAtomicBlock key={`content-${index}`} entity={entity} />
-            )
+            return <LilithAtomicBlock key={block.key} entity={entity} />
           })
         )
         break
