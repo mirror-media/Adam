@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import client from '../../../apollo/apollo-client'
 import { fetchWeeklys } from '../../../apollo/query/magazines'
 import Layout from '../../../components/shared/layout'
+import { useStickyHeader } from '../../../components/shell/header/sticky-header-context'
 import { getLogTraceObject } from '../../../utils'
 import { fetchShellHeaderData } from '../../../utils/api'
 import { setPageCache } from '../../../utils/cache-setting'
@@ -21,6 +22,23 @@ const Page = styled.div`
     border: 0;
   }
 `
+
+// Its own component so it renders inside Layout: StickyHeaderProvider lives in
+// PageShell, and the page component that renders Layout sits above it, so
+// reading the context there only gets the default value.
+function MagazineIframe({ src, title }) {
+  const { stickyOffset } = useStickyHeader()
+
+  // Scroll to where the site header collapses, so its full height no longer
+  // covers the iframe and swallows clicks meant for the magazine.
+  useEffect(() => {
+    if (stickyOffset) {
+      window.scrollTo({ top: stickyOffset })
+    }
+  }, [src, stickyOffset])
+
+  return <iframe src={src} title={title} />
+}
 
 export default function BookBIssuePublish({ headerData, weeklys }) {
   const router = useRouter()
@@ -49,7 +67,7 @@ export default function BookBIssuePublish({ headerData, weeklys }) {
       withFooter={false}
     >
       <Page>
-        <iframe
+        <MagazineIframe
           src={iframeSrc}
           title={`動態雜誌 ${issueString.split('-')[0]}`}
         />
