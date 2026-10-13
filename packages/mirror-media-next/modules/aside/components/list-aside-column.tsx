@@ -31,7 +31,8 @@ export function ListAsideColumn({
   pageKey,
   sectionSlug,
 }: ListAsideColumnProps) {
-  const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
+  const { isLoggedIn, isLogInProcessFinished, shouldShowAd } = useDisplayAd()
+  const keepsAdSlot = !isLoggedIn && (!isLogInProcessFinished || shouldShowAd)
   const { asideRef, top } = usePinnedAside()
 
   return (
@@ -42,18 +43,20 @@ export function ListAsideColumn({
         style={{ top }}
       >
         <LatestArticles sectionSlug={sectionSlug} />
-        <GPT_Placeholder_Aside
-          shouldShowAd={shouldShowAd}
-          isLogInProcessFinished={isLogInProcessFinished}
-        >
-          {shouldShowAd && (
-            <GPTAd
-              adKey="PC_R2"
-              className="mx-auto h-auto w-full"
-              pageKey={pageKey}
-            />
-          )}
-        </GPT_Placeholder_Aside>
+        {keepsAdSlot && (
+          <GPT_Placeholder_Aside
+            shouldShowAd={shouldShowAd}
+            isLogInProcessFinished={isLogInProcessFinished}
+          >
+            {shouldShowAd && (
+              <GPTAd
+                adKey="PC_R2"
+                className="mx-auto h-auto w-full"
+                pageKey={pageKey}
+              />
+            )}
+          </GPT_Placeholder_Aside>
+        )}
         <PopularArticles placement="list" />
         <GoogleNewsFollow />
         <FbPagePlugin />

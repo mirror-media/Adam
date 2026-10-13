@@ -30,7 +30,12 @@ export function NextUpPosts({
     isMediaQueryResolved: isArticleViewportResolved,
     matches: isArticlePc,
   } = useMediaQuery(AD_MEDIA_QUERIES.articleCompassFitPc)
-  const { shouldShowAd } = useDisplayAd(hiddenAdvertised)
+  const { isLoggedIn, isLogInProcessFinished, shouldShowAd } =
+    useDisplayAd(hiddenAdvertised)
+  const keepsAdSlots =
+    !hiddenAdvertised &&
+    !isLoggedIn &&
+    (!isLogInProcessFinished || shouldShowAd)
 
   if (items.length === 0) return null
 
@@ -104,7 +109,7 @@ export function NextUpPosts({
             </Link>
           </li>
         ))}
-        {!hiddenAdvertised && (
+        {keepsAdSlots && (
           <>
             {COMPASS_FIT_ARTICLE_SLOT_INDEXES.map((slotIndex) => {
               const unitId = !isArticleViewportResolved

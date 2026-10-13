@@ -29,7 +29,8 @@ type TopicIndexListProps = {
 }
 
 function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
-  const { shouldShowAd } = useDisplayAd()
+  const { isLoggedIn, isLogInProcessFinished, shouldShowAd } = useDisplayAd()
+  const keepsAdSlots = !isLoggedIn && (!isLogInProcessFinished || shouldShowAd)
   const withAd = items.slice(0, 9)
   const afterAd = items.slice(9)
 
@@ -42,7 +43,7 @@ function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
           return (
             <Fragment key={item.id}>
               <TopicIndexCard item={item} />
-              {slotIndex !== null ? (
+              {keepsAdSlots && slotIndex !== null ? (
                 <CompassFitAd
                   className={cn(
                     'mx-auto w-full max-w-82.5 md:mx-0 md:w-70 md:max-w-70 md:shrink-0',
@@ -56,7 +57,7 @@ function TopicIndexCards({ items }: { items: TopicIndexItem[] }) {
           )
         })}
       </TopicCardGrid>
-      {shouldShowAd ? (
+      {!isLoggedIn && shouldShowAd ? (
         <div className="mx-auto my-mm-3xl w-full max-w-242.5">
           <GPTAd adKey="FT" pageKey="other" />
         </div>
