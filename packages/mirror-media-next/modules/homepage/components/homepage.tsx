@@ -294,9 +294,10 @@ function Homepage({ data }: HomepageProps) {
             <EditorChoiceCarousel articles={data.editorChoices} />
           </div>
 
-          <div className="order-3 col-span-full xl:order-0">
-            <HomepageAd placement="secondary" />
-          </div>
+          <HomepageAd
+            placement="secondary"
+            wrapperClassName="order-3 col-span-full xl:order-0"
+          />
 
           <div className="order-4 col-span-full w-full xl:order-0">
             <PromoVideoCarousel videos={data.promoVideos} />

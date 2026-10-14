@@ -129,8 +129,18 @@ export default function PostLayout(props: PostLayoutProps) {
     : 'post'
 
   const canonicalUrl = `https://${SITE_URL}/story/${slug}`
-  const mainCategory = sections?.[0]
-  const subCategories = categories?.[0]
+  const sectionList = sections ?? []
+  const categoryList = categories ?? []
+
+  const mainCategory =
+    sectionList.length === 1
+      ? sectionList[0]
+      : sectionList.find((section) => section?.slug !== 'marketing')
+
+  const subCategories =
+    categoryList.length === 1
+      ? categoryList[0]
+      : categoryList.find((category) => category?.slug !== 'marketing')
 
   const textParagraphs = useMemo(
     () => getTextParagraphOrdinals(content.blocks),
