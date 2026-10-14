@@ -34,7 +34,8 @@ export function AsideArticleList({
   renderAmount = 6,
   title,
 }: AsideArticleListProps) {
-  const { shouldShowAd } = useDisplayAd()
+  const { isLoggedIn, isLogInProcessFinished, shouldShowAd } = useDisplayAd()
+  const keepsAdSlots = !isLoggedIn && (!isLogInProcessFinished || shouldShowAd)
 
   const wrapperRef = useRef<HTMLElement>(null)
   const [fetchedArticles, setFetchedArticles] = useState<AsideArticle[]>([])
@@ -71,8 +72,10 @@ export function AsideArticleList({
   }, [fetchFunc])
 
   const renderedArticles = fetchFunc ? fetchedArticles : articles
-  const adSlotCount = prismPlacement ? 2 : 0
-  const reservedRowCount = renderAmount + adSlotCount
+  const adSlotCount = prismPlacement && keepsAdSlots ? 2 : 0
+  const articleRenderAmount =
+    renderAmount + (prismPlacement && !keepsAdSlots ? 2 : 0)
+  const reservedRowCount = articleRenderAmount + adSlotCount
   const reservedGapCount = Math.max(reservedRowCount - 1, 0)
   const reservedRowHeight = AD_SLOT_LAYOUTS.prism.asideArticleRow.heightPx
 
@@ -94,29 +97,34 @@ export function AsideArticleList({
       <div
         className="space-y-mm-2xl bg-mm-neutral-100 px-[21px] pt-mm-5xl pb-mm-2xl"
         style={{
-          minHeight: `calc(var(--spacing-mm-5xl) + var(--spacing-mm-2xl) + ${reservedRowCount} * ${reservedRowHeight}px + ${reservedGapCount} * var(--spacing-mm-2xl))`,
+          minHeight:
+            prismPlacement && !keepsAdSlots
+              ? undefined
+              : `calc(var(--spacing-mm-5xl) + var(--spacing-mm-2xl) + ${reservedRowCount} * ${reservedRowHeight}px + ${reservedGapCount} * var(--spacing-mm-2xl))`,
         }}
       >
-        {renderedArticles.slice(0, renderAmount).map((article, index) => {
-          const prismPlacementIndex = index === 1 ? 0 : index === 2 ? 1 : null
-          const slot =
-            prismPlacement && prismPlacementIndex !== null
-              ? PRISM_SIDE_PLACEMENTS[prismPlacement][prismPlacementIndex]
-              : null
+        {renderedArticles
+          .slice(0, articleRenderAmount)
+          .map((article, index) => {
+            const prismPlacementIndex = index === 1 ? 0 : index === 2 ? 1 : null
+            const slot =
+              keepsAdSlots && prismPlacement && prismPlacementIndex !== null
+                ? PRISM_SIDE_PLACEMENTS[prismPlacement][prismPlacementIndex]
+                : null
 
-          return (
-            <Fragment key={article.id}>
-              <AsideArticleItem article={article} from={from} />
-              {slot && (
-                <PrismAdSlot
-                  className={AD_SLOT_LAYOUTS.prism.asideArticleRow.className}
-                  enabled={shouldShowAd}
-                  placement={slot}
-                />
-              )}
-            </Fragment>
-          )
-        })}
+            return (
+              <Fragment key={article.id}>
+                <AsideArticleItem article={article} from={from} />
+                {slot && (
+                  <PrismAdSlot
+                    className={AD_SLOT_LAYOUTS.prism.asideArticleRow.className}
+                    enabled={shouldShowAd}
+                    placement={slot}
+                  />
+                )}
+              </Fragment>
+            )
+          })}
       </div>
     </section>
   )

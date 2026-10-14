@@ -61,7 +61,8 @@ function ListingMobileCompassFitSlot({
 }
 
 export function ArticleList({ from, renderList, section }: ArticleListProps) {
-  const { shouldShowAd } = useDisplayAd()
+  const { isLoggedIn, isLogInProcessFinished, shouldShowAd } = useDisplayAd()
+  const keepsAdSlots = !isLoggedIn && (!isLogInProcessFinished || shouldShowAd)
   const { isMediaQueryResolved: isListingViewportResolved, matches: isSmUp } =
     useMediaQuery(AD_MEDIA_QUERIES.listingLayoutSm)
 
@@ -94,7 +95,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
                 item={item}
                 priority={index === 0}
               />
-              {mobileSlotIndex !== null && (
+              {keepsAdSlots && mobileSlotIndex !== null && (
                 <ListingMobileCompassFitSlot
                   enabled={
                     shouldShowAd &&
@@ -118,7 +119,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
             return (
               <Fragment key={item.id}>
                 <ArticleListItem from={from} item={item} />
-                {mobileSlotIndex !== null && (
+                {keepsAdSlots && mobileSlotIndex !== null && (
                   <ListingMobileCompassFitSlot
                     enabled={
                       shouldShowAd &&
@@ -128,7 +129,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
                     unitId={COMPASS_FIT_UNITS.listing[mobileSlotIndex]}
                   />
                 )}
-                {nonMobileSlotIndex !== null && (
+                {keepsAdSlots && nonMobileSlotIndex !== null && (
                   <CompassFitAd
                     className={cn(
                       'hidden sm:block',
@@ -147,7 +148,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
           })}
         </div>
 
-        {shouldShowAd && (
+        {!isLoggedIn && shouldShowAd && (
           <GPTAd
             adKey="MB_FT"
             className="mx-auto my-mm-2xl h-auto w-full xl:my-[35px]"

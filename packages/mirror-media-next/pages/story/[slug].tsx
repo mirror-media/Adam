@@ -118,7 +118,6 @@ const DableAd = dynamic(() => import('@/components/common/dable-ad'), {
 })
 
 type StoryPageProps = {
-  query: Record<string, string | string[] | undefined> | null
   postData: StoryPost
   initialRelatedStories: RelatedStory[]
   headerData: ShellHeaderData
@@ -128,7 +127,6 @@ type StoryPageProps = {
 }
 
 export default function Story({
-  query,
   postData,
   initialRelatedStories = [],
   headerData,
@@ -189,7 +187,8 @@ export default function Story({
       <StoryHead postData={postData} />
       <PageShell
         head={{
-          robotsMetaContent: query?.from ? 'noindex' : null,
+          // StoryHead owns robots. ?from= stays indexable; utm/fbclid still noindex there.
+          robotsMetaContent: null,
           title: `${title ?? ''}`,
           ogTitle: postData.og_title ?? undefined,
           description:
@@ -398,7 +397,7 @@ export default function Story({
 export const getServerSideProps: GetServerSideProps<
   StoryPageProps,
   { slug: string }
-> = async ({ params, query, req, res }) => {
+> = async ({ params, req, res }) => {
   if (ENV === 'prod') {
     setPageCache(
       res,
@@ -475,7 +474,6 @@ export const getServerSideProps: GetServerSideProps<
 
     return {
       props: {
-        query,
         postData: clientStoryPost,
         initialRelatedStories,
         headerData,

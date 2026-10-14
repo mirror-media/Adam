@@ -285,8 +285,8 @@ function MoreNews({
                       <span className="relative block aspect-3/2 w-full overflow-hidden bg-mm-neutral-100" />
                       <Typography
                         as="span"
-                        className="mt-mm-m block min-h-[3em] md:mt-mm-l"
-                        variant="h6"
+                        className="mt-mm-m block min-h-[3em] md:mt-mm-l md:text-mm-h6"
+                        variant="h5"
                       >
                         &nbsp;
                       </Typography>
@@ -329,8 +329,8 @@ function MoreNews({
                       </span>
                       <Typography
                         as="h3"
-                        className="mt-mm-m line-clamp-2 min-h-[3em] text-mm-neutral-800 group-hover:underline md:mt-mm-l"
-                        variant="h6"
+                        className="mt-mm-m line-clamp-2 min-h-[3em] text-mm-neutral-800 group-hover:underline md:mt-mm-l md:text-mm-h6"
+                        variant="h5"
                       >
                         {article.title}
                       </Typography>
