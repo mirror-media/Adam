@@ -147,7 +147,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
           {title}
         </Typography>
         <PublicDate
-          className="order-3 col-span-full ml-2 md:col-span-6 xl:col-span-5"
+          className="order-3 col-span-full ml-2 md:col-span-6 xl:col-span-7"
           publishedDate={publishedDate}
           updatedAt={updatedAt}
         />
