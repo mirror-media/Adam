@@ -1,5 +1,4 @@
 //TODO: add component to add html head dynamically, not jus write head in every pag
-import { useEffect, useState } from 'react'
 import type { GetServerSideProps } from 'next'
 import dynamic from 'next/dynamic'
 import Head from 'next/head'
@@ -25,10 +24,7 @@ import { LatestArticles } from '@/modules/aside/components/latest-articles'
 import { PopularArticles } from '@/modules/aside/components/popular-articles'
 import { fetchExternalPost } from '@/modules/external/external-data'
 import type { ExternalPost } from '@/modules/external/external-types'
-import {
-  fetchAdditionalExternalRelatedStories,
-  initializeExternalRelatedStories,
-} from '@/modules/external/related-stories-client'
+import { useLoadMoreExternalRelatedStories } from '@/modules/external/use-load-more-external-related-stories'
 import type { StoryDataLayer } from '@/types/dataLayer'
 import { getLogTraceObject } from '@/utils'
 import { getPageKeyByPartnerShowOnIndex } from '@/utils/ad'
@@ -57,8 +53,9 @@ export default function External({
   const router = useRouter()
   const { slug } = router.query
   const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
-  const [allRelatedStories, setAllRelatedStories] = useState(
-    initializeExternalRelatedStories(external.relateds)
+  const allRelatedStories = useLoadMoreExternalRelatedStories(
+    external.slug ?? '',
+    external.relateds
   )
 
   const { shouldShowAd, isLogInProcessFinished } = useDisplayAd()
@@ -67,35 +64,6 @@ export default function External({
   )
 
   const robots = 'index, max-image-preview:large'
-
-  useEffect(() => {
-    // Wait for page to be fully rendered before setting up miso API calls
-    const setupScrollHandler = () => {
-      const handleScroll = async () => {
-        const formattedStories = await fetchAdditionalExternalRelatedStories(
-          external.slug ?? '',
-          10
-        )
-        setAllRelatedStories((prev) => [...prev, ...formattedStories])
-      }
-
-      window.addEventListener('scroll', handleScroll, { once: true })
-      return () => window.removeEventListener('scroll', handleScroll)
-    }
-
-    // Execute after page is fully loaded to avoid blocking TTFB
-    if (document.readyState === 'complete') {
-      // Page already loaded, setup immediately
-      setupScrollHandler()
-    } else {
-      // Wait for page to finish loading
-      window.addEventListener('load', setupScrollHandler, { once: true })
-    }
-
-    return () => {
-      window.removeEventListener('load', setupScrollHandler)
-    }
-  }, [external.slug])
 
   const pubDate = (
     <meta

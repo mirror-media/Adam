@@ -6,7 +6,7 @@ import { Homepage } from '@/modules/homepage/components/homepage'
 import { fetchHomepageData } from '@/modules/homepage/homepage-data'
 import type { HomepagePageProps } from '@/modules/homepage/homepage-types'
 import { getLogTraceObject } from '@/utils'
-import { fetchShellHeaderData } from '@/utils/api'
+import { fetchShellHeaderData, fetchShellSectionPosts } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
 
 export default function HomePage({
@@ -41,9 +41,15 @@ export const getServerSideProps = (async ({ req, res }) => {
   const globalLogFields: Record<string, unknown> = {
     ...getLogTraceObject(req),
   }
+  const sectionPostsPromise = fetchShellSectionPosts({
+    logFields: globalLogFields,
+  }).catch(() => ({}))
   const [headerData, homepageData] = await Promise.all([
-    fetchShellHeaderData({ logFields: globalLogFields }),
-    fetchHomepageData(globalLogFields),
+    fetchShellHeaderData({
+      logFields: globalLogFields,
+      sectionPostsPromise,
+    }),
+    fetchHomepageData(globalLogFields, sectionPostsPromise),
   ])
 
   return {

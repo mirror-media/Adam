@@ -57,7 +57,7 @@ export function ArticleListItem({
         <Typography
           as="h2"
           variant="h5"
-          className="mb-mm-l line-clamp-2 text-mm-neutral-800 sm:mb-1"
+          className="mb-1.25 line-clamp-2 text-mm-neutral-800 sm:mb-1"
         >
           {item.title}
         </Typography>
