@@ -76,8 +76,14 @@ export default class MyDocument extends Document {
             name="google-site-verification"
             content="8tUjQvQoBEANJ6nRE9fMnsw2qODvbAgqDjSkLj-Mdw0"
           />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;900&display=swap"
+            rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"
+          />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300..900&family=Noto+Serif+TC:wght@400;600;900&display=swap"
             rel="stylesheet"
           />
         </Head>
