@@ -146,6 +146,10 @@ export default function PostLayout(props: PostLayoutProps) {
     () => getTextParagraphOrdinals(content.blocks),
     [content.blocks]
   )
+  const SIZES_HERO =
+    '(min-width: 1280px) 800px, (min-width: 768px) calc(100vw - 48px), 100vw'
+  const webpSrcSet = buildSrcSet(heroImage?.resizedWebp)
+  const defaultSrcSet = buildSrcSet(heroImage?.resized)
 
   const summary = useMemo(() => {
     return content.blocks
@@ -296,38 +300,27 @@ export default function PostLayout(props: PostLayoutProps) {
         </div>
         <figure className="order-5 col-span-full">
           <picture className="relative block aspect-3/2">
+            {webpSrcSet && (
+              <source
+                type="image/webp"
+                srcSet={webpSrcSet}
+                sizes={SIZES_HERO}
+              />
+            )}
             <img
               className="h-auto w-full object-cover"
-              srcSet={
-                heroImage?.resized
-                  ? Object.entries(heroImage.resized)
-                      .filter(
-                        ([key, value]) =>
-                          !['original', '__typename'].includes(key) &&
-                          Boolean(value)
-                      )
-                      .sort(
-                        (a, b) =>
-                          parseInt(a[0].replace('w', '')) -
-                          parseInt(b[0].replace('w', ''))
-                      )
-                      .map(
-                        ([key, value]) => `${value} ${key.replace('w', '')}w`
-                      )
-                      .join(',')
-                  : undefined
-              }
-              sizes="(min-width: 768px) 50vw, 100vw"
+              srcSet={defaultSrcSet}
+              sizes={SIZES_HERO}
               src={
-                typeof heroImage?.resized?.w2400 === 'string'
-                  ? heroImage.resized.w2400
-                  : typeof heroImage?.resized?.original === 'string'
-                    ? heroImage.resized.original
-                    : DEFAULT_OG_IMAGE_URL
+                heroImage?.resized?.w1200 ||
+                heroImage?.resized?.w1600 ||
+                heroImage?.resized?.original ||
+                DEFAULT_OG_IMAGE_URL
               }
               alt={heroCaption ?? title ?? ''}
               width="100%"
               height="auto"
+              fetchPriority="high"
             />
           </picture>
           {heroCaption && (
@@ -618,4 +611,22 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
   }
 
   return null
+}
+
+function buildSrcSet(
+  resized?: Record<string, string | null | undefined> | null
+) {
+  if (!resized) return undefined
+  return Object.entries(resized)
+    .filter(
+      ([key, value]) =>
+        !['original', '__typename'].includes(key) && Boolean(value)
+    )
+    .sort(
+      (a, b) =>
+        parseInt(a[0].replace('w', ''), 10) -
+        parseInt(b[0].replace('w', ''), 10)
+    )
+    .map(([key, value]) => `${value} ${key.replace('w', '')}w`)
+    .join(', ')
 }
