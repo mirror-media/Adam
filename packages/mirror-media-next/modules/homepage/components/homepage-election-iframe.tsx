@@ -21,7 +21,7 @@ function HomepageElectionIframe({
       <iframe
         className="mx-auto block h-[330px] w-[320px] max-w-full border-0 md:h-[200px] md:w-[720px] xl:h-[294px] xl:w-[970px]"
         src={src}
-        title="2026 選舉"
+        title="2026 選舉開票"
         scrolling="no"
       />
     </div>
