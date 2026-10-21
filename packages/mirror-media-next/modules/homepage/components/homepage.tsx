@@ -9,6 +9,7 @@ import { EditorChoiceCarousel } from './editor-choice-carousel'
 import { GoogleNewsFollow } from './google-news-follow'
 import { HeadlineList } from './headline-list'
 import { HomepageAd } from './homepage-ad'
+import { HomepageElectionIframe } from './homepage-election-iframe'
 import { MoreNews } from './more-news'
 import { PromoVideoCarousel } from './promo-video-carousel'
 
@@ -19,6 +20,7 @@ const FullScreenAds = dynamic(
 
 type HomepageProps = {
   data: HomepageViewModel
+  isElectionPeriod: boolean
 }
 
 type DetachedSidebarSnapshot = {
@@ -39,7 +41,7 @@ const sidebarBottomGap = 16
 // exposing a nested scroll surface; its programmatic offset follows page
 // scrolling only. Load more briefly detaches the painted window across the
 // grid-height commit, then safely hands position back to native sticky.
-function Homepage({ data }: HomepageProps) {
+function Homepage({ data, isElectionPeriod }: HomepageProps) {
   const sidebarColumnRef = useRef<HTMLDivElement | null>(null)
   const sidebarRef = useRef<HTMLElement | null>(null)
   const detachSidebarForContentGrowthRef = useRef<() => void>(() => {})
@@ -286,6 +288,7 @@ function Homepage({ data }: HomepageProps) {
 
   return (
     <main className="w-full bg-white pb-mm-5xl text-mm-all-black xl:pb-mm-6xl">
+      <HomepageElectionIframe isElectionPeriod={isElectionPeriod} />
       <HomepageAd placement="top" wrapperClassName="py-mm-5xl" />
 
       <div className="grid w-full grid-cols-1 gap-y-mm-5xl md:grid-cols-2 md:gap-x-mm-5xl xl:mx-auto xl:max-w-[1200px] xl:grid-cols-[728px_448px] xl:gap-x-mm-3xl xl:gap-y-0">
