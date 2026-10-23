@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { useBreakpoint } from '@/hooks/use-breakpoint'
+import { type BreakpointName, useBreakpoint } from '@/hooks/use-breakpoint'
 import useWindowDimensions from '@/hooks/use-window-dimensions'
 
 /**
@@ -10,17 +10,22 @@ import useWindowDimensions from '@/hooks/use-window-dimensions'
  * 側邊欄比視窗高的時候這是負值——負的 `top` 允許元素上緣超出畫面上方那麼多，效果等同
  * 於下緣貼齊視窗底部。
  *
- * `lg` 以下側邊欄不顯示，這裡回傳 `undefined`——沒有 `top` 的 sticky 不會作用，而且
- * 連 `ResizeObserver` 都不會建立。
+ * `breakpoint` 以下側邊欄不顯示，這裡回傳 `undefined`——沒有 `top` 的 sticky 不會作用，
+ * 而且連 `ResizeObserver` 都不會建立。
+ *
+ * `bottomGap` 是釘住時下緣與視窗底部之間留的空白。
  */
-export function usePinnedAside() {
+export function usePinnedAside(
+  breakpoint: BreakpointName = 'lg',
+  bottomGap = 20
+) {
   const asideRef = useRef<HTMLElement>(null)
   const [asideHeight, setAsideHeight] = useState<number>()
   const { height, width } = useWindowDimensions()
-  const lgBreakpoint = useBreakpoint('lg')
+  const minWidth = useBreakpoint(breakpoint)
 
   const isPinnable =
-    width !== undefined && lgBreakpoint !== undefined && width >= lgBreakpoint
+    width !== undefined && minWidth !== undefined && width >= minWidth
 
   useEffect(() => {
     const aside = asideRef.current
@@ -41,8 +46,7 @@ export function usePinnedAside() {
     asideRef,
     top:
       isPinnable && height !== undefined && asideHeight !== undefined
-        ? // 減掉的 20 是釘住時下緣與視窗底部之間留的空白。
-          height - asideHeight - 20
+        ? height - asideHeight - bottomGap
         : undefined,
   }
 }
