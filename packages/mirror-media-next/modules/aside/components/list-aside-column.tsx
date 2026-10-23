@@ -1,9 +1,8 @@
 import dynamic from 'next/dynamic'
 
 import { GPT_Placeholder_Aside } from '@/components/ads/gpt/gpt-placeholder'
+import { usePinnedAside } from '@/hooks/use-pinned-aside'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
-
-import { usePinnedAside } from '../use-pinned-aside'
 
 import { FbPagePlugin } from './fb-page-plugin'
 import { GoogleNewsFollow } from './google-news-follow'
