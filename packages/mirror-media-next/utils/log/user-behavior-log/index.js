@@ -12,7 +12,7 @@ import {
 } from '../shared'
 
 /**
- * @typedef {'pageview' | 'exit' | 'scroll-to-80%' | 'click'} EventType
+ * @typedef {'pageview' | 'exit' | 'click'} EventType
  *
  * @typedef {import('../../../context/membership').MemberType} MemberType
  *
