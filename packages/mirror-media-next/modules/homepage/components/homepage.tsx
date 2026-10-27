@@ -27,7 +27,7 @@ const singleColumnContentClass =
   'mx-auto w-[calc(100%-32px)] md:w-[704px] xl:mx-0 xl:w-full'
 
 function Homepage({ data, isElectionPeriod }: HomepageProps) {
-  const { asideRef, top } = usePinnedAside('xl')
+  const { asideRef, columnRef, paddingTop, top } = usePinnedAside('xl')
 
   return (
     <main className="w-full bg-white pb-mm-5xl text-mm-all-black xl:pb-mm-6xl">
@@ -66,7 +66,11 @@ function Homepage({ data, isElectionPeriod }: HomepageProps) {
           </div>
         </div>
 
-        <div className="contents xl:order-0 xl:block xl:min-w-0">
+        <div
+          className="contents xl:order-0 xl:block xl:min-w-0"
+          ref={columnRef}
+          style={{ paddingTop }}
+        >
           <aside
             aria-label="首頁側欄"
             className="contents xl:sticky xl:flex xl:w-auto xl:min-w-0 xl:flex-col xl:gap-mm-5xl"

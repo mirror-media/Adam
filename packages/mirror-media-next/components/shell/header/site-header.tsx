@@ -35,7 +35,7 @@ import {
   shellUtilityLinks,
 } from './navigation'
 import { ShellSearch } from './shell-search'
-import { useSetStickyOffsets, useStickyHeader } from './sticky-header-context'
+import { useSetStickyLayout, useStickyHeader } from './sticky-header-context'
 import { useHorizontalWheelScroll } from './use-horizontal-wheel-scroll'
 
 const DesktopNavigationItem = dynamic(() =>
@@ -79,7 +79,7 @@ function SiteHeader({
   const [headerAdStatus, setHeaderAdStatus] =
     useState<HeaderAdStatus>('pending')
   const { showStickyControls } = useStickyHeader()
-  const setStickyOffsets = useSetStickyOffsets()
+  const setStickyLayout = useSetStickyLayout()
   const categoryStripRef = useHorizontalWheelScroll()
   const [openFlyoutSlug, setOpenFlyoutSlug] = useState<string | null>(null)
   const [renderedFlyoutSlug, setRenderedFlyoutSlug] = useState<string | null>(
@@ -115,11 +115,18 @@ function SiteHeader({
   useLayoutEffect(() => {
     const flashNewsRowHeight = flashNewsRowRef.current?.offsetHeight ?? 0
     const logoRowHeight = logoRowRef.current?.offsetHeight ?? 0
-    setStickyOffsets({
-      compact: flashNewsRowHeight,
-      desktop: flashNewsRowHeight + logoRowHeight,
+    const navigationRowHeight = navigationRegionRef.current?.offsetHeight ?? 0
+    setStickyLayout({
+      compact: {
+        height: logoRowHeight + navigationRowHeight,
+        offset: flashNewsRowHeight,
+      },
+      desktop: {
+        height: navigationRowHeight,
+        offset: flashNewsRowHeight + logoRowHeight,
+      },
     })
-  }, [hasFlashNewsRow, setStickyOffsets])
+  }, [hasFlashNewsRow, setStickyLayout])
 
   useEffect(() => {
     if (!openFlyoutSlug) {
