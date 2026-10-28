@@ -16,14 +16,14 @@ export function renderProduct(
   const publishedDate = transformTimeDataIntoDotFormat(
     String(product.published_at)
   )
-  // Miso 給的是完整網址，不像其他列表頁是乾淨的路徑，所以要看它本來有沒有 query string。
-  const href = `${product.url}${product.url.includes('?') ? '&' : '?'}from=search_list`
+  const href = product.url
 
   return `
     <a
       class="relative block hover:no-underline sm:flex sm:items-center sm:gap-mm-xl"
       data-role="item"
       data-miso-product-id="${product.product_id}"
+      data-story-list="search_list"
       href="${href}"
       target="_blank"
       rel="noreferrer"

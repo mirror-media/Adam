@@ -306,7 +306,8 @@ function MoreNews({
                         'GTM-homepage-latest-list group flex h-full flex-col',
                         homepageCardLinkFocusClass
                       )}
-                      href={`${article.href}?from=index_list_news`}
+                      data-story-list="index_list_news"
+                      href={article.href}
                       ref={
                         article.key === focusArticleKey
                           ? firstAppendedArticleRef

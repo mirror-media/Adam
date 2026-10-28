@@ -187,7 +187,7 @@ export default function Story({
       <StoryHead postData={postData} />
       <PageShell
         head={{
-          // StoryHead owns robots. ?from= stays indexable; utm/fbclid still noindex there.
+          // StoryHead owns robots. utm/fbclid still noindex there.
           robotsMetaContent: null,
           title: `${title ?? ''}`,
           ogTitle: postData.og_title ?? undefined,

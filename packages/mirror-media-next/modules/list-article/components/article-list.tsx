@@ -12,6 +12,7 @@ import { cn } from '@/components/cn'
 import useMediaQuery from '@/hooks/use-media-query'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { getSectionGPTPageKey } from '@/utils/ad'
+import type { StoryList } from '@/utils/gtm/story-list'
 
 import type {
   ArticleListItemData,
@@ -26,9 +27,9 @@ const GPTAd = dynamic(() => import('@/components/ads/gpt/gpt-ad'), {
 })
 
 type ArticleListProps = {
-  from?: string
   renderList: ArticleListItemData[]
   section?: ArticleListSection
+  storyList?: StoryList
 }
 
 type ListingMobileCompassFitSlotProps = {
@@ -60,7 +61,11 @@ function ListingMobileCompassFitSlot({
   )
 }
 
-export function ArticleList({ from, renderList, section }: ArticleListProps) {
+export function ArticleList({
+  renderList,
+  section,
+  storyList,
+}: ArticleListProps) {
   const { isLoggedIn, isLogInProcessFinished, shouldShowAd } = useDisplayAd()
   const keepsAdSlots = !isLoggedIn && (!isLogInProcessFinished || shouldShowAd)
   const { isMediaQueryResolved: isListingViewportResolved, matches: isSmUp } =
@@ -91,7 +96,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
             <Fragment key={item.id}>
               <LeadArticle
                 className="sm:min-w-0 sm:flex-1"
-                from={from}
+                storyList={storyList}
                 item={item}
                 priority={index === 0}
               />
@@ -118,7 +123,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
 
             return (
               <Fragment key={item.id}>
-                <ArticleListItem from={from} item={item} />
+                <ArticleListItem storyList={storyList} item={item} />
                 {keepsAdSlots && mobileSlotIndex !== null && (
                   <ListingMobileCompassFitSlot
                     enabled={
@@ -158,7 +163,7 @@ export function ArticleList({ from, renderList, section }: ArticleListProps) {
 
         <div className="mt-mm-2xl space-y-mm-2xl">
           {renderListWithoutAd.map((item) => (
-            <ArticleListItem key={item.id} from={from} item={item} />
+            <ArticleListItem key={item.id} storyList={storyList} item={item} />
           ))}
         </div>
       </div>

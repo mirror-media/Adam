@@ -339,14 +339,14 @@ function Homepage({ data, isElectionPeriod }: HomepageProps) {
               title="最新新聞"
               titleId="homepage-latest-news-title"
               trackingClassName="GTM-homepage-latest-list"
-              trackingFrom="cate_newnews"
+              storyList="cate_newnews"
             />
             <HeadlineList
               articles={data.popularNews}
               className="order-5 col-span-full mx-auto w-[calc(100%-32px)] md:order-2 md:col-span-1 md:mx-0 md:w-[332px] md:justify-self-start xl:order-2 xl:w-full xl:justify-self-auto"
               title="熱門新聞"
               titleId="homepage-popular-news-title"
-              trackingFrom="cate_hotnews"
+              storyList="cate_hotnews"
               withPrismAds
             />
             <GoogleNewsFollow className="order-6 col-span-full mx-auto md:order-5 xl:order-1" />
@@ -355,7 +355,7 @@ function Homepage({ data, isElectionPeriod }: HomepageProps) {
               className={`${singleColumnContentClass} order-9 col-span-full md:order-8 xl:order-3`}
               title="論壇新聞"
               titleId="homepage-forum-news-title"
-              trackingFrom="cate_commentnews"
+              storyList="cate_commentnews"
             />
           </aside>
         </div>
