@@ -149,12 +149,13 @@ export function renderTextWithLinks(
 
     const url = entityMap[linkRange.key].data.url
     const isInternalLink = isInternalUrl(url)
-    const href = isInternalLink ? `${url}?from=referral_bottom` : url
+    const href = url
 
     nodes.push(
       <Link
         key={`link-${start}`}
         href={href}
+        data-story-list={isInternalLink ? 'referral_bottom' : undefined}
         target="_blank"
         rel={isInternalLink ? 'noopener' : 'noreferrer noopener'}
         className={cn('font-mm-body text-mm-body-l', linkClassName)}

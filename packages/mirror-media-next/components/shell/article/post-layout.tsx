@@ -406,7 +406,8 @@ export default function PostLayout(props: PostLayoutProps) {
                         延伸閱讀
                       </ThemeElement>
                       <Link
-                        href={`/story/${relativeStory.slug}?from=referral_contents`}
+                        data-story-list="referral_contents"
+                        href={`/story/${relativeStory.slug}`}
                       >
                         <ThemeElement
                           className="rounded-md rounded-tl-none p-2 text-lg font-bold text-mm-neutral-700 decoration-mm-neutral-700"
@@ -573,14 +574,16 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
         <RelativePostLink
           className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="next"
-          href={`/story/${relateds[0]?.slug}?from=story_updown`}
+          data-story-list="story_updown"
+          href={`/story/${relateds[0]?.slug}`}
         >
           {relateds[0]?.title}
         </RelativePostLink>
         <RelativePostLink
           className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="prev"
-          href={`/story/${relateds[1]?.slug}?from=story_updown`}
+          data-story-list="story_updown"
+          href={`/story/${relateds[1]?.slug}`}
         >
           {relateds[1]?.title}
         </RelativePostLink>
@@ -592,7 +595,8 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
       <RelativePostLink
         className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100 xl:hidden"
         type="next"
-        href={`/story/${relateds[0]?.slug}?from=story_updown`}
+        data-story-list="story_updown"
+        href={`/story/${relateds[0]?.slug}`}
       >
         {relateds[0]?.title}
       </RelativePostLink>
@@ -603,7 +607,8 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
       <RelativePostLink
         className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100 xl:hidden"
         type="prev"
-        href={`/story/${relateds[1]?.slug}?from=story_updown`}
+        data-story-list="story_updown"
+        href={`/story/${relateds[1]?.slug}`}
       >
         {relateds[1]?.title}
       </RelativePostLink>

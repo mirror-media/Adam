@@ -5,14 +5,15 @@ import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
 import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { transformTimeDataIntoDotFormat } from '@/utils'
+import type { StoryList } from '@/utils/gtm/story-list'
 
 import type { ArticleListItemData } from '../list-article-types'
 
 type LeadArticleProps = {
   className?: string
-  from?: string
   item: ArticleListItemData
   priority?: boolean
+  storyList?: StoryList
 }
 
 /**
@@ -22,20 +23,21 @@ type LeadArticleProps = {
  */
 export function LeadArticle({
   className,
-  from,
   item,
   priority,
+  storyList,
 }: LeadArticleProps) {
   const sectionName = item.sections?.[0]?.name
 
   return (
     <Link
       className={cn('relative block hover:no-underline', className)}
-      href={`${
+      data-story-list={storyList}
+      href={
         item.type === 'external'
           ? `/external/${item.slug}`
           : `/story/${item.slug}`
-      }${from ? `?from=${from}` : ''}`}
+      }
       target="_blank"
       rel="noreferrer"
     >
