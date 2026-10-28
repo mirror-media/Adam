@@ -174,5 +174,40 @@ const ALLOWED_STORY_LIST = Object.fromEntries(
 /**
  * 與使用者無關的同步 script。放在文章頁 head，於 gtm.js 執行前推進 story_list。
  * 快取 HTML 不會帶某個讀者的來源。
+ *
+ * COOKIE_PREFIX、ALLOWED_STORY_LIST 由此內插。
+ * slug regex、cookie 解析、清 cookie（Path、Max-Age=0、SameSite=Lax）與
+ * articleSlugFromPathname、readCookie、clearStoryListCookie 各寫一份，要一起改。
+ * 白名單不符時這裡直接 return，cookie 留給 takeStoryListForPageView。
  */
-export const STORY_LIST_BOOTSTRAP_SCRIPT = `(function(){var match=location.pathname.match(/\\/(?:story|external)\\/([^/?#]+)\\/?$/);if(!match)return;var slug;try{slug=decodeURIComponent(match[1]);}catch(e){return;}if(!/^[A-Za-z0-9_-]+$/.test(slug))return;var name=${JSON.stringify(COOKIE_PREFIX)}+slug;var parts=document.cookie?document.cookie.split(";"):[];var value="";for(var i=0;i<parts.length;i++){var trimmed=parts[i].replace(/^\\s+/,"");var eq=trimmed.indexOf("=");if(eq===-1||trimmed.slice(0,eq)!==name)continue;try{value=decodeURIComponent(trimmed.slice(eq+1));}catch(e){value=trimmed.slice(eq+1);}break;}var allowed=${JSON.stringify(ALLOWED_STORY_LIST)};if(!allowed[value])return;window.dataLayer=window.dataLayer||[];window.dataLayer.push({story_list:value});window.__mmStoryList=value;document.cookie=name+"=; Path=/; Max-Age=0; SameSite=Lax";})();`
+export const STORY_LIST_BOOTSTRAP_SCRIPT = `(function () {
+  var match = location.pathname.match(/\\/(?:story|external)\\/([^/?#]+)\\/?$/);
+  if (!match) return;
+  var slug;
+  try {
+    slug = decodeURIComponent(match[1]);
+  } catch (e) {
+    return;
+  }
+  if (!/^[A-Za-z0-9_-]+$/.test(slug)) return;
+  var name = ${JSON.stringify(COOKIE_PREFIX)} + slug;
+  var parts = document.cookie ? document.cookie.split(";") : [];
+  var value = "";
+  for (var i = 0; i < parts.length; i++) {
+    var trimmed = parts[i].replace(/^\\s+/, "");
+    var eq = trimmed.indexOf("=");
+    if (eq === -1 || trimmed.slice(0, eq) !== name) continue;
+    try {
+      value = decodeURIComponent(trimmed.slice(eq + 1));
+    } catch (e) {
+      value = trimmed.slice(eq + 1);
+    }
+    break;
+  }
+  var allowed = ${JSON.stringify(ALLOWED_STORY_LIST)};
+  if (!allowed[value]) return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({ story_list: value });
+  window.__mmStoryList = value;
+  document.cookie = name + "=; Path=/; Max-Age=0; SameSite=Lax";
+})();`
