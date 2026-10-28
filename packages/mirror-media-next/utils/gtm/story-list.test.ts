@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { createContext, runInContext } from 'node:vm'
 
-import { STORY_LIST_BOOTSTRAP_SCRIPT } from './story-list.ts'
+import { STORY_LIST_BOOTSTRAP_SCRIPT } from './story-list'
 
 type BootstrapResult = {
   writes: string[]
