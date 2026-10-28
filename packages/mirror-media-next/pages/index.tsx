@@ -1,7 +1,8 @@
 import type { GetServerSideProps } from 'next'
+import dayjs from 'dayjs'
 
 import { PageShell } from '@/components/shell/page-shell'
-import { ENV } from '@/config/index.mjs'
+import { ENV, WEEKLY_END_TS, WEEKLY_START_TS } from '@/config/index.mjs'
 import { Homepage } from '@/modules/homepage/components/homepage'
 import { fetchHomepageData } from '@/modules/homepage/homepage-data'
 import type { HomepagePageProps } from '@/modules/homepage/homepage-types'
@@ -12,11 +13,12 @@ import { setPageCache } from '@/utils/cache-setting'
 export default function HomePage({
   headerData,
   homepageData,
+  isElectionPeriod,
 }: HomepagePageProps) {
   return (
     <>
       <PageShell headerData={headerData} pauseCarouselTickerOnIdle>
-        <Homepage data={homepageData} />
+        <Homepage data={homepageData} isElectionPeriod={isElectionPeriod} />
       </PageShell>
     </>
   )
@@ -51,11 +53,23 @@ export const getServerSideProps = (async ({ req, res }) => {
     }),
     fetchHomepageData(globalLogFields, sectionPostsPromise),
   ])
+  // Runtime env is server-only. Comparing here also means SSR and hydration
+  // share one result instead of each reading its own clock.
+  const now = dayjs()
+  const start = dayjs(WEEKLY_START_TS)
+  const end = dayjs(WEEKLY_END_TS)
 
   return {
     props: {
       headerData,
       homepageData,
+      isElectionPeriod:
+        !!WEEKLY_START_TS &&
+        !!WEEKLY_END_TS &&
+        start.isValid() &&
+        end.isValid() &&
+        !now.isBefore(start) &&
+        !now.isAfter(end),
     },
   }
 }) satisfies GetServerSideProps<HomepagePageProps>
