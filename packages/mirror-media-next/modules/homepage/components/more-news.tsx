@@ -310,7 +310,7 @@ function MoreNews({
                           ? firstAppendedArticleRef
                           : undefined
                       }
-                      rel="noopener noreferrer"
+                      rel="noopener"
                       target="_blank"
                     >
                       <span className="relative block aspect-3/2 w-full overflow-hidden bg-mm-neutral-100">

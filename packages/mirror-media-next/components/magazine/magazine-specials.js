@@ -143,7 +143,7 @@ const IssueTitle = styled.p`
 const MagazineLink = ({ urlOriginal, children }) => {
   if (urlOriginal) {
     return (
-      <Link href={urlOriginal} rel="noopener noreferrer" target="_blank">
+      <Link href={urlOriginal} rel="noopener" target="_blank">
         {children}
       </Link>
     )

@@ -86,7 +86,7 @@ function EditorChoiceCarousel({ articles }: EditorChoiceCarouselProps) {
                 className="GTM-editorchoice-list absolute inset-0 block outline-none focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white focus-visible:outline-solid"
                 data-story-list="main_index"
                 href={article.href}
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 <ArticleImage
