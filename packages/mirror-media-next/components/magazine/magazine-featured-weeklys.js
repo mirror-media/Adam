@@ -143,7 +143,7 @@ export default function MagazineFeatures({ features }) {
         <Link
           href={getMagazineHrefFromSlug(magazine.slug)}
           key={magazine.id}
-          rel="noopener noreferrer"
+          rel="noopener"
           target="_blank"
         >
           <IssueCard>

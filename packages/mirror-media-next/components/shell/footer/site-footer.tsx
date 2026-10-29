@@ -87,7 +87,7 @@ function SiteFooter() {
                 className={shellBracketTextLinkOnDarkClass}
                 href={link.href}
                 key={link.name}
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 {link.title}
@@ -101,7 +101,7 @@ function SiteFooter() {
                 aria-label="READr"
                 className={cn(shellBracketBrandLinkOnDarkClass, '-mx-1 px-1')}
                 href="https://www.readr.tw/"
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 <Image
@@ -118,7 +118,7 @@ function SiteFooter() {
                 // READr's, so the rules need a step more room here.
                 className={cn(shellBracketBrandLinkOnDarkClass, '-mx-2 px-2')}
                 href={MESH_LINK.href}
-                rel="noopener noreferrer"
+                rel="noopener"
                 target="_blank"
               >
                 <Image

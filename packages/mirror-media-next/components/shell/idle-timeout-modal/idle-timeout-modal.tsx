@@ -100,8 +100,8 @@ function IdleTimeoutModal({
                         key={index}
                         href={link.href}
                         target="_blank"
-                        rel="noreferrer"
                         className="grow-1"
+                        rel="noopener"
                       >
                         <Typography variant="h6" className="text-mm-base-500">
                           {link.title}
