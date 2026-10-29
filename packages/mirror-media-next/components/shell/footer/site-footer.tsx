@@ -15,6 +15,7 @@ import {
   LINE_LINK,
   MESH_LINK,
 } from '@/constants'
+import { isInternalUrl } from '@/utils'
 
 const {
   AI_GUIDANCE,
@@ -87,7 +88,9 @@ function SiteFooter() {
                 className={shellBracketTextLinkOnDarkClass}
                 href={link.href}
                 key={link.name}
-                rel="noopener"
+                rel={
+                  isInternalUrl(link.href) ? 'noopener' : 'noopener noreferrer'
+                }
                 target="_blank"
               >
                 {link.title}
