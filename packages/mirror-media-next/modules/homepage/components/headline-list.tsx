@@ -6,6 +6,7 @@ import { PRISM_SIDE_PLACEMENTS } from '@/components/ads/prism/prism-config'
 import { cn } from '@/components/cn'
 import { Typography } from '@/components/ui/typography'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
+import type { StoryList } from '@/utils/gtm/story-list'
 
 import { HOMEPAGE_POPULAR_NEWS_COUNT } from '../homepage-constants'
 import type { HomepageArticle } from '../homepage-types'
@@ -17,10 +18,10 @@ import { SectionTitle } from './section-title'
 type HeadlineListProps = {
   articles: HomepageArticle[]
   className?: string
+  storyList?: StoryList
   title: string
   titleId: string
   trackingClassName?: string
-  trackingFrom?: string
   withPrismAds?: boolean
 }
 
@@ -41,10 +42,10 @@ const homepagePrismItemIndexes = [2, 4] as const
 function HeadlineList({
   articles,
   className,
+  storyList,
   title,
   titleId,
   trackingClassName,
-  trackingFrom,
   withPrismAds = false,
 }: HeadlineListProps) {
   const { isLogInProcessFinished, shouldShowAd } = useDisplayAd()
@@ -119,10 +120,9 @@ function HeadlineList({
                   homepageCardLinkFocusClass,
                   trackingClassName
                 )}
-                href={`${item.article.href}${
-                  trackingFrom ? `?from=${trackingFrom}` : ''
-                }`}
-                rel="noopener noreferrer"
+                data-story-list={storyList}
+                href={item.article.href}
+                rel="noopener"
                 target="_blank"
               >
                 <span className="relative block h-16 w-24 overflow-hidden bg-mm-neutral-100">

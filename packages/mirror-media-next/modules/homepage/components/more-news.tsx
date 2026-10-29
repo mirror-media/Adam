@@ -303,13 +303,14 @@ function MoreNews({
                         'GTM-homepage-latest-list group flex h-full flex-col',
                         homepageCardLinkFocusClass
                       )}
-                      href={`${article.href}?from=index_list_news`}
+                      data-story-list="index_list_news"
+                      href={article.href}
                       ref={
                         article.key === focusArticleKey
                           ? firstAppendedArticleRef
                           : undefined
                       }
-                      rel="noopener noreferrer"
+                      rel="noopener"
                       target="_blank"
                     >
                       <span className="relative block aspect-3/2 w-full overflow-hidden bg-mm-neutral-100">

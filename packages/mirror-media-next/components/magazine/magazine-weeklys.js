@@ -180,7 +180,7 @@ export default function MagazineWeeklys({ weeklys }) {
         <IssueCard key={magazine.id}>
           <Link
             href={getMagazineHrefFromSlug(magazine.slug)}
-            rel="noopener noreferrer"
+            rel="noopener"
             target="_blank"
           >
             <ImageWrapper>
