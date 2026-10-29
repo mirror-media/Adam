@@ -4,32 +4,33 @@ import { Link } from '@/components/ui/link'
 import { Typography } from '@/components/ui/typography'
 import { DEFAULT_OG_IMAGE_URL } from '@/constants'
 import { transformTimeDataIntoDotFormat } from '@/utils'
+import type { StoryList } from '@/utils/gtm/story-list'
 
 import type { ArticleListItemData } from '../list-article-types'
 
 type ArticleListItemProps = {
-  from?: string
   item: ArticleListItemData
   priority?: boolean
+  storyList?: StoryList
 }
 
 export function ArticleListItem({
-  from,
   item,
   priority,
+  storyList,
 }: ArticleListItemProps) {
   const sectionName = item.sections?.[0]?.name
 
   return (
     <Link
       className="relative block hover:no-underline sm:flex sm:items-center sm:gap-mm-xl"
-      href={`${
+      data-story-list={storyList}
+      href={
         item.type === 'external'
           ? `/external/${item.slug}`
           : `/story/${item.slug}`
-      }${from ? `?from=${from}` : ''}`}
+      }
       target="_blank"
-      rel="noreferrer"
     >
       <div className="relative mb-mm-l aspect-[330/220] w-full sm:mb-0 sm:aspect-auto sm:h-[127px] sm:w-[179px] sm:shrink-0">
         <Image

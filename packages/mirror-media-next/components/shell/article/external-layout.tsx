@@ -250,7 +250,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
                 <Link
                   className="text-mm-base-700 underline"
                   target="_blank"
-                  rel="noreferrer noopener"
+                  rel="noopener"
                   href={`/externals/${partner.slug}`}
                 >
                   {getCreditsHtml(credits)}
@@ -282,7 +282,6 @@ export function ExternalLayout(props: ExternalLayoutProps) {
               key={`tag-${tag?.name ?? index}`}
               href={`/tag/${tag?.slug}`}
               target="_blank"
-              rel="noreferrer"
             >
               <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
@@ -298,7 +297,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             <Link
               href="/donate"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="inline-flex items-center gap-x-1 rounded-full border-mm-base-700 bg-mm-base-700 px-3 py-2 hover:bg-mm-base-600"
             >
               <CircleDollarSignIcon className="size-4 text-white" />
@@ -312,7 +311,7 @@ export function ExternalLayout(props: ExternalLayoutProps) {
             <Link
               href="/subscribe"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="inline-flex"
             >
               <Typography

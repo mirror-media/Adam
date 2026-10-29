@@ -406,7 +406,8 @@ export default function PostLayout(props: PostLayoutProps) {
                         延伸閱讀
                       </ThemeElement>
                       <Link
-                        href={`/story/${relativeStory.slug}?from=referral_contents`}
+                        data-story-list="referral_contents"
+                        href={`/story/${relativeStory.slug}`}
                       >
                         <ThemeElement
                           className="rounded-md rounded-tl-none p-2 text-lg font-bold text-mm-neutral-700 decoration-mm-neutral-700"
@@ -433,7 +434,6 @@ export default function PostLayout(props: PostLayoutProps) {
               key={`tag-${tag?.name ?? index}`}
               href={`/tag/${tag?.slug}`}
               target="_blank"
-              rel="noreferrer"
             >
               <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
@@ -450,7 +450,7 @@ export default function PostLayout(props: PostLayoutProps) {
             <Link
               href="/donate"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="inline-flex items-center gap-x-1 rounded-full border-mm-base-700 bg-mm-base-700 px-3 py-2 hover:bg-mm-base-600"
             >
               <CircleDollarSignIcon className="size-4 text-white" />
@@ -464,7 +464,7 @@ export default function PostLayout(props: PostLayoutProps) {
             <Link
               href="/subscribe"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="inline-flex"
             >
               <Typography
@@ -552,7 +552,6 @@ function CreditNames({
           <Link
             href={`/author/${person.id}`}
             target="_blank"
-            rel="noreferrer"
             variant="muted"
             className="text-mm-subtitle"
           >
@@ -573,14 +572,16 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
         <RelativePostLink
           className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="next"
-          href={`/story/${relateds[0]?.slug}?from=story_updown`}
+          data-story-list="story_updown"
+          href={`/story/${relateds[0]?.slug}`}
         >
           {relateds[0]?.title}
         </RelativePostLink>
         <RelativePostLink
           className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100"
           type="prev"
-          href={`/story/${relateds[1]?.slug}?from=story_updown`}
+          data-story-list="story_updown"
+          href={`/story/${relateds[1]?.slug}`}
         >
           {relateds[1]?.title}
         </RelativePostLink>
@@ -592,7 +593,8 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
       <RelativePostLink
         className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100 xl:hidden"
         type="next"
-        href={`/story/${relateds[0]?.slug}?from=story_updown`}
+        data-story-list="story_updown"
+        href={`/story/${relateds[0]?.slug}`}
       >
         {relateds[0]?.title}
       </RelativePostLink>
@@ -603,7 +605,8 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
       <RelativePostLink
         className="flex overflow-hidden rounded-lg bg-mm-base-700 text-neutral-100 xl:hidden"
         type="prev"
-        href={`/story/${relateds[1]?.slug}?from=story_updown`}
+        data-story-list="story_updown"
+        href={`/story/${relateds[1]?.slug}`}
       >
         {relateds[1]?.title}
       </RelativePostLink>
