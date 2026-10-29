@@ -12,7 +12,7 @@ export function PopularArticles({ placement }: PopularArticlesProps) {
   return (
     <AsideArticleList
       fetchFunc={fetchPopularArticles}
-      from="cate_hotnews"
+      storyList="cate_hotnews"
       prismPlacement={placement}
       title="熱門文章"
     />

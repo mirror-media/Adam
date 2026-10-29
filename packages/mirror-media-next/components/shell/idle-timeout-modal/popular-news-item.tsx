@@ -44,7 +44,8 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
         {items.map((item, index) => (
           <div key={index}>
             <Link
-              href={`/story/${item.slug}?from=idlepage`}
+              data-story-list="idlepage"
+              href={`/story/${item.slug}`}
               target="_blank"
               rel="noreferrer"
               className="GTM-idle-window-click-popular-list"
@@ -91,7 +92,8 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
             className="embla__slide min-w-0 shrink-0 grow-0 basis-full px-10.25"
           >
             <Link
-              href={`/story/${item.slug}?from=idlepage`}
+              data-story-list="idlepage"
+              href={`/story/${item.slug}`}
               target="_blank"
               rel="noreferrer"
               className="GTM-idle-window-click-popular-list"

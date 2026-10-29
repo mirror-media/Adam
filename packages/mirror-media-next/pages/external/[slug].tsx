@@ -32,6 +32,7 @@ import type { ShellHeaderData } from '@/utils/api'
 import { fetchShellHeaderData } from '@/utils/api'
 import { setPageCache } from '@/utils/cache-setting'
 import { buildExternalDataLayer } from '@/utils/gtm/build-data-layer'
+import { STORY_LIST_BOOTSTRAP_SCRIPT } from '@/utils/gtm/story-list'
 import { toTaipeiISOString } from '@/utils/index'
 
 const MisoPageView = dynamic(() => import('@/components/miso-pageview'), {
@@ -92,6 +93,10 @@ export default function External({
   return (
     <>
       <Head>
+        <script
+          id="mm-story-list"
+          dangerouslySetInnerHTML={{ __html: STORY_LIST_BOOTSTRAP_SCRIPT }}
+        />
         <meta name="robots" content={robots} key="robots" />
         <meta
           property="dable:item_id"
@@ -125,7 +130,7 @@ export default function External({
       </Head>
       <PageShell
         head={{
-          // This page's Head owns robots. ?from= stays indexable.
+          // This page's Head owns robots.
           robotsMetaContent: null,
           title: `${external?.title}`,
           imageUrl: external?.thumb ?? undefined,

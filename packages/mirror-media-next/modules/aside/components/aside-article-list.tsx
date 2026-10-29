@@ -8,6 +8,7 @@ import {
 } from '@/components/ads/prism/prism-config'
 import { Typography } from '@/components/ui/typography'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
+import type { StoryList } from '@/utils/gtm/story-list'
 
 import type { AsideArticle } from '../aside-types'
 
@@ -20,18 +21,18 @@ type AsideArticleListProps = {
    * viewport, and `articles` is ignored.
    */
   fetchFunc?: () => Promise<AsideArticle[]>
-  from?: string
   prismPlacement?: PrismAsidePlacementContext
   renderAmount?: number
+  storyList?: StoryList
   title: string
 }
 
 export function AsideArticleList({
   articles = [],
   fetchFunc,
-  from,
   prismPlacement,
   renderAmount = 6,
+  storyList,
   title,
 }: AsideArticleListProps) {
   const { isLoggedIn, isLogInProcessFinished, shouldShowAd } = useDisplayAd()
@@ -114,7 +115,7 @@ export function AsideArticleList({
 
             return (
               <Fragment key={article.id}>
-                <AsideArticleItem article={article} from={from} />
+                <AsideArticleItem article={article} storyList={storyList} />
                 {slot && (
                   <PrismAdSlot
                     className={AD_SLOT_LAYOUTS.prism.asideArticleRow.className}
