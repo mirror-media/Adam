@@ -133,7 +133,12 @@ export default function PostLayout(props: PostLayoutProps) {
   const canonicalUrl = `https://${SITE_URL}/story/${slug}`
   const sectionList = sections ?? []
   const categoryList = categories ?? []
-  const displayTags = [...(tags ?? []), ...(tags_algo ?? [])]
+  const seenTagSlugs = new Set<string | null | undefined>()
+  const displayTags = [...(tags ?? []), ...(tags_algo ?? [])].filter((tag) => {
+    if (seenTagSlugs.has(tag?.slug)) return false
+    seenTagSlugs.add(tag?.slug)
+    return true
+  })
 
   const mainCategory =
     sectionList.length === 1
@@ -434,7 +439,7 @@ export default function PostLayout(props: PostLayoutProps) {
         <div className="order-9 col-span-full mx-8 flex flex-wrap gap-2">
           {displayTags.map((tag, index) => (
             <Link
-              key={`tag-${tag?.name ?? index}`}
+              key={`tag-${tag?.slug ?? index}`}
               href={`/tag/${tag?.slug}`}
               target="_blank"
             >
