@@ -15,23 +15,12 @@ import {
   NEWEBPAY_PAPERMAG_KEY,
   SITE_URL,
 } from '../../config/index.mjs'
-import { PLAN_LIST } from '../../constants/papermag'
-
-type PapermagTradeInfoInput =
-  FetchPaymentDataOfPapermagMutationVariables['data']
-
-type TradeInfo = FetchPaymentDataOfPapermagMutationVariables & {
-  data: PapermagTradeInfoInput & {
-    Amt?: unknown
-    merchandise: {
-      connect: {
-        code: string
-      }
-    }
-    itemCount: number
-    promoteCode?: string | null
-  }
-}
+import {
+  COUPON_DISCOUNT,
+  paperMagazineOrderInputSchema,
+  PLAN_LIST,
+} from '../../modules/paper-magazine/paper-magazine-data'
+import { normalizeError } from '../../utils/normalize-error'
 
 type NewebpayTradeInfo = NonNullable<
   FetchPaymentDataOfPapermagMutation['createNewebpayTradeInfoForMagazineOrder']
@@ -63,6 +52,9 @@ async function fireGqlRequest(
         headers: {
           'content-type': 'application/json',
           'Cache-Control': 'no-cache',
+          // Server-side only: lets the weekly-api-server proxy allow this
+          // mutation and attach the member session. Never exposed to clients.
+          'X-Internal-Api-Key': process.env.INTERNAL_API_KEY ?? '',
         },
       },
       variables,
@@ -78,7 +70,8 @@ async function fireGqlRequest(
 }
 
 async function getPaymentDataOfMagazineOrders(
-  variables: FetchPaymentDataOfPapermagMutationVariables
+  variables: FetchPaymentDataOfPapermagMutationVariables,
+  returnUrl?: string
 ): Promise<PaymentDataOfMagazineOrders> {
   const { data } = await fireGqlRequest(fetchPaymentDataOfPapermag, variables)
   const tradeInfo = data?.createNewebpayTradeInfoForMagazineOrder
@@ -90,9 +83,10 @@ async function getPaymentDataOfMagazineOrders(
     createNewebpayTradeInfoForMagazineOrder: {
       ...tradeInfo,
       ReturnURL:
-        ENV === 'local'
+        returnUrl ??
+        (ENV === 'local'
           ? `http://localhost:3000/papermag/return`
-          : `https://${SITE_URL}/papermag/return`,
+          : `https://${SITE_URL}/papermag/return`),
       CREDIT: 1,
       Version: '2.2',
     },
@@ -103,35 +97,41 @@ export default async function EncryptInfo(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const tradeInfo = req.body as TradeInfo
   try {
     // 防止使用者自行修改 Amt 的值
     // 詳見：https://app.asana.com/1/614399484723017/project/1210077071799813/task/1210384428427743?focus=true
-    const hasInputAmt = Object.prototype.hasOwnProperty.call(
-      tradeInfo.data,
-      'Amt'
-    )
-    const paymentInput = { ...tradeInfo.data }
-    delete paymentInput.Amt
+    const rawData = (req.body as { data?: unknown } | null)?.data
+    const hasInputAmt =
+      typeof rawData === 'object' &&
+      rawData !== null &&
+      Object.prototype.hasOwnProperty.call(rawData, 'Amt')
     if (hasInputAmt) {
       throw new Error('Amt is not correct input')
     }
+    const paymentInput = paperMagazineOrderInputSchema.parse(rawData)
 
     const variables: FetchPaymentDataOfPapermagMutationVariables = {
       data: paymentInput,
     }
-    const data = await getPaymentDataOfMagazineOrders(variables)
+    // TODO(P7): Remove this temporary dev-v4 override before promoting P7 to dev.
+    // Match only this fixed host; never build a return URL from request headers.
+    const returnUrl =
+      ENV === 'dev' &&
+      req.headers.host?.toLowerCase() === 'dev-v4.mirrormedia.mg'
+        ? 'https://dev-v4.mirrormedia.mg/papermag/return'
+        : undefined
+    const data = await getPaymentDataOfMagazineOrders(variables, returnUrl)
     const infoForNewebpay = data.createNewebpayTradeInfoForMagazineOrder
 
-    const itemCode = tradeInfo.data.merchandise.connect.code
+    const itemCode = paymentInput.merchandise.connect.code
     const item = PLAN_LIST.find((item) => item.code === itemCode)
     if (!item) {
       throw new Error('item is not correct input')
     }
     const itemPrice = item.price
-    const itemCount = tradeInfo.data.itemCount
-    const hasPromoteCode = !!tradeInfo.data.promoteCode
-    const promoteCodeDiscount = hasPromoteCode ? 80 * itemCount : 0
+    const itemCount = paymentInput.itemCount
+    const hasPromoteCode = !!paymentInput.promoteCode
+    const promoteCodeDiscount = hasPromoteCode ? COUPON_DISCOUNT * itemCount : 0
     const totalPrice = itemPrice * itemCount - promoteCodeDiscount
     if (totalPrice !== infoForNewebpay.Amt) {
       throw new Error(
@@ -148,12 +148,9 @@ export default async function EncryptInfo(
       data: encryptPostData,
     })
   } catch (e) {
-    const error = e as Error
-    const helpers = errors.helpers as typeof errors.helpers & {
-      wrap: (error: unknown, name: string, message: string) => Error
-    }
-    const annotatingError = helpers.wrap(
-      error.message,
+    const error = normalizeError(e)
+    const annotatingError = errors.helpers.wrap(
+      error,
       'UnhandledError',
       'Error occurs while submit papermag'
     )

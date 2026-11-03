@@ -47,7 +47,6 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
               data-story-list="idlepage"
               href={`/story/${item.slug}`}
               target="_blank"
-              rel="noreferrer"
               className="GTM-idle-window-click-popular-list"
             >
               <div className="relative space-y-2">
@@ -95,7 +94,6 @@ export function PopularNewsItem({ items }: PopularNewsItemProps) {
               data-story-list="idlepage"
               href={`/story/${item.slug}`}
               target="_blank"
-              rel="noreferrer"
               className="GTM-idle-window-click-popular-list"
             >
               <div className="relative space-y-2">

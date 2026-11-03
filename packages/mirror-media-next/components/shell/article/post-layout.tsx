@@ -57,6 +57,7 @@ type PostLayoutProps = Pick<
   | 'brief'
   | 'content'
   | 'tags'
+  | 'tags_algo'
   | 'slug'
   | 'sections'
   | 'relateds'
@@ -113,6 +114,7 @@ export default function PostLayout(props: PostLayoutProps) {
     brief,
     content,
     tags,
+    tags_algo,
     relateds,
     slug,
     relativeStory,
@@ -131,6 +133,12 @@ export default function PostLayout(props: PostLayoutProps) {
   const canonicalUrl = `https://${SITE_URL}/story/${slug}`
   const sectionList = sections ?? []
   const categoryList = categories ?? []
+  const seenTagSlugs = new Set<string | null | undefined>()
+  const displayTags = [...(tags ?? []), ...(tags_algo ?? [])].filter((tag) => {
+    if (seenTagSlugs.has(tag?.slug)) return false
+    seenTagSlugs.add(tag?.slug)
+    return true
+  })
 
   const mainCategory =
     sectionList.length === 1
@@ -429,12 +437,11 @@ export default function PostLayout(props: PostLayoutProps) {
           />
         </div>
         <div className="order-9 col-span-full mx-8 flex flex-wrap gap-2">
-          {tags?.map((tag, index) => (
+          {displayTags.map((tag, index) => (
             <Link
-              key={`tag-${tag?.name ?? index}`}
+              key={`tag-${tag?.slug ?? index}`}
               href={`/tag/${tag?.slug}`}
               target="_blank"
-              rel="noreferrer"
             >
               <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
@@ -451,7 +458,7 @@ export default function PostLayout(props: PostLayoutProps) {
             <Link
               href="/donate"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="inline-flex items-center gap-x-1 rounded-full border-mm-base-700 bg-mm-base-700 px-3 py-2 hover:bg-mm-base-600"
             >
               <CircleDollarSignIcon className="size-4 text-white" />
@@ -465,7 +472,7 @@ export default function PostLayout(props: PostLayoutProps) {
             <Link
               href="/subscribe"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
               className="inline-flex"
             >
               <Typography
@@ -553,7 +560,6 @@ function CreditNames({
           <Link
             href={`/author/${person.id}`}
             target="_blank"
-            rel="noreferrer"
             variant="muted"
             className="text-mm-subtitle"
           >

@@ -35,7 +35,6 @@ export function AsideArticleItem({
         ''
       )}
       target="_blank"
-      rel="noreferrer"
     >
       <div className="relative h-[114px] w-40 shrink-0">
         <Image

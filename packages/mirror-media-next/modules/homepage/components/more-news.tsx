@@ -27,7 +27,6 @@ type MoreNewsProps = {
   excludedKeys: string[]
   initialArticles: HomepageArticle[]
   initialHasMore: boolean
-  onBeforeAppend?: () => void
 }
 
 type MoreNewsGridItem =
@@ -70,7 +69,6 @@ function MoreNews({
   excludedKeys,
   initialArticles,
   initialHasMore,
-  onBeforeAppend,
 }: MoreNewsProps) {
   const initialArticleCountRef = useRef(initialArticles.length)
   const [articles, setArticles] = useState(initialArticles)
@@ -227,7 +225,6 @@ function MoreNews({
       const newlyVisibleArticleCount =
         result.articles.length +
         (!result.hasMore ? deferredArticlesBeforeLoad.length : 0)
-      if (newlyVisibleArticleCount) onBeforeAppend?.()
       setArticles((current) => current.concat(result.articles))
       setHasMore(result.hasMore)
       setHasLoadedMore(true)
@@ -313,7 +310,7 @@ function MoreNews({
                           ? firstAppendedArticleRef
                           : undefined
                       }
-                      rel="noopener noreferrer"
+                      rel="noopener"
                       target="_blank"
                     >
                       <span className="relative block aspect-3/2 w-full overflow-hidden bg-mm-neutral-100">

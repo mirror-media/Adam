@@ -120,39 +120,71 @@ packages/mirror-media-next/
 │   ├── index.tsx                       # Homepage route composition
 │   └── podcasts/index.tsx              # Podcast route composition
 ├── modules/                            # Business capabilities, shallow by default
+│   ├── account/                        # Member profile
+│   │   ├── account-types.ts            # Types derived from GraphQL codegen
+│   │   ├── account-data.ts             # Profile query and update mutation
+│   │   └── components/                 # Profile form, save states and deletion link
+│   ├── authentication/                 # Login, registration, password and Firebase email actions
+│   │   ├── authentication-state.ts     # Redux login form state
+│   │   ├── authentication-actions.ts   # Firebase and Israfel member actions
+│   │   ├── authentication-form.ts
+│   │   ├── authentication-utils.ts
+│   │   ├── authentication-redirect.ts  # Same-origin post-login destination
+│   │   ├── use-authentication-redirect.ts
+│   │   └── components/                 # Login, password and email-action UI
+│   ├── commerce/
+│   │   └── checkout-steps.tsx          # Checkout steps shared by subscription and paper magazine
 │   ├── homepage/
 │   │   ├── homepage-types.ts           # Homepage-owned view-model types
 │   │   ├── homepage-data.ts            # Server data aggregation
 │   │   ├── homepage-client-data.ts     # Browser load-more boundary
 │   │   ├── homepage-static-json.schema.ts
 │   │   └── components/                 # Homepage-owned UI
-│   └── podcast/
-│       ├── podcast-types.ts            # Podcast-owned view-model types
-│       ├── podcast-data.ts             # Fetch, validate and normalize Podcast data
-│       └── components/                 # Podcast-owned UI
-│           ├── audio-player.tsx
-│           ├── author-select-dropdown.tsx
-│           ├── play-pause-button.tsx
-│           ├── podcast-card.tsx
-│           ├── podcast-list.tsx
-│           └── podcast-modal.tsx
+│   ├── magazine/                       # Digital magazine
+│   │   ├── magazine-types.ts           # Types derived from GraphQL codegen
+│   │   ├── magazine-data.ts            # Loading, ordering, slug validation and iframe allowlist
+│   │   └── components/
+│   ├── membership/                     # Shared auth state, token and access guard
+│   │   ├── membership-context.tsx      # Firebase auth observer and MembershipProvider
+│   │   ├── membership-token.ts         # WAS access token and JWT role, Zod monitor mode
+│   │   ├── membership-types.ts
+│   │   └── use-membership-required.ts  # Client-side login guard
+│   ├── paper-magazine/                 # Paper magazine plans, order form and NewebPay
+│   │   ├── paper-magazine-types.ts
+│   │   ├── paper-magazine-data.ts      # Plans and order/NewebPay Zod schemas
+│   │   └── components/
+│   ├── podcast/
+│   │   ├── podcast-types.ts            # Podcast-owned view-model types
+│   │   ├── podcast-data.ts             # Fetch, validate and normalize Podcast data
+│   │   └── components/                 # Podcast-owned UI
+│   │       ├── audio-player.tsx
+│   │       ├── author-select-dropdown.tsx
+│   │       ├── play-pause-button.tsx
+│   │       ├── podcast-card.tsx
+│   │       ├── podcast-list.tsx
+│   │       └── podcast-modal.tsx
+│   ├── subscription/                   # Membership plans, prices and notices
+│   │   ├── subscription-types.ts
+│   │   ├── subscription-data.ts
+│   │   └── components/
+│   └── <other capabilities>/           # aside, author, category, external(s), list-article, search, section, story, tag, topic
 ├── components/
 │   ├── ui/                             # Domain-neutral design-system primitives
 │   ├── common/                         # Proven domain-neutral composed UI/controllers
-│   │   └── carousel-ticker.tsx         # Shared carousel cadence and pause coordination
+│   │   ├── carousel-ticker.tsx         # Shared carousel cadence and pause coordination
+│   │   ├── dable-ad.tsx                # Dable widget shared by story and external pages
+│   │   └── form-wrapper.tsx            # Card shared by login, account, password and email-action flows
 │   └── shell/                          # Application Layout/Header/Footer ownership
 ├── apollo/                             # GraphQL clients, sources, and generated output
 ├── axios/                              # Existing HTTP compatibility wrapper
 ├── config/                             # Environment configuration
 ├── constants/                          # Cross-cutting constants; review touched files
-├── context/                            # Existing React context state
 ├── firebase/                           # Firebase client/admin integration boundary
 ├── hooks/                              # Proven cross-cutting browser hooks
 ├── mocks/                              # Development fixtures and mock server
 ├── public/                             # Runtime assets and generated public artifacts
 ├── scripts/                            # Package tooling
 ├── service-worker/                     # Auth-only service worker source
-├── slice/                              # Existing Redux slices
 ├── store/                              # Redux store infrastructure
 ├── styles/                             # Tailwind source/theme and legacy styling
 ├── type/                               # Legacy JSDoc/global types; no new entries
@@ -195,6 +227,22 @@ packages/mirror-media-next/
 
 Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、互動與無障礙驗證，並將所有 consumers 更新到 `modules/podcast/components/` 後，刪除 `components/podcast/` 舊路徑。執行時程與 owner 放在 local-only execution 文件，不寫入這份長期架構表。
 
+### Current membership and commerce ownership（目前會員與商務能力所有權）
+
+P7 已建立七個有實際 consumers（使用端）的 capability modules（能力模組）：
+
+- `modules/membership/` 持有 Firebase auth observer（驗證觀察者）、會員 context（狀態內容）、WAS access token（存取權杖）、會員型別與登入保護 hook（掛鉤）。`pages/_app.js` 可掛載 `MembershipProvider`；shell、會員頁、廣告與紀錄元件只透過其公開 context 操作讀取狀態或登出。
+- `modules/authentication/` 持有登入、註冊、密碼重設與 Firebase email action（電子郵件動作）的表單元件、Redux UI state（使用者介面狀態）及流程工具。它可依賴 `modules/membership/membership-types.ts` 的型別契約，不接管全站會員 session（工作階段）的生命週期。
+- `modules/account/` 持有個人資料的型別、GraphQL data functions（資料函式）與表單元件；它透過 `modules/membership/membership-context.tsx` 取得呼叫會員 API 所需的公開狀態。
+- `modules/magazine/` 持有動態雜誌的 codegen-derived GraphQL types（由程式碼產生器衍生的圖形查詢型別）、client data loading（用戶端資料載入）、slug validation（網址識別字驗證）、排序、iframe allowlist（內嵌框架允許清單）與 UI。它可讀取 `modules/membership/` 的公開會員狀態，但不得接管登入或 route policy（路由政策）。
+- `modules/subscription/` 持有會員方案、價格、注意事項及方案 UI；價格是 magazine 與 story CTA 可讀取的公開 subscription contract（訂閱契約），route feature toggle（功能開關）與 GSSP 仍由 `pages/subscribe/**` 持有。
+- `modules/paper-magazine/` 持有紙本雜誌方案、訂購表單、NewebPay payload validation（藍新金流酬載驗證）、GraphQL codegen-derived order types（由程式碼生成衍生的訂單型別）與結果 UI。`pages/api/papermag.ts` 保留 HTTP policy（政策）及加密付款協調，`pages/papermag/return.tsx` 保留 raw POST parsing（原始請求解析）與 redirect policy（轉導政策）。
+- `modules/commerce/checkout-steps.tsx` 是 subscription 與 paper-magazine 共同使用的商務流程元件；它只呈現訂購階段，不持有任一路由、付款或會員政策。
+
+`components/shell/header/member-menu.tsx` 可讀取 membership context，並使用 `authentication-state.ts` 將登入表單切回起始狀態；這是 shell 呈現登入／登出操作所需的公開狀態操作，不把 session 或表單生命週期移進 shell。
+
+對應的 `pages/login`、`pages/profile`、`pages/recover-password`、`pages/update-password`、`pages/email-handler`、密碼結果頁、`pages/magazine/**`、`pages/subscribe/**` 與 `pages/papermag/**` 只保留 route exports（路由匯出）、GSSP、cache／redirect／404 policy（快取／轉導／找不到政策）、SEO、HTTP ingress（進入點）與頁面組合。七個 module 均不得 import `pages/**`；shared membership module（共用會員模組）也不得反向依賴 account 或 authentication。這些邊界由 root ESLint config（根目錄 ESLint 設定）的 path-specific restrictions（路徑限制）執行。
+
 ### Ownership and placement（所有權與放置規則）
 
 | 位置                                                     | 責任                                                                                    |
@@ -209,15 +257,14 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 | `type/**`、`types/**`                                    | `type/` 不再新增；`types/` 只放 ambient declarations（環境宣告）                        |
 
 `components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。
-新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
 
-`PageShell` 是 `components/shell/` 唯一的頁面外殼組合入口，也是一般非 AMP UI routes（使用者介面路由）的標準入口。它直接擁有 application shell（應用外殼）的 flex／`min-h-dvh` 結構與 slot order（插槽順序），固定組合 `CustomHead`、`SiteHeader`、`GDPRNotification` 與 `BackToTop`，預設加入 `SiteFooter` 與 `IdleTimeoutModal`。route-specific metadata（路由專屬中繼資料）透過 `head` prop（屬性）傳入；route 只有在補充文章時間、AMP link 或 JSON-LD 等特殊標籤時才另外使用 `next/head`，不應再自行 render `CustomHead`。只有已確認需保留原畫面的頁面才可使用 `withFooter={false}` 或 `withIdleTimeout={false}`；route 不應自行建立另一套 shell variant（外殼變體）。AMP routes 維持獨立 `components/amp/amp-layout`；`pages/500.js` 是不依賴資料與 shell 的靜態錯誤後備，兩者都不使用 `PageShell`，並直接組合 `CustomHead`。`_app.js` 也必須在 `/500` 排除 client-only `PromoteTopic`（僅用戶端專題推薦），避免錯誤畫面重新引入內容請求。
+**PageShell**：一般非 AMP 頁面使用 `components/shell/` 的 `PageShell`。
 
-`CustomHead` 提供站台預設的 `<meta name="robots" content="index, max-image-preview:large">` 與預設分享圖片；特殊頁面可透過 `robotsMetaContent` 覆寫，傳入 `null` 則代表該 route 的另一個 `Head` 負責 robots 規則。帳號流程與 404／500 必須明確使用 `noindex`，不可落回公開頁面的預設值。
-
-`components/shared/layout.js`、`components/shared/layout-full.js` 與 `LegacyLayoutAdapter` 只保留既有 JavaScript routes 的 compatibility facade（相容介面），render path（渲染路徑）同樣委派給 `PageShell`，不再保留裸 DOM flow、premium header 或 empty shell 分支；consumer（使用端）遷移完畢後刪除。
-
-`PageShell` 不在 render path 自行取得 Header data；使用它的 Pages Router route 必須在所屬 data boundary（資料邊界）呼叫 `fetchShellHeaderData()`，再以 serializable props（可序列化屬性）傳入。`fetchShellHeaderData()` 固定取得 flash news（快訊），不提供 opt-in；active navigation（作用中導覽）仍由 route 提供。仍使用 legacy header fetcher（舊頁首資料函式）的 compatibility routes 也必須把 `flashNewsData` 傳入 facade。500 的靜態錯誤後備不取任何 shell data，因此不受此契約約束。
+- route 在 `getServerSideProps` 呼叫 `fetchShellHeaderData()`，把結果當 props 傳入。
+- 頁面 metadata 透過 `head` prop 傳入。`CustomHead` 預設可被索引；帳號流程與 404／500 要設 `noindex`。
+- 只有需要保留原畫面的頁面才使用 `withFooter={false}` 或 `withIdleTimeout={false}`。
+- AMP 頁面使用 `components/amp/amp-layout`；`pages/500.js` 是不取資料的靜態錯誤頁。兩者都不使用 `PageShell`。
+- `components/shared/layout.js`、`layout-full.js` 與 `LegacyLayoutAdapter` 是讓既有 JavaScript routes 接到 `PageShell` 的相容層，使用端遷移完後刪除。
 
 ### Component placement guide（元件放置指南）
 
@@ -248,7 +295,7 @@ Route 與 capability 是不同分類軸：route 是 framework／runtime entry（
 
 ### Dependency boundaries（依賴邊界）
 
-以下 dependency boundaries（依賴邊界）是目前的 code-review contract（程式碼審查契約），尚未由專用 ESLint 規則自動強制。
+`modules/**` 不得匯入 `pages/**`，以及 `modules/membership/` 不得依賴 `modules/account/` 或 `modules/authentication/`，這兩條由 `eslint.config.mjs` 強制；以下其餘邊界靠 code review 維持。
 
 - `pages/**` 可組合 modules、shell、common、design-system UI 與遷移中的 Legacy components，但不可依賴另一個 page 的 route policy。
 - Module components／hooks 可依賴同 module、核准的其他 capability public contract、common、design-system UI 與 browser-safe utilities。
@@ -367,6 +414,7 @@ ref: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#cas
 | FIREBASE_ADMIN_CREDENTIAL   | 字串(JSON) | ''                        | Firebase 專案所屬服務帳號的密鑰資訊，參考：[Initialize the SDK in non-Google environments#To generate a private key file for your service account](https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments) |
 | NEWEBPAY_PAPERMAG_KEY       | 字串       | `'newebpay-papermag-key'` | 藍新商店 key                                                                                                                                                                                                                                   |
 | NEWEBPAY_PAPERMAG_IV        | 字串       | `'newebpay-papermag-iv'`  | 藍新商店 iv                                                                                                                                                                                                                                    |
+| INTERNAL_API_KEY            | 字串       | `''`                      | 僅伺服器執行期讀取；紙本訂單建立與付款回站查詢呼叫會員代理時使用。須與會員後端設定相符，不得改為 `NEXT_PUBLIC_` 變數或送到瀏覽器；預覽模式不傳至 CMS                                                                                           |
 | GOOGLE_SHEETS_PRIVATE_KEY   | 字串(JSON) | `''`                      | 呼叫 google sheet API 所使用的 service account token 資訊                                                                                                                                                                                      |
 | GOOGLE_SHEETS_CLIENT_EMAIL  | 字串       | `undefined`               | 呼叫 google sheet API 所使用的 service account 名稱                                                                                                                                                                                            |
 | GOOGLE_SHEETS_CLIENT_ID     | 字串       | `undefined`               | 呼叫 google sheet API 所使用的 service account ID                                                                                                                                                                                              |
@@ -375,7 +423,7 @@ ref: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#cas
 | GCS_FUSE_MOUNT_DIR          | 字串       | `/statics`                | Server-side static JSON 的 GCS FUSE mount path                                                                                                                                                                                                 |
 | GCS_FUSE_STATIC_BUCKET      | 字串       | 依 `NEXT_PUBLIC_ENV` 決定 | GCS FUSE static bucket 名稱                                                                                                                                                                                                                    |
 
-提醒：新增的環境變數若在 dev/prod 環境無法正常讀取， 須到 GCP (Google Cloud Platform) 的編輯觸發條件更新替代變數
+公開建置變數須透過 Cloud Build（雲端建置服務）與 Docker 建置參數傳入；`INTERNAL_API_KEY` 等伺服器執行期變數則設定在 Cloud Run（雲端容器服務）的執行環境或機密參照，僅新增建置替代變數不會自動傳入執行中的服務。
 
 ## Environment Variables for search only (Search 限定的環境變數)
 
