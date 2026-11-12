@@ -197,7 +197,6 @@ export default function PostLayout(props: PostLayoutProps) {
             <Link
               className="text-sm font-bold text-mm-base-500"
               href={`/section/${mainCategory?.slug ?? 'news'}`}
-              target="_blank"
             >
               <Typography
                 as="span"
@@ -214,7 +213,6 @@ export default function PostLayout(props: PostLayoutProps) {
                 <Link
                   className="text-sm font-bold text-mm-base-500"
                   href={`/category/${subCategories?.slug}`}
-                  target="_blank"
                 >
                   <Typography
                     as="span"
@@ -241,8 +239,9 @@ export default function PostLayout(props: PostLayoutProps) {
           publishedDate={publishedDate}
           updatedAt={updatedAt}
         />
-        <div className="sticky top-27 z-1 order-4 col-span-full flex items-start justify-around gap-x-3 bg-white p-2 md:static md:col-start-8 md:justify-end md:py-0">
+        <div className="sticky top-12 z-1 order-4 col-span-full flex items-start justify-around gap-x-3 bg-white p-2 md:static md:col-start-8 md:justify-end md:py-0">
           <IconLink
+            target="_blank"
             href="https://google.com/preferences/source?q=mirrormedia.mg"
             className="GTM-click-preferred-source flex h-7 items-center rounded-full border px-1.5 py-1 md:gap-1 md:px-2.5"
           >
@@ -440,11 +439,7 @@ export default function PostLayout(props: PostLayoutProps) {
         </div>
         <div className="order-9 col-span-full mx-8 flex flex-wrap gap-2">
           {displayTags.map((tag, index) => (
-            <Link
-              key={`tag-${tag?.slug ?? index}`}
-              href={`/tag/${tag?.slug}`}
-              target="_blank"
-            >
+            <Link key={`tag-${tag?.slug ?? index}`} href={`/tag/${tag?.slug}`}>
               <Badge className="text-mm-h6">{tag?.name}</Badge>
             </Link>
           ))}
@@ -460,7 +455,6 @@ export default function PostLayout(props: PostLayoutProps) {
             <Link
               href="/donate"
               target="_blank"
-              rel="noopener"
               className="inline-flex items-center gap-x-1 rounded-full border-mm-base-700 bg-mm-base-700 px-3 py-2 hover:bg-mm-base-600"
             >
               <CircleDollarSignIcon className="size-4 text-white" />
@@ -471,12 +465,7 @@ export default function PostLayout(props: PostLayoutProps) {
                 贊助本文
               </Typography>
             </Link>
-            <Link
-              href="/subscribe"
-              target="_blank"
-              rel="noopener"
-              className="inline-flex"
-            >
+            <Link href="/subscribe" className="inline-flex">
               <Typography
                 as="span"
                 className="items-center gap-x-1 rounded-full border-mm-second-700 bg-mm-second-700 px-3 py-2 text-sm leading-[1.125] font-normal text-white hover:bg-mm-second-600"
@@ -561,7 +550,6 @@ function CreditNames({
           {index > 0 && ' '}
           <Link
             href={`/author/${person.id}`}
-            target="_blank"
             variant="muted"
             className="text-mm-subtitle"
           >
