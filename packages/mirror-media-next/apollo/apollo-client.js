@@ -3,16 +3,11 @@ import { ApolloClient, concat, InMemoryCache } from '@apollo/client'
 import ApolloLinkTimeout from 'apollo-link-timeout'
 
 import { IS_PREVIEW_MODE } from '../config/index.mjs'
-import {
-  API_TIMEOUT_GRAPHQL,
-  PREVIEW_SERVER_ORIGIN,
-  WEEKLY_API_SERVER_ORIGIN,
-} from '../config/index.mjs'
+import { API_TIMEOUT_GRAPHQL, PREVIEW_SERVER_ORIGIN } from '../config/index.mjs'
+import { getWeeklyApiServerBaseUrl } from '../utils/weekly-api-server-url'
 
 const DEFAULT_URI = '/graphql'
-const serverOrigin = IS_PREVIEW_MODE
-  ? `https://${PREVIEW_SERVER_ORIGIN}`
-  : `https://${WEEKLY_API_SERVER_ORIGIN}`
+const previewServerOrigin = `https://${PREVIEW_SERVER_ORIGIN}`
 
 /**
  * Because we have two GraphQL endpoint, `/content/graphql` and `/member/graphql`,
@@ -26,7 +21,7 @@ const customFetch = (uri, options) => {
 
   if (IS_PREVIEW_MODE) {
     // in preview, we fetch data from CMS directly
-    endpoint = `${serverOrigin}/api/graphql`
+    endpoint = `${previewServerOrigin}/api/graphql`
     // The internal key is only meaningful to the weekly-api-server proxy;
     // never forward it to the preview CMS.
     if (options?.headers) {
@@ -34,6 +29,9 @@ const customFetch = (uri, options) => {
       delete options.headers['x-internal-api-key']
     }
   } else {
+    // Resolved per request: in the browser it depends on the runtime config
+    // element rendered by _document.
+    const serverOrigin = getWeeklyApiServerBaseUrl()
     endpoint =
       uri === DEFAULT_URI
         ? `${serverOrigin}/content/graphql`
