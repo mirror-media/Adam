@@ -6,12 +6,13 @@ import axios from 'axios'
 import client from '../apollo/apollo-client'
 import { createMember } from '../apollo/membership/mutation/member'
 import { fetchAllMember } from '../apollo/membership/query/member'
-import { API_TIMEOUT, WEEKLY_API_SERVER_ORIGIN } from '../config/index.mjs'
+import { API_TIMEOUT } from '../config/index.mjs'
 import { SECOND } from '../constants/time-unit'
 import { FormState } from '../slice/login-slice'
 
 import { generateErrorReportInfo } from './log/error-log'
 import { sendErrorLog } from './log/send-log'
+import { getWeeklyApiServerBaseUrl } from './weekly-api-server-url'
 
 /**
  * there are 3 error situation:
@@ -171,7 +172,7 @@ const getAccessToken = async (idToken, forceUpdate = false) => {
 
     const res = await axios({
       method: 'post',
-      url: `https://${WEEKLY_API_SERVER_ORIGIN}/access-token`,
+      url: `${getWeeklyApiServerBaseUrl()}/access-token`,
       headers: {
         authorization: `Bearer ${idToken}`,
       },
