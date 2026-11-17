@@ -8,6 +8,10 @@ import { ServerStyleSheet } from 'styled-components'
 
 import { GTM_AUTH, GTM_ID, GTM_PREVIEW } from '../config/index.mjs'
 import { getGtmNoscriptSrc } from '../utils/gtm/noscript-src'
+import {
+  BROWSER_RUNTIME_CONFIG_ELEMENT_ID,
+  getBrowserRuntimeConfigJson,
+} from '../utils/weekly-api-server-url'
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const sheet = new ServerStyleSheet()
@@ -42,6 +46,10 @@ export default class MyDocument extends Document {
       GTM_AUTH || undefined,
       GTM_PREVIEW || undefined
     )
+    // Read from the server environment on each render; null renders nothing.
+    const browserRuntimeConfigJson = inAmpMode
+      ? null
+      : getBrowserRuntimeConfigJson()
 
     return (
       <Html lang="zh-Hant">
@@ -91,6 +99,13 @@ export default class MyDocument extends Document {
                 rel="stylesheet"
               />
             </>
+          )}
+          {browserRuntimeConfigJson && (
+            <script
+              id={BROWSER_RUNTIME_CONFIG_ELEMENT_ID}
+              type="application/json"
+              dangerouslySetInnerHTML={{ __html: browserRuntimeConfigJson }}
+            />
           )}
         </Head>
 

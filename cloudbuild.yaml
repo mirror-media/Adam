@@ -123,3 +123,6 @@ substitutions:
   # override it with the actual `$_BASE_BRANCH`; builds on the target itself
   # compare the pushed commit with its first parent.
   _NO_NEW_JS_BASE_BRANCH: 'dev'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
