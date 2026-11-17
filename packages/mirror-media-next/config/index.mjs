@@ -16,6 +16,13 @@ const GOOGLE_SHEETS_CLIENT_ID = process.env.GOOGLE_SHEETS_CLIENT_ID
 const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
 const WEEKLY_START_TS = process.env.WEEKLY_START_TS ?? ''
 const WEEKLY_END_TS = process.env.WEEKLY_END_TS ?? ''
+// Runtime overrides for backend hosts (hostname only, no scheme), read when the
+// server starts. They only take effect in server code (SSR, API routes): the
+// browser bundle never receives env vars without the NEXT_PUBLIC_ prefix, so
+// client-side code keeps the per-environment default set below.
+const WEEKLY_API_SERVER_ORIGIN_SERVER =
+  process.env.WEEKLY_API_SERVER_ORIGIN_SERVER
+const PREVIEW_SERVER_ORIGIN_SERVER = process.env.PREVIEW_SERVER_ORIGIN_SERVER
 const MISO_API_BASE_URL = 'https://api.askmiso.com'
 const MISO_ENDPOINTS = {
   relatedStories: `${MISO_API_BASE_URL}/v1/recommendation/product_to_products`,
@@ -93,8 +100,11 @@ switch (ENV) {
     API_TIMEOUT = 1500
     API_TIMEOUT_GRAPHQL = 8000
     WEEKLY_API_SERVER_ORIGIN =
+      WEEKLY_API_SERVER_ORIGIN_SERVER ||
       'adam-weekly-api-server-prod-ufaummkd5q-de.a.run.app'
-    PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-prod-ufaummkd5q-de.a.run.app'
+    PREVIEW_SERVER_ORIGIN =
+      PREVIEW_SERVER_ORIGIN_SERVER ||
+      'mirror-cms-preview-prod-ufaummkd5q-de.a.run.app'
     STATIC_FILE_DOMAIN = 'v3-statics.mirrormedia.mg'
     // WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://api.mirrormedia.mg/youtube`
@@ -164,9 +174,12 @@ switch (ENV) {
     API_TIMEOUT_GRAPHQL = 8000
 
     WEEKLY_API_SERVER_ORIGIN =
+      WEEKLY_API_SERVER_ORIGIN_SERVER ||
       'adam-weekly-api-server-staging-ufaummkd5q-de.a.run.app'
 
-    PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-staging-ufaummkd5q-de.a.run.app'
+    PREVIEW_SERVER_ORIGIN =
+      PREVIEW_SERVER_ORIGIN_SERVER ||
+      'mirror-cms-preview-staging-ufaummkd5q-de.a.run.app'
     // WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://api.mirrormedia.mg/youtube`
     STATIC_FILE_DOMAIN = 'v3-statics-staging.mirrormedia.mg'
@@ -236,8 +249,11 @@ switch (ENV) {
     API_TIMEOUT_GRAPHQL = 5000
 
     WEEKLY_API_SERVER_ORIGIN =
+      WEEKLY_API_SERVER_ORIGIN_SERVER ||
       'adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app'
-    PREVIEW_SERVER_ORIGIN = 'mirror-cms-preview-dev-ufaummkd5q-de.a.run.app'
+    PREVIEW_SERVER_ORIGIN =
+      PREVIEW_SERVER_ORIGIN_SERVER ||
+      'mirror-cms-preview-dev-ufaummkd5q-de.a.run.app'
     // WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://api.mirrormedia.mg/youtube`
     STATIC_FILE_DOMAIN = 'v3-statics-dev.mirrormedia.mg'
@@ -253,7 +269,6 @@ switch (ENV) {
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_PROMOTE_TOPICS = `https://${STATIC_FILE_DOMAIN}/json/promote-topics.json`
-    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
     URL_STATIC_NEWS_CATEGORY_INFO = `https://${STATIC_FILE_DOMAIN}/json/latest/category_news.json`
     URL_STATIC_NEWS_CATEGORY_POSTS = `https://${STATIC_FILE_DOMAIN}/json/latest/latest_content_category_news_public`
@@ -265,6 +280,9 @@ switch (ENV) {
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
     GCS_FUSE_STATIC_BUCKET =
       process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
+    // Same bucket as the FUSE mount, so a renamed bucket keeps the mount
+    // mapping in fetch-static-json and the HTTP fallback on that bucket.
+    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/${GCS_FUSE_STATIC_BUCKET}/json/latest/latest_content_section_column_1.json`
 
     NEWEBPAY_PAPERMAG_API_URL = 'https://ccore.newebpay.com/MPG/mpg_gateway'
 
@@ -304,8 +322,9 @@ switch (ENV) {
     SITE_URL = 'localhost'
     API_TIMEOUT = 5000
     API_TIMEOUT_GRAPHQL = 5000
-    PREVIEW_SERVER_ORIGIN = ''
+    PREVIEW_SERVER_ORIGIN = PREVIEW_SERVER_ORIGIN_SERVER || ''
     WEEKLY_API_SERVER_ORIGIN =
+      WEEKLY_API_SERVER_ORIGIN_SERVER ||
       'adam-weekly-api-server-dev-ufaummkd5q-de.a.run.app'
     // WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `https://${WEEKLY_API_SERVER_ORIGIN}/youtube`
     WEEKLY_API_SERVER_YOUTUBE_ENDPOINT = `http://api-dev.mirrormedia.mg:8080/youtube`
@@ -329,7 +348,6 @@ switch (ENV) {
     URL_STATIC_PODCAST_LIST = `https://${STATIC_FILE_DOMAIN}/json/podcast_list.json`
     URL_STATIC_PROMOTE_VIDEOS = `https://${STATIC_FILE_DOMAIN}/files/json/promoting-video.json`
     URL_STATIC_PROMOTE_TOPICS = `https://${STATIC_FILE_DOMAIN}/json/promote-topics.json`
-    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/v3-statics-dev.mirrormedia.mg/json/latest/latest_content_section_column_1.json`
     URL_STATIC_DAILY_COLUMN_HEADLINES = `https://${STATIC_FILE_DOMAIN}/files/json/daily-column.json`
     URL_STATIC_NEWS_CATEGORY_INFO = `https://${STATIC_FILE_DOMAIN}/json/latest/category_news.json`
     URL_STATIC_NEWS_CATEGORY_POSTS = `https://${STATIC_FILE_DOMAIN}/json/latest/latest_content_category_news_public`
@@ -341,6 +359,9 @@ switch (ENV) {
     GCS_FUSE_MOUNT_DIR = process.env.GCS_FUSE_MOUNT_DIR || '/statics'
     GCS_FUSE_STATIC_BUCKET =
       process.env.GCS_FUSE_STATIC_BUCKET || 'v3-statics-dev.mirrormedia.mg'
+    // Same bucket as the FUSE mount, so a renamed bucket keeps the mount
+    // mapping in fetch-static-json and the HTTP fallback on that bucket.
+    URL_STATIC_COLUMN_SECTION_POSTS = `https://storage.googleapis.com/${GCS_FUSE_STATIC_BUCKET}/json/latest/latest_content_section_column_1.json`
 
     DONATION_PAGE_URL = 'https://mirrormedia.testing.oen.tw/'
     GA_MEASUREMENT_ID = 'G-36HYH6NF6P'

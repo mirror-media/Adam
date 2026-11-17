@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { z } from 'zod'
 
-import { API_TIMEOUT, WEEKLY_API_SERVER_ORIGIN } from '@/config/index.mjs'
+import { API_TIMEOUT } from '@/config/index.mjs'
+import { getWeeklyApiServerBaseUrl } from '@/utils/weekly-api-server-url'
 import { monitorZodSafeParse } from '@/utils/zod-monitor'
 
 import type { MemberType } from './membership-types'
@@ -44,7 +45,7 @@ const getAccessToken = async (idToken: string): Promise<string> => {
   try {
     const response = await axios<unknown>({
       method: 'post',
-      url: `https://${WEEKLY_API_SERVER_ORIGIN}/access-token`,
+      url: `${getWeeklyApiServerBaseUrl()}/access-token`,
       headers: {
         authorization: `Bearer ${idToken}`,
       },
