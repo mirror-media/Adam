@@ -21,17 +21,25 @@ const FullScreenAds = dynamic(
 type HomepageProps = {
   data: HomepageViewModel
   isElectionPeriod: boolean
+  isElectionTestPeriod: boolean
 }
 
 const singleColumnContentClass =
   'mx-auto w-[calc(100%-32px)] md:w-[704px] xl:mx-0 xl:w-full'
 
-function Homepage({ data, isElectionPeriod }: HomepageProps) {
+function Homepage({
+  data,
+  isElectionPeriod,
+  isElectionTestPeriod,
+}: HomepageProps) {
   const { asideRef, columnRef, paddingTop, top } = usePinnedAside('xl')
 
   return (
     <main className="w-full bg-white pb-mm-5xl text-mm-all-black xl:pb-mm-6xl">
-      <HomepageElectionIframe isElectionPeriod={isElectionPeriod} />
+      <HomepageElectionIframe
+        isElectionPeriod={isElectionPeriod}
+        isElectionTestPeriod={isElectionTestPeriod}
+      />
       <HomepageAd placement="top" wrapperClassName="py-mm-5xl" />
 
       <div className="grid w-full grid-cols-1 gap-y-mm-5xl md:grid-cols-2 md:gap-x-mm-5xl xl:mx-auto xl:max-w-[1200px] xl:grid-cols-[728px_448px] xl:gap-x-mm-3xl xl:gap-y-0">
