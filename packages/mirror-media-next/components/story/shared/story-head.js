@@ -35,10 +35,8 @@ const generateMetaData = (postData) => {
     tags = [],
     publishedDate = '',
     updatedAt = '',
-    isAdvertised = false,
     sections = [],
     sectionsInInputOrder = [],
-    state = 'draft',
     categories = [],
     categoriesInInputOrder = [],
     writers = [],
@@ -48,8 +46,6 @@ const generateMetaData = (postData) => {
 
   const robots = 'index, max-image-preview:large'
   const nonAmpUrl = `https://${SITE_URL}/story/${slug}`
-  const ampUrl = `https://${SITE_URL}/story/amp/${slug}`
-  const shouldCreateAmpHtmlLink = state === 'published' && !isAdvertised
   const tagsNameStr = tags.map((tag) => tag.name).join(', ')
   const sectionsWithOrdered = getActiveOrderSection(
     sections,
@@ -73,8 +69,6 @@ const generateMetaData = (postData) => {
     slug,
     robots,
     nonAmpUrl,
-    ampUrl,
-    shouldCreateAmpHtmlLink,
     tagsNameStr,
     section,
     category,
@@ -99,8 +93,6 @@ export default function StoryHead({ postData }) {
   const {
     slug,
     nonAmpUrl,
-    ampUrl,
-    shouldCreateAmpHtmlLink,
     tagsNameStr,
     section,
     category,
@@ -120,9 +112,6 @@ export default function StoryHead({ postData }) {
         <meta name="robots" content={robots} key="robots" />
         {!hasUtmOrFb && (
           <link rel="canonical" href={nonAmpUrl} key="canonical" />
-        )}
-        {shouldCreateAmpHtmlLink && (
-          <link rel="amphtml" href={ampUrl} key="amphtml" />
         )}
         <meta property="dable:item_id" content={slug} key="dable:item_id" />
         <meta property="og:slug" content={slug} key="og:slug" />

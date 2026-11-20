@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import { DEFAULT_OG_IMAGE_URL } from '../../constants'
 
+import type { PromoteTopicData } from './fetch-promote-topics'
+
 const Card = styled.a`
   display: block;
   width: 100%;
@@ -49,25 +51,11 @@ const Title = styled.p`
   overflow: hidden;
 `
 
-/**
- * @typedef {Object} PromoteTopicHeroImage
- * @property {Record<string, string>} [resized]
- * @property {Record<string, string>} [resizedWebp]
- *
- * @typedef {Object} PromoteTopicData
- * @property {string} id
- * @property {number | string | null} [order]
- * @property {string} slug
- * @property {string} name
- * @property {PromoteTopicHeroImage} heroImage
- */
+type PromoteTopicItemProps = {
+  topic: PromoteTopicData
+}
 
-/**
- * @param {Object} props
- * @param {PromoteTopicData} props.topic
- * @returns {React.ReactElement}
- */
-export default function PromoteTopicItem({ topic }) {
+export default function PromoteTopicItem({ topic }: PromoteTopicItemProps) {
   const images = topic.heroImage.resized ?? {}
   const imagesWebP = topic.heroImage.resizedWebp ?? null
 
