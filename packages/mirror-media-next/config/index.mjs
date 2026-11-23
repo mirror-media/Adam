@@ -16,6 +16,8 @@ const GOOGLE_SHEETS_CLIENT_ID = process.env.GOOGLE_SHEETS_CLIENT_ID
 const GOOGLE_SHEET_SLOT_ID = process.env.GOOGLE_SHEET_SLOT_ID
 const WEEKLY_START_TS = process.env.WEEKLY_START_TS ?? ''
 const WEEKLY_END_TS = process.env.WEEKLY_END_TS ?? ''
+const WEEKLY_TEST_END_TS =
+  process.env.WEEKLY_TEST_END_TS ?? '2026-11-28T00:00:00+08:00'
 // Runtime overrides for backend hosts (hostname only, no scheme), read when the
 // server starts. They only take effect in server code (SSR, API routes): the
 // browser bundle never receives env vars without the NEXT_PUBLIC_ prefix, so
@@ -447,4 +449,5 @@ export {
   WEEKLY_API_SERVER_YOUTUBE_ENDPOINT,
   WEEKLY_END_TS,
   WEEKLY_START_TS,
+  WEEKLY_TEST_END_TS,
 }

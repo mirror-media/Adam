@@ -3,6 +3,7 @@ import 'swiper/css/pagination'
 
 import { useState } from 'react'
 import styled from 'styled-components'
+import type { Swiper as SwiperInstance } from 'swiper'
 import { Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -13,6 +14,7 @@ import {
   useCarouselTicker,
 } from '../common/carousel-ticker'
 
+import type { PromoteTopicData } from './fetch-promote-topics'
 import PromoteTopicItem from './promote-topic-item'
 
 const CARD_WIDTH = 124
@@ -87,18 +89,13 @@ const CloseButton = styled.button`
   }
 `
 
-/**
- * @typedef {import('./promote-topic-item').PromoteTopicData} PromoteTopicData
- */
+type PromoteTopicSwiperProps = {
+  list: PromoteTopicData[]
+}
 
-/**
- * @param {Object} props
- * @param {PromoteTopicData[]} props.list
- * @returns {React.ReactElement | null}
- */
-export default function PromoteTopicSwiper({ list }) {
+export default function PromoteTopicSwiper({ list }: PromoteTopicSwiperProps) {
   const [shouldShow, setShouldShow] = useState(true)
-  const [swiper, setSwiper] = useState(null)
+  const [swiper, setSwiper] = useState<SwiperInstance | null>(null)
   const shouldLoop = list.length > 1
   const { carouselRef, interactionProps } = useCarouselTicker({
     isActive: shouldShow && shouldLoop,

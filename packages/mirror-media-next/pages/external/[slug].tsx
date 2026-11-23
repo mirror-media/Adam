@@ -16,7 +16,7 @@ import JsonLdsScript from '@/components/external/shared/json-lds-script'
 import { ExternalLayout } from '@/components/shell/article/external-layout'
 import { NextUpPosts } from '@/components/shell/article/next-up-posts'
 import { PageShell } from '@/components/shell/page-shell'
-import { ENV, SITE_URL } from '@/config/index.mjs'
+import { ENV } from '@/config/index.mjs'
 import { useDisplayAd } from '@/hooks/useDisplayAd'
 import { FbPagePlugin } from '@/modules/aside/components/fb-page-plugin'
 import { GoogleNewsFollow } from '@/modules/aside/components/google-news-follow'
@@ -53,7 +53,6 @@ export default function External({
 }: ExternalPageProps) {
   const router = useRouter()
   const { slug } = router.query
-  const ampUrl = `https://${SITE_URL}/external/amp/${slug}`
   const allRelatedStories = useLoadMoreExternalRelatedStories(
     external.slug ?? '',
     external.relateds
@@ -108,7 +107,6 @@ export default function External({
           content={Array.isArray(slug) ? slug?.[0] : slug}
           key="og:slug"
         />
-        <link rel="amphtml" href={ampUrl} key="amphtml" />
         {external?.publishedDate && pubDate}
         {external?.updatedAt && lastMod}
         {authorName && (
