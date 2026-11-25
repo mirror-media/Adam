@@ -94,12 +94,6 @@ docker build \
 docker run --rm -p 3000:3000 mirror-media-next
 ```
 
-AMP proxy runtime（AMP 代理執行期）：
-
-```bash
-docker run --rm -e PROXY_AMP=true -p 3000:3000 mirror-media-next
-```
-
 ## Repository architecture（程式庫架構）
 
 本節是 `packages/mirror-media-next/` 的 committed reference（進版控參考）。架構依 ownership（所有權）與 dependency direction（依賴方向）說明，不把交付階段當作檔案分類，也不能把尚未建立的 target directory（目標目錄）當成已落地功能。
@@ -285,7 +279,7 @@ pnpm build
 
 - Framework and routing（框架與路由）：使用 Next.js 15.5.22、React 19.2.7 與 Pages Router（頁面路由器），並保留 `/story/amp/[slug]`、`/external/amp/[slug]` 內建 AMP 路由。Next.js 16 已移除內建 AMP API；升級前必須先決定 AMP 的替代或退場方式，並驗證 Turbopack（打包工具）與 SVG、GraphQL 等既有 webpack loaders（webpack 載入器）的相容性。
 - App Router（應用程式路由器）：目前未使用。若要導入，必須同時設計 `getServerSideProps`、styled-components SSR、Apollo SSR 與會員個人化驗證流程的替代方案；不可只搬移路由檔案。
-- Deployment（部署）：Docker runtime（Docker 執行期）依賴 `output: 'standalone'`、monorepo output tracing（單一儲存庫輸出追蹤）與 repository-root build context（儲存庫根目錄建置上下文）。調整 Next.js、pnpm workspace 或 Dockerfile 後，必須確認一般模式及 `PROXY_AMP=true` 都能建置與啟動。
+- Deployment（部署）：Docker runtime（Docker 執行期）依賴 `output: 'standalone'`、monorepo output tracing（單一儲存庫輸出追蹤）與 repository-root build context（儲存庫根目錄建置上下文）。調整 Next.js、pnpm workspace 或 Dockerfile 後，必須確認能建置與啟動。
 - TypeScript：採 `strict: true`、`allowJs: true` 漸進遷移；既有 JavaScript 可繼續維護，但不得新增 application（應用程式）`.js`／`.jsx` 檔，請使用 `.ts`／`.tsx`。
 
 ### Auth-only Service Worker（僅供身分驗證的服務工作執行緒）
@@ -364,9 +358,6 @@ ref: https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#cas
 | ---------------------------------- | ---------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | NEXT_PUBLIC_ENV                    | 字串       | 'local'                   | 系統環境 (`local`, `dev`, `staging`, `prod`)                                                                                                                                                                                                                                                                   |
 | NEXT_PUBLIC_IS_PREVIEW_MODE        | 字串(布林) | `undefined`               | 是否為 preview mode                                                                                                                                                                                                                                                                                            |
-| PROXY_AMP                          | 字串       | `undefined`               | 是否為 proxy AMP 模式                                                                                                                                                                                                                                                                                          |
-| PROXY_SERVER_PORT                  | 字串(整數) | `3000`                    | proxy server port                                                                                                                                                                                                                                                                                              |
-| PROXIED_SERVER_PORT                | 字串(整數) | `3001`                    | 被 proxy 的 next.js server port                                                                                                                                                                                                                                                                                |
 | FIREBASE_ADMIN_CREDENTIAL          | 字串(JSON) | ''                        | Firebase 專案所屬服務帳號的密鑰資訊，參考：[Initialize the SDK in non-Google environments#To generate a private key file for your service account](https://firebase.google.com/docs/admin/setup#initialize_the_sdk_in_non-google_environments)                                                                 |
 | NEWEBPAY_PAPERMAG_KEY              | 字串       | `'newebpay-papermag-key'` | 藍新商店 key                                                                                                                                                                                                                                                                                                   |
 | NEWEBPAY_PAPERMAG_IV               | 字串       | `'newebpay-papermag-iv'`  | 藍新商店 iv                                                                                                                                                                                                                                                                                                    |
