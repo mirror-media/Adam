@@ -18,8 +18,6 @@ type CacheSetting = {
   cacheTime?: number
   /** Seconds shared caches should keep the response, emitted as `s-maxage`. */
   sharedCacheTime?: number
-  /** Seconds shared caches may serve stale content while revalidating. */
-  staleWhileRevalidate?: number
 }
 
 /**
@@ -58,15 +56,6 @@ const setPageCache = (
         ) {
           cacheControlDirectives.push(
             `s-maxage=${cacheSetting.sharedCacheTime}`
-          )
-        }
-
-        if (
-          typeof cacheSetting?.staleWhileRevalidate === 'number' &&
-          cacheSetting.staleWhileRevalidate >= 0
-        ) {
-          cacheControlDirectives.push(
-            `stale-while-revalidate=${cacheSetting.staleWhileRevalidate}`
           )
         }
 

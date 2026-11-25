@@ -42,7 +42,6 @@ export const getServerSideProps = (async ({ req, res }) => {
         cachePolicy: 'max-age',
         cacheTime: 180,
         sharedCacheTime: 180,
-        staleWhileRevalidate: 3600,
       },
       req.url
     )
