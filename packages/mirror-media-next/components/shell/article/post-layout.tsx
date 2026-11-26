@@ -1,11 +1,13 @@
 import { Fragment, useMemo } from 'react'
 import NextImage from 'next/image'
+import Image from '@readr-media/react-image'
 import type { RawDraftContentState } from 'draft-js'
 import { CircleDollarSignIcon } from 'lucide-react'
 
 import { Badge, Link, Typography } from '@/components/ui'
 import { SITE_BASE_PATH, SITE_URL } from '@/config/index.mjs'
 import { DEFAULT_OG_IMAGE_URL } from '@/constants'
+import { toImageSet } from '@/modules/list-article/list-article-data'
 import { RelatedStory, StoryPost } from '@/modules/story/story-types'
 
 import { Blocks, renderTextWithLinks } from './blocks'
@@ -155,14 +157,6 @@ export default function PostLayout(props: PostLayoutProps) {
     () => getTextParagraphOrdinals(content.blocks),
     [content.blocks]
   )
-  const SIZES_HERO =
-    '(min-width: 1280px) 800px, (min-width: 768px) calc(100vw - 48px), 100vw'
-  const webpSrcSet = buildSrcSet(heroImage?.resizedWebp)
-  const defaultSrcSet = buildSrcSet(heroImage?.resized)
-  const rawHeroWidth = heroImage?.imageFile?.width
-  const rawHeroHeight = heroImage?.imageFile?.height
-  const heroWidth = rawHeroWidth && rawHeroHeight ? rawHeroWidth : undefined
-  const heroHeight = rawHeroWidth && rawHeroHeight ? rawHeroHeight : undefined
 
   const summary = useMemo(() => {
     return content.blocks
@@ -311,30 +305,17 @@ export default function PostLayout(props: PostLayoutProps) {
           </CopyLinkButton>
         </div>
         <figure className="order-5 col-span-full">
-          <picture className="block">
-            {webpSrcSet && (
-              <source
-                type="image/webp"
-                srcSet={webpSrcSet}
-                sizes={SIZES_HERO}
-              />
-            )}
-            <img
-              className="h-auto w-full"
-              srcSet={defaultSrcSet}
-              sizes={SIZES_HERO}
-              src={
-                heroImage?.resized?.w1200 ||
-                heroImage?.resized?.w1600 ||
-                heroImage?.resized?.original ||
-                DEFAULT_OG_IMAGE_URL
-              }
-              alt={heroCaption ?? title ?? ''}
-              width={heroWidth}
-              height={heroHeight}
-              fetchPriority="high"
-            />
-          </picture>
+          <Image
+            images={toImageSet(heroImage?.resizedWebp)}
+            alt={title ?? ''}
+            loadingImage={'/images-next/loading.gif'}
+            defaultImage={heroImage?.resized?.original ?? DEFAULT_OG_IMAGE_URL}
+            priority
+            width="100%"
+            height="auto"
+            loading="eager"
+            fetchPriority="high"
+          />
           {heroCaption && (
             <Typography
               as="figcaption"
@@ -599,22 +580,4 @@ function RelativePosts({ relateds }: { relateds: StoryPost['relateds'] }) {
   }
 
   return null
-}
-
-function buildSrcSet(
-  resized?: Record<string, string | null | undefined> | null
-) {
-  if (!resized) return undefined
-  return Object.entries(resized)
-    .filter(
-      ([key, value]) =>
-        !['original', '__typename'].includes(key) && Boolean(value)
-    )
-    .sort(
-      (a, b) =>
-        parseInt(a[0].replace('w', ''), 10) -
-        parseInt(b[0].replace('w', ''), 10)
-    )
-    .map(([key, value]) => `${value} ${key.replace('w', '')}w`)
-    .join(', ')
 }
