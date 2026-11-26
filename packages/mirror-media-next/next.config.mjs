@@ -9,9 +9,8 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-// Architecture guardrail: keep Next.js 15 while the built-in AMP
-// routes remain. Before upgrading to Next.js 16, decide the long-term AMP path
-// and revalidate the custom webpack loaders against Turbopack.
+// Architecture guardrail: keep Next.js 15 until the custom webpack loaders
+// (@svgr/webpack, graphql-tag/loader) are revalidated against Turbopack.
 
 const withBundleAnalyzer =
   process.env.ANALYZE === 'true' && process.env.NEXT_PUBLIC_ENV !== 'prod'

@@ -1,28 +1,25 @@
-import { createRequire } from 'node:module'
-
-const require = createRequire(import.meta.url)
-const ampHtmlValidator = require('amphtml-validator')
-
 const DEFAULT_BASE_URL = 'http://127.0.0.1:3000'
 const REQUEST_TIMEOUT_MS = Number(process.env.SMOKE_TIMEOUT_MS || 15000)
-const AMP_VALIDATOR_JS = process.env.AMP_VALIDATOR_JS
 
 // Each route is checked on two independent axes:
 //
 // 1. Liveness / structural — the route is reachable, returns HTTP 200, is not an
-//    error page, and rendered its structural shell (`__NEXT_DATA__`, AMP html,
-//    canonical link). A failure here means the deployed candidate is broken
+//    error page, and rendered its structural shell (`__NEXT_DATA__`). A failure
+//    here means the deployed candidate is broken
 //    (500 / timeout / crash / routing regression), so it FAILS on prod and on
 //    any deployed non-prod environment. Only local keeps this best-effort,
 //    because local detail pages depend on external dev
 //    GraphQL that may not be reachable and is not a deployment under test.
 //
-// 2. Content-calibrated — the sample slug's title, `amphtml` link, and AMP
-//    validity. These expectations are calibrated against prod data, so they are
+// 2. Content-calibrated — the sample slug's title. These expectations are
+//    calibrated against prod data, so they are
 //    required only on prod (authoritative). Other networked environments read
 //    from a different CMS, so the same slug may have a different article state
 //    (`state !== 'published'`, advertised) or dirty source HTML; there a content
 //    failure is reported as WARN with an explanation instead of failing the run.
+//
+// Redirect routes (`redirectTo`) are checked separately: the redirect comes from
+// next.config.mjs rather than CMS data, so it is required in every environment.
 const AUTHORITATIVE_HOST =
   process.env.SMOKE_AUTHORITATIVE_HOST || 'www.mirrormedia.mg'
 
@@ -53,7 +50,6 @@ const routes = [
   {
     name: 'home',
     path: '/',
-    amp: false,
     // home has no slug-specific content; its markers are structural liveness.
     livenessMarkers: ['鏡週刊', /id="__NEXT_DATA__"/],
     contentMarkers: [],
@@ -61,50 +57,34 @@ const routes = [
   {
     name: 'story',
     path: `/story/${storySlug}`,
-    amp: false,
     livenessMarkers: [/id="__NEXT_DATA__"/],
-    // `amphtml` link is gated by article state (story-head.js: state ===
-    // 'published' && !isAdvertised), so it is content-calibrated, not structural.
-    contentMarkers: [storyTitle, /<link(?=[^>]+rel="amphtml")[^>]*>/],
+    contentMarkers: [storyTitle],
   },
   {
     name: 'storyAmp',
     path: `/story/amp/${storySlug}`,
-    amp: true,
-    livenessMarkers: [
-      /<html[^>]+(?:⚡|amp)(?:\s|>)/,
-      /<link(?=[^>]+rel="canonical")[^>]*>/,
-    ],
-    contentMarkers: [storyTitle],
+    redirectTo: `/story/${storySlug}`,
   },
   {
     name: 'external',
     path: `/external/${externalSlug}`,
-    amp: false,
     livenessMarkers: [/id="__NEXT_DATA__"/],
-    contentMarkers: [externalTitle, /<link(?=[^>]+rel="amphtml")[^>]*>/],
+    contentMarkers: [externalTitle],
   },
   {
     name: 'externalAmp',
     path: `/external/amp/${externalSlug}`,
-    amp: true,
-    livenessMarkers: [
-      /<html[^>]+(?:⚡|amp)(?:\s|>)/,
-      /<link(?=[^>]+rel="canonical")[^>]*>/,
-    ],
-    contentMarkers: [externalTitle],
+    redirectTo: `/external/${externalSlug}`,
   },
   {
     name: 'section',
     path: `/section/${sectionSlug}`,
-    amp: false,
     livenessMarkers: [/id="__NEXT_DATA__"/],
     contentMarkers: [sectionTitle],
   },
   {
     name: 'category',
     path: `/category/${categorySlug}`,
-    amp: false,
     livenessMarkers: [/id="__NEXT_DATA__"/],
     contentMarkers: [
       categoryTitle,
@@ -114,14 +94,12 @@ const routes = [
   {
     name: 'tag',
     path: `/tag/${tagSlug}`,
-    amp: false,
     livenessMarkers: [/id="__NEXT_DATA__"/],
     contentMarkers: [tagTitle],
   },
   {
     name: 'tagLowContentSeo',
     path: `/tag/${lowContentTagSlug}`,
-    amp: false,
     authoritativeOnly: true,
     livenessMarkers: [/id="__NEXT_DATA__"/],
     contentMarkers: [
@@ -135,7 +113,6 @@ const routes = [
     // `/api/search` and its Redis topology are deliberately not covered here.
     name: 'search',
     path: `/search/${searchKeyword}`,
-    amp: false,
     livenessMarkers: [/id="__NEXT_DATA__"/],
     contentMarkers: [searchKeyword],
   },
@@ -158,7 +135,6 @@ async function main() {
 
   let failureCount = 0
   let warningCount = 0
-  let ampValidator
 
   for (const route of routes) {
     const routeUrl = resolveRouteUrl(baseUrl, route.path)
@@ -166,6 +142,19 @@ async function main() {
       console.log(
         `SKIP ${route.name} ${routeUrl} (authoritative CMS fixture only)`
       )
+      continue
+    }
+    if (route.redirectTo) {
+      try {
+        await assertPermanentRedirect(
+          routeUrl,
+          resolveRouteUrl(baseUrl, route.redirectTo)
+        )
+        console.log(`PASS ${route.name} ${routeUrl}`)
+      } catch (error) {
+        reportFailure(route, routeUrl, error, true, 'redirect')
+        failureCount += 1
+      }
       continue
     }
     // Liveness FAILs on prod and on any deployed non-prod env; only local is
@@ -197,10 +186,6 @@ async function main() {
         html.body,
         route.contentForbiddenMarkers || []
       )
-      if (route.amp) {
-        ampValidator ||= await getAmpValidator()
-        assertAmpValid(routeUrl, html.body, ampValidator)
-      }
     } catch (error) {
       if (reportFailure(route, routeUrl, error, contentRequired, 'content')) {
         failureCount += 1
@@ -229,12 +214,12 @@ async function main() {
 
 function modeMessage() {
   if (isAuthoritativeBaseUrl) {
-    return `Authoritative mode (${AUTHORITATIVE_HOST}): liveness and content both required, including AMP validation and amphtml link.`
+    return `Authoritative mode (${AUTHORITATIVE_HOST}): liveness, redirects and content all required.`
   }
   if (isLocalBaseUrl) {
-    return 'Local mode: liveness is best-effort for detail routes (home still required); prod-calibrated content checks are WARN. Gate candidates against a deployed env or prod.'
+    return 'Local mode: liveness is best-effort for detail routes (home still required); redirects are required; prod-calibrated content checks are WARN. Gate candidates against a deployed env or prod.'
   }
-  return 'Deployed non-prod mode: route liveness is required (FAILs on network error / timeout / non-200 / error page / missing structure); prod-calibrated content checks (title, amphtml link, AMP validity) are WARN because this environment reads from a different CMS.'
+  return 'Deployed non-prod mode: route liveness and redirects are required (FAILs on network error / timeout / non-200 / error page / missing structure); prod-calibrated content checks (title) are WARN because this environment reads from a different CMS.'
 }
 
 // Returns true if the failure counts as FAIL, false if downgraded to WARN.
@@ -289,7 +274,7 @@ function resolveRouteUrl(base, routePath) {
   return url.toString()
 }
 
-async function fetchHtml(url) {
+async function fetchHtml(url, options = {}) {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
@@ -299,11 +284,26 @@ async function fetchHtml(url) {
         'user-agent': 'mirror-media-next-smoke-test',
       },
       signal: controller.signal,
+      ...options,
     })
     const body = await response.text()
     return { response, body }
   } finally {
     clearTimeout(timeout)
+  }
+}
+
+async function assertPermanentRedirect(url, expectedUrl) {
+  const { response } = await fetchHtml(url, { redirect: 'manual' })
+  if (response.status !== 308) {
+    throw new Error(`Expected HTTP 308 for ${url}, got ${response.status}`)
+  }
+  const location = response.headers.get('location')
+  const actualUrl = location && new URL(location, url).toString()
+  if (actualUrl !== expectedUrl) {
+    throw new Error(
+      `Expected redirect to ${expectedUrl} from ${url}, got ${location}`
+    )
   }
 }
 
@@ -342,30 +342,4 @@ function assertForbiddenMarkers(url, html, markers) {
       throw new Error(`Unexpected marker "${marker.toString()}" in ${url}`)
     }
   }
-}
-
-async function getAmpValidator() {
-  return AMP_VALIDATOR_JS
-    ? ampHtmlValidator.getInstance(AMP_VALIDATOR_JS)
-    : ampHtmlValidator.getInstance()
-}
-
-function assertAmpValid(url, html, validator) {
-  const result = validator.validateString(html)
-
-  if (result.status === 'PASS') {
-    return
-  }
-
-  const errorLines = result.errors
-    .filter((error) => error.severity === 'ERROR')
-    .slice(0, 10)
-    .map(
-      (error) =>
-        `line ${error.line}, col ${error.col}: ${error.message} (${error.code})`
-    )
-
-  throw new Error(
-    [`AMP validation failed for ${url}`, ...errorLines].join('\n  ')
-  )
 }

@@ -217,12 +217,6 @@ export const topicPost = graphql(`
   }
 `)
 
-export const postTrimmedContent = graphql(`
-  fragment postTrimmedContent on Post {
-    trimmedContent
-  }
-`)
-
 export const postFullContent = graphql(`
   fragment postFullContent on Post {
     content

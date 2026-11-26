@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { useAmp } from 'next/amp'
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock'
 import styled from 'styled-components'
 
@@ -87,7 +86,6 @@ const ButtonWrapper = styled.div`
  */
 
 export default function AdultOnlyWarning({ isAdult = false }) {
-  const isAmp = useAmp()
   const [isAgreed, setIsAgreed] = useState(false)
 
   const shouldShowAdultWarning = Boolean(isAdult && !isAgreed)
@@ -110,32 +108,6 @@ export default function AdultOnlyWarning({ isAdult = false }) {
     }
   }, [shouldShowAdultWarning])
 
-  let agreeBtnJsx
-  if (isAmp) {
-    agreeBtnJsx = (
-      <button
-        className="agree-button"
-        // eslint-disable-next-line react/no-unknown-property
-        on="tap:adult-only-warning.hide,amp-page.toggleClass(class='disable-scroll')"
-        aria-label="是，我已年滿十八歲"
-      >
-        是，我已年滿十八歲
-      </button>
-    )
-  } else {
-    agreeBtnJsx = (
-      <button
-        className="agree-button"
-        onClick={() => {
-          setIsAgreed(true)
-        }}
-        aria-label="是，我已年滿十八歲"
-      >
-        是，我已年滿十八歲
-      </button>
-    )
-  }
-
   const adultOnlyJsx = shouldShowAdultWarning ? (
     <Wrapper ref={warningRef} id="adult-only-warning">
       <WarningContent>
@@ -150,7 +122,15 @@ export default function AdultOnlyWarning({ isAdult = false }) {
         </p>
 
         <ButtonWrapper>
-          {agreeBtnJsx}
+          <button
+            className="agree-button"
+            onClick={() => {
+              setIsAgreed(true)
+            }}
+            aria-label="是，我已年滿十八歲"
+          >
+            是，我已年滿十八歲
+          </button>
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/" aria-label="離開">
             <button>離開</button>

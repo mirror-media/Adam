@@ -1,5 +1,4 @@
 import { useEffect } from 'react'
-import Head from 'next/head'
 import { useRouter } from 'next/router'
 import Script from 'next/script'
 
@@ -7,23 +6,16 @@ import { useReferrer } from '../context/referrer'
 
 /**
  * Component for implement comScore script.
- * There are two different script, one for amp type page, one for other.
- * See amp Docs to get more info about comScore amp page script: https://direct-support.comscore.com/hc/en-us/article_attachments/360058526434
  *
  */
 export default function ComScoreScript() {
   const router = useRouter()
-  const { pathname } = router
   const getReferrer = useReferrer()
-  const isAmpStoryPage =
-    pathname.startsWith('/story/amp/') || pathname.startsWith('/external/amp/')
 
   // Sends the first pageview on mount and a virtual pageview on each client-side
   // navigation (comScore SPA guide). Shallow pushes (search keyword changes) are
   // not counted.
   useEffect(() => {
-    if (isAmpStoryPage) return
-
     const sendPageview = () => {
       const pageview = {
         c1: '2',
@@ -61,40 +53,7 @@ export default function ComScoreScript() {
     return () => {
       router.events.off('routeChangeComplete', handleRouteChangeComplete)
     }
-  }, [isAmpStoryPage, router.events, getReferrer])
-
-  if (isAmpStoryPage) {
-    return (
-      <>
-        <Head>
-          <script
-            async
-            // eslint-disable-next-line react/no-unknown-property
-            custom-element="amp-analytics"
-            src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"
-          ></script>
-        </Head>
-
-        {/* @ts-ignore */}
-        <amp-analytics type="comscore">
-          <script
-            type="application/json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                vars: {
-                  c2: '24318560',
-                },
-                extraUrlParams: {
-                  comscorekw: 'amp',
-                },
-              }),
-            }}
-          ></script>
-          {/* @ts-ignore */}
-        </amp-analytics>
-      </>
-    )
-  }
+  }, [router.events, getReferrer])
 
   return (
     <>

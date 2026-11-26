@@ -64,7 +64,6 @@ ENV NODE_ENV=production
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=prod-deps /app/packages/mirror-media-next/node_modules ./packages/mirror-media-next/node_modules
 COPY --from=builder /app/packages/mirror-media-next/run.sh ./
-COPY --from=builder /app/packages/mirror-media-next/amp-proxy-server.js ./packages/mirror-media-next/amp-proxy-server.js
 
 COPY --from=builder /app/packages/mirror-media-next/public ./packages/mirror-media-next/public
 

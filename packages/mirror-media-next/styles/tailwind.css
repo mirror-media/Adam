@@ -198,8 +198,3 @@
 @source '../store';
 @source '../lib';
 @source '../constants';
-
-@source not '../pages/story/amp';
-@source not '../pages/external/amp';
-@source not '../components/amp';
-@source not '../modules/*/amp';

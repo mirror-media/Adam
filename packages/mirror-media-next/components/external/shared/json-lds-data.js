@@ -8,7 +8,7 @@ import { toTaipeiISOString } from '../../../utils/index'
 
 /**
  * @typedef {import('../../../modules/external/external-types').ExternalPost} ExternalPost
- * @typedef {'/external/' | '/external/amp/'} CurrentPage
+ * @typedef {'/external/'} CurrentPage
  */
 
 /**

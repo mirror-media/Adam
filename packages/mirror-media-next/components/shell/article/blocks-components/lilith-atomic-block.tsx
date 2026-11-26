@@ -21,9 +21,8 @@ export function LilithAtomicBlock({ entity }: { entity: RawDraftEntity }) {
      所以寫死 `'atomic'`。
    - `'normal'`：只有 `style-normal` 的文章會用 `PostLayout`，舊版一般文章
      （`components/story/normal/article-content.js`）傳的也是 `'normal'`。lilith 會依
-     `contentLayout` 改變樣式的只有 `ImageBlock`、`InfoBoxBlock`（例如 `'premium'`）
-     及各 block 的 `'amp'` 分支，而 `image`、`INFOBOX` 在 `Blocks` 目前用自己的元件，
-     不會走到這裡。
+     `contentLayout` 改變樣式的只有 `ImageBlock`、`InfoBoxBlock`（例如 `'premium'`），
+     而 `image`、`INFOBOX` 在 `Blocks` 目前用自己的元件，不會走到這裡。
    - 不傳 `firstImageAdComponent`：只有 `ImageBlock` 會用到，圖片不會走到這裡。
    - 回傳的 `editable: false` 是給 draft-js `Editor` 的設定，這裡沒有用 `Editor`。
   */

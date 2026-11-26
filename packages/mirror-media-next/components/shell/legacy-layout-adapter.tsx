@@ -72,7 +72,7 @@ function getShellHeaderData(header: LegacyHeaderConfig): SiteHeaderProps {
 }
 
 function LegacyHeaderAdapter({ header }: LegacyHeaderAdapterProps) {
-  // D18 resolves every non-AMP shared Header consumer to the same V4 SiteHeader.
+  // D18 resolves every shared Header consumer to the same V4 SiteHeader.
   return <SiteHeader {...getShellHeaderData(header)} />
 }
 

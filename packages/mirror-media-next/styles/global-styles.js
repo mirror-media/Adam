@@ -624,8 +624,3 @@ export const GlobalStyles = createGlobalStyle`
 
   ${applicationGlobalPolicy}
 `
-
-export const AmpGlobalStyles = createGlobalStyle`
-  ${legacyBaseReset}
-  ${applicationGlobalPolicy}
-`
