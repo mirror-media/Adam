@@ -6,7 +6,7 @@ const { DraftRenderer, hasContentInRawContentBlock, removeEmptyContentBlock } =
   MirrorMedia
 
 /**
- * @typedef { 'normal' | 'wide' | 'photography' | 'premium' | 'amp' } ContentLayout
+ * @typedef { 'normal' | 'wide' | 'photography' | 'premium' } ContentLayout
  */
 
 /**
@@ -40,12 +40,10 @@ export default function DraftRenderBlock({
   firstImageAdComponent,
   wrapper = (children) => <>{children}</>,
 }) {
-  const isAmp = contentLayout === 'amp'
   const shouldRenderDraft = hasContentInRawContentBlock(rawContentBlock)
 
-  const jsx = isAmp
-    ? AmpRenderBlock(rawContentBlock, contentLayout)
-    : DRAFT_RENDERER_FEATURE_TOGGLE === 'on'
+  const jsx =
+    DRAFT_RENDERER_FEATURE_TOGGLE === 'on'
       ? NormalSSRRenderBlock(
           rawContentBlock,
           contentLayout,
@@ -119,28 +117,4 @@ function NormalRenderBlock(
   }, [shouldRenderDraft, rawContentBlock, contentLayout])
 
   return draftRenderBlockJsx
-}
-/**
- * There is no client-side rendering in amp page, so `useState`, `useEffect` is unable to used.
- * Because the limitation mentioned above, it is needed to use `DraftRenderer` in server-side, which may cause issue of memory leak.
- * @param {RawContentBlock} rawContentBlock
- * @param {ContentLayout} contentLayout
- * @returns {import('react').JSX.Element}
- */
-function AmpRenderBlock(rawContentBlock, contentLayout) {
-  const shouldRenderDraft = hasContentInRawContentBlock(rawContentBlock)
-  let draftJsx = null
-
-  if (shouldRenderDraft) {
-    const contentWithRemovedEmptyBlock =
-      removeEmptyContentBlock(rawContentBlock)
-    draftJsx = (
-      <DraftRenderer
-        rawContentBlock={contentWithRemovedEmptyBlock}
-        contentLayout={contentLayout}
-      />
-    )
-  }
-
-  return draftJsx
 }

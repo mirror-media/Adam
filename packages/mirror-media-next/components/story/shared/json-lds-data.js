@@ -14,7 +14,7 @@ import { extractArticleBody } from '../../../utils/story'
 /**
  *
  * @param {PostData} postData
- * @param {'/story/' | '/story/amp/'} currentPage
+ * @param {'/story/'} currentPage
  * @returns {Object[]}
  */
 export const generateJsonLdsData = (postData, currentPage) => {

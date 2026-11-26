@@ -154,18 +154,11 @@ const cacheSettingSource = readFileSync(
 )
 
 assert.match(postQuerySource, /const fetchContentStoryPostBySlug = graphql\(`/)
-assert.match(postQuerySource, /const fetchAmpPostBySlug = graphql\(`/)
 assert.doesNotMatch(
   storyCodegenDocumentSource.match(
     /query fetchStoryPostBySlug[\s\S]*?query fetchExternalBySlug/
   )?.[0] ?? '',
   /postTrimmedContent|trimmedContent/
-)
-assert.match(
-  postQuerySource.match(
-    /const fetchAmpPostBySlug = graphql\(`[\s\S]*?`\)/
-  )?.[0] ?? '',
-  /postTrimmedContent/
 )
 assert.match(postFragmentSource, /fragment relatedPost on Post/)
 assert.doesNotMatch(

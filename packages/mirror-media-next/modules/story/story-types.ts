@@ -23,9 +23,8 @@ export type FaqsAlgo = {
 // from GraphQL's untyped `Json` scalar to real draft-js content, and
 // `faqs_algo` narrowed to its real shape (see fetchStoryPost's type guards).
 // `Post` (the schema type) also has `trimmedContent`/`isFeatured`, but this
-// query doesn't select either — they're the AMP query's and the listing
-// fragment's fields respectively — and nothing in the story render tree
-// reads them, so they're left out rather than faked in. Every other field's
+// query doesn't select either and nothing in the story render tree reads
+// them, so they're left out rather than faked in. Every other field's
 // nullability matches the GraphQL schema exactly as codegen reports it —
 // nothing here is asserted past what the response actually guarantees.
 export type StoryPost = StoryPostQueryResult & {

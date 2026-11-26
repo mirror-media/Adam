@@ -2,7 +2,6 @@ import '../styles/tailwind.css'
 
 import React, { useEffect, useRef } from 'react'
 import { Provider } from 'react-redux'
-import { useAmp } from 'next/amp'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { ApolloProvider } from '@apollo/client'
@@ -20,7 +19,7 @@ import { GTM_AUTH, GTM_ID, GTM_PREVIEW } from '../config/index.mjs'
 import { MembershipProvider } from '../context/membership'
 import { ReferrerProvider } from '../context/referrer'
 import store from '../store'
-import { AmpGlobalStyles, GlobalStyles } from '../styles/global-styles'
+import { GlobalStyles } from '../styles/global-styles'
 import { theme } from '../styles/theme'
 import {
   compactDataLayer,
@@ -59,10 +58,6 @@ function MyApp({ Component, pageProps }) {
   const isStoryPage = pathname.startsWith('/story/')
   const isServerErrorPage = pathname === '/500'
 
-  // Skip this client-only dynamic widget on AMP pages because Next.js may emit
-  // React fallback markers (e.g. `<template data-dgst="DYNAMIC_SERVER_USAGE">`)
-  // that AMP treats as invalid `<template>` tags.
-  const isAmpPage = useAmp()
   // Frozen on the first render: GoogleTagManager inlines this into the same
   // script as `gtm.start`, which only runs once per full page load. First load
   // and CSR navigations also send `mm_page_view` via pushDataLayer below.
@@ -74,27 +69,19 @@ function MyApp({ Component, pageProps }) {
   )
 
   useEffect(() => {
-    if (isAmpPage) {
-      return
-    }
-
     pushDataLayer(
       resolvePageDataLayer(router.pathname, router.asPath, pageProps.dataLayer)
     )
-  }, [isAmpPage, pageProps.dataLayer, router.asPath, router.pathname])
+  }, [pageProps.dataLayer, router.asPath, router.pathname])
 
   useEffect(() => {
-    if (isAmpPage) {
-      return
-    }
-
     document.addEventListener('click', rememberStoryListFromEvent)
     document.addEventListener('auxclick', rememberStoryListFromEvent)
     return () => {
       document.removeEventListener('click', rememberStoryListFromEvent)
       document.removeEventListener('auxclick', rememberStoryListFromEvent)
     }
-  }, [isAmpPage])
+  }, [])
 
   // The service worker is bundled into public/sw.js by the `build:sw` script
   // (esbuild) and registered manually here, replacing the auto-registration
@@ -118,15 +105,13 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {!isAmpPage && (
-        <GoogleTagManager
-          gtmId={GTM_ID}
-          auth={GTM_AUTH || undefined}
-          preview={GTM_PREVIEW || undefined}
-          dataLayer={ssrDataLayerRef.current}
-        />
-      )}
-      {isAmpPage ? <AmpGlobalStyles /> : <GlobalStyles />}
+      <GoogleTagManager
+        gtmId={GTM_ID}
+        auth={GTM_AUTH || undefined}
+        preview={GTM_PREVIEW || undefined}
+        dataLayer={ssrDataLayerRef.current}
+      />
+      <GlobalStyles />
       <ReferrerProvider>
         <MembershipProvider>
           <ApolloProvider client={client}>
@@ -174,7 +159,7 @@ function MyApp({ Component, pageProps }) {
                       thing catching it: without it, a failure in this secondary
                       widget would take down the whole app. No fallback props, so it just
                       disappears. */}
-                    {!isAmpPage && !isServerErrorPage && (
+                    {!isServerErrorPage && (
                       <ErrorBoundary boundary="promote-topic">
                         <PromoteTopic />
                       </ErrorBoundary>

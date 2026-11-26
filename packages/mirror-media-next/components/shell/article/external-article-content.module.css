@@ -1,5 +1,6 @@
 /* Ported 1:1 from @mirrormedia/lilith-draft-renderer's `draftEditorCssExternal`
- * plus the AMP-authored wrapper classes below. These style raw external HTML
+ * plus the `.amp-img-wrapper` / `.amp-iframe-wrapper` rules below, kept in
+ * case external HTML still carries those classes. These style raw external HTML
  * (dangerouslySetInnerHTML) with arbitrary nested tags, so they can't become
  * Tailwind utility classNames on the wrapper element itself. */
 

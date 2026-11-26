@@ -3,9 +3,6 @@ import { SECTION_IDS } from '../constants/index'
 
 type MicroAdType = 'HOME' | 'LISTING' | 'STORY'
 type Device = 'PC' | 'MB' | 'RWD'
-type SectionWithName = {
-  name?: string
-}
 
 /**
  * Determining whether to insert a `Micro` advertisement after a specific post index.
@@ -119,49 +116,7 @@ const getPopInId = (index = 0): string | null => {
   return null
 }
 
-/**
- * TODO: the logic of selecting amp-gpt-ad unit is different from gpt-ad in normal page.
- * Should refactor to prevent logic inconsistent.
- *
- * Retrieves the data slot section for a given section name.
- */
-function getAmpGptDataSlotSection(
-  section: SectionWithName | null | undefined,
-  isMemberArticle: boolean
-): string {
-  if (isMemberArticle) {
-    return 'member'
-  }
-  const name = section?.name
-
-  switch (true) {
-    case name?.includes('時事'):
-      return 'news'
-    case name?.includes('娛樂'):
-      return 'ent'
-    case name?.includes('財經理財'):
-      return 'fin'
-    case name?.includes('人物'):
-      return 'peo'
-    case name?.includes('國際'):
-      return 'int'
-    case name?.includes('瑪法達'):
-      return 'mafa'
-    case name?.includes('文化'):
-      return 'cul'
-    case name?.includes('汽車鐘錶'):
-      return 'wat'
-    case name?.includes('美食旅遊'):
-      return 'tra'
-    case name?.includes('生活'):
-      return 'life'
-    default:
-      return 'oth'
-  }
-}
-
 export {
-  getAmpGptDataSlotSection,
   getMicroAdUnitId,
   getPageKeyByPartnerShowOnIndex,
   getPopInId,

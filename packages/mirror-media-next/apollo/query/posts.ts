@@ -54,24 +54,7 @@ const fetchContentStoryPostBySlug = graphql(`
   }
 `)
 
-const fetchAmpPostBySlug = graphql(`
-  query fetchAmpPostBySlug($slug: String) {
-    post(where: { slug: $slug }) {
-      ...post
-      ...postTrimmedContent
-      ...postFullContent
-      relatedsOne {
-        ...relatedPost
-      }
-      relatedsTwo {
-        ...relatedPost
-      }
-    }
-  }
-`)
-
 export {
-  fetchAmpPostBySlug,
   fetchAsidePosts,
   fetchContentStoryPostBySlug,
   fetchPosts,

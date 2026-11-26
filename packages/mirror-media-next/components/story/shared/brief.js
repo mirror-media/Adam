@@ -44,7 +44,7 @@ const BriefContainer = styled.div`
  * @param {Object} props
  * @param {Brief} props.brief
  * @param {String} [props.sectionSlug]
- * @param { 'normal' | 'wide' | 'photography' | 'premium' | 'amp' } [props.contentLayout]
+ * @param { 'normal' | 'wide' | 'photography' | 'premium' } [props.contentLayout]
  * @returns {import('react').JSX.Element}
  */
 export default function ArticleBrief({
