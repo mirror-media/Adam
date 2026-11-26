@@ -208,7 +208,7 @@ Legacy bridge 不承接新的 ownership。等六個元件完成 `.tsx` 遷移、
 `components/ui/` 以 shadcn UI 為主。由 shadcn 衍生／客製，以及專案依相同慣例撰寫的低階 primitives 都可放在這裡；元件不得包含 route 或 business behavior（業務行為）。
 新程式碼直接從 `@/components/ui/<component>` 匯入；既有 `components/ui/index.ts` 只保留 compatibility exports（相容匯出），不擴張為第二個 public registry（公開登錄庫）。
 
-`PageShell` 是 `components/shell/` 唯一的頁面外殼組合入口，也是一般非 AMP UI routes（使用者介面路由）的標準入口。它直接擁有 application shell（應用外殼）的 flex／`min-h-dvh` 結構與 slot order（插槽順序），固定組合 `CustomHead`、`SiteHeader`、`GDPRNotification` 與 `BackToTop`，預設加入 `SiteFooter` 與 `IdleTimeoutModal`。route-specific metadata（路由專屬中繼資料）透過 `head` prop（屬性）傳入；route 只有在補充文章時間、AMP link 或 JSON-LD 等特殊標籤時才另外使用 `next/head`，不應再自行 render `CustomHead`。只有已確認需保留原畫面的頁面才可使用 `withFooter={false}` 或 `withIdleTimeout={false}`；route 不應自行建立另一套 shell variant（外殼變體）。AMP routes 維持獨立 `components/amp/amp-layout`；`pages/500.js` 是不依賴資料與 shell 的靜態錯誤後備，兩者都不使用 `PageShell`，並直接組合 `CustomHead`。`_app.js` 也必須在 `/500` 排除 client-only `PromoteTopic`（僅用戶端專題推薦），避免錯誤畫面重新引入內容請求。
+`PageShell` 是 `components/shell/` 唯一的頁面外殼組合入口，也是一般 UI routes（使用者介面路由）的標準入口。它直接擁有 application shell（應用外殼）的 flex／`min-h-dvh` 結構與 slot order（插槽順序），固定組合 `CustomHead`、`SiteHeader`、`GDPRNotification` 與 `BackToTop`，預設加入 `SiteFooter` 與 `IdleTimeoutModal`。route-specific metadata（路由專屬中繼資料）透過 `head` prop（屬性）傳入；route 只有在補充文章時間或 JSON-LD 等特殊標籤時才另外使用 `next/head`，不應再自行 render `CustomHead`。只有已確認需保留原畫面的頁面才可使用 `withFooter={false}` 或 `withIdleTimeout={false}`；route 不應自行建立另一套 shell variant（外殼變體）。`pages/500.js` 是不依賴資料與 shell 的靜態錯誤後備，不使用 `PageShell`，並直接組合 `CustomHead`。`_app.js` 也必須在 `/500` 排除 client-only `PromoteTopic`（僅用戶端專題推薦），避免錯誤畫面重新引入內容請求。
 
 `CustomHead` 提供站台預設的 `<meta name="robots" content="index, max-image-preview:large">` 與預設分享圖片；特殊頁面可透過 `robotsMetaContent` 覆寫，傳入 `null` 則代表該 route 的另一個 `Head` 負責 robots 規則。帳號流程與 404／500 必須明確使用 `noindex`，不可落回公開頁面的預設值。
 
@@ -259,7 +259,7 @@ Route 與 capability 是不同分類軸：route 是 framework／runtime entry（
 - Root `hooks/`／`utils/` 只保留跨能力、符合執行環境的內容；capability-specific code（能力專屬程式）放回最近 module。
 - `type/` 不再新增；feature-owned types 放最近 module，`types/` 只保留外部套件的 ambient declarations。
 - Tailwind current breakpoints（現行斷點）為 `sm: 640px`、`md: 768px`、`lg: 1024px`、`xl: 1280px`、`2xl: 1536px`；舊版視覺一致性使用 `legacy-*`。
-- Tailwind `@source` 只在真實 module component 開始產生 classes 時加入；AMP code 必須保持可排除。
+- Tailwind `@source` 只在真實 module component 開始產生 classes 時加入。
 
 ### Minimum checks（最低檢查）
 
@@ -271,13 +271,13 @@ pnpm codegen:check
 pnpm build
 ```
 
-另外驗證受影響 route；變更涉及 client／server、Tailwind 或 AMP 邊界時，再補對應的 bundle、CSS 或 validator 證據。
+另外驗證受影響 route；變更涉及 client／server 或 Tailwind 邊界時，再補對應的 bundle 或 CSS 證據。
 
 ## v4.0 架構基準
 
 `mirror-media-next` v4.0 的現行架構與維護限制如下；只有在對應實作完成變更後，才應同步更新或移除這些限制：
 
-- Framework and routing（框架與路由）：使用 Next.js 15.5.22、React 19.2.7 與 Pages Router（頁面路由器），並保留 `/story/amp/[slug]`、`/external/amp/[slug]` 內建 AMP 路由。Next.js 16 已移除內建 AMP API；升級前必須先決定 AMP 的替代或退場方式，並驗證 Turbopack（打包工具）與 SVG、GraphQL 等既有 webpack loaders（webpack 載入器）的相容性。
+- Framework and routing（框架與路由）：使用 Next.js 15.5.22、React 19.2.7 與 Pages Router（頁面路由器）。升級 Next.js 16 前必須先驗證 Turbopack（打包工具）與 SVG、GraphQL 等既有 webpack loaders（webpack 載入器）的相容性。
 - App Router（應用程式路由器）：目前未使用。若要導入，必須同時設計 `getServerSideProps`、styled-components SSR、Apollo SSR 與會員個人化驗證流程的替代方案；不可只搬移路由檔案。
 - Deployment（部署）：Docker runtime（Docker 執行期）依賴 `output: 'standalone'`、monorepo output tracing（單一儲存庫輸出追蹤）與 repository-root build context（儲存庫根目錄建置上下文）。調整 Next.js、pnpm workspace 或 Dockerfile 後，必須確認能建置與啟動。
 - TypeScript：採 `strict: true`、`allowJs: true` 漸進遷移；既有 JavaScript 可繼續維護，但不得新增 application（應用程式）`.js`／`.jsx` 檔，請使用 `.ts`／`.tsx`。
